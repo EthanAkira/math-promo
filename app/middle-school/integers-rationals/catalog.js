@@ -13,6 +13,127 @@ function gcd(a, b) {
   return left || 1;
 }
 
+function rational(numerator, denominator = 1) {
+  if (denominator === 0) throw new Error('A rational number cannot have a zero denominator.');
+  const sign = denominator < 0 ? -1 : 1;
+  const common = gcd(numerator, denominator);
+  return { n: (numerator * sign) / common, d: Math.abs(denominator) / common };
+}
+
+function rationalAdd(left, right) { return rational(left.n * right.d + right.n * left.d, left.d * right.d); }
+function rationalSubtract(left, right) { return rational(left.n * right.d - right.n * left.d, left.d * right.d); }
+function rationalMultiply(left, right) { return rational(left.n * right.n, left.d * right.d); }
+function rationalDivide(left, right) { return rational(left.n * right.d, left.d * right.n); }
+
+function rationalPower(value, exponent) {
+  return rational(value.n ** exponent, value.d ** exponent);
+}
+
+function rationalText(value) {
+  return value.d === 1 ? String(value.n) : `${value.n}/${value.d}`;
+}
+
+function signedText(value) {
+  const absolute = rational(Math.abs(value.n), value.d);
+  return `(${value.n >= 0 ? '+' : '−'}${rationalText(absolute)})`;
+}
+
+function decimalOperand(random) {
+  let tenths;
+  do tenths = randomInt(random, -89, 89); while (tenths === 0 || tenths % 10 === 0);
+  const value = rational(tenths, 10);
+  return { value, text: `(${tenths > 0 ? '+' : '−'}${Math.abs(tenths / 10)})`, decimal: true };
+}
+
+function integerOperand(random, max = 15) {
+  let value;
+  do value = randomInt(random, -max, max); while (value === 0);
+  return { value: rational(value), text: signedText(rational(value)), decimal: false };
+}
+
+function fractionOperand(random) {
+  const denominator = randomInt(random, 2, 12);
+  let numerator;
+  do numerator = randomInt(random, -denominator * 2, denominator * 2); while (numerator === 0 || numerator % denominator === 0);
+  const value = rational(numerator, denominator);
+  return { value, text: signedText(value), decimal: false };
+}
+
+function operationOperand(random, mode = 'mixed') {
+  if (mode === 'decimal') return decimalOperand(random);
+  if (mode === 'integer') return integerOperand(random);
+  if (mode === 'fraction') return fractionOperand(random);
+  return pick(random, [integerOperand, fractionOperand])(random);
+}
+
+function answerFor(value, decimalMode = false) {
+  if (decimalMode && 10 % value.d === 0) return String(value.n * (10 / value.d) / 10);
+  if (decimalMode && 100 % value.d === 0) return String(value.n * (100 / value.d) / 100);
+  return rationalText(value);
+}
+
+function rationalAddition(random) {
+  const mode = pick(random, ['integer', 'fraction', 'decimal']);
+  const operands = Array.from({ length: random() < 0.35 ? 3 : 2 }, () => operationOperand(random, mode));
+  const value = operands.reduce((total, item) => rationalAdd(total, item.value), rational(0));
+  return problem('다음을 계산하세요.', operands.map((item) => item.text).join(' + '), answerFor(value, mode === 'decimal'), '', { promptEn: 'Calculate.' });
+}
+
+function rationalSubtraction(random) {
+  const mode = pick(random, ['integer', 'fraction', 'decimal']);
+  const operands = Array.from({ length: random() < 0.28 ? 3 : 2 }, () => operationOperand(random, mode));
+  const value = operands.slice(1).reduce((total, item) => rationalSubtract(total, item.value), operands[0].value);
+  return problem('다음을 계산하세요.', operands.map((item, index) => `${index ? ' − ' : ''}${item.text}`).join(''), answerFor(value, mode === 'decimal'), '', { promptEn: 'Calculate.' });
+}
+
+function rationalAddSubtract(random) {
+  const mode = random() < 0.5 ? 'fraction' : 'decimal';
+  const operands = Array.from({ length: random() < 0.45 ? 4 : 3 }, () => operationOperand(random, mode));
+  const operators = Array.from({ length: operands.length - 1 }, () => random() < 0.5 ? '+' : '−');
+  const value = operators.reduce((total, operator, index) => operator === '+' ? rationalAdd(total, operands[index + 1].value) : rationalSubtract(total, operands[index + 1].value), operands[0].value);
+  const expression = operands.slice(1).reduce((text, item, index) => `${text} ${operators[index]} ${item.text}`, operands[0].text);
+  return problem('다음을 계산하세요.', expression, answerFor(value, mode === 'decimal'), '', { promptEn: 'Calculate using addition and subtraction.' });
+}
+
+function rationalMultiplication(random) {
+  if (random() < 0.22) {
+    const base = operationOperand(random, random() < 0.6 ? 'fraction' : 'integer');
+    const exponent = random() < 0.72 ? 2 : 3;
+    const expression = `${base.text}^${exponent}`;
+    return problem('거듭제곱을 계산하세요.', expression, rationalText(rationalPower(base.value, exponent)), '', { promptEn: 'Evaluate the power.' });
+  }
+  const operands = Array.from({ length: random() < 0.32 ? randomInt(random, 3, 4) : 2 }, () => operationOperand(random, random() < 0.72 ? 'fraction' : 'integer'));
+  const value = operands.reduce((total, item) => rationalMultiply(total, item.value), rational(1));
+  return problem('다음을 계산하세요.', operands.map((item) => item.text).join(' × '), rationalText(value), '', { promptEn: 'Calculate.' });
+}
+
+function rationalDivision(random) {
+  if (random() < 0.2) {
+    const operand = operationOperand(random, random() < 0.65 ? 'fraction' : 'decimal');
+    return problem('다음 수의 역수를 구하세요.', operand.text, rationalText(rational(operand.value.d, operand.value.n)), '', { promptEn: 'Find the reciprocal of the number.' });
+  }
+  const mode = pick(random, ['integer', 'fraction', 'decimal']);
+  const operands = Array.from({ length: random() < 0.25 ? 3 : 2 }, () => operationOperand(random, mode));
+  const operators = operands.length === 3 ? (random() < 0.5 ? ['÷', '×'] : ['×', '÷']) : ['÷'];
+  let value = operands[0].value;
+  for (let index = 0; index < operators.length; index += 1) value = operators[index] === '÷' ? rationalDivide(value, operands[index + 1].value) : rationalMultiply(value, operands[index + 1].value);
+  const expression = operands.slice(1).reduce((text, item, index) => `${text} ${operators[index]} ${item.text}`, operands[0].text);
+  return problem('다음을 계산하세요.', expression, answerFor(value, false), '', { promptEn: 'Calculate.' });
+}
+
+function rationalFourOperations(random) {
+  const operands = Array.from({ length: 3 }, () => operationOperand(random, random() < 0.65 ? 'fraction' : 'integer'));
+  const [a, b, c] = operands.map((item) => item.value);
+  const patterns = [
+    { expression: `${operands[0].text} − ${operands[1].text} × ${operands[2].text}`, value: rationalSubtract(a, rationalMultiply(b, c)) },
+    { expression: `${operands[0].text} + ${operands[1].text} ÷ ${operands[2].text}`, value: rationalAdd(a, rationalDivide(b, c)) },
+    { expression: `[${operands[0].text} + ${operands[1].text}] × ${operands[2].text}`, value: rationalMultiply(rationalAdd(a, b), c) },
+    { expression: `${operands[0].text} × ${operands[1].text} − ${operands[2].text}`, value: rationalSubtract(rationalMultiply(a, b), c) },
+  ];
+  const selected = pick(random, patterns);
+  return problem('계산 순서에 맞게 계산하세요.', selected.expression, rationalText(selected.value), '', { promptEn: 'Calculate using the correct order of operations.' });
+}
+
 function problem(prompt, expression, answer, answerSuffix = '', extra = {}) {
   return { prompt, expression, answer: String(answer), answerSuffix, ...extra };
 }
@@ -172,6 +293,7 @@ function integerSolutions(random) {
 }
 
 const mixedGenerators = [positiveNegative, integerClassification, rationalClassification, numberLine, absoluteValue, comparison, inequalityExpression, integerSolutions];
+const rationalOperationGenerators = [rationalAddition, rationalSubtraction, rationalAddSubtract, rationalMultiplication, rationalDivision, rationalFourOperations];
 
 export const INTEGER_RATIONAL_UNITS = [
   { id: 'positive-negative', label: '양수와 음수', description: '반대되는 상황을 +와 − 기호로 나타내기', en: ['Positive & negative numbers', 'Represent opposite situations with signs'], make: positiveNegative },
@@ -183,6 +305,13 @@ export const INTEGER_RATIONAL_UNITS = [
   { id: 'inequality-expression', label: '부등호의 사용', description: '문장으로 주어진 범위를 부등호로 나타내기', en: ['Writing inequalities', 'Translate verbal conditions into inequalities'], make: inequalityExpression },
   { id: 'integer-solutions', label: '조건을 만족하는 정수', description: '부등식 범위에 포함되는 정수를 모두 구하기', en: ['Integer solutions', 'List integers satisfying inequalities'], make: integerSolutions },
   { id: 'integer-rational-mixed', label: '정수와 유리수 기본 종합', description: '분류·수직선·절댓값·대소관계·부등호를 골고루 연습하기', en: ['Integers & rationals review', 'Mixed practice across all skills'], make: (random) => pick(random, mixedGenerators)(random) },
+  { id: 'rational-addition', label: '유리수의 덧셈', description: '정수·분수·소수의 부호를 포함한 덧셈', en: ['Adding rational numbers', 'Add signed integers, fractions and decimals'], make: rationalAddition },
+  { id: 'rational-subtraction', label: '유리수의 뺄셈', description: '정수·분수·소수의 부호를 포함한 뺄셈', en: ['Subtracting rational numbers', 'Subtract signed integers, fractions and decimals'], make: rationalSubtraction },
+  { id: 'rational-add-subtract', label: '덧셈과 뺄셈의 혼합 계산', description: '세 수와 네 수의 덧셈·뺄셈 혼합 계산', en: ['Mixed addition & subtraction', 'Calculate expressions with three or four terms'], make: rationalAddSubtract },
+  { id: 'rational-multiplication', label: '유리수의 곱셈과 거듭제곱', description: '부호가 있는 수의 곱셈과 거듭제곱', en: ['Multiplication & powers', 'Multiply signed rational numbers and evaluate powers'], make: rationalMultiplication },
+  { id: 'rational-division', label: '유리수의 나눗셈과 역수', description: '역수를 이용한 분수·소수·정수의 나눗셈', en: ['Division & reciprocals', 'Divide rational numbers and find reciprocals'], make: rationalDivision },
+  { id: 'rational-four-operations', label: '유리수의 사칙 혼합 계산', description: '괄호와 계산 순서를 포함한 사칙 혼합 계산', en: ['Mixed rational operations', 'Use parentheses and the order of operations'], make: rationalFourOperations },
+  { id: 'rational-operations-review', label: '유리수의 사칙계산 종합', description: '덧셈·뺄셈·곱셈·나눗셈을 골고루 연습하기', en: ['Rational operations review', 'Mixed practice across all rational operations'], make: (random) => pick(random, rationalOperationGenerators)(random) },
 ];
 
 export function findIntegerRationalUnit(unitId) {

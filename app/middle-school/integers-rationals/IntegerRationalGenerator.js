@@ -48,6 +48,24 @@ function normalizeAnswer(value) {
   return String(value).toLowerCase().replace(/−/g, '-').replace(/\s*([,<>≤≥=])\s*/g, '$1').replace(/\s+/g, '').trim();
 }
 
+function parseRationalAnswer(value) {
+  const text = String(value).replace(/−/g, '-').replace(/\s+/g, '').trim();
+  const fraction = text.match(/^([+-]?\d+)\/(\d+)$/);
+  if (fraction && Number(fraction[2]) !== 0) return { n: Number(fraction[1]), d: Number(fraction[2]) };
+  const decimal = text.match(/^([+-]?\d+)(?:\.(\d+))?$/);
+  if (!decimal) return null;
+  const places = decimal[2]?.length || 0;
+  const denominator = 10 ** places;
+  return { n: Math.round(Number(text) * denominator), d: denominator };
+}
+
+function answersEquivalent(left, right) {
+  const parsedLeft = parseRationalAnswer(left);
+  const parsedRight = parseRationalAnswer(right);
+  if (parsedLeft && parsedRight) return parsedLeft.n * parsedRight.d === parsedRight.n * parsedLeft.d;
+  return normalizeAnswer(left) === normalizeAnswer(right);
+}
+
 function buildUrl(seed, unitId, view = 'problems') {
   const url = new URL(window.location.href);
   url.searchParams.set('sheet', seed);
@@ -58,8 +76,9 @@ function buildUrl(seed, unitId, view = 'problems') {
 }
 
 function RationalText({ value }) {
-  const parts = String(value).split(/([+-]?\d+\/\d+)/g);
+  const parts = String(value).split(/([+-]?\d+\/\d+|\^\d+)/g);
   return <>{parts.map((part, index) => {
+    if (part.startsWith('^')) return <sup key={index}>{part.slice(1)}</sup>;
     const match = part.match(/^([+-]?)(\d+)\/(\d+)$/);
     if (!match) return <span key={index}>{part}</span>;
     return <span key={index} className="signed-fraction"><span>{match[1]}</span><span className="stacked-fraction"><span className="fraction-numerator">{match[2]}</span><span className="fraction-denominator">{match[3]}</span></span></span>;
@@ -108,7 +127,7 @@ export default function IntegerRationalGenerator() {
 
   const unit = findIntegerRationalUnit(unitId);
   const problems = useMemo(() => makeProblems(seed, unit), [seed, unit]);
-  const correctCount = problems.filter((item) => normalizeAnswer(answers[item.id]) === normalizeAnswer(item.answer)).length;
+  const correctCount = problems.filter((item) => answersEquivalent(answers[item.id], item.answer)).length;
 
   useEffect(() => {
     if (!ready) return;
@@ -133,7 +152,7 @@ export default function IntegerRationalGenerator() {
       <section className="problem-grid word-problem-grid prime-problem-grid" aria-label={`${unitLabel} ${foreign ? 'problems' : '문제'}`}>
         {problems.map((item) => {
           const value = answers[item.id] || '';
-          const isCorrect = normalizeAnswer(value) === normalizeAnswer(item.answer);
+          const isCorrect = answersEquivalent(value, item.answer);
           const prompt = foreign && item.promptEn ? item.promptEn : item.prompt;
           const expression = foreign && item.expressionEn ? item.expressionEn : item.expression;
           return <article className="vertical-problem word-problem prime-problem" key={item.id}><span className="problem-number">{item.id}</span><div className="word-calculation"><p>{prompt}</p>{item.kind === 'number-line' ? <NumberLine line={item.line} /> : expression ? <strong className="word-expression font-mono"><RationalText value={expression} /></strong> : null}<div className="word-answer"><span>{tr(language, 'answer')}</span><span className="inline-answer">{view === 'answers' ? <strong><RationalText value={item.answer} /></strong> : <><input aria-label={`${tr(language, 'answer')} ${item.id}`} value={value} onChange={(event) => changeAnswer(item.id, event.target.value)} className={checked && value ? (isCorrect ? 'correct' : 'wrong') : ''} /><span className="print-answer-space" aria-hidden="true" /></>}</span>{item.answerSuffix && !foreign ? <em>{item.answerSuffix}</em> : null}</div></div>{checked && view === 'problems' && value ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{tr(language, isCorrect ? 'correct' : 'tryAgain')}</span> : null}</article>;
