@@ -40,6 +40,10 @@ body {
 a {
   color: inherit;
 }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.language-picker select { min-height: 38px; padding: 5px 30px 5px 10px; color: var(--ink); background: var(--card-bg); border: 1px solid var(--paper-line); border-radius: 999px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+html[dir="rtl"] .language-picker select { padding: 5px 10px 5px 30px; }
+html[dir="rtl"] .worksheet-identity div { text-align: left; }
 
 .font-display {
   font-family: 'Gowun Batang', serif;
@@ -168,6 +172,17 @@ select:focus-visible {
 .profile-disclosure > summary::after { content: '+'; display: grid; place-items: center; flex: 0 0 28px; width: 28px; height: 28px; color: #fff; background: var(--chalk-green); border-radius: 50%; font-size: 20px; line-height: 1; }
 .profile-disclosure[open] > summary::after { content: '−'; }
 .profile-disclosure-body { padding: 22px; border-top: 1px solid var(--paper-line); }
+
+/* Keep equations and worksheet identifiers readable inside Arabic RTL pages. */
+html[dir="rtl"] .font-mono,
+html[dir="rtl"] .calculation,
+html[dir="rtl"] .inline-calculation,
+html[dir="rtl"] .word-expression,
+html[dir="rtl"] .worksheet-identity strong,
+html[dir="rtl"] .generated-number-line {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
 
 @media (max-width: 900px) {
   .worksheet-heading { grid-template-columns: 130px 1fr; }

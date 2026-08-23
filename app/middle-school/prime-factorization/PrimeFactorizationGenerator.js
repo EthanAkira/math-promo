@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
 import { findPrimeUnit, localizePrimeUnit, PRIME_UNITS } from './catalog';
 import { useLanguage } from '../../language';
+import { isNonKorean, tr } from '../../i18n';
 
 const PROBLEM_COUNT = 20;
 
@@ -69,7 +70,7 @@ function PowerText({ value }) {
 
 export default function PrimeFactorizationGenerator() {
   const { language } = useLanguage();
-  const en = language === 'en';
+  const foreign = isNonKorean(language);
   const [unitId, setUnitId] = useState(PRIME_UNITS[0].id);
   const [seed, setSeed] = useState('PREVIEW1');
   const [view, setView] = useState('problems');
@@ -114,25 +115,25 @@ export default function PrimeFactorizationGenerator() {
   const unitDescription = localizePrimeUnit(unit, language, 'description');
 
   return <div className="worksheet-app">
-    <section className="worksheet-controls no-print" aria-label={en ? 'Worksheet settings' : '문제지 설정'}>
-      <div><label htmlFor="prime-unit">{en ? 'Skill' : '문제 유형'}</label><select id="prime-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>{PRIME_UNITS.map((item) => <option key={item.id} value={item.id}>{localizePrimeUnit(item, language)}</option>)}</select><p>{unitDescription}</p></div>
-      <div className="control-actions"><button className="button button-secondary" onClick={() => window.print()}>{en ? 'Print / PDF' : '인쇄 / PDF'}</button><button className="button button-secondary" onClick={() => changeView(view === 'problems' ? 'answers' : 'problems')}>{view === 'problems' ? (en ? 'Answer key' : '답지 보기') : (en ? 'Worksheet' : '문제지 보기')}</button><button className="button button-primary" onClick={() => reset(createSeed())}>{en ? 'New worksheet' : '새 문제지'}</button></div>
+    <section className="worksheet-controls no-print" aria-label={tr(language, 'worksheetSettings')}>
+      <div><label htmlFor="prime-unit">{tr(language, 'skill')}</label><select id="prime-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>{PRIME_UNITS.map((item) => <option key={item.id} value={item.id}>{localizePrimeUnit(item, language)}</option>)}</select><p>{unitDescription}</p></div>
+      <div className="control-actions"><button className="button button-secondary" onClick={() => window.print()}>{tr(language, 'printPdf')}</button><button className="button button-secondary" onClick={() => changeView(view === 'problems' ? 'answers' : 'problems')}>{tr(language, view === 'problems' ? 'answerKey' : 'worksheet')}</button><button className="button button-primary" onClick={() => reset(createSeed())}>{tr(language, 'newWorksheet')}</button></div>
     </section>
 
     <div className={`worksheet-paper middle-worksheet ${view === 'answers' ? 'answer-sheet' : ''}`}>
-      <header className="worksheet-heading"><div className="worksheet-brand"><span className="brand-mark">{en ? 'DAILY' : '매일'}</span><strong>{en ? 'LEARNING LAB' : '배움 연구소'}</strong></div><div className="worksheet-title"><span>{en ? 'Middle School 1' : '중학교 1학년'}</span><h2>{unitLabel} {view === 'answers' ? (en ? 'Answer Key' : '정답지') : (en ? 'Worksheet' : '문제지')}</h2><p>{unitDescription}</p></div><div className="worksheet-identity"><div><span>{en ? 'Worksheet ID' : '문제지 번호'}</span><strong>{seed}</strong><small>{en ? 'Scan to reopen this worksheet.' : 'QR을 스캔하면 같은 문제를 다시 열 수 있어요.'}</small></div>{qrDataUrl ? <img src={qrDataUrl} alt={`Worksheet ${seed} QR code`} /> : null}</div></header>
-      <div className="student-row"><span>{en ? 'Name' : '이름'}</span><i /><span>{en ? 'Date' : '날짜'}</span><i /><span className="sheet-kind">{view === 'answers' ? (en ? 'Answers' : '정답') : (en ? '20 problems' : '20문제')}</span></div>
-      <section className="problem-grid word-problem-grid prime-problem-grid" aria-label={`${unitLabel} ${en ? 'problems' : '문제'}`}>
+      <header className="worksheet-heading"><div className="worksheet-brand"><span className="brand-mark">DAILY</span><strong>{tr(language, 'dailyLab')}</strong></div><div className="worksheet-title"><span>{tr(language, 'grade1Middle')}</span><h2>{unitLabel} {tr(language, view === 'answers' ? 'answerSheet' : 'worksheetWord')}</h2><p>{unitDescription}</p></div><div className="worksheet-identity"><div><span>{tr(language, 'worksheetId')}</span><strong>{seed}</strong><small>{tr(language, 'scanQr')}</small></div>{qrDataUrl ? <img src={qrDataUrl} alt={`Worksheet ${seed} QR code`} /> : null}</div></header>
+      <div className="student-row"><span>{tr(language, 'name')}</span><i /><span>{tr(language, 'date')}</span><i /><span className="sheet-kind">{tr(language, view === 'answers' ? 'answers' : 'problems20')}</span></div>
+      <section className="problem-grid word-problem-grid prime-problem-grid" aria-label={`${unitLabel} ${foreign ? 'problems' : '문제'}`}>
         {problems.map((item) => {
           const value = answers[item.id] || '';
           const isCorrect = normalizeAnswer(value) === normalizeAnswer(item.answer);
           const selectedChoice = item.choices?.find((choice) => choice.value === item.answer);
-          return <article className="vertical-problem word-problem prime-problem" key={item.id}><span className="problem-number">{item.id}</span><div className="word-calculation"><p>{en && item.promptEn ? item.promptEn : item.prompt}</p><strong className="word-expression font-mono"><PowerText value={item.expression} /></strong>{item.choices ? <div className="choice-answer">{view === 'answers' ? <strong>{selectedChoice.value}. {en ? selectedChoice.labelEn : selectedChoice.label}</strong> : item.choices.map((choice) => <button type="button" key={choice.value} className={`${value === choice.value ? 'selected' : ''} ${checked && value === choice.value ? (isCorrect ? 'correct' : 'wrong') : ''}`} onClick={() => changeAnswer(item.id, choice.value)} aria-pressed={value === choice.value}><span>{choice.value}</span>{en ? choice.labelEn : choice.label}</button>)}</div> : <div className="word-answer"><span>{en ? 'Answer' : '답'}</span><span className="inline-answer">{view === 'answers' ? <strong><PowerText value={item.answer} /></strong> : <><input aria-label={en ? `Answer ${item.id}` : `${item.id}번 답`} value={value} onChange={(event) => changeAnswer(item.id, event.target.value)} className={checked && value ? (isCorrect ? 'correct' : 'wrong') : ''} /><span className="print-answer-space" aria-hidden="true" /></>}</span>{item.answerSuffix ? <em>{item.answerSuffix}</em> : null}</div>}</div>{checked && view === 'problems' && value ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{isCorrect ? (en ? 'Correct' : '맞았어요') : (en ? 'Try again' : '다시 풀기')}</span> : null}</article>;
+          return <article className="vertical-problem word-problem prime-problem" key={item.id}><span className="problem-number">{item.id}</span><div className="word-calculation"><p>{foreign && item.promptEn ? item.promptEn : item.prompt}</p><strong className="word-expression font-mono"><PowerText value={item.expression} /></strong>{item.choices ? <div className="choice-answer">{view === 'answers' ? <strong>{selectedChoice.value}. {foreign ? selectedChoice.labelEn : selectedChoice.label}</strong> : item.choices.map((choice) => <button type="button" key={choice.value} className={`${value === choice.value ? 'selected' : ''} ${checked && value === choice.value ? (isCorrect ? 'correct' : 'wrong') : ''}`} onClick={() => changeAnswer(item.id, choice.value)} aria-pressed={value === choice.value}><span>{choice.value}</span>{foreign ? choice.labelEn : choice.label}</button>)}</div> : <div className="word-answer"><span>{tr(language, 'answer')}</span><span className="inline-answer">{view === 'answers' ? <strong><PowerText value={item.answer} /></strong> : <><input aria-label={`${tr(language, 'answer')} ${item.id}`} value={value} onChange={(event) => changeAnswer(item.id, event.target.value)} className={checked && value ? (isCorrect ? 'correct' : 'wrong') : ''} /><span className="print-answer-space" aria-hidden="true" /></>}</span>{item.answerSuffix ? <em>{item.answerSuffix}</em> : null}</div>}</div>{checked && view === 'problems' && value ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{tr(language, isCorrect ? 'correct' : 'tryAgain')}</span> : null}</article>;
         })}
       </section>
-      <footer className="worksheet-footer"><span>{en ? 'Daily Learning Lab' : '매일 배움 연구소'}</span><span>{seed} · {en ? 'Middle School 1' : '중1'} · {unitLabel}</span></footer>
+      <footer className="worksheet-footer"><span>{tr(language, 'dailyLab')}</span><span>{seed} · {tr(language, 'grade1Short')} · {unitLabel}</span></footer>
     </div>
 
-    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{en ? 'Solve directly on a tablet' : '태블릿으로 바로 풀기'}</strong><p>{en ? 'Use ^ for exponents, for example 2^3 x 5.' : '거듭제곱은 2^3 × 5처럼 입력하세요. 곱셈은 ×, x, * 모두 사용할 수 있습니다.'}</p></div><button className="button button-primary" onClick={() => setChecked(true)}>{en ? 'Check answers' : '채점하기'}</button>{checked ? <strong className="score">{en ? `${correctCount} of 20 correct` : `20문제 중 ${correctCount}문제 정답`}</strong> : null}</section> : null}
+    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Use ^ for exponents, for example 2^3 × 5.' : '거듭제곱은 2^3 × 5처럼 입력하세요. 곱셈은 ×, x, * 모두 사용할 수 있습니다.'}</p></div><button className="button button-primary" onClick={() => setChecked(true)}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
   </div>;
 }

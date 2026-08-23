@@ -132,6 +132,6 @@ export function findPrimeUnit(unitId) {
 }
 
 export function localizePrimeUnit(unit, language, field = 'label') {
-  if (language !== 'en') return unit[field];
+  if (language === 'ko') return unit[field];
   return unit.en[field === 'label' ? 0 : 1];
 }

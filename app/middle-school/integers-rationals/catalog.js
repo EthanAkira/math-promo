@@ -62,14 +62,14 @@ function mixedNumberList(random) {
 function positiveNegative(random) {
   const amount = randomInt(random, 2, 50);
   const scenarios = [
-    [`영상 ${amount}℃`, amount, '℃'], [`영하 ${amount}℃`, -amount, '℃'],
-    [`지상 ${amount}층`, amount, '층'], [`지하 ${amount}층`, -amount, '층'],
-    [`${amount * 1000}원 이익`, amount * 1000, '원'], [`${amount * 1000}원 손해`, -amount * 1000, '원'],
-    [`${amount}m 상승`, amount, 'm'], [`${amount}m 하강`, -amount, 'm'],
-    [`해발 ${amount}m`, amount, 'm'], [`해수면 아래 ${amount}m`, -amount, 'm'],
+    [`영상 ${amount}℃`, `${amount}°C above zero`, amount, '℃'], [`영하 ${amount}℃`, `${amount}°C below zero`, -amount, '℃'],
+    [`지상 ${amount}층`, `floor ${amount} above ground`, amount, '층'], [`지하 ${amount}층`, `floor ${amount} below ground`, -amount, '층'],
+    [`${amount * 1000}원 이익`, `a profit of ${amount * 1000} won`, amount * 1000, '원'], [`${amount * 1000}원 손해`, `a loss of ${amount * 1000} won`, -amount * 1000, '원'],
+    [`${amount}m 상승`, `a rise of ${amount} m`, amount, 'm'], [`${amount}m 하강`, `a fall of ${amount} m`, -amount, 'm'],
+    [`해발 ${amount}m`, `${amount} m above sea level`, amount, 'm'], [`해수면 아래 ${amount}m`, `${amount} m below sea level`, -amount, 'm'],
   ];
-  const [situation, value, suffix] = pick(random, scenarios);
-  return problem('다음 상황을 + 또는 − 기호를 사용하여 나타내세요.', situation, value > 0 ? `+${value}` : value, suffix);
+  const [situation, expressionEn, value, suffix] = pick(random, scenarios);
+  return problem('다음 상황을 + 또는 − 기호를 사용하여 나타내세요.', situation, value > 0 ? `+${value}` : value, suffix, { promptEn: 'Represent the situation using a + or − sign.', expressionEn });
 }
 
 function integerClassification(random) {
@@ -80,9 +80,10 @@ function integerClassification(random) {
     ['음의 정수를 모두 쓰세요.', items.filter((item) => item.integer && item.value < 0)],
     ['정수를 모두 쓰세요.', items.filter((item) => item.integer)],
   ];
-  if (mode < 3) return problem(questions[mode][0], items.map((item) => item.text).join(', '), questions[mode][1].map((item) => item.text).join(', '));
-  if (mode === 3) return problem('자연수의 개수를 구하세요.', items.map((item) => item.text).join(', '), items.filter((item) => item.natural).length, '개');
-  return problem('자연수가 아닌 정수의 개수를 구하세요.', items.map((item) => item.text).join(', '), items.filter((item) => item.integer && !item.natural).length, '개');
+  const promptsEn = ['List all positive integers.', 'List all negative integers.', 'List all integers.'];
+  if (mode < 3) return problem(questions[mode][0], items.map((item) => item.text).join(', '), questions[mode][1].map((item) => item.text).join(', '), '', { promptEn: promptsEn[mode] });
+  if (mode === 3) return problem('자연수의 개수를 구하세요.', items.map((item) => item.text).join(', '), items.filter((item) => item.natural).length, '개', { promptEn: 'How many natural numbers are there?' });
+  return problem('자연수가 아닌 정수의 개수를 구하세요.', items.map((item) => item.text).join(', '), items.filter((item) => item.integer && !item.natural).length, '개', { promptEn: 'How many integers are not natural numbers?' });
 }
 
 function rationalClassification(random) {
@@ -90,7 +91,8 @@ function rationalClassification(random) {
   const mode = randomInt(random, 0, 2);
   const selected = mode === 0 ? items.filter((item) => item.value > 0) : mode === 1 ? items.filter((item) => item.value < 0) : items.filter((item) => !item.integer);
   const prompt = mode === 0 ? '양의 유리수를 모두 쓰세요.' : mode === 1 ? '음의 유리수를 모두 쓰세요.' : '정수가 아닌 유리수를 모두 쓰세요.';
-  return problem(prompt, items.map((item) => item.text).join(', '), selected.map((item) => item.text).join(', '));
+  const promptEn = mode === 0 ? 'List all positive rational numbers.' : mode === 1 ? 'List all negative rational numbers.' : 'List all rational numbers that are not integers.';
+  return problem(prompt, items.map((item) => item.text).join(', '), selected.map((item) => item.text).join(', '), '', { promptEn });
 }
 
 function numberLine(random) {
@@ -100,7 +102,7 @@ function numberLine(random) {
   const max = rational ? 3 : 6;
   const tick = randomInt(random, 1, Math.round((max - min) / step) - 1);
   const value = min + tick * step;
-  return problem('수직선 위의 점 A가 나타내는 수를 구하세요.', '', value, '', { kind: 'number-line', line: { min, max, step, value, label: 'A' } });
+  return problem('수직선 위의 점 A가 나타내는 수를 구하세요.', '', value, '', { promptEn: 'Find the number represented by point A on the number line.', kind: 'number-line', line: { min, max, step, value, label: 'A' } });
 }
 
 function randomRational(random) {
@@ -113,19 +115,19 @@ function absoluteValue(random) {
   if (mode === 0) {
     const item = randomRational(random);
     const absolute = item.text.replace(/^[-+]/, '');
-    return problem('다음 수의 절댓값을 구하세요.', item.text, absolute);
+    return problem('다음 수의 절댓값을 구하세요.', item.text, absolute, '', { promptEn: 'Find the absolute value of the following number.' });
   }
   if (mode === 1) {
     const item = random() < 0.5 ? integerItem(randomInt(random, 1, 12)) : fractionItem(randomInt(random, 1, 12), pick(random, [2, 3, 4, 5]));
     const absolute = item.text.replace(/^[-+]/, '');
-    return problem(`절댓값이 ${absolute}인 수를 모두 구하세요.`, '', `-${absolute}, +${absolute}`);
+    return problem(`절댓값이 ${absolute}인 수를 모두 구하세요.`, '', `-${absolute}, +${absolute}`, '', { promptEn: `List all numbers whose absolute value is ${absolute}.` });
   }
   const items = [];
   while (items.length < 5) {
     const item = randomRational(random);
     if (!items.some((current) => Math.abs(current.value) === Math.abs(item.value))) items.push(item);
   }
-  return problem('다음 수를 절댓값이 작은 수부터 차례대로 나열하세요.', items.map((item) => item.text).join(', '), [...items].sort((a, b) => Math.abs(a.value) - Math.abs(b.value)).map((item) => item.text).join(', '));
+  return problem('다음 수를 절댓값이 작은 수부터 차례대로 나열하세요.', items.map((item) => item.text).join(', '), [...items].sort((a, b) => Math.abs(a.value) - Math.abs(b.value)).map((item) => item.text).join(', '), '', { promptEn: 'Order the numbers from the smallest absolute value to the largest.' });
 }
 
 function comparison(random) {
@@ -133,26 +135,26 @@ function comparison(random) {
     let left;
     let right;
     do { left = randomRational(random); right = randomRational(random); } while (left.value === right.value);
-    return problem('□ 안에 > 또는 < 중 알맞은 기호를 쓰세요.', `${left.text} □ ${right.text}`, left.value > right.value ? '>' : '<');
+    return problem('□ 안에 > 또는 < 중 알맞은 기호를 쓰세요.', `${left.text} □ ${right.text}`, left.value > right.value ? '>' : '<', '', { promptEn: 'Write > or < in the box.' });
   }
   const items = [];
   while (items.length < 5) {
     const item = randomRational(random);
     if (!items.some((current) => current.value === item.value)) items.push(item);
   }
-  return problem('다음 수를 큰 수부터 차례대로 나열하세요.', items.map((item) => item.text).join(', '), [...items].sort((a, b) => b.value - a.value).map((item) => item.text).join(', '));
+  return problem('다음 수를 큰 수부터 차례대로 나열하세요.', items.map((item) => item.text).join(', '), [...items].sort((a, b) => b.value - a.value).map((item) => item.text).join(', '), '', { promptEn: 'Order the numbers from greatest to least.' });
 }
 
 function inequalityExpression(random) {
   const a = randomInt(random, -6, 4);
   const b = a + randomInt(random, 2, 7);
   const modes = [
-    [`x는 ${a} 이상이다.`, `x ≥ ${a}`], [`x는 ${b} 미만이다.`, `x < ${b}`],
-    [`x는 ${a} 초과 ${b} 이하이다.`, `${a} < x ≤ ${b}`], [`x는 ${a} 이상 ${b} 미만이다.`, `${a} ≤ x < ${b}`],
-    [`x는 ${a}보다 작지 않다.`, `x ≥ ${a}`], [`x는 ${b}보다 크지 않다.`, `x ≤ ${b}`],
+    [`x는 ${a} 이상이다.`, `x is at least ${a}.`, `x ≥ ${a}`], [`x는 ${b} 미만이다.`, `x is less than ${b}.`, `x < ${b}`],
+    [`x는 ${a} 초과 ${b} 이하이다.`, `x is greater than ${a} and at most ${b}.`, `${a} < x ≤ ${b}`], [`x는 ${a} 이상 ${b} 미만이다.`, `x is at least ${a} and less than ${b}.`, `${a} ≤ x < ${b}`],
+    [`x는 ${a}보다 작지 않다.`, `x is not less than ${a}.`, `x ≥ ${a}`], [`x는 ${b}보다 크지 않다.`, `x is not greater than ${b}.`, `x ≤ ${b}`],
   ];
-  const [prompt, answer] = pick(random, modes);
-  return problem('다음 문장을 부등호를 사용하여 나타내세요.', prompt, answer);
+  const [prompt, expressionEn, answer] = pick(random, modes);
+  return problem('다음 문장을 부등호를 사용하여 나타내세요.', prompt, answer, '', { promptEn: 'Write the statement using inequality symbols.', expressionEn });
 }
 
 function integerSolutions(random) {
@@ -166,7 +168,7 @@ function integerSolutions(random) {
   for (let value = lower; value <= upper; value += 1) {
     if ((includeLower || value > lower) && (includeUpper || value < upper)) values.push(value);
   }
-  return problem('다음 조건을 만족하는 정수를 모두 구하세요.', `${lower} ${leftSymbol} x ${rightSymbol} ${upper}`, values.join(', '));
+  return problem('다음 조건을 만족하는 정수를 모두 구하세요.', `${lower} ${leftSymbol} x ${rightSymbol} ${upper}`, values.join(', '), '', { promptEn: 'List all integers that satisfy the condition.' });
 }
 
 const mixedGenerators = [positiveNegative, integerClassification, rationalClassification, numberLine, absoluteValue, comparison, inequalityExpression, integerSolutions];
@@ -188,6 +190,6 @@ export function findIntegerRationalUnit(unitId) {
 }
 
 export function localizeIntegerRationalUnit(unit, language, field = 'label') {
-  if (language !== 'en') return unit[field];
+  if (language === 'ko') return unit[field];
   return unit.en[field === 'label' ? 0 : 1];
 }

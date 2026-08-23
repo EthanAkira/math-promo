@@ -449,11 +449,11 @@ const ENGLISH = {
 };
 
 export function localizeGrade(grade, language) {
-  return language === 'en' ? ENGLISH.grades[grade.id] : grade.label;
+  return language !== 'ko' ? ENGLISH.grades[grade.id] : grade.label;
 }
 
 export function localizeUnit(unit, language, field = 'label') {
-  if (language !== 'en') return unit[field];
+  if (language === 'ko') return unit[field];
   const translated = ENGLISH.units[unit.id];
   return translated ? translated[field === 'label' ? 0 : 1] : unit[field];
 }
