@@ -70,15 +70,18 @@ const messages = {
 };
 
 const supplementalMessages = {
-  fr: { topicRationalOps: 'Opérations sur les nombres rationnels' },
-  es: { topicRationalOps: 'Operaciones con números racionales' },
-  ja: { topicRationalOps: '有理数の四則計算' },
-  ru: { topicRationalOps: 'Действия с рациональными числами' },
-  ar: { topicRationalOps: 'عمليات الأعداد النسبية' },
-  pt: { topicRationalOps: 'Operações com números racionais' },
-  hi: { topicRationalOps: 'परिमेय संख्याओं पर संक्रियाएँ' },
-  vi: { topicRationalOps: 'Phép tính với số hữu tỉ' },
-  id: { topicRationalOps: 'Operasi bilangan rasional' },
+  ko: { topicAlgebra: '문자와 식', algebraTitle: '중등 문자와 식·일차방정식 문제 생성기', algebraCrumb: '문자와 식·일차방정식' },
+  en: { topicAlgebra: 'Algebraic Expressions', algebraTitle: 'Algebraic Expressions & Linear Equations Generator', algebraCrumb: 'Expressions & Linear Equations' },
+  'zh-CN': { topicAlgebra: '代数式', algebraTitle: '代数式与一元一次方程练习生成器', algebraCrumb: '代数式与一元一次方程' },
+  fr: { topicRationalOps: 'Opérations sur les nombres rationnels', topicAlgebra: 'Calcul littéral', algebraTitle: 'Générateur de calcul littéral et d’équations', algebraCrumb: 'Calcul littéral et équations' },
+  es: { topicRationalOps: 'Operaciones con números racionales', topicAlgebra: 'Expresiones algebraicas', algebraTitle: 'Generador de expresiones y ecuaciones lineales', algebraCrumb: 'Expresiones y ecuaciones lineales' },
+  ja: { topicRationalOps: '有理数の四則計算', topicAlgebra: '文字式', algebraTitle: '文字式・一次方程式プリント生成', algebraCrumb: '文字式と一次方程式' },
+  ru: { topicRationalOps: 'Действия с рациональными числами', topicAlgebra: 'Алгебраические выражения', algebraTitle: 'Генератор выражений и линейных уравнений', algebraCrumb: 'Выражения и линейные уравнения' },
+  ar: { topicRationalOps: 'عمليات الأعداد النسبية', topicAlgebra: 'العبارات الجبرية', algebraTitle: 'مولّد العبارات الجبرية والمعادلات الخطية', algebraCrumb: 'العبارات والمعادلات الخطية' },
+  pt: { topicRationalOps: 'Operações com números racionais', topicAlgebra: 'Expressões algébricas', algebraTitle: 'Gerador de expressões e equações lineares', algebraCrumb: 'Expressões e equações lineares' },
+  hi: { topicRationalOps: 'परिमेय संख्याओं पर संक्रियाएँ', topicAlgebra: 'बीजीय व्यंजक', algebraTitle: 'बीजीय व्यंजक और रैखिक समीकरण जनरेटर', algebraCrumb: 'व्यंजक और रैखिक समीकरण' },
+  vi: { topicRationalOps: 'Phép tính với số hữu tỉ', topicAlgebra: 'Biểu thức đại số', algebraTitle: 'Trình tạo biểu thức và phương trình bậc nhất', algebraCrumb: 'Biểu thức và phương trình bậc nhất' },
+  id: { topicRationalOps: 'Operasi bilangan rasional', topicAlgebra: 'Bentuk aljabar', algebraTitle: 'Pembuat bentuk aljabar dan persamaan linear', algebraCrumb: 'Bentuk aljabar dan persamaan linear' },
 };
 
 export function tr(language, key, vars = {}) {
