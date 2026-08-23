@@ -49,6 +49,11 @@ a {
   font-family: 'IBM Plex Mono', ui-monospace, monospace;
 }
 
+.site-header-inner { max-width: 1120px; margin: 0 auto; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.site-brand { color: var(--ink); text-decoration: none; font-size: clamp(24px,2.5vw,31px); font-weight: 700; line-height: 1.2; white-space: nowrap; }
+.site-brand > span { margin: 0 .2em; color: var(--ink-soft); font-weight: 400; }
+.site-brand > strong { color: var(--red-pen); font: inherit; }
+
 /* Focus visibility */
 button:focus-visible,
 a:focus-visible,
@@ -114,6 +119,14 @@ select:focus-visible {
 .inline-answer input.correct { color: var(--chalk-green); background: #eff8f4; border-color: var(--chalk-green); }
 .inline-answer input.wrong { color: var(--red-pen); background: #fff3f5; border-color: var(--red-pen); }
 .inline-answer strong { display: block; min-height: 38px; color: var(--red-pen); text-align: center; }
+.word-problem-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 18px; }
+.word-problem { justify-content: flex-start; min-height: 210px; padding: 48px 16px 18px 42px; border-bottom: 1px dashed #c7cdd2; }
+.word-calculation { width: 100%; }
+.word-calculation p { min-height: 68px; margin: 0; font-size: 15px; line-height: 1.65; word-break: keep-all; }
+.word-expression { display: block; margin: 8px 0 12px; font-size: 20px; text-align: center; }
+.word-answer { display: grid; grid-template-columns: auto minmax(100px,1fr) auto; align-items: end; gap: 8px; margin-top: 13px; font-size: 13px; font-weight: 700; }
+.word-answer .inline-answer { min-width: 100px; }
+.word-answer em { padding-bottom: 5px; font-style: normal; }
 .mixed-fraction { display: inline-flex; align-items: center; gap: .16em; margin: 0 .08em; vertical-align: middle; white-space: nowrap; }
 .whole-number { display: inline-block; }
 .stacked-fraction { display: inline-grid; grid-template-rows: 1fr 1fr; align-items: center; min-width: 1.35em; line-height: 1; text-align: center; vertical-align: middle; }
@@ -128,6 +141,17 @@ select:focus-visible {
 .grading-panel p { margin: 2px 0 0; color: var(--ink-soft); font-size: 13px; }
 .grading-panel .score { color: var(--red-pen); white-space: nowrap; }
 
+.social-card { display: grid; grid-template-columns: minmax(0,1fr) 210px; align-items: center; gap: 28px; padding: 26px 28px; overflow: hidden; background: var(--card-bg); border: 1px solid var(--paper-line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.social-card-copy { min-width: 0; }
+.social-qr-link { display: block; overflow: hidden; border: 1px solid var(--paper-line); border-radius: 14px; background: #fff; }
+.social-qr { display: block; width: 100%; height: auto; aspect-ratio: 1320 / 1152; object-fit: cover; }
+.profile-disclosure { overflow: hidden; background: var(--card-bg); border: 1px solid var(--paper-line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.profile-disclosure > summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 22px; color: var(--ink); cursor: pointer; font-weight: 800; list-style: none; }
+.profile-disclosure > summary::-webkit-details-marker { display: none; }
+.profile-disclosure > summary::after { content: '+'; display: grid; place-items: center; flex: 0 0 28px; width: 28px; height: 28px; color: #fff; background: var(--chalk-green); border-radius: 50%; font-size: 20px; line-height: 1; }
+.profile-disclosure[open] > summary::after { content: '−'; }
+.profile-disclosure-body { padding: 22px; border-top: 1px solid var(--paper-line); }
+
 @media (max-width: 900px) {
   .worksheet-heading { grid-template-columns: 130px 1fr; }
   .worksheet-identity { grid-column: 1 / -1; border-top: 1px solid var(--ink); }
@@ -137,6 +161,10 @@ select:focus-visible {
 }
 
 @media (max-width: 640px) {
+  .site-header-inner { align-items: flex-start; flex-direction: column; gap: 10px; padding-block: 13px; }
+  .site-brand { font-size: clamp(20px,5.7vw,24px); white-space: normal; }
+  .social-card { grid-template-columns: 1fr; padding: 22px; text-align: center; }
+  .social-qr-link { width: min(100%,260px); margin: 0 auto; }
   .worksheet-page { padding: 24px 10px 0; }
   .worksheet-controls { align-items: stretch; flex-direction: column; }
   .worksheet-controls select { width: 100%; }
@@ -149,6 +177,8 @@ select:focus-visible {
   .student-row i { width: 60px; }
   .problem-grid { gap: 0 8px; padding-inline: 0; }
   .vertical-problem { min-height: 180px; padding-inline: 8px; }
+  .word-problem-grid { grid-template-columns: 1fr; }
+  .word-problem { min-height: 190px; padding: 46px 10px 18px 40px; }
   .calculation { width: 96px; font-size: 28px; }
   .grading-panel { align-items: stretch; flex-direction: column; }
 }
@@ -177,6 +207,11 @@ select:focus-visible {
   .stacked-fraction { min-width: 1.45em; }
   .inline-calculation > span:first-child { min-height: 8mm; }
   .inline-answer { min-height: 8mm; }
+  .word-problem-grid { grid-template-columns: repeat(2,1fr); gap: 0 4mm; }
+  .word-problem { min-height: 59mm; padding: 10mm 2mm 3mm 9mm; }
+  .word-calculation p { min-height: 18mm; font-size: 10.5px; line-height: 1.5; }
+  .word-expression { margin: 1mm 0 2mm; font-size: 14px; }
+  .word-answer { margin-top: 2mm; font-size: 10px; }
   .print-answer-space { display: block; height: 8mm; }
   .worksheet-footer { margin-top: 1mm; }
   .result-mark { display: none; }

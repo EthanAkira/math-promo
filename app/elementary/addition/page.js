@@ -2,7 +2,7 @@ import { SiteHeader, TutorBanner, SiteFooter } from '../../components';
 import Generator from './Generator';
 
 export const metadata = {
-  title: '초등 덧셈 문제 무료 생성 | 매일 수학 연습장',
+  title: '초등 덧셈 문제 무료 생성 | 매일 배움 연구소',
   description:
     '초등학교 1학년부터 4학년까지 난이도별 덧셈 문제를 무료로 자동 생성합니다. 회원가입 없이 바로 풀고 채점해보세요.',
 };

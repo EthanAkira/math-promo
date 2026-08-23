@@ -1,4 +1,4 @@
-# 매일 수학 연습장
+# 매일 배움 연구소 | Daily Learning Lab
 
 초중고 연산 문제를 자동 생성해 보여주고, 과외 홍보로 연결하는 사이트의 첫 버전입니다.
 지금은 **초등 덧셈** 한 페이지만 완성되어 있고, 나머지 학년/주제는 홈페이지에 "준비 중"으로 표시되어 있습니다.
@@ -39,10 +39,30 @@ app/
 그다음 `app/page.js`의 `gradeGroups` 배열에서 해당 주제의 `ready`를
 `true`로, `href`를 새 경로로 바꿔주면 홈페이지에 바로 노출됩니다.
 
-## 배포 (Vercel)
+## 배포 (Cloudflare Pages Free)
 
-1. 이 폴더를 GitHub 저장소로 push
-2. https://vercel.com 에서 GitHub 저장소 연결 → Import
-3. 별도 설정 없이 "Deploy" 클릭하면 끝 (Next.js는 자동 인식됩니다)
-4. 이후 GitHub에 push할 때마다 자동으로 재배포됩니다
-5. Vercel 프로젝트 설정 → Domains에서 구매한 도메인 연결
+이 프로젝트는 `next.config.mjs`의 `output: 'export'` 설정으로 정적 사이트를
+`out/` 폴더에 만듭니다. 문제 생성, 채점, QR 생성은 브라우저에서 실행됩니다.
+
+### GitHub 저장소 연결 방식
+
+1. 이 폴더를 GitHub 저장소에 push
+2. Cloudflare 대시보드 → Workers & Pages → Create application → Pages
+3. GitHub 저장소 연결
+4. Framework preset은 `Next.js (Static HTML Export)` 선택
+5. Build command는 `npm run build`, Build output directory는 `out` 입력
+6. Deploy 클릭
+
+이후 GitHub에 push할 때마다 자동으로 재배포됩니다.
+
+### 명령줄 직접 배포 방식
+
+Cloudflare 계정 로그인 후 아래 명령을 실행합니다.
+
+```bash
+npm run build
+npm run deploy:cloudflare
+```
+
+첫 실행에서 Wrangler가 설치되어 있지 않으면 `npm install -D wrangler`를 먼저
+실행합니다.

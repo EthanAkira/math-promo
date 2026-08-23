@@ -5,12 +5,16 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "deploy:cloudflare": "wrangler pages deploy out --project-name math-promo"
   },
   "dependencies": {
     "next": "14.2.35",
     "qrcode": "^1.5.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "wrangler": "^4.125.0"
   }
 }

@@ -164,7 +164,7 @@ export default function Generator() {
 
       <div className={`worksheet-paper ${view === 'answers' ? 'answer-sheet' : ''}`}>
         <header className="worksheet-heading">
-          <div className="worksheet-brand"><span className="brand-mark">매일</span><strong>수학 연습장</strong></div>
+          <div className="worksheet-brand"><span className="brand-mark">매일</span><strong>배움 연구소</strong></div>
           <div className="worksheet-title">
             <span>{level.label}</span><h2>{view === 'answers' ? '덧셈 정답지' : '덧셈 문제지'}</h2><p>{level.description}</p>
           </div>
@@ -201,7 +201,7 @@ export default function Generator() {
           })}
         </section>
 
-        <footer className="worksheet-footer"><span>매일 수학 연습장</span><span>{seed} · {view === 'answers' ? '정답지' : '문제지'}</span></footer>
+        <footer className="worksheet-footer"><span>매일 배움 연구소</span><span>{seed} · {view === 'answers' ? '정답지' : '문제지'}</span></footer>
       </div>
 
       {view === 'problems' ? <section className="grading-panel no-print">

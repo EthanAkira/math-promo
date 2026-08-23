@@ -123,6 +123,134 @@ function ratioPractice(random) {
   return inline(`${a} : ${b} → 가장 간단한 비`, `${a / common} : ${b / common}`);
 }
 
+function proportionQuestion(prompt, expression, answer, answerSuffix = '', promptEn = '', expressionEn = '') {
+  return { kind: 'word', prompt, expression, answer: String(answer), answerSuffix, promptEn, expressionEn };
+}
+
+const SIMPLE_RATIOS = [[2, 3], [2, 5], [3, 4], [3, 5], [3, 7], [4, 5], [4, 7], [5, 6], [5, 8], [7, 9]];
+
+function proportionBasic(random) {
+  const [a, b] = pick(random, SIMPLE_RATIOS);
+  const scale = randomInt(random, 2, 12);
+  const mode = randomInt(random, 0, 3);
+  const expressions = [
+    [`${a} : ${b} = ${a * scale} : □`, b * scale],
+    [`${a} : ${b} = □ : ${b * scale}`, a * scale],
+    [`□ : ${b} = ${a * scale} : ${b * scale}`, a],
+    [`${a} : □ = ${a * scale} : ${b * scale}`, b],
+  ];
+  return proportionQuestion('다음 비례식에서 □에 알맞은 수를 구하세요.', expressions[mode][0], expressions[mode][1], '', 'Find the number that belongs in □.', expressions[mode][0]);
+}
+
+function proportionStory(random) {
+  const mode = randomInt(random, 0, 4);
+  if (mode === 0) {
+    const concentrate = randomInt(random, 2, 5);
+    const water = randomInt(random, concentrate + 1, 8);
+    const scale = randomInt(random, 2, 6);
+    return proportionQuestion(`오렌지 원액과 물을 ${concentrate}:${water}의 비율로 섞습니다. 원액을 ${concentrate * scale}컵 넣었다면 물은 몇 컵 넣어야 할까요?`, '', water * scale, '컵');
+  }
+  if (mode === 1) {
+    const mapCm = randomInt(random, 2, 5);
+    const realKm = mapCm * randomInt(random, 3, 7);
+    const scale = randomInt(random, 2, 5);
+    return proportionQuestion(`지도에서 ${mapCm}cm가 실제 거리 ${realKm}km를 나타냅니다. 지도에서 두 곳 사이가 ${mapCm * scale}cm라면 실제 거리는 몇 km일까요?`, '', realKm * scale, 'km');
+  }
+  if (mode === 2) {
+    const count = randomInt(random, 2, 6);
+    const unitPrice = randomInt(random, 5, 20) * 100;
+    const wanted = count * randomInt(random, 2, 5);
+    return proportionQuestion(`사과 ${count}개의 가격이 ${(count * unitPrice).toLocaleString('ko-KR')}원입니다. 같은 가격으로 사과 ${wanted}개를 산다면 얼마일까요?`, '', wanted * unitPrice, '원');
+  }
+  if (mode === 3) {
+    const cookies = pick(random, [6, 8, 10, 12]);
+    const gramsEach = pick(random, [10, 15, 20, 25]);
+    const wanted = cookies * randomInt(random, 2, 4);
+    return proportionQuestion(`쿠키 ${cookies}개를 만드는 데 밀가루 ${cookies * gramsEach}g이 필요합니다. 같은 크기의 쿠키 ${wanted}개를 만들려면 밀가루가 몇 g 필요할까요?`, '', wanted * gramsEach, 'g');
+  }
+  const hours = randomInt(random, 2, 4);
+  const speed = randomInt(random, 4, 10) * 10;
+  const wantedHours = hours + randomInt(random, 2, 5);
+  return proportionQuestion(`자동차가 일정한 빠르기로 ${hours}시간 동안 ${hours * speed}km를 갔습니다. 같은 빠르기로 ${wantedHours}시간 동안 간다면 몇 km를 갈까요?`, '', wantedHours * speed, 'km');
+}
+
+function proportionalDistributionBasic(random) {
+  const threeParts = random() < 0.35;
+  const ratios = threeParts ? pick(random, [[2, 3, 5], [3, 4, 5], [4, 5, 6], [2, 4, 7]]) : pick(random, SIMPLE_RATIOS);
+  const unit = randomInt(random, 4, 20);
+  const total = ratios.reduce((sum, value) => sum + value, 0) * unit;
+  const shares = ratios.map((value) => value * unit);
+  if (!threeParts && random() < 0.3) {
+    return proportionQuestion(`${total}을 ${ratios.join(':')}로 비례배분했을 때 큰 수는 얼마인가요?`, '', Math.max(...shares));
+  }
+  return proportionQuestion(`${total}을 ${ratios.join(':')}로 비례배분하세요.`, '', shares.join(', '), '', `Divide ${total} in the ratio ${ratios.join(':')}.`);
+}
+
+function proportionalDistributionStory(random) {
+  const mode = randomInt(random, 0, 4);
+  if (mode === 0) {
+    const ratios = pick(random, [[4, 3], [5, 3], [5, 4]]);
+    const unit = randomInt(random, 4, 12) * 1000;
+    const total = (ratios[0] + ratios[1]) * unit;
+    return proportionQuestion(`형과 동생이 ${total.toLocaleString('ko-KR')}원을 ${ratios.join(':')}의 비율로 나누어 가지려고 합니다. 형과 동생은 각각 얼마씩 가지게 될까요?`, '', `${ratios[0] * unit}, ${ratios[1] * unit}`, '원');
+  }
+  if (mode === 1) {
+    const ratios = pick(random, [[5, 3], [4, 5], [7, 2]]);
+    const unit = randomInt(random, 3, 10);
+    const total = (ratios[0] + ratios[1]) * unit;
+    return proportionQuestion(`사탕 ${total}개를 민수와 지수에게 ${ratios.join(':')}의 비율로 나누어 주려고 합니다. 두 사람은 각각 몇 개씩 받게 될까요?`, '', `${ratios[0] * unit}, ${ratios[1] * unit}`, '개');
+  }
+  if (mode === 2) {
+    const ratios = pick(random, [[2, 3, 4], [2, 3, 5], [3, 4, 5]]);
+    const unit = randomInt(random, 2, 6) * 10000;
+    const total = ratios.reduce((sum, value) => sum + value, 0) * unit;
+    return proportionQuestion(`세 사람이 받은 상금 ${total.toLocaleString('ko-KR')}원을 기여도에 따라 ${ratios.join(':')}의 비율로 나누려고 합니다. 차례대로 얼마씩 받게 될까요?`, '', ratios.map((value) => value * unit).join(', '), '원');
+  }
+  if (mode === 3) {
+    const ratios = pick(random, [[3, 2, 5], [2, 3, 5], [4, 3, 3]]);
+    const unit = randomInt(random, 5, 12);
+    const total = ratios.reduce((sum, value) => sum + value, 0) * unit;
+    return proportionQuestion(`빨간색, 파란색, 노란색 색종이를 ${ratios.join(':')}의 비율로 준비했습니다. 전체가 ${total}장이라면 각 색깔은 몇 장일까요?`, '', ratios.map((value) => value * unit).join(', '), '장');
+  }
+  const ratios = pick(random, [[3, 4], [2, 5], [5, 7]]);
+  const unit = randomInt(random, 5, 15);
+  const total = (ratios[0] + ratios[1]) * unit;
+  return proportionQuestion(`길이가 ${total}m인 길을 두 구간으로 나누려고 합니다. 두 구간 길이의 비가 ${ratios.join(':')}라면 각각 몇 m일까요?`, '', `${ratios[0] * unit}, ${ratios[1] * unit}`, 'm');
+}
+
+function proportionApplication(random) {
+  const mode = randomInt(random, 0, 4);
+  if (mode === 0) {
+    const ratios = pick(random, SIMPLE_RATIOS);
+    const unit = randomInt(random, 4, 12);
+    const total = (ratios[0] + ratios[1]) * unit;
+    return proportionQuestion(`두 수의 비가 ${ratios.join(':')}이고 두 수의 합이 ${total}입니다. 두 수를 각각 구하세요.`, '', `${ratios[0] * unit}, ${ratios[1] * unit}`);
+  }
+  if (mode === 1) {
+    const ratios = pick(random, SIMPLE_RATIOS.filter(([a, b]) => b - a >= 2));
+    const unit = randomInt(random, 3, 10);
+    const difference = (ratios[1] - ratios[0]) * unit;
+    return proportionQuestion(`두 수의 비가 ${ratios.join(':')}이고 두 수의 차가 ${difference}입니다. 두 수를 각각 구하세요.`, '', `${ratios[0] * unit}, ${ratios[1] * unit}`);
+  }
+  if (mode === 2) {
+    const ratios = pick(random, [[2, 3, 5], [3, 4, 6], [2, 5, 7]]);
+    const unit = randomInt(random, 4, 10);
+    const known = ratios[2] * unit;
+    const total = ratios.reduce((sum, value) => sum + value, 0) * unit;
+    return proportionQuestion(`A, B, C 세 사람이 구슬을 ${ratios.join(':')}의 비율로 가지고 있습니다. C의 구슬이 ${known}개라면 세 사람의 구슬은 모두 몇 개일까요?`, '', total, '개');
+  }
+  if (mode === 3) {
+    const ratios = pick(random, [[4, 5], [3, 5], [5, 7]]);
+    const unit = randomInt(random, 3, 7);
+    const total = (ratios[0] + ratios[1]) * unit;
+    return proportionQuestion(`어떤 반의 남학생 수와 여학생 수의 비가 ${ratios.join(':')}입니다. 학생이 모두 ${total}명이라면 남학생과 여학생은 각각 몇 명일까요?`, '', `${ratios[0] * unit}, ${ratios[1] * unit}`, '명');
+  }
+  const ratios = pick(random, SIMPLE_RATIOS.filter(([a, b]) => b > a));
+  const unit = randomInt(random, 3, 9);
+  const difference = (ratios[1] - ratios[0]) * unit;
+  return proportionQuestion(`빨간 구슬과 파란 구슬 수의 비가 ${ratios.join(':')}입니다. 파란 구슬이 빨간 구슬보다 ${difference}개 더 많다면 각각 몇 개일까요?`, '', `${ratios[0] * unit}, ${ratios[1] * unit}`, '개');
+}
+
 function oneDigitWithinNine(random) {
   if (random() < 0.5) {
     const a = randomInt(random, 1, 8);
@@ -299,7 +427,11 @@ export const GRADE_CATALOG = [
       { id: 'g6-ratio', label: '비와 비율', description: '비를 간단히 나타내고 분수·소수로 바꾸기', make: ratioPractice },
       { id: 'g6-fraction-divide', label: '분수의 나눗셈', description: '자연수와 분수를 포함한 분수 나눗셈', make: fractionDivide },
       { id: 'g6-decimal-divide', label: '소수의 나눗셈', description: '자릿수가 다른 소수끼리의 나눗셈', make: decimalDivide },
-      { id: 'g6-proportion', label: '비례식과 비례배분', description: '비를 가장 간단한 자연수의 비로 나타내기', make: ratioPractice },
+      { id: 'g6-proportion-basic', label: '비례식 기본형', description: '비례식의 빈칸에 알맞은 수 구하기', make: proportionBasic },
+      { id: 'g6-proportion-story', label: '비례식을 세우는 문장제', description: '생활 속 상황을 비례식으로 해결하기', make: proportionStory },
+      { id: 'g6-distribution-basic', label: '비례배분 기본형', description: '전체를 주어진 비로 나누기', make: proportionalDistributionBasic },
+      { id: 'g6-distribution-story', label: '비례배분 문장제', description: '생활 속 양을 주어진 비로 나누기', make: proportionalDistributionStory },
+      { id: 'g6-proportion-application', label: '비례식과 비례배분 응용', description: '합·차·일부의 양을 이용한 응용 문제', make: proportionApplication },
     ],
   },
 ];
@@ -312,7 +444,7 @@ const ENGLISH = {
     'g3-add-sub': ['3- and 4-digit operations', 'Large-number addition and subtraction'], 'g3-division-basic': ['Division basics', 'Exact division within multiplication facts'], 'g3-multiply-2x1': ['2-digit × 1-digit', 'Multiply a two-digit number'], 'g3-multiply-3x1': ['3-digit × 1-digit', 'Multiply a three-digit number'], 'g3-multiply-2x2': ['2-digit × 2-digit', 'Multiply two two-digit numbers'], 'g3-division-exact': ['2-digit ÷ 1-digit', 'Exact two-digit division'], 'g3-fractions': ['Fractions', 'Improper and mixed fractions; comparison'],
     'g4-large-multiply': ['Large-number multiplication', '2–4 digit numbers times 1–2 digit numbers'], 'g4-large-division': ['Large-number division', 'Divide 2–3 digit numbers'], 'g4-fraction-add-sub': ['Fraction addition & subtraction', 'Like denominators and mixed forms'], 'g4-decimal-add-sub': ['Decimal addition & subtraction', 'Tenths through thousandths'],
     'g5-mixed-natural': ['Mixed whole-number operations', 'Order of operations and parentheses'], 'g5-factors-multiples': ['Factors & multiples', 'GCF, LCM, factors and multiples'], 'g5-reduce-common-denominator': ['Simplifying fractions', 'Reduce and compare fractions'], 'g5-fraction-add-sub': ['Fraction addition & subtraction', 'Unlike denominators'], 'g5-fraction-multiply': ['Fraction multiplication', 'Multiply fractions and whole numbers'], 'g5-decimal-multiply': ['Decimal multiplication', 'Multiply decimals and whole numbers'],
-    'g6-fraction-divide-natural': ['Fraction ÷ whole number', 'Divide proper, improper and mixed fractions'], 'g6-decimal-divide-natural': ['Decimal ÷ whole number', 'Exact decimal division'], 'g6-ratio': ['Ratios and rates', 'Simplify ratios and convert forms'], 'g6-fraction-divide': ['Fraction division', 'Divide fractions and whole numbers'], 'g6-decimal-divide': ['Decimal division', 'Divide decimals with different place values'], 'g6-proportion': ['Proportions', 'Simplify and partition ratios'],
+    'g6-fraction-divide-natural': ['Fraction ÷ whole number', 'Divide proper, improper and mixed fractions'], 'g6-decimal-divide-natural': ['Decimal ÷ whole number', 'Exact decimal division'], 'g6-ratio': ['Ratios and rates', 'Simplify ratios and convert forms'], 'g6-fraction-divide': ['Fraction division', 'Divide fractions and whole numbers'], 'g6-decimal-divide': ['Decimal division', 'Divide decimals with different place values'], 'g6-proportion-basic': ['Basic proportions', 'Find the missing value in a proportion'], 'g6-proportion-story': ['Proportion word problems', 'Solve everyday situations with proportions'], 'g6-distribution-basic': ['Basic proportional distribution', 'Divide a total in a given ratio'], 'g6-distribution-story': ['Distribution word problems', 'Share quantities in a given ratio'], 'g6-proportion-application': ['Proportion applications', 'Use sums, differences and known shares'],
   },
 };
 
