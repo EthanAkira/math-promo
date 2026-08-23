@@ -148,6 +148,28 @@ select:focus-visible {
 .generated-number-line path,.generated-number-line circle { fill: var(--ink); }
 .generated-number-line text { fill: var(--ink-soft); font: 10px 'IBM Plex Mono',monospace; text-anchor: middle; }
 .generated-number-line .point-label { fill: var(--red-pen); font-size: 13px; font-weight: 700; }
+.generated-coord-plane { display: block; width: 100%; max-width: 200px; height: auto; margin: 4px auto 8px; overflow: visible; }
+.generated-coord-plane .grid-line { stroke: var(--paper-line); stroke-width: 1; }
+.generated-coord-plane .axis-line { stroke: var(--ink); stroke-width: 1.4; }
+.generated-coord-plane path { fill: var(--ink); }
+.generated-coord-plane text { fill: var(--ink-soft); font: 9px 'IBM Plex Mono',monospace; }
+.generated-coord-plane .plane-point { fill: var(--ink); }
+.generated-coord-plane .plane-point.highlight { fill: var(--red-pen); }
+.generated-coord-plane .plane-label { fill: var(--ink); font-size: 11px; font-weight: 700; }
+.generated-coord-plane .plane-label.highlight { fill: var(--red-pen); }
+.generated-trip-graph { display: block; width: 100%; height: auto; margin: 4px 0 8px; overflow: visible; }
+.generated-trip-graph .axis-line { stroke: var(--ink); stroke-width: 1.4; }
+.generated-trip-graph .guide-line { stroke: var(--ink-soft); stroke-width: 1; stroke-dasharray: 3 3; }
+.generated-trip-graph .trip-line { stroke: var(--red-pen); stroke-width: 2; }
+.generated-trip-graph path { fill: var(--ink); }
+.generated-trip-graph text { fill: var(--ink-soft); font: 10px 'IBM Plex Mono',monospace; }
+.generated-proportion-graph { display: block; width: 100%; max-width: 180px; height: auto; margin: 4px auto 8px; overflow: visible; }
+.generated-proportion-graph .axis-line { stroke: var(--ink); stroke-width: 1.4; }
+.generated-proportion-graph .guide-line { stroke: var(--ink-soft); stroke-width: 1; stroke-dasharray: 3 3; }
+.generated-proportion-graph .proportion-curve { stroke: var(--red-pen); stroke-width: 2; }
+.generated-proportion-graph .proportion-point { fill: var(--ink); }
+.generated-proportion-graph path { fill: var(--ink); }
+.generated-proportion-graph text { fill: var(--ink-soft); font: 9px 'IBM Plex Mono',monospace; }
 .mixed-fraction { display: inline-flex; align-items: center; gap: .16em; margin: 0 .08em; vertical-align: middle; white-space: nowrap; }
 .whole-number { display: inline-block; }
 .stacked-fraction { display: inline-grid; grid-template-rows: 1fr 1fr; align-items: center; min-width: 1.35em; line-height: 1; text-align: center; vertical-align: middle; }
@@ -179,7 +201,10 @@ html[dir="rtl"] .calculation,
 html[dir="rtl"] .inline-calculation,
 html[dir="rtl"] .word-expression,
 html[dir="rtl"] .worksheet-identity strong,
-html[dir="rtl"] .generated-number-line {
+html[dir="rtl"] .generated-number-line,
+html[dir="rtl"] .generated-coord-plane,
+html[dir="rtl"] .generated-trip-graph,
+html[dir="rtl"] .generated-proportion-graph {
   direction: ltr;
   unicode-bidi: isolate;
 }

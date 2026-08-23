@@ -12,7 +12,7 @@ const groups = [
     ['topicGrade6', '/elementary/practice?grade=6&unit=g6-fraction-divide', true],
     ['topicGeometry', '#', false],
   ]},
-  { key: 'middle', topics: [['topicPrime', '/middle-school/prime-factorization', true], ['topicGcd', '/middle-school/gcd-lcm', true], ['topicInteger', '/middle-school/integers-rationals', true], ['topicRationalOps', '/middle-school/integers-rationals?unit=rational-operations-review', true], ['topicAlgebra', '/middle-school/algebra-basics.html?unit=expressions-review', true], ['topicEquation', '/middle-school/algebra-basics.html?unit=equations-review', true], ['topicFactoring', '#', false]] },
+  { key: 'middle', topics: [['topicPrime', '/middle-school/prime-factorization', true], ['topicGcd', '/middle-school/gcd-lcm', true], ['topicInteger', '/middle-school/integers-rationals', true], ['topicRationalOps', '/middle-school/integers-rationals?unit=rational-operations-review', true], ['topicAlgebra', '/middle-school/algebra-basics.html?unit=expressions-review', true], ['topicEquation', '/middle-school/algebra-basics.html?unit=equations-review', true], ['topicCoordinate', '/middle-school/coordinate-plane', true], ['topicProportion', '/middle-school/proportion', true], ['topicFactoring', '#', false]] },
   { key: 'high', topics: [['topicQuadratic', '#', false], ['topicSequences', '#', false], ['topicLogs', '#', false]] },
 ];
 
