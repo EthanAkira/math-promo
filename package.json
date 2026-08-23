@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "deploy:cloudflare": "wrangler pages deploy out --project-name math-promo"
+    "deploy:cloudflare": "wrangler pages deploy out --project-name math-promo --branch main"
   },
   "dependencies": {
     "next": "14.2.35",
