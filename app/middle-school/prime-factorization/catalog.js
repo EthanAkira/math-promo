@@ -56,7 +56,13 @@ function randomComposite(random, max = 500) {
 function primeComposite(random) {
   const prime = random() < 0.45;
   const value = prime ? pick(random, PRIMES) : randomComposite(random, 100);
-  return problem('다음 수가 소수인지 합성수인지 쓰세요.', value, prime ? '소수' : '합성수', '', 'Write whether the number is prime or composite.');
+  return {
+    ...problem('다음 수가 소수인지 합성수인지 고르세요.', value, prime ? '1' : '2', '', 'Choose whether the number is prime or composite.'),
+    choices: [
+      { value: '1', label: '소수', labelEn: 'Prime' },
+      { value: '2', label: '합성수', labelEn: 'Composite' },
+    ],
+  };
 }
 
 function powers(random) {
