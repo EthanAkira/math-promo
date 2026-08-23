@@ -11,7 +11,7 @@ const groups = [
     ['6학년 나눗셈·비율', 'Grade 6: Division & Ratios', '/elementary/practice?grade=6&unit=g6-fraction-divide', true],
     ['도형·측정', 'Geometry & Measurement', '#', false],
   ]},
-  { ko: '중등', en: 'Middle School', topics: [['소수와 소인수분해', 'Primes & Prime Factorization', '/middle-school/prime-factorization', true], ['최대공약수와 최소공배수', 'GCF & LCM', '/middle-school/gcd-lcm', true], ['정수와 유리수', 'Integers & Rational Numbers', '#', false], ['일차방정식', 'Linear Equations', '#', false], ['인수분해', 'Factoring', '#', false]] },
+  { ko: '중등', en: 'Middle School', topics: [['소수와 소인수분해', 'Primes & Prime Factorization', '/middle-school/prime-factorization', true], ['최대공약수와 최소공배수', 'GCF & LCM', '/middle-school/gcd-lcm', true], ['정수와 유리수', 'Integers & Rational Numbers', '/middle-school/integers-rationals', true], ['일차방정식', 'Linear Equations', '#', false], ['인수분해', 'Factoring', '#', false]] },
   { ko: '고등', en: 'High School', topics: [['이차함수', 'Quadratic Functions', '#', false], ['수열', 'Sequences', '#', false], ['지수·로그', 'Exponents & Logarithms', '#', false]] },
 ];
 
