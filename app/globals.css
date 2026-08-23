@@ -53,6 +53,38 @@ html[dir="rtl"] .worksheet-identity div { text-align: left; }
   font-family: 'IBM Plex Mono', ui-monospace, monospace;
 }
 
+.curriculum-explorer { margin-top: 42px; }
+.curriculum-heading { max-width: 720px; }
+.curriculum-heading > p:first-child { margin: 0 0 6px; color: var(--red-pen); font-size: 12px; font-weight: 700; }
+.curriculum-heading h2 { margin: 0 0 9px; font-size: clamp(25px,4vw,33px); }
+.curriculum-heading > p:last-child { margin: 0; color: var(--ink-soft); }
+.curriculum-tabs { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; margin-top: 22px; padding: 7px; background: rgba(255,254,251,.9); border: 1px solid var(--paper-line); border-radius: var(--radius); }
+.curriculum-tabs button { min-height: 76px; padding: 12px 14px; color: var(--ink-soft); background: transparent; border: 1px solid transparent; border-radius: 10px; text-align: left; font: inherit; cursor: pointer; }
+.curriculum-tabs button strong,.curriculum-tabs button span { display: block; }
+.curriculum-tabs button strong { color: var(--ink); font-size: 15px; }
+.curriculum-tabs button span { margin-top: 3px; font-size: 11px; line-height: 1.4; }
+.curriculum-tabs button.active { color: #fff; background: var(--chalk-green); border-color: var(--chalk-green); box-shadow: 0 4px 12px rgba(47,110,92,.18); }
+.curriculum-tabs button.active strong { color: #fff; }
+.curriculum-panel { margin-top: 10px; padding: 18px; background: rgba(255,254,251,.96); border: 1px solid var(--paper-line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.curriculum-stage-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; align-items: start; }
+.curriculum-stage { overflow: hidden; background: var(--card-bg); border: 1px solid var(--paper-line); border-radius: 11px; }
+.curriculum-stage > summary { position: relative; display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 12px; min-height: 72px; padding: 13px 42px 13px 15px; cursor: pointer; list-style: none; }
+.curriculum-stage > summary::-webkit-details-marker { display: none; }
+.curriculum-stage > summary::after { content: '+'; position: absolute; right: 14px; top: 50%; width: 22px; height: 22px; margin-top: -11px; color: var(--chalk-green); font-size: 20px; line-height: 20px; text-align: center; }
+.curriculum-stage[open] > summary::after { content: '−'; }
+.curriculum-stage summary strong,.curriculum-stage summary small { display: block; }
+.curriculum-stage summary strong { font-size: 15px; }
+.curriculum-stage summary small { margin-top: 2px; color: var(--ink-soft); font-size: 11px; font-weight: 500; }
+.curriculum-count { padding: 3px 7px; color: var(--ink-soft); background: var(--paper); border-radius: 999px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+.curriculum-count.ready { color: var(--chalk-green); background: var(--chalk-green-soft); }
+.curriculum-topic-list { display: grid; gap: 6px; padding: 5px 12px 12px; border-top: 1px solid var(--paper-line); }
+.curriculum-topic-list a,.curriculum-topic-list > span { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 42px; padding: 9px 10px; border-radius: 8px; font-size: 13px; font-weight: 700; text-decoration: none; }
+.curriculum-topic-list a { color: var(--ink); background: var(--chalk-green-soft); }
+.curriculum-topic-list a:hover { color: #fff; background: var(--chalk-green); }
+.curriculum-topic-list a span,.curriculum-topic-list small { font-size: 10px; font-weight: 600; white-space: nowrap; }
+.curriculum-topic-list .disabled { color: var(--ink-soft); background: var(--paper); opacity: .7; }
+.curriculum-note { margin: 14px 3px 0; color: var(--ink-soft); font-size: 11px; }
+
 .site-header-inner { max-width: 1120px; margin: 0 auto; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
 .site-brand { color: var(--ink); text-decoration: none; font-size: clamp(24px,2.5vw,31px); font-weight: 700; line-height: 1.2; white-space: nowrap; }
 .site-brand > span { margin: 0 .2em; color: var(--ink-soft); font-weight: 400; }
@@ -220,6 +252,10 @@ html[dir="rtl"] .generated-proportion-graph {
 @media (max-width: 640px) {
   .site-header-inner { align-items: flex-start; flex-direction: column; gap: 10px; padding-block: 13px; }
   .site-brand { font-size: clamp(20px,5.7vw,24px); white-space: normal; }
+  .curriculum-tabs { grid-template-columns: 1fr; }
+  .curriculum-tabs button { min-height: 58px; }
+  .curriculum-stage-grid { grid-template-columns: 1fr; }
+  .curriculum-panel { padding: 10px; }
   .social-card { grid-template-columns: 1fr; padding: 22px; text-align: center; }
   .social-qr-link { width: min(100%,260px); margin: 0 auto; }
   .worksheet-page { padding: 24px 10px 0; }
