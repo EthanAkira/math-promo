@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 import { useLanguage } from '../language';
 
 const COPY = {
@@ -39,6 +41,50 @@ function fileKindFromName(filename) {
   return 'other';
 }
 
+// Tokenizes LaTeX math out of a line of text: $$block$$ or $inline$.
+function tokenizeMath(text) {
+  const tokens = [];
+  const regex = /\$\$([\s\S]+?)\$\$|\$([^$\n]+?)\$/g;
+  let lastIndex = 0;
+  let match;
+  while ((match = regex.exec(text))) {
+    if (match.index > lastIndex) tokens.push({ type: 'text', value: text.slice(lastIndex, match.index) });
+    tokens.push(match[1] !== undefined ? { type: 'block', value: match[1] } : { type: 'inline', value: match[2] });
+    lastIndex = regex.lastIndex;
+  }
+  if (lastIndex < text.length) tokens.push({ type: 'text', value: text.slice(lastIndex) });
+  return tokens;
+}
+
+function MathSpan({ token }) {
+  if (token.type === 'text') return <>{token.value}</>;
+  try {
+    const html = katex.renderToString(token.value, { throwOnError: false, displayMode: token.type === 'block' });
+    // eslint-disable-next-line react/no-danger
+    return <span dangerouslySetInnerHTML={{ __html: html }} />;
+  } catch {
+    return <>{token.value}</>;
+  }
+}
+
+// A "Problem N" (or "문제 N") line on its own starts a new problem section.
+const PROBLEM_HEADING = /^(problem\s+\d+|문제\s*\d+)\b/i;
+
+function ArticleBody({ text }) {
+  const blocks = text.split(/\n\s*\n/).map((block) => block.trim()).filter(Boolean);
+  return <div style={{ fontFamily: "'Gowun Batang', serif", fontSize: 17, color: 'var(--ink)' }}>
+    {blocks.map((block, index) => {
+      const [firstLine, ...rest] = block.split('\n');
+      const isHeading = PROBLEM_HEADING.test(firstLine);
+      const bodyText = isHeading ? rest.join('\n') : block;
+      return <div key={index} style={{ marginTop: index === 0 ? 0 : 32 }}>
+        {isHeading ? <h2 style={{ fontSize: 20, margin: '0 0 12px', paddingBottom: 8, borderBottom: '2px solid var(--paper-line)' }}>{firstLine}</h2> : null}
+        {bodyText ? <p style={{ margin: 0, lineHeight: 1.9, whiteSpace: 'pre-line' }}>{tokenizeMath(bodyText).map((token, tokenIndex) => <MathSpan key={tokenIndex} token={token} />)}</p> : null}
+      </div>;
+    })}
+  </div>;
+}
+
 function TxtArticle({ url, words }) {
   const [text, setText] = useState(null);
   const [failed, setFailed] = useState(false);
@@ -54,7 +100,7 @@ function TxtArticle({ url, words }) {
 
   if (failed) return <p style={{ color: 'var(--red-pen)' }}>{words.textError}</p>;
   if (text === null) return <p style={{ color: 'var(--ink-soft)' }}>{words.textLoading}</p>;
-  return <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', fontSize: 15, lineHeight: 1.85, margin: 0 }}>{text}</pre>;
+  return <ArticleBody text={text} />;
 }
 
 function ExamSection({ typeLabel, fileEntry, words }) {
@@ -67,9 +113,7 @@ function ExamSection({ typeLabel, fileEntry, words }) {
       <h2 style={{ fontSize: 18, margin: 0 }}>{typeLabel}</h2>
       <a href={downloadUrl} style={{ fontSize: 13, color: 'var(--red-pen)', fontWeight: 700, textDecoration: 'none' }}>{words.download}</a>
     </div>
-    {kind === 'pdf' ? <iframe src={previewUrl} title={typeLabel} style={{ width: '100%', height: '82vh', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }} /> : null}
-    {kind === 'txt' ? <div style={{ padding: 24, background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}><TxtArticle url={previewUrl} words={words} /></div> : null}
-    {kind === 'other' ? <a href={downloadUrl} className="button button-secondary" style={{ textDecoration: 'none' }}>{words.download}</a> : null}
+    {kind === 'txt' ? <div style={{ padding: 24, background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}><TxtArticle url={previewUrl} words={words} /></div> : <a href={downloadUrl} className="button button-secondary" style={{ textDecoration: 'none' }}>{words.download}</a>}
   </section>;
 }
 

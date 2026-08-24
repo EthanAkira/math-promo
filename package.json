@@ -9,6 +9,7 @@
     "deploy:cloudflare": "wrangler pages deploy out --project-name math-promo --branch main"
   },
   "dependencies": {
+    "katex": "^0.18.4",
     "next": "14.2.35",
     "qrcode": "^1.5.4",
     "react": "^18.3.1",
