@@ -34,5 +34,13 @@ export function TutorBanner() {
 
 export function SiteFooter() {
   const { language } = useLanguage();
-  return <footer style={{ marginTop: 64, borderTop: '1px solid var(--paper-line)', padding: '28px 20px 40px', textAlign: 'center', color: 'var(--ink-soft)', fontSize: 13 }}><p style={{ margin: 0 }}>{tr(language, 'dailyLab')} · {tr(language, 'classInquiry')}</p><a href="https://www.instagram.com/algorythm_logarythm/" target="_blank" rel="noreferrer" style={{ display: 'inline-block', marginTop: 8, color: 'var(--red-pen)', fontWeight: 700, textDecoration: 'none' }}>Instagram · @algorythm_logarythm</a></footer>;
+  return <footer style={{ marginTop: 64, borderTop: '1px solid var(--paper-line)', padding: '28px 20px 40px', textAlign: 'center', color: 'var(--ink-soft)', fontSize: 13 }}>
+    <p style={{ margin: 0 }}>{tr(language, 'dailyLab')} · {tr(language, 'classInquiry')}</p>
+    <nav style={{ marginTop: 10, display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap' }}>
+      <a href="/notices" style={{ color: 'var(--ink-soft)', textDecoration: 'none', fontWeight: 700 }}>{tr(language, 'navNotices')}</a>
+      <a href="/contact" style={{ color: 'var(--ink-soft)', textDecoration: 'none', fontWeight: 700 }}>{tr(language, 'navContact')}</a>
+      <a href="/games.html" style={{ color: 'var(--ink-soft)', textDecoration: 'none', fontWeight: 700 }}>{language === 'ko' ? '쉬어가는 코너' : 'Rest Corner'}</a>
+    </nav>
+    <a href="https://www.instagram.com/algorythm_logarythm/" target="_blank" rel="noreferrer" style={{ display: 'inline-block', marginTop: 12, color: 'var(--red-pen)', fontWeight: 700, textDecoration: 'none' }}>Instagram · @algorythm_logarythm</a>
+  </footer>;
 }
