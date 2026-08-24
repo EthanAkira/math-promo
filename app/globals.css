@@ -167,6 +167,10 @@ select:focus-visible {
 .prime-problem { min-height: 195px; }
 .prime-problem .word-calculation p { min-height: 52px; }
 .prime-problem .word-expression { min-height: 34px; }
+.graphic-problem { min-height: 300px; }
+.graphic-problem .word-calculation p { min-height: 40px; }
+.graphic-problem .generated-coord-plane,.graphic-problem .generated-proportion-graph { max-width: 150px; }
+.graphic-problem .generated-trip-graph { max-width: 240px; }
 .choice-answer { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin-top: 12px; }
 .choice-answer button { min-height: 38px; color: var(--ink); background: #fff; border: 1px solid var(--paper-line); border-radius: 8px; font: inherit; font-weight: 700; cursor: pointer; }
 .choice-answer button span { display: inline-grid; place-items: center; width: 22px; height: 22px; margin-right: 6px; border: 1px solid currentColor; border-radius: 50%; font-size: 11px; }
@@ -303,6 +307,10 @@ html[dir="rtl"] .generated-proportion-graph {
   .word-problem-grid { grid-template-columns: repeat(2,1fr); gap: 0 4mm; }
   .word-problem { min-height: 59mm; padding: 10mm 2mm 3mm 9mm; }
   .prime-problem { min-height: 48mm; }
+  .graphic-problem { min-height: 72mm; }
+  .graphic-problem .word-calculation p { min-height: 12mm; }
+  .graphic-problem .generated-coord-plane,.graphic-problem .generated-proportion-graph { max-width: 34mm; }
+  .graphic-problem .generated-trip-graph { max-width: 55mm; }
   .word-calculation p { min-height: 18mm; font-size: 10.5px; line-height: 1.5; }
   .word-expression { margin: 1mm 0 2mm; font-size: 14px; }
   .word-answer { margin-top: 2mm; font-size: 10px; }

@@ -175,7 +175,8 @@ export default function CoordinatePlaneGenerator() {
           const isCorrect = normalizeAnswer(value) === normalizeAnswer(item.answer);
           const prompt = foreign && item.promptEn ? item.promptEn : item.prompt;
           const choices = foreign ? item.choicesEn : item.choicesKo;
-          return <article className="vertical-problem word-problem prime-problem" key={item.id}>
+          const graphic = item.kind === 'coordinate-plane' || item.kind === 'trip-graph';
+          return <article className={`vertical-problem word-problem prime-problem${graphic ? ' graphic-problem' : ''}`} key={item.id}>
             <span className="problem-number">{item.id}</span>
             <div className="word-calculation">
               <p>{prompt}</p>
