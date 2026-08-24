@@ -37,6 +37,7 @@ export function SiteFooter() {
   return <footer style={{ marginTop: 64, borderTop: '1px solid var(--paper-line)', padding: '28px 20px 40px', textAlign: 'center', color: 'var(--ink-soft)', fontSize: 13 }}>
     <p style={{ margin: 0 }}>{tr(language, 'dailyLab')} · {tr(language, 'classInquiry')}</p>
     <nav style={{ marginTop: 10, display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap' }}>
+      <a href="/amc.html" style={{ color: 'var(--ink-soft)', textDecoration: 'none', fontWeight: 700 }}>AMC</a>
       <a href="/notices" style={{ color: 'var(--ink-soft)', textDecoration: 'none', fontWeight: 700 }}>{tr(language, 'navNotices')}</a>
       <a href="/contact" style={{ color: 'var(--ink-soft)', textDecoration: 'none', fontWeight: 700 }}>{tr(language, 'navContact')}</a>
       <a href="/games.html" style={{ color: 'var(--ink-soft)', textDecoration: 'none', fontWeight: 700 }}>{language === 'ko' ? '쉬어가는 코너' : 'Rest Corner'}</a>

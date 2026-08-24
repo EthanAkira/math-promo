@@ -53,6 +53,17 @@ export default function HomePage() {
       </div>)}
     </section>
 
+    <section id="amc" style={{ marginTop: 40, scrollMarginTop: 90 }}>
+      <p className="font-mono" style={{ margin: '0 0 6px', color: 'var(--red-pen)', fontSize: 12, fontWeight: 700 }}>AMC ARCHIVE</p>
+      <h2 className="font-display" style={{ margin: '0 0 10px', fontSize: 25 }}>{language === 'ko' ? 'AMC 기출문제' : 'AMC Archive'}</h2>
+      <p style={{ margin: '0 0 16px', color: 'var(--ink-soft)', maxWidth: 560 }}>{language === 'ko' ? 'AMC 8·10·12 기출문제를 연도별로 모아 미리보기와 다운로드를 제공합니다.' : 'AMC 8, 10, and 12 past exams by year, with preview and download.'}</p>
+      <div className="game-card-grid">
+        <a href="/amc/8" className="game-card"><span className="game-card-icon">🥉</span><h2>AMC 8</h2><p>{language === 'ko' ? '중학생 이하 대상' : 'Middle school and below'}</p></a>
+        <a href="/amc/10" className="game-card"><span className="game-card-icon">🥈</span><h2>AMC 10</h2><p>{language === 'ko' ? '10학년 이하 대상 · A/B' : '10th grade and below · A/B'}</p></a>
+        <a href="/amc/12" className="game-card"><span className="game-card-icon">🥇</span><h2>AMC 12</h2><p>{language === 'ko' ? '12학년 이하 대상 · A/B' : '12th grade and below · A/B'}</p></a>
+      </div>
+    </section>
+
     <section id="games" style={{ marginTop: 40, scrollMarginTop: 90 }}>
       <p className="font-mono" style={{ margin: '0 0 6px', color: 'var(--chalk-green)', fontSize: 12, fontWeight: 700 }}>REST CORNER</p>
       <h2 className="font-display" style={{ margin: '0 0 10px', fontSize: 25 }}>{language === 'ko' ? '쉬어가는 코너' : 'Rest Corner'}</h2>
