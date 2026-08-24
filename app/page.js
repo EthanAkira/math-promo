@@ -4,6 +4,7 @@ import { SiteHeader, SiteFooter, TutorProfileDisclosure } from './components';
 import { useLanguage } from './language';
 import { tr } from './i18n';
 import CurriculumExplorer from './CurriculumExplorer';
+import { GAMES_COPY } from './games/gamesCopy';
 
 const MIDDLE_1_TOPICS = [
   ['topicPrime', '/middle-school/prime-factorization', true],
@@ -34,6 +35,7 @@ const topicGroups = [
 
 export default function HomePage() {
   const { language } = useLanguage();
+  const G = GAMES_COPY[language] || GAMES_COPY.en;
 
   return <><SiteHeader /><main style={{ maxWidth: 1040, margin: '0 auto', padding: '0 20px' }}>
     <section style={{ padding: '56px 0 8px' }}>
@@ -69,13 +71,13 @@ export default function HomePage() {
 
     <section id="games" style={{ marginTop: 40, scrollMarginTop: 90 }}>
       <p className="font-mono" style={{ margin: '0 0 6px', color: 'var(--chalk-green)', fontSize: 12, fontWeight: 700 }}>REST CORNER</p>
-      <h2 className="font-display" style={{ margin: '0 0 10px', fontSize: 25 }}>{language === 'ko' ? '쉬어가는 코너' : 'Rest Corner'}</h2>
-      <p style={{ margin: '0 0 16px', color: 'var(--ink-soft)', maxWidth: 560 }}>{language === 'ko' ? '공부하다 잠깐 쉬어갈 수 있는 무료 게임입니다. 스도쿠, 오목, 체스, 윷놀이를 AI와 함께 즐겨보세요.' : 'Free games for a short study break: Sudoku, Gomoku, Chess, and Yutnori against an AI.'}</p>
+      <h2 className="font-display" style={{ margin: '0 0 10px', fontSize: 25 }}>{G.title}</h2>
+      <p style={{ margin: '0 0 16px', color: 'var(--ink-soft)', maxWidth: 560 }}>{G.description}</p>
       <div className="game-card-grid">
-        <a href="/games/sudoku" className="game-card"><span className="game-card-icon">🔢</span><h2>{language === 'ko' ? '스도쿠' : 'Sudoku'}</h2><p>{language === 'ko' ? '난이도 4단계 · 메모 · 힌트' : '4 difficulty levels, notes & hints'}</p></a>
-        <a href="/games/gomoku" className="game-card"><span className="game-card-icon">⚫</span><h2>{language === 'ko' ? '오목' : 'Gomoku'}</h2><p>{language === 'ko' ? 'AI 난이도 5단계 · 무르기' : '5 AI levels, undo support'}</p></a>
-        <a href="/games/chess" className="game-card"><span className="game-card-icon">♞</span><h2>{language === 'ko' ? '체스' : 'Chess'}</h2><p>{language === 'ko' ? '캐슬링 · 앙파상 · 프로모션' : 'Castling, en passant, promotion'}</p></a>
-        <a href="/games/yutnori" className="game-card"><span className="game-card-icon">🎲</span><h2>{language === 'ko' ? '윷놀이' : 'Yutnori'}</h2><p>{language === 'ko' ? '전통 윷놀이 · 튜토리얼 포함' : 'Traditional board game · tutorial included'}</p></a>
+        <a href="/games/sudoku" className="game-card"><span className="game-card-icon">🔢</span><h2>{G.games.sudoku.title}</h2><p>{G.games.sudoku.desc}</p></a>
+        <a href="/games/gomoku" className="game-card"><span className="game-card-icon">⚫</span><h2>{G.games.gomoku.title}</h2><p>{G.games.gomoku.desc}</p></a>
+        <a href="/games/chess" className="game-card"><span className="game-card-icon">♞</span><h2>{G.games.chess.title}</h2><p>{G.games.chess.desc}</p></a>
+        <a href="/games/yutnori" className="game-card"><span className="game-card-icon">🎲</span><h2>{G.games.yutnori.title}</h2><p>{G.games.yutnori.desc}</p></a>
       </div>
     </section>
 
