@@ -53,6 +53,17 @@ export default function HomePage() {
       </div>)}
     </section>
 
+    <section id="games" style={{ marginTop: 40, scrollMarginTop: 90 }}>
+      <p className="font-mono" style={{ margin: '0 0 6px', color: 'var(--chalk-green)', fontSize: 12, fontWeight: 700 }}>REST CORNER</p>
+      <h2 className="font-display" style={{ margin: '0 0 10px', fontSize: 25 }}>{language === 'ko' ? '쉬어가는 코너' : 'Rest Corner'}</h2>
+      <p style={{ margin: '0 0 16px', color: 'var(--ink-soft)', maxWidth: 560 }}>{language === 'ko' ? '공부하다 잠깐 쉬어갈 수 있는 무료 게임입니다. 스도쿠, 오목, 체스를 AI와 함께 즐겨보세요.' : 'Free games for a short study break: Sudoku, Gomoku, and Chess against an AI.'}</p>
+      <div className="game-card-grid">
+        <a href="/games/sudoku" className="game-card"><span className="game-card-icon">🔢</span><h2>{language === 'ko' ? '스도쿠' : 'Sudoku'}</h2><p>{language === 'ko' ? '난이도 4단계 · 메모 · 힌트' : '4 difficulty levels, notes & hints'}</p></a>
+        <a href="/games/gomoku" className="game-card"><span className="game-card-icon">⚫</span><h2>{language === 'ko' ? '오목' : 'Gomoku'}</h2><p>{language === 'ko' ? 'AI 난이도 5단계 · 무르기' : '5 AI levels, undo support'}</p></a>
+        <a href="/games/chess" className="game-card"><span className="game-card-icon">♞</span><h2>{language === 'ko' ? '체스' : 'Chess'}</h2><p>{language === 'ko' ? '캐슬링 · 앙파상 · 프로모션' : 'Castling, en passant, promotion'}</p></a>
+      </div>
+    </section>
+
     <section id="tutor" style={{ marginTop: 56, scrollMarginTop: 90 }}><TutorProfileDisclosure /></section>
 
     <section id="contact" style={{ margin: '32px 0 8px', scrollMarginTop: 90 }}><div style={{ border: '1px dashed var(--red-pen)', borderRadius: 'var(--radius)', padding: '22px 24px', textAlign: 'center' }}>
