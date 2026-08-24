@@ -10,7 +10,7 @@ const COPY = {
     loading: '자료를 불러오는 중입니다...',
     error: '자료를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.',
     problems: '문제지', solutions: '해설지', answers: '정답지',
-    preview: '미리보기', download: '다운로드',
+    preview: '미리보기', download: '다운로드', upload: '자료 업로드',
   },
   en: {
     home: 'Home', hub: 'AMC Archive',
@@ -18,7 +18,7 @@ const COPY = {
     loading: 'Loading archive...',
     error: 'Could not load the archive. Please try again shortly.',
     problems: 'Problems', solutions: 'Solutions', answers: 'Answer Key',
-    preview: 'Preview', download: 'Download',
+    preview: 'Preview', download: 'Download', upload: 'Upload materials',
   },
 };
 
@@ -45,7 +45,10 @@ export default function AmcLevelArchive({ level, label, description }) {
     <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 6 }}>
       <a href="/">{words.home}</a> / <a href="/amc.html">{words.hub}</a> / {label}
     </p>
-    <h1 className="font-display" style={{ fontSize: 26, margin: '0 0 8px' }}>{label}</h1>
+    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, marginBottom: 8 }}>
+      <h1 className="font-display" style={{ fontSize: 26, margin: 0 }}>{label}</h1>
+      <a href="/amc/admin" className="button button-secondary" style={{ textDecoration: 'none' }}>{words.upload}</a>
+    </div>
     <p style={{ color: 'var(--ink-soft)', margin: '0 0 28px' }}>{description}</p>
 
     {status === 'loading' ? <p style={{ color: 'var(--ink-soft)' }}>{words.loading}</p> : null}

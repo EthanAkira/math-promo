@@ -15,7 +15,10 @@ export default function AmcHubPage() {
   return <><SiteHeader /><main style={{ maxWidth: 760, margin: '0 auto', padding: '0 20px' }}>
     <section style={{ padding: '56px 0 8px' }}>
       <p className="font-mono" style={{ margin: 0, fontSize: 13, color: 'var(--red-pen)', fontWeight: 700 }}>AMC ARCHIVE</p>
-      <h1 className="font-display" style={{ margin: '10px 0 14px', fontSize: 'clamp(28px, 5vw, 38px)' }}>AMC 기출문제</h1>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
+        <h1 className="font-display" style={{ margin: '10px 0 14px', fontSize: 'clamp(28px, 5vw, 38px)' }}>AMC 기출문제</h1>
+        <a href="/amc/admin" className="button button-primary" style={{ textDecoration: 'none', marginTop: 10 }}>자료 업로드</a>
+      </div>
       <p style={{ fontSize: 16, color: 'var(--ink-soft)', maxWidth: 560 }}>AMC 8·10·12 기출문제를 연도별로 모아 미리보기와 다운로드를 제공합니다.</p>
     </section>
 
@@ -27,7 +30,6 @@ export default function AmcHubPage() {
           <p>{level.description}</p>
         </a>)}
       </div>
-      <p style={{ marginTop: 20, textAlign: 'right' }}><a href="/amc/admin" style={{ fontSize: 12, color: 'var(--ink-soft)' }}>자료 업로드 (관리자)</a></p>
     </section>
   </main><SiteFooter /></>;
 }

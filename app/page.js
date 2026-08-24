@@ -54,8 +54,11 @@ export default function HomePage() {
     </section>
 
     <section id="amc" style={{ marginTop: 40, scrollMarginTop: 90 }}>
-      <p className="font-mono" style={{ margin: '0 0 6px', color: 'var(--red-pen)', fontSize: 12, fontWeight: 700 }}>AMC ARCHIVE</p>
-      <h2 className="font-display" style={{ margin: '0 0 10px', fontSize: 25 }}>{language === 'ko' ? 'AMC 기출문제' : 'AMC Archive'}</h2>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
+        <p className="font-mono" style={{ margin: 0, color: 'var(--red-pen)', fontSize: 12, fontWeight: 700 }}>AMC ARCHIVE</p>
+        <a href="/amc/admin" className="button button-secondary" style={{ textDecoration: 'none' }}>{language === 'ko' ? '자료 업로드' : 'Upload materials'}</a>
+      </div>
+      <h2 className="font-display" style={{ margin: '10px 0 10px', fontSize: 25 }}>{language === 'ko' ? 'AMC 기출문제' : 'AMC Archive'}</h2>
       <p style={{ margin: '0 0 16px', color: 'var(--ink-soft)', maxWidth: 560 }}>{language === 'ko' ? 'AMC 8·10·12 기출문제를 연도별로 모아 미리보기와 다운로드를 제공합니다.' : 'AMC 8, 10, and 12 past exams by year, with preview and download.'}</p>
       <div className="game-card-grid">
         <a href="/amc/8" className="game-card"><span className="game-card-icon">🥉</span><h2>AMC 8</h2><p>{language === 'ko' ? '중학생 이하 대상' : 'Middle school and below'}</p></a>
