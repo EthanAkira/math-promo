@@ -113,7 +113,9 @@ function ExamSection({ typeLabel, fileEntry, words }) {
       <h2 style={{ fontSize: 18, margin: 0 }}>{typeLabel}</h2>
       <a href={downloadUrl} style={{ fontSize: 13, color: 'var(--red-pen)', fontWeight: 700, textDecoration: 'none' }}>{words.download}</a>
     </div>
-    {kind === 'txt' ? <div style={{ padding: 24, background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}><TxtArticle url={previewUrl} words={words} /></div> : <a href={downloadUrl} className="button button-secondary" style={{ textDecoration: 'none' }}>{words.download}</a>}
+    {kind === 'txt' ? <div style={{ padding: 24, background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}><TxtArticle url={previewUrl} words={words} /></div> : null}
+    {kind === 'pdf' ? <iframe src={previewUrl} title={typeLabel} style={{ width: '100%', height: '88vh', minHeight: 700, border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }} /> : null}
+    {kind === 'other' ? <a href={downloadUrl} className="button button-secondary" style={{ textDecoration: 'none' }}>{words.download}</a> : null}
   </section>;
 }
 

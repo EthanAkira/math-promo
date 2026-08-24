@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 export default function Amc10Page() {
-  return <><SiteHeader /><main style={{ maxWidth: 760, margin: '0 auto', padding: '40px 20px 64px' }}>
+  return <><SiteHeader /><main style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 20px 64px' }}>
     <AmcLevelArchive level="10" label="AMC 10" description="10학년 이하를 대상으로 한 25문항, 75분 시험입니다. 연도별로 A/B 두 회차가 있습니다." />
   </main><SiteFooter /></>;
 }

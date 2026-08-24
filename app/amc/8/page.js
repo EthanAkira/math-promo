@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 export default function Amc8Page() {
-  return <><SiteHeader /><main style={{ maxWidth: 760, margin: '0 auto', padding: '40px 20px 64px' }}>
+  return <><SiteHeader /><main style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 20px 64px' }}>
     <AmcLevelArchive level="8" label="AMC 8" description="중학생 이하를 대상으로 한 25문항, 40분 시험입니다." />
   </main><SiteFooter /></>;
 }
