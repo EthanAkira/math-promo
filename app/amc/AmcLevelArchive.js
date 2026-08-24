@@ -1,30 +1,45 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useLanguage } from '../language';
-import { AMC_ARCHIVE, fileKind } from './data';
 
 const COPY = {
   ko: {
     home: '홈', hub: 'AMC 기출문제',
     empty: '아직 업로드된 자료가 없습니다. 문의하기를 통해 자료를 요청하거나 제안해주세요.',
+    loading: '자료를 불러오는 중입니다...',
+    error: '자료를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.',
     problems: '문제지', solutions: '해설지', answers: '정답지',
     preview: '미리보기', download: '다운로드',
   },
   en: {
     home: 'Home', hub: 'AMC Archive',
     empty: 'No files uploaded yet. Feel free to request or suggest materials via Contact.',
+    loading: 'Loading archive...',
+    error: 'Could not load the archive. Please try again shortly.',
     problems: 'Problems', solutions: 'Solutions', answers: 'Answer Key',
     preview: 'Preview', download: 'Download',
   },
 };
 
-const FILE_ICONS = { pdf: '📄', txt: '📝', file: '📁' };
 const FILE_ORDER = ['problems', 'solutions', 'answers'];
 
 export default function AmcLevelArchive({ level, label, description }) {
   const { language } = useLanguage();
   const words = COPY[language] || COPY.en;
-  const years = [...(AMC_ARCHIVE[level] || [])].sort((a, b) => b.year - a.year);
+  const [manifest, setManifest] = useState(null);
+  const [status, setStatus] = useState('loading');
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/amc/manifest')
+      .then((res) => { if (!res.ok) throw new Error('bad response'); return res.json(); })
+      .then((data) => { if (!cancelled) { setManifest(data); setStatus('ready'); } })
+      .catch(() => { if (!cancelled) setStatus('error'); });
+    return () => { cancelled = true; };
+  }, []);
+
+  const years = manifest ? [...(manifest[level] || [])].sort((a, b) => b.year - a.year) : [];
 
   return <>
     <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 6 }}>
@@ -33,7 +48,9 @@ export default function AmcLevelArchive({ level, label, description }) {
     <h1 className="font-display" style={{ fontSize: 26, margin: '0 0 8px' }}>{label}</h1>
     <p style={{ color: 'var(--ink-soft)', margin: '0 0 28px' }}>{description}</p>
 
-    {years.length === 0 ? <p style={{ padding: 24, background: 'var(--card-bg)', border: '1px dashed var(--paper-line)', borderRadius: 'var(--radius)', color: 'var(--ink-soft)', textAlign: 'center' }}>{words.empty}</p> : null}
+    {status === 'loading' ? <p style={{ color: 'var(--ink-soft)' }}>{words.loading}</p> : null}
+    {status === 'error' ? <p style={{ color: 'var(--red-pen)' }}>{words.error}</p> : null}
+    {status === 'ready' && years.length === 0 ? <p style={{ padding: 24, background: 'var(--card-bg)', border: '1px dashed var(--paper-line)', borderRadius: 'var(--radius)', color: 'var(--ink-soft)', textAlign: 'center' }}>{words.empty}</p> : null}
 
     <div style={{ display: 'grid', gap: 14 }}>
       {years.map((entry) => <article key={entry.year} style={{ padding: 20, background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}>
@@ -45,12 +62,10 @@ export default function AmcLevelArchive({ level, label, description }) {
               {FILE_ORDER.map((key) => {
                 const fileEntry = variant.files[key];
                 if (!fileEntry) return null;
-                const kind = fileKind(fileEntry.url);
                 return <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 12px', background: 'var(--paper)', borderRadius: 8, fontSize: 13 }}>
-                  <span aria-hidden="true">{FILE_ICONS[kind]}</span>
                   <span style={{ fontWeight: 700 }}>{words[key]}</span>
-                  <a href={fileEntry.url} target="_blank" rel="noreferrer" style={{ color: 'var(--ink)', textDecoration: 'underline' }}>{words.preview}</a>
-                  <a href={fileEntry.url} download style={{ color: 'var(--red-pen)', fontWeight: 700, textDecoration: 'none' }}>{words.download}</a>
+                  <a href={`/api/amc/file?key=${encodeURIComponent(fileEntry.key)}`} target="_blank" rel="noreferrer" style={{ color: 'var(--ink)', textDecoration: 'underline' }}>{words.preview}</a>
+                  <a href={`/api/amc/file?key=${encodeURIComponent(fileEntry.key)}&download=1`} style={{ color: 'var(--red-pen)', fontWeight: 700, textDecoration: 'none' }}>{words.download}</a>
                 </div>;
               })}
             </div>

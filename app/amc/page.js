@@ -27,6 +27,7 @@ export default function AmcHubPage() {
           <p>{level.description}</p>
         </a>)}
       </div>
+      <p style={{ marginTop: 20, textAlign: 'right' }}><a href="/amc/admin" style={{ fontSize: 12, color: 'var(--ink-soft)' }}>자료 업로드 (관리자)</a></p>
     </section>
   </main><SiteFooter /></>;
 }
