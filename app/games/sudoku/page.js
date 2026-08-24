@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function SudokuPage() {
   return <><SiteHeader /><main className="game-page">
-    <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 18 }}><a href="/">홈</a> / <a href="/games">쉬어가는 코너</a> / 스도쿠</p>
+    <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 18 }}><a href="/">홈</a> / <a href="/games.html">쉬어가는 코너</a> / 스도쿠</p>
     <SudokuBoard />
   </main><SiteFooter /></>;
 }
