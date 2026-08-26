@@ -7,6 +7,7 @@ import CurriculumExplorer from './CurriculumExplorer';
 import { GAMES_COPY } from './games/gamesCopy';
 
 const MIDDLE_1_TOPICS = [
+  ['topicBasicFigures', '/middle-school/basic-figures', true],
   ['topicPrime', '/middle-school/prime-factorization', true],
   ['topicGcd', '/middle-school/gcd-lcm', true],
   ['topicInteger', '/middle-school/integers-rationals', true],

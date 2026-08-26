@@ -12,7 +12,7 @@ const koreanStages = [
     topics: [ready(`${index + 1}학년 수학 연습`, `/elementary/practice?grade=${index + 1}`)],
   })),
   { title: '중학교 1학년', subtitle: 'Korean Grade 7', topics: [
-    ready('소수와 소인수분해', '/middle-school/prime-factorization'), ready('최대공약수와 최소공배수', '/middle-school/gcd-lcm'), ready('정수와 유리수', '/middle-school/integers-rationals'), ready('문자와 식', '/middle-school/algebra-basics.html?unit=expressions-review'), ready('일차방정식', '/middle-school/algebra-basics.html?unit=equations-review'), ready('좌표와 그래프', '/middle-school/coordinate-plane'), ready('정비례와 반비례', '/middle-school/proportion'),
+    ready('소수와 소인수분해', '/middle-school/prime-factorization'), ready('최대공약수와 최소공배수', '/middle-school/gcd-lcm'), ready('정수와 유리수', '/middle-school/integers-rationals'), ready('문자와 식', '/middle-school/algebra-basics.html?unit=expressions-review'), ready('일차방정식', '/middle-school/algebra-basics.html?unit=equations-review'), ready('좌표와 그래프', '/middle-school/coordinate-plane'), ready('정비례와 반비례', '/middle-school/proportion'), ready('기본 도형', '/middle-school/basic-figures'),
   ] },
   { title: '중학교 2학년', subtitle: 'Korean Grade 8', topics: [soon('식의 계산'), soon('일차부등식'), soon('연립일차방정식'), soon('일차함수')] },
   { title: '중학교 3학년', subtitle: 'Korean Grade 9', topics: [soon('제곱근과 실수'), soon('인수분해'), soon('이차방정식'), soon('이차함수')] },
@@ -23,7 +23,7 @@ const courseStages = [
   { title: 'Arithmetic & Foundations', subtitle: 'Number sense and operations', topics: [ready('Grades 1–6 Practice', '/elementary/practice'), ready('Fractions, Decimals & Ratios', '/elementary/practice?grade=6')] },
   { title: 'Pre-Algebra', subtitle: 'Prepare for symbolic algebra', topics: [ready('Primes & Prime Factorization', '/middle-school/prime-factorization'), ready('GCF & LCM', '/middle-school/gcd-lcm'), ready('Integers & Rational Numbers', '/middle-school/integers-rationals'), ready('Ratios & Proportions', '/middle-school/proportion')] },
   { title: 'Algebra 1', subtitle: 'Expressions, equations and graphs', topics: [ready('Algebraic Expressions', '/middle-school/algebra-basics.html?unit=expressions-review'), ready('Linear Equations', '/middle-school/algebra-basics.html?unit=equations-review'), ready('Coordinate Plane & Graphs', '/middle-school/coordinate-plane'), ready('Direct & Inverse Proportion', '/middle-school/proportion')] },
-  { title: 'Geometry', subtitle: 'Shapes, measurement and proof', topics: [soon('Geometry Foundations'), soon('Congruence & Similarity'), soon('Coordinate Geometry')] },
+  { title: 'Geometry', subtitle: 'Shapes, measurement and proof', topics: [ready('Geometry Foundations', '/middle-school/basic-figures'), soon('Congruence & Similarity'), soon('Coordinate Geometry')] },
   { title: 'Algebra 2', subtitle: 'Functions, polynomials and exponentials', topics: [soon('Polynomials & Factoring'), soon('Quadratic Functions'), soon('Exponential & Logarithmic Functions')] },
   { title: 'Precalculus & Calculus', subtitle: 'Advanced functions and change', topics: [soon('Trigonometry'), soon('Limits & Calculus'), soon('Sequences & Series')] },
   { title: 'Integrated Math I–III', subtitle: 'Alternative U.S. pathway', topics: [ready('Math I · Linear relationships', '/middle-school/algebra-basics.html?unit=equations-review'), soon('Math II · Geometry & quadratics'), soon('Math III · Advanced functions')] },
@@ -32,7 +32,7 @@ const courseStages = [
 const domainStages = [
   { title: '수와 연산', subtitle: 'Number & Operations', topics: [ready('초등 수 연산', '/elementary/practice'), ready('소수와 소인수분해', '/middle-school/prime-factorization'), ready('최대공약수와 최소공배수', '/middle-school/gcd-lcm'), ready('정수와 유리수', '/middle-school/integers-rationals')] },
   { title: '변화와 관계', subtitle: 'Algebra, Relations & Change', topics: [ready('문자와 식', '/middle-school/algebra-basics.html?unit=expressions-review'), ready('일차방정식', '/middle-school/algebra-basics.html?unit=equations-review'), ready('좌표와 그래프', '/middle-school/coordinate-plane'), ready('정비례와 반비례', '/middle-school/proportion')] },
-  { title: '도형과 측정', subtitle: 'Geometry & Measurement', topics: [soon('기본 도형'), soon('평면도형과 입체도형'), soon('합동과 닮음'), soon('삼각비')] },
+  { title: '도형과 측정', subtitle: 'Geometry & Measurement', topics: [ready('기본 도형', '/middle-school/basic-figures'), soon('평면도형과 입체도형'), soon('합동과 닮음'), soon('삼각비')] },
   { title: '자료와 가능성', subtitle: 'Data & Probability', topics: [soon('자료의 정리와 해석'), soon('확률'), soon('통계')] },
   { title: '수학적 모델링과 문제 해결', subtitle: 'Modeling & Problem Solving', topics: [ready('비례 관계 문제', '/middle-school/proportion'), ready('일차방정식 활용', '/middle-school/algebra-basics.html?unit=equation-word-problems'), ready('거리·속력·시간', '/middle-school/algebra-basics.html?unit=distance-speed-time'), soon('자료 기반 모델링')] },
 ];
