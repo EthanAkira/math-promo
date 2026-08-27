@@ -8,6 +8,13 @@ export function SiteHeader() {
   return <header style={{ borderBottom: '1px solid var(--paper-line)', background: 'rgba(244,242,236,0.9)', backdropFilter: 'blur(4px)', position: 'sticky', top: 0, zIndex: 10 }}>
     <div className="site-header-inner">
       <a href="/" className="font-display site-brand">매일 배움 연구소 <span aria-hidden="true">|</span> <strong>Daily Learning Lab</strong></a>
+      <nav className="site-nav" aria-label="주요 메뉴">
+        <a href="/#archive">AMC</a>
+        <a href="/csat.html">{tr(language, 'navCsat')}</a>
+        <a href="/notices">{tr(language, 'navNotices')}</a>
+        <a href="/contact">{tr(language, 'navContact')}</a>
+        <a href="/games.html">{tr(language, 'restCorner')}</a>
+      </nav>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <label className="language-picker"><span className="sr-only">{tr(language, 'language')}</span><select aria-label={tr(language, 'language')} value={language} onChange={(event) => setLanguage(event.target.value)}>{LANGUAGES.map((item) => <option key={item.code} value={item.code}>{item.label}</option>)}</select></label>
       </div>
@@ -38,9 +45,10 @@ export function SiteFooter() {
     <p style={{ margin: 0 }}>{tr(language, 'dailyLab')} · {tr(language, 'classInquiry')}</p>
     <nav style={{ marginTop: 10, display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap' }}>
       <a href="/amc.html" style={{ color: 'var(--ink-soft)', textDecoration: 'none', fontWeight: 700 }}>AMC</a>
+      <a href="/csat.html" style={{ color: 'var(--ink-soft)', textDecoration: 'none', fontWeight: 700 }}>{tr(language, 'navCsat')}</a>
       <a href="/notices" style={{ color: 'var(--ink-soft)', textDecoration: 'none', fontWeight: 700 }}>{tr(language, 'navNotices')}</a>
       <a href="/contact" style={{ color: 'var(--ink-soft)', textDecoration: 'none', fontWeight: 700 }}>{tr(language, 'navContact')}</a>
-      <a href="/games.html" style={{ color: 'var(--ink-soft)', textDecoration: 'none', fontWeight: 700 }}>{language === 'ko' ? '쉬어가는 코너' : 'Rest Corner'}</a>
+      <a href="/games.html" style={{ color: 'var(--ink-soft)', textDecoration: 'none', fontWeight: 700 }}>{tr(language, 'restCorner')}</a>
     </nav>
     <a href="https://www.instagram.com/algorythm_logarythm/" target="_blank" rel="noreferrer" style={{ display: 'inline-block', marginTop: 12, color: 'var(--red-pen)', fontWeight: 700, textDecoration: 'none' }}>Instagram · @algorythm_logarythm</a>
   </footer>;

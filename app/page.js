@@ -49,24 +49,37 @@ export default function HomePage() {
 
     <section style={{ marginTop: 54 }}>
       <p className="font-mono" style={{ margin: '0 0 6px', color: 'var(--red-pen)', fontSize: 12, fontWeight: 700 }}>QUICK PRACTICE</p>
-      <h2 className="font-display" style={{ margin: '0 0 22px', fontSize: 25 }}>{language === 'ko' ? '빠른 문제 선택' : 'Quick practice'}</h2>
+      <h2 className="font-display" style={{ margin: '0 0 22px', fontSize: 25 }}>{tr(language, 'quickPractice')}</h2>
       {topicGroups.map((group) => <div key={group.key} style={{ marginBottom: 28 }}>
         <h2 style={{ fontSize: 14, color: 'var(--chalk-green)', marginBottom: 10 }}>{tr(language, group.key)}</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))', gap: 10 }}>{group.topics.map(([key, href, ready]) => <a key={key} href={href} aria-disabled={!ready} style={{ display: 'block', padding: 16, borderRadius: 'var(--radius)', background: ready ? 'var(--card-bg)' : 'transparent', border: '1px solid var(--paper-line)', boxShadow: ready ? 'var(--shadow)' : 'none', textDecoration: 'none', color: ready ? 'var(--ink)' : 'var(--ink-soft)', opacity: ready ? 1 : 0.55, pointerEvents: ready ? 'auto' : 'none', fontWeight: 600, fontSize: 15 }}>{tr(language, key)}{!ready && <span style={{ display: 'block', fontSize: 11, fontWeight: 500, marginTop: 4 }}>{tr(language, 'comingSoon')}</span>}</a>)}</div>
       </div>)}
     </section>
 
-    <section id="amc" style={{ marginTop: 40, scrollMarginTop: 90 }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
-        <p className="font-mono" style={{ margin: 0, color: 'var(--red-pen)', fontSize: 12, fontWeight: 700 }}>AMC ARCHIVE</p>
-        <a href="/amc/admin" className="button button-secondary" style={{ textDecoration: 'none' }}>{language === 'ko' ? '자료 업로드' : 'Upload materials'}</a>
+    <section id="archive" style={{ marginTop: 40, scrollMarginTop: 90 }}>
+      <p className="font-mono" style={{ margin: 0, color: 'var(--red-pen)', fontSize: 12, fontWeight: 700 }}>EXAM ARCHIVE</p>
+      <h2 className="font-display" style={{ margin: '10px 0 10px', fontSize: 25 }}>{tr(language, 'examArchives')}</h2>
+      <p style={{ margin: '0 0 20px', color: 'var(--ink-soft)', maxWidth: 560 }}>{tr(language, 'examArchivesDesc')}</p>
+
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+        <h3 style={{ margin: 0, fontSize: 16, color: 'var(--chalk-green)' }}>{tr(language, 'amcArchive')}</h3>
+        <a href="/amc/admin" className="button button-secondary" style={{ textDecoration: 'none', fontSize: 13 }}>{tr(language, 'uploadMaterials')}</a>
       </div>
-      <h2 className="font-display" style={{ margin: '10px 0 10px', fontSize: 25 }}>{language === 'ko' ? 'AMC 기출문제' : 'AMC Archive'}</h2>
-      <p style={{ margin: '0 0 16px', color: 'var(--ink-soft)', maxWidth: 560 }}>{language === 'ko' ? 'AMC 8·10·12 기출문제를 연도별로 모아 미리보기와 다운로드를 제공합니다.' : 'AMC 8, 10, and 12 past exams by year, with preview and download.'}</p>
+      <p style={{ margin: '0 0 14px', color: 'var(--ink-soft)', maxWidth: 560, fontSize: 14 }}>{tr(language, 'amcArchiveDesc')}</p>
+      <div className="game-card-grid" style={{ marginBottom: 30 }}>
+        <a href="/amc/8" className="game-card"><span className="game-card-icon">🥉</span><h2>AMC 8</h2><p>{tr(language, 'amc8Level')}</p></a>
+        <a href="/amc/10" className="game-card"><span className="game-card-icon">🥈</span><h2>AMC 10</h2><p>{tr(language, 'amc10Level')}</p></a>
+        <a href="/amc/12" className="game-card"><span className="game-card-icon">🥇</span><h2>AMC 12</h2><p>{tr(language, 'amc12Level')}</p></a>
+      </div>
+
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+        <h3 style={{ margin: 0, fontSize: 16, color: 'var(--chalk-green)' }}>{tr(language, 'csatArchive')}</h3>
+        <a href="/csat/admin" className="button button-secondary" style={{ textDecoration: 'none', fontSize: 13 }}>{tr(language, 'uploadMaterials')}</a>
+      </div>
       <div className="game-card-grid">
-        <a href="/amc/8" className="game-card"><span className="game-card-icon">🥉</span><h2>AMC 8</h2><p>{language === 'ko' ? '중학생 이하 대상' : 'Middle school and below'}</p></a>
-        <a href="/amc/10" className="game-card"><span className="game-card-icon">🥈</span><h2>AMC 10</h2><p>{language === 'ko' ? '10학년 이하 대상 · A/B' : '10th grade and below · A/B'}</p></a>
-        <a href="/amc/12" className="game-card"><span className="game-card-icon">🥇</span><h2>AMC 12</h2><p>{language === 'ko' ? '12학년 이하 대상 · A/B' : '12th grade and below · A/B'}</p></a>
+        <a href="/csat/june" className="game-card"><span className="game-card-icon">🌱</span><h2>{tr(language, 'csatJune')}</h2><p>{tr(language, 'csatJuneDesc')}</p></a>
+        <a href="/csat/sept" className="game-card"><span className="game-card-icon">🍂</span><h2>{tr(language, 'csatSept')}</h2><p>{tr(language, 'csatSeptDesc')}</p></a>
+        <a href="/csat/nov" className="game-card"><span className="game-card-icon">🎓</span><h2>{tr(language, 'csatNov')}</h2><p>{tr(language, 'csatNovDesc')}</p></a>
       </div>
     </section>
 

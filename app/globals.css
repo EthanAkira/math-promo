@@ -89,6 +89,9 @@ html[dir="rtl"] .worksheet-identity div { text-align: left; }
 .site-brand { color: var(--ink); text-decoration: none; font-size: clamp(24px,2.5vw,31px); font-weight: 700; line-height: 1.2; white-space: nowrap; }
 .site-brand > span { margin: 0 .2em; color: var(--ink-soft); font-weight: 400; }
 .site-brand > strong { color: var(--red-pen); font: inherit; }
+.site-nav { display: flex; align-items: center; gap: 6px 18px; flex-wrap: wrap; font-size: 13px; font-weight: 700; }
+.site-nav a { color: var(--ink-soft); text-decoration: none; white-space: nowrap; }
+.site-nav a:hover { color: var(--red-pen); }
 
 /* Focus visibility */
 button:focus-visible,
@@ -225,6 +228,42 @@ select:focus-visible {
 .generated-proportion-graph .proportion-point { fill: var(--ink); }
 .generated-proportion-graph path { fill: var(--ink); }
 .generated-proportion-graph text { fill: var(--ink-soft); font: 9px 'IBM Plex Mono',monospace; }
+.generated-geometry { display: block; width: 100%; max-width: 230px; height: auto; margin: 2px auto 8px; overflow: visible; }
+.generated-geometry line,.generated-geometry polygon { fill: none; stroke: var(--ink); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.generated-geometry circle { fill: var(--ink); }
+.generated-geometry text { fill: var(--ink); font: 11px 'IBM Plex Mono',monospace; }
+.generated-geometry .point-label,.generated-geometry .line-label { font-size: 11px; font-weight: 700; }
+.generated-geometry .value-label { fill: var(--red-pen); font-size: 12px; font-weight: 700; }
+.generated-geometry .target-label { fill: #176b87; font-size: 14px; font-style: italic; font-weight: 800; }
+.generated-geometry .angle-arc { fill: none; stroke: var(--red-pen); stroke-width: 1.8; }
+.generated-geometry .target-arc { stroke: #176b87; }
+.generated-geometry .parallel-mark { fill: none; stroke: var(--ink-soft); stroke-width: 1.4; }
+.generated-geometry .hidden-edge { stroke-dasharray: 4 4; opacity: .65; }
+.generated-geometry .highlight-edge { stroke: var(--red-pen); stroke-width: 3.8; }
+.generated-geometry .target-edge { stroke: #176b87; stroke-width: 3.8; }
+.generated-geometry .construction-arc,.generated-geometry .construction-guide { fill: none; stroke: #176b87; stroke-width: 1.6; stroke-dasharray: 5 3; }
+.generated-geometry .construction-guide { stroke: var(--ink-soft); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.generated-geometry .construction-note { fill: #176b87; font-size: 12px; font-weight: 800; }
+.generated-geometry .highlight-angle-ring,.generated-geometry .target-angle-ring { fill: color-mix(in srgb, var(--red-pen) 10%, transparent); stroke: var(--red-pen); stroke-width: 2; }
+.generated-geometry .target-angle-ring { fill: color-mix(in srgb, #176b87 10%, transparent); stroke: #176b87; }
+.generated-geometry .arrow-head { fill: var(--ink); stroke: none; }
+.generated-geometry .plane-fill { fill: color-mix(in srgb, #8ccfd0 28%, transparent); stroke: var(--ink); }
+.generated-geometry .highlight-point { fill: var(--red-pen); }
+.generated-geometry .measure-arc { fill: none; stroke: var(--ink-soft); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.generated-geometry .guide-line { stroke: var(--ink-soft); stroke-dasharray: 4 4; }
+.generated-geometry .right-mark { fill: none; stroke: var(--red-pen); stroke-width: 1.8; }
+.generated-geometry polyline { fill: none; stroke: var(--ink); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.generated-geometry .highlight-face { fill: color-mix(in srgb, var(--red-pen) 20%, transparent); stroke: var(--red-pen); stroke-width: 1.2; }
+.generated-geometry .circle-outline { fill: none; stroke: var(--ink); stroke-width: 1.8; }
+.generated-geometry .sector-fill { fill: color-mix(in srgb, var(--red-pen) 18%, transparent); stroke: var(--red-pen); stroke-width: 1.1; }
+.generated-coordinate-geometry { max-width: 210px; }
+.generated-coordinate-geometry .coord-grid { stroke: var(--paper-line); stroke-width: .7; }
+.generated-coordinate-geometry .axis-line { stroke: var(--ink); stroke-width: 1.5; }
+.generated-coordinate-geometry .coordinate-circle { fill: color-mix(in srgb, #176b87 8%, transparent); stroke: #176b87; stroke-width: 2; }
+.geometry-problem { min-height: 330px; }
+.geometry-problem .word-calculation p { min-height: 44px; }
+.geometry-explanation { min-height: 0 !important; margin: 8px 0 0; padding: 8px 10px; border-left: 3px solid var(--red-pen); background: color-mix(in srgb, var(--paper) 82%, white); color: var(--ink-soft); font-size: 12px; line-height: 1.55; }
+.geometry-explanation b { display: inline-block; margin-right: 7px; color: var(--red-pen); }
 .mixed-fraction { display: inline-flex; align-items: center; gap: .16em; margin: 0 .08em; vertical-align: middle; white-space: nowrap; }
 .whole-number { display: inline-block; }
 .stacked-fraction { display: inline-grid; grid-template-rows: 1fr 1fr; align-items: center; min-width: 1.35em; line-height: 1; text-align: center; vertical-align: middle; }
@@ -275,6 +314,7 @@ html[dir="rtl"] .generated-proportion-graph {
 @media (max-width: 640px) {
   .site-header-inner { align-items: flex-start; flex-direction: column; gap: 10px; padding-block: 13px; }
   .site-brand { font-size: clamp(20px,5.7vw,24px); white-space: normal; }
+  .site-nav { width: 100%; gap: 8px 14px; }
   .curriculum-tabs { grid-template-columns: 1fr; }
   .curriculum-tabs button { min-height: 58px; }
   .curriculum-stage-grid { grid-template-columns: 1fr; }
@@ -330,6 +370,8 @@ html[dir="rtl"] .generated-proportion-graph {
   .graphic-problem .word-calculation p { min-height: 12mm; }
   .graphic-problem .generated-coord-plane,.graphic-problem .generated-proportion-graph { max-width: 34mm; }
   .graphic-problem .generated-trip-graph { max-width: 55mm; }
+  .graphic-problem .generated-geometry { max-width: 48mm; max-height: 36mm; }
+  .geometry-problem { min-height: 78mm; }
   .word-calculation p { min-height: 18mm; font-size: 10.5px; line-height: 1.5; }
   .word-expression { margin: 1mm 0 2mm; font-size: 14px; }
   .word-answer { margin-top: 2mm; font-size: 10px; }
