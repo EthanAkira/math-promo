@@ -1,7 +1,6 @@
 name = "math-promo"
 pages_build_output_dir = "out"
 compatibility_date = "2024-09-01"
-account_id = "01dda13ee01cad841f12258eaf76015f"
 
 [[kv_namespaces]]
 binding = "AMC_FILES"
