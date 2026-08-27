@@ -1,7 +1,10 @@
 export const LANGUAGES = [
   { code: 'ko', label: '한국어', short: 'KO' },
   { code: 'en', label: 'English', short: 'EN' },
+  { code: 'en-SG', label: 'English (Singapore)', short: 'SG' },
   { code: 'zh-CN', label: '简体中文', short: '中文' },
+  { code: 'zh-HK', label: '繁體中文（香港）', short: '香港' },
+  { code: 'zh-TW', label: '繁體中文（台灣）', short: '台灣' },
   { code: 'fr', label: 'Français', short: 'FR' },
   { code: 'es', label: 'Español', short: 'ES' },
   { code: 'ja', label: '日本語', short: '日本語' },
@@ -20,6 +23,7 @@ const messages = {
     worksheetSettings: '문제지 설정', problemType: '문제 유형', skill: '문제 유형', printPdf: '인쇄 / PDF', answerKey: '답지 보기', worksheet: '문제지 보기', newWorksheet: '새 문제지',
     worksheetId: '문제지 번호', scanQr: 'QR을 스캔하면 같은 문제를 다시 열 수 있어요.', name: '이름', date: '날짜', problems20: '20문제', answers: '정답', answer: '답',
     solveTablet: '태블릿으로 바로 풀기', checkAnswers: '채점하기', correct: '맞았어요', tryAgain: '다시 풀기', score: '20문제 중 {count}문제 정답',
+    noteToggleOpen: '✏️ 풀이 쓰기', noteToggleClose: '필기 접기', noteThick: '굵게', noteEraser: '지우개', noteUndo: '실행 취소', noteRedo: '다시 실행', noteClear: '전체 지우기',
     aboutTutor: '운영자 및 선생님 소개', lessons: '1:1, 소규모 수학 수업, 코딩수업', tutorName: '김채훈', degreeMech: 'Mechanical Engineering · Financial Mathematics · Data Science (Statistics)', degreeData: '', tutorCurrent: '현재 제주도에서 국제학교 수학강의, 코딩강의 중\n데이터 분석과 개발자, Audio Electronics Designer', tutorText: '문제 풀이에서 반복되는 실수를 확인하고, 학생별로 필요한 개념과 풀이 습관을 중심으로 수업합니다.', classInquiry: '수업 문의 · 010-3347-0308',
     elementaryTitle: '초등 1~6학년 수학 문제 생성기', elementaryDesc: '학년과 단원을 고르면 매번 새로운 무작위 문제지와 전용 QR 코드가 만들어집니다.',
     primeTitle: '중등 소인수분해 문제 생성기', primeCrumb: '소수와 소인수분해', middleDesc: '유형을 고르면 새로운 20문제 문제지와 정답지가 자동으로 만들어집니다.',
@@ -34,6 +38,7 @@ const messages = {
     worksheetSettings: 'Worksheet settings', problemType: 'Problem type', skill: 'Skill', printPdf: 'Print / PDF', answerKey: 'Answer key', worksheet: 'Worksheet', newWorksheet: 'New worksheet',
     worksheetId: 'Worksheet ID', scanQr: 'Scan the QR code to reopen this worksheet.', name: 'Name', date: 'Date', problems20: '20 problems', answers: 'Answers', answer: 'Answer',
     solveTablet: 'Solve directly on a tablet', checkAnswers: 'Check answers', correct: 'Correct', tryAgain: 'Try again', score: '{count} of 20 correct',
+    noteToggleOpen: '✏️ Write on notepad', noteToggleClose: 'Hide notepad', noteThick: 'Thick', noteEraser: 'Eraser', noteUndo: 'Undo', noteRedo: 'Redo', noteClear: 'Clear all',
     aboutTutor: 'About the operator & tutor', lessons: '1:1 MATH LESSONS', tutorName: 'Kim Chae-hoon', degreeMech: 'B.S. in Mechanical Engineering, Korea University', degreeData: 'M.S. in Statistics, Korea University', tutorCurrent: 'Currently teaching math at an international school in Jeju, while working as a data analyst/developer and Audio Electronics Designer.', tutorText: 'Lessons identify recurring mistakes and focus on the concepts and solution habits each student needs.', classInquiry: 'Class inquiry · 010-3347-0308',
     elementaryTitle: 'Elementary Math Worksheet Generator', elementaryDesc: 'Choose a grade and topic to create a new random worksheet and QR code.', primeTitle: 'Prime Factorization Worksheet Generator', primeCrumb: 'Primes & Prime Factorization', middleDesc: 'Choose a skill to generate a new 20-question worksheet and answer key.', gcdTitle: 'GCF & LCM Worksheet Generator', gcdCrumb: 'GCF & LCM', integerTitle: 'Integers & Rational Numbers Worksheet Generator', integerCrumb: 'Integers & Rational Numbers', basicFiguresTitle: 'Basic Figures Worksheet Generator', basicFiguresCrumb: 'Basic Figures (Points, Lines & Angles)', grade1Middle: 'Middle School 1', grade1Short: 'Middle 1', worksheetWord: 'Worksheet', answerSheet: 'Answer Key',
     topicElementary: 'Grades 1–6 Practice', topicGrade1: 'Grade 1: Number Bonds & Addition/Subtraction', topicGrade2: 'Grade 2: Two-Digit Operations & Times Tables', topicGrade3: 'Grade 3: Large-Number Multiplication, Division & Fractions', topicGrade4: 'Grade 4: Large Numbers, Fractions & Decimals', topicGrade5: 'Grade 5: Factors, Fractions & Decimals', topicGrade6: 'Grade 6: Division & Ratios', topicGeometry: 'Geometry & Measurement', topicPrime: 'Primes & Prime Factorization', topicGcd: 'GCF & LCM', topicInteger: 'Integers & Rational Numbers', topicRationalOps: 'Rational Number Operations', topicEquation: 'Linear Equations', topicFactoring: 'Factoring', topicQuadratic: 'Quadratic Functions', topicSequences: 'Sequences', topicLogs: 'Exponents & Logarithms', topicBasicFigures: 'Basic Figures (Points, Lines & Angles)',
@@ -69,6 +74,54 @@ const messages = {
     language: 'Bahasa', home: 'Beranda', elementary: 'Sekolah Dasar', middle: 'Sekolah Menengah', high: 'Sekolah Atas', comingSoon: 'Segera hadir', dailyLab: 'Laboratorium Belajar Harian', heroTitle: 'Dari matematika hingga coding,\nruang untuk berkembang setiap hari', heroDescription: 'Lembar matematika acak gratis untuk sekolah dasar dan menengah. Mata pelajaran lain akan segera ditambahkan.', worksheetSettings: 'Pengaturan lembar', problemType: 'Jenis soal', skill: 'Topik', printPdf: 'Cetak / PDF', answerKey: 'Kunci jawaban', worksheet: 'Lembar soal', newWorksheet: 'Lembar baru', worksheetId: 'Nomor lembar', scanQr: 'Pindai kode QR untuk membuka kembali lembar ini.', name: 'Nama', date: 'Tanggal', problems20: '20 soal', answers: 'Jawaban', answer: 'Jawaban', solveTablet: 'Kerjakan langsung di tablet', checkAnswers: 'Periksa jawaban', correct: 'Benar', tryAgain: 'Coba lagi', score: '{count} dari 20 benar', aboutTutor: 'Tentang pengajar', lessons: 'LES MATEMATIKA PRIVAT', tutorName: 'Kim Chae-hoon', degreeMech: 'Sarjana Teknik Mesin, Korea University', degreeData: 'M.S. Statistika, Korea University', tutorCurrent: 'Saat ini mengajar matematika di sekolah internasional di Pulau Jeju, sekaligus bekerja sebagai analis data/developer dan Audio Electronics Designer.', tutorText: 'Pelajaran mengenali kesalahan berulang dan berfokus pada konsep serta kebiasaan penyelesaian yang dibutuhkan setiap siswa.', classInquiry: 'Informasi kelas · 010-3347-0308', elementaryTitle: 'Pembuat lembar matematika sekolah dasar', elementaryDesc: 'Pilih kelas dan topik untuk membuat lembar acak baru beserta kode QR.', primeTitle: 'Pembuat soal faktorisasi prima', primeCrumb: 'Bilangan prima dan faktorisasi', middleDesc: 'Pilih topik untuk membuat 20 soal baru dan kunci jawaban.', gcdTitle: 'Pembuat FPB dan KPK', gcdCrumb: 'FPB dan KPK', integerTitle: 'Pembuat soal bilangan bulat dan rasional', integerCrumb: 'Bilangan bulat dan rasional', grade1Middle: 'Kelas 7', grade1Short: 'SMP', worksheetWord: 'Lembar soal', answerSheet: 'Kunci jawaban', topicElementary: 'Hitungan kelas 1–6', topicGrade4: 'Bilangan besar, pecahan, dan desimal', topicGrade5: 'Faktor, pecahan, dan desimal', topicGrade6: 'Pembagian dan rasio', topicGeometry: 'Geometri dan pengukuran', topicPrime: 'Bilangan prima dan faktorisasi', topicGcd: 'FPB dan KPK', topicInteger: 'Bilangan bulat dan rasional', topicEquation: 'Persamaan linear', topicFactoring: 'Faktorisasi', topicQuadratic: 'Fungsi kuadrat', topicSequences: 'Barisan', topicLogs: 'Eksponen dan logaritma', topicBasicFigures: 'Bentuk dasar (titik, garis, dan sudut)',
   },
 };
+
+// Regional Chinese is not interchangeable, and Singapore schools use British
+// English and local stage/subject terminology.  Keep each market as its own
+// locale while inheriting only copy that is genuinely shared.
+Object.assign(messages, {
+  'en-SG': {
+    ...messages.en,
+    elementary: 'Primary', middle: 'Secondary', high: 'Junior College',
+    heroDescription: 'Free randomised Mathematics worksheets for Primary and Secondary students. Singapore Math, coding practice and worked solutions will be added progressively.',
+    worksheetSettings: 'Worksheet settings', problemType: 'Question type', printPdf: 'Print / PDF', answerKey: 'Answer key', worksheet: 'Worksheet', newWorksheet: 'New worksheet',
+    solveTablet: 'Work on a tablet', checkAnswers: 'Check answers', tryAgain: 'Try again', score: '{count} out of 20 correct',
+    lessons: '1-TO-1 MATHEMATICS TUITION', classInquiry: 'Tuition enquiry · 010-3347-0308',
+    elementaryTitle: 'Primary Mathematics Worksheet Generator', elementaryDesc: 'Choose a Primary level and topic to create a fresh worksheet and QR code.',
+    primeTitle: 'Secondary Mathematics: Prime Factorisation', primeCrumb: 'Prime Numbers & Prime Factorisation', middleDesc: 'Choose a topic to generate a new 20-question worksheet and answer key.',
+    gcdTitle: 'HCF & LCM Worksheet Generator', gcdCrumb: 'Highest Common Factor & Lowest Common Multiple',
+    integerTitle: 'Integers & Rational Numbers Worksheet Generator', integerCrumb: 'Integers & Rational Numbers', grade1Middle: 'Secondary 1', grade1Short: 'Sec 1',
+    topicElementary: 'Primary 1–6 Mathematics', topicGrade1: 'Primary 1: Number Bonds & Addition/Subtraction', topicGrade2: 'Primary 2: Two-Digit Operations & Multiplication Tables', topicGrade3: 'Primary 3: Multiplication, Division & Fractions', topicGrade4: 'Primary 4: Whole Numbers, Fractions & Decimals', topicGrade5: 'Primary 5: Factors, Fractions & Decimals', topicGrade6: 'Primary 6: Division, Ratio & Percentage',
+    topicGeometry: 'Geometry & Measurement', topicPrime: 'Prime Numbers & Prime Factorisation', topicGcd: 'HCF & LCM', topicFactoring: 'Factorisation',
+  },
+  'zh-HK': {
+    language: '語言', home: '首頁', elementary: '小學', middle: '中學', high: '高中', comingSoon: '即將推出',
+    dailyLab: '每日學習研究所', heroTitle: '由數學到編程，\n每天進步的學習空間', heroDescription: '免費提供適合香港小學及中學程度的隨機數學工作紙。稍後將加入更多科目、編程練習及詳細解題。',
+    worksheetSettings: '工作紙設定', problemType: '題型', skill: '課題', printPdf: '列印 / PDF', answerKey: '查看答案', worksheet: '查看工作紙', newWorksheet: '新工作紙',
+    worksheetId: '工作紙編號', scanQr: '掃描二維碼即可重新開啟這份工作紙。', name: '姓名', date: '日期', problems20: '20題', answers: '答案', answer: '答案',
+    solveTablet: '直接在平板電腦作答', checkAnswers: '核對答案', correct: '答對了', tryAgain: '再試一次', score: '20題中答對{count}題',
+    aboutTutor: '導師及營運者簡介', lessons: '一對一數學補習', tutorName: '金采勳', degreeMech: '高麗大學機械工程學士', degreeData: '高麗大學統計學碩士', tutorCurrent: '現於濟州島國際學校教授數學，並從事數據分析、開發及 Audio Electronics Designer 工作。', tutorText: '課堂會找出重複出現的錯誤，並針對每位學生所需的概念和解題習慣作出指導。', classInquiry: '課堂查詢 · 010-3347-0308',
+    elementaryTitle: '小學數學工作紙產生器', elementaryDesc: '選擇年級和課題，即可產生全新的隨機工作紙及專屬二維碼。',
+    primeTitle: '中學質因數分解工作紙產生器', primeCrumb: '質數與質因數分解', middleDesc: '選擇題型，即可自動產生20條新題目及答案。',
+    gcdTitle: '最高公因數與最低公倍數工作紙產生器', gcdCrumb: '最高公因數與最低公倍數', integerTitle: '整數與有理數工作紙產生器', integerCrumb: '整數與有理數',
+    grade1Middle: '中一', grade1Short: '中一', worksheetWord: '工作紙', answerSheet: '答案',
+    topicElementary: '小一至小六運算', topicGrade1: '小一：數的分解與合成、加減法', topicGrade2: '小二：兩位數運算與乘數表', topicGrade3: '小三：乘法、除法與分數', topicGrade4: '小四：大數、分數與小數', topicGrade5: '小五：因數、分數與小數', topicGrade6: '小六：除法、比與百分比', topicGeometry: '圖形與度量',
+    topicPrime: '質數與質因數分解', topicGcd: '最高公因數與最低公倍數', topicInteger: '整數與有理數', topicRationalOps: '有理數的四則運算', topicEquation: '一元一次方程', topicFactoring: '因式分解', topicQuadratic: '二次函數', topicSequences: '數列', topicLogs: '指數與對數',
+  },
+  'zh-TW': {
+    language: '語言', home: '首頁', elementary: '國小', middle: '國中', high: '高中', comingSoon: '即將推出',
+    dailyLab: '每日學習研究室', heroTitle: '從數學到程式設計，\n每天成長的學習空間', heroDescription: '免費提供適合台灣國小及國中程度的隨機數學學習單。之後將陸續加入更多科目、程式練習與詳解。',
+    worksheetSettings: '學習單設定', problemType: '題型', skill: '單元', printPdf: '列印 / PDF', answerKey: '查看解答', worksheet: '查看學習單', newWorksheet: '新學習單',
+    worksheetId: '學習單編號', scanQr: '掃描 QR Code 即可重新開啟這份學習單。', name: '姓名', date: '日期', problems20: '20題', answers: '解答', answer: '答案',
+    solveTablet: '直接在平板上作答', checkAnswers: '批改答案', correct: '答對了', tryAgain: '再試一次', score: '20題中答對{count}題',
+    aboutTutor: '營運者與老師介紹', lessons: '一對一數學家教', tutorName: '金采勳', degreeMech: '高麗大學機械工程學士', degreeData: '高麗大學統計學碩士', tutorCurrent: '目前於濟州島國際學校教授數學，並從事資料分析、開發及 Audio Electronics Designer 工作。', tutorText: '課程會找出反覆出現的錯誤，並針對每位學生需要的觀念與解題習慣進行指導。', classInquiry: '課程諮詢 · 010-3347-0308',
+    elementaryTitle: '國小數學學習單產生器', elementaryDesc: '選擇年級與單元，即可產生全新的隨機學習單及專屬 QR Code。',
+    primeTitle: '國中質因數分解學習單產生器', primeCrumb: '質數與質因數分解', middleDesc: '選擇題型，即可自動產生20道新題目與解答。',
+    gcdTitle: '最大公因數與最小公倍數學習單產生器', gcdCrumb: '最大公因數與最小公倍數', integerTitle: '整數與有理數學習單產生器', integerCrumb: '整數與有理數',
+    grade1Middle: '國中一年級', grade1Short: '國一', worksheetWord: '學習單', answerSheet: '解答',
+    topicElementary: '國小一至六年級運算', topicGrade1: '一年級：數的分解與合成、加減法', topicGrade2: '二年級：二位數運算與九九乘法', topicGrade3: '三年級：乘法、除法與分數', topicGrade4: '四年級：大數、分數與小數', topicGrade5: '五年級：因數、分數與小數', topicGrade6: '六年級：除法、比與比值', topicGeometry: '幾何與測量',
+    topicPrime: '質數與質因數分解', topicGcd: '最大公因數與最小公倍數', topicInteger: '整數與有理數', topicRationalOps: '有理數的四則運算', topicEquation: '一元一次方程式', topicFactoring: '因式分解', topicQuadratic: '二次函數', topicSequences: '數列', topicLogs: '指數與對數',
+  },
+});
 
 const supplementalMessages = {
   ko: { topicAlgebra: '문자와 식', algebraTitle: '중등 문자와 식·일차방정식 문제 생성기', algebraCrumb: '문자와 식·일차방정식', topicCoordinate: '좌표와 그래프', coordinateTitle: '중등 좌표와 그래프 문제 생성기', coordinateCrumb: '좌표와 그래프', topicProportion: '정비례와 반비례', proportionTitle: '중등 정비례와 반비례 문제 생성기', proportionCrumb: '정비례와 반비례',
@@ -123,8 +176,38 @@ const supplementalMessages = {
     formImage: 'Lampirkan tangkapan layar (opsional)', boardSubmitQuestion: 'Kirim pertanyaan', boardSubmitNotice: 'Kirim pengumuman', boardPosted: 'Berhasil dikirim.', boardReplyLabel: 'Balasan', boardNoReplyYet: 'Belum ada balasan.', boardWriteReplyPlaceholder: 'Tulis balasan', boardSubmitReply: 'Kirim balasan', boardDelete: 'Hapus', boardConfirmDelete: 'Hapus postingan ini?', boardAdminLogin: 'Login admin', boardAdminLogout: 'Keluar', boardAdminPasswordPlaceholder: 'Kata sandi admin', boardWrongPassword: 'Kata sandi salah.', boardEmpty: 'Belum ada postingan.', boardLoading: 'Memuat...', boardViewImage: 'Lihat gambar', boardAnonymous: 'Pengunjung', boardAdmin: 'Admin', boardNoticeComposerTitle: 'Tulis pengumuman baru', boardQuestionComposerTitle: 'Tinggalkan pertanyaan', boardUploadTooLarge: 'Gambar terlalu besar (maks 8MB).', boardSubmitError: 'Gagal mengirim. Silakan coba lagi.' },
 };
 
+Object.assign(supplementalMessages, {
+  'en-SG': {
+    ...supplementalMessages.en,
+    topicAlgebra: 'Algebraic Expressions', algebraTitle: 'Algebraic Expressions & Linear Equations Worksheet Generator', algebraCrumb: 'Algebraic Expressions & Linear Equations',
+    topicCoordinate: 'Cartesian Coordinates & Graphs', coordinateTitle: 'Cartesian Coordinates & Graphs Worksheet Generator', coordinateCrumb: 'Cartesian Coordinates & Graphs',
+    topicProportion: 'Direct & Inverse Proportion', proportionTitle: 'Direct & Inverse Proportion Worksheet Generator', proportionCrumb: 'Direct & Inverse Proportion',
+  },
+  'zh-HK': {
+    topicAlgebra: '代數式', algebraTitle: '代數式與一元一次方程工作紙產生器', algebraCrumb: '代數式與一元一次方程', topicCoordinate: '直角坐標與圖像', coordinateTitle: '直角坐標與圖像工作紙產生器', coordinateCrumb: '直角坐標與圖像', topicProportion: '正比例與反比例', proportionTitle: '正比例與反比例工作紙產生器', proportionCrumb: '正比例與反比例',
+    navNotices: '最新消息', navContact: '聯絡我們', noticesTitle: '最新消息', noticesDesc: '查看網站的最新消息與更新。', noticesCrumb: '最新消息', contactTitle: '聯絡我們', contactDesc: '歡迎提交問題、意見或錯誤報告。', contactCrumb: '聯絡我們',
+    formName: '姓名（選填）', formEmail: '電郵（選填，用作回覆）', formType: '查詢類別', formTypeBug: '錯誤報告', formTypeSuggestion: '功能建議', formTypeQuestion: '問題', formTypeOther: '其他', formMessage: '內容', formMessagePlaceholder: '請詳細填寫查詢內容。', formSubmit: '以電郵傳送', formHelp: '按下傳送後會開啟電郵應用程式，請核對內容後送出。', formDirectEmail: '或直接傳送電郵', formRequired: '請輸入內容。', formSent: '已開啟電郵應用程式，請核對後送出。',
+    quickPractice: '快速練習', uploadMaterials: '上載教材', amcArchive: 'AMC 歷屆試題', amcArchiveDesc: '按年份查看 AMC 8、10及12歷屆試題，並提供預覽及下載。', amc8Level: '中學生或以下', amc10Level: '十年級或以下 · A/B', amc12Level: '十二年級或以下 · A/B', restCorner: '休息天地',
+  },
+  'zh-TW': {
+    topicAlgebra: '代數式', algebraTitle: '代數式與一元一次方程式學習單產生器', algebraCrumb: '代數式與一元一次方程式', topicCoordinate: '直角坐標與圖形', coordinateTitle: '直角坐標與圖形學習單產生器', coordinateCrumb: '直角坐標與圖形', topicProportion: '正比與反比', proportionTitle: '正比與反比學習單產生器', proportionCrumb: '正比與反比',
+    navNotices: '公告', navContact: '聯絡我們', noticesTitle: '公告', noticesDesc: '查看網站的最新消息與更新。', noticesCrumb: '公告', contactTitle: '聯絡我們', contactDesc: '歡迎傳送問題、意見或錯誤回報。', contactCrumb: '聯絡我們',
+    formName: '姓名（選填）', formEmail: '電子郵件（選填，供回覆使用）', formType: '詢問類型', formTypeBug: '錯誤回報', formTypeSuggestion: '功能建議', formTypeQuestion: '問題', formTypeOther: '其他', formMessage: '內容', formMessagePlaceholder: '請詳細填寫您想詢問的內容。', formSubmit: '用電子郵件傳送', formHelp: '按下傳送後會開啟電子郵件應用程式，請確認內容後寄出。', formDirectEmail: '或直接寄送電子郵件', formRequired: '請輸入內容。', formSent: '已開啟電子郵件應用程式，請確認後寄出。',
+    quickPractice: '快速練習', uploadMaterials: '上傳教材', amcArchive: 'AMC 歷屆試題', amcArchiveDesc: '依年份整理 AMC 8、10、12 歷屆試題，並提供預覽與下載。', amc8Level: '國中生以下', amc10Level: '十年級以下 · A/B', amc12Level: '十二年級以下 · A/B', restCorner: '休息一下',
+  },
+});
+
+Object.assign(supplementalMessages.en, {
+  quickPractice: 'Quick practice', uploadMaterials: 'Upload materials', amcArchive: 'AMC Archive', amcArchiveDesc: 'AMC 8, 10, and 12 past exams by year, with preview and download.', amc8Level: 'Middle school and below', amc10Level: '10th grade and below · A/B', amc12Level: '12th grade and below · A/B', restCorner: 'Rest Corner',
+});
+supplementalMessages['en-SG'] = { ...supplementalMessages.en, ...supplementalMessages['en-SG'] };
+Object.assign(supplementalMessages.ko, {
+  quickPractice: '빠른 문제 선택', uploadMaterials: '자료 업로드', amcArchive: 'AMC 기출문제', amcArchiveDesc: 'AMC 8·10·12 기출문제를 연도별로 모아 미리보기와 다운로드를 제공합니다.', amc8Level: '중학생 이하 대상', amc10Level: '10학년 이하 대상 · A/B', amc12Level: '12학년 이하 대상 · A/B', restCorner: '쉬어가는 코너',
+});
+
 export function tr(language, key, vars = {}) {
-  const template = messages[language]?.[key] ?? supplementalMessages[language]?.[key] ?? messages.en[key] ?? messages.ko[key] ?? key;
+  const regionalFallback = language === 'en-SG' ? 'en' : (language === 'zh-HK' || language === 'zh-TW') ? 'zh-CN' : language;
+  const template = messages[language]?.[key] ?? supplementalMessages[language]?.[key] ?? messages[regionalFallback]?.[key] ?? supplementalMessages[regionalFallback]?.[key] ?? messages.en[key] ?? supplementalMessages.en[key] ?? messages.ko[key] ?? key;
   return Object.entries(vars).reduce((text, [name, value]) => text.replaceAll(`{${name}}`, value), template);
 }
 

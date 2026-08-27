@@ -1,10 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
 import { findGrade, findUnit, GRADE_CATALOG, localizeGrade, localizeUnit } from './catalog';
 import { useLanguage } from '../../language';
 import { isNonKorean, tr } from '../../i18n';
+import NoteCanvas from '../../components/NoteCanvas';
 
 const PROBLEM_COUNT = 20;
 
@@ -113,6 +114,15 @@ export default function PracticeGenerator() {
   const [checked, setChecked] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState('');
   const [ready, setReady] = useState(false);
+  const [openNotes, setOpenNotes] = useState(() => new Set());
+
+  const toggleNote = useCallback((problemId) => {
+    setOpenNotes((current) => {
+      const next = new Set(current);
+      if (next.has(problemId)) next.delete(problemId); else next.add(problemId);
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -143,7 +153,7 @@ export default function PracticeGenerator() {
   }, []);
 
   function resetWork(nextSeed, nextGrade = gradeId, nextUnit = unitId) {
-    setSeed(nextSeed); setGradeId(nextGrade); setUnitId(nextUnit); setView('problems'); setAnswers({}); setChecked(false);
+    setSeed(nextSeed); setGradeId(nextGrade); setUnitId(nextUnit); setView('problems'); setAnswers({}); setChecked(false); setOpenNotes(new Set());
     replaceUrl(nextSeed, nextGrade, nextUnit, 'problems');
   }
 
@@ -174,7 +184,23 @@ export default function PracticeGenerator() {
       <header className="worksheet-heading"><div className="worksheet-brand"><span className="brand-mark">DAILY</span><strong>{tr(language, 'dailyLab')}</strong></div><div className="worksheet-title"><span>{gradeLabel}</span><h2>{unitLabel} {tr(language, view === 'answers' ? 'answerSheet' : 'worksheetWord')}</h2><p>{unitDescription}</p></div><div className="worksheet-identity"><div><span>{tr(language, 'worksheetId')}</span><strong>{seed}</strong><small>{tr(language, 'scanQr')}</small></div>{qrDataUrl ? <img src={qrDataUrl} alt={`Worksheet ${seed} QR code`} /> : null}</div></header>
       <div className="student-row"><span>{tr(language, 'name')}</span><i /><span>{tr(language, 'date')}</span><i /><span className="sheet-kind">{tr(language, view === 'answers' ? 'answers' : 'problems20')}</span></div>
       <section className={`problem-grid ${problems.some((problem) => problem.kind === 'word') ? 'word-problem-grid' : ''}`} aria-label={`${unitLabel} ${en ? 'problems' : '문제'}`}>
-        {problems.map((problem) => { const isCorrect = normalizeAnswer(answers[problem.id]) === normalizeAnswer(problem.answer); const hasAnswer = answers[problem.id] !== undefined && answers[problem.id] !== ''; return <article className={`vertical-problem ${problem.kind === 'inline' ? 'inline-problem' : ''} ${problem.kind === 'word' ? 'word-problem' : ''}`} key={problem.id}><span className="problem-number">{problem.id}</span><ProblemBody problem={problem} view={view} value={answers[problem.id]} checked={checked} onChange={handleAnswer} language={language} />{checked && view === 'problems' && hasAnswer ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{isCorrect ? (en ? 'Correct' : '맞았어요') : (en ? 'Try again' : '다시 풀기')}</span> : null}</article>; })}
+        {problems.map((problem) => {
+          const isCorrect = normalizeAnswer(answers[problem.id]) === normalizeAnswer(problem.answer);
+          const hasAnswer = answers[problem.id] !== undefined && answers[problem.id] !== '';
+          const noteOpen = view === 'problems' && openNotes.has(problem.id);
+          const noteKey = `dll-note:${seed}:${unit.id}:${problem.id}`;
+          return (
+            <Fragment key={problem.id}>
+              <article className={`vertical-problem ${problem.kind === 'inline' ? 'inline-problem' : ''} ${problem.kind === 'word' ? 'word-problem' : ''}`}>
+                <span className="problem-number">{problem.id}</span>
+                <ProblemBody problem={problem} view={view} value={answers[problem.id]} checked={checked} onChange={handleAnswer} language={language} />
+                {checked && view === 'problems' && hasAnswer ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{isCorrect ? (en ? 'Correct' : '맞았어요') : (en ? 'Try again' : '다시 풀기')}</span> : null}
+                {view === 'problems' ? <button type="button" className="note-toggle no-print" onClick={() => toggleNote(problem.id)}>{tr(language, noteOpen ? 'noteToggleClose' : 'noteToggleOpen')}</button> : null}
+              </article>
+              {noteOpen ? <div className="note-canvas-slot no-print"><NoteCanvas storageKey={noteKey} open={noteOpen} /></div> : null}
+            </Fragment>
+          );
+        })}
       </section>
       <footer className="worksheet-footer"><span>{tr(language, 'dailyLab')}</span><span>{seed} · {gradeLabel} · {unitLabel}</span></footer>
     </div>
