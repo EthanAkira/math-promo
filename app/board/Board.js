@@ -1,27 +1,49 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLanguage } from '../language';
 import { tr } from '../i18n';
 
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
+const PAGE_SIZE = 15;
+const POPULAR_VIEWS = 50;
 
 function formatDate(iso) {
   try {
-    return new Date(iso).toLocaleDateString();
+    const d = new Date(iso);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}.${m}.${day}`;
   } catch {
     return iso;
   }
 }
 
+function titleOf(message, fallback) {
+  const firstLine = (message || '').split('\n')[0].trim();
+  if (!firstLine) return fallback;
+  return firstLine.length > 60 ? `${firstLine.slice(0, 60)}…` : firstLine;
+}
+
 const fieldStyle = { padding: '10px 12px', border: '1px solid var(--paper-line)', borderRadius: 8, font: 'inherit' };
 const labelStyle = { fontSize: 13, fontWeight: 700, color: 'var(--chalk-green)' };
+const tableHeadStyle = { padding: '10px 8px', borderBottom: '2px solid var(--ink)', fontSize: 12, fontWeight: 700, color: 'var(--ink-soft)', textAlign: 'left', whiteSpace: 'nowrap' };
+const tableCellStyle = { padding: '10px 8px', borderBottom: '1px solid var(--paper-line)', fontSize: 13, verticalAlign: 'top' };
+const tagStyle = { display: 'inline-block', marginLeft: 6, fontSize: 11, fontWeight: 700, color: 'var(--red-pen)', border: '1px solid var(--red-pen)', borderRadius: 4, padding: '1px 5px', verticalAlign: 'middle' };
 
 export default function Board({ category, adminOnlyPost = false, allowReply = true, staticPosts = [] }) {
   const { language } = useLanguage();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
+
+  const [view, setView] = useState('list'); // 'list' | 'compose' | 'detail'
+  const [selectedPost, setSelectedPost] = useState(null);
+
+  const [page, setPage] = useState(1);
+  const [query, setQuery] = useState('');
+  const [searchInput, setSearchInput] = useState('');
 
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
@@ -33,9 +55,10 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
   const [adminPassword, setAdminPassword] = useState('');
   const [adminUnlocked, setAdminUnlocked] = useState(false);
   const [adminError, setAdminError] = useState('');
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
 
-  const [replyDrafts, setReplyDrafts] = useState({});
-  const [busyId, setBusyId] = useState(null);
+  const [replyDraft, setReplyDraft] = useState('');
+  const [busy, setBusy] = useState(false);
 
   async function loadPosts() {
     setLoading(true);
@@ -56,6 +79,60 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
     loadPosts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category]);
+
+  const combined = useMemo(() => {
+    const merged = [...staticPosts, ...posts];
+    return merged.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  }, [staticPosts, posts]);
+
+  const filtered = useMemo(() => {
+    if (!query.trim()) return combined;
+    const q = query.trim().toLowerCase();
+    return combined.filter((post) => (post.message || '').toLowerCase().includes(q) || (post.name || '').toLowerCase().includes(q));
+  }, [combined, query]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pageItems = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  function numberFor(post) {
+    const idx = combined.findIndex((item) => item.id === post.id);
+    return combined.length - idx;
+  }
+
+  async function openDetail(post) {
+    setSelectedPost(post);
+    setView('detail');
+    setReplyDraft('');
+    setAdminError('');
+    if (post.static) return;
+    try {
+      const res = await fetch(`/api/board/posts?id=${encodeURIComponent(post.id)}&view=1`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.post) {
+          setSelectedPost(data.post);
+          setPosts((prev) => prev.map((item) => (item.id === data.post.id ? data.post : item)));
+        }
+      }
+    } catch {
+      // view-count tracking is best-effort
+    }
+  }
+
+  function backToList() {
+    setView('list');
+    setSelectedPost(null);
+  }
+
+  function openCompose() {
+    if (adminOnlyPost && !adminUnlocked) {
+      setShowAdminLogin(true);
+      return;
+    }
+    setComposeError('');
+    setView('compose');
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -93,6 +170,8 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
       setImageFile(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
       await loadPosts();
+      setPage(1);
+      setView('list');
     } catch {
       setComposeError(tr(language, 'boardSubmitError'));
     } finally {
@@ -104,6 +183,7 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
     if (!adminPassword) return;
     setAdminUnlocked(true);
     setAdminError('');
+    setShowAdminLogin(false);
   }
 
   function logoutAdmin() {
@@ -112,38 +192,40 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
     setAdminError('');
   }
 
-  async function submitReply(postId) {
-    const replyText = (replyDrafts[postId] || '').trim();
-    if (!replyText) return;
-    setBusyId(postId);
+  async function submitReply() {
+    const text = replyDraft.trim();
+    if (!text || !selectedPost) return;
+    setBusy(true);
     try {
       const res = await fetch('/api/board/reply', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: adminPassword, id: postId, reply: replyText }),
+        body: JSON.stringify({ password: adminPassword, id: selectedPost.id, reply: text }),
       });
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setAdminError(tr(language, 'boardWrongPassword'));
         if (res.status === 401) setAdminUnlocked(false);
         return;
       }
-      setReplyDrafts((prev) => ({ ...prev, [postId]: '' }));
+      setSelectedPost(data.post);
+      setReplyDraft('');
       await loadPosts();
     } catch {
       setAdminError(tr(language, 'boardSubmitError'));
     } finally {
-      setBusyId(null);
+      setBusy(false);
     }
   }
 
-  async function deletePost(postId) {
-    if (typeof window !== 'undefined' && !window.confirm(tr(language, 'boardConfirmDelete'))) return;
-    setBusyId(postId);
+  async function deleteSelected() {
+    if (!selectedPost || (typeof window !== 'undefined' && !window.confirm(tr(language, 'boardConfirmDelete')))) return;
+    setBusy(true);
     try {
       const res = await fetch('/api/board/delete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: adminPassword, id: postId }),
+        body: JSON.stringify({ password: adminPassword, id: selectedPost.id }),
       });
       if (!res.ok) {
         setAdminError(tr(language, 'boardWrongPassword'));
@@ -151,88 +233,142 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
         return;
       }
       await loadPosts();
+      backToList();
     } catch {
       setAdminError(tr(language, 'boardSubmitError'));
     } finally {
-      setBusyId(null);
+      setBusy(false);
     }
   }
 
-  const combined = [...staticPosts, ...posts].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
-
-  return <>
-    {!adminOnlyPost && <form onSubmit={handleSubmit} className="no-print" style={{ display: 'grid', gap: 14, padding: 22, marginBottom: 28, background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}>
-      <h2 style={{ margin: 0, fontSize: 16 }}>{tr(language, 'boardQuestionComposerTitle')}</h2>
-      <label style={{ display: 'grid', gap: 6 }}>
-        <span style={labelStyle}>{tr(language, 'formName')}</span>
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} style={fieldStyle} />
-      </label>
-      <label style={{ display: 'grid', gap: 6 }}>
-        <span style={labelStyle}>{tr(language, 'formMessage')}</span>
-        <textarea value={message} onChange={(e) => { setMessage(e.target.value); setComposeError(''); }} placeholder={tr(language, 'formMessagePlaceholder')} rows={5} style={{ ...fieldStyle, border: `1px solid ${composeError ? 'var(--red-pen)' : 'var(--paper-line)'}`, resize: 'vertical' }} />
-      </label>
-      <label style={{ display: 'grid', gap: 6 }}>
-        <span style={labelStyle}>{tr(language, 'formImage')}</span>
-        <input ref={fileInputRef} type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files?.[0] || null)} />
-      </label>
-      {composeError ? <span style={{ color: 'var(--red-pen)', fontSize: 12, fontWeight: 700 }}>{composeError}</span> : null}
-      <button type="submit" className="button button-primary" disabled={submitting} style={{ justifySelf: 'start' }}>{tr(language, 'boardSubmitQuestion')}</button>
-    </form>}
-
-    <details className="no-print" style={{ marginBottom: 24 }} open={adminUnlocked}>
-      <summary style={{ cursor: 'pointer', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700 }}>{adminUnlocked ? tr(language, 'boardAdmin') : tr(language, 'boardAdminLogin')}</summary>
-      {!adminUnlocked ? <div style={{ display: 'flex', gap: 8, marginTop: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-        <input type="password" value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} placeholder={tr(language, 'boardAdminPasswordPlaceholder')} style={{ ...fieldStyle, maxWidth: 220 }} />
+  const adminBox = <div className="no-print" style={{ margin: '18px 0', fontSize: 13 }}>
+    {!adminUnlocked ? <>
+      {(showAdminLogin || !adminOnlyPost) ? <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+        <input type="password" value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} placeholder={tr(language, 'boardAdminPasswordPlaceholder')} style={{ ...fieldStyle, maxWidth: 200 }} />
         <button type="button" onClick={unlockAdmin} className="button button-secondary">{tr(language, 'boardAdminLogin')}</button>
-      </div> : <div style={{ marginTop: 10 }}>
-        <button type="button" onClick={logoutAdmin} className="button button-secondary">{tr(language, 'boardAdminLogout')}</button>
-      </div>}
-      {adminError ? <p style={{ color: 'var(--red-pen)', fontSize: 12, marginTop: 8 }}>{adminError}</p> : null}
-    </details>
+      </div> : <button type="button" onClick={() => setShowAdminLogin(true)} style={{ background: 'none', border: 'none', color: 'var(--ink-soft)', fontSize: 12, textDecoration: 'underline', cursor: 'pointer', padding: 0 }}>{tr(language, 'boardAdminLogin')}</button>}
+    </> : <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+      <span style={{ color: 'var(--chalk-green)', fontWeight: 700 }}>{tr(language, 'boardAdmin')}</span>
+      <button type="button" onClick={logoutAdmin} style={{ background: 'none', border: 'none', color: 'var(--ink-soft)', fontSize: 12, textDecoration: 'underline', cursor: 'pointer', padding: 0 }}>{tr(language, 'boardAdminLogout')}</button>
+    </div>}
+    {adminError ? <p style={{ color: 'var(--red-pen)', fontSize: 12, marginTop: 6 }}>{adminError}</p> : null}
+  </div>;
 
-    {adminOnlyPost && adminUnlocked && <form onSubmit={handleSubmit} className="no-print" style={{ display: 'grid', gap: 14, padding: 22, marginBottom: 28, background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}>
-      <h2 style={{ margin: 0, fontSize: 16 }}>{tr(language, 'boardNoticeComposerTitle')}</h2>
-      <label style={{ display: 'grid', gap: 6 }}>
-        <span style={labelStyle}>{tr(language, 'formMessage')}</span>
-        <textarea value={message} onChange={(e) => { setMessage(e.target.value); setComposeError(''); }} placeholder={tr(language, 'formMessagePlaceholder')} rows={5} style={{ ...fieldStyle, border: `1px solid ${composeError ? 'var(--red-pen)' : 'var(--paper-line)'}`, resize: 'vertical' }} />
-      </label>
-      <label style={{ display: 'grid', gap: 6 }}>
-        <span style={labelStyle}>{tr(language, 'formImage')}</span>
-        <input ref={fileInputRef} type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files?.[0] || null)} />
-      </label>
-      {composeError ? <span style={{ color: 'var(--red-pen)', fontSize: 12, fontWeight: 700 }}>{composeError}</span> : null}
-      <button type="submit" className="button button-primary" disabled={submitting} style={{ justifySelf: 'start' }}>{tr(language, 'boardSubmitNotice')}</button>
-    </form>}
+  if (view === 'compose') {
+    return <div>
+      <form onSubmit={handleSubmit} className="no-print" style={{ display: 'grid', gap: 14, padding: 22, background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}>
+        <h2 style={{ margin: 0, fontSize: 16 }}>{adminOnlyPost ? tr(language, 'boardNoticeComposerTitle') : tr(language, 'boardQuestionComposerTitle')}</h2>
+        {adminOnlyPost ? <label style={{ display: 'grid', gap: 6 }}>
+          <span style={labelStyle}>{tr(language, 'boardAdminPasswordPlaceholder')}</span>
+          <input type="password" value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} style={fieldStyle} />
+        </label> : <label style={{ display: 'grid', gap: 6 }}>
+          <span style={labelStyle}>{tr(language, 'formName')}</span>
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} style={fieldStyle} />
+        </label>}
+        <label style={{ display: 'grid', gap: 6 }}>
+          <span style={labelStyle}>{tr(language, 'formMessage')}</span>
+          <textarea value={message} onChange={(e) => { setMessage(e.target.value); setComposeError(''); }} placeholder={tr(language, 'formMessagePlaceholder')} rows={7} style={{ ...fieldStyle, border: `1px solid ${composeError ? 'var(--red-pen)' : 'var(--paper-line)'}`, resize: 'vertical' }} />
+        </label>
+        <label style={{ display: 'grid', gap: 6 }}>
+          <span style={labelStyle}>{tr(language, 'formImage')}</span>
+          <input ref={fileInputRef} type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files?.[0] || null)} />
+        </label>
+        {composeError ? <span style={{ color: 'var(--red-pen)', fontSize: 12, fontWeight: 700 }}>{composeError}</span> : null}
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button type="submit" className="button button-primary" disabled={submitting}>{adminOnlyPost ? tr(language, 'boardSubmitNotice') : tr(language, 'boardSubmitQuestion')}</button>
+          <button type="button" onClick={() => setView('list')} className="button button-secondary">{tr(language, 'boardCancel')}</button>
+        </div>
+      </form>
+    </div>;
+  }
+
+  if (view === 'detail' && selectedPost) {
+    const views = selectedPost.views || 0;
+    return <div>
+      <div className="no-print" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+        <button type="button" onClick={backToList} className="button button-secondary">{`← ${tr(language, 'boardBackToList')}`}</button>
+        {adminUnlocked && !selectedPost.static ? <button type="button" onClick={deleteSelected} disabled={busy} style={{ background: 'none', border: 'none', color: 'var(--ink-soft)', fontSize: 12, cursor: 'pointer', textDecoration: 'underline' }}>{tr(language, 'boardDelete')}</button> : null}
+      </div>
+
+      <article style={{ padding: '24px 26px', background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}>
+        <h2 style={{ margin: '0 0 10px', fontSize: 19 }}>{titleOf(selectedPost.message, tr(language, 'boardNoTitle'))}</h2>
+        <p className="font-mono" style={{ margin: '0 0 16px', color: 'var(--ink-soft)', fontSize: 12 }}>
+          {selectedPost.name || tr(language, 'boardAnonymous')} · {formatDate(selectedPost.createdAt)} · {tr(language, 'boardViewsLabel')} {views}
+        </p>
+        <p style={{ margin: '0 0 14px', color: 'var(--ink)', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>{selectedPost.message}</p>
+        {selectedPost.image ? <a href={`/api/board/file?key=${encodeURIComponent(selectedPost.image.key)}`} target="_blank" rel="noreferrer" style={{ display: 'inline-block' }}>
+          <img src={`/api/board/file?key=${encodeURIComponent(selectedPost.image.key)}`} alt={tr(language, 'boardViewImage')} style={{ maxWidth: '100%', maxHeight: 400, borderRadius: 8, border: '1px solid var(--paper-line)' }} />
+        </a> : null}
+
+        {allowReply ? <div style={{ marginTop: 18, paddingTop: 16, borderTop: '1px dashed var(--paper-line)' }}>
+          {selectedPost.reply ? <div>
+            <p className="font-mono" style={{ margin: '0 0 6px', color: 'var(--chalk-green)', fontSize: 12, fontWeight: 700 }}>{tr(language, 'boardReplyLabel')} · {tr(language, 'boardAdmin')} · {formatDate(selectedPost.reply.createdAt)}</p>
+            <p style={{ margin: 0, color: 'var(--ink)', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>{selectedPost.reply.message}</p>
+          </div> : <p style={{ margin: 0, color: 'var(--ink-soft)', fontSize: 13 }}>{tr(language, 'boardNoReplyYet')}</p>}
+
+          {adminUnlocked && !selectedPost.reply && !selectedPost.static ? <div className="no-print" style={{ display: 'grid', gap: 8, marginTop: 12 }}>
+            <textarea value={replyDraft} onChange={(e) => setReplyDraft(e.target.value)} placeholder={tr(language, 'boardWriteReplyPlaceholder')} rows={3} style={{ ...fieldStyle, resize: 'vertical' }} />
+            <button type="button" onClick={submitReply} disabled={busy} className="button button-secondary" style={{ justifySelf: 'start' }}>{tr(language, 'boardSubmitReply')}</button>
+          </div> : null}
+        </div> : null}
+      </article>
+
+      {adminBox}
+    </div>;
+  }
+
+  return <div>
+    <div className="no-print" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, marginBottom: 14, flexWrap: 'wrap' }}>
+      <form onSubmit={(e) => { e.preventDefault(); setQuery(searchInput); setPage(1); }} style={{ display: 'flex', gap: 6 }}>
+        <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder={tr(language, 'boardSearchPlaceholder')} style={{ ...fieldStyle, width: 200 }} />
+        <button type="submit" className="button button-secondary">{tr(language, 'boardSearchButton')}</button>
+      </form>
+      <button type="button" onClick={openCompose} className="button button-primary">{tr(language, 'boardWriteNew')}</button>
+    </div>
+
+    {showAdminLogin && adminOnlyPost && !adminUnlocked ? adminBox : null}
 
     {loading ? <p style={{ color: 'var(--ink-soft)' }}>{tr(language, 'boardLoading')}</p> : null}
     {!loading && loadError ? <p style={{ color: 'var(--red-pen)' }}>{tr(language, 'boardSubmitError')}</p> : null}
-    {!loading && !loadError && combined.length === 0 ? <p style={{ color: 'var(--ink-soft)' }}>{tr(language, 'boardEmpty')}</p> : null}
 
-    <div style={{ display: 'grid', gap: 14 }}>
-      {combined.map((post) => <article key={post.id} style={{ padding: '20px 22px', background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: 8 }}>
-          <p className="font-mono" style={{ margin: '0 0 8px', color: 'var(--red-pen)', fontSize: 12, fontWeight: 700 }}>
-            {post.name || tr(language, 'boardAnonymous')} · {formatDate(post.createdAt)}
-          </p>
-          {adminUnlocked && !post.static && <button type="button" onClick={() => deletePost(post.id)} disabled={busyId === post.id} className="no-print" style={{ background: 'none', border: 'none', color: 'var(--ink-soft)', fontSize: 12, cursor: 'pointer', textDecoration: 'underline' }}>{tr(language, 'boardDelete')}</button>}
-        </div>
-        <p style={{ margin: '0 0 10px', color: 'var(--ink)', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{post.message}</p>
-        {post.image ? <a href={`/api/board/file?key=${encodeURIComponent(post.image.key)}`} target="_blank" rel="noreferrer" style={{ display: 'inline-block', marginBottom: 10 }}>
-          <img src={`/api/board/file?key=${encodeURIComponent(post.image.key)}`} alt={tr(language, 'boardViewImage')} style={{ maxWidth: '100%', maxHeight: 260, borderRadius: 8, border: '1px solid var(--paper-line)' }} />
-        </a> : null}
+    {!loading && !loadError ? <div style={{ overflowX: 'auto' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead>
+          <tr>
+            <th style={{ ...tableHeadStyle, width: 60, textAlign: 'center' }}>{tr(language, 'boardColNumber')}</th>
+            <th style={tableHeadStyle}>{tr(language, 'boardColTitle')}</th>
+            <th style={{ ...tableHeadStyle, width: 100 }}>{tr(language, 'boardColDate')}</th>
+            <th style={{ ...tableHeadStyle, width: 100 }}>{tr(language, 'boardColAuthor')}</th>
+            <th style={{ ...tableHeadStyle, width: 70, textAlign: 'right' }}>{tr(language, 'boardColViews')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {pageItems.length === 0 ? <tr><td colSpan={5} style={{ ...tableCellStyle, textAlign: 'center', color: 'var(--ink-soft)' }}>{query ? tr(language, 'boardNoResults') : tr(language, 'boardEmpty')}</td></tr> : null}
+          {pageItems.map((post) => {
+            const views = post.views || 0;
+            return <tr key={post.id} onClick={() => openDetail(post)} style={{ cursor: 'pointer' }}>
+              <td style={{ ...tableCellStyle, textAlign: 'center', color: 'var(--red-pen)', fontWeight: category === 'notice' ? 700 : 400 }}>{category === 'notice' ? tr(language, 'boardPinned') : numberFor(post)}</td>
+              <td style={tableCellStyle}>
+                <span style={{ color: 'var(--ink)', fontWeight: 600 }}>{titleOf(post.message, tr(language, 'boardNoTitle'))}</span>
+                {post.reply ? <span style={{ color: 'var(--red-pen)', fontWeight: 700, marginLeft: 4 }}>(1)</span> : null}
+                {post.image ? <span style={tagStyle}>{tr(language, 'boardHasImage')}</span> : null}
+                {views >= POPULAR_VIEWS ? <span style={tagStyle}>{tr(language, 'boardPopular')}</span> : null}
+              </td>
+              <td style={tableCellStyle}>{formatDate(post.createdAt)}</td>
+              <td style={tableCellStyle}>{post.name || tr(language, 'boardAnonymous')}</td>
+              <td style={{ ...tableCellStyle, textAlign: 'right' }}>{views}</td>
+            </tr>;
+          })}
+        </tbody>
+      </table>
+    </div> : null}
 
-        {allowReply ? <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px dashed var(--paper-line)' }}>
-          {post.reply ? <div>
-            <p className="font-mono" style={{ margin: '0 0 6px', color: 'var(--chalk-green)', fontSize: 12, fontWeight: 700 }}>{tr(language, 'boardReplyLabel')} · {tr(language, 'boardAdmin')} · {formatDate(post.reply.createdAt)}</p>
-            <p style={{ margin: 0, color: 'var(--ink)', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{post.reply.message}</p>
-          </div> : <p style={{ margin: 0, color: 'var(--ink-soft)', fontSize: 13 }}>{tr(language, 'boardNoReplyYet')}</p>}
+    {!loading && !loadError && totalPages > 1 ? <div className="no-print" style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 18, alignItems: 'center' }}>
+      <button type="button" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={currentPage <= 1} className="button button-secondary">{tr(language, 'boardPrev')}</button>
+      <span style={{ fontSize: 13, color: 'var(--ink-soft)' }}>{currentPage} / {totalPages}</span>
+      <button type="button" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage >= totalPages} className="button button-secondary">{tr(language, 'boardNext')}</button>
+    </div> : null}
 
-          {adminUnlocked && !post.reply && !post.static ? <div className="no-print" style={{ display: 'grid', gap: 8, marginTop: 10 }}>
-            <textarea value={replyDrafts[post.id] || ''} onChange={(e) => setReplyDrafts((prev) => ({ ...prev, [post.id]: e.target.value }))} placeholder={tr(language, 'boardWriteReplyPlaceholder')} rows={3} style={{ ...fieldStyle, resize: 'vertical' }} />
-            <button type="button" onClick={() => submitReply(post.id)} disabled={busyId === post.id} className="button button-secondary" style={{ justifySelf: 'start' }}>{tr(language, 'boardSubmitReply')}</button>
-          </div> : null}
-        </div> : null}
-      </article>)}
-    </div>
-  </>;
+    {!adminOnlyPost ? adminBox : null}
+  </div>;
 }
