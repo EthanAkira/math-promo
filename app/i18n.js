@@ -20,7 +20,7 @@ const messages = {
     worksheetSettings: '문제지 설정', problemType: '문제 유형', skill: '문제 유형', printPdf: '인쇄 / PDF', answerKey: '답지 보기', worksheet: '문제지 보기', newWorksheet: '새 문제지',
     worksheetId: '문제지 번호', scanQr: 'QR을 스캔하면 같은 문제를 다시 열 수 있어요.', name: '이름', date: '날짜', problems20: '20문제', answers: '정답', answer: '답',
     solveTablet: '태블릿으로 바로 풀기', checkAnswers: '채점하기', correct: '맞았어요', tryAgain: '다시 풀기', score: '20문제 중 {count}문제 정답',
-    aboutTutor: '운영자 및 선생님 소개', lessons: '1:1 수학 수업', tutorName: '김채훈', degreeMech: '고려대학교 기계공학 학사', degreeData: '고려대학교 통계학 석사', tutorCurrent: '현재 제주도에서 국제학교 수학강의 / 데이터 분석과 개발자, Audio Electronics Designer로 활동 중', tutorText: '문제 풀이에서 반복되는 실수를 확인하고, 학생별로 필요한 개념과 풀이 습관을 중심으로 수업합니다.', classInquiry: '수업 문의 · 010-3347-0308',
+    aboutTutor: '운영자 및 선생님 소개', lessons: '1:1, 소규모 수학 수업, 코딩수업', tutorName: '김채훈', degreeMech: 'Mechanical Engineering · Financial Mathematics · Data Science (Statistics)', degreeData: '', tutorCurrent: '현재 제주도에서 국제학교 수학강의, 코딩강의 중\n데이터 분석과 개발자, Audio Electronics Designer', tutorText: '문제 풀이에서 반복되는 실수를 확인하고, 학생별로 필요한 개념과 풀이 습관을 중심으로 수업합니다.', classInquiry: '수업 문의 · 010-3347-0308',
     elementaryTitle: '초등 1~6학년 수학 문제 생성기', elementaryDesc: '학년과 단원을 고르면 매번 새로운 무작위 문제지와 전용 QR 코드가 만들어집니다.',
     primeTitle: '중등 소인수분해 문제 생성기', primeCrumb: '소수와 소인수분해', middleDesc: '유형을 고르면 새로운 20문제 문제지와 정답지가 자동으로 만들어집니다.',
     gcdTitle: '중등 최대공약수·최소공배수 문제 생성기', gcdCrumb: '최대공약수와 최소공배수', integerTitle: '중등 정수와 유리수 문제 생성기', integerCrumb: '정수와 유리수',

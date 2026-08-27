@@ -20,9 +20,9 @@ export function TutorProfileDisclosure() {
   return <details className="profile-disclosure"><summary>{tr(language, 'aboutTutor')}</summary><div className="profile-disclosure-body">
     <p style={{ margin: '0 0 6px', color: 'var(--red-pen)', fontWeight: 700 }}>{tr(language, 'lessons')}</p>
     <h2 className="font-display" style={{ fontSize: 23, margin: '0 0 12px' }}>{tr(language, 'tutorName')}</h2>
-    <p style={{ margin: '0 0 5px', color: 'var(--ink-soft)' }}>{tr(language, 'degreeMech')}</p>
-    <p style={{ margin: '0 0 15px', color: 'var(--ink-soft)' }}>{tr(language, 'degreeData')}</p>
-    <p style={{ margin: '0 0 15px', color: 'var(--ink-soft)' }}>{tr(language, 'tutorCurrent')}</p>
+    <p style={{ margin: tr(language, 'degreeData') ? '0 0 5px' : '0 0 15px', color: 'var(--ink-soft)' }}>{tr(language, 'degreeMech')}</p>
+    {tr(language, 'degreeData') ? <p style={{ margin: '0 0 15px', color: 'var(--ink-soft)' }}>{tr(language, 'degreeData')}</p> : null}
+    <p style={{ margin: '0 0 15px', color: 'var(--ink-soft)', whiteSpace: 'pre-line' }}>{tr(language, 'tutorCurrent')}</p>
     <p style={{ margin: '0 0 16px', color: 'var(--ink-soft)' }}>{tr(language, 'tutorText')}</p>
     <a href="tel:01033470308" style={{ display: 'inline-block', fontSize: 14, fontWeight: 700, color: 'var(--card-bg)', background: 'var(--red-pen)', padding: '10px 18px', borderRadius: 8, textDecoration: 'none' }}>{tr(language, 'classInquiry')}</a>
   </div></details>;
