@@ -5,6 +5,50 @@ import { useLanguage } from '../../language';
 
 const LATIN_OUTCOME_NAMES = { backdo: 'Back-do', do: 'Do', gae: 'Gae', geol: 'Geol', yut: 'Yut', mo: 'Mo' };
 
+// Tiny Web Audio synthesizer for the game's sound effects — no external audio files needed.
+let sharedAudioCtx = null;
+function ensureAudioCtx() {
+  if (typeof window === 'undefined') return null;
+  if (!sharedAudioCtx) {
+    const Ctor = window.AudioContext || window.webkitAudioContext;
+    if (!Ctor) return null;
+    sharedAudioCtx = new Ctor();
+  }
+  if (sharedAudioCtx.state === 'suspended') sharedAudioCtx.resume().catch(() => {});
+  return sharedAudioCtx;
+}
+function playTone(ctx, { freq, freqEnd, start, duration, type = 'sine', gain = 0.2 }) {
+  const osc = ctx.createOscillator();
+  const gainNode = ctx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, start);
+  if (freqEnd) osc.frequency.exponentialRampToValueAtTime(Math.max(freqEnd, 1), start + duration);
+  gainNode.gain.setValueAtTime(0.0001, start);
+  gainNode.gain.linearRampToValueAtTime(gain, start + 0.012);
+  gainNode.gain.exponentialRampToValueAtTime(0.001, start + duration);
+  osc.connect(gainNode);
+  gainNode.connect(ctx.destination);
+  osc.start(start);
+  osc.stop(start + duration + 0.03);
+}
+// A harsh, buzzy descending stab — deliberately grating, played when a piece gets captured.
+function playCaptureSound() {
+  const ctx = ensureAudioCtx();
+  if (!ctx) return;
+  const now = ctx.currentTime;
+  playTone(ctx, { freq: 300, freqEnd: 90, start: now, duration: 0.22, type: 'sawtooth', gain: 0.22 });
+  playTone(ctx, { freq: 210, freqEnd: 60, start: now + 0.05, duration: 0.26, type: 'square', gain: 0.16 });
+}
+// A bright, ascending three-note chime — played whenever a piece completes its lap (완주).
+function playFinishSound() {
+  const ctx = ensureAudioCtx();
+  if (!ctx) return;
+  const now = ctx.currentTime;
+  [523.25, 659.25, 783.99].forEach((freq, i) => {
+    playTone(ctx, { freq, start: now + i * 0.1, duration: 0.28, type: 'sine', gain: 0.2 });
+  });
+}
+
 const COPY = {
   ko: {
     home: '홈', hub: '쉬어가는 코너', crumbCurrent: '윷놀이',
@@ -604,8 +648,21 @@ function nextOptions(node) {
   if (node >= 0 && node <= 18) return [{ tag: 'outer', next: node + 1 }];
   return [];
 }
-// Enumerate every distinct route `steps` forward from `startNode`, branching at every fork encountered
-// along the way (a piece may cross more than one fork in a single throw). Returns one entry per route.
+// A fork (5, 10, or the center) only offers a real choice when the piece is already resting there
+// BEFORE the throw is applied. If a throw's path merely crosses a fork partway through (the piece
+// was moving, not starting from rest on that square), it must continue automatically with no choice:
+// through 5 or 10 that always means staying on the outer rim, and through the center it means
+// continuing straight along whichever diagonal line the piece was already travelling.
+function pickDefaultOption(node, predecessor, options) {
+  if (node === CENTER) {
+    const tag = predecessor === 26 ? 'toward0' : 'toward15';
+    return options.find((opt) => opt.tag === tag) || options[0];
+  }
+  return options.find((opt) => opt.tag === 'outer') || options[0];
+}
+// Enumerate every distinct route `steps` forward from `startNode`. A fork only branches into multiple
+// routes on the very first step of the walk (i.e. when the piece was already resting on that fork
+// square before this throw); forks encountered later, mid-walk, resolve to a single default route.
 function enumeratePaths(startNode, steps) {
   let frontier = [{ node: startNode, path: [], forkChoices: [] }];
   for (let i = 0; i < steps; i++) {
@@ -613,12 +670,17 @@ function enumeratePaths(startNode, steps) {
     frontier.forEach((item) => {
       if (item.node === 0 && item.path.length > 0) { next.push(item); return; }
       const options = nextOptions(item.node);
-      const isFork = options.length > 1;
-      options.forEach((opt) => {
+      const isChoiceMoment = options.length > 1 && i === 0;
+      const chosen = isChoiceMoment
+        ? options
+        : [options.length > 1
+          ? pickDefaultOption(item.node, item.path.length >= 2 ? item.path[item.path.length - 2] : startNode, options)
+          : options[0]];
+      chosen.forEach((opt) => {
         next.push({
           node: opt.next,
           path: [...item.path, opt.next],
-          forkChoices: isFork ? [...item.forkChoices, opt.tag] : item.forkChoices,
+          forkChoices: isChoiceMoment ? [...item.forkChoices, opt.tag] : item.forkChoices,
         });
       });
     });
@@ -879,6 +941,7 @@ export default function YutnoriGame() {
       const hits = piecesAtNode(oppC, node);
       if (hits.length === 0) return false;
       hits.forEach((h) => { h.node = null; h.path = []; });
+      playCaptureSound();
       return true;
     }
 
@@ -888,6 +951,7 @@ export default function YutnoriGame() {
       const landedNode = result.finished ? 'home' : result.node;
       group.forEach((p) => { p.path = [...p.path, ...result.path]; p.node = landedNode; });
       const captured = resolveCapture(color, landedNode);
+      if (landedNode === 'home') playFinishSound();
       return { node: landedNode, captured, count: group.length, finished: landedNode === 'home' };
     }
 
@@ -899,6 +963,7 @@ export default function YutnoriGame() {
       p.path = [...result.path];
       p.node = landedNode;
       const captured = resolveCapture(color, landedNode);
+      if (landedNode === 'home') playFinishSound();
       return { node: landedNode, captured, finished: landedNode === 'home' };
     }
 
