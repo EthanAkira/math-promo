@@ -95,6 +95,97 @@ function FrequencyTable({ rows }) {
   return <table className="generated-math-table" aria-label="도수분포표"><thead><tr><th>계급</th><th>도수</th></tr></thead><tbody>{rows.map((row) => <tr key={row.interval}><td>{row.interval}</td><td>{row.frequency}</td></tr>)}</tbody></table>;
 }
 
+function AlgebraGraph({ graph }) {
+  const size = 220;
+  const range = 10;
+  const toX = (x) => size / 2 + x * 9;
+  const toY = (y) => size / 2 - y * 9;
+  const xs = Array.from({ length: 81 }, (_, index) => -10 + index / 4);
+  const valueAt = (x) => {
+    if (graph.type === 'quadratic') return graph.a * (x - graph.h) ** 2 + graph.k;
+    if (graph.type === 'exponential') return graph.base ** x;
+    return graph.slope * x + graph.intercept;
+  };
+  const chunks = [];
+  let current = [];
+  xs.forEach((x) => {
+    const y = valueAt(x);
+    if (Number.isFinite(y) && Math.abs(y) <= range + 2) current.push([toX(x), toY(y)]);
+    else if (current.length) { chunks.push(current); current = []; }
+  });
+  if (current.length) chunks.push(current);
+  return <svg className="generated-coord-plane generated-algebra-graph" viewBox="0 0 220 220" role="img" aria-label="함수 그래프">
+    {[1, 2, 3].map((value) => <g key={value}><line x1={20} y1={110 - value * 27} x2={200} y2={110 - value * 27} className="grid-line" /><line x1={20} y1={110 + value * 27} x2={200} y2={110 + value * 27} className="grid-line" /></g>)}
+    <line x1="14" y1="110" x2="206" y2="110" className="axis-line" /><line x1="110" y1="14" x2="110" y2="206" className="axis-line" />
+    {chunks.map((points, index) => <polyline key={index} points={points.map((point) => point.join(',')).join(' ')} className="proportion-curve" fill="none" />)}
+    {(graph.points || []).map((point, index) => <g key={`${point.x}-${point.y}-${index}`}><circle cx={toX(point.x)} cy={toY(point.y)} r="3.5" className="proportion-point" /><text x={toX(point.x) + 5} y={toY(point.y) - 6}>({point.x},{point.y})</text></g>)}
+    <text x="201" y="104">x</text><text x="117" y="18">y</text><text x="96" y="124">O</text>
+  </svg>;
+}
+
+function SystemGraph({ lines, point }) {
+  const graph = { type: 'linear', slope: 0, intercept: 0, points: [point] };
+  const size = 220;
+  const toX = (x) => size / 2 + x * 12;
+  const toY = (y) => size / 2 - y * 12;
+  const segment = (line) => [-8, 8].map((x) => [toX(x), toY((line.c - line.a * x) / line.b)]).map((pair) => pair.join(',')).join(' ');
+  return <svg className="generated-coord-plane generated-system-graph" viewBox="0 0 220 220" role="img" aria-label="연립방정식 그래프">
+    <line x1="12" y1="110" x2="208" y2="110" className="axis-line" /><line x1="110" y1="12" x2="110" y2="208" className="axis-line" />
+    {lines.map((line, index) => <polyline key={index} points={segment(line)} className={index ? 'trip-line' : 'proportion-curve'} fill="none" />)}
+    <circle cx={toX(graph.points[0].x)} cy={toY(graph.points[0].y)} r="4" className="proportion-point" /><text x={toX(point.x) + 6} y={toY(point.y) - 6}>({point.x},{point.y})</text>
+  </svg>;
+}
+
+function ProbabilityBar({ counts }) {
+  const total = counts.reduce((sum, entry) => sum + entry.value, 0);
+  let cursor = 20;
+  return <svg className="generated-probability" viewBox="0 0 260 90" role="img" aria-label="확률 막대">
+    {counts.map((entry, index) => {
+      const width = 220 * entry.value / total;
+      const x = cursor;
+      cursor += width;
+      return <g key={entry.label}><rect x={x} y="24" width={width} height="34" className={index ? 'probability-second' : 'probability-first'} /><text x={x + width / 2} y="45" textAnchor="middle">{entry.label}: {entry.value}</text></g>;
+    })}
+    <text x="130" y="76" textAnchor="middle">total {total}</text>
+  </svg>;
+}
+
+function ProbabilityTree({ red, blue }) {
+  const total = red + blue;
+  return <svg className="generated-probability" viewBox="0 0 280 150" role="img" aria-label="확률 나무">
+    <line x1="25" y1="75" x2="115" y2="35" /><line x1="25" y1="75" x2="115" y2="115" />
+    <line x1="115" y1="35" x2="245" y2="20" /><line x1="115" y1="35" x2="245" y2="58" />
+    <text x="62" y="42">R {red}/{total}</text><text x="62" y="119">B {blue}/{total}</text>
+    <text x="170" y="18">R {red - 1}/{total - 1}</text><text x="170" y="63">B {blue}/{total - 1}</text>
+    <circle cx="25" cy="75" r="3" /><circle cx="115" cy="35" r="3" /><circle cx="115" cy="115" r="3" />
+  </svg>;
+}
+
+function MatrixOperation({ matrices, operator }) {
+  return <div className="generated-matrix-operation" role="img" aria-label="행렬 연산">
+    {matrices.map((matrix, matrixIndex) => <span className="matrix-wrap" key={matrixIndex}><span>{matrix[0]}</span><span>{matrix[1]}</span><span>{matrix[2]}</span><span>{matrix[3]}</span></span>).reduce((elements, matrix, index) => index ? [...elements, <strong key={`op-${index}`}>{operator}</strong>, matrix] : [matrix], [])}
+  </div>;
+}
+
+function VennDiagram({ total, a, b, intersection }) {
+  return <svg className="generated-venn" viewBox="0 0 260 145" role="img" aria-label="벤 다이어그램">
+    <rect x="8" y="8" width="244" height="129" rx="8" fill="none" /><circle cx="105" cy="72" r="50" className="venn-a" /><circle cx="155" cy="72" r="50" className="venn-b" />
+    <text x="72" y="72">{a - intersection}</text><text x="130" y="72" textAnchor="middle">{intersection}</text><text x="181" y="72">{b - intersection}</text><text x="18" y="25">U={total}</text><text x="78" y="32">A</text><text x="180" y="32">B</text>
+  </svg>;
+}
+
+function SequenceTable({ values }) {
+  return <table className="generated-math-table" aria-label="수열 표"><thead><tr>{values.map((_, index) => <th key={index}>a{index + 1}</th>)}</tr></thead><tbody><tr>{values.map((value, index) => <td key={index}>{value}</td>)}</tr></tbody></table>;
+}
+
+function DataBars({ data }) {
+  const maximum = Math.max(...data);
+  return <svg className="generated-data-bars" viewBox="0 0 260 130" role="img" aria-label="자료 막대그래프">
+    <line x1="20" y1="108" x2="246" y2="108" className="axis-line" />
+    {data.map((value, index) => { const height = 78 * value / maximum; return <g key={index}><rect x={35 + index * 40} y={108 - height} width="22" height={height} /><text x={46 + index * 40} y="123" textAnchor="middle">{value}</text></g>; })}
+  </svg>;
+}
+
 export function ProblemVisual({ item }) {
   if (item.kind === 'number-line') return <NumberLine line={item.line} />;
   if (item.kind === 'coordinate-plane') return <CoordinatePlane plane={item.plane} />;
@@ -103,9 +194,17 @@ export function ProblemVisual({ item }) {
   if (item.kind === 'ratio-table') return <RatioTable table={item.table} />;
   if (item.kind === 'stem-leaf') return <StemLeaf rows={item.stemLeaf} />;
   if (item.kind === 'frequency-table') return <FrequencyTable rows={item.frequencyTable} />;
+  if (item.kind === 'algebra-graph') return <AlgebraGraph graph={item.graph} />;
+  if (item.kind === 'system-graph') return <SystemGraph lines={item.lines} point={item.point} />;
+  if (item.kind === 'probability-bar') return <ProbabilityBar counts={item.counts} />;
+  if (item.kind === 'probability-tree') return <ProbabilityTree red={item.red} blue={item.blue} />;
+  if (item.kind === 'matrix-operation') return <MatrixOperation matrices={item.matrices} operator={item.operator} />;
+  if (item.kind === 'venn') return <VennDiagram total={item.total} a={item.a} b={item.b} intersection={item.intersection} />;
+  if (item.kind === 'sequence-table') return <SequenceTable values={item.values} />;
+  if (item.kind === 'data-bars') return <DataBars data={item.data} />;
   return null;
 }
 
 export function hasProblemVisual(item) {
-  return ['number-line', 'coordinate-plane', 'trip-graph', 'proportion-graph', 'ratio-table', 'stem-leaf', 'frequency-table'].includes(item.kind);
+  return ['number-line', 'coordinate-plane', 'trip-graph', 'proportion-graph', 'ratio-table', 'stem-leaf', 'frequency-table', 'algebra-graph', 'system-graph', 'probability-bar', 'probability-tree', 'matrix-operation', 'venn', 'sequence-table', 'data-bars'].includes(item.kind);
 }

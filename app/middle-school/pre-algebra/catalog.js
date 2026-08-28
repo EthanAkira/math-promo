@@ -4,6 +4,7 @@ import { INTEGER_RATIONAL_UNITS } from '../integers-rationals/catalog';
 import { ALGEBRA_UNITS } from '../algebra-basics/catalog';
 import { COORDINATE_UNITS } from '../coordinate-plane/catalog';
 import { PROPORTION_UNITS } from '../proportion/catalog';
+import { SECONDARY_ALGEBRA_UNITS } from './secondaryAlgebraEngine';
 
 function randomInt(random, min, max) {
   return Math.floor(random() * (max - min + 1)) + min;
@@ -172,18 +173,23 @@ const SOURCE_GROUPS = [
   ['수와 연산', ['pre-algebra', 'kr-middle-1'], PRIME_UNITS],
   ['수와 연산', ['pre-algebra', 'kr-middle-1'], GCD_LCM_UNITS],
   ['수와 연산', ['pre-algebra', 'kr-middle-1'], INTEGER_RATIONAL_UNITS],
-  ['문자와 식', ['pre-algebra', 'kr-middle-1'], ALGEBRA_UNITS],
-  ['좌표와 관계', ['pre-algebra', 'kr-middle-1'], COORDINATE_UNITS],
-  ['좌표와 관계', ['pre-algebra', 'kr-middle-1'], PROPORTION_UNITS],
+  ['문자와 식', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], ALGEBRA_UNITS],
+  ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], COORDINATE_UNITS],
+  ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'algebra-1'], PROPORTION_UNITS],
 ];
 
 const IMPORTED_UNITS = SOURCE_GROUPS.flatMap(([category, profiles, units]) => units.map((unit) => ({ ...unit, category, profiles })));
 
-export const PRE_ALGEBRA_UNITS = [...IMPORTED_UNITS, ...NEW_UNITS];
+export const PRE_ALGEBRA_UNITS = [...IMPORTED_UNITS, ...NEW_UNITS, ...SECONDARY_ALGEBRA_UNITS];
 
 export const PRE_ALGEBRA_PROFILES = [
   { id: 'kr-middle-1', label: '한국 중학교 1학년', labelEn: 'Korea Middle School 1', description: '2022 개정 교육과정의 비기하 전 범위', descriptionEn: 'All non-geometry Grade 7 topics in Korea’s 2022 curriculum' },
+  { id: 'kr-middle-2', label: '한국 중학교 2학년', labelEn: 'Korea Middle School 2', description: '식의 계산·부등식·연립방정식·일차함수·확률', descriptionEn: 'Expressions, inequalities, systems, linear functions and probability' },
+  { id: 'kr-middle-3', label: '한국 중학교 3학년', labelEn: 'Korea Middle School 3', description: '제곱근·인수분해·이차방정식·이차함수·통계', descriptionEn: 'Radicals, factoring, quadratics and data transformations' },
+  { id: 'kr-high-1', label: '한국 고등학교 1학년', labelEn: 'Korea High School 1', description: '공통수학의 다항식·방정식·집합·함수·경우의 수·행렬', descriptionEn: 'Common Mathematics: polynomials, equations, sets, functions, counting and matrices' },
   { id: 'pre-algebra', label: 'Pre-Algebra', labelEn: 'Pre-Algebra', description: '미국 Grade 6~8 대수 준비 핵심 범위', descriptionEn: 'Core non-geometry preparation across U.S. Grades 6–8' },
+  { id: 'algebra-1', label: 'Algebra 1', labelEn: 'Algebra 1', description: '일차식·방정식·함수·연립방정식·지수·다항식·이차식·자료', descriptionEn: 'Linear equations and functions, systems, exponents, polynomials, quadratics and data' },
+  { id: 'algebra-2', label: 'Algebra 2', labelEn: 'Algebra 2', description: '다항식·복소수·유리함수·무리함수·지수로그·수열', descriptionEn: 'Advanced polynomials, complex numbers, rational and radical functions, exponentials, logs and sequences' },
 ];
 
 export function unitsForProfile(profileId) {

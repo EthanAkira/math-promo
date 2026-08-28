@@ -8,7 +8,13 @@ import { PRE_ALGEBRA_PROFILES, finalizeGeneratedProblem, findPreAlgebraProfile, 
 import { hasProblemVisual, MathText, ProblemVisual } from './PreAlgebraVisuals';
 
 const PROBLEM_COUNT = 20;
-const CATEGORY_EN = { '수와 연산': 'Number & Operations', '문자와 식': 'Expressions & Equations', '좌표와 관계': 'Coordinates & Relationships', '비와 비율': 'Ratios & Percents', '자료와 가능성': 'Data & Statistics' };
+const CATEGORY_EN = {
+  '수와 연산': 'Number & Operations', '문자와 식': 'Expressions & Equations', '좌표와 관계': 'Coordinates & Relationships',
+  '비와 비율': 'Ratios & Percents', '자료와 가능성': 'Data & Statistics', '방정식과 부등식': 'Equations & Inequalities',
+  '함수': 'Functions', '확률과 통계': 'Probability & Statistics', '다항식': 'Polynomials', '경우의 수': 'Counting',
+  '행렬': 'Matrices', '집합과 명제': 'Sets & Logic', '지수와 로그': 'Exponents & Logarithms', '수열': 'Sequences',
+  '수학적 모델링': 'Mathematical Modeling',
+};
 
 function hashSeed(text) {
   let hash = 2166136261;
@@ -43,7 +49,7 @@ function makeProblems(seed, unit) {
     let attempt = 0;
     do {
       item = finalizeGeneratedProblem(unit.make(random), unit);
-      key = JSON.stringify([item.prompt, item.expression, item.line, item.plane, item.graph, item.table, item.stemLeaf, item.frequencyTable]);
+      key = JSON.stringify([item.prompt, item.expression, item.line, item.plane, item.graph, item.lines, item.point, item.table, item.stemLeaf, item.frequencyTable, item.matrices, item.data]);
       attempt += 1;
     } while (used.has(key) && attempt < 100);
     used.add(key);
@@ -190,6 +196,14 @@ export default function PreAlgebraGenerator() {
       .generated-stem-leaf span { padding-left: 12px; word-spacing: 8px; }
       .generated-stem-leaf small { display: block; margin-top: 7px; color: #64748b; }
       .stem-key { font-size: 12px; color: #64748b; margin-bottom: 4px; }
+      .generated-algebra-graph,.generated-system-graph,.generated-probability,.generated-venn,.generated-data-bars { display: block; width: min(100%,260px); height: auto; margin: 10px auto; }
+      .generated-algebra-graph polyline,.generated-system-graph polyline { stroke-width: 2.2; }
+      .generated-probability line,.generated-probability circle,.generated-venn rect { stroke: #334155; stroke-width: 1.5; }
+      .probability-first { fill: #f6c98f; stroke: #9a5a19; }.probability-second { fill: #9fd7e5; stroke: #25657a; }
+      .venn-a { fill: rgba(245,158,11,.3); stroke: #b96a08; }.venn-b { fill: rgba(14,165,233,.25); stroke: #176b8b; }
+      .generated-data-bars rect { fill: #79b8b3; stroke: #245c59; }.generated-data-bars text,.generated-probability text,.generated-venn text { font-size: 11px; fill: #1f2937; }
+      .generated-matrix-operation { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 14px auto; }
+      .matrix-wrap { display: grid; grid-template-columns: repeat(2,34px); gap: 5px; padding: 5px 10px; border-left: 2px solid #334155; border-right: 2px solid #334155; text-align: center; font-family: ui-monospace,monospace; }
       .generated-explanation { margin: 8px 0 0; padding: 8px 10px; border-left: 3px solid #66a3a0; background: #f3faf9; color: #334155; font-size: 12px; line-height: 1.55; }
       @media (max-width: 900px) { .pre-algebra-controls { grid-template-columns: 1fr 1fr; } .pre-algebra-controls .control-actions { grid-column: 1 / -1; } }
       @media (max-width: 600px) { .pre-algebra-controls { grid-template-columns: 1fr; } .pre-algebra-controls .control-actions { grid-column: auto; } }

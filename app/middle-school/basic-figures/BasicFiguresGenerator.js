@@ -50,7 +50,9 @@ function asAmcChoice(item, random) {
   if (item.choices) return item;
   const answer = String(item.answer);
   let candidates = [answer];
-  if (/^-?\d+(?:\.\d+)?$/.test(answer)) {
+  if (item.distractors?.length) {
+    candidates.push(...item.distractors.map((distractor) => String(distractor.value)));
+  } else if (/^-?\d+(?:\.\d+)?$/.test(answer)) {
     const value = Number(answer);
     candidates.push(String(value + 1), String(value - 1), String(value + 2), String(value - 2), String(value * 2));
   } else if (/^-?\d+\/\d+$/.test(answer)) {
@@ -68,7 +70,15 @@ function asAmcChoice(item, random) {
   const labels = shuffle(random, [...new Set(candidates)].slice(0, 5));
   while (labels.length < 5) labels.push(String(labels.length + 10));
   const answerIndex = labels.indexOf(answer) + 1;
-  return { ...item, answer: String(answerIndex), answerSuffix: '', choices: labels.map((label, index) => ({ value: String(index + 1), marker: String.fromCharCode(65 + index), label, labelEn: label })) };
+  const diagnostics = Object.fromEntries((item.distractors || []).map((distractor) => [String(distractor.value), distractor.reason]));
+  return {
+    ...item,
+    answer: String(answerIndex),
+    originalAnswer: answer,
+    answerSuffix: '',
+    choiceDiagnostics: labels.map((label, index) => ({ marker: String.fromCharCode(65 + index), label, reason: diagnostics[label] || '' })),
+    choices: labels.map((label, index) => ({ value: String(index + 1), marker: String.fromCharCode(65 + index), label, labelEn: label })),
+  };
 }
 
 function makeProblems(seed, unit, profile) {
@@ -76,13 +86,15 @@ function makeProblems(seed, unit, profile) {
   const used = new Set();
   return Array.from({ length: PROBLEM_COUNT }, (_, index) => {
     let item;
+    let uniquenessKey;
     let attempt = 0;
     do {
       item = unit.make(random, profile);
-      if (profile.id === 'amc12') item = asAmcChoice(item, random);
+      if (profile.id === 'amc12' || (profile.id === 'csat' && item.distractors?.length)) item = asAmcChoice(item, random);
+      uniquenessKey = `${item.prompt}|${item.expression}|${JSON.stringify(item.diagram)}|${item.originalAnswer || item.answer}`;
       attempt += 1;
-    } while (used.has(`${item.prompt}|${item.expression}|${JSON.stringify(item.diagram)}|${item.answer}`) && attempt < 40);
-    used.add(`${item.prompt}|${item.expression}|${JSON.stringify(item.diagram)}|${item.answer}`);
+    } while (used.has(uniquenessKey) && attempt < 80);
+    used.add(uniquenessKey);
     return { id: index + 1, ...item };
   });
 }
@@ -176,12 +188,22 @@ export default function BasicFiguresGenerator() {
           const promptText = localizedForeign && item.promptEn ? item.promptEn : item.prompt;
           const expressionText = localizedForeign && item.expressionEn ? item.expressionEn : item.expression;
           const graphic = Boolean(item.diagram);
-          return <article className={`vertical-problem word-problem prime-problem${graphic ? ' graphic-problem geometry-problem' : ''}`} key={item.id}><span className="problem-number">{item.id}</span><div className="word-calculation"><p>{promptText}</p>{item.diagram ? <GeometryDiagram diagram={item.diagram} /> : null}{expressionText ? <strong className="word-expression font-mono">{expressionText}</strong> : null}{item.choices ? <div className="choice-answer">{view === 'answers' ? <strong>{selectedChoice?.marker || selectedChoice?.value}. {localizedForeign ? selectedChoice?.labelEn : selectedChoice?.label}</strong> : item.choices.map((choice) => <button type="button" key={choice.value} className={`${value === choice.value ? 'selected' : ''} ${checked && value === choice.value ? (isCorrect ? 'correct' : 'wrong') : ''}`} onClick={() => changeAnswer(item.id, choice.value)} aria-pressed={value === choice.value}><span>{choice.marker || choice.value}</span>{localizedForeign ? choice.labelEn : choice.label}</button>)}</div> : <div className="word-answer"><span>{tr(language, 'answer')}</span><span className="inline-answer">{view === 'answers' ? <strong>{item.answer}</strong> : <><input aria-label={`${tr(language, 'answer')} ${item.id}`} value={value} onChange={(event) => changeAnswer(item.id, event.target.value)} className={checked && value ? (isCorrect ? 'correct' : 'wrong') : ''} /><span className="print-answer-space" aria-hidden="true" /></>}</span>{item.answerSuffix ? <em>{item.answerSuffix}</em> : null}</div>}{view === 'answers' && item.explanation ? <p className="geometry-explanation"><b>{contentLocale === 'ko' ? '풀이' : contentLocale.startsWith('zh') ? '解說' : 'Solution'}</b>{item.explanation}</p> : null}</div>{checked && view === 'problems' && value ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{tr(language, isCorrect ? 'correct' : 'tryAgain')}</span> : null}</article>;
+          return <article className={`vertical-problem word-problem prime-problem${graphic ? ' graphic-problem geometry-problem' : ''}`} key={item.id}><span className="problem-number">{item.id}</span><div className="word-calculation">{item.difficulty ? <div className="difficulty-strip"><span>{contentLocale === 'ko' ? '난이도' : 'Difficulty'} {item.difficulty.level}</span><span>{item.difficulty.score}/100</span><span>{item.difficulty.reasoningSteps} {contentLocale === 'ko' ? '단계' : 'steps'}</span><span>≈{item.difficulty.estimatedMinutes} min</span></div> : null}<p>{promptText}</p>{item.diagram ? <GeometryDiagram diagram={item.diagram} /> : null}{expressionText ? <strong className="word-expression font-mono">{expressionText}</strong> : null}{item.choices ? <div className="choice-answer">{view === 'answers' ? <strong>{selectedChoice?.marker || selectedChoice?.value}. {localizedForeign ? selectedChoice?.labelEn : selectedChoice?.label}</strong> : item.choices.map((choice) => <button type="button" key={choice.value} className={`${value === choice.value ? 'selected' : ''} ${checked && value === choice.value ? (isCorrect ? 'correct' : 'wrong') : ''}`} onClick={() => changeAnswer(item.id, choice.value)} aria-pressed={value === choice.value}><span>{choice.marker || choice.value}</span>{localizedForeign ? choice.labelEn : choice.label}</button>)}</div> : <div className="word-answer"><span>{tr(language, 'answer')}</span><span className="inline-answer">{view === 'answers' ? <strong>{item.answer}</strong> : <><input aria-label={`${tr(language, 'answer')} ${item.id}`} value={value} onChange={(event) => changeAnswer(item.id, event.target.value)} className={checked && value ? (isCorrect ? 'correct' : 'wrong') : ''} /><span className="print-answer-space" aria-hidden="true" /></>}</span>{item.answerSuffix ? <em>{item.answerSuffix}</em> : null}</div>}{view === 'answers' && item.explanation ? <p className="geometry-explanation"><b>{contentLocale === 'ko' ? '풀이' : contentLocale.startsWith('zh') ? '解說' : 'Solution'}</b>{item.explanation}</p> : null}{view === 'answers' && item.solutionSteps?.length ? <ol className="geometry-solution-steps">{item.solutionSteps.map((step, index) => <li key={index}>{step}</li>)}</ol> : null}{view === 'answers' && item.theorems?.length ? <p className="geometry-theorems"><b>{contentLocale === 'ko' ? '결합 개념' : 'Combined ideas'}</b>{item.theorems.join(' · ')}</p> : null}{view === 'answers' && item.choiceDiagnostics?.some((entry) => entry.reason) ? <details className="choice-diagnostics"><summary>{contentLocale === 'ko' ? '오답선지 진단' : 'Distractor diagnostics'}</summary>{item.choiceDiagnostics.filter((entry) => entry.reason).map((entry) => <p key={`${entry.marker}-${entry.label}`}><b>{entry.marker}. {entry.label}</b> — {entry.reason}</p>)}</details> : null}</div>{checked && view === 'problems' && value ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{tr(language, isCorrect ? 'correct' : 'tryAgain')}</span> : null}</article>;
         })}
       </section>
       <footer className="worksheet-footer"><span>{tr(language, 'dailyLab')}</span><span>{seed} · {profile.shortLabel} · {unitLabel}</span></footer>
     </div>
 
     {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Choose an option or type your numeric answer, then check.' : '객관식은 보기를 고르고, 주관식은 숫자만 입력하세요.'}</p></div><button className="button button-primary" onClick={() => setChecked(true)}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
+    <style jsx global>{`
+      .difficulty-strip { display:flex; flex-wrap:wrap; gap:5px; margin:0 0 7px; }
+      .difficulty-strip span { padding:3px 7px; border-radius:999px; background:#fff2d8; color:#7c4a08; border:1px solid #e7bd79; font-size:10px; font-weight:800; }
+      .geometry-solution-steps { margin:8px 0 0; padding:8px 10px 8px 30px; border-left:3px solid #5b8db8; background:#f3f7fc; font-size:12px; line-height:1.55; }
+      .geometry-solution-steps li + li { margin-top:4px; }
+      .geometry-theorems { margin:7px 0 0; font-size:11px; color:#475569; }.geometry-theorems b { margin-right:7px; color:#245c59; }
+      .choice-diagnostics { margin-top:8px; padding:7px 9px; background:#fff8ec; border:1px solid #edcf9d; font-size:11px; }
+      .choice-diagnostics summary { cursor:pointer; font-weight:800; color:#805216; }.choice-diagnostics p { margin:5px 0 0; line-height:1.45; }
+      @media print { .choice-diagnostics { display:block; }.choice-diagnostics summary { display:none; } }
+    `}</style>
   </div>;
 }

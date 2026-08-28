@@ -3,8 +3,8 @@ import PreAlgebraGenerator from './PreAlgebraGenerator';
 import PreAlgebraIntro from './PreAlgebraIntro';
 
 export const metadata = {
-  title: 'Pre-Algebra·한국 중1 수학 문제 생성기 | 매일 배움 연구소',
-  description: 'Pre-Algebra와 한국 중학교 1학년 비기하 전 범위의 문제, 수직선, 좌표 그래프, 통계표, 정답과 해설을 자동 생성합니다.',
+  title: '중1·중2·중3·고1·Algebra 1·2 문제 생성기 | 매일 배움 연구소',
+  description: '한국 중1·2·3·고1과 Pre-Algebra·Algebra 1·2의 대수 문제, 함수 그래프, 통계표, 정답과 해설을 자동 생성합니다.',
 };
 
 export default function PreAlgebraPage() {

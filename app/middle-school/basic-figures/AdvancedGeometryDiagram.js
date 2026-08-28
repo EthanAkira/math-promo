@@ -79,6 +79,59 @@ function Scatter({ data }) {
   return <svg className="generated-geometry generated-coordinate-geometry" viewBox="0 0 220 165" role="img" aria-label="scatter plot"><line x1="25" y1="140" x2="205" y2="140" className="axis-line" /><line x1="25" y1="140" x2="25" y2="15" className="axis-line" />{data.points.map(([x,y], i) => <circle key={i} cx={sx(x)} cy={sy(y)} r="3.5" className="highlight-point" />)}</svg>;
 }
 
+function CompositeCircle({ data }) {
+  return <svg className="generated-geometry" viewBox="0 0 270 170" role="img" aria-label="circle tangent radius and Pythagorean theorem">
+    <circle cx="90" cy="86" r="55" className="circle-outline" /><circle cx="90" cy="86" r="3" className="target-point" /><text x="78" y="82">O</text>
+    <circle cx="235" cy="86" r="3" className="target-point" /><text x="241" y="91">P</text><circle cx="119" cy="39" r="3" className="target-point" /><text x="120" y="32">T</text>
+    <line x1="90" y1="86" x2="235" y2="86" className="guide-line" /><line x1="90" y1="86" x2="119" y2="39" /><line x1="119" y1="39" x2="235" y2="86" className="highlight-edge" />
+    <path d="M115 47 l9 6 l-6 9" className="right-mark" /><text x="94" y="57" className="value-label">{data.radius}</text><text x="158" y="98" className="value-label">{data.distance}</text><text x="176" y="51" className="target-label">x</text>
+  </svg>;
+}
+
+function SimilarityArea({ data }) {
+  return <svg className="generated-geometry" viewBox="0 0 240 180" role="img" aria-label="parallel segment similar triangles and area ratio">
+    <polygon points="25,155 215,155 120,18" /><line x1="73" y1="87" x2="167" y2="87" className="highlight-edge" />
+    <text x="113" y="14">A</text><text x="14" y="169">B</text><text x="217" y="169">C</text><text x="62" y="86">D</text><text x="171" y="86">E</text>
+    <text x="119" y="70" textAnchor="middle" className="value-label">area={data.smallArea}</text><text x="119" y="135" textAnchor="middle" className="target-label">x</text>
+    <text x="38" y="116" className="value-label">1:{data.ratio}</text><path d="M84 92 h14 M144 92 h14" className="parallel-mark" />
+  </svg>;
+}
+
+function CentroidVector({ data }) {
+  return <svg className="generated-geometry generated-coordinate-geometry" viewBox="0 0 230 180" role="img" aria-label="triangle centroid and vector magnitude">
+    <line x1="25" y1="150" x2="215" y2="150" className="axis-line" /><line x1="25" y1="150" x2="25" y2="15" className="axis-line" />
+    <polygon points="25,150 205,150 25,25" /><line x1="25" y1="150" x2={25 + data.p * 10} y2={150 - data.q * 7} className="highlight-edge" />
+    <circle cx={25 + data.p * 10} cy={150 - data.q * 7} r="4" className="target-point" /><text x={32 + data.p * 10} y={145 - data.q * 7}>G({data.p},{data.q})</text><text x="12" y="163">O</text>
+  </svg>;
+}
+
+function ConicVectorComposite({ data }) {
+  const fx1 = 110 - data.c * 8; const fx2 = 110 + data.c * 8;
+  return <svg className="generated-geometry generated-coordinate-geometry" viewBox="0 0 220 175" role="img" aria-label="ellipse foci and vectors from a point">
+    <line x1="15" y1="100" x2="205" y2="100" className="axis-line" /><line x1="110" y1="15" x2="110" y2="160" className="axis-line" /><ellipse cx="110" cy="100" rx="78" ry="55" className="coordinate-circle" />
+    <circle cx={fx1} cy="100" r="3" className="target-point" /><circle cx={fx2} cy="100" r="3" className="target-point" /><circle cx="110" cy="45" r="4" className="highlight-point" />
+    <line x1="110" y1="45" x2={fx1} y2="100" className="highlight-edge" /><line x1="110" y1="45" x2={fx2} y2="100" className="target-edge" />
+    <text x="115" y="39">P</text><text x={fx1 - 16} y="116">F₁</text><text x={fx2 + 5} y="116">F₂</text>
+  </svg>;
+}
+
+function SpaceProjectionChallenge({ data }) {
+  return <svg className="generated-geometry generated-solid" viewBox="0 0 250 185" role="img" aria-label="cuboid space diagonal and projection">
+    <polygon points="35,145 150,145 205,112 90,112" className="plane-fill" /><polygon points="35,45 150,45 205,18 90,18" fill="none" />
+    <line x1="35" y1="45" x2="35" y2="145" /><line x1="150" y1="45" x2="150" y2="145" /><line x1="205" y1="18" x2="205" y2="112" /><line x1="90" y1="18" x2="90" y2="112" />
+    <line x1="35" y1="145" x2="205" y2="18" className="highlight-edge" /><line x1="35" y1="145" x2="205" y2="112" className="target-edge" /><line x1="205" y1="18" x2="205" y2="112" className="guide-line" />
+    <text x="24" y="159">O</text><text x="211" y="18">P</text><text x="105" y="141" className="value-label">projection={data.baseDiagonal}</text><text x="210" y="69" className="value-label">{data.height}</text><text x="111" y="71" className="target-label">θ</text>
+  </svg>;
+}
+
+function TrigComposite({ data }) {
+  return <svg className="generated-geometry" viewBox="0 0 240 175" role="img" aria-label="triangle requiring cosine rule and area formula">
+    <polygon points="30,150 215,150 92,27" /><text x="18" y="164">A</text><text x="218" y="164">B</text><text x="88" y="21">C</text>
+    <text x="52" y="83" className="value-label">{data.b}</text><text x="125" y="164" className="value-label">{data.a}</text><text x="159" y="83" className="target-label">BC={data.c}</text>
+    <path d="M58 150 A28 28 0 0 0 49 130" className="angle-arc" /><text x="55" y="130" className="value-label">{data.angle}°</text>
+  </svg>;
+}
+
 export default function AdvancedGeometryDiagram({ diagram }) {
   if (diagram.kind === 'trig-triangle') return <TrigTriangle data={diagram} />;
   if (diagram.kind === 'oblique-triangle') return <ObliqueTriangle data={diagram} />;
@@ -93,5 +146,11 @@ export default function AdvancedGeometryDiagram({ diagram }) {
   if (diagram.kind === 'function-graph') return <FunctionGraph data={diagram} />;
   if (diagram.kind === 'box-plot') return <BoxPlot data={diagram} />;
   if (diagram.kind === 'scatter') return <Scatter data={diagram} />;
+  if (diagram.kind === 'composite-circle') return <CompositeCircle data={diagram} />;
+  if (diagram.kind === 'similarity-area') return <SimilarityArea data={diagram} />;
+  if (diagram.kind === 'centroid-vector') return <CentroidVector data={diagram} />;
+  if (diagram.kind === 'conic-vector') return <ConicVectorComposite data={diagram} />;
+  if (diagram.kind === 'space-projection-composite') return <SpaceProjectionChallenge data={diagram} />;
+  if (diagram.kind === 'trig-composite') return <TrigComposite data={diagram} />;
   return null;
 }
