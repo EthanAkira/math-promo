@@ -5,3 +5,8 @@ compatibility_date = "2024-09-01"
 [[kv_namespaces]]
 binding = "AMC_FILES"
 id = "79bf0a28b35147209499746c0a42c34b"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "math-promo-db"
+database_id = "ba863226-143d-4b25-be94-ffb900146f5b"
