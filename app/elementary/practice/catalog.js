@@ -449,13 +449,14 @@ const ENGLISH = {
 };
 
 export function localizeGrade(grade, language) {
-  return language !== 'ko' ? ENGLISH.grades[grade.id] : grade.label;
+  return language !== 'ko' ? localizeRegionalGrade(grade.id, language, ENGLISH.grades[grade.id]) : grade.label;
 }
 
 export function localizeUnit(unit, language, field = 'label') {
   if (language === 'ko') return unit[field];
   const translated = ENGLISH.units[unit.id];
-  return translated ? translated[field === 'label' ? 0 : 1] : unit[field];
+  const englishText = translated ? translated[field === 'label' ? 0 : 1] : unit[field];
+  return localizeRegionalUnit(unit.id, language, englishText, field);
 }
 
 export function findGrade(gradeId) {
@@ -466,3 +467,4 @@ export function findUnit(gradeId, unitId) {
   const grade = findGrade(gradeId);
   return grade.units.find((unit) => unit.id === unitId) || grade.units[0];
 }
+import { localizeRegionalGrade, localizeRegionalUnit } from '../../regionalCatalog';

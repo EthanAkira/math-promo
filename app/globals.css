@@ -246,6 +246,8 @@ select:focus-visible {
 .generated-geometry .construction-note { fill: #176b87; font-size: 12px; font-weight: 800; }
 .generated-geometry .highlight-angle-ring,.generated-geometry .target-angle-ring { fill: color-mix(in srgb, var(--red-pen) 10%, transparent); stroke: var(--red-pen); stroke-width: 2; }
 .generated-geometry .target-angle-ring { fill: color-mix(in srgb, #176b87 10%, transparent); stroke: #176b87; }
+.generated-geometry .shape-outline { fill: none; stroke: var(--ink); stroke-width: 1.8; }
+.generated-geometry .target-point { fill: #176b87; stroke: #fffefb; stroke-width: 1.2; }
 .generated-geometry .arrow-head { fill: var(--ink); stroke: none; }
 .generated-geometry .plane-fill { fill: color-mix(in srgb, #8ccfd0 28%, transparent); stroke: var(--ink); }
 .generated-geometry .highlight-point { fill: var(--red-pen); }

@@ -120,3 +120,25 @@ export const GAMES_COPY = {
     },
   },
 };
+
+Object.assign(GAMES_COPY, {
+  'en-SG': { ...GAMES_COPY.en },
+  'zh-HK': {
+    title: '休息天地', description: '溫習期間小休一下：可免費與 AI 玩數獨、五子棋、國際象棋和柶戲。',
+    games: {
+      sudoku: { title: '數獨', desc: '4個難度 · 筆記 · 提示' },
+      gomoku: { title: '五子棋', desc: '5個 AI 難度 · 悔棋' },
+      chess: { title: '國際象棋', desc: '王車易位 · 吃過路兵 · 兵的升變' },
+      yutnori: { title: '柶戲', desc: '韓國傳統棋盤遊戲 · 附教學' },
+    },
+  },
+  'zh-TW': {
+    title: '休息一下', description: '讀書空檔可以免費與 AI 玩數獨、五子棋、西洋棋和擲柶遊戲。',
+    games: {
+      sudoku: { title: '數獨', desc: '4種難度 · 筆記 · 提示' },
+      gomoku: { title: '五子棋', desc: '5種 AI 難度 · 悔棋' },
+      chess: { title: '西洋棋', desc: '王車易位 · 吃過路兵 · 升變' },
+      yutnori: { title: '擲柶遊戲', desc: '韓國傳統棋盤遊戲 · 附教學' },
+    },
+  },
+});

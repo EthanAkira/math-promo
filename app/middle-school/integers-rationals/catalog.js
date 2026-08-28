@@ -320,5 +320,6 @@ export function findIntegerRationalUnit(unitId) {
 
 export function localizeIntegerRationalUnit(unit, language, field = 'label') {
   if (language === 'ko') return unit[field];
-  return unit.en[field === 'label' ? 0 : 1];
+  return localizeRegionalUnit(unit.id, language, unit.en[field === 'label' ? 0 : 1], field);
 }
+import { localizeRegionalUnit } from '../../regionalCatalog';
