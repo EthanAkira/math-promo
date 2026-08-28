@@ -1,6 +1,7 @@
 import { CORE_GEOMETRY_UNITS } from './geometryProblemEngine';
 import { ADVANCED_GEOMETRY_UNITS } from './advancedGeometryEngine';
 import { ADVANCED_GEOMETRY_CHALLENGE_UNITS } from './advancedGeometryChallengeEngine';
+import { MIDDLE_GEOMETRY_BASIC_UNITS } from './middleGeometryBasicsEngine';
 
 function randomInt(random, min, max) {
   return Math.floor(random() * (max - min + 1)) + min;
@@ -271,6 +272,7 @@ export const BASIC_FIGURE_UNITS = [
   { id: 'perpendicular', label: '수직과 수선', description: '수선의 발, 점과 직선 사이의 거리 등 수직 관련 개념 확인하기', en: ['Perpendicular Lines', 'Check concepts like the foot of a perpendicular and point-to-line distance'], make: perpendicular },
   { id: 'basic-figures-mixed', label: '기본 도형 기본 종합', description: '점·선·면부터 맞꼭지각, 수직과 수선까지 골고루 연습하기', en: ['Basic Figures Review', 'Mixed practice covering points, lines, angles, and perpendiculars'], make: (random) => pick(random, generators)(random) },
   ...CORE_GEOMETRY_UNITS,
+  ...MIDDLE_GEOMETRY_BASIC_UNITS,
   ...ADVANCED_GEOMETRY_UNITS,
   ...ADVANCED_GEOMETRY_CHALLENGE_UNITS,
 ];

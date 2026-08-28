@@ -317,6 +317,65 @@ function SolidDiagram({ data }) {
   </svg>;
 }
 
+function regularPoints(n, cx = 115, cy = 78, radius = 58, rotation = -90) {
+  return Array.from({ length: n }, (_, index) => { const angle = (rotation + index * 360 / n) * Math.PI / 180; return [cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)]; });
+}
+
+function PolygonBasicDiagram({ data }) {
+  const points = regularPoints(data.n); const pointString = points.map((point) => point.join(',')).join(' '); const diagonals = [];
+  if (data.mode === 'vertex-diagonals') for (let i = 2; i < data.n - 1; i += 1) diagonals.push([points[0], points[i]]);
+  if (data.mode === 'all-diagonals' && data.n <= 8) for (let i = 0; i < data.n; i += 1) for (let j = i + 1; j < data.n; j += 1) if (j !== i + 1 && !(i === 0 && j === data.n - 1)) diagonals.push([points[i], points[j]]);
+  return <svg className="generated-geometry" viewBox="0 0 230 160" role="img" aria-label={`${data.n}-gon`}><polygon points={pointString} />{diagonals.map(([a, b], i) => <line key={i} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} className="guide-line" />)}{data.mode === 'exterior' ? <><line x1={points[0][0]} y1={points[0][1]} x2={points[0][0] + 55} y2={points[0][1]} className="highlight-edge" /><text x={points[0][0] + 18} y={points[0][1] + 18} className="target-label">x</text></> : null}<text x="115" y="153" textAnchor="middle" className="value-label">{data.n}-gon</text></svg>;
+}
+
+function CirclePartsDiagram({ data }) {
+  const target = data.target;
+  return <svg className="generated-geometry" viewBox="0 0 230 155" role="img" aria-label="parts of a circle"><circle cx="110" cy="76" r="55" className="circle-outline" /><circle cx="110" cy="76" r="3" className="target-point" /><text x="99" y="91">O</text><g transform={`rotate(${data.rotation || 0} 110 76)`}>{target === 'radius' ? <line x1="110" y1="76" x2="165" y2="76" className="highlight-edge" /> : null}{target === 'diameter' ? <line x1="55" y1="76" x2="165" y2="76" className="highlight-edge" /> : null}{target === 'chord' ? <line x1="72" y1="36" x2="154" y2="112" className="highlight-edge" /> : null}{target === 'arc' ? <path d="M72 36 A55 55 0 0 1 154 112" className="highlight-edge" fill="none" /> : null}</g></svg>;
+}
+
+function CircleRatioDiagram({ data }) {
+  const sector = (cx, theta, fill) => { const r = 45; const endAngle = -90 + theta; const start = [cx, 75 - r]; const end = [cx + r * Math.cos(endAngle * Math.PI / 180), 75 + r * Math.sin(endAngle * Math.PI / 180)]; return <path d={`M${cx} 75 L${start[0]} ${start[1]} A${r} ${r} 0 ${theta > 180 ? 1 : 0} 1 ${end[0]} ${end[1]} Z`} className={fill} />; };
+  return <svg className="generated-geometry" viewBox="0 0 250 155" role="img" aria-label="two sectors in the same circle">{sector(65, data.thetaA, 'sector-fill')}{sector(185, data.thetaB, 'highlight-face')}<text x="65" y="140" textAnchor="middle" className="value-label">{data.thetaA}° · {data.valueA}</text><text x="185" y="140" textAnchor="middle" className="target-label">{data.thetaB}° · x</text></svg>;
+}
+
+function AnnulusDiagram({ data }) {
+  const scale = 52 / data.outer;
+  return <svg className="generated-geometry" viewBox="0 0 230 155" role="img" aria-label="annulus"><circle cx="110" cy="75" r={data.outer * scale} className="sector-fill" /><circle cx="110" cy="75" r={data.inner * scale} fill="white" className="circle-outline" /><line x1="110" y1="75" x2={110 + data.outer * scale} y2="75" /><line x1="110" y1="75" x2={110 + data.inner * scale} y2="75" className="guide-line" /><text x="122" y="68" className="value-label">{data.inner}</text><text x="157" y="68" className="value-label">{data.outer}</text></svg>;
+}
+
+function PolyhedronGeneralDiagram({ data }) {
+  const top = regularPoints(data.n, 115, 45, 36, -90); const bottom = regularPoints(data.n, 115, 112, 48, -90);
+  if (data.solid === 'pyramid') return <svg className="generated-geometry generated-solid" viewBox="0 0 230 165" role="img" aria-label={`${data.n}-gonal pyramid`}><polygon points={bottom.map(p => p.join(',')).join(' ')} />{bottom.map((p, i) => <line key={i} x1="115" y1="18" x2={p[0]} y2={p[1]} className={i > data.n / 2 ? 'hidden-edge' : ''} />)}<text x="115" y="157" textAnchor="middle">{data.n}-gonal pyramid</text></svg>;
+  return <svg className="generated-geometry generated-solid" viewBox="0 0 230 165" role="img" aria-label={`${data.n}-gonal prism`}><polygon points={top.map(p => p.join(',')).join(' ')} /><polygon points={bottom.map(p => p.join(',')).join(' ')} />{top.map((p, i) => <line key={i} x1={p[0]} y1={p[1]} x2={bottom[i][0]} y2={bottom[i][1]} />)}<text x="115" y="160" textAnchor="middle">{data.n}-gonal prism</text></svg>;
+}
+
+function RegularPolyhedronDiagram({ data }) {
+  return <svg className="generated-geometry generated-solid" viewBox="0 0 230 160" role="img" aria-label={data.name}><polygon points="115,18 38,112 192,112" /><polygon points="115,143 38,48 192,48" /><line x1="38" y1="112" x2="192" y2="48" className="guide-line" /><line x1="192" y1="112" x2="38" y2="48" className="guide-line" /><text x="115" y="157" textAnchor="middle" className="value-label">{data.name} · {data.faces} faces</text></svg>;
+}
+
+function RevolutionDiagram({ data }) {
+  return <svg className="generated-geometry" viewBox="0 0 230 160" role="img" aria-label="solid of revolution"><line x1="60" y1="20" x2="60" y2="140" className="highlight-edge" />{data.source === 'cylinder' ? <rect x="60" y="42" width="65" height="76" className="shape-outline" /> : data.source === 'cone' ? <polygon points="60,35 60,125 135,125" /> : <path d="M60 30 A55 55 0 0 1 60 140 Z" className="sector-fill" />}<path d="M148 52 Q190 80 148 108" className="measure-arc" /><polygon points="148,108 145,97 155,101" className="arrow-head" /><text x="174" y="82" className="target-label">360°</text></svg>;
+}
+
+function NetBasicDiagram({ data }) {
+  const shift = data.shift || 0;
+  if (data.net === 'net-cylinder') return <svg className="generated-geometry" viewBox="0 0 240 165" role="img" aria-label="cylinder net"><rect x="45" y="48" width="150" height="68" className="shape-outline" /><circle cx={80 + shift} cy="30" r="22" className="sector-fill" /><circle cx={160 + shift} cy="134" r="22" className="sector-fill" /></svg>;
+  if (data.net === 'net-cone') return <svg className="generated-geometry" viewBox="0 0 240 165" role="img" aria-label="cone net"><path d="M55 128 A92 92 0 0 1 187 31 L126 102 Z" className="sector-fill" /><circle cx={176 + shift / 2} cy="128" r="25" className="highlight-face" /></svg>;
+  return <svg className="generated-geometry" viewBox="0 0 240 165" role="img" aria-label="triangular prism net"><rect x="35" y="55" width="55" height="62" className="shape-outline" /><rect x="90" y="55" width="55" height="62" className="shape-outline" /><rect x="145" y="55" width="55" height="62" className="shape-outline" /><polygon points={`${90 + shift},55 ${117.5 + shift},20 ${145 + shift},55`} /><polygon points={`${90 - shift},117 ${117.5 - shift},152 ${145 - shift},117`} /></svg>;
+}
+
+function MeasurementSolidDiagram({ data }) {
+  if (data.solid === 'sphere') return <svg className="generated-geometry generated-solid" viewBox="0 0 230 160" role="img" aria-label="sphere"><circle cx="110" cy="76" r="56" className="sector-fill" /><ellipse cx="110" cy="76" rx="56" ry="17" className="hidden-edge" /><line x1="110" y1="76" x2="166" y2="76" /><text x="130" y="69" className="value-label">r={data.r}</text></svg>;
+  if (data.solid === 'cylinder') return <svg className="generated-geometry generated-solid" viewBox="0 0 230 170" role="img" aria-label="cylinder"><ellipse cx="110" cy="35" rx="48" ry="15" className="sector-fill" /><line x1="62" y1="35" x2="62" y2="135" /><line x1="158" y1="35" x2="158" y2="135" /><ellipse cx="110" cy="135" rx="48" ry="15" /><line x1="110" y1="35" x2="158" y2="35" /><text x="126" y="28">r={data.r}</text><text x="164" y="88">h={data.h}</text></svg>;
+  if (data.solid === 'cone') return <svg className="generated-geometry generated-solid" viewBox="0 0 230 170" role="img" aria-label="cone"><ellipse cx="110" cy="135" rx="52" ry="15" /><line x1="110" y1="20" x2="58" y2="135" /><line x1="110" y1="20" x2="162" y2="135" /><line x1="110" y1="20" x2="110" y2="135" className="guide-line" /><text x="116" y="82">h={data.h}</text><text x="130" y="128">r={data.r}</text></svg>;
+  if (data.solid === 'pyramid') return <PolyhedronGeneralDiagram data={{ solid: 'pyramid', n: 4 }} />;
+  return <svg className="generated-geometry generated-solid" viewBox="0 0 230 165" role="img" aria-label="cuboid"><polygon points="45,48 145,48 185,25 85,25" /><polygon points="45,48 145,48 145,130 45,130" /><polygon points="145,48 185,25 185,107 145,130" /><text x="87" y="146">{data.w}</text><text x="166" y="126">{data.d}</text><text x="28" y="92">{data.h}</text></svg>;
+}
+
+function SolidRatioDiagram({ data }) {
+  return <svg className="generated-geometry generated-solid" viewBox="0 0 250 165" role="img" aria-label="matching prism and pyramid volumes"><rect x="25" y="42" width="75" height="90" className="shape-outline" /><polygon points="160,132 235,132 198,42" /><text x="62" y="151" textAnchor="middle">V</text><text x="198" y="151" textAnchor="middle" className="target-label">V/3</text></svg>;
+}
+
 export default function GeometryDiagram({ diagram }) {
   if (!diagram) return null;
   if (diagram.kind === 'angle') return <AngleDiagram data={diagram} />;
@@ -342,5 +401,15 @@ export default function GeometryDiagram({ diagram }) {
   if (diagram.kind === 'rectangle-diagonal') return <RectangleDiagonalDiagram data={diagram} />;
   if (diagram.kind === 'coordinate-geometry') return <CoordinateGeometryDiagram data={diagram} />;
   if (diagram.kind === 'solid') return <SolidDiagram data={diagram} />;
+  if (diagram.kind === 'polygon-basic') return <PolygonBasicDiagram data={diagram} />;
+  if (diagram.kind === 'circle-parts') return <CirclePartsDiagram data={diagram} />;
+  if (diagram.kind === 'circle-ratio') return <CircleRatioDiagram data={diagram} />;
+  if (diagram.kind === 'annulus-basic') return <AnnulusDiagram data={diagram} />;
+  if (diagram.kind === 'polyhedron-general') return <PolyhedronGeneralDiagram data={diagram} />;
+  if (diagram.kind === 'regular-polyhedron') return <RegularPolyhedronDiagram data={diagram} />;
+  if (diagram.kind === 'revolution-basic') return <RevolutionDiagram data={diagram} />;
+  if (diagram.kind === 'net-basic') return <NetBasicDiagram data={diagram} />;
+  if (diagram.kind === 'measurement-solid') return <MeasurementSolidDiagram data={diagram} />;
+  if (diagram.kind === 'solid-ratio') return <SolidRatioDiagram data={diagram} />;
   return <AdvancedGeometryDiagram diagram={diagram} />;
 }
