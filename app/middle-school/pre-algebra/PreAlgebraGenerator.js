@@ -14,6 +14,7 @@ const CATEGORY_EN = {
   '함수': 'Functions', '확률과 통계': 'Probability & Statistics', '다항식': 'Polynomials', '경우의 수': 'Counting',
   '행렬': 'Matrices', '집합과 명제': 'Sets & Logic', '지수와 로그': 'Exponents & Logarithms', '수열': 'Sequences',
   '수학적 모델링': 'Mathematical Modeling',
+  '도형의 방정식': 'Coordinate Geometry', '삼각함수': 'Trigonometry', '종합평가': 'Comprehensive Review',
 };
 
 function hashSeed(text) {
@@ -49,7 +50,7 @@ function makeProblems(seed, unit) {
     let attempt = 0;
     do {
       item = finalizeGeneratedProblem(unit.make(random), unit);
-      key = JSON.stringify([item.prompt, item.expression, item.line, item.plane, item.graph, item.lines, item.point, item.table, item.stemLeaf, item.frequencyTable, item.matrices, item.data]);
+      key = JSON.stringify([item.prompt, item.expression, item.answer, item.line, item.plane, item.graph, item.lines, item.point, item.table, item.stemLeaf, item.frequencyTable, item.matrices, item.data, item.mapping, item.points, item.cells, item.values, item.roots, item.mode]);
       attempt += 1;
     } while (used.has(key) && attempt < 100);
     used.add(key);

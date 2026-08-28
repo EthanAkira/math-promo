@@ -101,23 +101,27 @@ function AlgebraGraph({ graph }) {
   const toX = (x) => size / 2 + x * 9;
   const toY = (y) => size / 2 - y * 9;
   const xs = Array.from({ length: 81 }, (_, index) => -10 + index / 4);
-  const valueAt = (x) => {
+  const valueAt = (x, curve = 0) => {
+    if (graph.type === 'quadratic-system') {
+      const linear = graph.slope * x + graph.intercept;
+      return curve ? linear + (x - graph.roots[0]) * (x - graph.roots[1]) : linear;
+    }
     if (graph.type === 'quadratic') return graph.a * (x - graph.h) ** 2 + graph.k;
     if (graph.type === 'exponential') return graph.base ** x;
     return graph.slope * x + graph.intercept;
   };
-  const chunks = [];
-  let current = [];
+  const curveChunks = (curve = 0) => { const chunks = []; let current = [];
   xs.forEach((x) => {
-    const y = valueAt(x);
+    const y = valueAt(x, curve);
     if (Number.isFinite(y) && Math.abs(y) <= range + 2) current.push([toX(x), toY(y)]);
     else if (current.length) { chunks.push(current); current = []; }
   });
-  if (current.length) chunks.push(current);
+  if (current.length) chunks.push(current); return chunks; };
+  const curves = graph.type === 'quadratic-system' ? [curveChunks(0), curveChunks(1)] : [curveChunks()];
   return <svg className="generated-coord-plane generated-algebra-graph" viewBox="0 0 220 220" role="img" aria-label="함수 그래프">
     {[1, 2, 3].map((value) => <g key={value}><line x1={20} y1={110 - value * 27} x2={200} y2={110 - value * 27} className="grid-line" /><line x1={20} y1={110 + value * 27} x2={200} y2={110 + value * 27} className="grid-line" /></g>)}
     <line x1="14" y1="110" x2="206" y2="110" className="axis-line" /><line x1="110" y1="14" x2="110" y2="206" className="axis-line" />
-    {chunks.map((points, index) => <polyline key={index} points={points.map((point) => point.join(',')).join(' ')} className="proportion-curve" fill="none" />)}
+    {curves.map((chunks, curveIndex) => chunks.map((points, index) => <polyline key={`${curveIndex}-${index}`} points={points.map((point) => point.join(',')).join(' ')} className={curveIndex ? 'trip-line' : 'proportion-curve'} fill="none" />))}
     {(graph.points || []).map((point, index) => <g key={`${point.x}-${point.y}-${index}`}><circle cx={toX(point.x)} cy={toY(point.y)} r="3.5" className="proportion-point" /><text x={toX(point.x) + 5} y={toY(point.y) - 6}>({point.x},{point.y})</text></g>)}
     <text x="201" y="104">x</text><text x="117" y="18">y</text><text x="96" y="124">O</text>
   </svg>;
@@ -186,25 +190,74 @@ function DataBars({ data }) {
   </svg>;
 }
 
+function MappingTable({ mapping }) {
+  return <table className="generated-math-table" aria-label="함수 대응표"><thead><tr><th>x</th>{mapping.inputs.map((value) => <th key={value}>{value}</th>)}</tr></thead><tbody><tr><th>f(x)</th>{mapping.outputs.map((value, index) => <td key={index}>{value}</td>)}</tr></tbody></table>;
+}
+
+function InequalityLine({ points }) {
+  const min = Math.min(...points) - 3; const max = Math.max(...points) + 3; const x = (value) => 24 + (value - min) * 272 / (max - min);
+  return <svg className="generated-number-line" viewBox="0 0 320 78" role="img" aria-label="해를 표시한 수직선"><line x1="16" y1="40" x2="304" y2="40" />{Array.from({ length: max - min + 1 }, (_, i) => min + i).map((value) => <g key={value}><line x1={x(value)} y1="35" x2={x(value)} y2="45" />{points.includes(value) || value === 0 ? <text x={x(value)} y="62">{value}</text> : null}</g>)}{points.map((value) => <circle key={value} cx={x(value)} cy="40" r="5" className="proportion-point" />)}</svg>;
+}
+
+function PiecewiseGraph({ item }) {
+  const size = 220; const toX = (x) => 110 + x * 12; const toY = (y) => 110 - y * 12;
+  const segment = (pair, from, to) => `${toX(from)},${toY(pair[0] * from + pair[1])} ${toX(to)},${toY(pair[0] * to + pair[1])}`;
+  return <svg className="generated-coord-plane generated-system-graph" viewBox="0 0 220 220" role="img" aria-label="구간별 정의 함수 그래프"><line x1="12" y1="110" x2="208" y2="110" className="axis-line" /><line x1="110" y1="12" x2="110" y2="208" className="axis-line" /><polyline points={segment(item.left, -8, item.split)} className="proportion-curve" fill="none" /><polyline points={segment(item.right, item.split, 8)} className="trip-line" fill="none" /><circle cx={toX(item.split)} cy={toY(item.left[0] * item.split + item.left[1])} r="4" fill="white" className="open-point" /><circle cx={toX(item.split)} cy={toY(item.right[0] * item.split + item.right[1])} r="4" className="proportion-point" /></svg>;
+}
+
+function ScatterPlot({ item }) {
+  const maximum = Math.max(12, ...item.points.flat().map(Math.abs)); const s = 170 / maximum; const x = (v) => 28 + v * s; const y = (v) => 196 - v * s;
+  return <svg className="generated-coord-plane" viewBox="0 0 220 220" role="img" aria-label="산점도와 추세선"><line x1="24" y1="196" x2="208" y2="196" className="axis-line" /><line x1="28" y1="206" x2="28" y2="14" className="axis-line" /><line x1={x(0)} y1={y(item.intercept)} x2={x(maximum)} y2={y(item.slope * maximum + item.intercept)} className="trip-line" />{item.points.map(([px, py], index) => <circle key={index} cx={x(px)} cy={y(py)} r="3.5" className="proportion-point" />)}</svg>;
+}
+
+function TwoWayTable({ cells }) {
+  const rowTotals = cells.map((row) => row[0] + row[1]); const colTotals = [cells[0][0] + cells[1][0], cells[0][1] + cells[1][1]];
+  return <table className="generated-math-table" aria-label="이원분할표"><thead><tr><th /><th>열 1</th><th>열 2</th><th>합계</th></tr></thead><tbody>{cells.map((row, i) => <tr key={i}><th>행 {i + 1}</th><td>{row[0]}</td><td>{row[1]}</td><td>{rowTotals[i]}</td></tr>)}<tr><th>합계</th><td>{colTotals[0]}</td><td>{colTotals[1]}</td><td>{rowTotals[0] + rowTotals[1]}</td></tr></tbody></table>;
+}
+
+function UnitCircle({ angle }) {
+  const radians = Number(angle) * Math.PI / 180; const px = 110 + 70 * Math.cos(radians); const py = 105 - 70 * Math.sin(radians);
+  return <svg className="generated-coord-plane" viewBox="0 0 220 210" role="img" aria-label="단위원"><line x1="18" y1="105" x2="202" y2="105" className="axis-line" /><line x1="110" y1="13" x2="110" y2="197" className="axis-line" /><circle cx="110" cy="105" r="70" fill="none" className="proportion-curve" /><line x1="110" y1="105" x2={px} y2={py} className="trip-line" /><circle cx={px} cy={py} r="4" className="proportion-point" /><text x="125" y="98">{angle}°</text></svg>;
+}
+
+function CoordinateGeometryGraph({ item }) {
+  const points = item.points || []; const limit = Math.max(8, item.radius || 0, ...points.flatMap((p) => [Math.abs(p.x), Math.abs(p.y)])); const s = 82 / limit; const x = (v) => 110 + v * s; const y = (v) => 110 - v * s;
+  return <svg className="generated-coord-plane" viewBox="0 0 220 220" role="img" aria-label="좌표기하 그래프"><line x1="14" y1="110" x2="206" y2="110" className="axis-line" /><line x1="110" y1="14" x2="110" y2="206" className="axis-line" />{item.mode === 'circle' ? <circle cx={x(item.h)} cy={y(item.k)} r={item.radius * s} fill="none" className="proportion-curve" /> : null}{item.mode === 'perpendicular-lines' ? <><line x1={x(-limit)} y1={y(-limit * item.slope)} x2={x(limit)} y2={y(limit * item.slope)} className="proportion-curve" /><line x1={x(-limit)} y1={y(limit / item.slope)} x2={x(limit)} y2={y(-limit / item.slope)} className="trip-line" /></> : null}{item.mode === 'point-line' ? <line x1={x(-limit)} y1={y((item.c + item.a * limit) / item.b)} x2={x(limit)} y2={y((item.c - item.a * limit) / item.b)} className="proportion-curve" /> : null}{points.length > 1 ? <polyline points={points.map((p) => `${x(p.x)},${y(p.y)}`).join(' ')} className="trip-line" fill="none" /> : null}{points.map((p, i) => <g key={i}><circle cx={x(p.x)} cy={y(p.y)} r="4" className="proportion-point" /><text x={x(p.x) + 6} y={y(p.y) - 6}>{p.label}</text></g>)}</svg>;
+}
+
+function PolynomialZeros({ roots }) {
+  const graph = { type: 'quadratic', a: 0.12, h: (roots[0].x + roots[1].x) / 2, k: -2, points: roots.map((root) => ({ x: root.x, y: 0 })) };
+  return <AlgebraGraph graph={graph} />;
+}
+
 export function ProblemVisual({ item }) {
-  if (item.kind === 'number-line') return <NumberLine line={item.line} />;
-  if (item.kind === 'coordinate-plane') return <CoordinatePlane plane={item.plane} />;
-  if (item.kind === 'trip-graph') return <TripGraph graph={item.graph} />;
-  if (item.kind === 'proportion-graph') return <ProportionGraph graph={item.graph} />;
-  if (item.kind === 'ratio-table') return <RatioTable table={item.table} />;
-  if (item.kind === 'stem-leaf') return <StemLeaf rows={item.stemLeaf} />;
-  if (item.kind === 'frequency-table') return <FrequencyTable rows={item.frequencyTable} />;
-  if (item.kind === 'algebra-graph') return <AlgebraGraph graph={item.graph} />;
-  if (item.kind === 'system-graph') return <SystemGraph lines={item.lines} point={item.point} />;
-  if (item.kind === 'probability-bar') return <ProbabilityBar counts={item.counts} />;
-  if (item.kind === 'probability-tree') return <ProbabilityTree red={item.red} blue={item.blue} />;
-  if (item.kind === 'matrix-operation') return <MatrixOperation matrices={item.matrices} operator={item.operator} />;
-  if (item.kind === 'venn') return <VennDiagram total={item.total} a={item.a} b={item.b} intersection={item.intersection} />;
-  if (item.kind === 'sequence-table') return <SequenceTable values={item.values} />;
-  if (item.kind === 'data-bars') return <DataBars data={item.data} />;
+  const kind = item.visualKind || item.kind;
+  if (kind === 'number-line') return <NumberLine line={item.line} />;
+  if (kind === 'coordinate-plane') return <CoordinatePlane plane={item.plane} />;
+  if (kind === 'trip-graph') return <TripGraph graph={item.graph} />;
+  if (kind === 'proportion-graph') return <ProportionGraph graph={item.graph} />;
+  if (kind === 'ratio-table') return <RatioTable table={item.table} />;
+  if (kind === 'stem-leaf') return <StemLeaf rows={item.stemLeaf} />;
+  if (kind === 'frequency-table') return <FrequencyTable rows={item.frequencyTable} />;
+  if (kind === 'algebra-graph') return <AlgebraGraph graph={item.graph} />;
+  if (kind === 'system-graph') return <SystemGraph lines={item.lines} point={item.point} />;
+  if (kind === 'probability-bar') return <ProbabilityBar counts={item.counts} />;
+  if (kind === 'probability-tree') return <ProbabilityTree red={item.red} blue={item.blue} />;
+  if (kind === 'matrix-operation') return <MatrixOperation matrices={item.matrices} operator={item.operator} />;
+  if (kind === 'venn') return <VennDiagram total={item.total} a={item.a} b={item.b} intersection={item.intersection} />;
+  if (kind === 'sequence-table') return <SequenceTable values={item.values} />;
+  if (kind === 'data-bars') return <DataBars data={item.data} />;
+  if (kind === 'mapping-table') return <MappingTable mapping={item.mapping} />;
+  if (kind === 'inequality-line') return <InequalityLine points={item.points} />;
+  if (kind === 'piecewise-graph') return <PiecewiseGraph item={item} />;
+  if (kind === 'regression-scatter') return <ScatterPlot item={item} />;
+  if (kind === 'two-way-table') return <TwoWayTable cells={item.cells} />;
+  if (kind === 'unit-circle') return <UnitCircle angle={item.angle} />;
+  if (kind === 'coordinate-geometry-graph') return <CoordinateGeometryGraph item={item} />;
+  if (kind === 'polynomial-zero-graph') return <PolynomialZeros roots={item.roots} />;
   return null;
 }
 
 export function hasProblemVisual(item) {
-  return ['number-line', 'coordinate-plane', 'trip-graph', 'proportion-graph', 'ratio-table', 'stem-leaf', 'frequency-table', 'algebra-graph', 'system-graph', 'probability-bar', 'probability-tree', 'matrix-operation', 'venn', 'sequence-table', 'data-bars'].includes(item.kind);
+  return ['number-line', 'coordinate-plane', 'trip-graph', 'proportion-graph', 'ratio-table', 'stem-leaf', 'frequency-table', 'algebra-graph', 'system-graph', 'probability-bar', 'probability-tree', 'matrix-operation', 'venn', 'sequence-table', 'data-bars', 'mapping-table', 'inequality-line', 'piecewise-graph', 'regression-scatter', 'two-way-table', 'unit-circle', 'coordinate-geometry-graph', 'polynomial-zero-graph'].includes(item.visualKind || item.kind);
 }
