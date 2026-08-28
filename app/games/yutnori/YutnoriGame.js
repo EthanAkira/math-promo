@@ -588,8 +588,62 @@ const CORNERS = [0, 5, 10, 15];
 const CENTER = 22;
 const OUTER_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 0];
 const DIAGONALS = [[5, 20], [20, 21], [21, 22], [22, 23], [23, 24], [24, 15], [10, 25], [25, 26], [26, 22], [22, 27], [27, 28], [28, 0]];
-const PATH = [1, 2, 3, 4, 5, 20, 21, 22, 27, 28];
-const nodeAt = (k) => PATH[k - 1];
+
+// Real board graph: every square a piece can stand on, and how it continues forward.
+// 0 is the start/finish corner (a piece that arrives back here is home, never "stands" on it mid-game).
+// 5 and 10 are corners with a fork: continue around the outer rim, or cut diagonally through the center.
+// 22 (the center) is itself a fork: continue the diagonal out to the far corner (15), or cut across the
+// other diagonal straight toward the start/finish corner (0) — the fastest way home.
+const DIAG_NEXT = { 20: 21, 21: 22, 23: 24, 24: 15, 25: 26, 26: 22, 27: 28, 28: 0 };
+function nextOptions(node) {
+  if (node === 5) return [{ tag: 'outer', next: 6 }, { tag: 'diagonal', next: 20 }];
+  if (node === 10) return [{ tag: 'outer', next: 11 }, { tag: 'diagonal', next: 25 }];
+  if (node === CENTER) return [{ tag: 'toward15', next: 23 }, { tag: 'toward0', next: 27 }];
+  if (node in DIAG_NEXT) return [{ tag: 'diagonal', next: DIAG_NEXT[node] }];
+  if (node === 19) return [{ tag: 'outer', next: 0 }];
+  if (node >= 0 && node <= 18) return [{ tag: 'outer', next: node + 1 }];
+  return [];
+}
+// Enumerate every distinct route `steps` forward from `startNode`, branching at every fork encountered
+// along the way (a piece may cross more than one fork in a single throw). Returns one entry per route.
+function enumeratePaths(startNode, steps) {
+  let frontier = [{ node: startNode, path: [], forkChoices: [] }];
+  for (let i = 0; i < steps; i++) {
+    const next = [];
+    frontier.forEach((item) => {
+      if (item.node === 0 && item.path.length > 0) { next.push(item); return; }
+      const options = nextOptions(item.node);
+      const isFork = options.length > 1;
+      options.forEach((opt) => {
+        next.push({
+          node: opt.next,
+          path: [...item.path, opt.next],
+          forkChoices: isFork ? [...item.forkChoices, opt.tag] : item.forkChoices,
+        });
+      });
+    });
+    frontier = next;
+  }
+  const seen = new Set();
+  return frontier
+    .map((item) => ({ finished: item.node === 0, node: item.node === 0 ? 'home' : item.node, path: item.path, forkChoices: item.forkChoices }))
+    .filter((item) => {
+      const key = `${item.finished ? 'F' : item.node}|${item.path.join(',')}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+}
+const FORK_LABELS = {
+  ko: { outer: '바깥 테두리', diagonal: '대각선 지름길', toward15: '반대편 모서리 방향', toward0: '출발점 방향 지름길' },
+  en: { outer: 'outer rim', diagonal: 'diagonal shortcut', toward15: 'toward the far corner', toward0: 'shortcut to the start corner' },
+};
+function routeHint(language, forkChoices) {
+  if (!forkChoices || forkChoices.length === 0) return '';
+  const dict = FORK_LABELS[language] || FORK_LABELS.en;
+  return ` (${forkChoices.map((tag) => dict[tag] || tag).join(' · ')})`;
+}
+function dedupeResults(results) { return results; } // enumeratePaths already dedupes
 
 const OUTCOMES = [
   { key: 'backdo', value: -1, flats: 0, weight: 3, special: true },
@@ -694,6 +748,7 @@ export default function YutnoriGame() {
   const { language } = useLanguage();
   const words = COPY[language] || COPY.en;
   const wordsRef = useRef(words);
+  const languageRef = useRef(language);
   const rootRef = useRef(null);
   const destroyedRef = useRef(false);
   const applyLanguageRef = useRef(() => {});
@@ -756,7 +811,7 @@ export default function YutnoriGame() {
     }
     drawStaticBoard();
 
-    function freshPieces() { return [0, 1, 2, 3].map((i) => ({ id: i, k: 0 })); }
+    function freshPieces() { return [0, 1, 2, 3].map((i) => ({ id: i, node: null, path: [] })); }
     let state = {
       turn: 'red',
       pieces: { red: freshPieces(), blue: freshPieces() },
@@ -800,9 +855,10 @@ export default function YutnoriGame() {
     }
 
     function oppColor(color) { return color === 'red' ? 'blue' : 'red'; }
-    function piecesAtK(color, k) { return state.pieces[color].filter((p) => p.k === k); }
-    function homeCount(color) { return state.pieces[color].filter((p) => p.k === 11).length; }
-    function offCount(color) { return state.pieces[color].filter((p) => p.k === 0).length; }
+    function piecesAtNode(color, node) { return state.pieces[color].filter((p) => p.node === node); }
+    function onBoardPieces(color) { return state.pieces[color].filter((p) => p.node !== null && p.node !== 'home'); }
+    function homeCount(color) { return state.pieces[color].filter((p) => p.node === 'home').length; }
+    function offCount(color) { return state.pieces[color].filter((p) => p.node === null).length; }
 
     function checkWin(color) {
       if (homeCount(color) === 4) {
@@ -816,33 +872,49 @@ export default function YutnoriGame() {
       return false;
     }
 
-    function applyMove(color, pieceK, value) {
-      const group = piecesAtK(color, pieceK);
-      let newK = pieceK + value;
-      if (newK < 0) newK = 0;
-      if (newK > 11) newK = 11;
-      let captured = false;
-      group.forEach((p) => { p.k = newK; });
-      if (newK >= 1 && newK <= 10) {
-        const oppC = oppColor(color);
-        const hits = piecesAtK(oppC, newK);
-        if (hits.length > 0) { hits.forEach((h) => { h.k = 0; }); captured = true; }
-      }
-      return { newK, captured, count: group.length };
+    // Resolve a capture at `node` (a real square, never home) for `color`'s opponent.
+    function resolveCapture(color, node) {
+      if (node === null || node === 'home') return false;
+      const oppC = oppColor(color);
+      const hits = piecesAtNode(oppC, node);
+      if (hits.length === 0) return false;
+      hits.forEach((h) => { h.node = null; h.path = []; });
+      return true;
     }
 
-    function enterPiece(color, value) {
-      const p = state.pieces[color].find((pp) => pp.k === 0);
+    // Move every piece currently at `fromNode` along the chosen `result` (from enumeratePaths).
+    function commitMove(color, fromNode, result) {
+      const group = piecesAtNode(color, fromNode);
+      const landedNode = result.finished ? 'home' : result.node;
+      group.forEach((p) => { p.path = [...p.path, ...result.path]; p.node = landedNode; });
+      const captured = resolveCapture(color, landedNode);
+      return { node: landedNode, captured, count: group.length, finished: landedNode === 'home' };
+    }
+
+    // Bring a new piece out from the tray along `result` (from enumeratePaths(0, value)).
+    function commitEnter(color, result) {
+      const p = state.pieces[color].find((pp) => pp.node === null);
       if (!p) return null;
-      const newK = Math.max(0, Math.min(11, value));
-      p.k = newK;
-      let captured = false;
-      if (newK >= 1 && newK <= 10) {
-        const oppC = oppColor(color);
-        const hits = piecesAtK(oppC, newK);
-        if (hits.length > 0) { hits.forEach((h) => { h.k = 0; }); captured = true; }
-      }
-      return { newK, captured };
+      const landedNode = result.finished ? 'home' : result.node;
+      p.path = [...result.path];
+      p.node = landedNode;
+      const captured = resolveCapture(color, landedNode);
+      return { node: landedNode, captured, finished: landedNode === 'home' };
+    }
+
+    // Back-do: every piece at `fromNode` retraces its own most recent step (using its travel history,
+    // since which fork it came through can't be inferred from the node id alone).
+    function commitBackdo(color, fromNode) {
+      const group = piecesAtNode(color, fromNode);
+      let landedNode = null;
+      group.forEach((p) => {
+        const newPath = p.path.slice(0, -1);
+        p.path = newPath;
+        p.node = newPath.length > 0 ? newPath[newPath.length - 1] : null;
+        landedNode = p.node;
+      });
+      const captured = resolveCapture(color, landedNode);
+      return { node: landedNode, captured, count: group.length };
     }
 
     function renderTrays() {
@@ -886,17 +958,17 @@ export default function YutnoriGame() {
     function render() {
       svg.querySelectorAll('.piece-group').forEach((e) => e.remove());
       ['red', 'blue'].forEach((color) => {
-        const byK = {};
+        const byNode = {};
         state.pieces[color].forEach((p) => {
-          if (p.k >= 1 && p.k <= 10) {
-            byK[p.k] = byK[p.k] || [];
-            byK[p.k].push(p);
+          if (p.node !== null && p.node !== 'home') {
+            byNode[p.node] = byNode[p.node] || [];
+            byNode[p.node].push(p);
           }
         });
-        Object.keys(byK).forEach((k) => {
-          k = +k;
-          const node = NODES[nodeAt(k)];
-          const group = byK[k];
+        Object.keys(byNode).forEach((nodeIdStr) => {
+          const nodeId = +nodeIdStr;
+          const node = NODES[nodeId];
+          const group = byNode[nodeId];
           const g = svgElNS('g', { class: 'piece-group' });
           const ox = color === 'red' ? -6 : 6;
           const cx = node.x + ox, cy = node.y - 4;
@@ -967,43 +1039,64 @@ export default function YutnoriGame() {
     }
     throwBtnEl.addEventListener('click', handleThrowClick);
 
+    // Total squares a piece at `node` has travelled so far (used only for the "Nth square" display text).
+    function stepsAt(color, node) {
+      const p = state.pieces[color].find((pp) => pp.node === node);
+      return p ? p.path.length : 0;
+    }
+
     function getMoveOptions(color, value) {
       const T = wordsRef.current;
+      const lang = languageRef.current;
       const oppC = oppColor(color);
       const options = [];
       if (offCount(color) > 0 && value > 0) {
-        const newK = Math.min(11, value);
-        const mergeCount = piecesAtK(color, newK).length;
-        const captureCount = (newK >= 1 && newK <= 10) ? piecesAtK(oppC, newK).length : 0;
-        options.push({
-          type: 'enter',
-          main: T.enterMain,
-          sub: newK === 11 ? T.enterSubHome : T.enterSub(newK),
-          tag: captureCount > 0 ? 'capture' : (mergeCount > 0 ? 'merge' : (newK === 11 ? 'finish' : null)),
+        enumeratePaths(0, value).forEach((result) => {
+          const landedNode = result.finished ? 'home' : result.node;
+          const mergeCount = result.finished ? 0 : piecesAtNode(color, landedNode).length;
+          const captureCount = result.finished ? 0 : piecesAtNode(oppC, landedNode).length;
+          options.push({
+            type: 'enter',
+            main: T.enterMain,
+            sub: (result.finished ? T.enterSubHome : T.enterSub(result.path.length)) + routeHint(lang, result.forkChoices),
+            tag: captureCount > 0 ? 'capture' : (mergeCount > 0 ? 'merge' : (result.finished ? 'finish' : null)),
+            commit: () => commitEnter(color, result),
+          });
         });
       }
-      const seen = new Set();
-      state.pieces[color].forEach((p) => {
-        if (p.k >= 1 && p.k <= 10 && !seen.has(p.k)) {
-          seen.add(p.k);
-          const fromK = p.k;
-          let newK = fromK + value;
-          if (newK < 0) newK = 0;
-          if (newK > 11) newK = 11;
-          const groupSize = piecesAtK(color, fromK).length;
-          const mergeCount = newK >= 1 ? piecesAtK(color, newK).length : 0;
-          const captureCount = (newK >= 1 && newK <= 10) ? piecesAtK(oppC, newK).length : 0;
-          const main = groupSize > 1 ? T.moveMainMulti(fromK, groupSize) : T.moveMainSingle(fromK);
-          let sub;
-          if (newK === 0) sub = T.moveSubHome;
-          else if (newK === 11) sub = T.moveSubFinish;
-          else sub = T.moveSubTo(newK);
+      const seenNodes = new Set();
+      onBoardPieces(color).forEach((p) => {
+        if (seenNodes.has(p.node)) return;
+        seenNodes.add(p.node);
+        const fromNode = p.node;
+        const groupSize = piecesAtNode(color, fromNode).length;
+        const fromSteps = stepsAt(color, fromNode);
+        if (value < 0) {
+          const newPath = p.path.slice(0, -1);
+          const newNode = newPath.length > 0 ? newPath[newPath.length - 1] : null;
+          const mergeCount = newNode !== null ? piecesAtNode(color, newNode).length : 0;
+          const captureCount = newNode !== null ? piecesAtNode(oppC, newNode).length : 0;
+          const main = groupSize > 1 ? T.moveMainMulti(fromSteps, groupSize) : T.moveMainSingle(fromSteps);
+          const sub = newNode === null ? T.moveSubHome : T.moveSubTo(newPath.length);
           let tag = null;
           if (captureCount > 0) tag = 'capture';
           else if (mergeCount > 0) tag = 'merge';
-          else if (newK === 11) tag = 'finish';
-          options.push({ type: 'move', k: fromK, main, sub, tag });
+          options.push({ type: 'move', main, sub, tag, commit: () => commitBackdo(color, fromNode) });
+          return;
         }
+        enumeratePaths(fromNode, value).forEach((result) => {
+          const landedNode = result.finished ? 'home' : result.node;
+          const newSteps = fromSteps + result.path.length;
+          const mergeCount = result.finished ? 0 : piecesAtNode(color, landedNode).length;
+          const captureCount = result.finished ? 0 : piecesAtNode(oppC, landedNode).length;
+          const main = groupSize > 1 ? T.moveMainMulti(fromSteps, groupSize) : T.moveMainSingle(fromSteps);
+          const sub = (result.finished ? T.moveSubFinish : T.moveSubTo(newSteps)) + routeHint(lang, result.forkChoices);
+          let tag = null;
+          if (captureCount > 0) tag = 'capture';
+          else if (mergeCount > 0) tag = 'merge';
+          else if (result.finished) tag = 'finish';
+          options.push({ type: 'move', main, sub, tag, commit: () => commitMove(color, fromNode, result) });
+        });
       });
       return options;
     }
@@ -1042,12 +1135,10 @@ export default function YutnoriGame() {
 
     async function selectMoveOption(opt) {
       hideMoveModal();
-      const value = state.pending.shift();
+      state.pending.shift();
       state.busy = true;
       updateHeader();
-      let res;
-      if (opt.type === 'enter') res = enterPiece('red', value);
-      else res = applyMove('red', opt.k, value);
+      const res = opt.commit();
       await sleep(200);
       if (destroyedRef.current) return;
       state.busy = false;
@@ -1078,42 +1169,52 @@ export default function YutnoriGame() {
 
     function chooseComputerMove(value) {
       const color = 'blue', oppC = 'red';
-      const options = [];
-      if (offCount(color) > 0) {
-        const newK = Math.max(0, Math.min(11, value));
-        let score = newK;
-        if (newK >= 1 && newK <= 10 && piecesAtK(oppC, newK).length > 0) score += 100;
-        if (newK === 11) score += 20;
-        options.push({ type: 'enter', score });
+      const candidates = [];
+      if (offCount(color) > 0 && value > 0) {
+        enumeratePaths(0, value).forEach((result) => {
+          const landedNode = result.finished ? 'home' : result.node;
+          let score = result.path.length;
+          if (!result.finished && piecesAtNode(oppC, landedNode).length > 0) score += 100;
+          if (result.finished) score += 20;
+          candidates.push({ score, commit: () => commitEnter(color, result) });
+        });
       }
-      const seen = new Set();
-      state.pieces[color].forEach((p) => {
-        if (p.k >= 1 && p.k <= 10 && !seen.has(p.k)) {
-          seen.add(p.k);
-          let newK = p.k + value;
-          if (newK < 0) newK = 0;
-          if (newK > 11) newK = 11;
-          let score = newK * 2;
-          if (newK >= 1 && newK <= 10 && piecesAtK(oppC, newK).length > 0) score += 100;
-          if (newK === 11) score += 30;
-          if (newK === 0 && value < 0) score -= 10;
-          options.push({ type: 'move', k: p.k, score });
+      const seenNodes = new Set();
+      onBoardPieces(color).forEach((p) => {
+        if (seenNodes.has(p.node)) return;
+        seenNodes.add(p.node);
+        const fromNode = p.node;
+        if (value < 0) {
+          const newPath = p.path.slice(0, -1);
+          const newNode = newPath.length > 0 ? newPath[newPath.length - 1] : null;
+          let score = newPath.length * 2;
+          if (newNode !== null && piecesAtNode(oppC, newNode).length > 0) score += 100;
+          if (newNode === null) score -= 10;
+          candidates.push({ score, commit: () => commitBackdo(color, fromNode) });
+          return;
         }
+        enumeratePaths(fromNode, value).forEach((result) => {
+          const landedNode = result.finished ? 'home' : result.node;
+          const newSteps = p.path.length + result.path.length;
+          let score = newSteps * 2;
+          if (!result.finished && piecesAtNode(oppC, landedNode).length > 0) score += 100;
+          if (result.finished) score += 30;
+          candidates.push({ score, commit: () => commitMove(color, fromNode, result) });
+        });
       });
-      if (options.length === 0) return { type: 'enter' };
-      options.sort((a, b) => b.score - a.score);
-      return options[0];
+      if (candidates.length === 0) return null;
+      candidates.sort((a, b) => b.score - a.score);
+      return candidates[0];
     }
 
     async function computerResolveMoves() {
       while (state.pending.length > 0) {
         const value = state.pending.shift();
         const best = chooseComputerMove(value);
+        if (!best) continue;
         state.busy = true;
         updateHeader();
-        let res;
-        if (best.type === 'enter') res = enterPiece('blue', value);
-        else res = applyMove('blue', best.k, value);
+        const res = best.commit();
         await sleep(500);
         if (destroyedRef.current) return;
         state.busy = false;
@@ -1175,8 +1276,9 @@ export default function YutnoriGame() {
 
   useEffect(() => {
     wordsRef.current = words;
+    languageRef.current = language;
     applyLanguageRef.current();
-  }, [words]);
+  }, [words, language]);
 
   return (
     <div className="yutnori-app" ref={rootRef}>
