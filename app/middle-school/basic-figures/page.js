@@ -3,8 +3,8 @@ import BasicFiguresGenerator from './BasicFiguresGenerator';
 import BasicFiguresIntro from './BasicFiguresIntro';
 
 export const metadata = {
-  title: '중1 기본 도형 문제 무료 생성 | 매일 배움 연구소',
-  description: '중학교 1학년 점·선·면, 두 점 사이의 거리와 중점, 각의 분류, 맞꼭지각, 수직과 수선 문제지를 무작위로 생성하고 인쇄할 수 있습니다.',
+  title: 'G12·AMC12·수능 도형 기하 문제 생성기 | 매일 배움 연구소',
+  description: '중등 기본 도형부터 삼각법, 고급 원, 이차곡선, 벡터, 공간좌표, 미적분·통계 시각화까지 문제와 SVG를 자동 생성합니다.',
 };
 
 export default function BasicFiguresPage() {

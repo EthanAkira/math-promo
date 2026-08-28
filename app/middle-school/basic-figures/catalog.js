@@ -1,3 +1,6 @@
+import { CORE_GEOMETRY_UNITS } from './geometryProblemEngine';
+import { ADVANCED_GEOMETRY_UNITS } from './advancedGeometryEngine';
+
 function randomInt(random, min, max) {
   return Math.floor(random() * (max - min + 1)) + min;
 }
@@ -266,13 +269,21 @@ export const BASIC_FIGURE_UNITS = [
   { id: 'vertical-angle', label: '맞꼭지각', description: '두 직선이 만날 때 생기는 맞꼭지각과 이웃한 각 구하기', en: ['Vertical Angles', 'Find vertical and adjacent angles formed by intersecting lines'], make: verticalAngle },
   { id: 'perpendicular', label: '수직과 수선', description: '수선의 발, 점과 직선 사이의 거리 등 수직 관련 개념 확인하기', en: ['Perpendicular Lines', 'Check concepts like the foot of a perpendicular and point-to-line distance'], make: perpendicular },
   { id: 'basic-figures-mixed', label: '기본 도형 기본 종합', description: '점·선·면부터 맞꼭지각, 수직과 수선까지 골고루 연습하기', en: ['Basic Figures Review', 'Mixed practice covering points, lines, angles, and perpendiculars'], make: (random) => pick(random, generators)(random) },
+  ...CORE_GEOMETRY_UNITS,
+  ...ADVANCED_GEOMETRY_UNITS,
 ];
 
 export function findBasicFigureUnit(unitId) {
-  return BASIC_FIGURE_UNITS.find((unit) => unit.id === unitId) || BASIC_FIGURE_UNITS[0];
+  return BASIC_FIGURE_UNITS.find((unit) => unit.id === unitId)
+    || BASIC_FIGURE_UNITS.find((unit) => unit.id === 'visual-foundations')
+    || BASIC_FIGURE_UNITS[0];
 }
 
 export function localizeBasicFigureUnit(unit, language, field = 'label') {
+  if (unit.labels) {
+    const values = field === 'label' ? unit.labels : unit.descriptions;
+    return values[language] || values[language?.split('-')[0]] || values.en || values.ko;
+  }
   if (language === 'ko') return unit[field];
   return unit.en[field === 'label' ? 0 : 1];
 }
