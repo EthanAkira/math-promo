@@ -19,6 +19,8 @@ export default function AmcAdmin() {
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
   const [manifest, setManifest] = useState(null);
+  const [movingKey, setMovingKey] = useState(null);
+  const [moveTarget, setMoveTarget] = useState(null);
 
   function loadManifest() {
     fetch('/api/amc/manifest').then((res) => res.json()).then(setManifest).catch(() => {});
@@ -54,6 +56,47 @@ export default function AmcAdmin() {
       if (!res.ok) throw new Error(data.error || '업로드에 실패했습니다.');
       setStatus('업로드 완료했습니다.');
       setFile(null);
+      loadManifest();
+    } catch (error) {
+      setStatus(error.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function entryKey(entryLevel, entryYear, entryVariantId, entryFileType) {
+    return `${entryLevel}-${entryYear}-${entryVariantId}-${entryFileType}`;
+  }
+
+  function startMove(entryLevel, entryYear, entryVariantId, entryFileType) {
+    setMovingKey(entryKey(entryLevel, entryYear, entryVariantId, entryFileType));
+    setMoveTarget({ level: entryLevel, year: String(entryYear), variantId: entryVariantId, variantLabel: '', fileType: entryFileType });
+  }
+
+  function cancelMove() {
+    setMovingKey(null);
+    setMoveTarget(null);
+  }
+
+  async function handleMove(entryLevel, entryYear, entryVariantId, entryFileType) {
+    if (!password) { setStatus('이동하려면 먼저 비밀번호를 입력해주세요.'); return; }
+    if (!moveTarget) return;
+
+    setBusy(true);
+    setStatus('이동 중...');
+    try {
+      const res = await fetch('/api/amc/move', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          password, level: entryLevel, year: entryYear, variantId: entryVariantId, fileType: entryFileType,
+          to: { level: moveTarget.level, year: moveTarget.year, variantId: moveTarget.variantId, variantLabel: moveTarget.variantLabel, fileType: moveTarget.fileType },
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || '이동에 실패했습니다.');
+      setStatus('이동했습니다.');
+      cancelMove();
       loadManifest();
     } catch (error) {
       setStatus(error.message);
@@ -141,12 +184,47 @@ export default function AmcAdmin() {
 
     <h2 style={{ fontSize: 18, margin: '0 0 12px' }}>현재 등록된 자료</h2>
     <div style={{ display: 'grid', gap: 10 }}>
-      {['8', '10', '12'].map((lvl) => (manifest?.[lvl] || []).map((entry) => entry.variants.map((variant) => <div key={`${lvl}-${entry.year}-${variant.id}`} style={{ padding: '12px 16px', background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 8, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10 }}>
-        <strong>{entry.year} AMC {lvl}{variant.id !== 'AMC8' ? variant.id : ''}</strong>
-        {Object.keys(variant.files).map((type) => <span key={type} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, background: 'var(--paper)', padding: '4px 10px', borderRadius: 999 }}>
-          {FILE_TYPE_LABELS[type]}
-          <button type="button" onClick={() => handleDelete(lvl, entry.year, variant.id, type)} disabled={busy} style={{ border: 'none', background: 'none', color: 'var(--red-pen)', fontWeight: 700, cursor: 'pointer', padding: 0 }}>✕</button>
-        </span>)}
+      {['8', '10', '12'].map((lvl) => (manifest?.[lvl] || []).map((entry) => entry.variants.map((variant) => <div key={`${lvl}-${entry.year}-${variant.id}`} style={{ padding: '12px 16px', background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 8, display: 'grid', gap: 8 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10 }}>
+          <strong>{entry.year} AMC {lvl}{variant.id !== 'AMC8' ? variant.id : ''}</strong>
+          {Object.keys(variant.files).map((type) => <span key={type} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, background: 'var(--paper)', padding: '4px 10px', borderRadius: 999 }}>
+            {FILE_TYPE_LABELS[type]}
+            <button type="button" onClick={() => startMove(lvl, entry.year, variant.id, type)} disabled={busy} style={{ border: 'none', background: 'none', color: 'var(--chalk-green)', fontWeight: 700, cursor: 'pointer', padding: 0 }}>이동</button>
+            <button type="button" onClick={() => handleDelete(lvl, entry.year, variant.id, type)} disabled={busy} style={{ border: 'none', background: 'none', color: 'var(--red-pen)', fontWeight: 700, cursor: 'pointer', padding: 0 }}>✕</button>
+          </span>)}
+        </div>
+        {Object.keys(variant.files).map((type) => movingKey === entryKey(lvl, entry.year, variant.id, type) && moveTarget ? <div key={`move-${type}`} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 8, padding: 12, background: 'var(--paper)', borderRadius: 8 }}>
+          <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
+            <span>이동할 AMC 종류</span>
+            <select value={moveTarget.level} onChange={(event) => setMoveTarget((prev) => ({ ...prev, level: event.target.value, variantId: variantOptions(event.target.value)[0].id }))} style={fieldStyle}>
+              <option value="8">AMC 8</option>
+              <option value="10">AMC 10</option>
+              <option value="12">AMC 12</option>
+            </select>
+          </label>
+          <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
+            <span>이동할 연도</span>
+            <input type="number" value={moveTarget.year} onChange={(event) => setMoveTarget((prev) => ({ ...prev, year: event.target.value }))} style={fieldStyle} />
+          </label>
+          <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
+            <span>이동할 회차</span>
+            <select value={moveTarget.variantId} onChange={(event) => setMoveTarget((prev) => ({ ...prev, variantId: event.target.value }))} style={fieldStyle}>
+              {variantOptions(moveTarget.level).map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}
+            </select>
+          </label>
+          <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
+            <span>이동할 파일 종류</span>
+            <select value={moveTarget.fileType} onChange={(event) => setMoveTarget((prev) => ({ ...prev, fileType: event.target.value }))} style={fieldStyle}>
+              <option value="problems">문제지</option>
+              <option value="solutions">해설지</option>
+              <option value="answers">정답지</option>
+            </select>
+          </label>
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8 }}>
+            <button type="button" className="button button-primary" disabled={busy} onClick={() => handleMove(lvl, entry.year, variant.id, type)}>적용</button>
+            <button type="button" className="button button-secondary" disabled={busy} onClick={cancelMove}>취소</button>
+          </div>
+        </div> : null)}
       </div>)))}
       {manifest && ['8', '10', '12'].every((lvl) => !(manifest[lvl] || []).length) ? <p style={{ color: 'var(--ink-soft)' }}>등록된 자료가 없습니다.</p> : null}
     </div>

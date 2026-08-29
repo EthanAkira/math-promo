@@ -20,6 +20,8 @@ export default function CsatAdmin() {
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
   const [manifest, setManifest] = useState(null);
+  const [movingKey, setMovingKey] = useState(null);
+  const [moveTarget, setMoveTarget] = useState(null);
 
   function loadManifest() {
     fetch('/api/csat/manifest').then((res) => res.json()).then(setManifest).catch(() => {});
@@ -50,6 +52,48 @@ export default function CsatAdmin() {
       if (!res.ok) throw new Error(data.error || '업로드에 실패했습니다.');
       setStatus('업로드 완료했습니다.');
       setFile(null);
+      loadManifest();
+    } catch (error) {
+      setStatus(error.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function entryKey(entryExamType, entryYear, entryVariantId, entryFileType) {
+    return `${entryExamType}-${entryYear}-${entryVariantId}-${entryFileType}`;
+  }
+
+  function startMove(entryExamType, entryYear, entryVariantId, entryFileType) {
+    setMovingKey(entryKey(entryExamType, entryYear, entryVariantId, entryFileType));
+    setMoveTarget({ examType: entryExamType, year: String(entryYear), variantId: entryVariantId, variantLabel: '', fileType: entryFileType });
+  }
+
+  function cancelMove() {
+    setMovingKey(null);
+    setMoveTarget(null);
+  }
+
+  async function handleMove(entryExamType, entryYear, entryVariantId, entryFileType) {
+    if (!password) { setStatus('이동하려면 먼저 비밀번호를 입력해주세요.'); return; }
+    if (!moveTarget) return;
+    if (!moveTarget.variantId.trim()) { setStatus('이동할 회차(트랙)를 입력해주세요.'); return; }
+
+    setBusy(true);
+    setStatus('이동 중...');
+    try {
+      const res = await fetch('/api/csat/move', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          password, examType: entryExamType, year: entryYear, variantId: entryVariantId, fileType: entryFileType,
+          to: { examType: moveTarget.examType, year: moveTarget.year, variantId: moveTarget.variantId.trim(), variantLabel: moveTarget.variantLabel.trim(), fileType: moveTarget.fileType },
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || '이동에 실패했습니다.');
+      setStatus('이동했습니다.');
+      cancelMove();
       loadManifest();
     } catch (error) {
       setStatus(error.message);
@@ -141,12 +185,47 @@ export default function CsatAdmin() {
 
     <h2 style={{ fontSize: 18, margin: '0 0 12px' }}>현재 등록된 자료</h2>
     <div style={{ display: 'grid', gap: 10 }}>
-      {EXAM_TYPES.map((type) => (manifest?.[type] || []).map((entry) => entry.variants.map((variant) => <div key={`${type}-${entry.year}-${variant.id}`} style={{ padding: '12px 16px', background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 8, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10 }}>
-        <strong>{entry.year} {EXAM_TYPE_LABELS[type]} {variant.label}</strong>
-        {Object.keys(variant.files).map((fkey) => <span key={fkey} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, background: 'var(--paper)', padding: '4px 10px', borderRadius: 999 }}>
-          {FILE_TYPE_LABELS[fkey]}
-          <button type="button" onClick={() => handleDelete(type, entry.year, variant.id, fkey)} disabled={busy} style={{ border: 'none', background: 'none', color: 'var(--red-pen)', fontWeight: 700, cursor: 'pointer', padding: 0 }}>✕</button>
-        </span>)}
+      {EXAM_TYPES.map((type) => (manifest?.[type] || []).map((entry) => entry.variants.map((variant) => <div key={`${type}-${entry.year}-${variant.id}`} style={{ padding: '12px 16px', background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 8, display: 'grid', gap: 8 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10 }}>
+          <strong>{entry.year} {EXAM_TYPE_LABELS[type]} {variant.label}</strong>
+          {Object.keys(variant.files).map((fkey) => <span key={fkey} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, background: 'var(--paper)', padding: '4px 10px', borderRadius: 999 }}>
+            {FILE_TYPE_LABELS[fkey]}
+            <button type="button" onClick={() => startMove(type, entry.year, variant.id, fkey)} disabled={busy} style={{ border: 'none', background: 'none', color: 'var(--chalk-green)', fontWeight: 700, cursor: 'pointer', padding: 0 }}>이동</button>
+            <button type="button" onClick={() => handleDelete(type, entry.year, variant.id, fkey)} disabled={busy} style={{ border: 'none', background: 'none', color: 'var(--red-pen)', fontWeight: 700, cursor: 'pointer', padding: 0 }}>✕</button>
+          </span>)}
+        </div>
+        {Object.keys(variant.files).map((fkey) => movingKey === entryKey(type, entry.year, variant.id, fkey) && moveTarget ? <div key={`move-${fkey}`} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 8, padding: 12, background: 'var(--paper)', borderRadius: 8 }}>
+          <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
+            <span>이동할 시험 종류</span>
+            <select value={moveTarget.examType} onChange={(event) => setMoveTarget((prev) => ({ ...prev, examType: event.target.value }))} style={fieldStyle}>
+              {EXAM_TYPES.map((t) => <option key={t} value={t}>{EXAM_TYPE_LABELS[t]}</option>)}
+            </select>
+          </label>
+          <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
+            <span>이동할 연도</span>
+            <input type="number" value={moveTarget.year} onChange={(event) => setMoveTarget((prev) => ({ ...prev, year: event.target.value }))} style={fieldStyle} />
+          </label>
+          <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
+            <span>이동할 회차/트랙 ID</span>
+            <input type="text" list="csat-variant-suggestions" value={moveTarget.variantId} onChange={(event) => setMoveTarget((prev) => ({ ...prev, variantId: event.target.value }))} style={fieldStyle} />
+          </label>
+          <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
+            <span>표시명 (선택)</span>
+            <input type="text" value={moveTarget.variantLabel} onChange={(event) => setMoveTarget((prev) => ({ ...prev, variantLabel: event.target.value }))} placeholder="비우면 ID 사용" style={fieldStyle} />
+          </label>
+          <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
+            <span>이동할 파일 종류</span>
+            <select value={moveTarget.fileType} onChange={(event) => setMoveTarget((prev) => ({ ...prev, fileType: event.target.value }))} style={fieldStyle}>
+              <option value="problems">문제지</option>
+              <option value="solutions">해설지</option>
+              <option value="answers">정답지</option>
+            </select>
+          </label>
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8 }}>
+            <button type="button" className="button button-primary" disabled={busy} onClick={() => handleMove(type, entry.year, variant.id, fkey)}>적용</button>
+            <button type="button" className="button button-secondary" disabled={busy} onClick={cancelMove}>취소</button>
+          </div>
+        </div> : null)}
       </div>)))}
       {manifest && EXAM_TYPES.every((type) => !(manifest[type] || []).length) ? <p style={{ color: 'var(--ink-soft)' }}>등록된 자료가 없습니다.</p> : null}
     </div>
