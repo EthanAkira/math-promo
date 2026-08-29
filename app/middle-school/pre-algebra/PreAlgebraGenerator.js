@@ -5,17 +5,10 @@ import QRCode from 'qrcode';
 import { useLanguage } from '../../language';
 import { isNonKorean, tr } from '../../i18n';
 import { PRE_ALGEBRA_PROFILES, finalizeGeneratedProblem, findPreAlgebraProfile, findPreAlgebraUnit, localizePreAlgebraUnit, unitsForProfile } from './catalog';
+import { preAlgebraCategory, preAlgebraCopy } from './localization';
 import { hasProblemVisual, MathText, ProblemVisual } from './PreAlgebraVisuals';
 
 const PROBLEM_COUNT = 20;
-const CATEGORY_EN = {
-  '수와 연산': 'Number & Operations', '문자와 식': 'Expressions & Equations', '좌표와 관계': 'Coordinates & Relationships',
-  '비와 비율': 'Ratios & Percents', '자료와 가능성': 'Data & Statistics', '방정식과 부등식': 'Equations & Inequalities',
-  '함수': 'Functions', '확률과 통계': 'Probability & Statistics', '다항식': 'Polynomials', '경우의 수': 'Counting',
-  '행렬': 'Matrices', '집합과 명제': 'Sets & Logic', '지수와 로그': 'Exponents & Logarithms', '수열': 'Sequences',
-  '수학적 모델링': 'Mathematical Modeling',
-  '도형의 방정식': 'Coordinate Geometry', '삼각함수': 'Trigonometry', '종합평가': 'Comprehensive Review',
-};
 
 function hashSeed(text) {
   let hash = 2166136261;
@@ -92,6 +85,7 @@ function buildUrl(seed, profileId, unitId, view = 'problems') {
 export default function PreAlgebraGenerator() {
   const { language } = useLanguage();
   const foreign = isNonKorean(language);
+  const copy = preAlgebraCopy(language);
   const [profileId, setProfileId] = useState('kr-middle-1');
   const [unitId, setUnitId] = useState('prime-composite');
   const [seed, setSeed] = useState('PREVIEW1');
@@ -150,11 +144,13 @@ export default function PreAlgebraGenerator() {
   const unitLabel = localizePreAlgebraUnit(unit, language);
   const unitDescription = localizePreAlgebraUnit(unit, language, 'description');
   const profileLabel = foreign ? profile.labelEn : profile.label;
+  const koreanProfiles = PRE_ALGEBRA_PROFILES.filter((item) => item.id.startsWith('kr-'));
+  const internationalProfiles = PRE_ALGEBRA_PROFILES.filter((item) => !item.id.startsWith('kr-'));
 
   return <div className="worksheet-app pre-algebra-app">
     <section className="worksheet-controls pre-algebra-controls no-print" aria-label={tr(language, 'worksheetSettings')}>
-      <div><label htmlFor="pre-algebra-profile">{foreign ? 'Curriculum' : '교육과정'}</label><select id="pre-algebra-profile" value={profileId} onChange={(event) => chooseProfile(event.target.value)}>{PRE_ALGEBRA_PROFILES.map((item) => <option key={item.id} value={item.id}>{foreign ? item.labelEn : item.label}</option>)}</select><p>{foreign ? profile.descriptionEn : profile.description}</p></div>
-      <div><label htmlFor="pre-algebra-category">{foreign ? 'Domain' : '영역'}</label><select id="pre-algebra-category" value={category} onChange={(event) => chooseCategory(event.target.value)}>{categories.map((item) => <option key={item} value={item}>{foreign ? CATEGORY_EN[item] : item}</option>)}</select></div>
+      <div><label htmlFor="pre-algebra-profile">{copy.controls[0]}</label><select id="pre-algebra-profile" value={profileId} onChange={(event) => chooseProfile(event.target.value)}><optgroup label={copy.controls[2]}>{koreanProfiles.map((item) => <option key={item.id} value={item.id}>{foreign ? item.labelEn : item.label}</option>)}</optgroup><optgroup label={copy.controls[3]}>{internationalProfiles.map((item) => <option key={item.id} value={item.id}>{foreign ? item.labelEn : item.label}</option>)}</optgroup></select><p>{foreign ? profile.descriptionEn : profile.description}</p></div>
+      <div><label htmlFor="pre-algebra-category">{copy.controls[1]}</label><select id="pre-algebra-category" value={category} onChange={(event) => chooseCategory(event.target.value)}>{categories.map((item) => <option key={item} value={item}>{preAlgebraCategory(item, language)}</option>)}</select></div>
       <div><label htmlFor="pre-algebra-unit">{tr(language, 'skill')}</label><select id="pre-algebra-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>{visibleUnits.map((item) => <option key={item.id} value={item.id}>{localizePreAlgebraUnit(item, language)}</option>)}</select><p>{unitDescription}</p></div>
       <div className="control-actions"><button className="button button-secondary" onClick={() => window.print()}>{tr(language, 'printPdf')}</button><button className="button button-secondary" onClick={() => changeView(view === 'problems' ? 'answers' : 'problems')}>{tr(language, view === 'problems' ? 'answerKey' : 'worksheet')}</button><button className="button button-primary" onClick={() => reset(createSeed())}>{tr(language, 'newWorksheet')}</button></div>
     </section>
@@ -172,7 +168,7 @@ export default function PreAlgebraGenerator() {
           return <article className={`vertical-problem word-problem prime-problem${hasProblemVisual(item) ? ' graphic-problem' : ''}`} key={item.id}>
             <span className="problem-number">{item.id}</span><div className="word-calculation"><p>{prompt}</p>
               {expression ? <strong className="word-expression font-mono"><MathText value={expression} /></strong> : null}
-              <ProblemVisual item={item} />
+              <ProblemVisual item={item} language={language} />
               <div className="word-answer"><span>{tr(language, 'answer')}</span>{item.kind === 'choice' && choices ? <div className="choice-answer">{view === 'answers' ? <strong>{choices[Number(item.answer) - 1]}</strong> : choices.map((choice, index) => <button type="button" key={`${choice}-${index}`} className={value === String(index + 1) ? 'selected' : ''} onClick={() => changeAnswer(item.id, String(index + 1))}>{choice}</button>)}</div> : <span className="inline-answer">{view === 'answers' ? <strong><MathText value={item.answer} /></strong> : <><input aria-label={`${tr(language, 'answer')} ${item.id}`} value={value} onChange={(event) => changeAnswer(item.id, event.target.value)} className={checked && value ? (isCorrect ? 'correct' : 'wrong') : ''} /><span className="print-answer-space" aria-hidden="true" /></>}</span>}{item.answerSuffix && !foreign ? <em>{item.answerSuffix}</em> : null}</div>
               {view === 'answers' ? <p className="generated-explanation"><strong>{foreign ? 'Why: ' : '풀이: '}</strong>{foreign ? item.explanationEn : item.explanation}</p> : null}
             </div>{checked && view === 'problems' && value ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{tr(language, isCorrect ? 'correct' : 'tryAgain')}</span> : null}

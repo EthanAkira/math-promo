@@ -1,5 +1,7 @@
 'use client';
 
+import { preAlgebraCopy } from './localization';
+
 export function MathText({ value }) {
   const parts = String(value ?? '').split(/([+-]?\d+\/\d+|\^\d+)/g);
   return <>{parts.map((part, index) => {
@@ -87,12 +89,12 @@ function RatioTable({ table }) {
   return <table className="generated-math-table" aria-label="같은 비를 나타내는 표"><thead><tr><th>x</th>{table.map((pair, index) => <th key={index}>{pair[0]}</th>)}</tr></thead><tbody><tr><th>y</th>{table.map((pair, index) => <td key={index}>{pair[1] ?? '□'}</td>)}</tr></tbody></table>;
 }
 
-function StemLeaf({ rows }) {
-  return <div className="generated-stem-leaf" role="img" aria-label="줄기와 잎 그림"><div className="stem-key">줄기 | 잎</div>{rows.map(([stem, leaves]) => <div key={stem}><strong>{stem}</strong><span>{leaves.join('  ')}</span></div>)}<small>예: 2 | 4 는 24</small></div>;
+function StemLeaf({ rows, labels }) {
+  return <div className="generated-stem-leaf" role="img" aria-label={`${labels[3]} · ${labels[4]}`}><div className="stem-key">{labels[3]} | {labels[4]}</div>{rows.map(([stem, leaves]) => <div key={stem}><strong>{stem}</strong><span>{leaves.join('  ')}</span></div>)}<small>{labels[5]}: 2 | 4 = 24</small></div>;
 }
 
-function FrequencyTable({ rows }) {
-  return <table className="generated-math-table" aria-label="도수분포표"><thead><tr><th>계급</th><th>도수</th></tr></thead><tbody>{rows.map((row) => <tr key={row.interval}><td>{row.interval}</td><td>{row.frequency}</td></tr>)}</tbody></table>;
+function FrequencyTable({ rows, labels }) {
+  return <table className="generated-math-table" aria-label={`${labels[6]} · ${labels[7]}`}><thead><tr><th>{labels[6]}</th><th>{labels[7]}</th></tr></thead><tbody>{rows.map((row) => <tr key={row.interval}><td>{row.interval}</td><td>{row.frequency}</td></tr>)}</tbody></table>;
 }
 
 function AlgebraGraph({ graph }) {
@@ -140,7 +142,7 @@ function SystemGraph({ lines, point }) {
   </svg>;
 }
 
-function ProbabilityBar({ counts }) {
+function ProbabilityBar({ counts, labels }) {
   const total = counts.reduce((sum, entry) => sum + entry.value, 0);
   let cursor = 20;
   return <svg className="generated-probability" viewBox="0 0 260 90" role="img" aria-label="확률 막대">
@@ -150,7 +152,7 @@ function ProbabilityBar({ counts }) {
       cursor += width;
       return <g key={entry.label}><rect x={x} y="24" width={width} height="34" className={index ? 'probability-second' : 'probability-first'} /><text x={x + width / 2} y="45" textAnchor="middle">{entry.label}: {entry.value}</text></g>;
     })}
-    <text x="130" y="76" textAnchor="middle">total {total}</text>
+    <text x="130" y="76" textAnchor="middle">{labels[2]} {total}</text>
   </svg>;
 }
 
@@ -210,9 +212,9 @@ function ScatterPlot({ item }) {
   return <svg className="generated-coord-plane" viewBox="0 0 220 220" role="img" aria-label="산점도와 추세선"><line x1="24" y1="196" x2="208" y2="196" className="axis-line" /><line x1="28" y1="206" x2="28" y2="14" className="axis-line" /><line x1={x(0)} y1={y(item.intercept)} x2={x(maximum)} y2={y(item.slope * maximum + item.intercept)} className="trip-line" />{item.points.map(([px, py], index) => <circle key={index} cx={x(px)} cy={y(py)} r="3.5" className="proportion-point" />)}</svg>;
 }
 
-function TwoWayTable({ cells }) {
+function TwoWayTable({ cells, labels }) {
   const rowTotals = cells.map((row) => row[0] + row[1]); const colTotals = [cells[0][0] + cells[1][0], cells[0][1] + cells[1][1]];
-  return <table className="generated-math-table" aria-label="이원분할표"><thead><tr><th /><th>열 1</th><th>열 2</th><th>합계</th></tr></thead><tbody>{cells.map((row, i) => <tr key={i}><th>행 {i + 1}</th><td>{row[0]}</td><td>{row[1]}</td><td>{rowTotals[i]}</td></tr>)}<tr><th>합계</th><td>{colTotals[0]}</td><td>{colTotals[1]}</td><td>{rowTotals[0] + rowTotals[1]}</td></tr></tbody></table>;
+  return <table className="generated-math-table" aria-label={labels[8]}><thead><tr><th /><th>{labels[0]} 1</th><th>{labels[0]} 2</th><th>{labels[2]}</th></tr></thead><tbody>{cells.map((row, i) => <tr key={i}><th>{labels[1]} {i + 1}</th><td>{row[0]}</td><td>{row[1]}</td><td>{rowTotals[i]}</td></tr>)}<tr><th>{labels[2]}</th><td>{colTotals[0]}</td><td>{colTotals[1]}</td><td>{rowTotals[0] + rowTotals[1]}</td></tr></tbody></table>;
 }
 
 function UnitCircle({ angle }) {
@@ -230,18 +232,19 @@ function PolynomialZeros({ roots }) {
   return <AlgebraGraph graph={graph} />;
 }
 
-export function ProblemVisual({ item }) {
+export function ProblemVisual({ item, language = 'ko' }) {
   const kind = item.visualKind || item.kind;
+  const labels = preAlgebraCopy(language).visual;
   if (kind === 'number-line') return <NumberLine line={item.line} />;
   if (kind === 'coordinate-plane') return <CoordinatePlane plane={item.plane} />;
   if (kind === 'trip-graph') return <TripGraph graph={item.graph} />;
   if (kind === 'proportion-graph') return <ProportionGraph graph={item.graph} />;
   if (kind === 'ratio-table') return <RatioTable table={item.table} />;
-  if (kind === 'stem-leaf') return <StemLeaf rows={item.stemLeaf} />;
-  if (kind === 'frequency-table') return <FrequencyTable rows={item.frequencyTable} />;
+  if (kind === 'stem-leaf') return <StemLeaf rows={item.stemLeaf} labels={labels} />;
+  if (kind === 'frequency-table') return <FrequencyTable rows={item.frequencyTable} labels={labels} />;
   if (kind === 'algebra-graph') return <AlgebraGraph graph={item.graph} />;
   if (kind === 'system-graph') return <SystemGraph lines={item.lines} point={item.point} />;
-  if (kind === 'probability-bar') return <ProbabilityBar counts={item.counts} />;
+  if (kind === 'probability-bar') return <ProbabilityBar counts={item.counts} labels={labels} />;
   if (kind === 'probability-tree') return <ProbabilityTree red={item.red} blue={item.blue} />;
   if (kind === 'matrix-operation') return <MatrixOperation matrices={item.matrices} operator={item.operator} />;
   if (kind === 'venn') return <VennDiagram total={item.total} a={item.a} b={item.b} intersection={item.intersection} />;
@@ -251,7 +254,7 @@ export function ProblemVisual({ item }) {
   if (kind === 'inequality-line') return <InequalityLine points={item.points} />;
   if (kind === 'piecewise-graph') return <PiecewiseGraph item={item} />;
   if (kind === 'regression-scatter') return <ScatterPlot item={item} />;
-  if (kind === 'two-way-table') return <TwoWayTable cells={item.cells} />;
+  if (kind === 'two-way-table') return <TwoWayTable cells={item.cells} labels={labels} />;
   if (kind === 'unit-circle') return <UnitCircle angle={item.angle} />;
   if (kind === 'coordinate-geometry-graph') return <CoordinateGeometryGraph item={item} />;
   if (kind === 'polynomial-zero-graph') return <PolynomialZeros roots={item.roots} />;
