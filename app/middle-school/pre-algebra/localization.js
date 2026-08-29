@@ -20,14 +20,37 @@ const COPY = {
 COPY['en-SG'] = COPY.en;
 
 const CATEGORY_EN = {
-  '수와 연산': 'Number & Operations', '문자와 식': 'Expressions & Equations', '좌표와 관계': 'Coordinates & Relationships', '비와 비율': 'Ratios & Percents', '자료와 가능성': 'Data & Statistics', '방정식과 부등식': 'Equations & Inequalities', '함수': 'Functions', '확률과 통계': 'Probability & Statistics', '다항식': 'Polynomials', '경우의 수': 'Counting', '행렬': 'Matrices', '집합과 명제': 'Sets & Logic', '지수와 로그': 'Exponents & Logarithms', '수열': 'Sequences', '수학적 모델링': 'Mathematical Modeling', '도형의 방정식': 'Coordinate Geometry', '삼각함수': 'Trigonometry', '종합평가': 'Comprehensive Review',
+  '수와 연산': 'Number & Operations', '문자와 식': 'Expressions & Equations', '좌표와 관계': 'Coordinates & Relationships', '비와 비율': 'Ratios & Percents', '자료와 가능성': 'Data & Statistics', '방정식과 부등식': 'Equations & Inequalities', '함수': 'Functions', '확률과 통계': 'Probability & Statistics', '다항식': 'Polynomials', '경우의 수': 'Counting', '행렬': 'Matrices', '집합과 명제': 'Sets & Logic', '지수와 로그': 'Exponents & Logarithms', '수열': 'Sequences', '미적분': 'Calculus', '수학적 모델링': 'Mathematical Modeling', '도형의 방정식': 'Coordinate Geometry', '삼각함수': 'Trigonometry', '종합평가': 'Comprehensive Review',
 };
 
 const CATEGORY_ZH = {
-  '수와 연산': '数与运算', '문자와 식': '代数式', '좌표와 관계': '坐标与关系', '비와 비율': '比与百分数', '자료와 가능성': '数据与统计', '방정식과 부등식': '方程与不等式', '함수': '函数', '확률과 통계': '概率与统计', '다항식': '多项式', '경우의 수': '计数', '행렬': '矩阵', '집합과 명제': '集合与命题', '지수와 로그': '指数与对数', '수열': '数列', '수학적 모델링': '数学建模', '도형의 방정식': '坐标几何', '삼각함수': '三角函数', '종합평가': '综合练习',
+  '수와 연산': '数与运算', '문자와 식': '代数式', '좌표와 관계': '坐标与关系', '비와 비율': '比与百分数', '자료와 가능성': '数据与统计', '방정식과 부등식': '方程与不等式', '함수': '函数', '확률과 통계': '概率与统计', '다항식': '多项式', '경우의 수': '计数', '행렬': '矩阵', '집합과 명제': '集合与命题', '지수와 로그': '指数与对数', '수열': '数列', '미적분': '微积分', '수학적 모델링': '数学建模', '도형의 방정식': '坐标几何', '삼각함수': '三角函数', '종합평가': '综合练习',
 };
 
+const PROFILE_LABELS = {
+  'zh-CN': ['韩国初中一年级', '韩国初中二年级', '韩国初中三年级', '韩国高中一年级', '韩国高二 · 代数', '韩国高二 · 微积分Ⅰ', '韩国高二 · 概率与统计'],
+  'zh-HK': ['韓國初中一年級', '韓國初中二年級', '韓國初中三年級', '韓國高中一年級', '韓國高中二年級 · 代數', '韓國高中二年級 · 微積分Ⅰ', '韓國高中二年級 · 概率與統計'],
+  'zh-TW': ['韓國國中一年級', '韓國國中二年級', '韓國國中三年級', '韓國高中一年級', '韓國高中二年級 · 代數', '韓國高中二年級 · 微積分Ⅰ', '韓國高中二年級 · 機率與統計'],
+  ja: ['韓国 中学校1年', '韓国 中学校2年', '韓国 中学校3年', '韓国 高校1年', '韓国 高校2年・代数', '韓国 高校2年・微積分Ⅰ', '韓国 高校2年・確率と統計'],
+  fr: ['Corée · Collège 1', 'Corée · Collège 2', 'Corée · Collège 3', 'Corée · Lycée 1', 'Corée · Lycée 2 · Algèbre', 'Corée · Lycée 2 · Calcul I', 'Corée · Lycée 2 · Probabilités et statistiques'],
+  es: ['Corea · Secundaria 1', 'Corea · Secundaria 2', 'Corea · Secundaria 3', 'Corea · Bachillerato 1', 'Corea · Bachillerato 2 · Álgebra', 'Corea · Bachillerato 2 · Cálculo I', 'Corea · Bachillerato 2 · Probabilidad y estadística'],
+  ru: ['Корея · 7 класс', 'Корея · 8 класс', 'Корея · 9 класс', 'Корея · 10 класс', 'Корея · 11 класс · Алгебра', 'Корея · 11 класс · Анализ I', 'Корея · 11 класс · Вероятность и статистика'],
+  ar: ['كوريا · الصف السابع', 'كوريا · الصف الثامن', 'كوريا · الصف التاسع', 'كوريا · الصف العاشر', 'كوريا · الصف الحادي عشر · الجبر', 'كوريا · الصف الحادي عشر · التفاضل والتكامل ١', 'كوريا · الصف الحادي عشر · الاحتمالات والإحصاء'],
+  pt: ['Coreia · 7.º ano', 'Coreia · 8.º ano', 'Coreia · 9.º ano', 'Coreia · 10.º ano', 'Coreia · 11.º ano · Álgebra', 'Coreia · 11.º ano · Cálculo I', 'Coreia · 11.º ano · Probabilidade e estatística'],
+  hi: ['कोरिया · कक्षा 7', 'कोरिया · कक्षा 8', 'कोरिया · कक्षा 9', 'कोरिया · कक्षा 10', 'कोरिया · कक्षा 11 · बीजगणित', 'कोरिया · कक्षा 11 · कलन I', 'कोरिया · कक्षा 11 · प्रायिकता और सांख्यिकी'],
+  vi: ['Hàn Quốc · Lớp 7', 'Hàn Quốc · Lớp 8', 'Hàn Quốc · Lớp 9', 'Hàn Quốc · Lớp 10', 'Hàn Quốc · Lớp 11 · Đại số', 'Hàn Quốc · Lớp 11 · Giải tích I', 'Hàn Quốc · Lớp 11 · Xác suất và thống kê'],
+  id: ['Korea · Kelas 7', 'Korea · Kelas 8', 'Korea · Kelas 9', 'Korea · Kelas 10', 'Korea · Kelas 11 · Aljabar', 'Korea · Kelas 11 · Kalkulus I', 'Korea · Kelas 11 · Peluang dan statistika'],
+};
+
+const KOREAN_PROFILE_IDS = ['kr-middle-1', 'kr-middle-2', 'kr-middle-3', 'kr-high-1', 'kr-high-2-algebra', 'kr-high-2-calculus-1', 'kr-high-2-probability-statistics'];
+
 export function preAlgebraCopy(language) { return COPY[language] || COPY.en; }
+export function preAlgebraProfileLabel(profile, language) {
+  if (language === 'ko') return profile.label;
+  const index = KOREAN_PROFILE_IDS.indexOf(profile.id);
+  if (index >= 0 && PROFILE_LABELS[language]) return PROFILE_LABELS[language][index];
+  return profile.labelEn;
+}
 export function preAlgebraCategory(category, language) {
   if (language === 'ko') return category;
   if (language === 'zh-CN' || language === 'zh-HK' || language === 'zh-TW') return CATEGORY_ZH[category] || CATEGORY_EN[category] || category;

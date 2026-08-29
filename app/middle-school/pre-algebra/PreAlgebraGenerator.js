@@ -5,7 +5,7 @@ import QRCode from 'qrcode';
 import { useLanguage } from '../../language';
 import { isNonKorean, tr } from '../../i18n';
 import { PRE_ALGEBRA_PROFILES, finalizeGeneratedProblem, findPreAlgebraProfile, findPreAlgebraUnit, localizePreAlgebraUnit, unitsForProfile } from './catalog';
-import { preAlgebraCategory, preAlgebraCopy } from './localization';
+import { preAlgebraCategory, preAlgebraCopy, preAlgebraProfileLabel } from './localization';
 import { hasProblemVisual, MathText, ProblemVisual } from './PreAlgebraVisuals';
 
 const PROBLEM_COUNT = 20;
@@ -143,13 +143,13 @@ export default function PreAlgebraGenerator() {
 
   const unitLabel = localizePreAlgebraUnit(unit, language);
   const unitDescription = localizePreAlgebraUnit(unit, language, 'description');
-  const profileLabel = foreign ? profile.labelEn : profile.label;
+  const profileLabel = preAlgebraProfileLabel(profile, language);
   const koreanProfiles = PRE_ALGEBRA_PROFILES.filter((item) => item.id.startsWith('kr-'));
   const internationalProfiles = PRE_ALGEBRA_PROFILES.filter((item) => !item.id.startsWith('kr-'));
 
   return <div className="worksheet-app pre-algebra-app">
     <section className="worksheet-controls pre-algebra-controls no-print" aria-label={tr(language, 'worksheetSettings')}>
-      <div><label htmlFor="pre-algebra-profile">{copy.controls[0]}</label><select id="pre-algebra-profile" value={profileId} onChange={(event) => chooseProfile(event.target.value)}><optgroup label={copy.controls[2]}>{koreanProfiles.map((item) => <option key={item.id} value={item.id}>{foreign ? item.labelEn : item.label}</option>)}</optgroup><optgroup label={copy.controls[3]}>{internationalProfiles.map((item) => <option key={item.id} value={item.id}>{foreign ? item.labelEn : item.label}</option>)}</optgroup></select><p>{foreign ? profile.descriptionEn : profile.description}</p></div>
+      <div><label htmlFor="pre-algebra-profile">{copy.controls[0]}</label><select id="pre-algebra-profile" value={profileId} onChange={(event) => chooseProfile(event.target.value)}><optgroup label={copy.controls[2]}>{koreanProfiles.map((item) => <option key={item.id} value={item.id}>{preAlgebraProfileLabel(item, language)}</option>)}</optgroup><optgroup label={copy.controls[3]}>{internationalProfiles.map((item) => <option key={item.id} value={item.id}>{preAlgebraProfileLabel(item, language)}</option>)}</optgroup></select><p>{foreign ? profile.descriptionEn : profile.description}</p></div>
       <div><label htmlFor="pre-algebra-category">{copy.controls[1]}</label><select id="pre-algebra-category" value={category} onChange={(event) => chooseCategory(event.target.value)}>{categories.map((item) => <option key={item} value={item}>{preAlgebraCategory(item, language)}</option>)}</select></div>
       <div><label htmlFor="pre-algebra-unit">{tr(language, 'skill')}</label><select id="pre-algebra-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>{visibleUnits.map((item) => <option key={item.id} value={item.id}>{localizePreAlgebraUnit(item, language)}</option>)}</select><p>{unitDescription}</p></div>
       <div className="control-actions"><button className="button button-secondary" onClick={() => window.print()}>{tr(language, 'printPdf')}</button><button className="button button-secondary" onClick={() => changeView(view === 'problems' ? 'answers' : 'problems')}>{tr(language, view === 'problems' ? 'answerKey' : 'worksheet')}</button><button className="button button-primary" onClick={() => reset(createSeed())}>{tr(language, 'newWorksheet')}</button></div>
