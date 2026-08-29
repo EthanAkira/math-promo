@@ -139,25 +139,69 @@ function centerAndSpread(random) {
 }
 
 function stemLeaf(random) {
-  const stemA = randomInt(random, 1, 4);
+  const stemA = randomInt(random, 1, 3);
   const stemB = stemA + 1;
-  const leavesA = Array.from({ length: randomInt(random, 3, 5) }, () => randomInt(random, 0, 9)).sort((a, b) => a - b);
-  const leavesB = Array.from({ length: randomInt(random, 3, 5) }, () => randomInt(random, 0, 9)).sort((a, b) => a - b);
+  const leavesA = Array.from({ length: randomInt(random, 3, 6) }, () => randomInt(random, 0, 9)).sort((a, b) => a - b);
+  const leavesB = Array.from({ length: randomInt(random, 3, 6) }, () => randomInt(random, 0, 9)).sort((a, b) => a - b);
+  if (leavesA.length === leavesB.length) return stemLeaf(random);
   const all = [...leavesA.map((leaf) => stemA * 10 + leaf), ...leavesB.map((leaf) => stemB * 10 + leaf)].sort((a, b) => a - b);
-  const mode = randomInt(random, 0, 1);
-  if (mode === 0) return problem('줄기와 잎 그림에서 자료의 최댓값을 구하세요.', '', all[all.length - 1], { kind: 'stem-leaf', stemLeaf: [[stemA, leavesA], [stemB, leavesB]], promptEn: 'Find the maximum value in the stem-and-leaf plot.', explanation: `가장 큰 줄기의 가장 큰 잎을 읽으면 ${all[all.length - 1]}입니다.`, explanationEn: `Read the largest leaf on the largest stem: ${all[all.length - 1]}.` });
-  return problem('줄기와 잎 그림에 나타난 자료의 개수를 구하세요.', '', all.length, { kind: 'stem-leaf', stemLeaf: [[stemA, leavesA], [stemB, leavesB]], promptEn: 'How many data values are shown?', explanation: `잎의 개수를 모두 세면 ${all.length}개입니다.`, explanationEn: `There are ${all.length} leaves, so there are ${all.length} data values.` });
+  const visual = { kind: 'stem-leaf', stemLeaf: [[stemA, leavesA], [stemB, leavesB]] };
+  const mode = randomInt(random, 0, 5);
+  if (mode === 0) return problem('줄기와 잎 그림에서 자료의 최댓값을 구하세요.', '', all[all.length - 1], { ...visual, promptEn: 'Find the maximum value in the stem-and-leaf plot.', explanation: `가장 큰 줄기의 가장 큰 잎을 읽으면 ${all[all.length - 1]}입니다.`, explanationEn: `Read the largest leaf on the largest stem: ${all[all.length - 1]}.` });
+  if (mode === 1) return problem('줄기와 잎 그림에 나타난 자료의 개수를 구하세요.', '', all.length, { ...visual, promptEn: 'How many data values are shown?', explanation: `잎의 개수를 모두 세면 ${all.length}개입니다.`, explanationEn: `There are ${all.length} leaves, so there are ${all.length} data values.` });
+  if (mode === 2) {
+    const answerStem = leavesA.length > leavesB.length ? stemA : stemB;
+    return problem('잎이 가장 많은 줄기를 구하세요.', '', answerStem, { ...visual, promptEn: 'Which stem has the most leaves?', explanation: `줄기 ${stemA}은 잎 ${leavesA.length}개, 줄기 ${stemB}은 잎 ${leavesB.length}개이므로 잎이 더 많은 줄기는 ${answerStem}입니다.`, explanationEn: `Stem ${stemA} has ${leavesA.length} leaves and stem ${stemB} has ${leavesB.length}; the stem with more leaves is ${answerStem}.` });
+  }
+  if (mode === 3) {
+    const targetStem = pick(random, [stemA, stemB]);
+    const leaves = targetStem === stemA ? leavesA : leavesB;
+    return problem(`줄기 ${targetStem}에 해당하는 잎을 모두 구하세요. (작은 수부터 쉼표로 구분)`, '', leaves.join(','), { ...visual, promptEn: `List all leaves for stem ${targetStem}, smallest to largest, separated by commas.`, explanation: `줄기 ${targetStem}의 잎을 작은 수부터 나열하면 ${leaves.join(', ')}입니다.`, explanationEn: `The leaves for stem ${targetStem} in order are ${leaves.join(', ')}.` });
+  }
+  if (mode === 4) {
+    const n = randomInt(random, 2, Math.min(4, all.length - 1));
+    const fromLargest = random() < 0.5;
+    const value = fromLargest ? all[all.length - n] : all[n - 1];
+    const rankLabel = fromLargest ? `큰 자료부터 ${n}번째` : `작은 자료부터 ${n}번째`;
+    return problem(`${rankLabel} 값을 구하세요.`, '', value, { ...visual, promptEn: `Find the value ranked ${n} from the ${fromLargest ? 'largest' : 'smallest'}.`, explanation: `자료를 크기순으로 나열하면 ${all.join(', ')}이므로 ${rankLabel} 값은 ${value}입니다.`, explanationEn: `In sorted order (${all.join(', ')}), the requested value is ${value}.` });
+  }
+  const threshold = pick(random, [stemA, stemB]) * 10 + randomInt(random, 0, 5);
+  const count = all.filter((value) => value >= threshold).length;
+  return problem(`값이 ${threshold} 이상인 자료의 개수를 구하세요.`, '', count, { ...visual, promptEn: `Find how many data values are at least ${threshold}.`, explanation: `${threshold} 이상인 값을 모두 세면 ${count}개입니다.`, explanationEn: `Counting values that are at least ${threshold} gives ${count}.` });
 }
 
 function frequencyTable(random) {
+  const width = pick(random, [5, 10]);
   const frequencies = Array.from({ length: 4 }, () => randomInt(random, 2, 9));
   const total = frequencies.reduce((sum, value) => sum + value, 0);
-  const index = randomInt(random, 0, 3);
-  const mode = randomInt(random, 0, 1);
-  const table = frequencies.map((frequency, row) => ({ interval: `${row * 10}~${row * 10 + 9}`, frequency }));
-  if (mode === 0) return problem('도수분포표에서 전체 도수의 합을 구하세요.', '', total, { kind: 'frequency-table', frequencyTable: table, promptEn: 'Find the total frequency.', explanation: `각 계급의 도수를 더하면 ${frequencies.join('+')}=${total}입니다.`, explanationEn: `Add all class frequencies to get ${total}.` });
-  const relative = frequencies[index] / total;
-  return problem(`도수분포표에서 ${table[index].interval} 계급의 상대도수를 소수로 구하세요.`, '', String(Number(relative.toFixed(3))), { kind: 'frequency-table', frequencyTable: table, promptEn: `Find the relative frequency for the ${table[index].interval} class as a decimal.`, explanation: `상대도수는 ${frequencies[index]}÷${total}=${Number(relative.toFixed(3))}입니다.`, explanationEn: `Relative frequency is ${frequencies[index]}÷${total}=${Number(relative.toFixed(3))}.` });
+  const table = frequencies.map((frequency, row) => ({ interval: `${row * width}~${row * width + width - 1}`, frequency }));
+  const visual = (rows) => ({ kind: 'frequency-table', frequencyTable: rows });
+  const mode = randomInt(random, 0, 5);
+  if (mode === 0) return problem('도수분포표에서 전체 도수의 합을 구하세요.', '', total, { ...visual(table), promptEn: 'Find the total frequency.', explanation: `각 계급의 도수를 더하면 ${frequencies.join('+')}=${total}입니다.`, explanationEn: `Add all class frequencies to get ${total}.` });
+  if (mode === 1) {
+    const index = randomInt(random, 0, 3);
+    const relative = frequencies[index] / total;
+    return problem(`도수분포표에서 ${table[index].interval} 계급의 상대도수를 소수로 구하세요.`, '', String(Number(relative.toFixed(3))), { ...visual(table), promptEn: `Find the relative frequency for the ${table[index].interval} class as a decimal.`, explanation: `상대도수는 ${frequencies[index]}÷${total}=${Number(relative.toFixed(3))}입니다.`, explanationEn: `Relative frequency is ${frequencies[index]}÷${total}=${Number(relative.toFixed(3))}.` });
+  }
+  if (mode === 2) {
+    const index = randomInt(random, 0, 3);
+    const hidden = table.map((row, rowIndex) => (rowIndex === index ? { ...row, frequency: 'A' } : row));
+    const others = frequencies.filter((_, rowIndex) => rowIndex !== index);
+    return problem(`아래 도수분포표에서 전체 도수가 ${total}일 때, A의 값을 구하세요.`, '', frequencies[index], { ...visual(hidden), promptEn: `Given a total frequency of ${total}, find the value of A.`, explanation: `A=${total}-(${others.join('+')})=${frequencies[index]}입니다.`, explanationEn: `A = ${total} - (${others.join('+')}) = ${frequencies[index]}.` });
+  }
+  if (mode === 3) {
+    const index = randomInt(random, 1, 3);
+    const threshold = table[index].interval.split('~')[0];
+    const cumulative = frequencies.slice(index).reduce((sum, value) => sum + value, 0);
+    return problem(`${threshold} 이상인 계급의 도수의 합을 구하세요.`, '', cumulative, { ...visual(table), promptEn: `Find the sum of frequencies for classes at or above ${threshold}.`, explanation: `${table[index].interval}부터 마지막 계급까지 도수를 더하면 ${frequencies.slice(index).join('+')}=${cumulative}입니다.`, explanationEn: `Adding the frequencies from ${table[index].interval} onward gives ${cumulative}.` });
+  }
+  if (mode === 4) {
+    return problem('도수분포표에서 계급의 크기와 계급의 개수를 차례로 구하세요.', '', `${width},${frequencies.length}`, { ...visual(table), promptEn: 'Find the class width and the number of classes, in order.', explanation: `각 계급의 크기는 ${width}이고 계급은 ${frequencies.length}개입니다.`, explanationEn: `Each class has width ${width}, and there are ${frequencies.length} classes.` });
+  }
+  const maxFrequency = Math.max(...frequencies);
+  if (frequencies.filter((value) => value === maxFrequency).length > 1) return frequencyTable(random);
+  const maxIndex = frequencies.indexOf(maxFrequency);
+  return problem('도수가 가장 큰 계급을 구하세요.', '', table[maxIndex].interval, { ...visual(table), promptEn: 'Find the class with the greatest frequency.', explanation: `도수가 가장 큰 계급은 ${table[maxIndex].interval}이고 도수는 ${maxFrequency}입니다.`, explanationEn: `The class with the greatest frequency is ${table[maxIndex].interval}, with frequency ${maxFrequency}.` });
 }
 
 const NEW_UNITS = [
