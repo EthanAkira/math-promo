@@ -152,6 +152,33 @@ function quadraticFunctions(random) {
   return item('이차함수 그래프의 꼭짓점 좌표를 구하세요.', expression, `(${h},${k})`, withEnglish({ kind: 'algebra-graph', graph: { type: 'quadratic', a, h, k, points: [{ x: h, y: k }] } }, 'Find the vertex of the quadratic graph.', `y=a(x−p)²+q의 꼭짓점은 (p,q)이므로 (${h},${k})입니다.`, `In y=a(x−p)²+q, the vertex is (p,q), so it is (${h},${k}).`));
 }
 
+function quadraticMaxMin(random) {
+  const a = pick(random, [-2, -1, 1, 2]);
+  const h = randomInt(random, -3, 3);
+  const k = randomInt(random, -4, 4);
+  const spanLeft = randomInt(random, 1, 4);
+  const spanRight = randomInt(random, 1, 4);
+  const p = h - spanLeft;
+  const q = h + spanRight;
+  const farX = spanLeft >= spanRight ? p : q;
+  const f = (x) => a * (x - h) * (x - h) + k;
+  const vertexIsMax = a < 0;
+  const askMax = random() < 0.5;
+  const answerIsVertex = askMax === vertexIsMax;
+  const atX = answerIsVertex ? h : farX;
+  const answer = f(atX);
+  const expression = `y=${a === 1 ? '' : a === -1 ? '−' : a}(x${h >= 0 ? '−' : '+'}${Math.abs(h)})^2${k === 0 ? '' : signed(k).replace(' ', '')} (${p}≤x≤${q})`;
+  const label = askMax ? '최댓값' : '최솟값';
+  const labelEn = askMax ? 'maximum value' : 'minimum value';
+  const explanation = answerIsVertex
+    ? `이차항의 계수가 ${a > 0 ? '양수' : '음수'}이므로 꼭짓점 x=${h}에서 ${label} ${answer}을 갖습니다.`
+    : `꼭짓점은 반대쪽 극값을 주므로 꼭짓점에서 더 먼 끝점 x=${atX}에서 ${label} ${answer}을 갖습니다.`;
+  const explanationEn = answerIsVertex
+    ? `Since a is ${a > 0 ? 'positive' : 'negative'}, the vertex x=${h} gives the ${labelEn} ${answer}.`
+    : `The vertex gives the opposite extreme, so the endpoint farther from the vertex, x=${atX}, gives the ${labelEn} ${answer}.`;
+  return item(`주어진 구간에서 이차함수의 ${label}을 구하세요.`, expression, answer, withEnglish({ kind: 'algebra-graph', graph: { type: 'quadratic', a, h, k, points: [{ x: atX, y: answer }] } }, `Find the ${labelEn} of the quadratic function on the given interval.`, explanation, explanationEn));
+}
+
 function dataVariation(random) {
   const base = Array.from({ length: 5 }, () => randomInt(random, 2, 14)).sort((a, b) => a - b);
   const shift = randomInt(random, 2, 7);
@@ -201,6 +228,13 @@ function permutationsCombinations(random) {
   const numerator = Array.from({ length: r }, (_, index) => n - index).reduce((a, b) => a * b, 1);
   const denominator = Array.from({ length: r }, (_, index) => index + 1).reduce((a, b) => a * b, 1);
   return item(`서로 다른 ${n}명 중 대표 ${r}명을 뽑는 경우의 수를 구하세요.`, `${n}C${r}`, numerator / denominator, withEnglish({}, `Choose ${r} representatives from ${n} people. How many ways?`, `순서를 고려하지 않으므로 ${n}C${r}=${numerator / denominator}입니다.`, `Order does not matter, so use ${n}C${r}=${numerator / denominator}.`));
+}
+
+function circularPermutations(random) {
+  const n = randomInt(random, 4, 8);
+  let answer = 1;
+  for (let index = 2; index <= n - 1; index += 1) answer *= index;
+  return item(`서로 다른 ${n}명이 원탁에 둘러앉는 경우의 수를 구하세요.`, '', answer, withEnglish({}, `${n} distinct people sit around a round table. How many arrangements are there?`, `원순열의 수는 (n−1)!이므로 (${n}−1)!=${answer}입니다.`, `The number of circular permutations is (n−1)!=(${n}−1)!=${answer}.`));
 }
 
 function matrices(random) {
@@ -297,11 +331,13 @@ export const SECONDARY_ALGEBRA_UNITS = [
   { id: 'identities-factoring', category: '문자와 식', label: '곱셈공식과 인수분해', description: '곱셈공식의 전개와 이차식 인수분해', en: ['Identities & factoring', 'Expand identities and factor quadratics'], profiles: profiles(P.M3, P.H1, P.A1, P.A2), make: identitiesFactoring },
   { id: 'quadratic-equations', category: '방정식과 부등식', label: '이차방정식', description: '인수분해 가능한 이차방정식의 근', en: ['Quadratic equations', 'Solve quadratic equations by factoring'], profiles: profiles(P.M3, P.H1, P.A1, P.A2), make: quadraticEquations },
   { id: 'quadratic-functions', category: '함수', label: '이차함수', description: '꼭짓점·축·그래프의 이동', en: ['Quadratic functions', 'Interpret vertices, axes and graph transformations'], profiles: profiles(P.M3, P.H1, P.A1, P.A2, P.PC), make: quadraticFunctions },
+  { id: 'quadratic-max-min', category: '함수', label: '이차함수의 최대·최소', description: '주어진 구간에서 이차함수의 최댓값과 최솟값', en: ['Quadratic max & min', 'Find the maximum or minimum on a closed interval'], profiles: profiles(P.M3, P.H1, P.A1, P.A2, P.PC), make: quadraticMaxMin },
   { id: 'data-variation', category: '확률과 통계', label: '대푯값과 산포의 변화', description: '자료 변환에 따른 평균과 산포의 변화', en: ['Data transformations', 'Understand how transformations affect center and spread'], profiles: profiles(P.M3, P.A1), make: dataVariation },
   { id: 'remainder-factor-theorem', category: '다항식', label: '나머지정리와 인수정리', description: '다항식의 값으로 나머지와 인수 판정', en: ['Remainder & Factor Theorems', 'Use polynomial values to find remainders and factors'], profiles: profiles(P.H1, P.A2, P.PC), make: remainderFactorTheorem },
   { id: 'complex-numbers', category: '수와 연산', label: '복소수', description: '복소수의 사칙계산과 i²=−1', en: ['Complex numbers', 'Add and multiply complex numbers'], profiles: profiles(P.H1, P.A2, P.PC), make: complexNumbers },
   { id: 'quadratic-inequalities', category: '방정식과 부등식', label: '이차부등식', description: '이차식의 부호와 해의 범위', en: ['Quadratic inequalities', 'Solve inequalities using zeros and signs'], profiles: profiles(P.H1, P.A2), make: quadraticInequalities },
   { id: 'permutations-combinations', category: '경우의 수', label: '순열과 조합', description: '순서를 고려하는 배열과 선택', en: ['Permutations & combinations', 'Count ordered arrangements and selections'], profiles: profiles(P.H1, P.H2S, P.A2), make: permutationsCombinations },
+  { id: 'circular-permutations', category: '경우의 수', label: '원순열', description: '원형으로 배열하는 경우의 수', en: ['Circular permutations', 'Count seatings arranged around a circle'], profiles: profiles(P.H1, P.H2S, P.A2), make: circularPermutations },
   { id: 'matrices', category: '행렬', label: '행렬의 연산', description: '행렬의 성분과 덧셈', en: ['Matrix operations', 'Add matrices entry by entry'], profiles: profiles(P.H1, P.A2), make: matrices },
   { id: 'sets-logic', category: '집합과 명제', label: '집합의 연산', description: '합집합·교집합과 포함배제', en: ['Sets & logic', 'Use unions, intersections and inclusion-exclusion'], profiles: profiles(P.H1), make: setsAndLogic },
   { id: 'function-composition', category: '함수', label: '함수의 합성과 역함수 기초', description: '함숫값과 합성함수 계산', en: ['Function composition', 'Evaluate composite functions'], profiles: profiles(P.H1, P.A2, P.PC), make: functionComposition },

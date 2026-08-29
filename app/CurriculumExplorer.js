@@ -1,87 +1,544 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLanguage } from './language';
-
-const ready = (label, href) => ({ label, href, ready: true });
-const soon = (label) => ({ label, href: '#', ready: false });
-
-const koreanStages = [
-  ...Array.from({ length: 6 }, (_, index) => ({
-    title: `초등학교 ${index + 1}학년`, subtitle: `Korean Grade ${index + 1}`,
-    topics: [ready(`${index + 1}학년 수학 연습`, `/elementary/practice?grade=${index + 1}`)],
-  })),
-  { title: '중학교 1학년', subtitle: 'Korean Grade 7', topics: [
-    ready('중1 비기하 전 범위 통합 생성기', '/middle-school/pre-algebra?profile=kr-middle-1'), ready('소수와 소인수분해', '/middle-school/prime-factorization'), ready('최대공약수와 최소공배수', '/middle-school/gcd-lcm'), ready('정수와 유리수', '/middle-school/integers-rationals'), ready('문자와 식', '/middle-school/algebra-basics.html?unit=expressions-review'), ready('일차방정식', '/middle-school/algebra-basics.html?unit=equations-review'), ready('좌표와 그래프', '/middle-school/coordinate-plane'), ready('정비례와 반비례', '/middle-school/proportion'), ready('기본 도형', '/middle-school/basic-figures'),
-  ] },
-  { title: '중학교 2학년', subtitle: 'Korean Grade 8', topics: [ready('중2 통합 생성기', '/middle-school/pre-algebra?profile=kr-middle-2'), ready('식의 계산', '/middle-school/pre-algebra?profile=kr-middle-2&unit=polynomial-operations-2'), ready('연립일차방정식', '/middle-school/pre-algebra?profile=kr-middle-2&unit=systems-linear'), ready('일차함수', '/middle-school/pre-algebra?profile=kr-middle-2&unit=linear-functions-2')] },
-  { title: '중학교 3학년', subtitle: 'Korean Grade 9', topics: [ready('중3 통합 생성기', '/middle-school/pre-algebra?profile=kr-middle-3'), ready('제곱근과 실수', '/middle-school/pre-algebra?profile=kr-middle-3&unit=radicals-real-numbers'), ready('인수분해·이차방정식', '/middle-school/pre-algebra?profile=kr-middle-3&unit=quadratic-equations'), ready('이차함수', '/middle-school/pre-algebra?profile=kr-middle-3&unit=quadratic-functions')] },
-  { title: '고등학교 1학년', subtitle: 'Korean Grade 10', topics: [ready('고1 공통수학 생성기', '/middle-school/pre-algebra?profile=kr-high-1'), ready('다항식·방정식', '/middle-school/pre-algebra?profile=kr-high-1&unit=remainder-factor-theorem'), ready('집합·함수', '/middle-school/pre-algebra?profile=kr-high-1&unit=sets-logic'), ready('경우의 수·행렬', '/middle-school/pre-algebra?profile=kr-high-1&unit=permutations-combinations'), ready('고등 기하', '/middle-school/basic-figures?profile=csat')] },
-  { title: '고등학교 2학년', subtitle: 'Korean Grade 11', topics: [ready('고2 대수', '/middle-school/pre-algebra?profile=kr-high-2-algebra'), ready('고2 미적분Ⅰ', '/middle-school/pre-algebra?profile=kr-high-2-calculus-1'), ready('고2 확률과 통계', '/middle-school/pre-algebra?profile=kr-high-2-probability-statistics')] },
-  { title: '고등학교 3학년', subtitle: 'Korean Grade 12', topics: [ready('고3 미적분Ⅱ', '/middle-school/pre-algebra?profile=kr-high-3-calculus-2'), ready('고3 기하', '/middle-school/pre-algebra?profile=kr-high-3-geometry'), ready('수능 기하 연습', '/middle-school/basic-figures?profile=csat')] },
-];
-
-const courseStages = [
-  { title: 'Arithmetic & Foundations', subtitle: 'Number sense and operations', topics: [ready('Grades 1–6 Practice', '/elementary/practice'), ready('Fractions, Decimals & Ratios', '/elementary/practice?grade=6')] },
-  { title: 'Pre-Algebra', subtitle: 'Prepare for symbolic algebra', topics: [ready('Complete Pre-Algebra Generator', '/middle-school/pre-algebra?profile=pre-algebra'), ready('Primes & Prime Factorization', '/middle-school/prime-factorization'), ready('GCF & LCM', '/middle-school/gcd-lcm'), ready('Integers & Rational Numbers', '/middle-school/integers-rationals'), ready('Ratios & Proportions', '/middle-school/proportion')] },
-  { title: 'Algebra 1', subtitle: 'Expressions, equations and graphs', topics: [ready('Complete Algebra 1 Generator', '/middle-school/pre-algebra?profile=algebra-1'), ready('Systems of Linear Equations', '/middle-school/pre-algebra?profile=algebra-1&unit=systems-linear'), ready('Linear & Quadratic Functions', '/middle-school/pre-algebra?profile=algebra-1&unit=quadratic-functions'), ready('Probability & Data', '/middle-school/pre-algebra?profile=algebra-1&unit=probability-2')] },
-  { title: 'Geometry', subtitle: 'Shapes, measurement and proof', topics: [ready('Geometry Foundations', '/middle-school/basic-figures'), soon('Congruence & Similarity'), soon('Coordinate Geometry')] },
-  { title: 'Algebra 2', subtitle: 'Functions, polynomials and exponentials', topics: [ready('Complete Algebra 2 Generator', '/middle-school/pre-algebra?profile=algebra-2'), ready('Polynomials & Complex Numbers', '/middle-school/pre-algebra?profile=algebra-2&unit=complex-numbers'), ready('Rational & Radical Functions', '/middle-school/pre-algebra?profile=algebra-2&unit=rational-radical-functions'), ready('Exponential & Logarithmic Functions', '/middle-school/pre-algebra?profile=algebra-2&unit=exponential-equations'), ready('Sequences', '/middle-school/pre-algebra?profile=algebra-2&unit=sequences')] },
-  { title: 'Precalculus', subtitle: 'Advanced functions, trigonometry and vectors', topics: [ready('Complete Precalculus Generator', '/middle-school/pre-algebra?profile=precalculus'), ready('Polynomial & Rational Functions', '/middle-school/pre-algebra?profile=precalculus&unit=precalc-rational-features'), ready('Trigonometric Functions', '/middle-school/pre-algebra?profile=precalculus&unit=precalc-trig-graphs'), ready('Polar & Parametric Functions', '/middle-school/pre-algebra?profile=precalculus&unit=precalc-polar-coordinates'), ready('Vectors & Matrices', '/middle-school/pre-algebra?profile=precalculus&unit=precalc-vectors')] },
-  { title: 'Integrated Math I–III', subtitle: 'Alternative U.S. pathway', topics: [ready('Math I · Linear relationships', '/middle-school/algebra-basics.html?unit=equations-review'), soon('Math II · Geometry & quadratics'), soon('Math III · Advanced functions')] },
-];
-
-const domainStages = [
-  { title: '수와 연산', subtitle: 'Number & Operations', topics: [ready('초등 수 연산', '/elementary/practice'), ready('소수와 소인수분해', '/middle-school/prime-factorization'), ready('최대공약수와 최소공배수', '/middle-school/gcd-lcm'), ready('정수와 유리수', '/middle-school/integers-rationals')] },
-  { title: '변화와 관계', subtitle: 'Algebra, Relations & Change', topics: [ready('문자와 식', '/middle-school/algebra-basics.html?unit=expressions-review'), ready('일차방정식', '/middle-school/algebra-basics.html?unit=equations-review'), ready('좌표와 그래프', '/middle-school/coordinate-plane'), ready('정비례와 반비례', '/middle-school/proportion')] },
-  { title: '도형과 측정', subtitle: 'Geometry & Measurement', topics: [ready('기본 도형', '/middle-school/basic-figures'), soon('평면도형과 입체도형'), soon('합동과 닮음'), soon('삼각비')] },
-  { title: '자료와 가능성', subtitle: 'Data & Probability', topics: [ready('중1 자료의 정리와 해석', '/middle-school/pre-algebra?profile=kr-middle-1&unit=frequency-table'), ready('Pre-Algebra Statistics', '/middle-school/pre-algebra?profile=pre-algebra&unit=center-spread'), ready('중2·Algebra 1 확률', '/middle-school/pre-algebra?profile=kr-middle-2&unit=probability-2'), ready('중3 자료의 변화', '/middle-school/pre-algebra?profile=kr-middle-3&unit=data-variation')] },
-  { title: '수학적 모델링과 문제 해결', subtitle: 'Modeling & Problem Solving', topics: [ready('비례 관계 문제', '/middle-school/proportion'), ready('일차방정식 활용', '/middle-school/algebra-basics.html?unit=equation-word-problems'), ready('거리·속력·시간', '/middle-school/algebra-basics.html?unit=distance-speed-time'), soon('자료 기반 모델링')] },
-];
-
-const copy = {
-  ko: { eyebrow: 'CURRICULUM MAP', title: '어떤 순서로 수학을 찾아볼까요?', description: '같은 문제를 한국 학년, 국제 과목 과정, 수학 영역의 세 가지 관점으로 펼쳐볼 수 있습니다.', tabs: ['한국 학년별', '국제 과목별', '수학 영역별'], tabHelp: ['2022 개정 교육과정의 학년 흐름', 'Pre-Algebra · Algebra 1·2 중심 과정', '학년과 문화권을 넘는 개념 지도'], available: '바로 학습', coming: '준비 중', open: '단원 펼쳐보기', note: '표시된 학년·과목은 탐색을 위한 대표 경로이며, 학교와 국가에 따라 단원 순서가 달라질 수 있습니다.' },
-  en: { eyebrow: 'CURRICULUM MAP', title: 'Choose how you want to explore math', description: 'Browse the same practice library by Korean grade, international course sequence, or mathematical domain.', tabs: ['Korean Grades', 'Course Sequence', 'Math Domains'], tabHelp: ['Grade-by-grade Korean pathway', 'Pre-Algebra, Algebra 1–2 and beyond', 'A concept map that works across systems'], available: 'Practice now', coming: 'Coming soon', open: 'Open topics', note: 'These are practical navigation pathways. Exact topic order varies by school, country, and program.' },
-  'en-SG': { eyebrow: 'CURRICULUM MAP', title: 'Choose a Mathematics learning pathway', description: 'Browse the practice library by school level, international course sequence or mathematical strand.', tabs: ['School Levels', 'Course Sequence', 'Mathematical Strands'], tabHelp: ['Primary, Secondary and pre-university progression', 'Pre-Algebra, Algebra 1–2 and beyond', 'Number, algebra, geometry and data'], available: 'Practise now', coming: 'Coming soon', open: 'Open topics', note: 'These are reference pathways. Topic order may vary between MOE, international-school and other programmes.' },
-  'zh-CN': { eyebrow: '课程地图', title: '您想按什么顺序学习数学？', description: '可按韩国年级、国际课程顺序或数学领域浏览同一题库。', tabs: ['韩国年级', '国际课程', '数学领域'], tabHelp: ['韩国逐年级学习路径', '以预备代数、代数1·2为中心', '跨教育体系的概念地图'], available: '立即练习', coming: '即将推出', open: '展开单元', note: '这些是便于浏览的代表性路径；具体单元顺序会因学校、国家和课程而异。' },
-  'zh-HK': { eyebrow: '課程地圖', title: '選擇你的數學學習路徑', description: '可按學校年級、國際課程次序或數學範疇瀏覽同一題庫。', tabs: ['學校年級', '課程次序', '數學範疇'], tabHelp: ['小學、中學至高中學習進程', '預備代數、代數1及2等課程', '數、代數、圖形與數據'], available: '立即練習', coming: '即將推出', open: '展開課題', note: '此處為方便瀏覽的參考路徑；實際課題次序會因香港本地、國際學校及其他課程而異。' },
-  'zh-TW': { eyebrow: '課程地圖', title: '選擇你的數學學習路徑', description: '可依學校年級、國際課程順序或數學領域瀏覽同一題庫。', tabs: ['學校年級', '課程順序', '數學領域'], tabHelp: ['國小、國中到高中學習進程', '先備代數、代數1與2等課程', '數與量、代數、幾何與資料'], available: '立即練習', coming: '即將推出', open: '展開單元', note: '此處為方便瀏覽的參考路徑；實際單元順序會因台灣課綱、國際學校及其他課程而異。' },
-  fr: { eyebrow: 'CARTE DU PROGRAMME', title: 'Comment souhaitez-vous explorer les maths ?', description: 'Parcourez les mêmes exercices par niveau coréen, parcours international ou domaine mathématique.', tabs: ['Niveaux coréens', 'Parcours par cours', 'Domaines mathématiques'], tabHelp: ['Progression scolaire coréenne', 'Pré-algèbre, Algèbre 1–2 et suite', 'Carte des notions commune aux systèmes'], available: 'S’exercer', coming: 'Bientôt', open: 'Ouvrir les thèmes', note: 'Ces parcours servent de repères ; l’ordre précis varie selon l’école, le pays et le programme.' },
-  es: { eyebrow: 'MAPA CURRICULAR', title: '¿Cómo quieres explorar las matemáticas?', description: 'Consulta los mismos ejercicios por curso coreano, secuencia internacional o área matemática.', tabs: ['Cursos de Corea', 'Secuencia de materias', 'Áreas matemáticas'], tabHelp: ['Ruta coreana curso a curso', 'Preálgebra, Álgebra 1–2 y más', 'Mapa conceptual entre sistemas'], available: 'Practicar ahora', coming: 'Próximamente', open: 'Abrir temas', note: 'Son rutas orientativas; el orden exacto varía según la escuela, el país y el programa.' },
-  ja: { eyebrow: 'カリキュラムマップ', title: 'どの順序で数学を探しますか？', description: '同じ問題集を韓国の学年別、国際的な科目順、数学分野別に見られます。', tabs: ['韓国の学年別', '国際科目別', '数学分野別'], tabHelp: ['韓国の学年ごとの流れ', 'Pre-Algebra・Algebra 1/2中心', '教育制度を越えた概念地図'], available: 'すぐ学習', coming: '準備中', open: '単元を開く', note: '学年・科目は代表的な案内です。実際の順序は学校や国、課程によって異なります。' },
-  ru: { eyebrow: 'КАРТА ПРОГРАММЫ', title: 'Как вы хотите изучать математику?', description: 'Один набор заданий можно просматривать по классам Кореи, международным курсам или разделам математики.', tabs: ['Классы Кореи', 'Последовательность курсов', 'Разделы математики'], tabHelp: ['Корейская школьная траектория', 'Предалгебра, Алгебра 1–2 и далее', 'Карта понятий для разных систем'], available: 'Начать', coming: 'Скоро', open: 'Открыть темы', note: 'Это ориентировочные маршруты; точный порядок зависит от школы, страны и программы.' },
-  ar: { eyebrow: 'خريطة المنهج', title: 'كيف تريد استكشاف الرياضيات؟', description: 'تصفّح التمارين نفسها حسب الصفوف الكورية أو تسلسل المقررات الدولي أو مجالات الرياضيات.', tabs: ['الصفوف الكورية', 'تسلسل المقررات', 'مجالات الرياضيات'], tabHelp: ['مسار كوري حسب الصف', 'ما قبل الجبر والجبر 1 و2 وما بعدهما', 'خريطة مفاهيم مشتركة بين الأنظمة'], available: 'تدرّب الآن', coming: 'قريبًا', open: 'افتح الموضوعات', note: 'هذه مسارات إرشادية، وقد يختلف ترتيب الموضوعات حسب المدرسة والدولة والبرنامج.' },
-  pt: { eyebrow: 'MAPA CURRICULAR', title: 'Como você quer explorar a matemática?', description: 'Veja os mesmos exercícios por ano escolar coreano, sequência internacional ou área da matemática.', tabs: ['Anos da Coreia', 'Sequência de cursos', 'Áreas da matemática'], tabHelp: ['Percurso coreano ano a ano', 'Pré-Álgebra, Álgebra 1–2 e além', 'Mapa conceitual entre sistemas'], available: 'Praticar agora', coming: 'Em breve', open: 'Abrir tópicos', note: 'São percursos de referência; a ordem exata varia conforme a escola, o país e o programa.' },
-  hi: { eyebrow: 'पाठ्यक्रम मानचित्र', title: 'आप गणित को किस क्रम में देखना चाहते हैं?', description: 'एक ही अभ्यास-संग्रह को कोरियाई कक्षा, अंतरराष्ट्रीय पाठ्यक्रम या गणितीय क्षेत्र के अनुसार देखें।', tabs: ['कोरियाई कक्षाएँ', 'पाठ्यक्रम क्रम', 'गणित के क्षेत्र'], tabHelp: ['कक्षा-दर-कक्षा कोरियाई मार्ग', 'प्री-अल्जेब्रा, अल्जेब्रा 1–2 और आगे', 'विभिन्न प्रणालियों का अवधारणा मानचित्र'], available: 'अभी अभ्यास करें', coming: 'जल्द आ रहा है', open: 'विषय खोलें', note: 'ये मार्गदर्शक रास्ते हैं; वास्तविक क्रम स्कूल, देश और कार्यक्रम के अनुसार बदल सकता है।' },
-  vi: { eyebrow: 'BẢN ĐỒ CHƯƠNG TRÌNH', title: 'Bạn muốn khám phá toán theo cách nào?', description: 'Xem cùng một kho bài tập theo lớp học Hàn Quốc, lộ trình quốc tế hoặc lĩnh vực toán học.', tabs: ['Lớp học Hàn Quốc', 'Lộ trình môn học', 'Lĩnh vực toán học'], tabHelp: ['Lộ trình Hàn Quốc theo từng lớp', 'Tiền đại số, Đại số 1–2 và tiếp theo', 'Bản đồ khái niệm giữa các hệ thống'], available: 'Học ngay', coming: 'Sắp có', open: 'Mở chủ đề', note: 'Đây là các lộ trình tham khảo; thứ tự cụ thể tùy trường, quốc gia và chương trình.' },
-  id: { eyebrow: 'PETA KURIKULUM', title: 'Bagaimana Anda ingin menjelajahi matematika?', description: 'Telusuri latihan yang sama berdasarkan kelas Korea, urutan kursus internasional, atau bidang matematika.', tabs: ['Kelas Korea', 'Urutan kursus', 'Bidang matematika'], tabHelp: ['Jalur Korea per kelas', 'Pra-Aljabar, Aljabar 1–2, dan seterusnya', 'Peta konsep lintas sistem'], available: 'Latihan sekarang', coming: 'Segera hadir', open: 'Buka topik', note: 'Ini adalah jalur panduan; urutan tepat dapat berbeda menurut sekolah, negara, dan program.' },
-};
-
-const modes = [{ id: 'korea', stages: koreanStages }, { id: 'courses', stages: courseStages }, { id: 'domains', stages: domainStages }];
+import {
+  CURRICULUM_COPY,
+  KOREAN_GRADE_STAGES,
+  KOREAN_2022_SUBJECT_STAGES,
+  INTERNATIONAL_COURSE_STAGES,
+  DOMAIN_STAGES,
+} from './curriculumCatalog';
 
 export default function CurriculumExplorer() {
   const { language } = useLanguage();
-  const [mode, setMode] = useState('korea');
-  const words = copy[language] || copy.en;
-  const selectedIndex = modes.findIndex((item) => item.id === mode);
-  const selected = modes[selectedIndex];
+  const [activeTab, setActiveTab] = useState(() => (language === 'ko' ? 'korea' : 'courses'));
+  const [krSubView, setKrSubView] = useState('grade'); // 'grade' | 'subject2022'
 
-  return <section className="curriculum-explorer" aria-labelledby="curriculum-title">
-    <div className="curriculum-heading"><p className="font-mono">{words.eyebrow}</p><h2 id="curriculum-title" className="font-display">{words.title}</h2><p>{words.description}</p></div>
-    <div className="curriculum-tabs" role="tablist" aria-label={words.title}>
-      {modes.map((item, index) => <button key={item.id} type="button" role="tab" aria-selected={mode === item.id} aria-controls={`curriculum-${item.id}`} id={`curriculum-tab-${item.id}`} className={mode === item.id ? 'active' : ''} onClick={() => setMode(item.id)}><strong>{words.tabs[index]}</strong><span>{words.tabHelp[index]}</span></button>)}
-    </div>
-    <div className="curriculum-panel" id={`curriculum-${selected.id}`} role="tabpanel" aria-labelledby={`curriculum-tab-${selected.id}`}>
-      <div className="curriculum-stage-grid">
-        {selected.stages.map((stage, index) => {
-          const readyCount = stage.topics.filter((topic) => topic.ready).length;
-          return <details className="curriculum-stage" key={stage.title} open={index === 0}>
-            <summary><span><strong>{stage.title}</strong><small>{stage.subtitle}</small></span><span className={readyCount ? 'curriculum-count ready' : 'curriculum-count'}>{readyCount ? `${readyCount} ${words.available}` : words.coming}</span><span className="sr-only">{words.open}</span></summary>
-            <div className="curriculum-topic-list">{stage.topics.map((topic) => topic.ready ? <a href={topic.href} key={topic.label}>{topic.label}<span>{words.available} →</span></a> : <span className="disabled" key={topic.label}>{topic.label}<small>{words.coming}</small></span>)}</div>
-          </details>;
-        })}
+  // If user has not manually changed tab on first load, adjust to language default once
+  useEffect(() => {
+    const userSelected = window.sessionStorage.getItem('math-curriculum-tab');
+    if (userSelected) {
+      setActiveTab(userSelected);
+    } else if (language === 'ko') {
+      setActiveTab('korea');
+    } else {
+      setActiveTab('courses');
+    }
+  }, []); // Run once on mount
+
+  const copy = CURRICULUM_COPY[language] || CURRICULUM_COPY.en;
+
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    try {
+      window.sessionStorage.setItem('math-curriculum-tab', tabId);
+    } catch {}
+  };
+
+  const tabs = useMemo(
+    () => [
+      { id: 'korea', label: copy.mainTabs[0], help: copy.mainTabHelp[0] },
+      { id: 'courses', label: copy.mainTabs[1], help: copy.mainTabHelp[1] },
+      { id: 'domains', label: copy.mainTabs[2], help: copy.mainTabHelp[2] },
+    ],
+    [copy]
+  );
+
+  return (
+    <section className="curriculum-explorer" aria-labelledby="curriculum-title">
+      <div className="curriculum-heading">
+        <p className="font-mono">{copy.eyebrow}</p>
+        <h2 id="curriculum-title" className="font-display">
+          {copy.title}
+        </h2>
+        <p>{copy.description}</p>
       </div>
-      <p className="curriculum-note">{words.note}</p>
-    </div>
-  </section>;
+
+      {/* Top 3 Main Tabs */}
+      <div className="curriculum-tabs" role="tablist" aria-label={copy.title}>
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            aria-controls={`curriculum-panel-${tab.id}`}
+            id={`curriculum-tab-${tab.id}`}
+            className={activeTab === tab.id ? 'active' : ''}
+            onClick={() => handleTabChange(tab.id)}
+          >
+            <strong>{tab.label}</strong>
+            <span>{tab.help}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Main Tab Panel */}
+      <div
+        className="curriculum-panel"
+        id={`curriculum-panel-${activeTab}`}
+        role="tabpanel"
+        aria-labelledby={`curriculum-tab-${activeTab}`}
+      >
+        {/* Tab 1: 한국 교육과정 */}
+        {activeTab === 'korea' && (
+          <div className="korean-curriculum-wrap">
+            {/* Sub-view Switcher for Korean Curriculum */}
+            <div className="curriculum-subview-bar">
+              <div className="subview-toggle-group" role="group" aria-label="한국 교육과정 보기 방식">
+                <button
+                  type="button"
+                  className={`subview-btn ${krSubView === 'grade' ? 'active' : ''}`}
+                  onClick={() => setKrSubView('grade')}
+                >
+                  <span className="subview-icon">🏫</span>
+                  <strong>{copy.subViews.byGrade}</strong>
+                </button>
+                <button
+                  type="button"
+                  className={`subview-btn ${krSubView === 'subject2022' ? 'active' : ''}`}
+                  onClick={() => setKrSubView('subject2022')}
+                >
+                  <span className="subview-icon">📘</span>
+                  <strong>{copy.subViews.bySubject2022}</strong>
+                </button>
+              </div>
+            </div>
+
+            {/* View A: 학년별 보기 (기존 분류 기반 기본 탐색) */}
+            {krSubView === 'grade' && (
+              <div className="grade-view-container">
+                {/* High School Alert Notice */}
+                <div className="curriculum-notice-banner">
+                  <span className="notice-icon">💡</span>
+                  <p>{copy.notices.gradeLegacyNotice}</p>
+                </div>
+
+                <div className="curriculum-stage-grid">
+                  {KOREAN_GRADE_STAGES.map((stage, index) => {
+                    const readyCount = stage.topics.filter((t) => t.ready).length;
+                    const isHigh = stage.level === 'high';
+                    return (
+                      <details className={`curriculum-stage ${isHigh ? 'high-stage' : ''}`} key={stage.id} open={index >= 6 || index === 0}>
+                        <summary>
+                          <span>
+                            <strong>{stage.title}</strong>
+                            <small>{stage.subtitle}</small>
+                          </span>
+                          <span className={`curriculum-count ${readyCount > 0 ? 'ready' : ''}`}>
+                            {readyCount > 0 ? `${readyCount} ${copy.badges.ready}` : copy.badges.planned}
+                          </span>
+                          <span className="sr-only">{copy.badges.open}</span>
+                        </summary>
+
+                        {stage.notice && (
+                          <div className="stage-mini-notice">
+                            <span>ℹ️</span> {stage.notice}
+                          </div>
+                        )}
+
+                        <div className="curriculum-topic-list">
+                          {stage.topics.map((topic) => (
+                            <div key={topic.label} className="curriculum-topic-item">
+                              {topic.ready ? (
+                                <a href={topic.href} className="topic-link">
+                                  <div className="topic-link-main">
+                                    <span className="topic-name">{topic.label}</span>
+                                    {topic.meta && (
+                                      <div className="topic-meta-badges">
+                                        {topic.meta.revised2022 && (
+                                          <span className="meta-badge revised">
+                                            {copy.labels.revised2022}: {topic.meta.revised2022}
+                                          </span>
+                                        )}
+                                        {topic.meta.officialType && (
+                                          <span className="meta-badge official">{topic.meta.officialType}</span>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                  <span className="action-tag">
+                                    {topic.availability === 'partial' ? copy.badges.partial : copy.badges.ready} →
+                                  </span>
+                                </a>
+                              ) : (
+                                <div className="topic-disabled">
+                                  <div className="topic-link-main">
+                                    <span className="topic-name">{topic.label}</span>
+                                  </div>
+                                  <small className="planned-tag">{copy.badges.planned}</small>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </details>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* View B: 2022 개정 과목별 보기 (공식 구분별 탐색) */}
+            {krSubView === 'subject2022' && (
+              <div className="subject2022-view-container">
+                <div className="curriculum-notice-banner official">
+                  <span className="notice-icon">📋</span>
+                  <p>{copy.notices.subject2022Notice}</p>
+                </div>
+
+                <div className="curriculum-stage-grid">
+                  {KOREAN_2022_SUBJECT_STAGES.map((stage, index) => {
+                    const readyCount = stage.topics.filter((t) => t.ready).length;
+                    const isProfessional = stage.officialType === 'professional';
+                    return (
+                      <details className={`curriculum-stage subject-stage ${isProfessional ? 'professional-stage' : ''}`} key={stage.id} open={index < 3}>
+                        <summary>
+                          <span>
+                            <strong>{stage.title}</strong>
+                            <small>{stage.subtitle}</small>
+                          </span>
+                          <span className={`curriculum-count ${readyCount > 0 ? 'ready' : ''}`}>
+                            {readyCount > 0 ? `${readyCount} ${copy.badges.ready}` : copy.badges.planned}
+                          </span>
+                          <span className="sr-only">{copy.badges.open}</span>
+                        </summary>
+
+                        <div className="curriculum-topic-list">
+                          {stage.topics.map((topic) => (
+                            <div key={topic.label} className="curriculum-topic-item">
+                              {topic.ready ? (
+                                <a href={topic.href} className="topic-link">
+                                  <div className="topic-link-main">
+                                    <span className="topic-name">{topic.label}</span>
+                                    {topic.meta && (
+                                      <div className="topic-meta-badges">
+                                        {topic.meta.legacy && (
+                                          <span className="meta-badge legacy">
+                                            {copy.labels.legacyName}: {topic.meta.legacy}
+                                          </span>
+                                        )}
+                                        {topic.meta.grade && (
+                                          <span className="meta-badge grade">
+                                            {copy.labels.targetGrade}: {topic.meta.grade}
+                                          </span>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                  <span className="action-tag">
+                                    {topic.availability === 'partial' ? copy.badges.partial : copy.badges.ready} →
+                                  </span>
+                                </a>
+                              ) : (
+                                <div className="topic-disabled">
+                                  <div className="topic-link-main">
+                                    <span className="topic-name">{topic.label}</span>
+                                    {topic.meta && topic.meta.grade && (
+                                      <div className="topic-meta-badges">
+                                        <span className="meta-badge grade">
+                                          {copy.labels.targetGrade}: {topic.meta.grade}
+                                        </span>
+                                      </div>
+                                    )}
+                                  </div>
+                                  <small className="planned-tag">{copy.badges.planned}</small>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </details>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Tab 2: 국제학교 과정 */}
+        {activeTab === 'courses' && (
+          <div className="international-curriculum-wrap">
+            <div className="curriculum-notice-banner intl">
+              <span className="notice-icon">🌐</span>
+              <p>{copy.notices.intlNotice}</p>
+            </div>
+
+            <div className="curriculum-stage-grid">
+              {INTERNATIONAL_COURSE_STAGES.map((stage, index) => {
+                const readyCount = stage.topics.filter((t) => t.ready).length;
+                return (
+                  <details className="curriculum-stage" key={stage.id} open={index < 3}>
+                    <summary>
+                      <span>
+                        <strong>{stage.title}</strong>
+                        <small>{stage.subtitle}</small>
+                      </span>
+                      <span className={`curriculum-count ${readyCount > 0 ? 'ready' : ''}`}>
+                        {readyCount > 0 ? `${readyCount} ${copy.badges.ready}` : copy.badges.planned}
+                      </span>
+                      <span className="sr-only">{copy.badges.open}</span>
+                    </summary>
+
+                    <div className="curriculum-topic-list">
+                      {stage.topics.map((topic) => (
+                        <div key={topic.label} className="curriculum-topic-item">
+                          {topic.ready ? (
+                            <a href={topic.href} className="topic-link">
+                              <span className="topic-name">{topic.label}</span>
+                              <span className="action-tag">{copy.badges.ready} →</span>
+                            </a>
+                          ) : (
+                            <div className="topic-disabled">
+                              <span className="topic-name">{topic.label}</span>
+                              <small className="planned-tag">{copy.badges.planned}</small>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </details>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Tab 3: 수학 영역별 */}
+        {activeTab === 'domains' && (
+          <div className="domains-curriculum-wrap">
+            <div className="curriculum-notice-banner domain">
+              <span className="notice-icon">📐</span>
+              <p>{copy.notices.domainNotice}</p>
+            </div>
+
+            <div className="curriculum-stage-grid">
+              {DOMAIN_STAGES.map((stage, index) => {
+                const readyCount = stage.topics.filter((t) => t.ready).length;
+                return (
+                  <details className="curriculum-stage" key={stage.id} open={index < 2}>
+                    <summary>
+                      <span>
+                        <strong>{stage.title}</strong>
+                        <small>{stage.subtitle}</small>
+                      </span>
+                      <span className={`curriculum-count ${readyCount > 0 ? 'ready' : ''}`}>
+                        {readyCount > 0 ? `${readyCount} ${copy.badges.ready}` : copy.badges.planned}
+                      </span>
+                      <span className="sr-only">{copy.badges.open}</span>
+                    </summary>
+
+                    <div className="curriculum-topic-list">
+                      {stage.topics.map((topic) => (
+                        <div key={topic.label} className="curriculum-topic-item">
+                          {topic.ready ? (
+                            <a href={topic.href} className="topic-link">
+                              <span className="topic-name">{topic.label}</span>
+                              <span className="action-tag">{copy.badges.ready} →</span>
+                            </a>
+                          ) : (
+                            <div className="topic-disabled">
+                              <span className="topic-name">{topic.label}</span>
+                              <small className="planned-tag">{copy.badges.planned}</small>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </details>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        <p className="curriculum-note">{copy.notices.bottomNote}</p>
+      </div>
+
+      <style jsx>{`
+        .curriculum-subview-bar {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          margin-bottom: 14px;
+          padding-bottom: 12px;
+          border-bottom: 1px dashed var(--paper-line);
+        }
+        .subview-toggle-group {
+          display: inline-flex;
+          gap: 6px;
+          background: var(--paper);
+          padding: 4px;
+          border-radius: 10px;
+          border: 1px solid var(--paper-line);
+        }
+        .subview-btn {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 14px;
+          border: none;
+          background: transparent;
+          color: var(--ink-soft);
+          border-radius: 8px;
+          font-size: 13px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.15s ease;
+        }
+        .subview-btn:hover {
+          color: var(--ink);
+          background: rgba(255, 255, 255, 0.6);
+        }
+        .subview-btn.active {
+          color: #fff;
+          background: var(--chalk-green);
+          box-shadow: 0 2px 6px rgba(47, 110, 92, 0.25);
+        }
+        .subview-icon {
+          font-size: 14px;
+        }
+        .curriculum-notice-banner {
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+          padding: 10px 14px;
+          margin-bottom: 14px;
+          border-radius: 9px;
+          background: #fff8eb;
+          border: 1px solid #fed7aa;
+          color: #9a3412;
+          font-size: 12px;
+          line-height: 1.5;
+        }
+        .curriculum-notice-banner.official {
+          background: #f0fdf4;
+          border-color: #bbf7d0;
+          color: #166534;
+        }
+        .curriculum-notice-banner.intl {
+          background: #f0f9ff;
+          border-color: #bae6fd;
+          color: #0369a1;
+        }
+        .curriculum-notice-banner.domain {
+          background: #fdf4ff;
+          border-color: #f5d0fe;
+          color: #86198f;
+        }
+        .curriculum-notice-banner p {
+          margin: 0;
+          font-weight: 500;
+        }
+        .stage-mini-notice {
+          padding: 6px 12px;
+          font-size: 11px;
+          color: #854d0e;
+          background: #fefce8;
+          border-bottom: 1px dashed #fef08a;
+          line-height: 1.4;
+        }
+        .topic-link-main {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+          min-width: 0;
+        }
+        .topic-name {
+          line-height: 1.35;
+          word-break: keep-all;
+        }
+        .topic-meta-badges {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 4px;
+        }
+        .meta-badge {
+          display: inline-block;
+          padding: 1px 6px;
+          border-radius: 4px;
+          font-size: 10px;
+          font-weight: 600;
+          line-height: 1.3;
+        }
+        .meta-badge.revised {
+          background: #e0f2fe;
+          color: #0369a1;
+        }
+        .meta-badge.official {
+          background: #fef3c7;
+          color: #92400e;
+        }
+        .meta-badge.legacy {
+          background: #f1f5f9;
+          color: #475569;
+        }
+        .meta-badge.grade {
+          background: #fae8ff;
+          color: #86198f;
+        }
+        .action-tag {
+          font-size: 11px;
+          font-weight: 700;
+          color: var(--chalk-green);
+          white-space: nowrap;
+          margin-left: 6px;
+        }
+        .topic-link:hover .action-tag {
+          color: #fff;
+        }
+        .topic-disabled {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 12px;
+          min-height: 42px;
+          padding: 9px 10px;
+          border-radius: 8px;
+          font-size: 13px;
+          font-weight: 700;
+          color: var(--ink-soft);
+          background: var(--paper);
+          opacity: 0.72;
+        }
+        .planned-tag {
+          font-size: 10px;
+          color: #64748b;
+          background: #e2e8f0;
+          padding: 2px 6px;
+          border-radius: 4px;
+          white-space: nowrap;
+        }
+        .high-stage {
+          border-color: #cbd5e1;
+        }
+        .professional-stage {
+          border-style: dashed;
+        }
+        @media (max-width: 768px) {
+          .curriculum-tabs {
+            grid-template-columns: 1fr;
+          }
+          .curriculum-tabs button {
+            min-height: 60px;
+          }
+          .curriculum-stage-grid {
+            grid-template-columns: 1fr;
+          }
+          .subview-toggle-group {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+          }
+          .subview-btn {
+            justify-content: center;
+            padding: 8px 8px;
+            font-size: 12px;
+          }
+        }
+      `}</style>
+    </section>
+  );
 }

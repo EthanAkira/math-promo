@@ -121,6 +121,17 @@ function confidenceInterval(random) {
   return make('모평균의 신뢰구간이 표본평균±오차한계로 주어질 때 신뢰구간을 구하세요.', `표본평균=${mean}, 오차한계=${margin}`, `${mean - margin},${mean + margin}`, bi('Find the confidence interval from the sample mean and margin of error.', `${mean}±${margin}이므로 ${mean - margin}≤μ≤${mean + margin}입니다.`, `${mean}±${margin} gives ${mean - margin}≤μ≤${mean + margin}.`));
 }
 
+function sampleProportion(random) {
+  const n = pick(random, [50, 80, 100, 200, 400]);
+  const successes = ri(random, Math.round(n * 0.2), Math.round(n * 0.8));
+  if (random() < 0.5) {
+    return make('표본비율을 구하세요.', `크기 ${n}인 표본에서 특성 A를 가진 것이 ${successes}개`, frac(successes, n), bi('Find the sample proportion.', `표본비율은 p̂=${successes}/${n}=${frac(successes, n)}입니다.`, `The sample proportion is p̂=${successes}/${n}=${frac(successes, n)}.`));
+  }
+  const marginPercent = pick(random, [2, 3, 4, 5]);
+  const pointEstimate = Math.round((successes / n) * 100);
+  return make('모비율의 신뢰구간을 구하세요. (단위: %)', `표본비율 ${pointEstimate}%, 오차한계 ${marginPercent}%p`, `${pointEstimate - marginPercent},${pointEstimate + marginPercent}`, bi('Find the confidence interval for the population proportion (in %).', `표본비율에서 오차한계를 빼고 더하면 ${pointEstimate - marginPercent}%≤p≤${pointEstimate + marginPercent}%입니다.`, `${pointEstimate}%±${marginPercent}%p gives ${pointEstimate - marginPercent}%≤p≤${pointEstimate + marginPercent}%.`));
+}
+
 const unit = (id, category, label, enLabel, description, enDescription, profiles, generator) => ({ id, category, label, description, en: [enLabel, enDescription], profiles, make: generator });
 
 export const KOREAN_HIGH2_UNITS = [
@@ -143,4 +154,5 @@ export const KOREAN_HIGH2_UNITS = [
   unit('h2-normal-distribution', '확률과 통계', '정규분포', 'Normal distribution', '정규분포의 대칭성과 확률', 'Use symmetry of normal distributions', H2S, normalDistribution),
   unit('h2-sample-mean', '확률과 통계', '표본평균', 'Sample mean', '표본자료의 평균과 표집', 'Calculate sample means', H2S, samplingMean),
   unit('h2-confidence-interval', '확률과 통계', '통계적 추정', 'Statistical estimation', '모평균의 신뢰구간', 'Construct confidence intervals for a population mean', H2S, confidenceInterval),
+  unit('h2-sample-proportion', '확률과 통계', '표본비율과 모비율의 추정', 'Sample & population proportion', '표본비율 계산과 모비율의 신뢰구간 추정', 'Compute sample proportions and estimate confidence intervals for a population proportion', H2S, sampleProportion),
 ];

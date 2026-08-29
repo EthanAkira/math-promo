@@ -171,6 +171,13 @@ function internalDivision(random) {
   return make(`A(${x1},${y1}), B(${x2},${y2})를 m:n=${m}:${n}으로 내분하는 점 P의 좌표를 구하세요.`, '', `(${px},${py})`, bi({ kind: 'coordinate-geometry-graph', mode: 'segment', points: [{ x: x1, y: y1, label: 'A' }, { x: x2, y: y2, label: 'B' }, { x: px, y: py, label: 'P' }] }, 'Find the internal-division point.', `P=((n·A+m·B)/(m+n))=(${px},${py})입니다.`, `Apply the section formula to obtain (${px},${py}).`));
 }
 
+function externalDivision(random) {
+  const x1 = ri(random, -8, 2); const y1 = ri(random, -8, 2); const m = ri(random, 1, 4); let n = ri(random, 1, 4); if (n === m) n += 1; const px = ri(random, -3, 6); const py = ri(random, -3, 6); const x2n = (m - n) * px + n * x1; const y2n = (m - n) * py + n * y1;
+  if (x2n % m || y2n % m) return externalDivision(random);
+  const x2 = x2n / m; const y2 = y2n / m;
+  return make(`A(${x1},${y1}), B(${x2},${y2})를 m:n=${m}:${n}으로 외분하는 점 P의 좌표를 구하세요.`, '', `(${px},${py})`, bi({ kind: 'coordinate-geometry-graph', mode: 'segment', points: [{ x: x1, y: y1, label: 'A' }, { x: x2, y: y2, label: 'B' }, { x: px, y: py, label: 'P' }] }, 'Find the external-division point.', `P=((−n·A+m·B)/(m−n))=(${px},${py})입니다.`, `Apply the external section formula to obtain (${px},${py}).`));
+}
+
 function lineDistanceConditions(random) {
   if (random() < 0.5) {
     const slope = nz(random, -5, 5); return make(`직선 y=${slope}x+2에 수직인 직선의 기울기를 구하세요.`, '', frac(-1, slope), bi({ kind: 'coordinate-geometry-graph', mode: 'perpendicular-lines', slope }, 'Find the slope of a perpendicular line.', `두 기울기의 곱은 −1이므로 기울기는 ${frac(-1, slope)}입니다.`, `Perpendicular slopes multiply to −1.`));
@@ -243,6 +250,7 @@ export const ALGEBRA_COMPLETION_UNITS = [
   unit('conditional-probability', '확률과 통계', '조건부확률', 'Conditional probability', '집합과 조건을 제한한 확률', 'Calculate probabilities under conditions', profiles(P.H2S, P.A2), conditionalProbability),
   unit('algebra2-trigonometry', '삼각함수', '삼각함수의 값', 'Trigonometric values', '특수각의 정확한 삼각함수 값', 'Use exact unit-circle values', profiles(P.H2A, P.A2, P.PC), exactTrigonometry),
   unit('internal-division-coordinate', '도형의 방정식', '선분의 내분점', 'Internal division point', '내분 공식과 좌표 계산', 'Use the section formula in coordinates', profiles(P.H1), internalDivision),
+  unit('external-division-coordinate', '도형의 방정식', '선분의 외분점', 'External division point', '외분 공식과 좌표 계산', 'Use the external section formula in coordinates', profiles(P.H1), externalDivision),
   unit('line-distance-conditions', '도형의 방정식', '직선의 평행·수직·거리', 'Line conditions & distance', '기울기 관계와 점·직선 사이 거리', 'Use slopes and point-to-line distance', profiles(P.H1), lineDistanceConditions),
   unit('circle-equations-complete', '도형의 방정식', '원의 방정식', 'Circle equations', '중심과 반지름을 이용한 원의 표준형', 'Read and construct circle equations', profiles(P.H1), circleEquations),
   unit('coordinate-transformations', '도형의 방정식', '도형의 이동', 'Coordinate transformations', '점과 도형의 평행이동·대칭이동', 'Translate and reflect coordinate figures', profiles(P.H1), coordinateTransformations),
