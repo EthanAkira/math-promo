@@ -206,7 +206,7 @@ function matrixMultiplication(random) {
   return make('두 행렬의 곱을 [a,b;c,d] 형식으로 쓰세요.', `[${a[0]},${a[1]};${a[2]},${a[3]}][${b[0]},${b[1]};${b[2]},${b[3]}]`, `[${result[0]},${result[1]};${result[2]},${result[3]}]`, bi({ kind: 'matrix-operation', matrices: [a, b], operator: '×' }, 'Multiply the matrices.', '행과 열의 대응 성분을 곱하여 더합니다.', 'Take row-by-column dot products.'));
 }
 
-const P = { H1: ['kr-high-1'], H2A: ['kr-high-2-algebra'], H2S: ['kr-high-2-probability-statistics'], A1: ['algebra-1'], A2: ['algebra-2'] };
+const P = { H1: ['kr-high-1'], H2A: ['kr-high-2-algebra'], H2S: ['kr-high-2-probability-statistics'], A1: ['algebra-1'], A2: ['algebra-2'], PC: ['precalculus'] };
 const profiles = (...groups) => [...new Set(groups.flat())];
 const unit = (id, category, label, enLabel, description, enDescription, profileList, generator) => ({ id, category, label, description, en: [enLabel, enDescription], profiles: profileList, make: generator });
 
@@ -216,8 +216,8 @@ const ALGEBRA2_REVIEW = [polynomialDivision, polynomialMultiplicity, complexQuad
 const mixed = (pool) => (random) => pick(random, pool)(random);
 
 export const ALGEBRA_COMPLETION_UNITS = [
-  unit('polynomial-division', '다항식', '다항식의 나눗셈', 'Polynomial division', '인수분해와 다항식 나눗셈의 몫', 'Divide polynomials and verify by multiplication', profiles(P.H1, P.A2), polynomialDivision),
-  unit('polynomial-zeros-multiplicity', '다항식', '다항함수의 영점과 중복도', 'Polynomial zeros & multiplicity', '인수와 그래프의 x절편·중복도 연결', 'Connect factors, zeros, intercepts and multiplicity', profiles(P.A2), polynomialMultiplicity),
+  unit('polynomial-division', '다항식', '다항식의 나눗셈', 'Polynomial division', '인수분해와 다항식 나눗셈의 몫', 'Divide polynomials and verify by multiplication', profiles(P.H1, P.A2, P.PC), polynomialDivision),
+  unit('polynomial-zeros-multiplicity', '다항식', '다항함수의 영점과 중복도', 'Polynomial zeros & multiplicity', '인수와 그래프의 x절편·중복도 연결', 'Connect factors, zeros, intercepts and multiplicity', profiles(P.A2, P.PC), polynomialMultiplicity),
   unit('complex-quadratic-roots', '방정식과 부등식', '복소수 이차방정식', 'Complex quadratic roots', '판별식이 음수인 이차방정식', 'Solve quadratics with nonreal roots', profiles(P.H1, P.A2), complexQuadraticRoots),
   unit('completing-square', '방정식과 부등식', '완전제곱식과 제곱완성', 'Completing the square', '이차식을 완전제곱식으로 변형', 'Rewrite quadratics in completed-square form', profiles(P.H1, P.A1, P.A2), completingSquare),
   unit('discriminant-roots', '방정식과 부등식', '판별식과 근의 종류', 'Discriminant & root type', '판별식으로 실근·중근·허근 판별', 'Classify quadratic roots using the discriminant', profiles(P.H1, P.A1, P.A2), discriminantClassification),
@@ -226,28 +226,28 @@ export const ALGEBRA_COMPLETION_UNITS = [
   unit('systems-inequalities', '방정식과 부등식', '연립일차부등식', 'Systems of inequalities', '두 부등식의 공통해와 영역', 'Find points in overlapping solution regions', profiles(P.A1), systemInequalities),
   unit('linear-quadratic-systems', '방정식과 부등식', '직선과 이차함수의 교점', 'Linear-quadratic systems', '연립이차방정식과 그래프의 교점', 'Solve intersections of lines and quadratics', profiles(P.H1, P.A2), linearQuadraticSystem),
   unit('finite-domain-range', '함수', '정의역과 치역', 'Domain & range', '대응표에서 정의역과 치역 해석', 'Interpret domain and range from mappings', profiles(P.A1, P.A2), finiteDomainRange),
-  unit('piecewise-functions', '함수', '구간별 정의 함수', 'Piecewise functions', '조건에 따라 식을 선택하여 함숫값 계산', 'Evaluate and graph piecewise functions', profiles(P.A1, P.A2), piecewiseFunctions),
-  unit('average-rate-change', '함수', '평균변화율', 'Average rate of change', '표·식·그래프에서 구간 변화율 계산', 'Calculate and interpret secant slopes', profiles(P.A1, P.A2), averageRateChange),
-  unit('function-transformations', '함수', '함수 그래프의 변환', 'Function transformations', '평행이동·대칭·확대와 식의 변화', 'Interpret shifts, reflections and stretches', profiles(P.H1, P.A1, P.A2), functionTransformations),
-  unit('inverse-functions-complete', '함수', '역함수', 'Inverse functions', '일대일함수의 역함숫값 계산', 'Evaluate inverse functions algebraically', profiles(P.H1, P.A2), inverseFunctions),
-  unit('exponential-modeling', '함수', '지수성장과 감소 모델', 'Exponential growth & decay', '백분율 변화와 지수모델 응용', 'Model repeated percent change', profiles(P.A1, P.A2), exponentialModeling),
+  unit('piecewise-functions', '함수', '구간별 정의 함수', 'Piecewise functions', '조건에 따라 식을 선택하여 함숫값 계산', 'Evaluate and graph piecewise functions', profiles(P.A1, P.A2, P.PC), piecewiseFunctions),
+  unit('average-rate-change', '함수', '평균변화율', 'Average rate of change', '표·식·그래프에서 구간 변화율 계산', 'Calculate and interpret secant slopes', profiles(P.A1, P.A2, P.PC), averageRateChange),
+  unit('function-transformations', '함수', '함수 그래프의 변환', 'Function transformations', '평행이동·대칭·확대와 식의 변화', 'Interpret shifts, reflections and stretches', profiles(P.H1, P.A1, P.A2, P.PC), functionTransformations),
+  unit('inverse-functions-complete', '함수', '역함수', 'Inverse functions', '일대일함수의 역함숫값 계산', 'Evaluate inverse functions algebraically', profiles(P.H1, P.A2, P.PC), inverseFunctions),
+  unit('exponential-modeling', '함수', '지수성장과 감소 모델', 'Exponential growth & decay', '백분율 변화와 지수모델 응용', 'Model repeated percent change', profiles(P.A1, P.A2, P.PC), exponentialModeling),
   unit('regression-modeling', '확률과 통계', '산점도와 회귀모델', 'Scatterplots & regression', '추세선으로 자료의 값을 예측', 'Use linear regression models for prediction', profiles(P.A1, P.A2), linearRegression),
   unit('two-way-tables', '확률과 통계', '이원분할표와 조건부확률', 'Two-way tables', '행·열 조건에 따른 상대도수', 'Calculate conditional relative frequencies', profiles(P.H2S, P.A1, P.A2), twoWayTables),
-  unit('rational-expressions', '문자와 식', '유리식의 연산', 'Rational expressions', '인수분해와 유리식의 약분', 'Factor and simplify rational expressions', profiles(P.A2), rationalExpressions),
+  unit('rational-expressions', '문자와 식', '유리식의 연산', 'Rational expressions', '인수분해와 유리식의 약분', 'Factor and simplify rational expressions', profiles(P.A2, P.PC), rationalExpressions),
   unit('rational-equations', '방정식과 부등식', '유리방정식', 'Rational equations', '정의역 제한과 유리방정식의 해', 'Solve rational equations and reject excluded values', profiles(P.A2), rationalEquations),
   unit('radical-equations', '방정식과 부등식', '무리방정식', 'Radical equations', '제곱과 검산을 이용한 무리방정식', 'Solve radical equations and check extraneous roots', profiles(P.A2), radicalEquations),
   unit('logarithmic-modeling', '지수와 로그', '지수·로그 모델링', 'Exponential & logarithmic modeling', '지수모델의 미지 지수 구하기', 'Solve for time in exponential models', profiles(P.A2), logarithmicModeling),
-  unit('geometric-sequences', '수열', '등비수열과 유한급수', 'Geometric sequences & series', '등비수열의 일반항과 합', 'Find terms and finite geometric sums', profiles(P.H2A, P.A2), geometricSequences),
+  unit('geometric-sequences', '수열', '등비수열과 유한급수', 'Geometric sequences & series', '등비수열의 일반항과 합', 'Find terms and finite geometric sums', profiles(P.H2A, P.A2, P.PC), geometricSequences),
   unit('binomial-theorem', '다항식', '이항정리', 'Binomial Theorem', '조합을 이용한 전개식의 계수', 'Find expansion coefficients with combinations', profiles(P.H2S, P.A2), binomialTheorem),
   unit('variation-modeling', '수학적 모델링', '정비례·반비례 모델링', 'Direct & inverse variation', '변화상수를 이용한 응용문제', 'Model direct and inverse variation', profiles(P.A1, P.A2), variationModeling),
   unit('conditional-probability', '확률과 통계', '조건부확률', 'Conditional probability', '집합과 조건을 제한한 확률', 'Calculate probabilities under conditions', profiles(P.H2S, P.A2), conditionalProbability),
-  unit('algebra2-trigonometry', '삼각함수', '삼각함수의 값', 'Trigonometric values', '특수각의 정확한 삼각함수 값', 'Use exact unit-circle values', profiles(P.H2A, P.A2), exactTrigonometry),
+  unit('algebra2-trigonometry', '삼각함수', '삼각함수의 값', 'Trigonometric values', '특수각의 정확한 삼각함수 값', 'Use exact unit-circle values', profiles(P.H2A, P.A2, P.PC), exactTrigonometry),
   unit('internal-division-coordinate', '도형의 방정식', '선분의 내분점', 'Internal division point', '내분 공식과 좌표 계산', 'Use the section formula in coordinates', profiles(P.H1), internalDivision),
   unit('line-distance-conditions', '도형의 방정식', '직선의 평행·수직·거리', 'Line conditions & distance', '기울기 관계와 점·직선 사이 거리', 'Use slopes and point-to-line distance', profiles(P.H1), lineDistanceConditions),
   unit('circle-equations-complete', '도형의 방정식', '원의 방정식', 'Circle equations', '중심과 반지름을 이용한 원의 표준형', 'Read and construct circle equations', profiles(P.H1), circleEquations),
   unit('coordinate-transformations', '도형의 방정식', '도형의 이동', 'Coordinate transformations', '점과 도형의 평행이동·대칭이동', 'Translate and reflect coordinate figures', profiles(P.H1), coordinateTransformations),
   unit('propositions-complete', '집합과 명제', '명제·조건·반례', 'Propositions & counterexamples', '명제의 참·거짓과 반례 판단', 'Test propositions and use counterexamples', profiles(P.H1), propositions),
-  unit('matrix-multiplication', '행렬', '행렬의 곱셈', 'Matrix multiplication', '행과 열의 곱으로 행렬 계산', 'Multiply matrices by row-column products', profiles(P.H1, P.A2), matrixMultiplication),
+  unit('matrix-multiplication', '행렬', '행렬의 곱셈', 'Matrix multiplication', '행과 열의 곱으로 행렬 계산', 'Multiply matrices by row-column products', profiles(P.H1, P.A2, P.PC), matrixMultiplication),
   unit('kr-high-1-complete-review', '종합평가', '공통수학 1·2 종합평가', 'Common Mathematics comprehensive review', '대수·함수·경우의 수·좌표·집합·행렬을 섞은 독립 문제지', 'Mixed independent review across Common Mathematics 1–2', profiles(P.H1), mixed(HIGH1_REVIEW)),
   unit('algebra-1-complete-review', '종합평가', 'Algebra 1 종합평가', 'Algebra 1 comprehensive review', '식·방정식·함수·모델링·자료를 섞은 독립 문제지', 'Mixed independent review of equations, functions, modeling and data', profiles(P.A1), mixed(ALGEBRA1_REVIEW)),
   unit('algebra-2-complete-review', '종합평가', 'Algebra 2 종합평가', 'Algebra 2 comprehensive review', '고급 대수·함수·확률·수열·삼각함수 혼합 문제지', 'Mixed independent review of advanced algebra, functions, probability, sequences and trigonometry', profiles(P.A2), mixed(ALGEBRA2_REVIEW)),
