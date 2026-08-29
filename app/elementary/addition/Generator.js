@@ -201,7 +201,7 @@ export default function Generator() {
           })}
         </section>
 
-        <footer className="worksheet-footer"><span>매일 배움 연구소</span><span>{seed} · {view === 'answers' ? '정답지' : '문제지'}</span></footer>
+        <footer className="worksheet-footer"><span className="worksheet-signature">Built &amp; Designed by Chae</span><span>매일 배움 연구소</span><span>{seed} · {view === 'answers' ? '정답지' : '문제지'}</span></footer>
       </div>
 
       {view === 'problems' ? <section className="grading-panel no-print">
