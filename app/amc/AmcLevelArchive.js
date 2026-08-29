@@ -191,7 +191,10 @@ export default function AmcLevelArchive({ level, label, description }) {
     <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 6 }}>
       <a href="/">{words.home}</a> / <a href="/amc.html">{words.hub}</a> / {label}
     </p>
-    <h1 className="font-display" style={{ fontSize: 26, margin: '0 0 8px' }}>{label}</h1>
+    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, marginBottom: 8 }}>
+      <h1 className="font-display" style={{ fontSize: 26, margin: 0 }}>{label}</h1>
+      <a href="/amc/admin" className="button button-secondary" style={{ textDecoration: 'none' }}>{words.upload}</a>
+    </div>
     <p style={{ color: 'var(--ink-soft)', margin: '0 0 28px' }}>{description}</p>
 
     {status === 'loading' ? <p style={{ color: 'var(--ink-soft)' }}>{words.loading}</p> : null}
