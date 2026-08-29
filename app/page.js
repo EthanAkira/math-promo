@@ -6,34 +6,6 @@ import { tr } from './i18n';
 import CurriculumExplorer from './CurriculumExplorer';
 import { GAMES_COPY } from './games/gamesCopy';
 
-const MIDDLE_1_TOPICS = [
-  ['topicBasicFigures', '/middle-school/basic-figures', true],
-  ['topicPrime', '/middle-school/prime-factorization', true],
-  ['topicGcd', '/middle-school/gcd-lcm', true],
-  ['topicInteger', '/middle-school/integers-rationals', true],
-  ['topicRationalOps', '/middle-school/integers-rationals?unit=rational-operations-review', true],
-  ['topicAlgebra', '/middle-school/algebra-basics.html?unit=expressions-review', true],
-  ['topicEquation', '/middle-school/algebra-basics.html?unit=equations-review', true],
-  ['topicCoordinate', '/middle-school/coordinate-plane', true],
-  ['topicProportion', '/middle-school/proportion', true],
-];
-
-const ELEMENTARY_GRADES = [
-  ['topicGrade1', '/elementary/practice?grade=1', true],
-  ['topicGrade2', '/elementary/practice?grade=2', true],
-  ['topicGrade3', '/elementary/practice?grade=3', true],
-  ['topicGrade4', '/elementary/practice?grade=4&unit=g4-large-multiply', true],
-  ['topicGrade5', '/elementary/practice?grade=5&unit=g5-factors-multiples', true],
-  ['topicGrade6', '/elementary/practice?grade=6&unit=g6-fraction-divide', true],
-];
-
-// Default view: worksheets grouped by topic area, independent of grade or curriculum.
-const topicGroups = [
-  { key: 'elementary', topics: [['topicElementary', '/elementary/practice', true], ...ELEMENTARY_GRADES.slice(3), ['topicGeometry', '#', false]] },
-  { key: 'middle', topics: [...MIDDLE_1_TOPICS, ['topicFactoring', '#', false]] },
-  { key: 'high', topics: [['topicQuadratic', '#', false], ['topicSequences', '#', false], ['topicLogs', '#', false]] },
-];
-
 export default function HomePage() {
   const { language } = useLanguage();
   const G = GAMES_COPY[language] || GAMES_COPY.en;
@@ -42,21 +14,12 @@ export default function HomePage() {
     <section style={{ padding: '56px 0 8px' }}>
       <p className="font-mono" style={{ margin: 0, fontSize: 13, color: 'var(--red-pen)', fontWeight: 700 }}>{tr(language, 'dailyLab')}</p>
       <h1 className="font-display" style={{ margin: '10px 0 14px', fontSize: 'clamp(28px, 5vw, 40px)', lineHeight: 1.35, whiteSpace: 'pre-line' }}>{tr(language, 'heroTitle')}</h1>
-      <p style={{ fontSize: 16, color: 'var(--ink-soft)', maxWidth: 600 }}>{tr(language, 'heroDescription')}</p>
+      <p style={{ fontSize: 16, color: 'var(--ink-soft)', maxWidth: 760, lineHeight: 1.65 }}>{tr(language, 'heroDescription')}</p>
     </section>
 
     <CurriculumExplorer />
 
-    <section style={{ marginTop: 54 }}>
-      <p className="font-mono" style={{ margin: '0 0 6px', color: 'var(--red-pen)', fontSize: 12, fontWeight: 700 }}>QUICK PRACTICE</p>
-      <h2 className="font-display" style={{ margin: '0 0 22px', fontSize: 25 }}>{tr(language, 'quickPractice')}</h2>
-      {topicGroups.map((group) => <div key={group.key} style={{ marginBottom: 28 }}>
-        <h2 style={{ fontSize: 14, color: 'var(--chalk-green)', marginBottom: 10 }}>{tr(language, group.key)}</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))', gap: 10 }}>{group.topics.map(([key, href, ready]) => <a key={key} href={href} aria-disabled={!ready} style={{ display: 'block', padding: 16, borderRadius: 'var(--radius)', background: ready ? 'var(--card-bg)' : 'transparent', border: '1px solid var(--paper-line)', boxShadow: ready ? 'var(--shadow)' : 'none', textDecoration: 'none', color: ready ? 'var(--ink)' : 'var(--ink-soft)', opacity: ready ? 1 : 0.55, pointerEvents: ready ? 'auto' : 'none', fontWeight: 600, fontSize: 15 }}>{tr(language, key)}{!ready && <span style={{ display: 'block', fontSize: 11, fontWeight: 500, marginTop: 4 }}>{tr(language, 'comingSoon')}</span>}</a>)}</div>
-      </div>)}
-    </section>
-
-    <section id="archive" style={{ marginTop: 40, scrollMarginTop: 90 }}>
+    <section id="archive" style={{ marginTop: 54, scrollMarginTop: 90 }}>
       <p className="font-mono" style={{ margin: 0, color: 'var(--red-pen)', fontSize: 12, fontWeight: 700 }}>EXAM ARCHIVE</p>
       <h2 className="font-display" style={{ margin: '10px 0 10px', fontSize: 25 }}>{tr(language, 'examArchives')}</h2>
       <p style={{ margin: '0 0 20px', color: 'var(--ink-soft)', maxWidth: 560 }}>{tr(language, 'examArchivesDesc')}</p>
