@@ -4,8 +4,11 @@ import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
 import { findGrade, findUnit, GRADE_CATALOG, localizeGrade, localizeUnit } from './catalog';
 import { useLanguage } from '../../language';
+import { useAuth } from '../../auth';
 import { isNonKorean, tr } from '../../i18n';
 import NoteCanvas from '../../components/NoteCanvas';
+import MathText from '../../components/MathText';
+import { recordAttempts } from '../../lib/submissions';
 
 const PROBLEM_COUNT = 20;
 
@@ -55,28 +58,6 @@ function buildUrl(seed, gradeId, unitId, view = 'problems') {
   return url.toString();
 }
 
-function Fraction({ whole, numerator, denominator }) {
-  return <span className="mixed-fraction">
-    {whole ? <span className="whole-number">{whole}</span> : null}
-    <span className="stacked-fraction" aria-label={`${whole ? `${whole} ` : ''}${numerator}/${denominator}`}>
-      <span className="fraction-numerator">{numerator}</span>
-      <span className="fraction-denominator">{denominator}</span>
-    </span>
-  </span>;
-}
-
-function MathText({ value }) {
-  const text = String(value);
-  const parts = text.split(/(\d+\s+\d+\/\d+|\d+\/\d+)/g);
-  return <>{parts.map((part, index) => {
-    const mixed = part.match(/^(\d+)\s+(\d+)\/(\d+)$/);
-    if (mixed) return <Fraction key={`${part}-${index}`} whole={mixed[1]} numerator={mixed[2]} denominator={mixed[3]} />;
-    const fraction = part.match(/^(\d+)\/(\d+)$/);
-    if (fraction) return <Fraction key={`${part}-${index}`} numerator={fraction[1]} denominator={fraction[2]} />;
-    return <span key={`${part}-${index}`}>{part}</span>;
-  })}</>;
-}
-
 function ProblemBody({ problem, view, value, checked, onChange, language }) {
   const isCorrect = normalizeAnswer(value) === normalizeAnswer(problem.answer);
   const hasAnswer = value !== undefined && value !== '';
@@ -105,6 +86,7 @@ function ProblemBody({ problem, view, value, checked, onChange, language }) {
 
 export default function PracticeGenerator() {
   const { language } = useLanguage();
+  const { user } = useAuth();
   const en = isNonKorean(language);
   const [gradeId, setGradeId] = useState('1');
   const [unitId, setUnitId] = useState('g1-bonds');
@@ -166,6 +148,19 @@ export default function PracticeGenerator() {
   function changeView(nextView) { setView(nextView); setChecked(false); replaceUrl(seed, gradeId, unitId, nextView); }
   function handleAnswer(id, value) { if (!/^[0-9A-Za-z\s,/<>:=.\-]*$/.test(value)) return; setAnswers((current) => ({ ...current, [id]: value })); setChecked(false); }
 
+  function checkAnswers() {
+    setChecked(true);
+    recordAttempts(user, problems
+      .filter((problem) => answers[problem.id] !== undefined && answers[problem.id] !== '')
+      .map((problem) => ({
+        grade: gradeId,
+        unit: unit.id,
+        problemType: 'short',
+        isCorrect: normalizeAnswer(answers[problem.id]) === normalizeAnswer(problem.answer),
+        answer: answers[problem.id],
+      })));
+  }
+
   const gradeLabel = localizeGrade(grade, language);
   const unitLabel = localizeUnit(unit, language);
   const unitDescription = localizeUnit(unit, language, 'description');
@@ -202,9 +197,9 @@ export default function PracticeGenerator() {
           );
         })}
       </section>
-      <footer className="worksheet-footer"><span>{tr(language, 'dailyLab')}</span><span>{seed} · {gradeLabel} · {unitLabel}</span></footer>
+      <footer className="worksheet-footer"><span className="worksheet-signature">Built &amp; Designed by Chae</span><span>{tr(language, 'dailyLab')}</span><span>{seed} · {gradeLabel} · {unitLabel}</span></footer>
     </div>
 
-    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{en ? 'Enter fractions as 7/3 or 2 1/3. Use R for a remainder.' : '분수는 7/3 또는 2 1/3, 나머지는 R로 입력하세요.'}</p></div><button className="button button-primary" onClick={() => setChecked(true)}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
+    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{en ? 'Enter fractions as 7/3 or 2 1/3. Use R for a remainder.' : '분수는 7/3 또는 2 1/3, 나머지는 R로 입력하세요.'}</p></div><button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
   </div>;
 }

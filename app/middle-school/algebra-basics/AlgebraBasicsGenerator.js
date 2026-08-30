@@ -4,7 +4,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
 import { ALGEBRA_UNITS, findAlgebraUnit, localizeAlgebraUnit } from './catalog';
 import { useLanguage } from '../../language';
+import { useAuth } from '../../auth';
 import { isNonKorean, tr } from '../../i18n';
+import MathText from '../../components/MathText';
+import { recordAttempts } from '../../lib/submissions';
 
 const PROBLEM_COUNT = 20;
 
@@ -75,18 +78,9 @@ function buildUrl(seed, unitId, view = 'problems') {
   return url.toString();
 }
 
-function AlgebraText({ value }) {
-  const parts = String(value).split(/([+-]?\d+\/\d+|\^\d+)/g);
-  return <>{parts.map((part, index) => {
-    if (part.startsWith('^')) return <sup key={index}>{part.slice(1)}</sup>;
-    const fraction = part.match(/^([+-]?)(\d+)\/(\d+)$/);
-    if (!fraction) return <span key={index}>{part}</span>;
-    return <span key={index} className="signed-fraction"><span>{fraction[1]}</span><span className="stacked-fraction"><span className="fraction-numerator">{fraction[2]}</span><span className="fraction-denominator">{fraction[3]}</span></span></span>;
-  })}</>;
-}
-
 export default function AlgebraBasicsGenerator() {
   const { language } = useLanguage();
+  const { user } = useAuth();
   const foreign = isNonKorean(language);
   const [unitId, setUnitId] = useState(ALGEBRA_UNITS[0].id);
   const [seed, setSeed] = useState('PREVIEW1');
@@ -121,6 +115,19 @@ export default function AlgebraBasicsGenerator() {
   function changeView(nextView) { setView(nextView); setChecked(false); replaceUrl(seed, unitId, nextView); }
   function changeAnswer(id, value) { setAnswers((current) => ({ ...current, [id]: value })); setChecked(false); }
 
+  function checkAnswers() {
+    setChecked(true);
+    recordAttempts(user, problems
+      .filter((item) => answers[item.id] !== undefined && answers[item.id] !== '')
+      .map((item) => ({
+        grade: 'middle-1',
+        unit: unit.id,
+        problemType: item.kind === 'choice' ? 'mcq' : 'short',
+        isCorrect: answersEquivalent(answers[item.id], item.answer),
+        answer: answers[item.id],
+      })));
+  }
+
   const unitLabel = localizeAlgebraUnit(unit, language);
   const unitDescription = localizeAlgebraUnit(unit, language, 'description');
 
@@ -137,12 +144,12 @@ export default function AlgebraBasicsGenerator() {
           const prompt = foreign && item.promptEn ? item.promptEn : item.prompt;
           const choices = foreign ? item.choicesEn : item.choicesKo;
           const suffix = foreign ? (item.answerSuffixEn || (item.answerSuffix === '개' ? '' : item.answerSuffix)) : item.answerSuffix;
-          return <article className="vertical-problem word-problem prime-problem" key={item.id}><span className="problem-number">{item.id}</span><div className="word-calculation"><p>{prompt}</p>{item.expression ? <strong className="word-expression font-mono"><AlgebraText value={item.expression} /></strong> : null}<div className="word-answer"><span>{tr(language, 'answer')}</span>{item.kind === 'choice' ? <div className="choice-answer">{view === 'answers' ? <strong>{choices[Number(item.answer) - 1]}</strong> : choices.map((choice, index) => <button type="button" key={choice} className={value === String(index + 1) ? 'selected' : ''} onClick={() => changeAnswer(item.id, String(index + 1))}>{choice}</button>)}</div> : <span className="inline-answer">{view === 'answers' ? <strong><AlgebraText value={item.answer} /></strong> : <><input aria-label={`${tr(language, 'answer')} ${item.id}`} value={value} onChange={(event) => changeAnswer(item.id, event.target.value)} className={checked && value ? (isCorrect ? 'correct' : 'wrong') : ''} /><span className="print-answer-space" aria-hidden="true" /></>}</span>}{suffix ? <em>{suffix}</em> : null}</div></div>{checked && view === 'problems' && value ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{tr(language, isCorrect ? 'correct' : 'tryAgain')}</span> : null}</article>;
+          return <article className="vertical-problem word-problem prime-problem" key={item.id}><span className="problem-number">{item.id}</span><div className="word-calculation"><p><MathText value={prompt} /></p>{item.expression ? <strong className="word-expression font-mono"><MathText value={item.expression} /></strong> : null}<div className="word-answer"><span>{tr(language, 'answer')}</span>{item.kind === 'choice' ? <div className="choice-answer">{view === 'answers' ? <strong>{choices[Number(item.answer) - 1]}</strong> : choices.map((choice, index) => <button type="button" key={choice} className={value === String(index + 1) ? 'selected' : ''} onClick={() => changeAnswer(item.id, String(index + 1))}>{choice}</button>)}</div> : <span className="inline-answer">{view === 'answers' ? <strong><MathText value={item.answer} /></strong> : <><input aria-label={`${tr(language, 'answer')} ${item.id}`} value={value} onChange={(event) => changeAnswer(item.id, event.target.value)} className={checked && value ? (isCorrect ? 'correct' : 'wrong') : ''} /><span className="print-answer-space" aria-hidden="true" /></>}</span>}{suffix ? <em>{suffix}</em> : null}</div></div>{checked && view === 'problems' && value ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{tr(language, isCorrect ? 'correct' : 'tryAgain')}</span> : null}</article>;
         })}
       </section>
-      <footer className="worksheet-footer"><span>{tr(language, 'dailyLab')}</span><span>{seed} · {tr(language, 'grade1Short')} · {unitLabel}</span></footer>
+      <footer className="worksheet-footer"><span className="worksheet-signature">Built &amp; Designed by Chae</span><span>{tr(language, 'dailyLab')}</span><span>{seed} · {tr(language, 'grade1Short')} · {unitLabel}</span></footer>
     </div>
 
-    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Use x for variables and / for fractions. Equivalent numerical answers are accepted.' : '문자는 x, 분수는 /를 사용해 입력하세요. 값이 같은 수는 정답으로 인정됩니다.'}</p></div><button className="button button-primary" onClick={() => setChecked(true)}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
+    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Use x for variables and / for fractions. Equivalent numerical answers are accepted.' : '문자는 x, 분수는 /를 사용해 입력하세요. 값이 같은 수는 정답으로 인정됩니다.'}</p></div><button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
   </div>;
 }

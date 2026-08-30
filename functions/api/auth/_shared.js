@@ -102,6 +102,17 @@ export async function createSession(db, userId) {
   return { cookie: buildSessionCookie(token, Math.floor(SESSION_TTL_MS / 1000)) };
 }
 
+export function clearSessionCookie() {
+  return `${SESSION_COOKIE_NAME}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
+}
+
+export async function deleteSessionByRequest(db, request) {
+  const token = parseCookies(request)[SESSION_COOKIE_NAME];
+  if (!token) return;
+  const tokenHash = await hashToken(token);
+  await db.prepare('DELETE FROM sessions WHERE token_hash = ?').bind(tokenHash).run();
+}
+
 export async function getSessionUser(db, request) {
   const token = parseCookies(request)[SESSION_COOKIE_NAME];
   if (!token) return null;

@@ -1,5 +1,6 @@
 import './globals.css';
 import { LanguageProvider } from './language';
+import { AuthProvider } from './auth';
 
 export const metadata = {
   title: '매일 배움 연구소 | 수학·코딩 문제와 학습 콘텐츠',
@@ -10,7 +11,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="ko" suppressHydrationWarning>
-      <body><LanguageProvider>{children}</LanguageProvider></body>
+      <body><LanguageProvider><AuthProvider>{children}</AuthProvider></LanguageProvider></body>
     </html>
   );
 }

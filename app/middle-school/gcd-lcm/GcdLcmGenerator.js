@@ -4,7 +4,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
 import { findGcdLcmUnit, GCD_LCM_UNITS, localizeGcdLcmUnit } from './catalog';
 import { useLanguage } from '../../language';
+import { useAuth } from '../../auth';
 import { isNonKorean, tr } from '../../i18n';
+import MathText from '../../components/MathText';
+import { recordAttempts } from '../../lib/submissions';
 
 const PROBLEM_COUNT = 20;
 
@@ -63,13 +66,11 @@ function buildUrl(seed, unitId, view = 'problems') {
   return url.toString();
 }
 
-function PowerText({ value }) {
-  const parts = String(value).split(/(\^\d+)/g);
-  return <>{parts.map((part, index) => part.startsWith('^') ? <sup key={index}>{part.slice(1)}</sup> : <span key={index}>{part}</span>)}</>;
-}
+const PowerText = MathText;
 
 export default function GcdLcmGenerator() {
   const { language } = useLanguage();
+  const { user } = useAuth();
   const foreign = isNonKorean(language);
   const [unitId, setUnitId] = useState(GCD_LCM_UNITS[0].id);
   const [seed, setSeed] = useState('PREVIEW1');
@@ -111,6 +112,19 @@ export default function GcdLcmGenerator() {
   function changeView(nextView) { setView(nextView); setChecked(false); replaceUrl(seed, unitId, nextView); }
   function changeAnswer(id, value) { setAnswers((current) => ({ ...current, [id]: value })); setChecked(false); }
 
+  function checkAnswers() {
+    setChecked(true);
+    recordAttempts(user, problems
+      .filter((item) => answers[item.id] !== undefined && answers[item.id] !== '')
+      .map((item) => ({
+        grade: 'middle-1',
+        unit: unit.id,
+        problemType: 'short',
+        isCorrect: normalizeAnswer(answers[item.id]) === normalizeAnswer(item.answer),
+        answer: answers[item.id],
+      })));
+  }
+
   const unitLabel = localizeGcdLcmUnit(unit, language);
   const unitDescription = localizeGcdLcmUnit(unit, language, 'description');
 
@@ -130,9 +144,9 @@ export default function GcdLcmGenerator() {
           return <article className="vertical-problem word-problem prime-problem" key={item.id}><span className="problem-number">{item.id}</span><div className="word-calculation"><p>{foreign && item.promptEn ? item.promptEn : item.prompt}</p>{item.expression ? <strong className="word-expression font-mono"><PowerText value={item.expression} /></strong> : null}<div className="word-answer"><span>{tr(language, 'answer')}</span><span className="inline-answer">{view === 'answers' ? <strong><PowerText value={item.answer} /></strong> : <><input aria-label={`${tr(language, 'answer')} ${item.id}`} value={value} onChange={(event) => changeAnswer(item.id, event.target.value)} className={checked && value ? (isCorrect ? 'correct' : 'wrong') : ''} /><span className="print-answer-space" aria-hidden="true" /></>}</span>{item.answerSuffix ? <em>{item.answerSuffix}</em> : null}</div></div>{checked && view === 'problems' && value ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{tr(language, isCorrect ? 'correct' : 'tryAgain')}</span> : null}</article>;
         })}
       </section>
-      <footer className="worksheet-footer"><span>{tr(language, 'dailyLab')}</span><span>{seed} · {tr(language, 'grade1Short')} · {unitLabel}</span></footer>
+      <footer className="worksheet-footer"><span className="worksheet-signature">Built &amp; Designed by Chae</span><span>{tr(language, 'dailyLab')}</span><span>{seed} · {tr(language, 'grade1Short')} · {unitLabel}</span></footer>
     </div>
 
-    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Separate multiple answers with commas. Use ^ for exponents.' : '답이 여러 개이면 쉼표로 구분하세요. 거듭제곱은 2^3처럼 입력합니다.'}</p></div><button className="button button-primary" onClick={() => setChecked(true)}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
+    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Separate multiple answers with commas. Use ^ for exponents.' : '답이 여러 개이면 쉼표로 구분하세요. 거듭제곱은 2^3처럼 입력합니다.'}</p></div><button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
   </div>;
 }

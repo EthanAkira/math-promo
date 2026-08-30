@@ -4,7 +4,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
 import { COORDINATE_UNITS, findCoordinateUnit, localizeCoordinateUnit } from './catalog';
 import { useLanguage } from '../../language';
+import { useAuth } from '../../auth';
 import { isNonKorean, tr } from '../../i18n';
+import { recordAttempts } from '../../lib/submissions';
 
 const PROBLEM_COUNT = 20;
 
@@ -126,6 +128,7 @@ function TripGraphSvg({ graph }) {
 
 export default function CoordinatePlaneGenerator() {
   const { language } = useLanguage();
+  const { user } = useAuth();
   const foreign = isNonKorean(language);
   const [unitId, setUnitId] = useState(COORDINATE_UNITS[0].id);
   const [seed, setSeed] = useState('PREVIEW1');
@@ -159,6 +162,19 @@ export default function CoordinatePlaneGenerator() {
   function chooseUnit(nextUnit) { reset(createSeed(), nextUnit); }
   function changeView(nextView) { setView(nextView); setChecked(false); replaceUrl(seed, unitId, nextView); }
   function changeAnswer(id, value) { setAnswers((current) => ({ ...current, [id]: value })); setChecked(false); }
+
+  function checkAnswers() {
+    setChecked(true);
+    recordAttempts(user, problems
+      .filter((item) => answers[item.id] !== undefined && answers[item.id] !== '')
+      .map((item) => ({
+        grade: 'middle-1',
+        unit: unit.id,
+        problemType: item.kind === 'choice' ? 'mcq' : 'short',
+        isCorrect: normalizeAnswer(answers[item.id]) === normalizeAnswer(item.answer),
+        answer: answers[item.id],
+      })));
+  }
 
   const unitLabel = localizeCoordinateUnit(unit, language);
   const unitDescription = localizeCoordinateUnit(unit, language, 'description');
@@ -195,6 +211,6 @@ export default function CoordinatePlaneGenerator() {
       <footer className="worksheet-footer"><span className="worksheet-signature">Built &amp; Designed by Chae</span><span>{tr(language, 'dailyLab')}</span><span>{seed} · {tr(language, 'grade1Short')} · {unitLabel}</span></footer>
     </div>
 
-    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Write a coordinate as (x, y). For a labeled point, type its letter.' : '좌표는 (x, y) 형태로 입력하고, 점의 기호를 물으면 알파벳을 입력하세요.' }</p></div><button className="button button-primary" onClick={() => setChecked(true)}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
+    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Write a coordinate as (x, y). For a labeled point, type its letter.' : '좌표는 (x, y) 형태로 입력하고, 점의 기호를 물으면 알파벳을 입력하세요.' }</p></div><button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
   </div>;
 }

@@ -1,16 +1,7 @@
 'use client';
 
 import { preAlgebraCopy } from './localization';
-
-export function MathText({ value }) {
-  const parts = String(value ?? '').split(/([+-]?\d+\/\d+|\^\d+)/g);
-  return <>{parts.map((part, index) => {
-    if (part.startsWith('^')) return <sup key={index}>{part.slice(1)}</sup>;
-    const match = part.match(/^([+-]?)(\d+)\/(\d+)$/);
-    if (!match) return <span key={index}>{part}</span>;
-    return <span key={index} className="signed-fraction"><span>{match[1]}</span><span className="stacked-fraction"><span className="fraction-numerator">{match[2]}</span><span className="fraction-denominator">{match[3]}</span></span></span>;
-  })}</>;
-}
+export { default as MathText } from '../../components/MathText';
 
 export function NumberLine({ line }) {
   const width = 320;

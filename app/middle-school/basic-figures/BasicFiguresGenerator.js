@@ -5,8 +5,11 @@ import QRCode from 'qrcode';
 import { findBasicFigureUnit, localizeBasicFigureUnit, BASIC_FIGURE_UNITS } from './catalog';
 import GeometryDiagram from './GeometryDiagram';
 import { findGeometryProfile, GEOMETRY_PROFILES } from './geometryProfiles';
+import MathText from '../../components/MathText';
 import { useLanguage } from '../../language';
+import { useAuth } from '../../auth';
 import { isNonKorean, tr } from '../../i18n';
+import { recordAttempts } from '../../lib/submissions';
 
 const PROBLEM_COUNT = 20;
 
@@ -115,6 +118,7 @@ function buildUrl(seed, unitId, profileId, view = 'problems') {
 
 export default function BasicFiguresGenerator() {
   const { language } = useLanguage();
+  const { user } = useAuth();
   const foreign = isNonKorean(language);
   const [unitId, setUnitId] = useState('visual-foundations');
   const [profileId, setProfileId] = useState('kr');
@@ -165,6 +169,19 @@ export default function BasicFiguresGenerator() {
   function changeView(nextView) { setView(nextView); setChecked(false); replaceUrl(seed, unitId, profileId, nextView); }
   function changeAnswer(id, value) { setAnswers((current) => ({ ...current, [id]: value })); setChecked(false); }
 
+  function checkAnswers() {
+    setChecked(true);
+    recordAttempts(user, problems
+      .filter((item) => answers[item.id] !== undefined && answers[item.id] !== '')
+      .map((item) => ({
+        grade: profileId,
+        unit: unit.id,
+        problemType: item.choices ? 'mcq' : 'short',
+        isCorrect: normalizeAnswer(answers[item.id]) === normalizeAnswer(item.answer),
+        answer: answers[item.id],
+      })));
+  }
+
   const contentLocale = profile.locale;
   const unitLabel = localizeBasicFigureUnit(unit, contentLocale);
   const unitDescription = localizeBasicFigureUnit(unit, contentLocale, 'description');
@@ -188,13 +205,13 @@ export default function BasicFiguresGenerator() {
           const promptText = localizedForeign && item.promptEn ? item.promptEn : item.prompt;
           const expressionText = localizedForeign && item.expressionEn ? item.expressionEn : item.expression;
           const graphic = Boolean(item.diagram);
-          return <article className={`vertical-problem word-problem prime-problem${graphic ? ' graphic-problem geometry-problem' : ''}`} key={item.id}><span className="problem-number">{item.id}</span><div className="word-calculation">{item.difficulty ? <div className="difficulty-strip"><span>{contentLocale === 'ko' ? '난이도' : 'Difficulty'} {item.difficulty.level}</span><span>{item.difficulty.score}/100</span><span>{item.difficulty.reasoningSteps} {contentLocale === 'ko' ? '단계' : 'steps'}</span><span>≈{item.difficulty.estimatedMinutes} min</span></div> : null}<p>{promptText}</p>{item.diagram ? <GeometryDiagram diagram={item.diagram} /> : null}{expressionText ? <strong className="word-expression font-mono">{expressionText}</strong> : null}{item.choices ? <div className="choice-answer">{view === 'answers' ? <strong>{selectedChoice?.marker || selectedChoice?.value}. {localizedForeign ? selectedChoice?.labelEn : selectedChoice?.label}</strong> : item.choices.map((choice) => <button type="button" key={choice.value} className={`${value === choice.value ? 'selected' : ''} ${checked && value === choice.value ? (isCorrect ? 'correct' : 'wrong') : ''}`} onClick={() => changeAnswer(item.id, choice.value)} aria-pressed={value === choice.value}><span>{choice.marker || choice.value}</span>{localizedForeign ? choice.labelEn : choice.label}</button>)}</div> : <div className="word-answer"><span>{tr(language, 'answer')}</span><span className="inline-answer">{view === 'answers' ? <strong>{item.answer}</strong> : <><input aria-label={`${tr(language, 'answer')} ${item.id}`} value={value} onChange={(event) => changeAnswer(item.id, event.target.value)} className={checked && value ? (isCorrect ? 'correct' : 'wrong') : ''} /><span className="print-answer-space" aria-hidden="true" /></>}</span>{item.answerSuffix ? <em>{item.answerSuffix}</em> : null}</div>}{view === 'answers' && item.explanation ? <p className="geometry-explanation"><b>{contentLocale === 'ko' ? '풀이' : contentLocale.startsWith('zh') ? '解說' : 'Solution'}</b>{item.explanation}</p> : null}{view === 'answers' && item.solutionSteps?.length ? <ol className="geometry-solution-steps">{item.solutionSteps.map((step, index) => <li key={index}>{step}</li>)}</ol> : null}{view === 'answers' && item.theorems?.length ? <p className="geometry-theorems"><b>{contentLocale === 'ko' ? '결합 개념' : 'Combined ideas'}</b>{item.theorems.join(' · ')}</p> : null}{view === 'answers' && item.choiceDiagnostics?.some((entry) => entry.reason) ? <details className="choice-diagnostics"><summary>{contentLocale === 'ko' ? '오답선지 진단' : 'Distractor diagnostics'}</summary>{item.choiceDiagnostics.filter((entry) => entry.reason).map((entry) => <p key={`${entry.marker}-${entry.label}`}><b>{entry.marker}. {entry.label}</b> — {entry.reason}</p>)}</details> : null}</div>{checked && view === 'problems' && value ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{tr(language, isCorrect ? 'correct' : 'tryAgain')}</span> : null}</article>;
+          return <article className={`vertical-problem word-problem prime-problem${graphic ? ' graphic-problem geometry-problem' : ''}`} key={item.id}><span className="problem-number">{item.id}</span><div className="word-calculation">{item.difficulty ? <div className="difficulty-strip"><span>{contentLocale === 'ko' ? '난이도' : 'Difficulty'} {item.difficulty.level}</span><span>{item.difficulty.score}/100</span><span>{item.difficulty.reasoningSteps} {contentLocale === 'ko' ? '단계' : 'steps'}</span><span>≈{item.difficulty.estimatedMinutes} min</span></div> : null}<p><MathText value={promptText} /></p>{item.diagram ? <GeometryDiagram diagram={item.diagram} /> : null}{expressionText ? <strong className="word-expression font-mono"><MathText value={expressionText} /></strong> : null}{item.choices ? <div className="choice-answer">{view === 'answers' ? <strong>{selectedChoice?.marker || selectedChoice?.value}. {localizedForeign ? selectedChoice?.labelEn : selectedChoice?.label}</strong> : item.choices.map((choice) => <button type="button" key={choice.value} className={`${value === choice.value ? 'selected' : ''} ${checked && value === choice.value ? (isCorrect ? 'correct' : 'wrong') : ''}`} onClick={() => changeAnswer(item.id, choice.value)} aria-pressed={value === choice.value}><span>{choice.marker || choice.value}</span>{localizedForeign ? choice.labelEn : choice.label}</button>)}</div> : <div className="word-answer"><span>{tr(language, 'answer')}</span><span className="inline-answer">{view === 'answers' ? <strong><MathText value={item.answer} /></strong> : <><input aria-label={`${tr(language, 'answer')} ${item.id}`} value={value} onChange={(event) => changeAnswer(item.id, event.target.value)} className={checked && value ? (isCorrect ? 'correct' : 'wrong') : ''} /><span className="print-answer-space" aria-hidden="true" /></>}</span>{item.answerSuffix ? <em>{item.answerSuffix}</em> : null}</div>}{view === 'answers' && item.explanation ? <p className="geometry-explanation"><b>{contentLocale === 'ko' ? '풀이' : contentLocale.startsWith('zh') ? '解說' : 'Solution'}</b><MathText value={item.explanation} /></p> : null}{view === 'answers' && item.solutionSteps?.length ? <ol className="geometry-solution-steps">{item.solutionSteps.map((step, index) => <li key={index}><MathText value={step} /></li>)}</ol> : null}{view === 'answers' && item.theorems?.length ? <p className="geometry-theorems"><b>{contentLocale === 'ko' ? '결합 개념' : 'Combined ideas'}</b>{item.theorems.join(' · ')}</p> : null}{view === 'answers' && item.choiceDiagnostics?.some((entry) => entry.reason) ? <details className="choice-diagnostics"><summary>{contentLocale === 'ko' ? '오답선지 진단' : 'Distractor diagnostics'}</summary>{item.choiceDiagnostics.filter((entry) => entry.reason).map((entry) => <p key={`${entry.marker}-${entry.label}`}><b>{entry.marker}. {entry.label}</b> — <MathText value={entry.reason} /></p>)}</details> : null}</div>{checked && view === 'problems' && value ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{tr(language, isCorrect ? 'correct' : 'tryAgain')}</span> : null}</article>;
         })}
       </section>
-      <footer className="worksheet-footer"><span>{tr(language, 'dailyLab')}</span><span>{seed} · {profile.shortLabel} · {unitLabel}</span></footer>
+      <footer className="worksheet-footer"><span className="worksheet-signature">Built &amp; Designed by Chae</span><span>{tr(language, 'dailyLab')}</span><span>{seed} · {profile.shortLabel} · {unitLabel}</span></footer>
     </div>
 
-    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Choose an option or type your numeric answer, then check.' : '객관식은 보기를 고르고, 주관식은 숫자만 입력하세요.'}</p></div><button className="button button-primary" onClick={() => setChecked(true)}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
+    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Choose an option or type your numeric answer, then check.' : '객관식은 보기를 고르고, 주관식은 숫자만 입력하세요.'}</p></div><button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
     <style jsx global>{`
       .difficulty-strip { display:flex; flex-wrap:wrap; gap:5px; margin:0 0 7px; }
       .difficulty-strip span { padding:3px 7px; border-radius:999px; background:#fff2d8; color:#7c4a08; border:1px solid #e7bd79; font-size:10px; font-weight:800; }

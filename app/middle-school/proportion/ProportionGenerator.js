@@ -4,7 +4,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
 import { PROPORTION_UNITS, findProportionUnit, localizeProportionUnit } from './catalog';
 import { useLanguage } from '../../language';
+import { useAuth } from '../../auth';
 import { isNonKorean, tr } from '../../i18n';
+import MathText from '../../components/MathText';
+import { recordAttempts } from '../../lib/submissions';
 
 const PROBLEM_COUNT = 20;
 
@@ -63,14 +66,7 @@ function buildUrl(seed, unitId, view = 'problems') {
   return url.toString();
 }
 
-function ProportionText({ value }) {
-  const parts = String(value).split(/([+-]?\d+\/\d+)/g);
-  return <>{parts.map((part, index) => {
-    const match = part.match(/^([+-]?)(\d+)\/(\d+)$/);
-    if (!match) return <span key={index}>{part}</span>;
-    return <span key={index} className="signed-fraction"><span>{match[1]}</span><span className="stacked-fraction"><span className="fraction-numerator">{match[2]}</span><span className="fraction-denominator">{match[3]}</span></span></span>;
-  })}</>;
-}
+const ProportionText = MathText;
 
 function ProportionGraphSvg({ graph }) {
   const width = 200;
@@ -116,6 +112,7 @@ function ProportionGraphSvg({ graph }) {
 
 export default function ProportionGenerator() {
   const { language } = useLanguage();
+  const { user } = useAuth();
   const foreign = isNonKorean(language);
   const [unitId, setUnitId] = useState(PROPORTION_UNITS[0].id);
   const [seed, setSeed] = useState('PREVIEW1');
@@ -150,6 +147,19 @@ export default function ProportionGenerator() {
   function changeView(nextView) { setView(nextView); setChecked(false); replaceUrl(seed, unitId, nextView); }
   function changeAnswer(id, value) { setAnswers((current) => ({ ...current, [id]: value })); setChecked(false); }
 
+  function checkAnswers() {
+    setChecked(true);
+    recordAttempts(user, problems
+      .filter((item) => answers[item.id] !== undefined && answers[item.id] !== '')
+      .map((item) => ({
+        grade: 'middle-1',
+        unit: unit.id,
+        problemType: item.kind === 'choice' ? 'mcq' : 'short',
+        isCorrect: normalizeAnswer(answers[item.id]) === normalizeAnswer(item.answer),
+        answer: answers[item.id],
+      })));
+  }
+
   const unitLabel = localizeProportionUnit(unit, language);
   const unitDescription = localizeProportionUnit(unit, language, 'description');
 
@@ -182,9 +192,9 @@ export default function ProportionGenerator() {
           </article>;
         })}
       </section>
-      <footer className="worksheet-footer"><span>{tr(language, 'dailyLab')}</span><span>{seed} · {tr(language, 'grade1Short')} · {unitLabel}</span></footer>
+      <footer className="worksheet-footer"><span className="worksheet-signature">Built &amp; Designed by Chae</span><span>{tr(language, 'dailyLab')}</span><span>{seed} · {tr(language, 'grade1Short')} · {unitLabel}</span></footer>
     </div>
 
-    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Write equations as y=3x or y=6/x. Enter fractions as -3/4.' : '관계식은 y=3x, y=6/x처럼 입력하고, 분수는 -3/4처럼 입력하세요.'}</p></div><button className="button button-primary" onClick={() => setChecked(true)}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
+    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Write equations as y=3x or y=6/x. Enter fractions as -3/4.' : '관계식은 y=3x, y=6/x처럼 입력하고, 분수는 -3/4처럼 입력하세요.'}</p></div><button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
   </div>;
 }

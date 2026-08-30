@@ -3,8 +3,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
 import { useLanguage } from '../../language';
+import { useAuth } from '../../auth';
 import { isNonKorean, tr } from '../../i18n';
 import { PRE_ALGEBRA_PROFILES, finalizeGeneratedProblem, findPreAlgebraProfile, findPreAlgebraUnit, localizePreAlgebraUnit, unitsForProfile } from './catalog';
+import { recordAttempts } from '../../lib/submissions';
 import { preAlgebraCategory, preAlgebraCopy, preAlgebraProfileLabel } from './localization';
 import { hasProblemVisual, MathText, ProblemVisual } from './PreAlgebraVisuals';
 
@@ -84,6 +86,7 @@ function buildUrl(seed, profileId, unitId, view = 'problems') {
 
 export default function PreAlgebraGenerator() {
   const { language } = useLanguage();
+  const { user } = useAuth();
   const foreign = isNonKorean(language);
   const copy = preAlgebraCopy(language);
   const [profileId, setProfileId] = useState('kr-middle-1');
@@ -141,6 +144,19 @@ export default function PreAlgebraGenerator() {
   function changeView(nextView) { setView(nextView); setChecked(false); replaceUrl(seed, profileId, unitId, nextView); }
   function changeAnswer(id, value) { setAnswers((current) => ({ ...current, [id]: value })); setChecked(false); }
 
+  function checkAnswers() {
+    setChecked(true);
+    recordAttempts(user, problems
+      .filter((item) => answers[item.id] !== undefined && answers[item.id] !== '')
+      .map((item) => ({
+        grade: profileId,
+        unit: unit.id,
+        problemType: item.kind === 'choice' ? 'mcq' : 'short',
+        isCorrect: equivalent(answers[item.id], item.answer),
+        answer: answers[item.id],
+      })));
+  }
+
   const unitLabel = localizePreAlgebraUnit(unit, language);
   const unitDescription = localizePreAlgebraUnit(unit, language, 'description');
   const profileLabel = preAlgebraProfileLabel(profile, language);
@@ -166,19 +182,19 @@ export default function PreAlgebraGenerator() {
           const expression = foreign && item.expressionEn ? item.expressionEn : item.expression;
           const choices = foreign ? item.choicesEn : item.choicesKo;
           return <article className={`vertical-problem word-problem prime-problem${hasProblemVisual(item) ? ' graphic-problem' : ''}`} key={item.id}>
-            <span className="problem-number">{item.id}</span><div className="word-calculation"><p>{prompt}</p>
+            <span className="problem-number">{item.id}</span><div className="word-calculation"><p><MathText value={prompt} /></p>
               {expression ? <strong className="word-expression font-mono"><MathText value={expression} /></strong> : null}
               <ProblemVisual item={item} language={language} />
               <div className="word-answer"><span>{tr(language, 'answer')}</span>{item.kind === 'choice' && choices ? <div className="choice-answer">{view === 'answers' ? <strong>{choices[Number(item.answer) - 1]}</strong> : choices.map((choice, index) => <button type="button" key={`${choice}-${index}`} className={value === String(index + 1) ? 'selected' : ''} onClick={() => changeAnswer(item.id, String(index + 1))}>{choice}</button>)}</div> : <span className="inline-answer">{view === 'answers' ? <strong><MathText value={item.answer} /></strong> : <><input aria-label={`${tr(language, 'answer')} ${item.id}`} value={value} onChange={(event) => changeAnswer(item.id, event.target.value)} className={checked && value ? (isCorrect ? 'correct' : 'wrong') : ''} /><span className="print-answer-space" aria-hidden="true" /></>}</span>}{item.answerSuffix && !foreign ? <em>{item.answerSuffix}</em> : null}</div>
-              {view === 'answers' ? <p className="generated-explanation"><strong>{foreign ? 'Why: ' : '풀이: '}</strong>{foreign ? item.explanationEn : item.explanation}</p> : null}
+              {view === 'answers' ? <p className="generated-explanation"><strong>{foreign ? 'Why: ' : '풀이: '}</strong><MathText value={foreign ? item.explanationEn : item.explanation} /></p> : null}
             </div>{checked && view === 'problems' && value ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{tr(language, isCorrect ? 'correct' : 'tryAgain')}</span> : null}
           </article>;
         })}
       </section>
-      <footer className="worksheet-footer"><span>{tr(language, 'dailyLab')}</span><span>{seed} · {profileLabel} · {unitLabel}</span></footer>
+      <footer className="worksheet-footer"><span className="worksheet-signature">Built &amp; Designed by Chae</span><span>{tr(language, 'dailyLab')}</span><span>{seed} · {profileLabel} · {unitLabel}</span></footer>
     </div>
 
-    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Fractions: 3/4 · Coordinates: 2,-3 · Inequalities: x<=4' : '분수는 3/4, 좌표는 2,-3, 부등식은 x<=4처럼 입력할 수 있습니다.'}</p></div><button className="button button-primary" onClick={() => setChecked(true)}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
+    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Fractions: 3/4 · Coordinates: 2,-3 · Inequalities: x<=4' : '분수는 3/4, 좌표는 2,-3, 부등식은 x<=4처럼 입력할 수 있습니다.'}</p></div><button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
 
     <style jsx global>{`
       .pre-algebra-controls { grid-template-columns: minmax(190px,.8fr) minmax(150px,.55fr) minmax(240px,1fr) auto; align-items: end; }
