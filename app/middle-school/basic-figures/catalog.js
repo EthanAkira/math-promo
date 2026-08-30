@@ -263,6 +263,57 @@ function perpendicular(random) {
 
 const generators = [termsOx, distanceMidpoint, angleClassify, straightAngle, verticalAngle, perpendicular];
 
+// CORE_GEOMETRY_UNITS/MIDDLE_GEOMETRY_BASIC_UNITS only had exam-track `profiles` (kr/international/amc/...),
+// with no grade/course namespace like the Algebra catalogs use (kr-middle-1, algebra-1, ...). This map adds
+// that second, independent axis via `curriculumProfiles` so curriculumCatalog.js can deep-link a specific
+// grade's page to the matching unit. Units not listed here (e.g. regional-geometry-mixed) span multiple
+// grades and are intentionally left untagged.
+const CURRICULUM_PROFILES = {
+  // CORE_GEOMETRY_UNITS (geometryProblemEngine.js)
+  'visual-foundations': ['kr-middle-1', 'pre-algebra'],
+  'visual-angles': ['kr-middle-1', 'pre-algebra'],
+  'perpendicular-distance': ['kr-middle-1', 'pre-algebra'],
+  'parallel-lines': ['kr-middle-1', 'pre-algebra'],
+  'triangle-angles': ['kr-middle-1', 'pre-algebra'],
+  'ruler-compass-construction': ['kr-middle-1', 'pre-algebra'],
+  'triangle-side-angle-relations': ['kr-middle-2', 'geometry'],
+  'circle-sector': ['kr-middle-1', 'pre-algebra'],
+  'triangle-congruence-similarity': ['kr-middle-2', 'geometry'],
+  'pythagorean-theorem': ['kr-middle-2', 'geometry'],
+  'high-coordinate-geometry': ['kr-high-1', 'geometry'],
+  'solid-elements': ['kr-middle-1', 'pre-algebra'],
+  'solid-relations': ['kr-middle-1', 'pre-algebra'],
+
+  // MIDDLE_GEOMETRY_BASIC_UNITS (middleGeometryBasicsEngine.js)
+  'polygon-foundations-basic': ['kr-middle-1', 'pre-algebra'],
+  'polygon-diagonals-basic': ['kr-middle-1', 'pre-algebra'],
+  'polygon-angles-basic': ['kr-middle-1', 'pre-algebra'],
+  'triangle-interior-exterior-basic': ['kr-middle-1', 'pre-algebra'],
+  'circle-parts-basic': ['kr-middle-1', 'pre-algebra'],
+  'circle-sector-proportion': ['kr-middle-1', 'pre-algebra'],
+  'circle-sector-inverse-basic': ['kr-middle-1', 'pre-algebra'],
+  'annulus-composite-circle': ['kr-middle-1', 'pre-algebra'],
+  'annular-sector-measures': ['kr-middle-1', 'pre-algebra'],
+  'polyhedron-counts-general': ['kr-middle-1', 'pre-algebra'],
+  'polyhedron-concepts-euler': ['kr-middle-1', 'geometry'],
+  'regular-polyhedra-basic': ['kr-middle-1', 'pre-algebra'],
+  'solids-revolution-nets': ['kr-middle-1', 'pre-algebra'],
+  'solids-revolution-sections': ['kr-middle-1', 'pre-algebra'],
+  'metric-solid-nets': ['kr-middle-1', 'pre-algebra'],
+  'prism-cylinder-measures': ['kr-middle-1', 'pre-algebra'],
+  'pyramid-cone-measures': ['kr-middle-1', 'pre-algebra'],
+  'expanded-solid-measures': ['kr-middle-1', 'geometry'],
+  'sphere-measures-basic': ['kr-middle-1', 'pre-algebra'],
+  'hemisphere-sphere-ratios': ['kr-middle-1', 'geometry'],
+  'solid-volume-ratios': ['kr-middle-1', 'pre-algebra'],
+};
+
+function withCurriculumProfiles(units) {
+  return units.map((unit) => (
+    CURRICULUM_PROFILES[unit.id] ? { ...unit, curriculumProfiles: CURRICULUM_PROFILES[unit.id] } : unit
+  ));
+}
+
 export const BASIC_FIGURE_UNITS = [
   { id: 'terms-ox', label: '점·선·면 정오 판별', description: '점·선·면의 성질, 직선/반직선/선분의 표현, 입체도형의 면·꼭짓점·모서리 판별하기', en: ['Points, Lines & Planes (True/False)', 'Check statements about points, lines, planes, and solid shapes'], make: termsOx },
   { id: 'distance-midpoint', label: '두 점 사이의 거리와 중점', description: '중점과 삼등분점을 이용해 선분의 길이 구하기', en: ['Distance & Midpoints', 'Use midpoints and trisection points to find segment lengths'], make: distanceMidpoint },
@@ -271,8 +322,8 @@ export const BASIC_FIGURE_UNITS = [
   { id: 'vertical-angle', label: '맞꼭지각', description: '두 직선이 만날 때 생기는 맞꼭지각과 이웃한 각 구하기', en: ['Vertical Angles', 'Find vertical and adjacent angles formed by intersecting lines'], make: verticalAngle },
   { id: 'perpendicular', label: '수직과 수선', description: '수선의 발, 점과 직선 사이의 거리 등 수직 관련 개념 확인하기', en: ['Perpendicular Lines', 'Check concepts like the foot of a perpendicular and point-to-line distance'], make: perpendicular },
   { id: 'basic-figures-mixed', label: '기본 도형 기본 종합', description: '점·선·면부터 맞꼭지각, 수직과 수선까지 골고루 연습하기', en: ['Basic Figures Review', 'Mixed practice covering points, lines, angles, and perpendiculars'], make: (random) => pick(random, generators)(random) },
-  ...CORE_GEOMETRY_UNITS,
-  ...MIDDLE_GEOMETRY_BASIC_UNITS,
+  ...withCurriculumProfiles(CORE_GEOMETRY_UNITS),
+  ...withCurriculumProfiles(MIDDLE_GEOMETRY_BASIC_UNITS),
   ...ADVANCED_GEOMETRY_UNITS,
   ...ADVANCED_GEOMETRY_CHALLENGE_UNITS,
 ];
