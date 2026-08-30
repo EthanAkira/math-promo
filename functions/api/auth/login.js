@@ -14,7 +14,7 @@ export async function onRequestPost({ request, env }) {
   const password = String(body.password || '');
 
   const user = await env.DB
-    .prepare('SELECT id, email, password_hash, name, grade, school_type, country, plan FROM users WHERE email = ?')
+    .prepare('SELECT id, email, password_hash, name, grade, school_type, country, plan, birth_date FROM users WHERE email = ?')
     .bind(email)
     .first();
 

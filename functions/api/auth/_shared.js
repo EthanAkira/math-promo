@@ -122,7 +122,7 @@ export async function getSessionUser(db, request) {
     .prepare(
       `SELECT users.id AS id, users.email AS email, users.name AS name, users.grade AS grade,
               users.school_type AS school_type, users.country AS country, users.plan AS plan,
-              sessions.expires_at AS expires_at
+              users.birth_date AS birth_date, sessions.expires_at AS expires_at
        FROM sessions JOIN users ON users.id = sessions.user_id
        WHERE sessions.token_hash = ?`
     )
@@ -142,5 +142,6 @@ export function toPublicUser(row) {
     schoolType: row.school_type,
     country: row.country,
     plan: row.plan,
+    birthDate: row.birth_date,
   };
 }

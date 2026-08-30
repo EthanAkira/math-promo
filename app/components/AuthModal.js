@@ -12,6 +12,7 @@ export default function AuthModal({ mode, onClose }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [birthDate, setBirthDate] = useState('');
   const [grade, setGrade] = useState('');
   const [schoolType, setSchoolType] = useState('general');
   const [country, setCountry] = useState('');
@@ -25,7 +26,7 @@ export default function AuthModal({ mode, onClose }) {
     try {
       const result = activeMode === 'login'
         ? await login({ email, password })
-        : await signup({ email, password, name, grade, schoolType, country });
+        : await signup({ email, password, name, birthDate, grade, schoolType, country });
       if (result.ok) {
         onClose();
       } else {
@@ -50,10 +51,17 @@ export default function AuthModal({ mode, onClose }) {
 
         <form className="auth-modal-form" onSubmit={handleSubmit}>
           {activeMode === 'signup' ? (
-            <label>
-              <span>{tr(language, 'authName')}</span>
-              <input type="text" value={name} onChange={(event) => setName(event.target.value)} required maxLength={60} />
-            </label>
+            <>
+              <label>
+                <span>{tr(language, 'authName')}</span>
+                <input type="text" value={name} onChange={(event) => setName(event.target.value)} required maxLength={60} />
+              </label>
+              <label>
+                <span>{tr(language, 'authBirthDate')}</span>
+                <input type="date" value={birthDate} onChange={(event) => setBirthDate(event.target.value)} required max={new Date().toISOString().slice(0, 10)} />
+                <small>{tr(language, 'authBirthDateHint')}</small>
+              </label>
+            </>
           ) : null}
 
           <label>
