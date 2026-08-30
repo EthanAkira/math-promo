@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "verify:curriculum": "node scripts/verify-curriculum-phase1.mjs && node scripts/verify-curriculum-phase3.mjs",
+    "verify:curriculum": "node scripts/verify-curriculum-phase1.mjs && node scripts/verify-curriculum-phase3.mjs && node scripts/verify-curriculum-regression.mjs",
     "start": "next start",
-    "deploy:cloudflare": "wrangler pages deploy out --project-name math-promo --branch main"
+    "deploy:cloudflare": "npm run verify:curriculum && wrangler pages deploy out --project-name math-promo --branch main"
   },
   "dependencies": {
     "katex": "^0.18.4",
@@ -17,6 +17,7 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "esbuild": "^0.28.1",
     "wrangler": "^4.125.0"
   }
 }

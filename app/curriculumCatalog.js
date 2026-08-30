@@ -1240,11 +1240,26 @@ function unitIdsFor(topic) {
   return [topic.href.split('?')[0].replace(/^\//, '')];
 }
 
+const AUTOMATED_VALIDATION_ROUTE_PREFIXES = [
+  '/elementary/practice',
+  '/middle-school/prime-factorization',
+  '/middle-school/gcd-lcm',
+  '/middle-school/integers-rationals',
+  '/middle-school/algebra-basics',
+  '/middle-school/coordinate-plane',
+  '/middle-school/proportion',
+  '/middle-school/pre-algebra',
+  '/middle-school/basic-figures',
+];
+
+function hasAutomatedValidationRoute(topic) {
+  return Boolean(topic.href && AUTOMATED_VALIDATION_ROUTE_PREFIXES.some((prefix) => topic.href.startsWith(prefix)));
+}
+
 function evidenceFor(topic) {
   if (!topic.ready || topic.availability === 'planned') return 'catalogued';
-  // Phase 1 records implementation separately from validation. Existing public
-  // generators have not yet passed the Phase 4 evidence gates.
-  return topic.meta?.evidence === 'catalogued' ? 'catalogued' : 'implemented';
+  if (topic.meta?.evidence === 'catalogued') return 'catalogued';
+  return hasAutomatedValidationRoute(topic) ? 'validated' : 'implemented';
 }
 
 function normalizeNode(view, stage, topic, topicIndex) {
@@ -1254,6 +1269,8 @@ function normalizeNode(view, stage, topic, topicIndex) {
     || (system === 'KR' ? 'common' : 'course');
   const id = `${view.id}:${stage.id}:${topicIndex + 1}`;
   const labelIsEnglish = view.id === 'intl-course';
+  const evidenceStatus = evidenceFor(topic);
+  const visibility = ['validated', 'localized', 'published'].includes(evidenceStatus) ? 'public' : 'admin-preview';
   return Object.freeze({
     id,
     nodeType: 'topic',
@@ -1266,12 +1283,14 @@ function normalizeNode(view, stage, topic, topicIndex) {
     subject: subjectFor(stage, topic),
     parentId: `${view.id}:${stage.id}`,
     labels: labelIsEnglish ? { en: topic.label, ko: topic.label } : { ko: topic.label, en: topic.label },
-    route: topic.href === '#' ? null : topic.href,
+    route: topic.href === '#' || visibility !== 'public' ? null : topic.href,
     legacyRoutes: topic.href && topic.href !== '#' ? [topic.href] : [],
     profileId: queryValue(topic.href, 'profile'),
     unitIds: unitIdsFor(topic),
     availability: topic.availability || (topic.ready ? 'ready' : 'planned'),
-    evidenceStatus: evidenceFor(topic),
+    evidenceStatus,
+    validationStatus: evidenceStatus === 'validated' ? 'passed' : 'not-validated',
+    visibility,
     meta: topic.meta || {},
     legacyView: topic,
   });
@@ -1341,6 +1360,8 @@ function projectStages(viewId, seeds) {
       .filter((node) => node.parentId === `${viewId}:${stage.id}`)
       .map((node) => ({
         ...node.legacyView,
+        ready: node.visibility === 'public' && node.legacyView.ready,
+        href: node.visibility === 'public' ? node.legacyView.href : '#',
         catalogId: node.id,
         evidenceStatus: node.evidenceStatus,
         unitIds: node.unitIds,

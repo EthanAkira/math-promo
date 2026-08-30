@@ -35,6 +35,10 @@ for (const node of CURRICULUM_CATALOG.nodes) {
   if (!node.labels.ko || !node.labels.en) failures.push(`${node.id}: ko/en labels are required in Phase 1`);
   if (node.availability === 'planned' && node.route) failures.push(`${node.id}: planned topic must not have a public route`);
   if (node.evidenceStatus === 'catalogued' && node.availability === 'ready') failures.push(`${node.id}: catalogued-only topic cannot be ready`);
+  if (node.visibility === 'public' && !['validated', 'localized', 'published'].includes(node.evidenceStatus)) {
+    failures.push(`${node.id}: unvalidated node cannot be public`);
+  }
+  if (node.visibility !== 'public' && node.route) failures.push(`${node.id}: private node cannot expose a route`);
 }
 
 const duplicateIds = CURRICULUM_CATALOG.nodes
