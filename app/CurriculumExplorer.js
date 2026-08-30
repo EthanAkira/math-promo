@@ -10,6 +10,25 @@ import {
   DOMAIN_STAGES,
 } from './curriculumCatalog';
 
+function availabilityForTopics(topics) {
+  if (topics.every((topic) => !topic.ready || topic.availability === 'planned')) return 'planned';
+  if (topics.some((topic) => topic.availability === 'partial' || !topic.ready || topic.availability === 'planned')) return 'partial';
+  return 'ready';
+}
+
+function availabilitySummary(topics, copy) {
+  const status = availabilityForTopics(topics);
+  if (status === 'planned') return copy.badges.planned;
+  const availableCount = topics.filter((topic) => topic.ready && topic.availability !== 'planned').length;
+  if (status === 'partial') return `${availableCount}/${topics.length} · ${copy.badges.partial}`;
+  return `${availableCount} · ${copy.badges.ready}`;
+}
+
+function topicAvailabilityLabel(topic, copy) {
+  if (!topic.ready || topic.availability === 'planned') return copy.badges.planned;
+  return topic.availability === 'partial' ? copy.badges.partial : copy.badges.ready;
+}
+
 export default function CurriculumExplorer() {
   const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState(() => (language === 'ko' ? 'korea' : 'courses'));
@@ -43,6 +62,30 @@ export default function CurriculumExplorer() {
       { id: 'domains', label: copy.mainTabs[2], help: copy.mainTabHelp[2] },
     ],
     [copy]
+  );
+
+  const koreanSchoolGroups = useMemo(
+    () => [
+      {
+        id: 'elementary',
+        title: copy.schoolLevels.elementary,
+        subtitle: language === 'ko' ? '초1–초6' : 'Grades 1–6',
+        stages: KOREAN_GRADE_STAGES.filter((stage) => stage.level === 'elementary'),
+      },
+      {
+        id: 'middle',
+        title: copy.schoolLevels.middle,
+        subtitle: language === 'ko' ? '중1–중3' : 'Grades 7–9',
+        stages: KOREAN_GRADE_STAGES.filter((stage) => stage.level === 'middle'),
+      },
+      {
+        id: 'high',
+        title: copy.schoolLevels.high,
+        subtitle: language === 'ko' ? '고1–고3 · 기존 분류' : 'Grades 10–12 · Classic course names',
+        stages: KOREAN_GRADE_STAGES.filter((stage) => stage.level === 'high'),
+      },
+    ],
+    [copy, language]
   );
 
   return (
@@ -115,63 +158,81 @@ export default function CurriculumExplorer() {
                   <p>{copy.notices.gradeLegacyNotice}</p>
                 </div>
 
-                <div className="curriculum-stage-grid">
-                  {KOREAN_GRADE_STAGES.map((stage, index) => {
-                    const readyCount = stage.topics.filter((t) => t.ready).length;
-                    const isHigh = stage.level === 'high';
+                <div className="school-level-list">
+                  {koreanSchoolGroups.map((group) => {
+                    const groupTopics = group.stages.flatMap((stage) => stage.topics);
+                    const groupStatus = availabilityForTopics(groupTopics);
                     return (
-                      <details className={`curriculum-stage ${isHigh ? 'high-stage' : ''}`} key={stage.id} open={index >= 6 || index === 0}>
+                      <details className={`school-level-group ${group.id}-group`} key={group.id} open={group.id === 'high'}>
                         <summary>
                           <span>
-                            <strong>{stage.title}</strong>
-                            <small>{stage.subtitle}</small>
+                            <strong>{group.title}</strong>
+                            <small>{group.subtitle}</small>
                           </span>
-                          <span className={`curriculum-count ${readyCount > 0 ? 'ready' : ''}`}>
-                            {readyCount > 0 ? `${readyCount} ${copy.badges.ready}` : copy.badges.planned}
-                          </span>
+                          <span className={`curriculum-count ${groupStatus}`}>{availabilitySummary(groupTopics, copy)}</span>
                           <span className="sr-only">{copy.badges.open}</span>
                         </summary>
+                        <div className="school-level-content">
+                          <div className="curriculum-stage-grid">
+                            {group.stages.map((stage) => {
+                              const stageStatus = availabilityForTopics(stage.topics);
+                              const isHigh = stage.level === 'high';
+                              return (
+                                <details className={`curriculum-stage ${isHigh ? 'high-stage' : ''}`} key={stage.id}>
+                                  <summary>
+                                    <span>
+                                      <strong>{stage.title}</strong>
+                                      <small>{stage.subtitle}</small>
+                                    </span>
+                                    <span className={`curriculum-count ${stageStatus}`}>{availabilitySummary(stage.topics, copy)}</span>
+                                    <span className="sr-only">{copy.badges.open}</span>
+                                  </summary>
 
-                        {stage.notice && (
-                          <div className="stage-mini-notice">
-                            <span>ℹ️</span> {stage.notice}
-                          </div>
-                        )}
+                                  {stage.notice && (
+                                    <div className="stage-mini-notice">
+                                      <span>ℹ️</span> {stage.notice}
+                                    </div>
+                                  )}
 
-                        <div className="curriculum-topic-list">
-                          {stage.topics.map((topic) => (
-                            <div key={topic.label} className="curriculum-topic-item">
-                              {topic.ready ? (
-                                <a href={topic.href} className="topic-link">
-                                  <div className="topic-link-main">
-                                    <span className="topic-name">{topic.label}</span>
-                                    {topic.meta && (
-                                      <div className="topic-meta-badges">
-                                        {topic.meta.revised2022 && (
-                                          <span className="meta-badge revised">
-                                            {copy.labels.revised2022}: {topic.meta.revised2022}
-                                          </span>
-                                        )}
-                                        {topic.meta.officialType && (
-                                          <span className="meta-badge official">{topic.meta.officialType}</span>
+                                  <div className="curriculum-topic-list">
+                                    {stage.topics.map((topic) => (
+                                      <div key={topic.catalogId || topic.label} className="curriculum-topic-item">
+                                        {topic.ready ? (
+                                          <a href={topic.href} className="topic-link">
+                                            <div className="topic-link-main">
+                                              <span className="topic-name">{topic.label}</span>
+                                              {topic.meta && (
+                                                <div className="topic-meta-badges">
+                                                  {topic.meta.revised2022 && (
+                                                    <span className="meta-badge revised">
+                                                      {copy.labels.revised2022}: {topic.meta.revised2022}
+                                                    </span>
+                                                  )}
+                                                  {topic.meta.officialType && (
+                                                    <span className="meta-badge official">{topic.meta.officialType}</span>
+                                                  )}
+                                                </div>
+                                              )}
+                                            </div>
+                                            <span className={`action-tag ${topic.availability || 'ready'}`}>
+                                              {topicAvailabilityLabel(topic, copy)} →
+                                            </span>
+                                          </a>
+                                        ) : (
+                                          <div className="topic-disabled">
+                                            <div className="topic-link-main">
+                                              <span className="topic-name">{topic.label}</span>
+                                            </div>
+                                            <small className="planned-tag">{copy.badges.planned}</small>
+                                          </div>
                                         )}
                                       </div>
-                                    )}
+                                    ))}
                                   </div>
-                                  <span className="action-tag">
-                                    {topic.availability === 'partial' ? copy.badges.partial : copy.badges.ready} →
-                                  </span>
-                                </a>
-                              ) : (
-                                <div className="topic-disabled">
-                                  <div className="topic-link-main">
-                                    <span className="topic-name">{topic.label}</span>
-                                  </div>
-                                  <small className="planned-tag">{copy.badges.planned}</small>
-                                </div>
-                              )}
-                            </div>
-                          ))}
+                                </details>
+                              );
+                            })}
+                          </div>
                         </div>
                       </details>
                     );
@@ -190,7 +251,7 @@ export default function CurriculumExplorer() {
 
                 <div className="curriculum-stage-grid">
                   {KOREAN_2022_SUBJECT_STAGES.map((stage, index) => {
-                    const readyCount = stage.topics.filter((t) => t.ready).length;
+                    const stageStatus = availabilityForTopics(stage.topics);
                     const isProfessional = stage.officialType === 'professional';
                     return (
                       <details className={`curriculum-stage subject-stage ${isProfessional ? 'professional-stage' : ''}`} key={stage.id} open={index < 3}>
@@ -199,9 +260,7 @@ export default function CurriculumExplorer() {
                             <strong>{stage.title}</strong>
                             <small>{stage.subtitle}</small>
                           </span>
-                          <span className={`curriculum-count ${readyCount > 0 ? 'ready' : ''}`}>
-                            {readyCount > 0 ? `${readyCount} ${copy.badges.ready}` : copy.badges.planned}
-                          </span>
+                          <span className={`curriculum-count ${stageStatus}`}>{availabilitySummary(stage.topics, copy)}</span>
                           <span className="sr-only">{copy.badges.open}</span>
                         </summary>
 
@@ -227,8 +286,8 @@ export default function CurriculumExplorer() {
                                       </div>
                                     )}
                                   </div>
-                                  <span className="action-tag">
-                                    {topic.availability === 'partial' ? copy.badges.partial : copy.badges.ready} →
+                                  <span className={`action-tag ${topic.availability || 'ready'}`}>
+                                    {topicAvailabilityLabel(topic, copy)} →
                                   </span>
                                 </a>
                               ) : (
@@ -268,7 +327,7 @@ export default function CurriculumExplorer() {
 
             <div className="curriculum-stage-grid">
               {INTERNATIONAL_COURSE_STAGES.map((stage, index) => {
-                const readyCount = stage.topics.filter((t) => t.ready).length;
+                const stageStatus = availabilityForTopics(stage.topics);
                 return (
                   <details className="curriculum-stage" key={stage.id} open={index < 3}>
                     <summary>
@@ -276,9 +335,7 @@ export default function CurriculumExplorer() {
                         <strong>{stage.title}</strong>
                         <small>{stage.subtitle}</small>
                       </span>
-                      <span className={`curriculum-count ${readyCount > 0 ? 'ready' : ''}`}>
-                        {readyCount > 0 ? `${readyCount} ${copy.badges.ready}` : copy.badges.planned}
-                      </span>
+                      <span className={`curriculum-count ${stageStatus}`}>{availabilitySummary(stage.topics, copy)}</span>
                       <span className="sr-only">{copy.badges.open}</span>
                     </summary>
 
@@ -288,7 +345,7 @@ export default function CurriculumExplorer() {
                           {topic.ready ? (
                             <a href={topic.href} className="topic-link">
                               <span className="topic-name">{topic.label}</span>
-                              <span className="action-tag">{copy.badges.ready} →</span>
+                              <span className={`action-tag ${topic.availability || 'ready'}`}>{topicAvailabilityLabel(topic, copy)} →</span>
                             </a>
                           ) : (
                             <div className="topic-disabled">
@@ -316,7 +373,7 @@ export default function CurriculumExplorer() {
 
             <div className="curriculum-stage-grid">
               {DOMAIN_STAGES.map((stage, index) => {
-                const readyCount = stage.topics.filter((t) => t.ready).length;
+                const stageStatus = availabilityForTopics(stage.topics);
                 return (
                   <details className="curriculum-stage" key={stage.id} open={index < 2}>
                     <summary>
@@ -324,9 +381,7 @@ export default function CurriculumExplorer() {
                         <strong>{stage.title}</strong>
                         <small>{stage.subtitle}</small>
                       </span>
-                      <span className={`curriculum-count ${readyCount > 0 ? 'ready' : ''}`}>
-                        {readyCount > 0 ? `${readyCount} ${copy.badges.ready}` : copy.badges.planned}
-                      </span>
+                      <span className={`curriculum-count ${stageStatus}`}>{availabilitySummary(stage.topics, copy)}</span>
                       <span className="sr-only">{copy.badges.open}</span>
                     </summary>
 
@@ -336,7 +391,7 @@ export default function CurriculumExplorer() {
                           {topic.ready ? (
                             <a href={topic.href} className="topic-link">
                               <span className="topic-name">{topic.label}</span>
-                              <span className="action-tag">{copy.badges.ready} →</span>
+                              <span className={`action-tag ${topic.availability || 'ready'}`}>{topicAvailabilityLabel(topic, copy)} →</span>
                             </a>
                           ) : (
                             <div className="topic-disabled">
@@ -432,6 +487,72 @@ export default function CurriculumExplorer() {
           margin: 0;
           font-weight: 500;
         }
+        .school-level-list {
+          display: grid;
+          gap: 12px;
+        }
+        .school-level-group {
+          overflow: hidden;
+          border: 1px solid var(--paper-line);
+          border-radius: 13px;
+          background: rgba(255, 254, 251, 0.72);
+        }
+        .school-level-group > summary {
+          position: relative;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          align-items: center;
+          gap: 12px;
+          min-height: 68px;
+          padding: 13px 46px 13px 16px;
+          cursor: pointer;
+          list-style: none;
+        }
+        .school-level-group > summary::-webkit-details-marker {
+          display: none;
+        }
+        .school-level-group > summary::after {
+          content: '+';
+          position: absolute;
+          right: 16px;
+          top: 50%;
+          margin-top: -12px;
+          color: var(--chalk-green);
+          font-size: 22px;
+          line-height: 24px;
+        }
+        .school-level-group[open] > summary::after {
+          content: '−';
+        }
+        .school-level-group > summary strong,
+        .school-level-group > summary small {
+          display: block;
+        }
+        .school-level-group > summary strong {
+          font-size: 17px;
+        }
+        .school-level-group > summary small {
+          margin-top: 2px;
+          color: var(--ink-soft);
+          font-size: 11px;
+        }
+        .school-level-content {
+          padding: 12px;
+          border-top: 1px solid var(--paper-line);
+          background: var(--paper);
+        }
+        .high-group {
+          border-color: #a7c7bb;
+          box-shadow: 0 5px 16px rgba(47, 110, 92, 0.07);
+        }
+        .curriculum-count.partial {
+          color: #9a5b13;
+          background: #fff4d6;
+        }
+        .curriculum-count.planned {
+          color: #64748b;
+          background: #e2e8f0;
+        }
         .stage-mini-notice {
           padding: 6px 12px;
           font-size: 11px;
@@ -485,6 +606,9 @@ export default function CurriculumExplorer() {
           color: var(--chalk-green);
           white-space: nowrap;
           margin-left: 6px;
+        }
+        .action-tag.partial {
+          color: #9a5b13;
         }
         .topic-link:hover .action-tag {
           color: #fff;

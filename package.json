@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "verify:curriculum": "node scripts/verify-curriculum-phase1.mjs && node scripts/verify-curriculum-phase3.mjs",
     "start": "next start",
     "deploy:cloudflare": "wrangler pages deploy out --project-name math-promo --branch main"
   },

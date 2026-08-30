@@ -27,7 +27,7 @@ export const CURRICULUM_COPY = {
       professional: '전문·심화 과목',
     },
     badges: {
-      ready: '바로 학습',
+      ready: '연습 가능',
       partial: '일부 가능',
       planned: '준비 중',
       open: '단원 펼쳐보기',
@@ -654,7 +654,7 @@ export const CURRICULUM_COPY = {
 /**
  * 1. 한국 교육과정 - 학년별 인덱스 (초1 ~ 고3)
  */
-export const KOREAN_GRADE_STAGES = [
+const KOREAN_GRADE_STAGE_SEEDS = [
   // 초등학교
   ...Array.from({ length: 6 }, (_, index) => {
     const grade = index + 1;
@@ -835,7 +835,7 @@ export const KOREAN_GRADE_STAGES = [
 /**
  * 2. 한국 고등학교 - 2022 개정 공식 과목 구분별 인덱스
  */
-export const KOREAN_2022_SUBJECT_STAGES = [
+const KOREAN_2022_SUBJECT_STAGE_SEEDS = [
   // 공통 과목
   {
     id: 'kr-2022-common',
@@ -1005,7 +1005,7 @@ export const KOREAN_2022_SUBJECT_STAGES = [
 /**
  * 3. 국제학교 과정 인덱스 (International Courses)
  */
-export const INTERNATIONAL_COURSE_STAGES = [
+const INTERNATIONAL_COURSE_STAGE_SEEDS = [
   {
     id: 'intl-arithmetic',
     title: 'Arithmetic & Foundations',
@@ -1095,7 +1095,7 @@ export const INTERNATIONAL_COURSE_STAGES = [
 /**
  * 4. 수학 영역별 인덱스 (Math Domains)
  */
-export const DOMAIN_STAGES = [
+const DOMAIN_STAGE_SEEDS = [
   {
     id: 'domain-numbers',
     title: '수와 연산',
@@ -1165,3 +1165,191 @@ export const DOMAIN_STAGES = [
     ],
   },
 ];
+
+/**
+ * Phase 1 canonical curriculum registry.
+ *
+ * The seed trees above preserve the existing navigation copy and ordering. Every
+ * visible topic is normalized here before it is exposed to the UI, so future
+ * category changes can target this registry without touching a generator.
+ */
+const VIEW_DEFINITIONS = [
+  { id: 'kr-grade', system: 'KR', stages: KOREAN_GRADE_STAGE_SEEDS },
+  { id: 'kr-subject-2022', system: 'KR', schoolLevel: 'high', stages: KOREAN_2022_SUBJECT_STAGE_SEEDS },
+  { id: 'intl-course', system: 'INTL', stages: INTERNATIONAL_COURSE_STAGE_SEEDS },
+  { id: 'domain', system: null, stages: DOMAIN_STAGE_SEEDS },
+];
+
+const OFFICIAL_TYPE_CODES = {
+  '공통 과목': 'common',
+  '일반 선택': 'general-elective',
+  '진로 선택': 'career-elective',
+  '융합 선택': 'convergence-elective',
+  '전문·심화 과목': 'professional',
+};
+
+function queryValue(href, key) {
+  if (!href || href === '#') return null;
+  try {
+    return new URL(href, 'https://curriculum.local').searchParams.get(key);
+  } catch {
+    return null;
+  }
+}
+
+function representativeGrades(stage, topic) {
+  const gradeText = topic.meta?.grade || '';
+  const explicit = gradeText.match(/\d+/g)?.map((value) => {
+    const grade = Number(value);
+    if (gradeText.includes('고')) return grade + 9;
+    if (gradeText.includes('중')) return grade + 6;
+    return grade;
+  });
+  if (explicit?.length) return explicit;
+  const elementary = stage.id.match(/^kr-elem-(\d+)$/);
+  if (elementary) return [Number(elementary[1])];
+  const middle = stage.id.match(/^kr-middle-(\d+)-grade$/);
+  if (middle) return [Number(middle[1]) + 6];
+  const high = stage.id.match(/^kr-high-(\d+)-grade$/);
+  if (high) return [Number(high[1]) + 9];
+  return [];
+}
+
+function schoolLevelFor(view, stage) {
+  if (view.schoolLevel) return view.schoolLevel;
+  if (stage.level) return stage.level;
+  if (view.id === 'intl-course') return stage.id === 'intl-arithmetic' ? 'elementary' : 'secondary';
+  return 'cross-level';
+}
+
+function systemFor(view, href) {
+  if (view.system) return view.system;
+  return queryValue(href, 'profile')?.startsWith('kr-') ? 'KR' : 'INTL';
+}
+
+function subjectFor(stage, topic) {
+  return queryValue(topic.href, 'profile')
+    || topic.meta?.revised2022
+    || stage.id.replace(/^(kr-2022|kr-|intl-|domain-)/, '');
+}
+
+function unitIdsFor(topic) {
+  const explicitUnit = queryValue(topic.href, 'unit');
+  if (explicitUnit) return [explicitUnit];
+  if (!topic.href || topic.href === '#') return [];
+  return [topic.href.split('?')[0].replace(/^\//, '')];
+}
+
+function evidenceFor(topic) {
+  if (!topic.ready || topic.availability === 'planned') return 'catalogued';
+  // Phase 1 records implementation separately from validation. Existing public
+  // generators have not yet passed the Phase 4 evidence gates.
+  return topic.meta?.evidence === 'catalogued' ? 'catalogued' : 'implemented';
+}
+
+function normalizeNode(view, stage, topic, topicIndex) {
+  const system = systemFor(view, topic.href);
+  const officialType = stage.officialType
+    || OFFICIAL_TYPE_CODES[topic.meta?.officialType]
+    || (system === 'KR' ? 'common' : 'course');
+  const id = `${view.id}:${stage.id}:${topicIndex + 1}`;
+  const labelIsEnglish = view.id === 'intl-course';
+  return Object.freeze({
+    id,
+    nodeType: 'topic',
+    viewIds: [view.id],
+    system,
+    curriculumVersion: system === 'KR' ? '2022' : 'international',
+    schoolLevel: schoolLevelFor(view, stage),
+    representativeGrades: representativeGrades(stage, topic),
+    officialType,
+    subject: subjectFor(stage, topic),
+    parentId: `${view.id}:${stage.id}`,
+    labels: labelIsEnglish ? { en: topic.label, ko: topic.label } : { ko: topic.label, en: topic.label },
+    route: topic.href === '#' ? null : topic.href,
+    legacyRoutes: topic.href && topic.href !== '#' ? [topic.href] : [],
+    profileId: queryValue(topic.href, 'profile'),
+    unitIds: unitIdsFor(topic),
+    availability: topic.availability || (topic.ready ? 'ready' : 'planned'),
+    evidenceStatus: evidenceFor(topic),
+    meta: topic.meta || {},
+    legacyView: topic,
+  });
+}
+
+const INDEX_ENTRIES = VIEW_DEFINITIONS.flatMap((view) => (
+  view.stages.flatMap((stage) => stage.topics.map((topic, topicIndex) => normalizeNode(view, stage, topic, topicIndex)))
+));
+
+function canonicalKey(node) {
+  if (node.route) return `${node.system}:${node.route}`;
+  return `${node.system}:${node.officialType}:${node.subject}:${node.labels.ko}`;
+}
+
+const groupedEntries = new Map();
+for (const entry of INDEX_ENTRIES) {
+  const key = canonicalKey(entry);
+  const entries = groupedEntries.get(key) || [];
+  entries.push(entry);
+  groupedEntries.set(key, entries);
+}
+
+const CATALOG_NODES = [...groupedEntries.entries()].map(([key, entries], index) => {
+  const primary = entries[0];
+  return Object.freeze({
+    ...primary,
+    id: `curriculum:${index + 1}`,
+    canonicalKey: key,
+    viewIds: [...new Set(entries.flatMap((entry) => entry.viewIds))],
+    parentIds: [...new Set(entries.map((entry) => entry.parentId))],
+    representativeGrades: [...new Set(entries.flatMap((entry) => entry.representativeGrades))],
+    unitIds: [...new Set(entries.flatMap((entry) => entry.unitIds))],
+    legacyRoutes: [...new Set(entries.flatMap((entry) => entry.legacyRoutes))],
+    aliases: Object.freeze(Object.fromEntries(entries.map((entry) => [entry.viewIds[0], entry.labels]))),
+    indexEntryIds: entries.map((entry) => entry.id),
+    legacyView: undefined,
+  });
+});
+
+export const LEGACY_PROFILE_COMPATIBILITY = Object.freeze({
+  'kr-high-1': { subjects: ['common-math-1', 'common-math-2'], legacyRoute: '/middle-school/pre-algebra?profile=kr-high-1' },
+  'kr-high-2-algebra': { subjects: ['algebra'], legacyRoute: '/middle-school/pre-algebra?profile=kr-high-2-algebra' },
+  'kr-high-2-calculus-1': { subjects: ['calculus-1'], legacyRoute: '/middle-school/pre-algebra?profile=kr-high-2-calculus-1' },
+  'kr-high-2-probability-statistics': { subjects: ['probability-statistics'], legacyRoute: '/middle-school/pre-algebra?profile=kr-high-2-probability-statistics' },
+  'kr-high-3-calculus-2': { subjects: ['calculus-2'], legacyRoute: '/middle-school/pre-algebra?profile=kr-high-3-calculus-2' },
+  'kr-high-3-geometry': { subjects: ['geometry'], legacyRoute: '/middle-school/pre-algebra?profile=kr-high-3-geometry' },
+  'pre-algebra': { subjects: ['pre-algebra'], legacyRoute: '/middle-school/pre-algebra?profile=pre-algebra' },
+  'algebra-1': { subjects: ['algebra-1'], legacyRoute: '/middle-school/pre-algebra?profile=algebra-1' },
+  'algebra-2': { subjects: ['algebra-2'], legacyRoute: '/middle-school/pre-algebra?profile=algebra-2' },
+  precalculus: { subjects: ['precalculus'], legacyRoute: '/middle-school/pre-algebra?profile=precalculus' },
+});
+
+export const CURRICULUM_CATALOG = Object.freeze({
+  schemaVersion: 1,
+  nodes: CATALOG_NODES,
+  nodesById: Object.freeze(Object.fromEntries(CATALOG_NODES.map((node) => [node.id, node]))),
+  indexEntries: INDEX_ENTRIES,
+  legacyProfileCompatibility: LEGACY_PROFILE_COMPATIBILITY,
+  engineAuditModule: './curriculumEngineAudit.js',
+});
+
+function projectStages(viewId, seeds) {
+  const nodes = INDEX_ENTRIES.filter((node) => node.viewIds.includes(viewId));
+  return seeds.map((stage) => ({
+    ...stage,
+    topics: nodes
+      .filter((node) => node.parentId === `${viewId}:${stage.id}`)
+      .map((node) => ({
+        ...node.legacyView,
+        catalogId: node.id,
+        evidenceStatus: node.evidenceStatus,
+        unitIds: node.unitIds,
+      })),
+  }));
+}
+
+// Backward-compatible projections consumed by CurriculumExplorer.
+export const KOREAN_GRADE_STAGES = projectStages('kr-grade', KOREAN_GRADE_STAGE_SEEDS);
+export const KOREAN_2022_SUBJECT_STAGES = projectStages('kr-subject-2022', KOREAN_2022_SUBJECT_STAGE_SEEDS);
+export const INTERNATIONAL_COURSE_STAGES = projectStages('intl-course', INTERNATIONAL_COURSE_STAGE_SEEDS);
+export const DOMAIN_STAGES = projectStages('domain', DOMAIN_STAGE_SEEDS);
