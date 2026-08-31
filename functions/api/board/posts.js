@@ -1,7 +1,9 @@
 import { readBoard, writeBoard, jsonResponse, postImageKey, genId, CORS_HEADERS } from './_shared.js';
 
 const MAX_BYTES = 8 * 1024 * 1024;
-const VALID_CATEGORIES = ['notice', 'contact'];
+const MAX_ATTACHMENT_BYTES = 20 * 1024 * 1024;
+const VALID_CATEGORIES = ['notice', 'contact', 'coding'];
+const ADMIN_ONLY_CATEGORIES = ['notice', 'coding'];
 
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
@@ -37,7 +39,7 @@ export async function onRequestPost({ request, env }) {
     return jsonResponse({ error: 'Invalid category.' }, { status: 400 });
   }
 
-  if (category === 'notice') {
+  if (ADMIN_ONLY_CATEGORIES.includes(category)) {
     const password = formData.get('password');
     if (!env.AMC_UPLOAD_PASSWORD || password !== env.AMC_UPLOAD_PASSWORD) {
       return jsonResponse({ error: 'Incorrect password.' }, { status: 401 });
@@ -54,15 +56,17 @@ export async function onRequestPost({ request, env }) {
   let image = null;
   const file = formData.get('image');
   if (file && typeof file.arrayBuffer === 'function' && file.size > 0) {
-    if (file.size > MAX_BYTES) {
-      return jsonResponse({ error: 'Image is too large.' }, { status: 400 });
+    const maxBytes = category === 'coding' ? MAX_ATTACHMENT_BYTES : MAX_BYTES;
+    if (file.size > maxBytes) {
+      return jsonResponse({ error: 'Attachment is too large.' }, { status: 400 });
     }
     const key = postImageKey(id);
+    const contentType = file.type || 'application/octet-stream';
     const bytes = await file.arrayBuffer();
     await env.AMC_FILES.put(key, bytes, {
-      metadata: { contentType: file.type || 'application/octet-stream', filename: file.name || 'image' },
+      metadata: { contentType, filename: file.name || 'image' },
     });
-    image = { key, filename: file.name || 'image' };
+    image = { key, filename: file.name || 'image', contentType };
   }
 
   const post = {

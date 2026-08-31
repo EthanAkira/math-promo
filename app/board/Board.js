@@ -26,13 +26,23 @@ function titleOf(message, fallback) {
   return firstLine.length > 60 ? `${firstLine.slice(0, 60)}…` : firstLine;
 }
 
+const IMAGE_EXTENSION_RE = /\.(png|jpe?g|gif|webp|svg|bmp)$/i;
+
+// Older posts (and any upload where the browser didn't report a MIME type) have no
+// `contentType`, so fall back to sniffing the filename extension.
+function isImageAttachment(attachment) {
+  if (!attachment) return false;
+  if (attachment.contentType) return attachment.contentType.startsWith('image/');
+  return IMAGE_EXTENSION_RE.test(attachment.filename || '');
+}
+
 const fieldStyle = { padding: '10px 12px', border: '1px solid var(--paper-line)', borderRadius: 8, font: 'inherit' };
 const labelStyle = { fontSize: 13, fontWeight: 700, color: 'var(--chalk-green)' };
 const tableHeadStyle = { padding: '10px 8px', borderBottom: '2px solid var(--ink)', fontSize: 12, fontWeight: 700, color: 'var(--ink-soft)', textAlign: 'left', whiteSpace: 'nowrap' };
 const tableCellStyle = { padding: '10px 8px', borderBottom: '1px solid var(--paper-line)', fontSize: 13, verticalAlign: 'top' };
 const tagStyle = { display: 'inline-block', marginLeft: 6, fontSize: 11, fontWeight: 700, color: 'var(--red-pen)', border: '1px solid var(--red-pen)', borderRadius: 4, padding: '1px 5px', verticalAlign: 'middle' };
 
-export default function Board({ category, adminOnlyPost = false, allowReply = true, staticPosts = [] }) {
+export default function Board({ category, adminOnlyPost = false, allowReply = true, staticPosts = [], attachmentAccept = 'image/*', attachmentLabelKey = 'formImage', composerTitleKey }) {
   const { language } = useLanguage();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -257,7 +267,7 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
   if (view === 'compose') {
     return <div>
       <form onSubmit={handleSubmit} className="no-print" style={{ display: 'grid', gap: 14, padding: 22, background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}>
-        <h2 style={{ margin: 0, fontSize: 16 }}>{adminOnlyPost ? tr(language, 'boardNoticeComposerTitle') : tr(language, 'boardQuestionComposerTitle')}</h2>
+        <h2 style={{ margin: 0, fontSize: 16 }}>{tr(language, composerTitleKey || (adminOnlyPost ? 'boardNoticeComposerTitle' : 'boardQuestionComposerTitle'))}</h2>
         {adminOnlyPost ? <label style={{ display: 'grid', gap: 6 }}>
           <span style={labelStyle}>{tr(language, 'boardAdminPasswordPlaceholder')}</span>
           <input type="password" value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} style={fieldStyle} />
@@ -270,8 +280,8 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
           <textarea value={message} onChange={(e) => { setMessage(e.target.value); setComposeError(''); }} placeholder={tr(language, 'formMessagePlaceholder')} rows={7} style={{ ...fieldStyle, border: `1px solid ${composeError ? 'var(--red-pen)' : 'var(--paper-line)'}`, resize: 'vertical' }} />
         </label>
         <label style={{ display: 'grid', gap: 6 }}>
-          <span style={labelStyle}>{tr(language, 'formImage')}</span>
-          <input ref={fileInputRef} type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files?.[0] || null)} />
+          <span style={labelStyle}>{tr(language, attachmentLabelKey)}</span>
+          <input ref={fileInputRef} type="file" accept={attachmentAccept} onChange={(e) => setImageFile(e.target.files?.[0] || null)} />
         </label>
         {composeError ? <span style={{ color: 'var(--red-pen)', fontSize: 12, fontWeight: 700 }}>{composeError}</span> : null}
         <div style={{ display: 'flex', gap: 10 }}>
@@ -296,9 +306,17 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
           {selectedPost.name || tr(language, 'boardAnonymous')} · {formatDate(selectedPost.createdAt)} · {tr(language, 'boardViewsLabel')} {views}
         </p>
         <p style={{ margin: '0 0 14px', color: 'var(--ink)', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>{selectedPost.message}</p>
-        {selectedPost.image ? <a href={`/api/board/file?key=${encodeURIComponent(selectedPost.image.key)}`} target="_blank" rel="noreferrer" style={{ display: 'inline-block' }}>
-          <img src={`/api/board/file?key=${encodeURIComponent(selectedPost.image.key)}`} alt={tr(language, 'boardViewImage')} style={{ maxWidth: '100%', maxHeight: 400, borderRadius: 8, border: '1px solid var(--paper-line)' }} />
-        </a> : null}
+        {selectedPost.image ? (
+          isImageAttachment(selectedPost.image) ? (
+            <a href={`/api/board/file?key=${encodeURIComponent(selectedPost.image.key)}`} target="_blank" rel="noreferrer" style={{ display: 'inline-block' }}>
+              <img src={`/api/board/file?key=${encodeURIComponent(selectedPost.image.key)}`} alt={tr(language, 'boardViewImage')} style={{ maxWidth: '100%', maxHeight: 400, borderRadius: 8, border: '1px solid var(--paper-line)' }} />
+            </a>
+          ) : (
+            <a href={`/api/board/file?key=${encodeURIComponent(selectedPost.image.key)}`} target="_blank" rel="noreferrer" className="button button-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <span>📎</span> {selectedPost.image.filename} · {tr(language, 'boardDownloadFile')}
+            </a>
+          )
+        ) : null}
 
         {allowReply ? <div style={{ marginTop: 18, paddingTop: 16, borderTop: '1px dashed var(--paper-line)' }}>
           {selectedPost.reply ? <div>
@@ -351,7 +369,7 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
               <td style={tableCellStyle}>
                 <span style={{ color: 'var(--ink)', fontWeight: 600 }}>{titleOf(post.message, tr(language, 'boardNoTitle'))}</span>
                 {post.reply ? <span style={{ color: 'var(--red-pen)', fontWeight: 700, marginLeft: 4 }}>(1)</span> : null}
-                {post.image ? <span style={tagStyle}>{tr(language, 'boardHasImage')}</span> : null}
+                {post.image ? <span style={tagStyle}>{tr(language, isImageAttachment(post.image) ? 'boardHasImage' : 'boardHasAttachment')}</span> : null}
                 {views >= POPULAR_VIEWS ? <span style={tagStyle}>{tr(language, 'boardPopular')}</span> : null}
               </td>
               <td style={tableCellStyle}>{formatDate(post.createdAt)}</td>

@@ -27,6 +27,7 @@ export function SiteHeader() {
         <nav className="site-nav-academic" aria-label="주요 메뉴">
           <a href="/#archive" className="nav-item">AMC</a>
           <a href="/csat.html" className="nav-item">{tr(language, 'navCsat')}</a>
+          <a href="/coding" className="nav-item">{tr(language, 'navCoding')}</a>
           <a href="/notices" className="nav-item">{tr(language, 'navNotices')}</a>
           <a href="/contact" className="nav-item">{tr(language, 'navContact')}</a>
           <a href="/games.html" className="nav-item">{tr(language, 'restCorner')}</a>
@@ -142,6 +143,7 @@ export function SiteFooter() {
         <nav className="footer-nav" aria-label="푸터 메뉴">
           <a href="/amc.html">AMC 8/10/12</a>
           <a href="/csat.html">{tr(language, 'navCsat')}</a>
+          <a href="/coding">{tr(language, 'navCoding')}</a>
           <a href="/notices">{tr(language, 'navNotices')}</a>
           <a href="/contact">{tr(language, 'navContact')}</a>
           <a href="/games.html">{tr(language, 'restCorner')}</a>

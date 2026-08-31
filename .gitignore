@@ -4,5 +4,7 @@ out/
 .wrangler/
 .env
 .env.*
+.dev.vars
+.dev.vars.*
 npm-debug.log*
 math-promo/
