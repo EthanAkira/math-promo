@@ -6,7 +6,7 @@ export const GEOMETRY_PROFILES = [
   },
   {
     id: 'international', locale: 'en', label: 'International School', shortLabel: 'International',
-    description: 'IB·Cambridge 계열을 위한 영어 수학 용어와 추론형 문항',
+    description: '국제학교(AP·IB·Cambridge 등 공통) 영어 수학 용어와 추론형 문항',
     difficulty: 3, choiceCount: 4, angleSymbol: '°', vocabulary: { alternate: 'alternate angles', corresponding: 'corresponding angles', sameSide: 'co-interior angles' },
   },
   {
@@ -30,8 +30,8 @@ export const GEOMETRY_PROFILES = [
     difficulty: 3, choiceCount: 4, angleSymbol: '°', vocabulary: { alternate: '內錯角', corresponding: '同位角', sameSide: '同旁內角' },
   },
   {
-    id: 'g12', locale: 'en', label: 'G12 International', shortLabel: 'G12',
-    description: 'Grade 12 · trigonometry, conics, vectors, 3D geometry, calculus and statistics',
+    id: 'g12', locale: 'en', label: 'AP Precalculus & Calculus', shortLabel: 'AP',
+    description: 'AP-style Grade 12 · trigonometry, conics, vectors, 3D geometry, calculus and statistics',
     difficulty: 5, choiceCount: 4, angleSymbol: '°', vocabulary: { alternate: 'alternate interior angles', corresponding: 'corresponding angles', sameSide: 'same-side interior angles' },
   },
   {
