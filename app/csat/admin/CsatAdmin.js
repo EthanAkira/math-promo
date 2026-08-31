@@ -2,20 +2,36 @@
 
 import { useEffect, useState } from 'react';
 
-const FILE_TYPE_LABELS = { problems: '문제지', solutions: '해설지', answers: '정답지' };
-const EXAM_TYPE_LABELS = { june: '6월 모의고사', sept: '9월 모의고사', nov: '대학수학능력시험(11월)' };
-const EXAM_TYPES = ['june', 'sept', 'nov'];
+const FILE_TYPE_LABELS = {
+  problems: '문제지', solutions: '해설지', answers: '정답지',
+  theory: '이론', variant_problem: '변형문제', related_problem: '관련문제', forecast: '예상문제', stats: '통계',
+};
+const ACCESS_TIER_LABELS = { free: '무료', premium: '프리미엄' };
+const EXAM_TYPE_LABELS = { june: '6월 모의고사', sept: '9월 모의고사', nov: '대학수학능력시험(11월)', 'city-mock': '시교육청 학력평가' };
+const EXAM_TYPES = ['june', 'sept', 'nov', 'city-mock'];
+const GRADE_LABELS = { g1: '고1', g2: '고2', g3: '고3' };
 // Track naming has changed across curricula (가형/나형, 확통/미적분/기하, 공통 …),
 // so the variant is free text with a few suggestions rather than a fixed dropdown.
 const VARIANT_SUGGESTIONS = ['공통', '확통', '미적분', '기하', '가형', '나형', '홀수형', '짝수형'];
 
+function fileTypeLabel(type) {
+  if (type.startsWith('solutions__')) return `해설지 (${type.slice('solutions__'.length)})`;
+  return FILE_TYPE_LABELS[type] || type;
+}
+
 export default function CsatAdmin() {
   const [password, setPassword] = useState('');
   const [examType, setExamType] = useState('june');
+  const [grade, setGrade] = useState('g3');
+  const [issuer, setIssuer] = useState('');
   const [year, setYear] = useState(String(new Date().getFullYear()));
   const [variantId, setVariantId] = useState('공통');
   const [variantLabel, setVariantLabel] = useState('공통');
   const [fileType, setFileType] = useState('problems');
+  const [solutionMethod, setSolutionMethod] = useState('');
+  const [unitTag, setUnitTag] = useState('');
+  const [accessTier, setAccessTier] = useState('free');
+  const [sourceItemId, setSourceItemId] = useState('');
   const [file, setFile] = useState(null);
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
@@ -44,6 +60,12 @@ export default function CsatAdmin() {
     form.append('variantId', variantId.trim());
     form.append('variantLabel', (variantLabel || variantId).trim());
     form.append('fileType', fileType);
+    if (grade) form.append('grade', grade);
+    if (examType === 'city-mock' && issuer.trim()) form.append('issuer', issuer.trim());
+    if (fileType === 'solutions' && solutionMethod.trim()) form.append('solutionMethod', solutionMethod.trim());
+    if (unitTag.trim()) form.append('unitTag', unitTag.trim());
+    form.append('accessTier', accessTier);
+    if (sourceItemId.trim()) form.append('sourceItemId', sourceItemId.trim());
     form.append('file', file);
 
     try {
@@ -52,6 +74,9 @@ export default function CsatAdmin() {
       if (!res.ok) throw new Error(data.error || '업로드에 실패했습니다.');
       setStatus('업로드 완료했습니다.');
       setFile(null);
+      setSolutionMethod('');
+      setUnitTag('');
+      setSourceItemId('');
       loadManifest();
     } catch (error) {
       setStatus(error.message);
@@ -104,7 +129,7 @@ export default function CsatAdmin() {
 
   async function handleDelete(entryExamType, entryYear, entryVariantId, entryFileType) {
     if (!password) { setStatus('삭제하려면 먼저 비밀번호를 입력해주세요.'); return; }
-    if (!window.confirm(`${entryYear} ${EXAM_TYPE_LABELS[entryExamType]} ${entryVariantId} ${FILE_TYPE_LABELS[entryFileType]}을(를) 삭제할까요?`)) return;
+    if (!window.confirm(`${entryYear} ${EXAM_TYPE_LABELS[entryExamType]} ${entryVariantId} ${fileTypeLabel(entryFileType)}을(를) 삭제할까요?`)) return;
 
     setBusy(true);
     try {
@@ -147,6 +172,20 @@ export default function CsatAdmin() {
         </label>
 
         <label style={{ display: 'grid', gap: 6 }}>
+          <span style={labelStyle}>학년</span>
+          <select value={grade} onChange={(event) => setGrade(event.target.value)} style={fieldStyle}>
+            <option value="g1">고1</option>
+            <option value="g2">고2</option>
+            <option value="g3">고3</option>
+          </select>
+        </label>
+
+        {examType === 'city-mock' ? <label style={{ display: 'grid', gap: 6 }}>
+          <span style={labelStyle}>주관 교육청</span>
+          <input type="text" value={issuer} onChange={(event) => setIssuer(event.target.value)} placeholder="예: 서울, 경기, 인천" style={fieldStyle} />
+        </label> : null}
+
+        <label style={{ display: 'grid', gap: 6 }}>
           <span style={labelStyle}>연도</span>
           <input type="number" value={year} onChange={(event) => setYear(event.target.value)} min="1993" max="2100" style={fieldStyle} required />
         </label>
@@ -167,10 +206,38 @@ export default function CsatAdmin() {
         <label style={{ display: 'grid', gap: 6 }}>
           <span style={labelStyle}>파일 종류</span>
           <select value={fileType} onChange={(event) => setFileType(event.target.value)} style={fieldStyle}>
-            <option value="problems">문제지</option>
-            <option value="solutions">해설지</option>
+            <option value="problems">문제지 (기출)</option>
+            <option value="solutions">해설지 (풀이)</option>
             <option value="answers">정답지</option>
+            <option value="theory">이론</option>
+            <option value="variant_problem">변형문제</option>
+            <option value="related_problem">관련문제</option>
+            <option value="forecast">예상문제</option>
+            <option value="stats">통계</option>
           </select>
+        </label>
+
+        <label style={{ display: 'grid', gap: 6 }}>
+          <span style={labelStyle}>접근 등급</span>
+          <select value={accessTier} onChange={(event) => setAccessTier(event.target.value)} style={fieldStyle}>
+            <option value="free">무료</option>
+            <option value="premium">프리미엄</option>
+          </select>
+        </label>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 16 }}>
+        {fileType === 'solutions' ? <label style={{ display: 'grid', gap: 6 }}>
+          <span style={labelStyle}>풀이 방법 (같은 문제에 여러 풀이법을 올릴 때 구분)</span>
+          <input type="text" value={solutionMethod} onChange={(event) => setSolutionMethod(event.target.value)} placeholder="예: 대수적 풀이" style={fieldStyle} />
+        </label> : null}
+        <label style={{ display: 'grid', gap: 6 }}>
+          <span style={labelStyle}>단원 태그 (선택)</span>
+          <input type="text" value={unitTag} onChange={(event) => setUnitTag(event.target.value)} placeholder="예: 미분법" style={fieldStyle} />
+        </label>
+        <label style={{ display: 'grid', gap: 6 }}>
+          <span style={labelStyle}>원본 문제 ID (변형·관련·예상 문제일 때)</span>
+          <input type="text" value={sourceItemId} onChange={(event) => setSourceItemId(event.target.value)} placeholder="선택 사항" style={fieldStyle} />
         </label>
       </div>
 
@@ -188,11 +255,17 @@ export default function CsatAdmin() {
       {EXAM_TYPES.map((type) => (manifest?.[type] || []).map((entry) => entry.variants.map((variant) => <div key={`${type}-${entry.year}-${variant.id}`} style={{ padding: '12px 16px', background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 8, display: 'grid', gap: 8 }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10 }}>
           <strong>{entry.year} {EXAM_TYPE_LABELS[type]} {variant.label}</strong>
-          {Object.keys(variant.files).map((fkey) => <span key={fkey} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, background: 'var(--paper)', padding: '4px 10px', borderRadius: 999 }}>
-            {FILE_TYPE_LABELS[fkey]}
-            <button type="button" onClick={() => startMove(type, entry.year, variant.id, fkey)} disabled={busy} style={{ border: 'none', background: 'none', color: 'var(--chalk-green)', fontWeight: 700, cursor: 'pointer', padding: 0 }}>이동</button>
-            <button type="button" onClick={() => handleDelete(type, entry.year, variant.id, fkey)} disabled={busy} style={{ border: 'none', background: 'none', color: 'var(--red-pen)', fontWeight: 700, cursor: 'pointer', padding: 0 }}>✕</button>
-          </span>)}
+          {Object.keys(variant.files).map((fkey) => {
+            const meta = variant.files[fkey].meta;
+            return <span key={fkey} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, background: 'var(--paper)', padding: '4px 10px', borderRadius: 999 }}>
+              {fileTypeLabel(fkey)}
+              {meta?.unitTag ? <em style={{ fontStyle: 'normal', color: 'var(--ink-soft)' }}>· {meta.unitTag}</em> : null}
+              {meta?.grade ? <em style={{ fontStyle: 'normal', color: 'var(--ink-soft)' }}>· {GRADE_LABELS[meta.grade]}</em> : null}
+              {meta?.accessTier === 'premium' ? <em style={{ fontStyle: 'normal', color: 'var(--red-pen)', fontWeight: 700 }}>🔒 {ACCESS_TIER_LABELS.premium}</em> : null}
+              <button type="button" onClick={() => startMove(type, entry.year, variant.id, fkey)} disabled={busy} style={{ border: 'none', background: 'none', color: 'var(--chalk-green)', fontWeight: 700, cursor: 'pointer', padding: 0 }}>이동</button>
+              <button type="button" onClick={() => handleDelete(type, entry.year, variant.id, fkey)} disabled={busy} style={{ border: 'none', background: 'none', color: 'var(--red-pen)', fontWeight: 700, cursor: 'pointer', padding: 0 }}>✕</button>
+            </span>;
+          })}
         </div>
         {Object.keys(variant.files).map((fkey) => movingKey === entryKey(type, entry.year, variant.id, fkey) && moveTarget ? <div key={`move-${fkey}`} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 8, padding: 12, background: 'var(--paper)', borderRadius: 8 }}>
           <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
@@ -216,9 +289,16 @@ export default function CsatAdmin() {
           <label style={{ display: 'grid', gap: 4, fontSize: 12 }}>
             <span>이동할 파일 종류</span>
             <select value={moveTarget.fileType} onChange={(event) => setMoveTarget((prev) => ({ ...prev, fileType: event.target.value }))} style={fieldStyle}>
-              <option value="problems">문제지</option>
-              <option value="solutions">해설지</option>
+              {!['problems', 'solutions', 'answers', 'theory', 'variant_problem', 'related_problem', 'forecast', 'stats'].includes(moveTarget.fileType)
+                ? <option value={moveTarget.fileType}>{fileTypeLabel(moveTarget.fileType)} (현재 값 유지)</option> : null}
+              <option value="problems">문제지 (기출)</option>
+              <option value="solutions">해설지 (풀이)</option>
               <option value="answers">정답지</option>
+              <option value="theory">이론</option>
+              <option value="variant_problem">변형문제</option>
+              <option value="related_problem">관련문제</option>
+              <option value="forecast">예상문제</option>
+              <option value="stats">통계</option>
             </select>
           </label>
           <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8 }}>

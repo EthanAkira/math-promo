@@ -1,8 +1,9 @@
 import { readManifest, writeManifest, jsonResponse, fileKey, CORS_HEADERS } from './_shared.js';
+import { upsertArchiveItem, resolveStorageFileType, FILE_TYPE_TO_CONTENT_TYPE, VALID_FILE_TYPES, VALID_ACCESS_TIERS } from '../_archive.js';
 
 const MAX_BYTES = 20 * 1024 * 1024;
-const VALID_EXAM_TYPES = ['june', 'sept', 'nov'];
-const VALID_FILE_TYPES = ['problems', 'solutions', 'answers'];
+const VALID_EXAM_TYPES = ['june', 'sept', 'nov', 'city-mock'];
+const VALID_GRADES = ['g1', 'g2', 'g3'];
 
 export async function onRequestPost({ request, env }) {
   if (!env.AMC_UPLOAD_PASSWORD) {
@@ -26,6 +27,12 @@ export async function onRequestPost({ request, env }) {
   const variantId = String(formData.get('variantId') || '').trim();
   const variantLabel = String(formData.get('variantLabel') || '').trim();
   const fileType = String(formData.get('fileType') || '');
+  const solutionMethod = String(formData.get('solutionMethod') || '').trim() || null;
+  const unitTag = String(formData.get('unitTag') || '').trim() || null;
+  const accessTier = VALID_ACCESS_TIERS.includes(formData.get('accessTier')) ? formData.get('accessTier') : 'free';
+  const sourceItemId = String(formData.get('sourceItemId') || '').trim() || null;
+  const grade = VALID_GRADES.includes(formData.get('grade')) ? formData.get('grade') : null;
+  const issuer = String(formData.get('issuer') || '').trim() || null;
   const file = formData.get('file');
 
   if (!VALID_EXAM_TYPES.includes(examType)) return jsonResponse({ error: 'Invalid exam type.' }, { status: 400 });
@@ -35,10 +42,11 @@ export async function onRequestPost({ request, env }) {
   if (!file || typeof file.arrayBuffer !== 'function') return jsonResponse({ error: 'Missing file.' }, { status: 400 });
   if (file.size > MAX_BYTES) return jsonResponse({ error: 'File is too large (limit 20MB).' }, { status: 400 });
 
-  const key = fileKey(examType, year, variantId, fileType);
+  const slotType = resolveStorageFileType(fileType, solutionMethod);
+  const key = fileKey(examType, year, variantId, slotType);
   const bytes = await file.arrayBuffer();
   await env.AMC_FILES.put(key, bytes, {
-    metadata: { contentType: file.type || 'application/octet-stream', filename: file.name || `${fileType}.pdf` },
+    metadata: { contentType: file.type || 'application/octet-stream', filename: file.name || `${slotType}.pdf` },
   });
 
   const manifest = await readManifest(env.AMC_FILES);
@@ -55,9 +63,26 @@ export async function onRequestPost({ request, env }) {
   } else if (variantLabel) {
     variant.label = variantLabel;
   }
-  variant.files[fileType] = { key, label: file.name || fileType, filename: file.name || `${fileType}.pdf` };
+  variant.files[slotType] = { key, label: file.name || slotType, filename: file.name || `${slotType}.pdf` };
 
   await writeManifest(env.AMC_FILES, manifest);
+
+  await upsertArchiveItem(env.DB, {
+    subject: 'csat',
+    examType,
+    grade,
+    issuer,
+    year: Number(year),
+    variant: variantId,
+    contentType: FILE_TYPE_TO_CONTENT_TYPE[fileType],
+    solutionMethod,
+    unitTag,
+    sourceItemId,
+    accessTier,
+    title: variantLabel || variantId,
+    fileKey: key,
+    filename: file.name || `${slotType}.pdf`,
+  });
 
   return jsonResponse({ ok: true, key });
 }

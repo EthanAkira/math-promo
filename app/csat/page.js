@@ -9,6 +9,7 @@ const EXAM_TYPES = [
   { href: '/csat/june', icon: '🌱', title: '6월 모의고사', description: '고3 전국연합학력평가 · 매년 6월 시행' },
   { href: '/csat/sept', icon: '🍂', title: '9월 모의고사', description: '고3 전국연합학력평가 · 매년 9월 시행' },
   { href: '/csat/nov', icon: '🎓', title: '대학수학능력시험', description: '매년 11월 시행 · 본수능' },
+  { href: '/csat/city-mock', icon: '🏫', title: '시교육청 학력평가', description: '서울·경기·인천 등 시·도교육청 주관 학력평가' },
 ];
 
 export default function CsatHubPage() {

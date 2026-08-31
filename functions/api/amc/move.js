@@ -1,7 +1,11 @@
 import { readManifest, writeManifest, jsonResponse, fileKey, CORS_HEADERS } from './_shared.js';
+import { getArchiveItemByFileKey, deleteArchiveItemByFileKey, upsertArchiveItem, VALID_FILE_TYPES, FILE_TYPE_TO_CONTENT_TYPE } from '../_archive.js';
 
 const VALID_LEVELS = ['8', '10', '12'];
-const VALID_FILE_TYPES = ['problems', 'solutions', 'answers'];
+
+function isValidDestinationType(type) {
+  return VALID_FILE_TYPES.includes(type) || type.startsWith('solutions__');
+}
 
 export async function onRequestPost({ request, env }) {
   let body;
@@ -25,7 +29,7 @@ export async function onRequestPost({ request, env }) {
   if (!VALID_LEVELS.includes(toLevel)) return jsonResponse({ error: 'Invalid destination level.' }, { status: 400 });
   if (!/^\d{4}$/.test(toYear)) return jsonResponse({ error: 'Invalid destination year.' }, { status: 400 });
   if (!toVariantId) return jsonResponse({ error: 'Missing destination variant.' }, { status: 400 });
-  if (!VALID_FILE_TYPES.includes(toFileType)) return jsonResponse({ error: 'Invalid destination file type.' }, { status: 400 });
+  if (!isValidDestinationType(toFileType)) return jsonResponse({ error: 'Invalid destination file type.' }, { status: 400 });
 
   const manifest = await readManifest(env.AMC_FILES);
   const levelYears = manifest[String(level)];
@@ -59,6 +63,7 @@ export async function onRequestPost({ request, env }) {
   const overwritten = destVariant.files[toFileType];
   if (overwritten && overwritten.key && overwritten.key !== oldKey) {
     await env.AMC_FILES.delete(overwritten.key);
+    await deleteArchiveItemByFileKey(env.DB, overwritten.key);
   }
 
   await env.AMC_FILES.put(newKey, stored.value, { metadata: stored.metadata || {} });
@@ -75,6 +80,24 @@ export async function onRequestPost({ request, env }) {
   }
 
   await writeManifest(env.AMC_FILES, manifest);
+
+  const existingTag = await getArchiveItemByFileKey(env.DB, oldKey);
+  await deleteArchiveItemByFileKey(env.DB, oldKey);
+  await upsertArchiveItem(env.DB, {
+    subject: 'amc',
+    level: toLevel,
+    year: Number(toYear),
+    variant: toVariantId,
+    contentType: existingTag ? existingTag.content_type : FILE_TYPE_TO_CONTENT_TYPE[toFileType.split('__')[0]],
+    solutionMethod: existingTag ? existingTag.solution_method : null,
+    unitTag: existingTag ? existingTag.unit_tag : null,
+    sourceItemId: existingTag ? existingTag.source_item_id : null,
+    accessTier: existingTag ? existingTag.access_tier : 'free',
+    title: existingTag ? existingTag.title : (toVariantLabel || toVariantId),
+    fileKey: newKey,
+    filename: sourceFile.filename,
+  });
+
   return jsonResponse({ ok: true, key: newKey });
 }
 

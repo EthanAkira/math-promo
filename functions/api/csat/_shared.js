@@ -15,9 +15,9 @@ export function jsonResponse(data, init = {}) {
 
 export async function readManifest(kv) {
   const raw = await kv.get(MANIFEST_KEY);
-  if (!raw) return { june: [], sept: [], nov: [] };
+  if (!raw) return { june: [], sept: [], nov: [], 'city-mock': [] };
   const parsed = JSON.parse(raw);
-  return { june: parsed.june || [], sept: parsed.sept || [], nov: parsed.nov || [] };
+  return { june: parsed.june || [], sept: parsed.sept || [], nov: parsed.nov || [], 'city-mock': parsed['city-mock'] || [] };
 }
 
 export async function writeManifest(kv, manifest) {

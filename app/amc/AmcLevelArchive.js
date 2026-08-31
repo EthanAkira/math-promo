@@ -12,11 +12,13 @@ const COPY = {
     loading: '자료를 불러오는 중입니다...',
     error: '자료를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.',
     problems: '문제지', solutions: '해설지', answers: '정답지',
+    theory: '이론', variant_problem: '변형문제', related_problem: '관련문제', forecast: '예상문제', stats: '통계',
     download: '다운로드', upload: '자료 업로드', back: '목록으로',
     fileCount: (n) => `${n}개 파일`,
     textLoading: '내용을 불러오는 중입니다...',
     textError: '내용을 불러오지 못했습니다.',
     noFiles: '이 회차에는 아직 등록된 파일이 없습니다.',
+    premiumLocked: '프리미엄 콘텐츠입니다. 구독 서비스 준비 중이니 곧 만나보실 수 있습니다.',
   },
   en: {
     home: 'Home', hub: 'AMC Archive',
@@ -24,15 +26,22 @@ const COPY = {
     loading: 'Loading archive...',
     error: 'Could not load the archive. Please try again shortly.',
     problems: 'Problems', solutions: 'Solutions', answers: 'Answer Key',
+    theory: 'Theory', variant_problem: 'Variant problems', related_problem: 'Related problems', forecast: 'Forecast problems', stats: 'Statistics',
     download: 'Download', upload: 'Upload materials', back: 'Back to list',
     fileCount: (n) => `${n} file${n === 1 ? '' : 's'}`,
     textLoading: 'Loading content...',
     textError: 'Could not load the content.',
     noFiles: 'No files for this session yet.',
+    premiumLocked: 'This is premium content. Subscriptions are coming soon.',
   },
 };
 
-const FILE_ORDER = ['problems', 'solutions', 'answers'];
+function fileTypeLabel(type, words) {
+  if (type.startsWith('solutions__')) return `${words.solutions} (${type.slice('solutions__'.length)})`;
+  return words[type] || type;
+}
+
+const FILE_ORDER = ['problems', 'solutions', 'answers', 'theory', 'variant_problem', 'related_problem', 'forecast', 'stats'];
 
 function fileKindFromName(filename) {
   const ext = (filename || '').split('.').pop().toLowerCase();
@@ -104,18 +113,21 @@ function TxtArticle({ url, words }) {
 }
 
 function ExamSection({ typeLabel, fileEntry, words }) {
+  const isPremium = fileEntry.meta?.accessTier === 'premium';
   const kind = fileKindFromName(fileEntry.filename);
   const previewUrl = `/api/amc/file?key=${encodeURIComponent(fileEntry.key)}`;
   const downloadUrl = `${previewUrl}&download=1`;
 
   return <section style={{ marginBottom: 32 }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-      <h2 style={{ fontSize: 18, margin: 0 }}>{typeLabel}</h2>
-      <a href={downloadUrl} style={{ fontSize: 13, color: 'var(--red-pen)', fontWeight: 700, textDecoration: 'none' }}>{words.download}</a>
+      <h2 style={{ fontSize: 18, margin: 0 }}>{isPremium ? '🔒 ' : ''}{typeLabel}</h2>
+      {isPremium ? null : <a href={downloadUrl} style={{ fontSize: 13, color: 'var(--red-pen)', fontWeight: 700, textDecoration: 'none' }}>{words.download}</a>}
     </div>
-    {kind === 'txt' ? <div style={{ padding: 24, background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}><TxtArticle url={previewUrl} words={words} /></div> : null}
-    {kind === 'pdf' ? <iframe src={previewUrl} title={typeLabel} style={{ width: '100%', height: '88vh', minHeight: 700, border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }} /> : null}
-    {kind === 'other' ? <a href={downloadUrl} className="button button-secondary" style={{ textDecoration: 'none' }}>{words.download}</a> : null}
+    {isPremium ? <div style={{ padding: 32, textAlign: 'center', background: 'var(--card-bg)', border: '1px dashed var(--paper-line)', borderRadius: 'var(--radius)', color: 'var(--ink-soft)' }}>{words.premiumLocked}</div> : <>
+      {kind === 'txt' ? <div style={{ padding: 24, background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}><TxtArticle url={previewUrl} words={words} /></div> : null}
+      {kind === 'pdf' ? <iframe src={previewUrl} title={typeLabel} style={{ width: '100%', height: '88vh', minHeight: 700, border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }} /> : null}
+      {kind === 'other' ? <a href={downloadUrl} className="button button-secondary" style={{ textDecoration: 'none' }}>{words.download}</a> : null}
+    </>}
   </section>;
 }
 
@@ -174,14 +186,18 @@ export default function AmcLevelArchive({ level, label, description }) {
   }
 
   if (status === 'ready' && selectedEntry && selectedVariant) {
-    const fileTypes = FILE_ORDER.filter((type) => selectedVariant.files[type]);
+    const allTypes = Object.keys(selectedVariant.files);
+    const fileTypes = [
+      ...FILE_ORDER.filter((type) => allTypes.includes(type)),
+      ...allTypes.filter((type) => type.startsWith('solutions__')),
+    ];
     return <>
       <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 6 }}>
         <a href="/">{words.home}</a> / <a href="/amc.html">{words.hub}</a> / <a href={`/amc/${level}`} onClick={(event) => { event.preventDefault(); closeEntry(); }}>{label}</a> / {selectedEntry.year} {selectedVariant.label}
       </p>
       <button type="button" onClick={closeEntry} className="button button-secondary no-print" style={{ marginBottom: 16 }}>{words.back}</button>
       <h1 className="font-display" style={{ fontSize: 26, margin: '0 0 24px' }}>{selectedEntry.year} {selectedVariant.label}</h1>
-      {fileTypes.length === 0 ? <p style={{ color: 'var(--ink-soft)' }}>{words.noFiles}</p> : fileTypes.map((type) => <ExamSection key={type} typeLabel={words[type]} fileEntry={selectedVariant.files[type]} words={words} />)}
+      {fileTypes.length === 0 ? <p style={{ color: 'var(--ink-soft)' }}>{words.noFiles}</p> : fileTypes.map((type) => <ExamSection key={type} typeLabel={fileTypeLabel(type, words)} fileEntry={selectedVariant.files[type]} words={words} />)}
     </>;
   }
 
