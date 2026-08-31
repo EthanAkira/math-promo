@@ -709,7 +709,7 @@ const KOREAN_GRADE_STAGE_SEEDS = [
       { label: '일차부등식', href: '/middle-school/pre-algebra?profile=kr-middle-2&unit=linear-inequalities-2', ready: true, availability: 'ready' },
       { label: '연립일차방정식', href: '/middle-school/pre-algebra?profile=kr-middle-2&unit=systems-linear', ready: true, availability: 'ready' },
       { label: '일차함수와 그래프', href: '/middle-school/pre-algebra?profile=kr-middle-2&unit=linear-functions-2', ready: true, availability: 'ready' },
-      { label: '도형의 성질 (삼각형·사각형)', href: '/middle-school/basic-figures?profile=kr&unit=triangle-side-angle-relations', ready: true, availability: 'partial' },
+      { label: '도형의 성질 (삼각형·사각형)', href: '/middle-school/basic-figures?profile=kr&unit=isosceles-triangle-properties', ready: true, availability: 'ready' },
       { label: '도형의 닮음과 피타고라스 정리', href: '#', ready: false, availability: 'planned' },
       { label: '확률과 그 기본 성질', href: '/middle-school/pre-algebra?profile=kr-middle-2&unit=probability-2', ready: true, availability: 'ready' },
     ],

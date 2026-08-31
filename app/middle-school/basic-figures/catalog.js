@@ -2,6 +2,7 @@ import { CORE_GEOMETRY_UNITS } from './geometryProblemEngine';
 import { ADVANCED_GEOMETRY_UNITS } from './advancedGeometryEngine';
 import { ADVANCED_GEOMETRY_CHALLENGE_UNITS } from './advancedGeometryChallengeEngine';
 import { MIDDLE_GEOMETRY_BASIC_UNITS } from './middleGeometryBasicsEngine';
+import { TRIANGLE_QUADRILATERAL_UNITS } from './triangleQuadrilateralEngine';
 
 function randomInt(random, min, max) {
   return Math.floor(random() * (max - min + 1)) + min;
@@ -306,6 +307,13 @@ const CURRICULUM_PROFILES = {
   'sphere-measures-basic': ['kr-middle-1', 'pre-algebra'],
   'hemisphere-sphere-ratios': ['kr-middle-1', 'geometry'],
   'solid-volume-ratios': ['kr-middle-1', 'pre-algebra'],
+
+  // TRIANGLE_QUADRILATERAL_UNITS (triangleQuadrilateralEngine.js)
+  'isosceles-triangle-properties': ['kr-middle-2', 'geometry'],
+  'triangle-circumcenter': ['kr-middle-2', 'geometry'],
+  'triangle-incenter': ['kr-middle-2', 'geometry'],
+  'parallelogram-properties': ['kr-middle-2', 'geometry'],
+  'special-quadrilaterals': ['kr-middle-2', 'geometry'],
 };
 
 function withCurriculumProfiles(units) {
@@ -324,6 +332,7 @@ export const BASIC_FIGURE_UNITS = [
   { id: 'basic-figures-mixed', label: '기본 도형 기본 종합', description: '점·선·면부터 맞꼭지각, 수직과 수선까지 골고루 연습하기', en: ['Basic Figures Review', 'Mixed practice covering points, lines, angles, and perpendiculars'], make: (random) => pick(random, generators)(random) },
   ...withCurriculumProfiles(CORE_GEOMETRY_UNITS),
   ...withCurriculumProfiles(MIDDLE_GEOMETRY_BASIC_UNITS),
+  ...withCurriculumProfiles(TRIANGLE_QUADRILATERAL_UNITS),
   ...ADVANCED_GEOMETRY_UNITS,
   ...ADVANCED_GEOMETRY_CHALLENGE_UNITS,
 ];

@@ -425,6 +425,125 @@ function SolidRatioDiagram({ data }) {
   return <svg className="generated-geometry generated-solid" viewBox="0 0 250 165" role="img" aria-label="matching prism and pyramid volumes"><rect x="25" y="42" width="75" height="90" className="shape-outline" /><polygon points="160,132 235,132 198,42" /><text x="62" y="151" textAnchor="middle">V</text><text x="198" y="151" textAnchor="middle" className="target-label">V/3</text></svg>;
 }
 
+function tickMarks(p1, p2, count) {
+  const mx = (p1[0] + p2[0]) / 2; const my = (p1[1] + p2[1]) / 2;
+  const dx = p2[0] - p1[0]; const dy = p2[1] - p1[1];
+  const len = Math.hypot(dx, dy) || 1;
+  const ux = dx / len; const uy = dy / len;
+  const px = -uy; const py = ux;
+  const tickLen = 5; const spacing = 5;
+  let d = '';
+  for (let i = 0; i < count; i += 1) {
+    const offset = (i - (count - 1) / 2) * spacing;
+    const cx = mx + ux * offset; const cy = my + uy * offset;
+    d += `M${cx - px * tickLen} ${cy - py * tickLen} L${cx + px * tickLen} ${cy + py * tickLen} `;
+  }
+  return d;
+}
+
+// 이등변삼각형: 밑각 정리(∠B=∠C)를 이용해 apexAngle 또는 baseAngle 중 하나를 구하는 문제.
+// showFoot이 있으면 꼭지각의 이등분선이 밑변을 수직이등분하는 점 D도 함께 표시한다.
+function IsoscelesTriangleDiagram({ data }) {
+  const apex = [115, 26]; const left = [32, 128]; const right = [198, 128];
+  const foot = [(left[0] + right[0]) / 2, left[1]];
+  const apexIsTarget = data.target === 'apex';
+  const showAngles = data.showAngles !== false;
+  const apexLabel = apexIsTarget ? 'x' : `${data.apexAngle}°`;
+  const baseLabel = apexIsTarget ? `${data.baseAngle}°` : 'x';
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label="isosceles triangle with base angle theorem">
+    <polygon points={`${apex.join(',')} ${left.join(',')} ${right.join(',')}`} />
+    <path className="tick-line" d={tickMarks(apex, left, 1)} />
+    <path className="tick-line" d={tickMarks(apex, right, 1)} />
+    {data.showFoot ? <>
+      <line x1={foot[0]} y1={foot[1]} x2={apex[0]} y2={apex[1]} className="hidden-edge" />
+      <path className="right-mark" d={`M${foot[0] - 7} ${foot[1]} v-7 h7`} />
+      <text x={foot[0] - 3} y={foot[1] + 16} className="point-label">D</text>
+    </> : null}
+    {showAngles ? <>
+      <Arc cx={left[0]} cy={left[1]} radius={26} start={-50} end={0} className={apexIsTarget ? 'angle-arc' : 'angle-arc target-arc'} />
+      <Arc cx={right[0]} cy={right[1]} radius={26} start={180} end={230} className={apexIsTarget ? 'angle-arc' : 'angle-arc target-arc'} />
+      <Arc cx={apex[0]} cy={apex[1]} radius={20} start={60} end={120} className={apexIsTarget ? 'angle-arc target-arc' : 'angle-arc'} />
+      <text x={apex[0] - 5} y={apex[1] + 32} className={apexIsTarget ? 'target-label' : 'value-label'}>{apexLabel}</text>
+      <text x={left[0] + 32} y={left[1] - 10} className={apexIsTarget ? 'value-label' : 'target-label'}>{baseLabel}</text>
+      <text x={right[0] - 40} y={right[1] - 10} className={apexIsTarget ? 'value-label' : 'target-label'}>{baseLabel}</text>
+    </> : null}
+    {(data.lengthLabels || []).map((label, index) => {
+      const anchor = label.position === 'BD' ? [(left[0] + foot[0]) / 2, foot[1] + 16] : label.position === 'DC' ? [(foot[0] + right[0]) / 2, foot[1] + 16] : [(left[0] + right[0]) / 2, foot[1] + 16];
+      return <text key={index} x={anchor[0]} y={anchor[1]} textAnchor="middle" className={label.isTarget ? 'target-label' : 'value-label'}>{label.text}</text>;
+    })}
+    <text x={apex[0] - 4} y={apex[1] - 8} className="point-label">A</text>
+    <text x={left[0] - 14} y={left[1] + 16} className="point-label">B</text>
+    <text x={right[0] + 4} y={right[1] + 16} className="point-label">C</text>
+  </svg>;
+}
+
+// 삼각형의 외심/내심: 중심점 O(또는 I)에서 세 꼭짓점으로 이은 선분과, 그 위에 표시된 각/길이 값들.
+function TriangleCenterDiagram({ data }) {
+  const A = [115, 22]; const B = [28, 130]; const C = [202, 130];
+  const O = data.center === 'circumcenter' ? [113, 88] : [112, 100];
+  const points = { A, B, C };
+  const mid = (p, q) => [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label={`triangle ${data.center}`}>
+    <polygon points={`${A.join(',')} ${B.join(',')} ${C.join(',')}`} />
+    <line x1={O[0]} y1={O[1]} x2={A[0]} y2={A[1]} className="hidden-edge" />
+    <line x1={O[0]} y1={O[1]} x2={B[0]} y2={B[1]} className="hidden-edge" />
+    <line x1={O[0]} y1={O[1]} x2={C[0]} y2={C[1]} className="hidden-edge" />
+    <circle cx={O[0]} cy={O[1]} r="2.6" className="highlight-point" />
+    <text x={O[0] + 4} y={O[1] - 4} className="point-label">{data.center === 'circumcenter' ? 'O' : 'I'}</text>
+    <text x={A[0] - 4} y={A[1] - 8} className="point-label">A</text>
+    <text x={B[0] - 14} y={B[1] + 16} className="point-label">B</text>
+    <text x={C[0] + 4} y={C[1] + 16} className="point-label">C</text>
+    {data.labels.map((label, index) => {
+      const vertexPos = points[label.vertex];
+      const towardO = mid(vertexPos, O);
+      const offsetY = label.vertex === 'A' ? 14 : -10;
+      return <text key={index} x={towardO[0]} y={towardO[1] + offsetY} textAnchor="middle" className={label.isTarget ? 'target-label' : 'value-label'}>{label.text}</text>;
+    })}
+  </svg>;
+}
+
+const QUAD_LAYOUTS = {
+  parallelogram: { A: [70, 26], D: [195, 26], B: [30, 128], C: [155, 128] },
+  rectangle: { A: [50, 26], D: [180, 26], B: [50, 128], C: [180, 128] },
+  rhombus: { A: [115, 20], D: [198, 78], B: [32, 78], C: [115, 132] },
+  square: { A: [70, 26], D: [160, 26], B: [70, 118], C: [160, 118] },
+  trapezoid: { A: [80, 26], D: [160, 26], B: [30, 128], C: [200, 128] },
+};
+
+// 평행사변형/직사각형/마름모/정사각형/등변사다리꼴 공통 다이어그램. variant에 따라 꼭짓점 배치만 바꾸고,
+// showDiagonals·rightAngleCorners·tickSides·labels로 각 사각형 고유의 성질을 표시한다.
+function QuadrilateralDiagram({ data }) {
+  const points = QUAD_LAYOUTS[data.variant] || QUAD_LAYOUTS.parallelogram;
+  const { A, B, C, D } = points;
+  const O = [(A[0] + C[0]) / 2, (A[1] + C[1]) / 2];
+  const cornerMark = (corner) => {
+    const p = points[corner];
+    const dx = corner === 'A' || corner === 'B' ? 8 : -8;
+    const dy = corner === 'A' || corner === 'D' ? 8 : -8;
+    return <path key={corner} className="right-mark" d={`M${p[0]} ${p[1] - dy} v${dy} h${dx}`} />;
+  };
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label={`${data.variant} with marked properties`}>
+    <polygon points={`${A.join(',')} ${D.join(',')} ${C.join(',')} ${B.join(',')}`} />
+    {data.showDiagonals ? <>
+      <line x1={A[0]} y1={A[1]} x2={C[0]} y2={C[1]} className="hidden-edge" />
+      <line x1={B[0]} y1={B[1]} x2={D[0]} y2={D[1]} className="hidden-edge" />
+      <text x={O[0] + 4} y={O[1] - 4} className="point-label">O</text>
+    </> : null}
+    {(data.rightAngleCorners || []).map(cornerMark)}
+    {(data.tickSides || []).map(([p1, p2, count], index) => <path key={index} className="tick-line" d={tickMarks(points[p1], points[p2], count)} />)}
+    <text x={A[0] - 6} y={A[1] - 8} className="point-label">A</text>
+    <text x={D[0] + 4} y={D[1] - 8} className="point-label">D</text>
+    <text x={B[0] - 14} y={B[1] + 16} className="point-label">B</text>
+    <text x={C[0] + 4} y={C[1] + 16} className="point-label">C</text>
+    {(data.labels || []).map((label, index) => {
+      const p = points[label.corner];
+      const dx = label.corner === 'B' || label.corner === 'C' ? 22 : -22;
+      const dy = label.corner === 'A' || label.corner === 'D' ? 18 : -12;
+      return <text key={index} x={p[0] + dx} y={p[1] + dy} textAnchor="middle" className={label.isTarget ? 'target-label' : 'value-label'}>{label.text}</text>;
+    })}
+  </svg>;
+}
+
 export default function GeometryDiagram({ diagram }) {
   if (!diagram) return null;
   if (diagram.kind === 'angle') return <AngleDiagram data={diagram} />;
@@ -463,5 +582,8 @@ export default function GeometryDiagram({ diagram }) {
   if (diagram.kind === 'net-basic') return <NetBasicDiagram data={diagram} />;
   if (diagram.kind === 'measurement-solid') return <MeasurementSolidDiagram data={diagram} />;
   if (diagram.kind === 'solid-ratio') return <SolidRatioDiagram data={diagram} />;
+  if (diagram.kind === 'isosceles-triangle') return <IsoscelesTriangleDiagram data={diagram} />;
+  if (diagram.kind === 'triangle-center-angles') return <TriangleCenterDiagram data={diagram} />;
+  if (diagram.kind === 'quadrilateral') return <QuadrilateralDiagram data={diagram} />;
   return <AdvancedGeometryDiagram diagram={diagram} />;
 }

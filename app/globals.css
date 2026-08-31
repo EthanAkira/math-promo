@@ -1653,6 +1653,7 @@ html[dir="rtl"] .language-picker-academic select {
 .generated-geometry .measure-arc { fill: none; stroke: var(--ink-soft); stroke-width: 1.2; stroke-dasharray: 3 3; }
 .generated-geometry .guide-line { stroke: var(--ink-soft); stroke-dasharray: 4 4; }
 .generated-geometry .right-mark { fill: none; stroke: var(--red-pen); stroke-width: 1.8; }
+.generated-geometry .tick-line { fill: none; stroke: var(--ink); stroke-width: 1.6; }
 .generated-geometry polyline { fill: none; stroke: var(--ink); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .generated-geometry .highlight-face { fill: color-mix(in srgb, var(--red-pen) 20%, transparent); stroke: var(--red-pen); stroke-width: 1.2; }
 .generated-geometry .circle-outline { fill: none; stroke: var(--ink); stroke-width: 1.8; }
