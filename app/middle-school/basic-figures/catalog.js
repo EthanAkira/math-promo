@@ -3,6 +3,7 @@ import { ADVANCED_GEOMETRY_UNITS } from './advancedGeometryEngine';
 import { ADVANCED_GEOMETRY_CHALLENGE_UNITS } from './advancedGeometryChallengeEngine';
 import { MIDDLE_GEOMETRY_BASIC_UNITS } from './middleGeometryBasicsEngine';
 import { TRIANGLE_QUADRILATERAL_UNITS } from './triangleQuadrilateralEngine';
+import { TRIANGLE_SIMILARITY_UNITS } from './triangleSimilarityEngine';
 
 function randomInt(random, min, max) {
   return Math.floor(random() * (max - min + 1)) + min;
@@ -314,6 +315,15 @@ const CURRICULUM_PROFILES = {
   'triangle-incenter': ['kr-middle-2', 'geometry'],
   'parallelogram-properties': ['kr-middle-2', 'geometry'],
   'special-quadrilaterals': ['kr-middle-2', 'geometry'],
+
+  // TRIANGLE_SIMILARITY_UNITS (triangleSimilarityEngine.js)
+  'similarity-conditions': ['kr-middle-2', 'geometry'],
+  'right-triangle-similarity': ['kr-middle-2', 'geometry'],
+  'similar-solids-ratio': ['kr-middle-2', 'geometry'],
+  'parallel-line-segment-ratio': ['kr-middle-2', 'geometry'],
+  'midsegment-theorem': ['kr-middle-2', 'geometry'],
+  'triangle-centroid-median': ['kr-middle-2', 'geometry'],
+  'pythagorean-applications': ['kr-middle-2', 'geometry'],
 };
 
 function withCurriculumProfiles(units) {
@@ -333,6 +343,7 @@ export const BASIC_FIGURE_UNITS = [
   ...withCurriculumProfiles(CORE_GEOMETRY_UNITS),
   ...withCurriculumProfiles(MIDDLE_GEOMETRY_BASIC_UNITS),
   ...withCurriculumProfiles(TRIANGLE_QUADRILATERAL_UNITS),
+  ...withCurriculumProfiles(TRIANGLE_SIMILARITY_UNITS),
   ...ADVANCED_GEOMETRY_UNITS,
   ...ADVANCED_GEOMETRY_CHALLENGE_UNITS,
 ];

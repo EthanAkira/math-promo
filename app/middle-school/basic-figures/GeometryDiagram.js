@@ -544,6 +544,192 @@ function QuadrilateralDiagram({ data }) {
   </svg>;
 }
 
+// 두 점을 지름으로 하는 반원이 주어진 세 번째 점(삼각형의 반대쪽 꼭짓점)에서 먼 쪽으로 부풀도록
+// 호의 시작/끝 각도를 계산한다. 08-5 직각삼각형의 세 반원 다이어그램에서 재사용한다.
+function outwardSemicircle(p1, p2, awayFrom) {
+  const cx = (p1[0] + p2[0]) / 2; const cy = (p1[1] + p2[1]) / 2;
+  const radius = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]) / 2;
+  const angle1 = (Math.atan2(p1[1] - cy, p1[0] - cx) * 180) / Math.PI;
+  const rad = (deg) => (deg * Math.PI) / 180;
+  const bulgeA = [cx + radius * Math.cos(rad(angle1 + 90)), cy + radius * Math.sin(rad(angle1 + 90))];
+  const bulgeB = [cx + radius * Math.cos(rad(angle1 - 90)), cy + radius * Math.sin(rad(angle1 - 90))];
+  const distA = Math.hypot(bulgeA[0] - awayFrom[0], bulgeA[1] - awayFrom[1]);
+  const distB = Math.hypot(bulgeB[0] - awayFrom[0], bulgeB[1] - awayFrom[1]);
+  return distA >= distB
+    ? { cx, cy, radius, start: angle1, end: angle1 + 180 }
+    : { cx, cy, radius, start: angle1 + 180, end: angle1 + 360 };
+}
+
+// 직각삼각형에서 빗변에 내린 수선의 발 D를 이용한 닮음(AA)과 세 변의 관계(AD²=BD·DC 등)를 다루는 다이어그램.
+function RightTriangleAltitudeDiagram({ data }) {
+  const A = [70, 24]; const B = [24, 128]; const C = [206, 128]; const D = [70, 128];
+  const labelAt = (key) => data.labels && data.labels[key];
+  const renderLabel = (key, anchor) => {
+    const label = labelAt(key);
+    if (!label) return null;
+    return <text x={anchor[0]} y={anchor[1]} textAnchor="middle" className={label.isTarget ? 'target-label' : 'value-label'}>{key === 'target' ? 'x' : label.text}</text>;
+  };
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label="right triangle with altitude to the hypotenuse">
+    <polygon points={`${A.join(',')} ${B.join(',')} ${C.join(',')}`} />
+    <line x1={A[0]} y1={A[1]} x2={D[0]} y2={D[1]} />
+    <path className="right-mark" d={`M${D[0] - 8} ${D[1]} v-8 h8`} />
+    <path className="right-mark" d={`M${A[0]} ${A[1] + 10} l7 -3.5 l3.5 7`} />
+    <text x={A[0] - 10} y={A[1] - 6} className="point-label">A</text>
+    <text x={B[0] - 14} y={B[1] + 16} className="point-label">B</text>
+    <text x={C[0] + 4} y={C[1] + 16} className="point-label">C</text>
+    <text x={D[0] - 4} y={D[1] + 16} className="point-label">D</text>
+    {renderLabel('BD', [(B[0] + D[0]) / 2, D[1] + 16])}
+    {renderLabel('DC', [(D[0] + C[0]) / 2, D[1] + 16])}
+    {renderLabel('BC', [(B[0] + C[0]) / 2, D[1] + 30])}
+    {renderLabel('AD', [D[0] + 16, (A[1] + D[1]) / 2])}
+    {renderLabel('AB', [(A[0] + B[0]) / 2 - 18, (A[1] + B[1]) / 2])}
+    {renderLabel('AC', [(A[0] + C[0]) / 2 + 20, (A[1] + C[1]) / 2 - 8])}
+  </svg>;
+}
+
+// 삼각형 내부에서 밑변에 평행한 선분 DE (06-1 평행선과 선분의 비, 07-1 두 변의 중점을 연결한 선분).
+// ratio는 A로부터 D, E까지의 위치 비율(0~1)이며 0.5이면 중점을 연결한 선분이 된다.
+function TriangleParallelSegmentDiagram({ data }) {
+  const A = [105, 22]; const B = [24, 132]; const C = [190, 132];
+  const ratio = data.ratio ?? 0.5;
+  const D = [A[0] + (B[0] - A[0]) * ratio, A[1] + (B[1] - A[1]) * ratio];
+  const E = [A[0] + (C[0] - A[0]) * ratio, A[1] + (C[1] - A[1]) * ratio];
+  const labelAt = (key) => data.labels && data.labels[key];
+  const renderLabel = (key, anchor) => {
+    const label = labelAt(key);
+    if (!label) return null;
+    return <text x={anchor[0]} y={anchor[1]} textAnchor="middle" className={label.isTarget ? 'target-label' : 'value-label'}>{label.text}</text>;
+  };
+  return <svg className="generated-geometry" viewBox="0 0 230 155" role="img" aria-label="triangle with a segment parallel to the base">
+    <polygon points={`${A.join(',')} ${B.join(',')} ${C.join(',')}`} />
+    <line x1={D[0]} y1={D[1]} x2={E[0]} y2={E[1]} />
+    <text x={A[0] - 4} y={A[1] - 8} className="point-label">A</text>
+    <text x={B[0] - 14} y={B[1] + 16} className="point-label">B</text>
+    <text x={C[0] + 4} y={C[1] + 16} className="point-label">C</text>
+    <text x={D[0] - 16} y={D[1] + 4} className="point-label">D</text>
+    <text x={E[0] + 8} y={E[1] + 4} className="point-label">E</text>
+    {renderLabel('AD', [(A[0] + D[0]) / 2 - 16, (A[1] + D[1]) / 2])}
+    {renderLabel('DB', [(D[0] + B[0]) / 2 - 14, (D[1] + B[1]) / 2])}
+    {renderLabel('AE', [(A[0] + E[0]) / 2 + 16, (A[1] + E[1]) / 2])}
+    {renderLabel('EC', [(E[0] + C[0]) / 2 + 14, (E[1] + C[1]) / 2])}
+    {renderLabel('DE', [(D[0] + E[0]) / 2, D[1] - 8])}
+    {renderLabel('BC', [(B[0] + C[0]) / 2, B[1] + 16])}
+  </svg>;
+}
+
+// 세 평행선 l∥m∥n이 두 개의 교선(횡단선)과 만나 선분의 길이의 비를 이루는 06-3 다이어그램.
+function ParallelLinesTransversalDiagram({ data }) {
+  const ys = [30, 82, 134];
+  const t1 = { top: [66, 12], bottom: [104, 152] };
+  const t2 = { top: [150, 12], bottom: [188, 152] };
+  const onLine = (t, y) => {
+    const ratio = (y - t.top[1]) / (t.bottom[1] - t.top[1]);
+    return [t.top[0] + (t.bottom[0] - t.top[0]) * ratio, y];
+  };
+  const p1 = ys.map((y) => onLine(t1, y));
+  const p2 = ys.map((y) => onLine(t2, y));
+  const labelAt = (key) => data.labels && data.labels[key];
+  const renderLabel = (key, anchor, dx = -12) => {
+    const label = labelAt(key);
+    if (!label) return null;
+    return <text x={anchor[0] + dx} y={anchor[1]} className={label.isTarget ? 'target-label' : 'value-label'}>{label.text}</text>;
+  };
+  return <svg className="generated-geometry" viewBox="0 0 230 165" role="img" aria-label="three parallel lines cut by two transversals">
+    {ys.map((y, index) => <line key={y} x1="18" y1={y} x2="216" y2={y} />)}
+    <path className="parallel-mark" d="M24 26 l6 4 l-6 4 M24 78 l6 4 l-6 4 M24 130 l6 4 l-6 4" />
+    <line x1={t1.top[0]} y1={t1.top[1]} x2={t1.bottom[0]} y2={t1.bottom[1]} />
+    <line x1={t2.top[0]} y1={t2.top[1]} x2={t2.bottom[0]} y2={t2.bottom[1]} />
+    <text x="222" y={ys[0] + 4} className="line-label">l</text>
+    <text x="222" y={ys[1] + 4} className="line-label">m</text>
+    <text x="222" y={ys[2] + 4} className="line-label">n</text>
+    {renderLabel('p', [(p1[0][0] + p1[1][0]) / 2, (p1[0][1] + p1[1][1]) / 2])}
+    {renderLabel('q', [(p1[1][0] + p1[2][0]) / 2, (p1[1][1] + p1[2][1]) / 2])}
+    {renderLabel('r', [(p2[0][0] + p2[1][0]) / 2, (p2[0][1] + p2[1][1]) / 2], 8)}
+    {renderLabel('x', [(p2[1][0] + p2[2][0]) / 2, (p2[1][1] + p2[2][1]) / 2], 8)}
+  </svg>;
+}
+
+// 사다리꼴 ABCD(AD∥BC)의 두 변 AB, DC의 중점 M, N을 연결한 선분 (06-4/07-2).
+function TrapezoidMidsegmentDiagram({ data }) {
+  const { A, D, B, C } = QUAD_LAYOUTS.trapezoid;
+  const M = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2];
+  const N = [(D[0] + C[0]) / 2, (D[1] + C[1]) / 2];
+  const labelAt = (key) => data.labels && data.labels[key];
+  const renderLabel = (key, anchor) => {
+    const label = labelAt(key);
+    if (!label) return null;
+    return <text x={anchor[0]} y={anchor[1]} textAnchor="middle" className={label.isTarget ? 'target-label' : 'value-label'}>{label.text}</text>;
+  };
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label="trapezoid with the segment joining the midpoints of its legs">
+    <polygon points={`${A.join(',')} ${D.join(',')} ${C.join(',')} ${B.join(',')}`} />
+    <line x1={M[0]} y1={M[1]} x2={N[0]} y2={N[1]} />
+    <circle cx={M[0]} cy={M[1]} r="2.4" className="highlight-point" />
+    <circle cx={N[0]} cy={N[1]} r="2.4" className="highlight-point" />
+    <text x={A[0] - 6} y={A[1] - 8} className="point-label">A</text>
+    <text x={D[0] + 4} y={D[1] - 8} className="point-label">D</text>
+    <text x={B[0] - 14} y={B[1] + 16} className="point-label">B</text>
+    <text x={C[0] + 4} y={C[1] + 16} className="point-label">C</text>
+    <text x={M[0] - 16} y={M[1] + 4} className="point-label">M</text>
+    <text x={N[0] + 8} y={N[1] + 4} className="point-label">N</text>
+    {renderLabel('AD', [(A[0] + D[0]) / 2, A[1] - 8])}
+    {renderLabel('BC', [(B[0] + C[0]) / 2, B[1] + 20])}
+    {renderLabel('MN', [(M[0] + N[0]) / 2, M[1] - 10])}
+  </svg>;
+}
+
+// 삼각형의 세 중선과 무게중심 G. highlight로 하나의 작은 삼각형(GAB/GBC/GCA)을 색칠해 넓이 비 문제에 사용한다.
+function TriangleCentroidDiagram({ data }) {
+  const A = [105, 20]; const B = [24, 132]; const C = [190, 132];
+  const mid = (p, q) => [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
+  const Ma = mid(B, C); const Mb = mid(A, C); const Mc = mid(A, B);
+  const G = [(A[0] + B[0] + C[0]) / 3, (A[1] + B[1] + C[1]) / 3];
+  const highlightPoints = { GAB: [G, A, B], GBC: [G, B, C], GCA: [G, C, A] };
+  const highlight = data.highlight && highlightPoints[data.highlight];
+  const labelAt = (key) => data.labels && data.labels[key];
+  const renderLabel = (key, anchor) => {
+    const label = labelAt(key);
+    if (!label) return null;
+    return <text x={anchor[0]} y={anchor[1]} textAnchor="middle" className={label.isTarget ? 'target-label' : 'value-label'}>{label.text}</text>;
+  };
+  return <svg className="generated-geometry" viewBox="0 0 230 155" role="img" aria-label="triangle with medians and centroid">
+    <polygon points={`${A.join(',')} ${B.join(',')} ${C.join(',')}`} />
+    {highlight ? <polygon className="highlight-face" points={highlight.map((p) => p.join(',')).join(' ')} /> : null}
+    <line x1={A[0]} y1={A[1]} x2={Ma[0]} y2={Ma[1]} className="hidden-edge" />
+    <line x1={B[0]} y1={B[1]} x2={Mb[0]} y2={Mb[1]} className="hidden-edge" />
+    <line x1={C[0]} y1={C[1]} x2={Mc[0]} y2={Mc[1]} className="hidden-edge" />
+    <circle cx={G[0]} cy={G[1]} r="2.6" className="highlight-point" />
+    <text x={G[0] + 5} y={G[1] - 4} className="point-label">G</text>
+    <text x={A[0] - 4} y={A[1] - 8} className="point-label">A</text>
+    <text x={B[0] - 14} y={B[1] + 16} className="point-label">B</text>
+    <text x={C[0] + 4} y={C[1] + 16} className="point-label">C</text>
+    <text x={Ma[0] - 4} y={Ma[1] + 16} className="point-label">M</text>
+    {renderLabel('AG', [(A[0] + G[0]) / 2 + 14, (A[1] + G[1]) / 2])}
+    {renderLabel('GM', [(G[0] + Ma[0]) / 2 + 14, (G[1] + Ma[1]) / 2])}
+  </svg>;
+}
+
+// 직각삼각형의 세 변을 지름으로 하는 반원 사이의 넓이 관계 (08-5, 히포크라테스의 초승달).
+function RightTriangleSemicirclesDiagram({ data }) {
+  const C = [50, 128]; const B = [190, 128]; const A = [50, 30];
+  const legBC = outwardSemicircle(C, B, A);
+  const legCA = outwardSemicircle(C, A, B);
+  const hyp = outwardSemicircle(A, B, C);
+  const labelAt = (key) => data.labels && data.labels[key];
+  return <svg className="generated-geometry" viewBox="0 0 230 175" role="img" aria-label="semicircles on the sides of a right triangle">
+    <polygon points={`${A.join(',')} ${B.join(',')} ${C.join(',')}`} />
+    <path className="right-mark" d={`M${C[0]} ${C[1] - 10} h10 v10`} />
+    <Arc cx={legBC.cx} cy={legBC.cy} radius={legBC.radius} start={legBC.start} end={legBC.end} className="shape-outline" />
+    <Arc cx={legCA.cx} cy={legCA.cy} radius={legCA.radius} start={legCA.start} end={legCA.end} className="shape-outline" />
+    <Arc cx={hyp.cx} cy={hyp.cy} radius={hyp.radius} start={hyp.start} end={hyp.end} className="shape-outline" />
+    <text x={A[0] - 10} y={A[1] - 6} className="point-label">A</text>
+    <text x={B[0] + 6} y={B[1] + 4} className="point-label">B</text>
+    <text x={C[0] - 14} y={C[1] + 16} className="point-label">C</text>
+    {labelAt('BC') ? <text x={(C[0] + B[0]) / 2} y={legBC.cy + legBC.radius * 0.6} textAnchor="middle" className={labelAt('BC').isTarget ? 'target-label' : 'value-label'}>{labelAt('BC').text}</text> : null}
+    {labelAt('CA') ? <text x={legCA.cx - legCA.radius * 0.6} y={(C[1] + A[1]) / 2} textAnchor="middle" className={labelAt('CA').isTarget ? 'target-label' : 'value-label'}>{labelAt('CA').text}</text> : null}
+    {labelAt('AB') ? <text x={(A[0] + B[0]) / 2 + 30} y={(A[1] + B[1]) / 2 - 20} textAnchor="middle" className={labelAt('AB').isTarget ? 'target-label' : 'value-label'}>{labelAt('AB').text}</text> : null}
+  </svg>;
+}
+
 export default function GeometryDiagram({ diagram }) {
   if (!diagram) return null;
   if (diagram.kind === 'angle') return <AngleDiagram data={diagram} />;
@@ -585,5 +771,11 @@ export default function GeometryDiagram({ diagram }) {
   if (diagram.kind === 'isosceles-triangle') return <IsoscelesTriangleDiagram data={diagram} />;
   if (diagram.kind === 'triangle-center-angles') return <TriangleCenterDiagram data={diagram} />;
   if (diagram.kind === 'quadrilateral') return <QuadrilateralDiagram data={diagram} />;
+  if (diagram.kind === 'right-triangle-altitude') return <RightTriangleAltitudeDiagram data={diagram} />;
+  if (diagram.kind === 'triangle-parallel-segment') return <TriangleParallelSegmentDiagram data={diagram} />;
+  if (diagram.kind === 'parallel-lines-transversal') return <ParallelLinesTransversalDiagram data={diagram} />;
+  if (diagram.kind === 'trapezoid-midsegment') return <TrapezoidMidsegmentDiagram data={diagram} />;
+  if (diagram.kind === 'triangle-centroid') return <TriangleCentroidDiagram data={diagram} />;
+  if (diagram.kind === 'right-triangle-semicircles') return <RightTriangleSemicirclesDiagram data={diagram} />;
   return <AdvancedGeometryDiagram diagram={diagram} />;
 }
