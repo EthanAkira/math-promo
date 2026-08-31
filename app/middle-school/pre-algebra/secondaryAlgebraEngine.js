@@ -424,14 +424,199 @@ function lineEquationTwoPoints(random) {
 
 const LINEAR_FUNCTION_GENERATORS = [linearFunctionsSlopeIntercept, linearFunctionsSlopeIntercept, functionValue, functionIdentifyLinear, functionIntercepts, functionRateOfChange, functionSlopeSign, functionParallelCoincident, functionWordProblem, lineStandardForm, verticalHorizontalLine, lineEquationSlopeForm, lineEquationTwoPoints];
 
-function probability(random) {
+// 09-1: 사건과 경우의 수 (한 개의 주사위)
+function countingDiceEvent(random) {
+  const events = [
+    { desc: '3 미만의 눈', descEn: 'a value less than 3', test: (n) => n < 3 },
+    { desc: '3의 배수의 눈', descEn: 'a multiple of 3', test: (n) => n % 3 === 0 },
+    { desc: '6의 약수의 눈', descEn: 'a divisor of 6', test: (n) => 6 % n === 0 },
+    { desc: '4 이상의 눈', descEn: 'a value of at least 4', test: (n) => n >= 4 },
+    { desc: '소수의 눈', descEn: 'a prime value', test: (n) => [2, 3, 5].includes(n) },
+  ];
+  const chosen = pick(random, events);
+  const favorable = [1, 2, 3, 4, 5, 6].filter(chosen.test);
+  return item(`한 개의 주사위를 던질 때, ${chosen.desc}이 나오는 경우의 수를 구하세요.`, '', favorable.length, withEnglish({}, `Roll one die. Find the number of ways to get ${chosen.descEn}.`, `${chosen.desc}은 {${favorable.join(', ')}}이므로 경우의 수는 ${favorable.length}입니다.`, `The outcomes are {${favorable.join(', ')}}, so there are ${favorable.length} ways.`));
+}
+
+// 09-2: 사건 A 또는 사건 B가 일어나는 경우의 수 (배타적 사건의 덧셈 법칙)
+// 겹치는 배수가 생기지 않도록(중2 수준에서는 포함배제를 다루지 않으므로) 검증된 조합만 사용한다.
+const OR_RULE_CASES = [{ total: 10, a: 3, b: 5 }, { total: 10, a: 2, b: 9 }, { total: 20, a: 4, b: 7 }, { total: 20, a: 3, b: 8 }, { total: 25, a: 5, b: 6 }];
+function countingOrRule(random) {
+  const { total, a, b } = pick(random, OR_RULE_CASES);
+  const countA = Math.floor(total / a); const countB = Math.floor(total / b);
+  const answer = countA + countB;
+  return item(`1부터 ${total}까지의 자연수가 각각 적힌 카드 중 한 장을 뽑을 때, ${a}의 배수 또는 ${b}의 배수가 적힌 카드가 나오는 경우의 수를 구하세요.`, '', answer, withEnglish({}, `Draw one card numbered 1 to ${total}. Find the number of ways to draw a multiple of ${a} or a multiple of ${b}.`, `${a}의 배수는 ${countA}개, ${b}의 배수는 ${countB}개이고 두 사건은 동시에 일어나지 않으므로 경우의 수는 ${countA}+${countB}=${answer}입니다.`, `There are ${countA} multiples of ${a} and ${countB} multiples of ${b}; since the events are mutually exclusive, the count is ${countA}+${countB}=${answer}.`));
+}
+
+// 09-3: 두 사건이 동시에 일어나는 경우의 수 (곱의 법칙)
+function countingAndRule(random) {
+  const routeA = randomInt(random, 2, 5);
+  const routeB = randomInt(random, 2, 4);
+  return item(`민서네 집에서 이모 댁까지 가는 버스 노선이 ${routeA}가지, 지하철 노선이 ${routeB}가지 있다. 갈 때는 버스를, 올 때는 지하철을 이용하는 방법의 수를 구하세요.`, '', routeA * routeB, withEnglish({}, `There are ${routeA} bus routes and ${routeB} subway routes between two places. Find the number of ways to go by bus and return by subway.`, `버스를 고르는 방법 ${routeA}가지와 지하철을 고르는 방법 ${routeB}가지를 곱하면 ${routeA}×${routeB}=${routeA * routeB}입니다.`, `Multiply the choices: ${routeA}×${routeB}=${routeA * routeB}.`));
+}
+
+// 09-4: 한 줄로 세우는 경우의 수 (전체 나열) — 순열 기호 없이 직접 곱으로 설명한다.
+function arrangeInRow(random) {
+  const n = randomInt(random, 3, 5);
+  const terms = []; let answer = 1;
+  for (let i = n; i >= 1; i -= 1) { terms.push(i); answer *= i; }
+  return item(`서로 다른 ${n}명을 한 줄로 세우는 경우의 수를 구하세요.`, '', answer, withEnglish({}, `Find the number of ways to arrange ${n} distinct people in a row.`, `첫 번째 자리부터 차례로 자리를 채우면 ${terms.join('×')}=${answer}입니다.`, `Fill each position in turn: ${terms.join('×')}=${answer}.`));
+}
+
+// 09-4: 한 줄로 세우는 경우의 수 (일부만 뽑아 세우기) — 역시 기호 없이 직접 곱으로 설명한다.
+function arrangeSubsetInRow(random) {
+  const n = randomInt(random, 4, 7);
+  const r = pick(random, [2, 3]);
+  const terms = []; let answer = 1;
+  for (let i = 0; i < r; i += 1) { const term = n - i; terms.push(term); answer *= term; }
+  return item(`서로 다른 ${n}명 중에서 ${r}명을 뽑아 한 줄로 세우는 경우의 수를 구하세요.`, '', answer, withEnglish({}, `Choose ${r} people from ${n} distinct people and arrange them in a row. Find the number of ways.`, `앞에서부터 차례로 자리를 채우면 ${terms.join('×')}=${answer}입니다.`, `Fill the positions one at a time: ${terms.join('×')}=${answer}.`));
+}
+
+// 09-6: 서로 다른 직책(대표)을 각각 뽑는 경우의 수 (순서를 구분)
+function chooseDistinctRoles(random) {
+  const n = randomInt(random, 4, 7);
+  const roles = pick(random, [['반장', '부반장'], ['회장', '부회장'], ['반장', '부반장', '총무']]);
+  const terms = []; let answer = 1;
+  for (let i = 0; i < roles.length; i += 1) { const term = n - i; terms.push(term); answer *= term; }
+  return item(`학생 ${n}명 중에서 ${roles.join(', ')}을(를) 각각 1명씩 뽑는 경우의 수를 구하세요.`, '', answer, withEnglish({}, `Choose ${roles.join(', ')} (one each, distinct roles) from ${n} students. Find the number of ways.`, `서로 다른 직책이므로 순서를 구분하여 ${terms.join('×')}=${answer}입니다.`, `Since the roles are distinct, multiply: ${terms.join('×')}=${answer}.`));
+}
+
+// 09-6: 대표를 뽑는 경우의 수 (순서 없음) — 순서를 구분한 경우의 수를 중복되는 나열 방법의 수로 나눈다.
+function chooseRepresentativesUnordered(random) {
+  const n = randomInt(random, 4, 9);
+  const r = pick(random, [2, 3]);
+  let ordered = 1;
+  for (let i = 0; i < r; i += 1) ordered *= (n - i);
+  const factorial = r === 2 ? 2 : 6;
+  const answer = ordered / factorial;
+  return item(`서로 다른 ${n}명 중에서 대표 ${r}명을 뽑는 경우의 수를 구하세요. (단, 대표 사이에는 순서가 없다)`, '', answer, withEnglish({}, `Choose ${r} representatives (unordered) from ${n} distinct people. Find the number of ways.`, `순서를 구분하여 뽑으면 ${ordered}가지이고, 뽑힌 ${r}명을 나열하는 방법의 수 ${factorial}가지만큼 중복되므로 ${ordered}÷${factorial}=${answer}입니다.`, `Ordering them gives ${ordered} ways; each unordered group is counted ${factorial} times (the arrangements of the ${r} chosen people), so divide by ${factorial} to get ${answer}.`));
+}
+
+// 09-5: 숫자 카드로 자연수 만들기 (0 없음)
+function formNumberNoZero(random) {
+  const digitCount = pick(random, [4, 5]);
+  const pickCount = pick(random, [2, 3]);
+  const terms = []; let answer = 1;
+  for (let i = 0; i < pickCount; i += 1) { const term = digitCount - i; terms.push(term); answer *= term; }
+  const digitWord = { 2: '두', 3: '세' }[pickCount];
+  return item(`1부터 ${digitCount}까지의 숫자가 각각 적힌 ${digitCount}장의 카드가 있다. 이 중 ${pickCount}장을 뽑아 만들 수 있는 ${digitWord} 자리 자연수의 개수를 구하세요.`, '', answer, withEnglish({}, `There are cards numbered 1 to ${digitCount}. Find how many ${pickCount}-digit numbers can be formed by choosing ${pickCount} cards.`, `맨 앞자리부터 차례로 ${terms.join('×')}=${answer}입니다.`, `Fill each digit position in turn: ${terms.join('×')}=${answer}.`));
+}
+
+// 09-5: 숫자 카드로 자연수 만들기 (0 포함, 맨 앞자리에 0 불가)
+function formNumberWithZero(random) {
+  const maxDigit = pick(random, [4, 5]);
+  const digitCount = maxDigit + 1;
+  const pickCount = pick(random, [2, 3, 4]);
+  const terms = [digitCount - 1];
+  let pool = digitCount - 1;
+  let answer = digitCount - 1;
+  for (let i = 1; i < pickCount; i += 1) { answer *= pool; terms.push(pool); pool -= 1; }
+  const digitWord = { 2: '두', 3: '세', 4: '네' }[pickCount];
+  return item(`0부터 ${maxDigit}까지의 숫자가 각각 적힌 ${digitCount}장의 카드가 있다. 이 중 ${pickCount}장을 뽑아 만들 수 있는 ${digitWord} 자리 자연수의 개수를 구하세요.`, '', answer, withEnglish({}, `There are cards numbered 0 to ${maxDigit}. Find how many ${pickCount}-digit numbers can be formed by choosing ${pickCount} of them (no leading zero).`, `맨 앞자리는 0이 될 수 없으므로 ${digitCount - 1}가지이고, 그 다음 자리부터는 이미 사용한 카드를 제외한 나머지를 순서대로 선택하므로 ${terms.join('×')}=${answer}입니다.`, `The leading digit excludes 0 (${digitCount - 1} choices); each following digit is chosen from what's left: ${terms.join('×')}=${answer}.`));
+}
+
+// 10-1: 확률의 뜻
+function probabilitySingleDraw(random) {
   const red = randomInt(random, 2, 8);
   const blue = randomInt(random, 2, 8);
-  const mode = randomInt(random, 0, 1);
-  if (mode === 0) return item(`주머니에 빨간 공 ${red}개와 파란 공 ${blue}개가 있습니다. 한 개를 꺼낼 때 빨간 공일 확률을 구하세요.`, '', fraction(red, red + blue), withEnglish({ kind: 'probability-bar', counts: [{ label: 'R', value: red }, { label: 'B', value: blue }] }, `A bag has ${red} red and ${blue} blue balls. Find P(red).`, `전체 ${red + blue}개 중 빨간 공이 ${red}개이므로 확률은 ${fraction(red, red + blue)}입니다.`, `There are ${red} favorable outcomes out of ${red + blue}, so the probability is ${fraction(red, red + blue)}.`));
-  const first = fraction(red, red + blue);
-  const second = fraction(red - 1, red + blue - 1);
-  return item(`빨간 공 ${red}개와 파란 공 ${blue}개 중 두 개를 차례로 복원하지 않고 꺼냅니다. 모두 빨간 공일 확률을 구하세요.`, `${first} × ${second}`, fraction(red * (red - 1), (red + blue) * (red + blue - 1)), withEnglish({ kind: 'probability-tree', red, blue }, 'Two balls are drawn without replacement. Find the probability both are red.', `두 확률을 곱하면 ${first}×${second}=${fraction(red * (red - 1), (red + blue) * (red + blue - 1))}입니다.`, `Multiply the successive probabilities to get ${fraction(red * (red - 1), (red + blue) * (red + blue - 1))}.`));
+  return item(`주머니에 빨간 공 ${red}개와 파란 공 ${blue}개가 있습니다. 한 개를 꺼낼 때 빨간 공일 확률을 구하세요.`, '', fraction(red, red + blue), withEnglish({ kind: 'probability-bar', counts: [{ label: 'R', value: red }, { label: 'B', value: blue }] }, `A bag has ${red} red and ${blue} blue balls. Find P(red).`, `전체 ${red + blue}개 중 빨간 공이 ${red}개이므로 확률은 ${fraction(red, red + blue)}입니다.`, `There are ${red} favorable outcomes out of ${red + blue}, so the probability is ${fraction(red, red + blue)}.`));
+}
+
+// 10-3: 어떤 사건이 일어나지 않을 확률 (여사건)
+function probabilityComplement(random) {
+  const total = randomInt(random, 8, 12);
+  const favorable = randomInt(random, 2, total - 2);
+  const p = fraction(favorable, total);
+  const complement = fraction(total - favorable, total);
+  return item(`어떤 사건 A가 일어날 확률이 ${p}일 때, 사건 A가 일어나지 않을 확률을 구하세요.`, '', complement, withEnglish({}, `If the probability that event A occurs is ${p}, find the probability that A does not occur.`, `여사건의 확률은 1에서 원래 확률을 빼면 되므로 1−${p}=${complement}입니다.`, `The complement's probability is 1 minus the original: 1−${p}=${complement}.`));
+}
+
+// 10-4: 사건 A 또는 사건 B가 일어날 확률 (배타적 사건의 덧셈 법칙)
+function probabilityAddition(random) {
+  const countA = randomInt(random, 2, 6); const countB = randomInt(random, 2, 6); const countC = randomInt(random, 2, 6);
+  const total = countA + countB + countC;
+  const pA = fraction(countA, total); const pC = fraction(countC, total);
+  const answer = fraction(countA + countC, total);
+  return item(`주머니 속에 빨간 공 ${countA}개, 파란 공 ${countB}개, 노란 공 ${countC}개가 들어 있다. 한 개의 공을 꺼낼 때, 빨간 공 또는 노란 공이 나올 확률을 구하세요.`, '', answer, withEnglish({}, `A bag has ${countA} red, ${countB} blue, and ${countC} yellow balls. Find the probability of drawing a red or yellow ball.`, `빨간 공 또는 노란 공이 나오는 사건은 동시에 일어나지 않으므로 두 확률을 더하면 ${pA}+${pC}=${answer}입니다.`, `The two events cannot happen together, so add the probabilities: ${pA}+${pC}=${answer}.`));
+}
+
+// 10-2: 확률의 성질 (O/X)
+const PROBABILITY_PROPERTY_STATEMENTS = [
+  { ko: '확률 P는 항상 0≤P≤1을 만족한다.', en: 'A probability P always satisfies 0≤P≤1.', valid: true },
+  { ko: '반드시 일어나는 사건의 확률은 1이다.', en: 'The probability of a certain event is 1.', valid: true },
+  { ko: '절대로 일어나지 않는 사건의 확률은 0이다.', en: 'The probability of an impossible event is 0.', valid: true },
+  { ko: '사건 A가 일어날 확률과 일어나지 않을 확률의 합은 1이다.', en: "The probability of A plus the probability of not-A equals 1.", valid: true },
+  { ko: '확률은 1보다 클 수도 있다.', en: 'A probability can be greater than 1.', valid: false },
+  { ko: '확률이 0이면 그 사건은 반드시 일어난다.', en: 'If the probability is 0, the event is certain to occur.', valid: false },
+];
+function probabilityProperties(random) {
+  const chosen = pick(random, PROBABILITY_PROPERTY_STATEMENTS);
+  return item(`다음 설명이 옳은지 판단하세요.\n"${chosen.ko}"`, '', chosen.valid ? '1' : '2', {
+    ...choicesOf(['옳다', '옳지 않다'], ['True', 'False']),
+    promptEn: `Decide whether the following is true.\n"${chosen.en}"`,
+    explanation: chosen.valid ? '확률의 기본 성질에 부합하는 옳은 설명입니다.' : '확률의 기본 성질에 어긋나는 설명입니다.',
+    explanationEn: chosen.valid ? 'This matches a basic property of probability.' : 'This contradicts a basic property of probability.',
+  });
+}
+
+// 10-5: 두 사건이 동시에 일어날 확률 (독립사건의 곱셈 법칙)
+function probabilityIndependentEvents(random) {
+  const diceFavorable = pick(random, [
+    { desc: '소수의 눈', descEn: 'a prime value', count: 3 },
+    { desc: '3의 배수의 눈', descEn: 'a multiple of 3', count: 2 },
+    { desc: '4 이하의 눈', descEn: 'a value of at most 4', count: 4 },
+  ]);
+  const pCoin = fraction(1, 2);
+  const pDice = fraction(diceFavorable.count, 6);
+  const answer = fraction(diceFavorable.count, 12);
+  return item(`한 개의 동전과 한 개의 주사위를 동시에 던질 때, 동전은 앞면이 나오고 주사위는 ${diceFavorable.desc}이 나올 확률을 구하세요.`, '', answer, withEnglish({}, `Toss one coin and one die together. Find the probability that the coin shows heads and the die shows ${diceFavorable.descEn}.`, `두 사건은 독립이므로 확률을 곱하면 ${pCoin}×${pDice}=${answer}입니다.`, `The events are independent, so multiply: ${pCoin}×${pDice}=${answer}.`));
+}
+
+// 10-6: 연속하여 뽑는 경우의 확률 (복원 vs 비복원)
+function probabilitySequentialDraws(random) {
+  const white = randomInt(random, 2, 6);
+  const black = randomInt(random, 2, 6);
+  const total = white + black;
+  const withReplacement = random() < 0.5;
+  const askWhite = random() < 0.5;
+  const count = askWhite ? white : black;
+  const colorKo = askWhite ? '흰' : '검은';
+  const colorEn = askWhite ? 'white' : 'black';
+  if (withReplacement) {
+    const p1 = fraction(count, total);
+    const answer = fraction(count * count, total * total);
+    return item(`주머니 속에 흰 공 ${white}개, 검은 공 ${black}개가 들어 있다. 한 개의 공을 꺼내 확인하고 다시 넣은 후 한 개의 공을 또 꺼낼 때, 두 개 모두 ${colorKo} 공일 확률을 구하세요.`, '', answer, withEnglish({}, `A bag has ${white} white and ${black} black balls. Draw one, replace it, then draw again. Find the probability both are ${colorEn}.`, `꺼낸 공을 다시 넣으므로 두 번의 확률이 같아 ${p1}×${p1}=${answer}입니다.`, `Since the ball is replaced, both draws have the same probability: ${p1}×${p1}=${answer}.`));
+  }
+  const p1 = fraction(count, total);
+  const p2 = fraction(count - 1, total - 1);
+  const answer = fraction(count * (count - 1), total * (total - 1));
+  return item(`주머니 속에 흰 공 ${white}개, 검은 공 ${black}개가 들어 있다. 한 개의 공을 꺼내 확인하고 다시 넣지 않은 후 한 개의 공을 또 꺼낼 때, 두 개 모두 ${colorKo} 공일 확률을 구하세요.`, '', answer, withEnglish({}, `A bag has ${white} white and ${black} black balls. Draw one without replacement, then draw again. Find the probability both are ${colorEn}.`, `공을 다시 넣지 않으므로 두 번째 확률이 달라져 ${p1}×${p2}=${answer}입니다.`, `Since the ball is not replaced, the second probability changes: ${p1}×${p2}=${answer}.`));
+}
+
+// 10-7: 도형에서의 확률 (넓이 또는 각의 비)
+function probabilityGeometric(random) {
+  const mode = pick(random, ['grid', 'spinner']);
+  if (mode === 'grid') {
+    const totalCells = 9;
+    const shaded = randomInt(random, 2, 6);
+    const answer = fraction(shaded, totalCells);
+    return item(`크기가 모두 같은 정사각형 ${totalCells}개로 이루어진 과녁에 화살을 한 번 쏠 때, 색칠된 ${shaded}칸을 맞힐 확률을 구하세요. (단, 화살이 과녁을 벗어나거나 경계선을 맞히는 경우는 없다)`, '', answer, withEnglish({}, `A target is divided into ${totalCells} equal squares. Find the probability of hitting one of the ${shaded} shaded squares.`, `전체 넓이에 대한 색칠된 부분의 넓이의 비가 확률이므로 ${shaded}/${totalCells}=${answer}입니다.`, `The probability equals the ratio of the shaded area to the total area: ${shaded}/${totalCells}=${answer}.`));
+  }
+  const sections = pick(random, [8, 10, 12]);
+  const favorable = randomInt(random, 2, Math.floor(sections / 2));
+  const answer = fraction(favorable, sections);
+  return item(`크기가 같은 ${sections}등분된 원판에 화살을 한 번 쏠 때, 특정 부분(${favorable}칸)을 맞힐 확률을 구하세요. (단, 화살이 원판을 벗어나거나 경계선을 맞히는 경우는 없다)`, '', answer, withEnglish({}, `A spinner is divided into ${sections} equal sections. Find the probability of landing on one of ${favorable} marked sections.`, `전체 중 특정 부분이 차지하는 비율이 확률이므로 ${favorable}/${sections}=${answer}입니다.`, `The probability equals the fraction of sections marked: ${favorable}/${sections}=${answer}.`));
+}
+
+const PROBABILITY_COUNTING_GENERATORS = [
+  countingDiceEvent, countingOrRule, countingAndRule,
+  arrangeInRow, arrangeSubsetInRow, chooseDistinctRoles, chooseRepresentativesUnordered,
+  formNumberNoZero, formNumberWithZero,
+  probabilitySingleDraw, probabilityComplement, probabilityAddition, probabilityProperties,
+  probabilityIndependentEvents, probabilitySequentialDraws, probabilityGeometric,
+];
+function probability(random) {
+  return pick(random, PROBABILITY_COUNTING_GENERATORS)(random);
 }
 
 function radicals(random) {
@@ -642,7 +827,7 @@ export const SECONDARY_ALGEBRA_UNITS = [
   { id: 'linear-inequalities-2', category: '방정식과 부등식', label: '일차부등식', description: '일차부등식의 풀이와 부호 방향', en: ['Linear inequalities', 'Solve multi-step linear inequalities'], profiles: profiles(P.M2, P.A1), make: linearInequality },
   { id: 'systems-linear', category: '방정식과 부등식', label: '연립일차방정식', description: '가감법·대입법과 두 직선의 교점', en: ['Systems of linear equations', 'Solve systems algebraically and graphically'], profiles: profiles(P.M2, P.A1), make: systemsLinear },
   { id: 'linear-functions-2', category: '함수', label: '일차함수', description: '기울기·절편·그래프와 연립방정식의 관계', en: ['Linear functions', 'Work with slope, intercepts and graphs'], profiles: profiles(P.M2, P.A1), make: linearFunctions },
-  { id: 'probability-2', category: '확률과 통계', label: '경우의 수와 확률', description: '한 단계·두 단계 확률과 복원하지 않는 추출', en: ['Probability', 'Find one-stage and two-stage probabilities'], profiles: profiles(P.M2, P.A1), make: probability },
+  { id: 'probability-2', category: '확률과 통계', label: '경우의 수와 확률', description: '경우의 수(합·곱의 법칙, 나열·대표 뽑기)와 확률의 성질·계산', en: ['Counting & probability', 'Counting principles, arrangements, and the properties and rules of probability'], profiles: profiles(P.M2, P.A1), make: probability },
   { id: 'radicals-real-numbers', category: '수와 연산', label: '제곱근과 실수', description: '근호의 간단한 계산과 무리수', en: ['Radicals & real numbers', 'Simplify and combine radical expressions'], profiles: profiles(P.M3, P.A1, P.A2, P.PC), make: radicals },
   { id: 'identities-factoring', category: '문자와 식', label: '곱셈공식과 인수분해', description: '곱셈공식의 전개와 이차식 인수분해', en: ['Identities & factoring', 'Expand identities and factor quadratics'], profiles: profiles(P.M3, P.H1, P.A1, P.A2), make: identitiesFactoring },
   { id: 'quadratic-equations', category: '방정식과 부등식', label: '이차방정식', description: '인수분해 가능한 이차방정식의 근', en: ['Quadratic equations', 'Solve quadratic equations by factoring'], profiles: profiles(P.M3, P.H1, P.A1, P.A2), make: quadraticEquations },
