@@ -260,7 +260,14 @@ function systemsLinear(random) {
   return pick(random, SYSTEMS_GENERATORS)(random);
 }
 
-function linearFunctions(random) {
+function signedTerm(coeff, variable) {
+  const abs = Math.abs(coeff);
+  const term = abs === 1 ? variable : `${abs}${variable}`;
+  return coeff < 0 ? `− ${term}` : `+ ${term}`;
+}
+
+// 08-5 (첫 번째 유형): 두 점을 지나는 직선의 기울기 / 일차함수의 y절편
+function linearFunctionsSlopeIntercept(random) {
   const slope = nonZero(random, -4, 4);
   const intercept = randomInt(random, -6, 6);
   const x1 = randomInt(random, -3, 2);
@@ -271,6 +278,151 @@ function linearFunctions(random) {
   if (mode === 0) return item(`두 점 (${x1}, ${y1}), (${x2}, ${y2})를 지나는 직선의 기울기를 구하세요.`, '', slope, withEnglish({ kind: 'algebra-graph', graph: { type: 'linear', slope, intercept, points: [{ x: x1, y: y1 }, { x: x2, y: y2 }] } }, `Find the slope of the line through (${x1}, ${y1}) and (${x2}, ${y2}).`, `기울기는 (${y2}−${y1})/(${x2}−${x1})=${slope}입니다.`, `The slope is (${y2}−${y1})/(${x2}−${x1})=${slope}.`));
   return item('일차함수의 y절편을 구하세요.', `y = ${linear(slope, intercept)}`, intercept, withEnglish({ kind: 'algebra-graph', graph: { type: 'linear', slope, intercept, points: [] } }, 'Find the y-intercept of the linear function.', `x=0일 때 y=${intercept}이므로 y절편은 ${intercept}입니다.`, `At x=0, y=${intercept}, so the y-intercept is ${intercept}.`));
 }
+
+// 08-1: 함숫값 구하기 (일차함수 및 반비례 f(x)=k/x)
+function functionValue(random) {
+  const x0 = nonZero(random, -6, 6);
+  if (random() < 0.6) {
+    const a = nonZero(random, -6, 6);
+    const b = randomInt(random, -8, 8);
+    const value = a * x0 + b;
+    return item(`함수 f(x)=${linear(a, b)}에 대하여 f(${x0})의 값을 구하세요.`, '', value, withEnglish({}, 'Find the function value f(x0).', `f(${x0})=${linear(a, b)}에 x=${x0}을 대입하면 ${value}입니다.`, `Substitute x=${x0} into f(x)=${linear(a, b)} to get ${value}.`));
+  }
+  const multiplier = nonZero(random, -8, 8);
+  const k = x0 * multiplier;
+  return item(`함수 f(x)=${k}/x에 대하여 f(${x0})의 값을 구하세요.`, '', multiplier, withEnglish({}, 'Find the function value for the inverse-variation function.', `f(${x0})=${k}/${x0}=${multiplier}입니다.`, `f(${x0})=${k}/${x0}=${multiplier}.`));
+}
+
+// 08-2: 일차함수인지 판별하기
+const LINEAR_FUNCTION_CANDIDATES = [
+  { expr: 'y=3x−1', isLinear: true },
+  { expr: 'y=−2x+x^2', isLinear: false },
+  { expr: 'y=4', isLinear: false },
+  { expr: 'xy=10', isLinear: false },
+  { expr: 'y=(1/2)(x−3)', isLinear: true },
+  { expr: 'x+3y=6', isLinear: true },
+  { expr: 'y=1/x', isLinear: false },
+  { expr: 'y=−x+5', isLinear: true },
+];
+function functionIdentifyLinear(random) {
+  const chosen = pick(random, LINEAR_FUNCTION_CANDIDATES);
+  return item('다음 중 y가 x에 대한 일차함수이면 "예", 아니면 "아니오"를 고르세요.', chosen.expr, chosen.isLinear ? '1' : '2', {
+    ...choicesOf(['예', '아니오'], ['Yes', 'No']),
+    ...withEnglish({}, 'Decide whether y is a linear function of x.', `${chosen.expr}는 x에 대한 일차식${chosen.isLinear ? '이므로 일차함수입니다' : '이 아니므로 일차함수가 아닙니다'}.`, `${chosen.expr} is ${chosen.isLinear ? '' : 'not '}a first-degree expression in x.`),
+  });
+}
+
+// 08-4: 일차함수 그래프의 x절편, y절편
+function functionIntercepts(random) {
+  const a = nonZero(random, -6, 6);
+  const b = nonZero(random, -8, 8);
+  if (random() < 0.5) return item(`일차함수 y=${linear(a, b)}의 그래프의 y절편을 구하세요.`, '', b, withEnglish({}, 'Find the y-intercept.', `x=0일 때 y=${b}이므로 y절편은 ${b}입니다.`, `At x=0, y=${b}, so the y-intercept is ${b}.`));
+  return item(`일차함수 y=${linear(a, b)}의 그래프의 x절편을 구하세요.`, '', fraction(-b, a), withEnglish({}, 'Find the x-intercept.', `y=0을 대입하면 x=${fraction(-b, a)}이므로 x절편은 ${fraction(-b, a)}입니다.`, `Setting y=0 gives x=${fraction(-b, a)}, the x-intercept.`));
+}
+
+// 08-5 (두 번째 유형): x의 증가량에 대한 y의 증가량 (변화율)
+function functionRateOfChange(random) {
+  const a = nonZero(random, -6, 6);
+  const b = randomInt(random, -6, 6);
+  const dx = randomInt(random, 2, 6);
+  const dy = a * dx;
+  return item(`일차함수 y=${linear(a, b)}에서 x의 값이 ${dx}만큼 증가할 때, y의 값의 증가량을 구하세요.`, '', dy, withEnglish({}, 'Find the change in y when x increases by the given amount.', `기울기가 ${a}이므로 x가 ${dx}만큼 증가하면 y는 ${a}×${dx}=${dy}만큼 증가합니다.`, `The slope is ${a}, so y changes by ${a}×${dx}=${dy}.`));
+}
+
+// 08-6: 일차함수 그래프의 증가·감소 판별
+function functionSlopeSign(random) {
+  const a = nonZero(random, -6, 6);
+  const b = randomInt(random, -6, 6);
+  return item(`일차함수 y=${linear(a, b)}에 대한 설명으로 옳은 것을 고르세요.`, '', a > 0 ? '1' : '2', {
+    ...choicesOf(['x의 값이 증가하면 y의 값도 증가한다', 'x의 값이 증가하면 y의 값은 감소한다'], ['As x increases, y also increases', 'As x increases, y decreases']),
+    ...withEnglish({}, 'Decide whether the function is increasing or decreasing.', `기울기가 ${a > 0 ? '양수' : '음수'}이므로 x가 증가하면 y는 ${a > 0 ? '증가합니다' : '감소합니다'}.`, `The slope is ${a > 0 ? 'positive' : 'negative'}, so y ${a > 0 ? 'increases' : 'decreases'} as x increases.`),
+  });
+}
+
+// 08-7: 일차함수 그래프의 평행·일치 조건
+function functionParallelCoincident(random) {
+  const slope = nonZero(random, -6, 6);
+  const knownIntercept = randomInt(random, -8, 8);
+  if (random() < 0.5) {
+    return item(`두 일차함수 y=${slope}x+a, y=${linear(slope, knownIntercept)}의 그래프가 서로 일치하도록 하는 상수 a의 값을 구하세요.`, '', knownIntercept, withEnglish({}, 'Find a so the two graphs coincide.', `기울기가 이미 같으므로 일치하려면 y절편도 같아야 합니다. 따라서 a=${knownIntercept}입니다.`, `The slopes already match, so the y-intercepts must match too: a=${knownIntercept}.`));
+  }
+  let otherIntercept;
+  do { otherIntercept = randomInt(random, -8, 8); } while (otherIntercept === knownIntercept);
+  return item(`두 일차함수 y=ax${signed(otherIntercept)}, y=${linear(slope, knownIntercept)}의 그래프가 서로 평행하도록 하는 상수 a의 값을 구하세요.`, '', slope, withEnglish({}, 'Find a so the two graphs are parallel.', `두 그래프가 평행하려면 기울기가 같아야 하므로 a=${slope}입니다.`, `Parallel lines have equal slopes, so a=${slope}.`));
+}
+
+// 08-8: 일차함수의 활용 (일정한 비율로 줄어드는 양)
+function functionWordProblem(random) {
+  const capacity = pick(random, [30, 40, 50, 60, 80]);
+  const rate = pick(random, [5, 8, 10, 12, 15, 20]);
+  const usedUnits = randomInt(random, 1, Math.floor(capacity / rate) - 1 || 1);
+  const x = rate * usedUnits;
+  const remaining = capacity - usedUnits;
+  return item(`1 km를 달리는 데 1/${rate} L의 휘발유가 소모되는 자동차가 있다. 이 자동차에 휘발유 ${capacity} L를 채우고 출발하여 x km를 달렸을 때 남은 휘발유의 양을 y L라 하자. x=${x}일 때 y의 값을 구하세요.`, `y = ${capacity} − x/${rate}`, remaining, withEnglish({}, 'Set up the linear function and evaluate it at the given x.', `y=${capacity}−x/${rate}에 x=${x}를 대입하면 y=${remaining}입니다.`, `Substituting x=${x} into y=${capacity}−x/${rate} gives y=${remaining}.`), { answerSuffix: 'L' });
+}
+
+function linearFunctions(random) {
+  return pick(random, LINEAR_FUNCTION_GENERATORS)(random);
+}
+
+// 09-1: 일차방정식 ax+by+c=0의 그래프의 기울기·x절편·y절편
+function lineStandardForm(random) {
+  const a = nonZero(random, -5, 5);
+  const b = nonZero(random, -5, 5);
+  const c = randomInt(random, -10, 10);
+  const expression = `${linear(a, 0)} ${signedTerm(b, 'y')} ${signed(c)} = 0`;
+  const ask = pick(random, ['slope', 'x-intercept', 'y-intercept']);
+  if (ask === 'slope') return item('다음 일차방정식의 그래프의 기울기를 구하세요.', expression, fraction(-a, b), withEnglish({}, 'Find the slope of the graph of the linear equation.', `y=${fraction(-a, b)}x+(${fraction(-c, b)}) 꼴로 정리하면 기울기는 ${fraction(-a, b)}입니다.`, `Solving for y gives slope ${fraction(-a, b)}.`));
+  if (ask === 'x-intercept') return item('다음 일차방정식의 그래프의 x절편을 구하세요.', expression, fraction(-c, a), withEnglish({}, 'Find the x-intercept of the graph.', `y=0을 대입하면 x=${fraction(-c, a)}이므로 x절편은 ${fraction(-c, a)}입니다.`, `Setting y=0 gives x=${fraction(-c, a)}.`));
+  return item('다음 일차방정식의 그래프의 y절편을 구하세요.', expression, fraction(-c, b), withEnglish({}, 'Find the y-intercept of the graph.', `x=0을 대입하면 y=${fraction(-c, b)}이므로 y절편은 ${fraction(-c, b)}입니다.`, `Setting x=0 gives y=${fraction(-c, b)}.`));
+}
+
+// 09-2: 좌표축에 평행한 직선의 방정식 (x=p, y=q)
+function verticalHorizontalLine(random) {
+  const x0 = randomInt(random, -6, 6);
+  const y0 = randomInt(random, -6, 6);
+  if (random() < 0.5) return item(`점 (${x0}, ${y0})을 지나고 y축에 평행한 직선의 방정식을 구하세요.`, '', `x=${x0}`, withEnglish({}, 'Find the equation of the line through the point, parallel to the y-axis.', `y축에 평행한 직선은 x=(상수) 꼴이므로 x=${x0}입니다.`, `A line parallel to the y-axis has the form x=constant: x=${x0}.`));
+  return item(`점 (${x0}, ${y0})을 지나고 x축에 평행한 직선의 방정식을 구하세요.`, '', `y=${y0}`, withEnglish({}, 'Find the equation of the line through the point, parallel to the x-axis.', `x축에 평행한 직선은 y=(상수) 꼴이므로 y=${y0}입니다.`, `A line parallel to the x-axis has the form y=constant: y=${y0}.`));
+}
+
+// 09-3: 기울기를 알 때 직선의 방정식 y=ax+b에서 a+b의 값 구하기 (열린 형태 답 대신 계산값으로 확인)
+function lineEquationSlopeForm(random) {
+  const slope = nonZero(random, -6, 6);
+  const mode = pick(random, ['intercept', 'point', 'rate']);
+  if (mode === 'intercept') {
+    const b = randomInt(random, -8, 8);
+    return item(`기울기가 ${slope}이고 y절편이 ${b}인 직선의 방정식을 y=ax+b 꼴로 나타낼 때, a+b의 값을 구하세요.`, '', slope + b, withEnglish({}, 'Write the line as y=ax+b and find a+b.', `a=${slope}, b=${b}이므로 a+b=${slope + b}입니다.`, `Here a=${slope} and b=${b}, so a+b=${slope + b}.`));
+  }
+  if (mode === 'point') {
+    const x0 = randomInt(random, -6, 6);
+    const y0 = randomInt(random, -6, 6);
+    const b = y0 - slope * x0;
+    return item(`기울기가 ${slope}이고 점 (${x0}, ${y0})을 지나는 직선의 방정식을 y=ax+b 꼴로 나타낼 때, a+b의 값을 구하세요.`, '', slope + b, withEnglish({}, 'Write the line as y=ax+b and find a+b.', `y=${slope}x+b에 (${x0}, ${y0})을 대입하면 b=${b}이므로 a+b=${slope + b}입니다.`, `Substituting the point into y=${slope}x+b gives b=${b}, so a+b=${slope + b}.`));
+  }
+  const dx = randomInt(random, 2, 5);
+  const dy = slope * dx;
+  const b = randomInt(random, -8, 8);
+  return item(`x의 값이 ${dx}만큼 증가할 때 y의 값이 ${dy}만큼 증가하고, y절편이 ${b}인 직선의 방정식을 y=ax+b 꼴로 나타낼 때, a+b의 값을 구하세요.`, '', slope + b, withEnglish({}, 'Write the line as y=ax+b and find a+b.', `기울기는 ${dy}/${dx}=${slope}이고 b=${b}이므로 a+b=${slope + b}입니다.`, `The slope is ${dy}/${dx}=${slope}, and b=${b}, so a+b=${slope + b}.`));
+}
+
+// 09-4: 두 점 또는 x절편·y절편으로 직선의 방정식 구하기
+function lineEquationTwoPoints(random) {
+  if (random() < 0.5) {
+    const x1 = randomInt(random, -6, 4);
+    const x2 = x1 + randomInt(random, 1, 6);
+    const slope = nonZero(random, -5, 5);
+    const y1 = randomInt(random, -8, 8);
+    const y2 = y1 + slope * (x2 - x1);
+    const b = y1 - slope * x1;
+    return item(`두 점 (${x1}, ${y1}), (${x2}, ${y2})를 지나는 직선의 방정식을 y=ax+b 꼴로 나타낼 때, a+b의 값을 구하세요.`, '', slope + b, withEnglish({}, 'Find the line through the two points as y=ax+b and give a+b.', `기울기는 (${y2}−${y1})/(${x2}−${x1})=${slope}이고 b=${b}이므로 a+b=${slope + b}입니다.`, `The slope is ${slope} and the y-intercept is ${b}, so a+b=${slope + b}.`));
+  }
+  const xIntercept = nonZero(random, -8, 8);
+  const slope = nonZero(random, -4, 4);
+  const yIntercept = xIntercept * slope * -1;
+  return item(`x절편이 ${xIntercept}, y절편이 ${yIntercept}인 직선의 방정식을 y=ax+b 꼴로 나타낼 때, a+b의 값을 구하세요.`, '', slope + yIntercept, withEnglish({}, 'Find the line through the intercepts as y=ax+b and give a+b.', `기울기는 −(y절편/x절편)=${slope}이고 b=${yIntercept}이므로 a+b=${slope + yIntercept}입니다.`, `The slope is −(y-intercept/x-intercept)=${slope} and b=${yIntercept}, so a+b=${slope + yIntercept}.`));
+}
+
+const LINEAR_FUNCTION_GENERATORS = [linearFunctionsSlopeIntercept, linearFunctionsSlopeIntercept, functionValue, functionIdentifyLinear, functionIntercepts, functionRateOfChange, functionSlopeSign, functionParallelCoincident, functionWordProblem, lineStandardForm, verticalHorizontalLine, lineEquationSlopeForm, lineEquationTwoPoints];
 
 function probability(random) {
   const red = randomInt(random, 2, 8);
