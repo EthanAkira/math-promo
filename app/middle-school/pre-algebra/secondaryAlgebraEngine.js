@@ -73,17 +73,177 @@ function polynomialOperations(random) {
   return item('단항식과 다항식을 곱하여 전개하세요.', `${p}x(x ${signed(q)})`, `${p}x^2+${p * q}x`, withEnglish({}, 'Expand the product.', `분배법칙을 적용하면 ${p}x²+${p * q}x입니다.`, `Distribute ${p}x to obtain ${p}x²+${p * q}x.`));
 }
 
-function linearInequality(random) {
+const REVERSE_SYMBOL = { '<': '>', '≤': '≥', '>': '<', '≥': '≤' };
+
+function choicesOf(choicesKo, choicesEn = choicesKo) {
+  return { choices: choicesKo.map((label, index) => ({ label, labelEn: choicesEn[index] })) };
+}
+
+// 04-5/04-6: 기본형 ax+b ▢ c 부등식 풀이 (양수/음수로 나누어 부호가 바뀌는 경우 모두 포함)
+function inequalitySolveBasic(random) {
   const root = randomInt(random, -6, 10);
   const a = randomInt(random, 2, 6);
   const b = randomInt(random, -9, 9);
   const symbol = pick(random, ['<', '≤', '>', '≥']);
-  const reverse = { '<': '>', '≤': '≥', '>': '<', '≥': '≤' };
   if (random() < 0.7) return item('일차부등식을 푸세요.', `${a}x ${signed(b)} ${symbol} ${a * root + b}`, `x${symbol}${root}`, withEnglish({}, 'Solve the linear inequality.', `양변에서 ${b}를 정리하고 양수 ${a}로 나누면 x${symbol}${root}입니다.`, `Isolate the x-term and divide by positive ${a}: x${symbol}${root}.`));
-  return item('일차부등식을 푸세요.', `${-a}x ${signed(b)} ${symbol} ${-a * root + b}`, `x${reverse[symbol]}${root}`, withEnglish({}, 'Solve the linear inequality.', `음수 ${-a}로 나누므로 부등호 방향을 바꾸어 x${reverse[symbol]}${root}입니다.`, `Divide by negative ${-a} and reverse the inequality: x${reverse[symbol]}${root}.`));
+  return item('일차부등식을 푸세요.', `${-a}x ${signed(b)} ${symbol} ${-a * root + b}`, `x${REVERSE_SYMBOL[symbol]}${root}`, withEnglish({}, 'Solve the linear inequality.', `음수 ${-a}로 나누므로 부등호 방향을 바꾸어 x${REVERSE_SYMBOL[symbol]}${root}입니다.`, `Divide by negative ${-a} and reverse the inequality: x${REVERSE_SYMBOL[symbol]}${root}.`));
 }
 
-function systemsLinear(random) {
+// 04-6: 괄호를 포함한 복잡한 일차부등식 (분배법칙 후 정리)
+function inequalitySolveParentheses(random) {
+  const p = randomInt(random, 2, 5);
+  let q;
+  do { q = randomInt(random, 1, 5); } while (q === p);
+  const h = randomInt(random, -4, 4);
+  const root = randomInt(random, -6, 8);
+  const coeff = p - q;
+  const r = root * coeff - p * h;
+  const symbol = pick(random, ['<', '≤', '>', '≥']);
+  const finalSymbol = coeff > 0 ? symbol : REVERSE_SYMBOL[symbol];
+  return item('괄호를 풀어 일차부등식을 푸세요.', `${p}(${linear(1, -h)}) ${symbol} ${linear(q, r)}`, `x${finalSymbol}${root}`, withEnglish({}, 'Expand the parentheses and solve the inequality.', `괄호를 풀면 ${linear(p, -p * h)} ${symbol} ${linear(q, r)}이고, 정리하면 ${coeff < 0 ? '음수로 나누어 부등호 방향을 바꾸어 ' : ''}x${finalSymbol}${root}입니다.`, `Expanding gives ${linear(p, -p * h)} ${symbol} ${linear(q, r)}; simplifying yields x${finalSymbol}${root}.`));
+}
+
+// 04-6: 소수 계수를 포함한 일차부등식
+function inequalitySolveDecimal(random) {
+  const round1 = (value) => Math.round(value * 10) / 10;
+  const fmt = (value) => (Number.isInteger(value) ? String(value) : value.toFixed(1));
+  const root = randomInt(random, -8, 10);
+  const a = round1(pick(random, [2, 3, 4, 5, 6, 7, 8, 9]) / 10);
+  const b = round1(randomInt(random, -20, 20) / 10);
+  const symbol = pick(random, ['<', '≤', '>', '≥']);
+  const rhs = round1(a * root + b);
+  return item('소수를 포함한 일차부등식을 푸세요.', `${fmt(a)}x ${signed(b)} ${symbol} ${fmt(rhs)}`, `x${symbol}${root}`, withEnglish({}, 'Solve the linear inequality with decimal coefficients.', `양변에서 ${fmt(b)}를 정리하고 양수 ${fmt(a)}로 나누면 x${symbol}${root}입니다.`, `Isolate the x-term and divide by the positive coefficient ${fmt(a)}: x${symbol}${root}.`));
+}
+
+// 04-2: 특정 x 값이 부등식의 해인지 판단하기
+function inequalityCheckValue(random) {
+  const a = randomInt(random, 2, 6);
+  const b = randomInt(random, -8, 8);
+  const c = randomInt(random, -10, 15);
+  const testX = randomInt(random, -5, 8);
+  const symbol = pick(random, ['<', '≤', '>', '≥']);
+  const lhs = a * testX + b;
+  const holds = symbol === '<' ? lhs < c : symbol === '≤' ? lhs <= c : symbol === '>' ? lhs > c : lhs >= c;
+  return item(`x=${testX}가 다음 부등식의 해인지 판단하세요.`, `${linear(a, b)} ${symbol} ${c}`, holds ? '1' : '2', {
+    ...choicesOf(['해이다', '해가 아니다'], ['It is a solution', 'It is not a solution']),
+    ...withEnglish({}, `Decide whether x=${testX} is a solution of the inequality.`, `x=${testX}를 대입하면 ${lhs}${symbol}${c}는 ${holds ? '참' : '거짓'}이므로 해가 ${holds ? '됩니다' : '되지 않습니다'}.`, `Substituting x=${testX} gives ${lhs}${symbol}${c}, which is ${holds ? 'true' : 'false'}.`),
+  });
+}
+
+// 04-3: 부등식의 성질 - 양변에 연산을 적용했을 때 부호 방향
+function inequalityProperty(random) {
+  const relation = pick(random, ['<', '>']);
+  const k = nonZero(random, -9, 9);
+  const ops = [
+    { ko: `양변에 ${k}를 더하면`, en: `Add ${k} to both sides:`, expr: `a${signed(k)} □ b${signed(k)}`, flips: false },
+    { ko: `양변에서 ${Math.abs(k)}를 빼면`, en: `Subtract ${Math.abs(k)} from both sides:`, expr: `a${signed(-Math.abs(k))} □ b${signed(-Math.abs(k))}`, flips: false },
+    { ko: `양변에 ${k}를 곱하면`, en: `Multiply both sides by ${k}:`, expr: `${k}a □ ${k}b`, flips: k < 0 },
+    { ko: `양변을 ${k}로 나누면`, en: `Divide both sides by ${k}:`, expr: `a÷${k} □ b÷${k}`, flips: k < 0 },
+  ];
+  const chosen = pick(random, ops);
+  const resultSymbol = chosen.flips ? REVERSE_SYMBOL[relation] : relation;
+  return item(`a ${relation} b일 때, ${chosen.ko} 다음 중 □ 안에 알맞은 부등호는?`, chosen.expr, resultSymbol === '<' ? '1' : '2', {
+    ...choicesOf(['<', '>']),
+    ...withEnglish({}, `Given a ${relation} b, ${chosen.en} choose the correct inequality symbol for □.`, `${chosen.flips ? '음수를 곱하거나 나누면 부등호 방향이 바뀌므로' : '더하거나 빼는 것은 부등호 방향에 영향을 주지 않으므로'} ${resultSymbol}입니다.`, `${chosen.flips ? 'Multiplying or dividing by a negative number reverses the inequality, so' : 'Adding or subtracting does not change the direction, so'} the symbol is ${resultSymbol}.`),
+  });
+}
+
+// 05-1: 개수 제한형 활용 문제 (예산 안에서 최대 몇 개까지 살 수 있는지)
+function inequalityWordBudget(random) {
+  const price = pick(random, [300, 700, 800, 900, 1200, 1500]);
+  const fee = pick(random, [500, 1000, 1500, 2000]);
+  const maxCount = randomInt(random, 5, 15);
+  const budget = price * maxCount + fee;
+  return item(`한 개에 ${price}원인 물건을 ${fee}원짜리 상자에 담아서 ${budget}원 이하의 금액으로 사려고 한다. 물건의 개수를 x라 할 때, 최대 몇 개까지 살 수 있는지 구하세요.`, `${price}x + ${fee} ≤ ${budget}`, maxCount, { ...withEnglish({}, 'Set up and solve the inequality to find the maximum number of items.', `부등식을 세우면 ${price}x+${fee}≤${budget}이고, 풀면 x≤${maxCount}이므로 최대 ${maxCount}개까지 살 수 있습니다.`, `The inequality ${price}x+${fee}≤${budget} gives x≤${maxCount}, so at most ${maxCount} items.`), answerSuffix: '개' });
+}
+
+// 05-2: 연속하는 두 자연수의 합에 대한 활용 문제
+function inequalityWordConsecutive(random) {
+  const smallest = randomInt(random, 10, 40);
+  const sum = 2 * smallest + 1;
+  const threshold = sum - 1;
+  return item(`연속하는 두 자연수의 합이 ${threshold}보다 크다고 한다. 이를 만족하는 가장 작은 두 자연수 중 작은 수를 구하세요.`, `x + (x+1) > ${threshold}`, smallest, withEnglish({}, 'Set up and solve the inequality, then give the smaller of the two smallest natural numbers.', `부등식을 세우면 2x+1>${threshold}이고, 풀면 x>${smallest - 1}이므로 가장 작은 자연수는 ${smallest}입니다.`, `The inequality 2x+1>${threshold} gives x>${smallest - 1}, so the smallest natural number is ${smallest}.`));
+}
+
+// 05-2: 두 지불 방식의 손익분기점 (몇 개 이상일 때 유리한지)
+function inequalityWordBreakeven(random) {
+  const priceLocal = pick(random, [1300, 1400, 1500, 1600, 1800]);
+  const priceMarket = priceLocal + randomInt(random, 100, 300);
+  const diff = priceMarket - priceLocal;
+  const x0 = randomInt(random, 3, 10);
+  const fee = diff * x0;
+  const answer = x0 + 1;
+  return item(`집 근처 상점에서 한 개에 ${priceMarket}원인 물건이 도매 시장에서는 ${priceLocal}원이고, 도매 시장에 다녀오는 데 교통비 ${fee}원이 든다고 한다. 물건을 몇 개 이상 살 경우 도매 시장에 가는 것이 유리한지 구하세요.`, `${priceMarket}x > ${priceLocal}x + ${fee}`, answer, { ...withEnglish({}, 'Set up and solve the inequality to find the break-even quantity.', `부등식을 세우면 ${priceMarket}x>${priceLocal}x+${fee}이고, 풀면 x>${x0}이므로 ${answer}개 이상일 때 유리합니다.`, `The inequality ${priceMarket}x>${priceLocal}x+${fee} gives x>${x0}, so buying ${answer} or more is cheaper via the market.`), answerSuffix: '개' });
+}
+
+const INEQUALITY_GENERATORS = [inequalitySolveBasic, inequalitySolveBasic, inequalitySolveParentheses, inequalitySolveDecimal, inequalityCheckValue, inequalityProperty, inequalityWordBudget, inequalityWordConsecutive, inequalityWordBreakeven];
+
+function linearInequality(random) {
+  return pick(random, INEQUALITY_GENERATORS)(random);
+}
+
+// 06-1/06-2: 두 식을 모두 만족하는 순서쌍 (x, y)가 연립방정식의 해인지 판단하기
+function systemsCheckSolution(random) {
+  const testX = randomInt(random, -5, 6);
+  const testY = randomInt(random, -5, 6);
+  let a; let b; let c; let d;
+  do {
+    a = nonZero(random, -4, 4); b = nonZero(random, -4, 4);
+    c = nonZero(random, -4, 4); d = nonZero(random, -4, 4);
+  } while (a * d === b * c);
+  const e = a * testX + b * testY;
+  const isSolution = random() < 0.5;
+  const f = isSolution ? c * testX + d * testY : c * testX + d * testY + nonZero(random, 1, 4);
+  return item(`(x, y)=(${testX}, ${testY})가 다음 연립방정식의 해인지 판단하세요.`, `${linear(a, 0)} ${signed(b)}y = ${e},  ${linear(c, 0)} ${signed(d)}y = ${f}`, isSolution ? '1' : '2', {
+    ...choicesOf(['해이다', '해가 아니다'], ['It is a solution', 'It is not a solution']),
+    ...withEnglish({}, `Decide whether (x, y)=(${testX}, ${testY}) is a solution of the system.`, `두 식에 대입하면 첫 식은 성립${isSolution ? '하고 둘째 식도 성립하므로 해입니다' : '하지만 둘째 식은 성립하지 않으므로 해가 아닙니다'}.`, `Substituting satisfies the first equation, and the second equation is ${isSolution ? 'also satisfied, so it is a solution' : 'not satisfied, so it is not a solution'}.`),
+  });
+}
+
+// 06-3: 대입법 - 한 식이 y=... 형태로 이미 정리된 연립방정식
+function systemsLinearSubstitution(random) {
+  const x = randomInt(random, -6, 8);
+  const y = randomInt(random, -6, 8);
+  const m = nonZero(random, -4, 4);
+  const k = y - m * x;
+  let c; let d;
+  do { c = nonZero(random, -4, 4); d = nonZero(random, -4, 4); } while (c + d * m === 0);
+  const f = c * x + d * y;
+  return item('대입법을 이용하여 연립방정식을 풀고 해 (x, y)를 구하세요.', `y = ${linear(m, k)},  ${linear(c, 0)} ${signed(d)}y = ${f}`, `(${x},${y})`, withEnglish({}, 'Substitute the first equation into the second, then solve for (x, y).', `y=${linear(m, k)}를 둘째 식에 대입하여 풀면 x=${x}, y=${y}이므로 해는 (${x}, ${y})입니다.`, `Substituting y=${linear(m, k)} into the second equation gives x=${x}, y=${y}.`));
+}
+
+// 06-5: 괄호를 포함한 복잡한 연립방정식
+function systemsLinearParentheses(random) {
+  const x = randomInt(random, -5, 7);
+  const y = randomInt(random, -5, 7);
+  const a = pick(random, [2, 3, 4, -2, -3, -4]);
+  const h = randomInt(random, -3, 3);
+  const b = nonZero(random, -4, 4);
+  const rhs1 = a * (x - h) + b * y;
+  let c; let d;
+  do { c = nonZero(random, -4, 4); d = nonZero(random, -4, 4); } while (a * d === b * c);
+  const rhs2 = c * x + d * y;
+  return item('괄호를 풀어 연립방정식을 풀고 해 (x, y)를 구하세요.', `${a}(${linear(1, -h)}) ${signed(b)}y = ${rhs1},  ${linear(c, 0)} ${signed(d)}y = ${rhs2}`, `(${x},${y})`, withEnglish({}, 'Expand the parentheses, solve the system, and give (x, y).', `괄호를 풀면 ${linear(a, -a * h)} ${signed(b)}y = ${rhs1}이 되고, 두 식을 연립하여 풀면 x=${x}, y=${y}입니다.`, `Expanding gives ${linear(a, -a * h)} ${signed(b)}y=${rhs1}; solving the system yields x=${x}, y=${y}.`));
+}
+
+// 06-6: 해가 없거나 무수히 많은 특수한 연립방정식 판별하기
+function systemsSpecialCase(random) {
+  const a = nonZero(random, -4, 4);
+  const b = nonZero(random, -4, 4);
+  const k = pick(random, [2, 3, -2, -3]);
+  const c = a * k; const d = b * k;
+  const e = randomInt(random, -9, 9);
+  const infinite = random() < 0.5;
+  const f = infinite ? e * k : e * k + nonZero(random, 1, 6);
+  return item('다음 연립방정식의 해의 개수를 고르세요.', `${linear(a, 0)} ${signed(b)}y = ${e},  ${linear(c, 0)} ${signed(d)}y = ${f}`, infinite ? '2' : '1', {
+    ...choicesOf(['해가 없다', '해가 무수히 많다'], ['No solution', 'Infinitely many solutions']),
+    ...withEnglish({}, 'Determine how many solutions this system has.', infinite ? `두 식의 계수와 상수항의 비가 모두 같으므로(${k}배) 해가 무수히 많습니다.` : `계수의 비는 같지만 상수항의 비가 달라 해가 없습니다.`, infinite ? `All coefficient and constant ratios match (×${k}), so there are infinitely many solutions.` : `The coefficient ratios match but the constants don't, so there is no solution.`),
+  });
+}
+
+const SYSTEMS_GENERATORS = [systemsLinearBasic, systemsLinearBasic, systemsCheckSolution, systemsLinearSubstitution, systemsLinearParentheses, systemsSpecialCase];
+
+function systemsLinearBasic(random) {
   const x = randomInt(random, -5, 7);
   const y = randomInt(random, -5, 7);
   let a; let b; let c; let d;
@@ -94,6 +254,10 @@ function systemsLinear(random) {
   const e = a * x + b * y;
   const f = c * x + d * y;
   return item('연립일차방정식의 해 (x, y)를 구하세요.', `${linear(a, 0)} ${signed(b)}y = ${e},  ${linear(c, 0)} ${signed(d)}y = ${f}`, `(${x},${y})`, withEnglish({ kind: 'system-graph', lines: [{ a, b, c: e }, { a: c, b: d, c: f }], point: { x, y } }, 'Solve the system and give (x, y).', `가감법으로 한 문자를 소거하면 x=${x}, y=${y}이므로 해는 (${x}, ${y})입니다.`, `Elimination gives x=${x} and y=${y}, so the solution is (${x}, ${y}).`));
+}
+
+function systemsLinear(random) {
+  return pick(random, SYSTEMS_GENERATORS)(random);
 }
 
 function linearFunctions(random) {
