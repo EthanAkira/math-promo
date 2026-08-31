@@ -20,6 +20,12 @@ function formatDate(iso) {
   }
 }
 
+function orderOf(post) {
+  return typeof post.order === 'number' ? post.order : Date.parse(post.createdAt) || 0;
+}
+
+const MOVABLE_CATEGORIES = ['notice', 'contact', 'coding'];
+
 function titleOf(message, fallback) {
   const firstLine = (message || '').split('\n')[0].trim();
   if (!firstLine) return fallback;
@@ -62,6 +68,10 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
   const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef(null);
 
+  const [editingPost, setEditingPost] = useState(null);
+  const [removeAttachment, setRemoveAttachment] = useState(false);
+  const [moveTarget, setMoveTarget] = useState('');
+
   const [adminPassword, setAdminPassword] = useState('');
   const [adminUnlocked, setAdminUnlocked] = useState(false);
   const [adminError, setAdminError] = useState('');
@@ -92,7 +102,7 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
 
   const combined = useMemo(() => {
     const merged = [...staticPosts, ...posts];
-    return merged.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+    return merged.sort((a, b) => orderOf(b) - orderOf(a));
   }, [staticPosts, posts]);
 
   const filtered = useMemo(() => {
@@ -135,11 +145,35 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
     setSelectedPost(null);
   }
 
+  function resetComposeFields() {
+    setName('');
+    setMessage('');
+    setImageFile(null);
+    setRemoveAttachment(false);
+    setEditingPost(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  }
+
   function openCompose() {
     if (adminOnlyPost && !adminUnlocked) {
       setShowAdminLogin(true);
       return;
     }
+    resetComposeFields();
+    setComposeError('');
+    setView('compose');
+  }
+
+  function openEdit(post) {
+    if (!adminUnlocked) {
+      setShowAdminLogin(true);
+      return;
+    }
+    setEditingPost(post);
+    setName(post.name || '');
+    setMessage(post.message || '');
+    setImageFile(null);
+    setRemoveAttachment(false);
     setComposeError('');
     setView('compose');
   }
@@ -154,7 +188,7 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
       setComposeError(tr(language, 'boardUploadTooLarge'));
       return;
     }
-    if (adminOnlyPost && !adminPassword) {
+    if ((adminOnlyPost || editingPost) && !adminPassword) {
       setComposeError(tr(language, 'boardWrongPassword'));
       return;
     }
@@ -162,26 +196,37 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
     setSubmitting(true);
     try {
       const formData = new FormData();
-      formData.append('category', category);
+      formData.append('password', adminPassword);
       formData.append('name', name);
       formData.append('message', message);
-      if (adminOnlyPost) formData.append('password', adminPassword);
       if (imageFile) formData.append('image', imageFile);
 
-      const res = await fetch('/api/board/posts', { method: 'POST', body: formData });
+      let res;
+      if (editingPost) {
+        formData.append('id', editingPost.id);
+        if (removeAttachment && !imageFile) formData.append('removeAttachment', '1');
+        res = await fetch('/api/board/update', { method: 'POST', body: formData });
+      } else {
+        formData.append('category', category);
+        res = await fetch('/api/board/posts', { method: 'POST', body: formData });
+      }
+
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setComposeError(data.error === 'Incorrect password.' ? tr(language, 'boardWrongPassword') : tr(language, 'boardSubmitError'));
+        if (res.status === 401) setAdminUnlocked(false);
         setSubmitting(false);
         return;
       }
-      setName('');
-      setMessage('');
-      setImageFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = '';
+      resetComposeFields();
       await loadPosts();
-      setPage(1);
-      setView('list');
+      if (editingPost) {
+        setSelectedPost(data.post);
+        setView('detail');
+      } else {
+        setPage(1);
+        setView('list');
+      }
     } catch {
       setComposeError(tr(language, 'boardSubmitError'));
     } finally {
@@ -251,6 +296,46 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
     }
   }
 
+  async function moveSelected() {
+    if (!selectedPost || !moveTarget || moveTarget === selectedPost.category) return;
+    setBusy(true);
+    try {
+      const res = await fetch('/api/board/move', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: adminPassword, id: selectedPost.id, category: moveTarget }),
+      });
+      if (!res.ok) {
+        setAdminError(tr(language, 'boardWrongPassword'));
+        if (res.status === 401) setAdminUnlocked(false);
+        return;
+      }
+      await loadPosts();
+      backToList();
+    } catch {
+      setAdminError(tr(language, 'boardSubmitError'));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function reorderPost(post, direction, event) {
+    event.stopPropagation();
+    setBusy(true);
+    try {
+      const res = await fetch('/api/board/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: adminPassword, id: post.id, direction }),
+      });
+      if (res.ok) await loadPosts();
+    } catch {
+      // best-effort; the row simply won't move if this fails
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const adminBox = <div className="no-print" style={{ margin: '18px 0', fontSize: 13 }}>
     {!adminUnlocked ? <>
       {(showAdminLogin || !adminOnlyPost) ? <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
@@ -265,10 +350,11 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
   </div>;
 
   if (view === 'compose') {
+    const needsPassword = adminOnlyPost || Boolean(editingPost);
     return <div>
       <form onSubmit={handleSubmit} className="no-print" style={{ display: 'grid', gap: 14, padding: 22, background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}>
-        <h2 style={{ margin: 0, fontSize: 16 }}>{tr(language, composerTitleKey || (adminOnlyPost ? 'boardNoticeComposerTitle' : 'boardQuestionComposerTitle'))}</h2>
-        {adminOnlyPost ? <label style={{ display: 'grid', gap: 6 }}>
+        <h2 style={{ margin: 0, fontSize: 16 }}>{tr(language, editingPost ? 'boardEditComposerTitle' : (composerTitleKey || (adminOnlyPost ? 'boardNoticeComposerTitle' : 'boardQuestionComposerTitle')))}</h2>
+        {needsPassword ? <label style={{ display: 'grid', gap: 6 }}>
           <span style={labelStyle}>{tr(language, 'boardAdminPasswordPlaceholder')}</span>
           <input type="password" value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} style={fieldStyle} />
         </label> : <label style={{ display: 'grid', gap: 6 }}>
@@ -279,14 +365,20 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
           <span style={labelStyle}>{tr(language, 'formMessage')}</span>
           <textarea value={message} onChange={(e) => { setMessage(e.target.value); setComposeError(''); }} placeholder={tr(language, 'formMessagePlaceholder')} rows={7} style={{ ...fieldStyle, border: `1px solid ${composeError ? 'var(--red-pen)' : 'var(--paper-line)'}`, resize: 'vertical' }} />
         </label>
+        {editingPost?.image && !removeAttachment ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12.5, color: 'var(--ink-soft)' }}>
+            <span>📎 {editingPost.image.filename}</span>
+            <button type="button" onClick={() => setRemoveAttachment(true)} style={{ background: 'none', border: 'none', color: 'var(--red-pen)', textDecoration: 'underline', cursor: 'pointer', padding: 0, fontSize: 12.5 }}>{tr(language, 'boardRemoveAttachment')}</button>
+          </div>
+        ) : null}
         <label style={{ display: 'grid', gap: 6 }}>
           <span style={labelStyle}>{tr(language, attachmentLabelKey)}</span>
           <input ref={fileInputRef} type="file" accept={attachmentAccept} onChange={(e) => setImageFile(e.target.files?.[0] || null)} />
         </label>
         {composeError ? <span style={{ color: 'var(--red-pen)', fontSize: 12, fontWeight: 700 }}>{composeError}</span> : null}
         <div style={{ display: 'flex', gap: 10 }}>
-          <button type="submit" className="button button-primary" disabled={submitting}>{adminOnlyPost ? tr(language, 'boardSubmitNotice') : tr(language, 'boardSubmitQuestion')}</button>
-          <button type="button" onClick={() => setView('list')} className="button button-secondary">{tr(language, 'boardCancel')}</button>
+          <button type="submit" className="button button-primary" disabled={submitting}>{editingPost ? tr(language, 'boardSaveEdit') : (adminOnlyPost ? tr(language, 'boardSubmitNotice') : tr(language, 'boardSubmitQuestion'))}</button>
+          <button type="button" onClick={() => { resetComposeFields(); setView(editingPost ? 'detail' : 'list'); }} className="button button-secondary">{tr(language, 'boardCancel')}</button>
         </div>
       </form>
     </div>;
@@ -295,9 +387,12 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
   if (view === 'detail' && selectedPost) {
     const views = selectedPost.views || 0;
     return <div>
-      <div className="no-print" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+      <div className="no-print" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14, flexWrap: 'wrap', gap: 8 }}>
         <button type="button" onClick={backToList} className="button button-secondary">{`← ${tr(language, 'boardBackToList')}`}</button>
-        {adminUnlocked && !selectedPost.static ? <button type="button" onClick={deleteSelected} disabled={busy} style={{ background: 'none', border: 'none', color: 'var(--ink-soft)', fontSize: 12, cursor: 'pointer', textDecoration: 'underline' }}>{tr(language, 'boardDelete')}</button> : null}
+        {adminUnlocked && !selectedPost.static ? <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <button type="button" onClick={() => openEdit(selectedPost)} style={{ background: 'none', border: 'none', color: 'var(--chalk-green)', fontSize: 12, cursor: 'pointer', textDecoration: 'underline' }}>{tr(language, 'boardEdit')}</button>
+          <button type="button" onClick={deleteSelected} disabled={busy} style={{ background: 'none', border: 'none', color: 'var(--ink-soft)', fontSize: 12, cursor: 'pointer', textDecoration: 'underline' }}>{tr(language, 'boardDelete')}</button>
+        </div> : null}
       </div>
 
       <article style={{ padding: '24px 26px', background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}>
@@ -317,6 +412,14 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
             </a>
           )
         ) : null}
+
+        {adminUnlocked && !selectedPost.static ? <div className="no-print" style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 16, paddingTop: 14, borderTop: '1px dashed var(--paper-line)', fontSize: 12.5 }}>
+          <span style={labelStyle}>{tr(language, 'boardMoveTo')}</span>
+          <select value={moveTarget || selectedPost.category} onChange={(e) => setMoveTarget(e.target.value)} style={{ ...fieldStyle, padding: '6px 10px' }}>
+            {MOVABLE_CATEGORIES.map((value) => <option key={value} value={value}>{tr(language, `boardCategory_${value}`)}</option>)}
+          </select>
+          <button type="button" onClick={moveSelected} disabled={busy || !moveTarget || moveTarget === selectedPost.category} className="button button-secondary">{tr(language, 'boardMoveButton')}</button>
+        </div> : null}
 
         {allowReply ? <div style={{ marginTop: 18, paddingTop: 16, borderTop: '1px dashed var(--paper-line)' }}>
           {selectedPost.reply ? <div>
@@ -358,14 +461,16 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
             <th style={{ ...tableHeadStyle, width: 100 }}>{tr(language, 'boardColDate')}</th>
             <th style={{ ...tableHeadStyle, width: 100 }}>{tr(language, 'boardColAuthor')}</th>
             <th style={{ ...tableHeadStyle, width: 70, textAlign: 'right' }}>{tr(language, 'boardColViews')}</th>
+            {adminUnlocked ? <th style={{ ...tableHeadStyle, width: 60, textAlign: 'center' }}>{tr(language, 'boardColReorder')}</th> : null}
           </tr>
         </thead>
         <tbody>
-          {pageItems.length === 0 ? <tr><td colSpan={5} style={{ ...tableCellStyle, textAlign: 'center', color: 'var(--ink-soft)' }}>{query ? tr(language, 'boardNoResults') : tr(language, 'boardEmpty')}</td></tr> : null}
+          {pageItems.length === 0 ? <tr><td colSpan={adminUnlocked ? 6 : 5} style={{ ...tableCellStyle, textAlign: 'center', color: 'var(--ink-soft)' }}>{query ? tr(language, 'boardNoResults') : tr(language, 'boardEmpty')}</td></tr> : null}
           {pageItems.map((post) => {
             const views = post.views || 0;
+            const rank = numberFor(post);
             return <tr key={post.id} onClick={() => openDetail(post)} style={{ cursor: 'pointer' }}>
-              <td style={{ ...tableCellStyle, textAlign: 'center', color: 'var(--red-pen)', fontWeight: category === 'notice' ? 700 : 400 }}>{category === 'notice' ? tr(language, 'boardPinned') : numberFor(post)}</td>
+              <td style={{ ...tableCellStyle, textAlign: 'center', color: 'var(--red-pen)', fontWeight: category === 'notice' ? 700 : 400 }}>{category === 'notice' ? tr(language, 'boardPinned') : rank}</td>
               <td style={tableCellStyle}>
                 <span style={{ color: 'var(--ink)', fontWeight: 600 }}>{titleOf(post.message, tr(language, 'boardNoTitle'))}</span>
                 {post.reply ? <span style={{ color: 'var(--red-pen)', fontWeight: 700, marginLeft: 4 }}>(1)</span> : null}
@@ -375,6 +480,12 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
               <td style={tableCellStyle}>{formatDate(post.createdAt)}</td>
               <td style={tableCellStyle}>{post.name || tr(language, 'boardAnonymous')}</td>
               <td style={{ ...tableCellStyle, textAlign: 'right' }}>{views}</td>
+              {adminUnlocked ? <td style={{ ...tableCellStyle, textAlign: 'center', whiteSpace: 'nowrap' }}>
+                {!post.static ? <>
+                  <button type="button" onClick={(e) => reorderPost(post, 'up', e)} disabled={busy || rank === combined.length} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, padding: '0 3px', color: rank === combined.length ? 'var(--paper-line)' : 'var(--ink-soft)' }} title="위로" aria-label="위로 이동">▲</button>
+                  <button type="button" onClick={(e) => reorderPost(post, 'down', e)} disabled={busy || rank === 1} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, padding: '0 3px', color: rank === 1 ? 'var(--paper-line)' : 'var(--ink-soft)' }} title="아래로" aria-label="아래로 이동">▼</button>
+                </> : null}
+              </td> : null}
             </tr>;
           })}
         </tbody>

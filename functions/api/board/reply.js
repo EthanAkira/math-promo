@@ -1,4 +1,4 @@
-import { readBoard, writeBoard, jsonResponse, CORS_HEADERS } from './_shared.js';
+import { readBoard, writeBoard, jsonResponse, CORS_HEADERS, isAdminPassword } from './_shared.js';
 
 export async function onRequestPost({ request, env }) {
   let body;
@@ -9,7 +9,7 @@ export async function onRequestPost({ request, env }) {
   }
 
   const { password, id, reply } = body || {};
-  if (!env.AMC_UPLOAD_PASSWORD || password !== env.AMC_UPLOAD_PASSWORD) {
+  if (!isAdminPassword(env, password)) {
     return jsonResponse({ error: 'Incorrect password.' }, { status: 401 });
   }
 

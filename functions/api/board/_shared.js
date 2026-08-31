@@ -1,4 +1,14 @@
 export const MANIFEST_KEY = 'board-manifest';
+export const VALID_CATEGORIES = ['notice', 'contact', 'coding'];
+export const ADMIN_ONLY_CATEGORIES = ['notice', 'coding'];
+
+export function isAdminPassword(env, password) {
+  return Boolean(env.AMC_UPLOAD_PASSWORD) && password === env.AMC_UPLOAD_PASSWORD;
+}
+
+export function orderOf(post) {
+  return typeof post.order === 'number' ? post.order : Date.parse(post.createdAt) || 0;
+}
 
 export const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',

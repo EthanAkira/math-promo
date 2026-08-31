@@ -1,9 +1,7 @@
-import { readBoard, writeBoard, jsonResponse, postImageKey, genId, CORS_HEADERS } from './_shared.js';
+import { readBoard, writeBoard, jsonResponse, postImageKey, genId, CORS_HEADERS, VALID_CATEGORIES, ADMIN_ONLY_CATEGORIES, isAdminPassword, orderOf } from './_shared.js';
 
 const MAX_BYTES = 8 * 1024 * 1024;
 const MAX_ATTACHMENT_BYTES = 20 * 1024 * 1024;
-const VALID_CATEGORIES = ['notice', 'contact', 'coding'];
-const ADMIN_ONLY_CATEGORIES = ['notice', 'coding'];
 
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
@@ -22,7 +20,7 @@ export async function onRequestGet({ request, env }) {
 
   const category = url.searchParams.get('category');
   const filtered = VALID_CATEGORIES.includes(category) ? posts.filter((post) => post.category === category) : posts;
-  const sorted = [...filtered].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  const sorted = [...filtered].sort((a, b) => orderOf(b) - orderOf(a));
   return jsonResponse({ posts: sorted });
 }
 
@@ -39,11 +37,8 @@ export async function onRequestPost({ request, env }) {
     return jsonResponse({ error: 'Invalid category.' }, { status: 400 });
   }
 
-  if (ADMIN_ONLY_CATEGORIES.includes(category)) {
-    const password = formData.get('password');
-    if (!env.AMC_UPLOAD_PASSWORD || password !== env.AMC_UPLOAD_PASSWORD) {
-      return jsonResponse({ error: 'Incorrect password.' }, { status: 401 });
-    }
+  if (ADMIN_ONLY_CATEGORIES.includes(category) && !isAdminPassword(env, formData.get('password'))) {
+    return jsonResponse({ error: 'Incorrect password.' }, { status: 401 });
   }
 
   const name = String(formData.get('name') || '').trim().slice(0, 60);
@@ -69,13 +64,15 @@ export async function onRequestPost({ request, env }) {
     image = { key, filename: file.name || 'image', contentType };
   }
 
+  const now = new Date();
   const post = {
     id,
     category,
     name: name || null,
     message,
     image,
-    createdAt: new Date().toISOString(),
+    createdAt: now.toISOString(),
+    order: now.getTime(),
     reply: null,
     views: 0,
   };
