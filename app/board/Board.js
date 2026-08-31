@@ -32,6 +32,13 @@ function titleOf(message, fallback) {
   return firstLine.length > 60 ? `${firstLine.slice(0, 60)}…` : firstLine;
 }
 
+// A post only has a real `title` field if the author typed one; otherwise it keeps the
+// original behavior of using the message's first line as a stand-in title.
+function displayTitle(post, fallback) {
+  const explicit = (post.title || '').trim();
+  return explicit || titleOf(post.message, fallback);
+}
+
 const IMAGE_EXTENSION_RE = /\.(png|jpe?g|gif|webp|svg|bmp)$/i;
 
 // Older posts (and any upload where the browser didn't report a MIME type) have no
@@ -62,6 +69,7 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
   const [searchInput, setSearchInput] = useState('');
 
   const [name, setName] = useState('');
+  const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [composeError, setComposeError] = useState('');
@@ -108,7 +116,7 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
   const filtered = useMemo(() => {
     if (!query.trim()) return combined;
     const q = query.trim().toLowerCase();
-    return combined.filter((post) => (post.message || '').toLowerCase().includes(q) || (post.name || '').toLowerCase().includes(q));
+    return combined.filter((post) => (post.title || '').toLowerCase().includes(q) || (post.message || '').toLowerCase().includes(q) || (post.name || '').toLowerCase().includes(q));
   }, [combined, query]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -147,6 +155,7 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
 
   function resetComposeFields() {
     setName('');
+    setTitle('');
     setMessage('');
     setImageFile(null);
     setRemoveAttachment(false);
@@ -171,6 +180,7 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
     }
     setEditingPost(post);
     setName(post.name || '');
+    setTitle(post.title || '');
     setMessage(post.message || '');
     setImageFile(null);
     setRemoveAttachment(false);
@@ -198,6 +208,7 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
       const formData = new FormData();
       formData.append('password', adminPassword);
       formData.append('name', name);
+      formData.append('title', title);
       formData.append('message', message);
       if (imageFile) formData.append('image', imageFile);
 
@@ -362,6 +373,10 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
           <input type="text" value={name} onChange={(e) => setName(e.target.value)} style={fieldStyle} />
         </label>}
         <label style={{ display: 'grid', gap: 6 }}>
+          <span style={labelStyle}>{tr(language, 'formTitle')}</span>
+          <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={tr(language, 'formTitlePlaceholder')} maxLength={100} style={fieldStyle} />
+        </label>
+        <label style={{ display: 'grid', gap: 6 }}>
           <span style={labelStyle}>{tr(language, 'formMessage')}</span>
           <textarea value={message} onChange={(e) => { setMessage(e.target.value); setComposeError(''); }} placeholder={tr(language, 'formMessagePlaceholder')} rows={7} style={{ ...fieldStyle, border: `1px solid ${composeError ? 'var(--red-pen)' : 'var(--paper-line)'}`, resize: 'vertical' }} />
         </label>
@@ -396,7 +411,7 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
       </div>
 
       <article style={{ padding: '24px 26px', background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}>
-        <h2 style={{ margin: '0 0 10px', fontSize: 19 }}>{titleOf(selectedPost.message, tr(language, 'boardNoTitle'))}</h2>
+        <h2 style={{ margin: '0 0 10px', fontSize: 19 }}>{displayTitle(selectedPost, tr(language, 'boardNoTitle'))}</h2>
         <p className="font-mono" style={{ margin: '0 0 16px', color: 'var(--ink-soft)', fontSize: 12 }}>
           {selectedPost.name || tr(language, 'boardAnonymous')} · {formatDate(selectedPost.createdAt)} · {tr(language, 'boardViewsLabel')} {views}
         </p>
@@ -472,7 +487,7 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
             return <tr key={post.id} onClick={() => openDetail(post)} style={{ cursor: 'pointer' }}>
               <td style={{ ...tableCellStyle, textAlign: 'center', color: 'var(--red-pen)', fontWeight: category === 'notice' ? 700 : 400 }}>{category === 'notice' ? tr(language, 'boardPinned') : rank}</td>
               <td style={tableCellStyle}>
-                <span style={{ color: 'var(--ink)', fontWeight: 600 }}>{titleOf(post.message, tr(language, 'boardNoTitle'))}</span>
+                <span style={{ color: 'var(--ink)', fontWeight: 600 }}>{displayTitle(post, tr(language, 'boardNoTitle'))}</span>
                 {post.reply ? <span style={{ color: 'var(--red-pen)', fontWeight: 700, marginLeft: 4 }}>(1)</span> : null}
                 {post.image ? <span style={tagStyle}>{tr(language, isImageAttachment(post.image) ? 'boardHasImage' : 'boardHasAttachment')}</span> : null}
                 {views >= POPULAR_VIEWS ? <span style={tagStyle}>{tr(language, 'boardPopular')}</span> : null}

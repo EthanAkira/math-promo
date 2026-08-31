@@ -42,6 +42,7 @@ export async function onRequestPost({ request, env }) {
   }
 
   const name = String(formData.get('name') || '').trim().slice(0, 60);
+  const title = String(formData.get('title') || '').trim().slice(0, 100);
   const message = String(formData.get('message') || '').trim().slice(0, 4000);
   if (!message) {
     return jsonResponse({ error: 'Message is required.' }, { status: 400 });
@@ -69,6 +70,7 @@ export async function onRequestPost({ request, env }) {
     id,
     category,
     name: name || null,
+    title: title || null,
     message,
     image,
     createdAt: now.toISOString(),

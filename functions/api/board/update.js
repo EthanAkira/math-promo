@@ -24,6 +24,9 @@ export async function onRequestPost({ request, env }) {
   if (!message) return jsonResponse({ error: 'Message is required.' }, { status: 400 });
   post.message = message;
 
+  const title = formData.get('title');
+  if (title != null) post.title = String(title).trim().slice(0, 100) || null;
+
   const name = formData.get('name');
   if (name != null) post.name = String(name).trim().slice(0, 60) || null;
 
