@@ -389,6 +389,8 @@ export const GRADE_CATALOG = [
       { id: 'g2-tables-2-5', label: '곱셈구구 2~5단', description: '2, 3, 4, 5단 곱셈구구', make: (r) => { const a = pick(r, [2, 3, 4, 5]); const b = randomInt(r, 1, 9); return inline(`${a} × ${b}`, a * b); } },
       { id: 'g2-tables-6-9', label: '곱셈구구 6~9단', description: '6, 7, 8, 9단 곱셈구구', make: (r) => { const a = pick(r, [6, 7, 8, 9]); const b = randomInt(r, 1, 9); return inline(`${a} × ${b}`, a * b); } },
       { id: 'g2-tables-all', label: '곱셈구구 종합', description: '2단부터 9단까지 무작위', make: (r) => { const a = randomInt(r, 2, 9); const b = randomInt(r, 1, 9); return inline(`${a} × ${b}`, a * b); } },
+      { id: 'g2-length', label: '길이 재기', description: 'cm와 m 단위 길이의 합과 차', make: lengthCalcSimple },
+      { id: 'g2-time', label: '시각과 시간', description: '시각에서 몇 분 후의 시각 구하기', make: timeAddCalc },
     ],
   },
   {
@@ -400,6 +402,10 @@ export const GRADE_CATALOG = [
       { id: 'g3-multiply-2x2', label: '두 자리 수 × 두 자리 수', description: '두 자리 수끼리 곱하기', make: (r) => multiply(r, 2, 2) },
       { id: 'g3-division-exact', label: '두 자리 수 ÷ 한 자리 수', description: '나머지가 없는 두 자리 수 나눗셈', make: (r) => exactDivision(r, 10, 30) },
       { id: 'g3-fractions', label: '분수', description: '가분수·대분수 변환과 크기 비교', make: fractionPractice },
+      { id: 'g3-number-patterns', label: '수의 규칙 찾기', description: '일정하게 더하거나 곱하는 수열의 다음 수 찾기', make: (r) => makeElementarySequencePattern(r, randomInt, pick) },
+      { id: 'g3-length-time-units', label: '길이와 시간의 단위', description: 'mm·cm·m·km, 분·초 단위 변환', make: measurementUnitConvert },
+      { id: 'g3-capacity-weight', label: '들이와 무게', description: 'L·mL, g·kg 단위 변환과 덧셈', make: weightCapacityConvert },
+      { id: 'g3-circle', label: '원', description: '원의 반지름과 지름의 관계', make: circleBasic },
     ],
   },
   {
@@ -408,6 +414,10 @@ export const GRADE_CATALOG = [
       { id: 'g4-large-division', label: '큰 수의 나눗셈', description: '두세 자리 수를 한두 자리 수로 나누기', make: (r) => { const divisor = randomInt(r, 2, 29); const quotient = randomInt(r, 3, 99); const remainder = r() < 0.35 ? randomInt(r, 1, divisor - 1) : 0; return inline(`${divisor * quotient + remainder} ÷ ${divisor}`, remainder ? `${quotient} R ${remainder}` : quotient); } },
       { id: 'g4-fraction-add-sub', label: '분수의 덧셈과 뺄셈', description: '분모가 같은 진분수·가분수·대분수 계산', make: (r) => { const d = randomInt(r, 3, 12); let a = randomInt(r, 1, d * 3); let b = randomInt(r, 1, d * 2); const op = r() < 0.55 ? '+' : '-'; if (op === '-' && b > a) [a, b] = [b, a]; return inline(`${a}/${d} ${op} ${b}/${d}`, fractionAnswer(op === '+' ? a + b : a - b, d)); } },
       { id: 'g4-decimal-add-sub', label: '소수의 덧셈과 뺄셈', description: '소수 한 자리부터 세 자리까지의 계산', make: (r) => decimalOperation(r, r() < 0.55 ? '+' : '-') },
+      { id: 'g4-number-patterns', label: '수의 규칙과 수열', description: '덧셈·곱셈 규칙을 찾아 빈 항 구하기', make: (r) => makeElementarySequencePattern(r, randomInt, pick) },
+      { id: 'g4-growing-block-patterns', label: '묶음 수열의 규칙', description: '길이가 하나씩 늘어나는 묶음에서 항의 위치 찾기', make: (r) => makeElementaryGrowingBlockPattern(r, randomInt, pick) },
+      { id: 'g4-angle', label: '각도', description: '각도의 합과 차, 예각·직각·둔각 분류', make: angleBasic },
+      { id: 'g4-polygon-angle', label: '삼각형과 사각형의 각', description: '내각의 합을 이용해 나머지 각 구하기', make: polygonAngleMissing },
     ],
   },
   {
@@ -418,6 +428,12 @@ export const GRADE_CATALOG = [
       { id: 'g5-fraction-add-sub', label: '분수의 덧셈과 뺄셈', description: '분모가 다른 분수의 덧셈과 뺄셈', make: fractionAddSub },
       { id: 'g5-fraction-multiply', label: '분수의 곱셈', description: '분수와 자연수, 두세 분수의 곱셈', make: fractionMultiply },
       { id: 'g5-decimal-multiply', label: '소수의 곱셈', description: '소수와 자연수 또는 소수의 곱셈', make: decimalMultiply },
+      { id: 'g5-perimeter-area', label: '다각형의 둘레와 넓이', description: '직사각형·삼각형·평행사변형·사다리꼴·마름모', make: perimeterArea },
+      { id: 'g5-range-round', label: '수의 범위와 어림', description: '이상·이하·초과·미만과 올림·버림·반올림', make: rangeRound },
+      { id: 'g5-average-probability', label: '평균과 가능성', description: '자료의 평균 구하기와 가능성을 분수로 나타내기', make: averageProbability },
+      { id: 'g5-solid-figure', label: '직육면체와 정육면체', description: '면·모서리·꼭짓점의 개수와 모서리 길이의 합', make: solidFigureBasic },
+      { id: 'g5-congruence-symmetry', label: '합동과 대칭', description: '대응변·대응각과 선대칭·점대칭의 성질', make: congruenceSymmetry },
+      { id: 'g5-function-table', label: '규칙과 대응', description: '표에서 대응 규칙을 찾아 값 구하기', make: functionTable },
     ],
   },
   {
@@ -432,6 +448,12 @@ export const GRADE_CATALOG = [
       { id: 'g6-distribution-basic', label: '비례배분 기본형', description: '전체를 주어진 비로 나누기', make: proportionalDistributionBasic },
       { id: 'g6-distribution-story', label: '비례배분 문장제', description: '생활 속 양을 주어진 비로 나누기', make: proportionalDistributionStory },
       { id: 'g6-proportion-application', label: '비례식과 비례배분 응용', description: '합·차·일부의 양을 이용한 응용 문제', make: proportionApplication },
+      { id: 'g6-percentage-basic', label: '백분율의 표현', description: '분수·소수·백분율 서로 바꾸기', make: percentageBasic },
+      { id: 'g6-percentage-word', label: '백분율 문장제', description: '할인 금액, 전체 중 비율 등 생활 속 백분율', make: percentageWord },
+      { id: 'g6-circle-measure', label: '원의 원주와 넓이', description: '원주율 3.14를 이용한 원주와 넓이', make: circleMeasure },
+      { id: 'g6-prism-pyramid', label: '각기둥과 각뿔', description: '면·모서리·꼭짓점의 개수 구하기', make: prismPyramidCounts },
+      { id: 'g6-volume-surface', label: '직육면체의 부피와 겉넓이', description: '직육면체·정육면체의 부피와 겉넓이', make: volumeSurfaceArea },
+      { id: 'g6-data-graph', label: '띠그래프와 원그래프', description: '백분율 자료를 해석하는 문장제', make: dataGraphWord },
     ],
   },
 ];
@@ -440,11 +462,11 @@ const ENGLISH = {
   grades: { '1': 'Grade 1', '2': 'Grade 2', '3': 'Grade 3', '4': 'Grade 4', '5': 'Grade 5', '6': 'Grade 6' },
   units: {
     'g1-bonds': ['Number bonds', 'Split and combine numbers up to 10'], 'g1-within-9': ['One-digit addition & subtraction', 'Sums and differences up to 9'], 'g1-three-numbers': ['Three-number operations', 'Calculate three numbers in order'], 'g1-two-digit-no-carry': ['Two-digit ± one-digit', 'No regrouping'], 'g1-two-digit-carry': ['Regrouping practice', 'Two-digit and one-digit operations'],
-    'g2-no-carry': ['Two-digit operations: basic', 'No regrouping'], 'g2-carry': ['Two-digit operations: advanced', 'With regrouping'], 'g2-three-numbers': ['Three-number operations', 'Sums and differences up to 100'], 'g2-tables-2-5': ['Times tables 2–5', 'Multiplication facts 2 through 5'], 'g2-tables-6-9': ['Times tables 6–9', 'Multiplication facts 6 through 9'], 'g2-tables-all': ['All times tables', 'Random facts from 2 through 9'],
-    'g3-add-sub': ['3- and 4-digit operations', 'Large-number addition and subtraction'], 'g3-division-basic': ['Division basics', 'Exact division within multiplication facts'], 'g3-multiply-2x1': ['2-digit × 1-digit', 'Multiply a two-digit number'], 'g3-multiply-3x1': ['3-digit × 1-digit', 'Multiply a three-digit number'], 'g3-multiply-2x2': ['2-digit × 2-digit', 'Multiply two two-digit numbers'], 'g3-division-exact': ['2-digit ÷ 1-digit', 'Exact two-digit division'], 'g3-fractions': ['Fractions', 'Improper and mixed fractions; comparison'],
-    'g4-large-multiply': ['Large-number multiplication', '2–4 digit numbers times 1–2 digit numbers'], 'g4-large-division': ['Large-number division', 'Divide 2–3 digit numbers'], 'g4-fraction-add-sub': ['Fraction addition & subtraction', 'Like denominators and mixed forms'], 'g4-decimal-add-sub': ['Decimal addition & subtraction', 'Tenths through thousandths'],
-    'g5-mixed-natural': ['Mixed whole-number operations', 'Order of operations and parentheses'], 'g5-factors-multiples': ['Factors & multiples', 'GCF, LCM, factors and multiples'], 'g5-reduce-common-denominator': ['Simplifying fractions', 'Reduce and compare fractions'], 'g5-fraction-add-sub': ['Fraction addition & subtraction', 'Unlike denominators'], 'g5-fraction-multiply': ['Fraction multiplication', 'Multiply fractions and whole numbers'], 'g5-decimal-multiply': ['Decimal multiplication', 'Multiply decimals and whole numbers'],
-    'g6-fraction-divide-natural': ['Fraction ÷ whole number', 'Divide proper, improper and mixed fractions'], 'g6-decimal-divide-natural': ['Decimal ÷ whole number', 'Exact decimal division'], 'g6-ratio': ['Ratios and rates', 'Simplify ratios and convert forms'], 'g6-fraction-divide': ['Fraction division', 'Divide fractions and whole numbers'], 'g6-decimal-divide': ['Decimal division', 'Divide decimals with different place values'], 'g6-proportion-basic': ['Basic proportions', 'Find the missing value in a proportion'], 'g6-proportion-story': ['Proportion word problems', 'Solve everyday situations with proportions'], 'g6-distribution-basic': ['Basic proportional distribution', 'Divide a total in a given ratio'], 'g6-distribution-story': ['Distribution word problems', 'Share quantities in a given ratio'], 'g6-proportion-application': ['Proportion applications', 'Use sums, differences and known shares'],
+    'g2-no-carry': ['Two-digit operations: basic', 'No regrouping'], 'g2-carry': ['Two-digit operations: advanced', 'With regrouping'], 'g2-three-numbers': ['Three-number operations', 'Sums and differences up to 100'], 'g2-tables-2-5': ['Times tables 2–5', 'Multiplication facts 2 through 5'], 'g2-tables-6-9': ['Times tables 6–9', 'Multiplication facts 6 through 9'], 'g2-tables-all': ['All times tables', 'Random facts from 2 through 9'], 'g2-length': ['Measuring length', 'Sums and differences of cm and m'], 'g2-time': ['Clock time', 'Find the time some minutes later'],
+    'g3-add-sub': ['3- and 4-digit operations', 'Large-number addition and subtraction'], 'g3-division-basic': ['Division basics', 'Exact division within multiplication facts'], 'g3-multiply-2x1': ['2-digit × 1-digit', 'Multiply a two-digit number'], 'g3-multiply-3x1': ['3-digit × 1-digit', 'Multiply a three-digit number'], 'g3-multiply-2x2': ['2-digit × 2-digit', 'Multiply two two-digit numbers'], 'g3-division-exact': ['2-digit ÷ 1-digit', 'Exact two-digit division'], 'g3-fractions': ['Fractions', 'Improper and mixed fractions; comparison'], 'g3-number-patterns': ['Number patterns', 'Continue additive and multiplicative sequences'], 'g3-length-time-units': ['Length & time units', 'Convert mm, cm, m, km, minutes, seconds'], 'g3-capacity-weight': ['Capacity & weight', 'Convert and add L, mL, g, kg'], 'g3-circle': ['Circles', 'Relate radius and diameter'],
+    'g4-large-multiply': ['Large-number multiplication', '2–4 digit numbers times 1–2 digit numbers'], 'g4-large-division': ['Large-number division', 'Divide 2–3 digit numbers'], 'g4-fraction-add-sub': ['Fraction addition & subtraction', 'Like denominators and mixed forms'], 'g4-decimal-add-sub': ['Decimal addition & subtraction', 'Tenths through thousandths'], 'g4-number-patterns': ['Patterns & sequences', 'Find missing terms from additive and multiplicative rules'], 'g4-growing-block-patterns': ['Growing block patterns', 'Locate terms in groups whose lengths increase'], 'g4-angle': ['Angles', 'Add, subtract, and classify angles'], 'g4-polygon-angle': ['Triangle & quadrilateral angles', 'Use the angle-sum property to find a missing angle'],
+    'g5-mixed-natural': ['Mixed whole-number operations', 'Order of operations and parentheses'], 'g5-factors-multiples': ['Factors & multiples', 'GCF, LCM, factors and multiples'], 'g5-reduce-common-denominator': ['Simplifying fractions', 'Reduce and compare fractions'], 'g5-fraction-add-sub': ['Fraction addition & subtraction', 'Unlike denominators'], 'g5-fraction-multiply': ['Fraction multiplication', 'Multiply fractions and whole numbers'], 'g5-decimal-multiply': ['Decimal multiplication', 'Multiply decimals and whole numbers'], 'g5-perimeter-area': ['Perimeter & area', 'Rectangles, triangles, parallelograms, trapezoids, rhombuses'], 'g5-range-round': ['Number ranges & rounding', 'At least/most, more/less than, round up/down/nearest'], 'g5-average-probability': ['Average & likelihood', 'Find an average and express likelihood as a fraction'], 'g5-solid-figure': ['Rectangular & cube prisms', 'Count faces, edges, vertices and edge-length totals'], 'g5-congruence-symmetry': ['Congruence & symmetry', 'Corresponding sides, angles, and symmetric points'], 'g5-function-table': ['Patterns & correspondence', 'Find a value from a table rule'],
+    'g6-fraction-divide-natural': ['Fraction ÷ whole number', 'Divide proper, improper and mixed fractions'], 'g6-decimal-divide-natural': ['Decimal ÷ whole number', 'Exact decimal division'], 'g6-ratio': ['Ratios and rates', 'Simplify ratios and convert forms'], 'g6-fraction-divide': ['Fraction division', 'Divide fractions and whole numbers'], 'g6-decimal-divide': ['Decimal division', 'Divide decimals with different place values'], 'g6-proportion-basic': ['Basic proportions', 'Find the missing value in a proportion'], 'g6-proportion-story': ['Proportion word problems', 'Solve everyday situations with proportions'], 'g6-distribution-basic': ['Basic proportional distribution', 'Divide a total in a given ratio'], 'g6-distribution-story': ['Distribution word problems', 'Share quantities in a given ratio'], 'g6-proportion-application': ['Proportion applications', 'Use sums, differences and known shares'], 'g6-percentage-basic': ['Expressing percentages', 'Convert between fractions, decimals, and percentages'], 'g6-percentage-word': ['Percentage word problems', 'Discounts and shares of a total'], 'g6-circle-measure': ['Circumference & area of circles', 'Use π ≈ 3.14'], 'g6-prism-pyramid': ['Prisms & pyramids', 'Count faces, edges, and vertices'], 'g6-volume-surface': ['Volume & surface area', 'Rectangular prisms and cubes'], 'g6-data-graph': ['Band & pie graphs', 'Word problems interpreting percentage data'],
   },
 };
 
@@ -468,3 +490,10 @@ export function findUnit(gradeId, unitId) {
   return grade.units.find((unit) => unit.id === unitId) || grade.units[0];
 }
 import { localizeRegionalGrade, localizeRegionalUnit } from '../../regionalCatalog';
+import { makeElementaryGrowingBlockPattern, makeElementarySequencePattern } from '../../lib/sequenceCore';
+import {
+  angleBasic, averageProbability, circleBasic, circleMeasure, congruenceSymmetry, dataGraphWord,
+  functionTable, lengthCalcSimple, measurementUnitConvert, percentageBasic, percentageWord,
+  perimeterArea, polygonAngleMissing, prismPyramidCounts, rangeRound, solidFigureBasic,
+  timeAddCalc, volumeSurfaceArea, weightCapacityConvert,
+} from './geometryMeasurementEngine';

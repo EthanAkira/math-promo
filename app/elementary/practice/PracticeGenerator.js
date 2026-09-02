@@ -41,7 +41,19 @@ function createSeed() {
 
 function makeProblems(seed, unit) {
   const random = seededRandom(`${seed}:${unit.id}`);
-  return Array.from({ length: PROBLEM_COUNT }, (_, index) => ({ id: index + 1, ...unit.make(random, index) }));
+  const used = new Set();
+  return Array.from({ length: PROBLEM_COUNT }, (_, index) => {
+    let item;
+    let key;
+    let attempt = 0;
+    do {
+      item = unit.make(random, index);
+      key = JSON.stringify([item.kind, item.prompt, item.expression, item.answer, item.a, item.b, item.operator]);
+      attempt += 1;
+    } while (used.has(key) && attempt < 100);
+    used.add(key);
+    return { id: index + 1, ...item };
+  });
 }
 
 function normalizeAnswer(value) {
@@ -146,7 +158,7 @@ export default function PracticeGenerator() {
 
   function chooseUnit(nextUnit) { resetWork(createSeed(), gradeId, nextUnit); }
   function changeView(nextView) { setView(nextView); setChecked(false); replaceUrl(seed, gradeId, unitId, nextView); }
-  function handleAnswer(id, value) { if (!/^[0-9A-Za-z\s,/<>:=.\-]*$/.test(value)) return; setAnswers((current) => ({ ...current, [id]: value })); setChecked(false); }
+  function handleAnswer(id, value) { if (!/^[0-9A-Za-z가-힣\s,/<>:=.\-]*$/.test(value)) return; setAnswers((current) => ({ ...current, [id]: value })); setChecked(false); }
 
   function checkAnswers() {
     setChecked(true);
