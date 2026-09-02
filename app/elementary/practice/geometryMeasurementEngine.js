@@ -112,7 +112,7 @@ export function measurementUnitConvert(random) {
 }
 
 export function weightCapacityConvert(random) {
-  const mode = randomInt(random, 0, 3);
+  const mode = randomInt(random, 0, 4);
   if (mode === 0) {
     const kg = randomInt(random, 1, 9);
     const g = pick(random, [0, 100, 250, 500, 750]);
@@ -130,20 +130,159 @@ export function weightCapacityConvert(random) {
     const ml = totalMl % 1000;
     return wordQ('다음을 L와 mL로 나타내세요.', `${totalMl}mL`, ml === 0 ? `${l}L` : `${l}L ${ml}mL`);
   }
-  const kg1 = randomInt(random, 1, 5);
-  const g1 = pick(random, [0, 100, 250, 500, 750]);
-  const kg2 = randomInt(random, 1, 4);
-  const g2 = pick(random, [0, 100, 250, 500, 750]);
-  const totalG = (kg1 * 1000 + g1) + (kg2 * 1000 + g2);
-  const kg = Math.floor(totalG / 1000);
-  const g = totalG % 1000;
-  return wordQ('무게의 합을 구하세요.', `${kg1}kg ${g1}g + ${kg2}kg ${g2}g`, g === 0 ? `${kg}kg` : `${kg}kg ${g}g`);
+  if (mode === 3) {
+    const kg1 = randomInt(random, 1, 5);
+    const g1 = pick(random, [0, 100, 250, 500, 750]);
+    const kg2 = randomInt(random, 1, 4);
+    const g2 = pick(random, [0, 100, 250, 500, 750]);
+    const totalG = (kg1 * 1000 + g1) + (kg2 * 1000 + g2);
+    const kg = Math.floor(totalG / 1000);
+    const g = totalG % 1000;
+    return wordQ('무게의 합을 구하세요.', `${kg1}kg ${g1}g + ${kg2}kg ${g2}g`, g === 0 ? `${kg}kg` : `${kg}kg ${g}g`);
+  }
+  return capacityAddSub(random);
+}
+
+function formatCapacity(ml) {
+  return ml % 1000 === 0 ? `${ml / 1000}L` : `${Math.floor(ml / 1000)}L ${ml % 1000}mL`;
+}
+
+export function capacityAddSub(random) {
+  const operator = random() < 0.55 ? '+' : '-';
+  let totalA = randomInt(random, 1, 6) * 1000 + pick(random, [0, 100, 250, 500, 750]);
+  let totalB = randomInt(random, 1, 5) * 1000 + pick(random, [0, 100, 250, 500, 750]);
+  if (operator === '-' && totalB > totalA) [totalA, totalB] = [totalB, totalA];
+  const result = operator === '+' ? totalA + totalB : totalA - totalB;
+  return wordQ('들이의 합 또는 차를 구하세요.', `${formatCapacity(totalA)} ${operator} ${formatCapacity(totalB)}`, formatCapacity(result));
 }
 
 export function circleBasic(random) {
   const radius = randomInt(random, 2, 20);
   if (random() < 0.5) return wordQ('원의 반지름이 주어졌을 때 지름을 구하세요.', `반지름 ${radius}cm`, radius * 2, 'cm');
   return wordQ('원의 지름이 주어졌을 때 반지름을 구하세요.', `지름 ${radius * 2}cm`, radius, 'cm');
+}
+
+export function circleTangentRow(random) {
+  const count = randomInt(random, 2, 5);
+  const radius = randomInt(random, 2, 8);
+  const total = count * 2 * radius;
+  return {
+    ...wordQ('그림과 같이 크기가 같은 원 여러 개를 겹치지 않게 나란히 맞닿게 그렸습니다. 원 전체의 길이는 몇 cm인가요?', '', total, 'cm', 'Equal-size circles are drawn touching in a row, as shown. Find the total length.'),
+    visualKind: 'circle-row',
+    row: { count, radiusLabel: radius },
+  };
+}
+
+export function circleCentersDistance(random) {
+  const r1 = randomInt(random, 2, 10);
+  const r2 = randomInt(random, 2, 10);
+  return {
+    ...wordQ('그림과 같이 두 원이 맞닿아 있습니다. 두 원의 중심을 이은 선분의 길이를 구하세요.', '', r1 + r2, 'cm', "Two circles touch as shown. Find the distance between their centers."),
+    visualKind: 'circle-pair',
+    pair: { r1, r2, labelA: 'ㄱ', labelB: 'ㄴ' },
+  };
+}
+
+const CIRCLE_COMPARE_LABELS = ['가', '나', '다', '라'];
+
+export function circleSizeCompare(random) {
+  const count = randomInt(random, 3, 4);
+  const labels = CIRCLE_COMPARE_LABELS.slice(0, count);
+  const used = new Set();
+  const circles = labels.map(() => {
+    let asRadius;
+    let value;
+    let diameter;
+    do {
+      asRadius = random() < 0.5;
+      value = randomInt(random, 3, 15);
+      diameter = asRadius ? value * 2 : value;
+    } while (used.has(diameter));
+    used.add(diameter);
+    return { asRadius, value, diameter };
+  });
+  const askLargestFirst = random() < 0.5;
+  const order = labels
+    .map((label, index) => ({ label, diameter: circles[index].diameter }))
+    .sort((a, b) => (askLargestFirst ? b.diameter - a.diameter : a.diameter - b.diameter))
+    .map((item) => item.label);
+  const description = labels.map((label, index) => `${label}: ${circles[index].asRadius ? '반지름' : '지름'} ${circles[index].value}cm인 원`).join(', ');
+  return wordQ(`${description}. 크기가 ${askLargestFirst ? '큰' : '작은'} 원부터 차례대로 기호를 쓰세요.`, '', order.join(','), '', `List the circles from ${askLargestFirst ? 'largest' : 'smallest'} to ${askLargestFirst ? 'smallest' : 'largest'}.`);
+}
+
+export function circleProperties(random) {
+  const mode = randomInt(random, 0, 2);
+  if (mode === 0) return circleTangentRow(random);
+  if (mode === 1) return circleCentersDistance(random);
+  return circleSizeCompare(random);
+}
+
+export function divisionRemainder3(random) {
+  const dividend = random() < 0.6 ? randomInt(random, 100, 999) : randomInt(random, 10, 99);
+  const divisor = randomInt(random, 2, 9);
+  const quotient = Math.floor(dividend / divisor);
+  const remainder = dividend % divisor;
+  return inline(`${dividend} ÷ ${divisor}`, remainder ? `${quotient} R ${remainder}` : quotient);
+}
+
+export function fractionOfWhole(random) {
+  const parts = randomInt(random, 3, 8);
+  const total = parts * randomInt(random, 1, 6);
+  const mark = randomInt(random, 1, parts - 1);
+  const perPart = total / parts;
+  if (random() < 0.5) {
+    return {
+      ...wordQ(`전체가 ${total}일 때, 색칠된 부분은 전체의 얼마인지 분수로 쓰세요.`, '', `${mark}/${parts}`, '', 'What fraction of the whole is shaded?'),
+      visualKind: 'fraction-tape',
+      tape: { total, parts, mark },
+    };
+  }
+  return {
+    ...wordQ(`${total}의 ${mark}/${parts}은(는) 얼마인가요?`, '', mark * perPart, '', `Find ${mark}/${parts} of ${total}.`),
+    visualKind: 'fraction-tape',
+    tape: { total, parts, mark },
+  };
+}
+
+const TABLE_LABELS = ['가', '나', '다', '라'];
+
+export function dataTableMissing(random) {
+  const count = randomInt(random, 3, 4);
+  const labels = TABLE_LABELS.slice(0, count);
+  const values = labels.map(() => randomInt(random, 10, 60));
+  const missingIndex = randomInt(random, 0, count - 1);
+  const total = values.reduce((sum, value) => sum + value, 0);
+  const categories = labels.map((label, index) => ({ label, value: index === missingIndex ? null : values[index] }));
+  return {
+    ...wordQ('표를 보고 빈칸에 알맞은 수를 구하세요.', '', values[missingIndex], '', 'Find the missing value in the table.'),
+    visualKind: 'data-table',
+    table: { categories, total },
+  };
+}
+
+export function pictographRead(random) {
+  const count = randomInt(random, 3, 4);
+  const labels = TABLE_LABELS.slice(0, count);
+  const used = new Set();
+  const values = labels.map(() => {
+    let value;
+    do { value = randomInt(random, 11, 88); } while (used.has(value));
+    used.add(value);
+    return value;
+  });
+  const categories = labels.map((label, index) => ({ label, value: values[index] }));
+  const mode = randomInt(random, 0, 2);
+  if (mode === 0) {
+    const index = randomInt(random, 0, count - 1);
+    return { ...wordQ(`그림그래프를 보고 ${labels[index]}의 수를 구하세요.`, '', values[index], '개', `Read the pictograph and find the value for category ${labels[index]}.`), visualKind: 'pictograph', pictograph: { categories } };
+  }
+  if (mode === 1) {
+    const max = Math.max(...values);
+    const label = labels[values.indexOf(max)];
+    return { ...wordQ('그림그래프에서 가장 큰 수를 나타내는 항목의 기호를 쓰세요.', '', label, '', 'Which category has the largest value?'), visualKind: 'pictograph', pictograph: { categories } };
+  }
+  const total = values.reduce((sum, value) => sum + value, 0);
+  return { ...wordQ('그림그래프에 나타난 모든 값의 합을 구하세요.', '', total, '개', 'Find the sum of all the values shown in the pictograph.'), visualKind: 'pictograph', pictograph: { categories } };
 }
 
 export function angleBasic(random) {

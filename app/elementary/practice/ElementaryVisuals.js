@@ -145,6 +145,87 @@ export function PolygonFigure({ polygon }) {
   </svg>;
 }
 
+export function CircleRow({ row }) {
+  const r = 22;
+  const width = row.count * 2 * r + 20;
+  const cy = 45;
+  return <svg className="generated-geometry" viewBox={`0 0 ${width} 90`} role="img" aria-label="맞닿은 원">
+    {Array.from({ length: row.count }, (_, index) => {
+      const cx = 10 + r + index * 2 * r;
+      return <circle key={index} cx={cx} cy={cy} r={r} className="shape-outline" />;
+    })}
+    <text x={10 + r} y={cy + 4} textAnchor="middle" className="value-label">{row.radiusLabel}cm</text>
+  </svg>;
+}
+
+export function CirclePair({ pair }) {
+  const scale = 4.2;
+  const r1 = pair.r1 * scale;
+  const r2 = pair.r2 * scale;
+  const cy = 60;
+  const c1x = 20 + r1;
+  const c2x = c1x + r1 + r2;
+  return <svg className="generated-geometry" viewBox={`0 0 ${c2x + r2 + 20} 110`} role="img" aria-label="맞닿은 두 원">
+    <circle cx={c1x} cy={cy} r={r1} className="shape-outline" />
+    <circle cx={c2x} cy={cy} r={r2} className="shape-outline" />
+    <circle cx={c1x} cy={cy} r="2.2" /><circle cx={c2x} cy={cy} r="2.2" />
+    <text x={c1x} y={cy - r1 - 6} textAnchor="middle" className="point-label">{pair.labelA}</text>
+    <text x={c2x} y={cy - r2 - 6} textAnchor="middle" className="point-label">{pair.labelB}</text>
+    <text x={c1x} y={cy + r1 + 16} textAnchor="middle" className="value-label">{pair.r1}cm</text>
+    <text x={c2x} y={cy + r2 + 16} textAnchor="middle" className="value-label">{pair.r2}cm</text>
+  </svg>;
+}
+
+export function Pictograph({ pictograph }) {
+  const rowHeight = 30;
+  const iconGap = 18;
+  const startX = 92;
+  const height = pictograph.categories.length * rowHeight + 40;
+  const maxIcons = Math.max(...pictograph.categories.map((c) => Math.floor(c.value / 10) + (c.value % 10)));
+  const width = Math.max(260, startX + maxIcons * iconGap + 20);
+  return <svg className="generated-geometry" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="그림그래프">
+    <circle cx="14" cy="14" r="7" /><text x="26" y="18">= 10</text>
+    <circle cx="70" cy="14" r="3" /><text x="80" y="18">= 1</text>
+    {pictograph.categories.map((category, rowIndex) => {
+      const y = 40 + rowIndex * rowHeight;
+      const tens = Math.floor(category.value / 10);
+      const ones = category.value % 10;
+      return <g key={category.label}>
+        <text x="0" y={y + 5} className="point-label">{category.label}</text>
+        {Array.from({ length: tens }, (_, index) => <circle key={`t${index}`} cx={startX + index * iconGap} cy={y} r="7" />)}
+        {Array.from({ length: ones }, (_, index) => <circle key={`o${index}`} cx={startX + (tens + index) * iconGap} cy={y} r="3" />)}
+      </g>;
+    })}
+  </svg>;
+}
+
+export function FractionTape({ tape }) {
+  const left = 15;
+  const width = 320;
+  const right = left + width;
+  const top = 40;
+  const stepWidth = width / tape.parts;
+  return <svg className="generated-geometry" viewBox="0 0 350 70" role="img" aria-label="분수 테이프">
+    {Array.from({ length: tape.mark }, (_, index) => <rect key={index} x={left + index * stepWidth} y={top} width={stepWidth} height="18" className="highlight-face" />)}
+    <rect x={left} y={top} width={width} height="18" className="shape-outline" />
+    {Array.from({ length: tape.parts + 1 }, (_, index) => {
+      const x = left + index * stepWidth;
+      const value = Math.round((tape.total / tape.parts) * index * 10) / 10;
+      return <g key={index}>
+        <line x1={x} y1={top} x2={x} y2={top + 18} />
+        <text x={x} y={top + 34} textAnchor="middle">{value}</text>
+      </g>;
+    })}
+  </svg>;
+}
+
+export function DataTable({ table }) {
+  return <table className="generated-math-table" aria-label="자료의 표">
+    <thead><tr><th />{table.categories.map((category) => <th key={category.label}>{category.label}</th>)}<th>합계</th></tr></thead>
+    <tbody><tr><th>수</th>{table.categories.map((category) => <td key={category.label}>{category.value === null ? '□' : category.value}</td>)}<td>{table.total}</td></tr></tbody>
+  </table>;
+}
+
 export function ProblemVisual({ item }) {
   const kind = item.visualKind;
   if (kind === 'clock') return <ClockFace clock={item.clock} />;
@@ -152,9 +233,14 @@ export function ProblemVisual({ item }) {
   if (kind === 'point-figure') return <PointFigure figure={item.figure} />;
   if (kind === 'point-cloud') return <PointCloud cloud={item.cloud} />;
   if (kind === 'polygon-figure') return <PolygonFigure polygon={item.polygon} />;
+  if (kind === 'circle-row') return <CircleRow row={item.row} />;
+  if (kind === 'circle-pair') return <CirclePair pair={item.pair} />;
+  if (kind === 'pictograph') return <Pictograph pictograph={item.pictograph} />;
+  if (kind === 'fraction-tape') return <FractionTape tape={item.tape} />;
+  if (kind === 'data-table') return <DataTable table={item.table} />;
   return null;
 }
 
 export function hasProblemVisual(item) {
-  return ['clock', 'angle-figure', 'point-figure', 'point-cloud', 'polygon-figure'].includes(item.visualKind);
+  return ['clock', 'angle-figure', 'point-figure', 'point-cloud', 'polygon-figure', 'circle-row', 'circle-pair', 'pictograph', 'fraction-tape', 'data-table'].includes(item.visualKind);
 }
