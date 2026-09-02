@@ -216,6 +216,18 @@ export default function HomePage() {
                 <span className="action-text">도전하기 →</span>
               </div>
             </a>
+
+            <a href="/games/janggi" className="academic-item-card rest-item">
+              <div className="card-badge-header">
+                <span className="game-symbol">象</span>
+                <span className="game-tag">Traditional Board Game</span>
+              </div>
+              <h4 className="card-title font-display">{G.games.janggi.title}</h4>
+              <p className="card-description">{G.games.janggi.desc}</p>
+              <div className="card-action-footer">
+                <span className="action-text">도전하기 →</span>
+              </div>
+            </a>
           </div>
         </section>
 
