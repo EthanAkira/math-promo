@@ -84,7 +84,29 @@ function rightAngleMark(x, y, sizeX, sizeY) {
 }
 
 export function PolygonFigure({ polygon }) {
-  const { shape, a, b, height, d1, d2 } = polygon;
+  const { shape, a, b, height, d1, d2, w: fullW, h: fullH } = polygon;
+  if (shape === 'lshape') {
+    const left = 20;
+    const top = 20;
+    const width = 160;
+    const boxHeight = 100;
+    const notchW = 60;
+    const notchH = 40;
+    const bl = { x: left, y: top + boxHeight };
+    const br = { x: left + width, y: top + boxHeight };
+    const midR = { x: left + width, y: top + notchH };
+    const notchInnerX = left + width - notchW;
+    const notch1 = { x: notchInnerX, y: top + notchH };
+    const notch2 = { x: notchInnerX, y: top };
+    const tl = { x: left, y: top };
+    return <svg className="generated-geometry" viewBox="0 0 220 150" role="img" aria-label="직각으로 이루어진 도형">
+      <polygon className="shape-outline" points={[bl, br, midR, notch1, notch2, tl].map((p) => `${p.x},${p.y}`).join(' ')} />
+      <text x={(bl.x + br.x) / 2} y={bl.y + 16} textAnchor="middle" className="value-label">{fullW}cm</text>
+      <text x={tl.x - 14} y={(tl.y + bl.y) / 2} className="value-label">{fullH}cm</text>
+      <text x={(notch2.x + midR.x) / 2} y={notch1.y - 6} textAnchor="middle" className="value-label">{a}cm</text>
+      <text x={notch1.x + 10} y={(notch1.y + notch2.y) / 2} className="value-label">{b}cm</text>
+    </svg>;
+  }
   if (shape === 'rectangle' || shape === 'square') {
     const w = 150;
     const h = shape === 'square' ? 90 : 90 * Math.min(1.4, Math.max(0.5, b / a || 1));
@@ -219,6 +241,29 @@ export function FractionTape({ tape }) {
   </svg>;
 }
 
+function staircaseCells(n) {
+  const cells = new Set();
+  for (let i = 0; i < n; i += 1) { cells.add(`${i},0`); cells.add(`0,${i}`); }
+  return Array.from(cells, (key) => key.split(',').map(Number));
+}
+
+export function BlockPattern({ pattern }) {
+  const cell = 12;
+  const maxN = Math.max(...pattern.stages);
+  const stageWidth = maxN * cell + 24;
+  const height = maxN * cell + 34;
+  return <svg className="generated-geometry" viewBox={`0 0 ${stageWidth * pattern.stages.length} ${height}`} role="img" aria-label="늘어나는 정사각형 배열">
+    {pattern.stages.map((n, stageIndex) => {
+      const offsetX = stageIndex * stageWidth + 10;
+      const baseY = height - 24;
+      return <g key={n}>
+        {staircaseCells(n).map(([col, row]) => <rect key={`${col}-${row}`} x={offsetX + col * cell} y={baseY - row * cell - cell} width={cell} height={cell} className="shape-outline" />)}
+        <text x={offsetX + (maxN * cell) / 2} y={height - 6} textAnchor="middle" className="point-label">{n}번째</text>
+      </g>;
+    })}
+  </svg>;
+}
+
 export function DataTable({ table }) {
   return <table className="generated-math-table" aria-label="자료의 표">
     <thead><tr><th />{table.categories.map((category) => <th key={category.label}>{category.label}</th>)}<th>합계</th></tr></thead>
@@ -238,9 +283,10 @@ export function ProblemVisual({ item }) {
   if (kind === 'pictograph') return <Pictograph pictograph={item.pictograph} />;
   if (kind === 'fraction-tape') return <FractionTape tape={item.tape} />;
   if (kind === 'data-table') return <DataTable table={item.table} />;
+  if (kind === 'block-pattern') return <BlockPattern pattern={item.pattern} />;
   return null;
 }
 
 export function hasProblemVisual(item) {
-  return ['clock', 'angle-figure', 'point-figure', 'point-cloud', 'polygon-figure', 'circle-row', 'circle-pair', 'pictograph', 'fraction-tape', 'data-table'].includes(item.visualKind);
+  return ['clock', 'angle-figure', 'point-figure', 'point-cloud', 'polygon-figure', 'circle-row', 'circle-pair', 'pictograph', 'fraction-tape', 'data-table', 'block-pattern'].includes(item.visualKind);
 }

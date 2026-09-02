@@ -359,8 +359,15 @@ function withPolygon(question, shape, dims) {
 }
 
 export function perimeterArea(random) {
-  const shape = pick(random, ['rectangle', 'square', 'parallelogram', 'triangle', 'trapezoid', 'rhombus']);
+  const shape = pick(random, ['rectangle', 'square', 'parallelogram', 'triangle', 'trapezoid', 'rhombus', 'lshape']);
   const askPerimeter = random() < 0.5;
+  if (shape === 'lshape') {
+    const w = randomInt(random, 12, 30);
+    const h = randomInt(random, 10, 25);
+    const a = randomInt(random, 2, w - 2);
+    const b = randomInt(random, 2, h - 2);
+    return withPolygon(wordQ('그림과 같이 직각으로 이루어진 도형의 둘레를 구하세요.', '', 2 * (w + h), 'cm', 'Find the perimeter of the rectilinear (right-angled) figure shown.'), 'lshape', { w, h, a, b });
+  }
   if (shape === 'rectangle') {
     const w = randomInt(random, 3, 20);
     const h = randomInt(random, 3, 20);
@@ -487,6 +494,17 @@ export function functionTable(random) {
   const targetX = randomInt(random, 5, 9);
   const pairs = xs.map((x) => `x=${x}일 때 y=${k * x + b}`).join(', ');
   return wordQ(`x와 y 사이에 일정한 대응 규칙이 있습니다. ${pairs}입니다. 규칙에 따라 x=${targetX}일 때 y의 값을 구하세요.`, '', k * targetX + b);
+}
+
+export function blockStaircasePattern(random) {
+  const shown = randomInt(random, 3, 5);
+  const targetN = randomInt(random, shown + 2, shown + 25);
+  const stages = Array.from({ length: shown }, (_, index) => index + 1);
+  return {
+    ...wordQ(`그림과 같이 정사각형을 늘어놓아 계단 모양을 만들고 있습니다. 이 규칙대로 계속 만들 때 ${targetN}번째 모양의 정사각형은 모두 몇 개인가요?`, '', 2 * targetN - 1, '개', `Following the pattern shown, how many unit squares make up stage ${targetN}?`),
+    visualKind: 'block-pattern',
+    pattern: { stages },
+  };
 }
 
 export function percentageBasic(random) {
