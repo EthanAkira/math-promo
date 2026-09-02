@@ -806,7 +806,7 @@ function weightedPick() {
 function sleep(ms) { return new Promise((resolve) => setTimeout(resolve, ms)); }
 
 const CSS = `
-.yutnori-app{--ink:#1b1815;--ink2:#241f1a;--hanji:#f4ece0;--hanji-line:#d8c9a8;--red:#c23b32;--red-dark:#8f2a24;--blue:#2a5c8a;--blue-dark:#1c3f5f;--gold:#c99a3e;--gold-soft:#e8cf95;--wood:#6d431c;font-family:'Noto Sans KR', sans-serif;}
+.yutnori-app{--ink:#1b1815;--ink2:#241f1a;--hanji:#f5edd9;--hanji-line:#d8c9a8;--red:#c23b32;--red-dark:#8f2a24;--blue:#2a5c8a;--blue-dark:#1c3f5f;--gold:#c99a3e;--gold-soft:#e8cf95;--wood:#6d431c;font-family:'Noto Sans KR', sans-serif;}
 .yutnori-app *{box-sizing:border-box;}
 .yutnori-app .title-wrap{text-align:center;margin-bottom:12px;}
 .yutnori-app h1{font-family:'Song Myung', serif;font-size:2.2rem;letter-spacing:0.18em;color:var(--red-dark);margin:0 0 2px;text-shadow:0 1px 2px rgba(0,0,0,0.1);}
@@ -830,56 +830,102 @@ const CSS = `
   }
 }
 
-/* ========== 1. 윷판 보드 = 전통 멍석판 (BOARD MAT) ========== */
+/* ========== 1. 전통 윷놀이 말판 (TRADITIONAL YUT MALPAN) ========== */
 .yutnori-app .board-card{
   position:relative;
   background:
-    repeating-linear-gradient(45deg, #c79e56 0px, #b2863e 4px, #c79e56 8px, #9e752f 12px),
-    repeating-linear-gradient(-45deg, rgba(0,0,0,0.14) 0px, transparent 4px, rgba(0,0,0,0.2) 8px);
-  border:8px solid #583311;
-  border-radius:24px;
-  padding:20px;
-  box-shadow:inset 0 0 40px rgba(25,12,3,0.75), 0 16px 40px rgba(0,0,0,0.35);
+    radial-gradient(ellipse at center, rgba(255,248,232,0.96) 0%, rgba(240,227,201,0.92) 100%),
+    repeating-linear-gradient(45deg, #c79e56 0px, #b2863e 4px, #c79e56 8px, #9e752f 12px);
+  border:10px solid #4a2810;
+  border-radius:26px;
+  padding:18px;
+  box-shadow:inset 0 0 32px rgba(45,22,6,0.35), 0 16px 40px rgba(0,0,0,0.4);
 }
 .yutnori-app .board-card::before{
   content:'';
   position:absolute;
   inset:6px;
-  border:2px dashed rgba(70,40,12,0.65);
-  border-radius:16px;
+  border:2.5px solid #8e5820;
+  border-radius:18px;
   pointer-events:none;
 }
 .yutnori-app .board-card::after{
   content:'';
   position:absolute;
-  inset:0;
-  background:radial-gradient(ellipse at center, rgba(255,240,195,0.22) 0%, rgba(0,0,0,0.28) 100%);
+  inset:10px;
+  border:1px dashed rgba(100,50,15,0.4);
+  border-radius:14px;
   pointer-events:none;
-  border-radius:16px;
 }
 
 .yutnori-app .board-inner{
   position:relative;
-  background:rgba(247, 240, 228, 0.92);
-  border:2px solid #a37b42;
-  border-radius:14px;
-  padding:10px;
-  box-shadow:inset 0 0 20px rgba(100,65,20,0.18), 0 4px 12px rgba(0,0,0,0.2);
-  backdrop-filter:blur(2px);
+  background:linear-gradient(145deg, #faf3e5 0%, #eee1c4 100%);
+  border:2px solid #b38647;
+  border-radius:12px;
+  padding:12px;
+  box-shadow:inset 0 0 24px rgba(110,70,25,0.18), 0 4px 14px rgba(0,0,0,0.15);
   z-index:2;
 }
 
 .yutnori-app svg{width:100%;height:auto;display:block;}
-.yutnori-app .edge-line{stroke:#4d2c10;stroke-width:3.2;opacity:0.75;}
-.yutnori-app .diag-line{stroke:#4d2c10;stroke-width:2.4;opacity:0.55;stroke-dasharray:2 6;stroke-linecap:round;}
-.yutnori-app .node-dot{fill:#fffdf7;stroke:#4d2c10;stroke-width:2.2;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.15));}
-.yutnori-app .node-dot.corner{fill:#fce4a6;stroke:#8f5615;stroke-width:3;}
-.yutnori-app .node-dot.center{fill:#f5ba38;stroke:#6b3c07;stroke-width:3.5;}
-.yutnori-app .piece{filter:drop-shadow(0 4px 6px rgba(0,0,0,0.45));cursor:pointer;transition:transform .15s ease;}
-.yutnori-app .piece:hover{transform:scale(1.15);}
-.yutnori-app .piece-count{font-family:'Noto Sans KR',sans-serif;font-size:9.5px;font-weight:900;fill:#fff;pointer-events:none;}
 
-/* ========== 2. 조작 패널 & 멍석 던짐판 ========== */
+/* 윷판 말판 길 (Paths) */
+.yutnori-app .edge-line{
+  stroke:#3b200c;
+  stroke-width:4.5;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,0.25));
+}
+.yutnori-app .diag-line{
+  stroke:#4a2a11;
+  stroke-width:3.2;
+  stroke-dasharray:4 8;
+  stroke-linecap:round;
+  opacity:0.75;
+}
+
+/* 윷판 말판 밭/점 (Traditional Nodes) */
+.yutnori-app .node-ring{
+  fill:#fffcf3;
+  stroke:#422209;
+  stroke-width:2.4;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+.yutnori-app .node-ring.corner{
+  fill:#fce6a8;
+  stroke:#7d4512;
+  stroke-width:3.2;
+}
+.yutnori-app .node-ring.center{
+  fill:#f5ba38;
+  stroke:#8a241c;
+  stroke-width:3.8;
+}
+.yutnori-app .node-inner-dot{
+  fill:#522c0d;
+  pointer-events:none;
+}
+.yutnori-app .node-inner-dot.center{
+  fill:#b8261c;
+}
+
+.yutnori-app .node-text{
+  font-family:'Song Myung', serif;
+  font-weight:900;
+  fill:#7d4512;
+  text-anchor:middle;
+  dominant-baseline:central;
+  pointer-events:none;
+}
+
+/* 말 (Game pieces) */
+.yutnori-app .piece{filter:drop-shadow(0 5px 8px rgba(0,0,0,0.55));cursor:pointer;transition:transform .15s ease;}
+.yutnori-app .piece:hover{transform:scale(1.18);}
+.yutnori-app .piece-count{font-family:'Noto Sans KR',sans-serif;font-size:10px;font-weight:900;fill:#fff;pointer-events:none;}
+
+/* ========== 2. 조작 패널 & 윷 던짐판 ========== */
 .yutnori-app .panel{
   width:100%;
   background:linear-gradient(160deg, #2a2217 0%, #1a150f 100%);
@@ -898,12 +944,12 @@ const CSS = `
 .yutnori-app .turn-dot.blue{background:var(--blue);color:var(--blue);}
 .yutnori-app .score-mini{font-size:0.85rem;color:#d4c49f;font-weight:700;}
 
-/* 멍석 (STRAW MAT) DEDICATED THROW PAD */
+/* 윷 던짐 멍석 깔개 (STRAW MAT THROW PAD) */
 .yutnori-app .mats-container{
   position:relative;
   margin:2px 0 4px;
   border-radius:18px;
-  padding:22px 14px 18px;
+  padding:24px 14px 20px;
   background:
     repeating-linear-gradient(45deg, #caa05b 0px, #b88d44 3px, #caa05b 6px, #9e752f 9px),
     repeating-linear-gradient(-45deg, rgba(0,0,0,0.15) 0px, transparent 3px, rgba(0,0,0,0.22) 6px);
@@ -925,17 +971,6 @@ const CSS = `
   border:1.5px dashed rgba(75,45,15,0.6);
   border-radius:12px;
   pointer-events:none;
-}
-.yutnori-app .mat-label{
-  position:absolute;
-  top:5px;
-  left:10px;
-  font-size:0.72rem;
-  color:#42260d;
-  font-weight:900;
-  letter-spacing:0.14em;
-  opacity:0.9;
-  text-shadow:0 1px 0 rgba(255,240,200,0.5);
 }
 
 /* ========== 3. 3D REALISTIC WOODEN YUT STICKS ========== */
@@ -1169,7 +1204,7 @@ const CSS = `
 @media (max-width:480px){
   .yutnori-app h1{font-size:1.8rem;}
   .yutnori-app .stick{width:22px;height:90px;}
-  .yutnori-app .mats-container{padding:14px 8px;}
+  .yutnori-app .mats-container{padding:16px 8px;}
   .yutnori-app .tutorial-card{padding:22px 18px;}
 }
 `;
@@ -1223,23 +1258,54 @@ export default function YutnoriGame() {
 
     function drawStaticBoard() {
       svg.innerHTML = '';
+      
+      // 1. Board decorative background grid & lines
       const pts = OUTER_ORDER.map((id) => `${NODES[id].x},${NODES[id].y}`).join(' ');
       svg.appendChild(svgElNS('polyline', { points: pts, class: 'edge-line', fill: 'none' }));
       DIAGONALS.forEach(([a, b]) => {
         svg.appendChild(svgElNS('line', { x1: NODES[a].x, y1: NODES[a].y, x2: NODES[b].x, y2: NODES[b].y, class: 'diag-line' }));
       });
+
+      // 2. Traditional Nodes (말판의 밭 / 참먹 / 방)
       Object.keys(NODES).forEach((id) => {
         id = +id;
         const n = NODES[id];
-        let cls = 'node-dot';
-        let r = 7;
-        if (id === CENTER) { cls += ' center'; r = 12; }
-        else if (CORNERS.includes(id)) { cls += ' corner'; r = 10; }
-        svg.appendChild(svgElNS('circle', { cx: n.x, cy: n.y, r, class: cls, 'data-node': id }));
+        const g = svgElNS('g', { class: 'node-group', 'data-node': id });
+
+        if (id === CENTER) {
+          // 중앙 방 (Center Room)
+          const outerRing = svgElNS('circle', { cx: n.x, cy: n.y, r: 16, class: 'node-ring center' });
+          const innerRing = svgElNS('circle', { cx: n.x, cy: n.y, r: 11, fill: 'none', stroke: '#8a241c', 'stroke-width': 1.5 });
+          const dot = svgElNS('circle', { cx: n.x, cy: n.y, r: 4.5, class: 'node-inner-dot center' });
+          g.appendChild(outerRing);
+          g.appendChild(innerRing);
+          g.appendChild(dot);
+        } else if (CORNERS.includes(id)) {
+          // 4대 모서리 (Corners)
+          const outerRing = svgElNS('circle', { cx: n.x, cy: n.y, r: 13, class: 'node-ring corner' });
+          const innerRing = svgElNS('circle', { cx: n.x, cy: n.y, r: 8.5, fill: 'none', stroke: '#7d4512', 'stroke-width': 1.2 });
+          const dot = svgElNS('circle', { cx: n.x, cy: n.y, r: 3.5, class: 'node-inner-dot' });
+          g.appendChild(outerRing);
+          g.appendChild(innerRing);
+          g.appendChild(dot);
+        } else {
+          // 일반 밭 (Regular Nodes)
+          const ring = svgElNS('circle', { cx: n.x, cy: n.y, r: 9, class: 'node-ring' });
+          const dot = svgElNS('circle', { cx: n.x, cy: n.y, r: 3, class: 'node-inner-dot' });
+          g.appendChild(ring);
+          g.appendChild(dot);
+        }
+        svg.appendChild(g);
       });
-      homeLabelEl = svgElNS('text', { x: NODES[0].x, y: NODES[0].y - 18, 'text-anchor': 'middle', fill: '#4d2c10', 'font-size': 12, 'font-family': "'Song Myung', serif", 'font-weight': 900 });
+
+      // 3. 출발 및 골(날) 전통 낙관 표식
+      const homeBadge = svgElNS('g', { class: 'home-badge' });
+      const rect = svgElNS('rect', { x: NODES[0].x - 22, y: NODES[0].y + 16, width: 44, height: 20, rx: 6, fill: '#8f2a24', stroke: '#fff8ec', 'stroke-width': 1.5 });
+      homeLabelEl = svgElNS('text', { x: NODES[0].x, y: NODES[0].y + 30, 'text-anchor': 'middle', fill: '#fff8ec', 'font-size': 11, 'font-family': "'Song Myung', serif", 'font-weight': 900 });
       homeLabelEl.textContent = wordsRef.current.homeLabel;
-      svg.appendChild(homeLabelEl);
+      homeBadge.appendChild(rect);
+      homeBadge.appendChild(homeLabelEl);
+      svg.appendChild(homeBadge);
     }
     drawStaticBoard();
 
@@ -1434,16 +1500,16 @@ export default function YutnoriGame() {
           const cx = node.x + ox;
           const cy = node.y - 4;
           const circ = svgElNS('circle', {
-            cx, cy, r: 11,
+            cx, cy, r: 11.5,
             fill: color === 'red' ? '#c23b32' : '#2a5c8a',
             stroke: '#fff8ec',
-            'stroke-width': 2,
+            'stroke-width': 2.2,
             class: 'piece',
           });
           g.appendChild(circ);
           if (group.length > 1) {
             const txt = svgElNS('text', {
-              x: cx, y: cy + 3,
+              x: cx, y: cy + 3.5,
               'text-anchor': 'middle',
               class: 'piece-count',
             });
@@ -1814,14 +1880,14 @@ export default function YutnoriGame() {
       </div>
 
       <div className="layout">
-        {/* LEFT: 윷놀이 멍석 보드판 (STRAW MAT BOARD) */}
+        {/* LEFT: 전통 윷놀이 말판 (TRADITIONAL BOARD) */}
         <div className="board-card">
           <div className="board-inner">
             <svg id="yn-board" viewBox="0 0 600 600" />
           </div>
         </div>
 
-        {/* RIGHT: 한눈에 보는 조작 패널 & 멍석 던짐판 & 3D 윷가락 & 알 상태 (SIDE PANEL) */}
+        {/* RIGHT: 한눈에 보는 조작 패널 & 3D 윷가락 & 알 상태 (SIDE PANEL) */}
         <div className="panel">
           <div className="turn-row">
             <div className="turn-badge" id="yn-turnBadge">
@@ -1831,9 +1897,8 @@ export default function YutnoriGame() {
             <div className="score-mini" id="yn-scoreMini" />
           </div>
 
-          {/* 멍석 (STRAW MAT) 던짐 영역 & 3D 윷가락 */}
+          {/* 윷 던짐판 (THROUGH MAT) & 3D 윷가락 */}
           <div className="mats-container">
-            <span className="mat-label">멍석 (Straw Mat)</span>
             <div className="sticks-area" id="yn-sticksArea" />
           </div>
 

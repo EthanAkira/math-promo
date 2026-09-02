@@ -840,7 +840,7 @@ const CSS = `\n</style>
 
     <!-- 멍석 STRAW MAT CONTAINER -->
     <div class="mats-container">
-      <span class="mat-label">멍석 (Straw Mat)</span>
+      
       <div class="sticks-area" id="yn-sticksArea"></div>
     </div>
 
@@ -1146,26 +1146,57 @@ const CSS = `\n</style>
   }
 
   function drawStaticBoard() {
-    svg.innerHTML = '';
-    const pts = OUTER_ORDER.map((id) => `${NODES[id].x},${NODES[id].y}`).join(' ');
-    svg.appendChild(svgElNS('polyline', { points: pts, class: 'edge-line', fill: 'none' }));
-    DIAGONALS.forEach(([a, b]) => {
-      svg.appendChild(svgElNS('line', { x1: NODES[a].x, y1: NODES[a].y, x2: NODES[b].x, y2: NODES[b].y, class: 'diag-line' }));
-    });
-    Object.keys(NODES).forEach((id) => {
-      id = +id;
-      const n = NODES[id];
-      let cls = 'node-dot';
-      let r = 6;
-      if (id === CENTER) { cls += ' center'; r = 10; }
-      else if (CORNERS.includes(id)) { cls += ' corner'; r = 9; }
-      svg.appendChild(svgElNS('circle', { cx: n.x, cy: n.y, r, class: cls, 'data-node': id }));
-    });
-    const homeLabel = svgElNS('text', { x: NODES[0].x, y: NODES[0].y - 16, 'text-anchor': 'middle', fill: '#8a6a3a', 'font-size': 11, 'font-family': "'Noto Sans KR',sans-serif", 'font-weight': 700 });
-    homeLabel.textContent = '날';
-    svg.appendChild(homeLabel);
-  }
-  drawStaticBoard();
+      svg.innerHTML = '';
+      
+      // 1. Board decorative background grid & lines
+      const pts = OUTER_ORDER.map((id) => `${NODES[id].x},${NODES[id].y}`).join(' ');
+      svg.appendChild(svgElNS('polyline', { points: pts, class: 'edge-line', fill: 'none' }));
+      DIAGONALS.forEach(([a, b]) => {
+        svg.appendChild(svgElNS('line', { x1: NODES[a].x, y1: NODES[a].y, x2: NODES[b].x, y2: NODES[b].y, class: 'diag-line' }));
+      });
+
+      // 2. Traditional Nodes (말판의 밭 / 참먹 / 방)
+      Object.keys(NODES).forEach((id) => {
+        id = +id;
+        const n = NODES[id];
+        const g = svgElNS('g', { class: 'node-group', 'data-node': id });
+
+        if (id === CENTER) {
+          // 중앙 방 (Center Room)
+          const outerRing = svgElNS('circle', { cx: n.x, cy: n.y, r: 16, class: 'node-ring center' });
+          const innerRing = svgElNS('circle', { cx: n.x, cy: n.y, r: 11, fill: 'none', stroke: '#8a241c', 'stroke-width': 1.5 });
+          const dot = svgElNS('circle', { cx: n.x, cy: n.y, r: 4.5, class: 'node-inner-dot center' });
+          g.appendChild(outerRing);
+          g.appendChild(innerRing);
+          g.appendChild(dot);
+        } else if (CORNERS.includes(id)) {
+          // 4대 모서리 (Corners)
+          const outerRing = svgElNS('circle', { cx: n.x, cy: n.y, r: 13, class: 'node-ring corner' });
+          const innerRing = svgElNS('circle', { cx: n.x, cy: n.y, r: 8.5, fill: 'none', stroke: '#7d4512', 'stroke-width': 1.2 });
+          const dot = svgElNS('circle', { cx: n.x, cy: n.y, r: 3.5, class: 'node-inner-dot' });
+          g.appendChild(outerRing);
+          g.appendChild(innerRing);
+          g.appendChild(dot);
+        } else {
+          // 일반 밭 (Regular Nodes)
+          const ring = svgElNS('circle', { cx: n.x, cy: n.y, r: 9, class: 'node-ring' });
+          const dot = svgElNS('circle', { cx: n.x, cy: n.y, r: 3, class: 'node-inner-dot' });
+          g.appendChild(ring);
+          g.appendChild(dot);
+        }
+        svg.appendChild(g);
+      });
+
+      // 3. 출발 및 골(날) 전통 낙관 표식
+      const homeBadge = svgElNS('g', { class: 'home-badge' });
+      const rect = svgElNS('rect', { x: NODES[0].x - 22, y: NODES[0].y + 16, width: 44, height: 20, rx: 6, fill: '#8f2a24', stroke: '#fff8ec', 'stroke-width': 1.5 });
+      homeLabelEl = svgElNS('text', { x: NODES[0].x, y: NODES[0].y + 30, 'text-anchor': 'middle', fill: '#fff8ec', 'font-size': 11, 'font-family': "'Song Myung', serif", 'font-weight': 900 });
+      homeLabelEl.textContent = words.homeLabel;
+      homeBadge.appendChild(rect);
+      homeBadge.appendChild(homeLabelEl);
+      svg.appendChild(homeBadge);
+    }
+    drawStaticBoard();
 
   function freshPieces() { return [0, 1, 2, 3].map((i) => ({ id: i, node: null, path: [] })); }
   let state = {
