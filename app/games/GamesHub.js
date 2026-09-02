@@ -3,8 +3,8 @@
 import { useLanguage } from '../language';
 import { GAMES_COPY } from './gamesCopy';
 
-const ICONS = { sudoku: '🔢', gomoku: '⚫', chess: '♞', yutnori: '🎲' };
-const ORDER = ['sudoku', 'gomoku', 'chess', 'yutnori'];
+const ICONS = { sudoku: '🔢', gomoku: '⚫', chess: '♞', yutnori: '🪵', janggi: '象' };
+const ORDER = ['sudoku', 'gomoku', 'chess', 'yutnori', 'janggi'];
 
 export default function GamesHub() {
   const { language } = useLanguage();
