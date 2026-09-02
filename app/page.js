@@ -185,7 +185,29 @@ export default function HomePage() {
 
             <a href="/games/yutnori" className="academic-item-card rest-item">
               <div className="card-badge-header">
-                <span className="game-symbol">🎲🪵</span>
+                <span className="game-symbol" style={{ display: 'inline-flex', alignItems: 'center' }}>
+                  <svg width="24" height="24" viewBox="0 0 32 32" style={{ verticalAlign: 'middle' }}>
+                    <defs>
+                      <linearGradient id="mainYutBack" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor="#3b1d0e" />
+                        <stop offset="45%" stopColor="#8c5529" />
+                        <stop offset="100%" stopColor="#2e1408" />
+                      </linearGradient>
+                      <linearGradient id="mainYutFront" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor="#cfae70" />
+                        <stop offset="45%" stopColor="#fff8eb" />
+                        <stop offset="100%" stopColor="#bf9954" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="13" y="2" width="6" height="28" rx="3" fill="url(#mainYutBack)" stroke="#261005" strokeWidth="0.8" transform="rotate(-25 16 16)" />
+                    <g transform="rotate(25 16 16)">
+                      <rect x="13" y="2" width="6" height="28" rx="3" fill="url(#mainYutFront)" stroke="#805d26" strokeWidth="0.8" />
+                      <circle cx="16" cy="8" r="1.1" fill="#3b1d0e" />
+                      <text x="16" y="18" textAnchor="middle" fill="#b8261c" fontSize="6.5" fontFamily="'Song Myung', serif" fontWeight="900">✕</text>
+                      <circle cx="16" cy="24" r="1.1" fill="#3b1d0e" />
+                    </g>
+                  </svg>
+                </span>
                 <span className="game-tag">Probability & Flow</span>
               </div>
               <h4 className="card-title font-display">{G.games.yutnori.title}</h4>

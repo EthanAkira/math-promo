@@ -5,7 +5,7 @@ import { useLanguage } from '../../language';
 
 const LATIN_OUTCOME_NAMES = { backdo: 'Back-do', do: 'Do', gae: 'Gae', geol: 'Geol', yut: 'Yut', mo: 'Mo' };
 
-// Tiny Web Audio synthesizer for the game's sound effects — no external audio files needed.
+// High-fidelity Web Audio Synthesizer
 let sharedAudioCtx = null;
 function ensureAudioCtx() {
   if (typeof window === 'undefined') return null;
@@ -17,35 +17,123 @@ function ensureAudioCtx() {
   if (sharedAudioCtx.state === 'suspended') sharedAudioCtx.resume().catch(() => {});
   return sharedAudioCtx;
 }
-function playTone(ctx, { freq, freqEnd, start, duration, type = 'sine', gain = 0.2 }) {
-  const osc = ctx.createOscillator();
-  const gainNode = ctx.createGain();
-  osc.type = type;
-  osc.frequency.setValueAtTime(freq, start);
-  if (freqEnd) osc.frequency.exponentialRampToValueAtTime(Math.max(freqEnd, 1), start + duration);
-  gainNode.gain.setValueAtTime(0.0001, start);
-  gainNode.gain.linearRampToValueAtTime(gain, start + 0.012);
-  gainNode.gain.exponentialRampToValueAtTime(0.001, start + duration);
-  osc.connect(gainNode);
-  gainNode.connect(ctx.destination);
-  osc.start(start);
-  osc.stop(start + duration + 0.03);
+
+function playWoodTossSound() {
+  const ctx = ensureAudioCtx();
+  if (!ctx) return;
+  const now = ctx.currentTime;
+  const clicks = [
+    { delay: 0.0, freq: 920, dur: 0.032, gain: 0.35 },
+    { delay: 0.035, freq: 1150, dur: 0.028, gain: 0.28 },
+    { delay: 0.08, freq: 740, dur: 0.038, gain: 0.30 },
+    { delay: 0.14, freq: 990, dur: 0.030, gain: 0.26 },
+    { delay: 0.20, freq: 830, dur: 0.035, gain: 0.22 },
+  ];
+  clicks.forEach(({ delay, freq, dur, gain }) => {
+    try {
+      const osc = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, now + delay);
+      osc.frequency.exponentialRampToValueAtTime(freq * 0.35, now + delay + dur);
+      gainNode.gain.setValueAtTime(0.001, now + delay);
+      gainNode.gain.linearRampToValueAtTime(gain, now + delay + 0.003);
+      gainNode.gain.exponentialRampToValueAtTime(0.0001, now + delay + dur);
+      osc.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      osc.start(now + delay);
+      osc.stop(now + delay + dur + 0.01);
+    } catch {}
+  });
 }
-// A harsh, buzzy descending stab — deliberately grating, played when a piece gets captured.
+
+function playMatLandSound(isBonus = false) {
+  const ctx = ensureAudioCtx();
+  if (!ctx) return;
+  const now = ctx.currentTime;
+  try {
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(150, now);
+    osc.frequency.exponentialRampToValueAtTime(40, now + 0.13);
+    gainNode.gain.setValueAtTime(0.4, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+    osc.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.16);
+  } catch {}
+  try {
+    const osc2 = ctx.createOscillator();
+    const gainNode2 = ctx.createGain();
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(520, now + 0.01);
+    osc2.frequency.exponentialRampToValueAtTime(160, now + 0.07);
+    gainNode2.gain.setValueAtTime(0.25, now + 0.01);
+    gainNode2.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+    osc2.connect(gainNode2);
+    gainNode2.connect(ctx.destination);
+    osc2.start(now + 0.01);
+    osc2.stop(now + 0.09);
+  } catch {}
+  if (isBonus) {
+    [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+      try {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + 0.08 + i * 0.06);
+        g.gain.setValueAtTime(0.001, now + 0.08 + i * 0.06);
+        g.gain.linearRampToValueAtTime(0.2, now + 0.08 + i * 0.06 + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.08 + i * 0.06 + 0.2);
+        osc.connect(g);
+        g.connect(ctx.destination);
+        osc.start(now + 0.08 + i * 0.06);
+        osc.stop(now + 0.08 + i * 0.06 + 0.22);
+      } catch {}
+    });
+  }
+}
+
 function playCaptureSound() {
   const ctx = ensureAudioCtx();
   if (!ctx) return;
   const now = ctx.currentTime;
-  playTone(ctx, { freq: 300, freqEnd: 90, start: now, duration: 0.22, type: 'sawtooth', gain: 0.22 });
-  playTone(ctx, { freq: 210, freqEnd: 60, start: now + 0.05, duration: 0.26, type: 'square', gain: 0.16 });
+  try {
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(340, now);
+    osc.frequency.exponentialRampToValueAtTime(80, now + 0.24);
+    gainNode.gain.setValueAtTime(0.001, now);
+    gainNode.gain.linearRampToValueAtTime(0.28, now + 0.01);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
+    osc.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.26);
+  } catch {}
 }
-// A bright, ascending three-note chime — played whenever a piece completes its lap (완주).
+
 function playFinishSound() {
   const ctx = ensureAudioCtx();
   if (!ctx) return;
   const now = ctx.currentTime;
-  [523.25, 659.25, 783.99].forEach((freq, i) => {
-    playTone(ctx, { freq, start: now + i * 0.1, duration: 0.28, type: 'sine', gain: 0.2 });
+  [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+    try {
+      const osc = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now + i * 0.09);
+      gainNode.gain.setValueAtTime(0.001, now + i * 0.09);
+      gainNode.gain.linearRampToValueAtTime(0.24, now + i * 0.09 + 0.01);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.32);
+      osc.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      osc.start(now + i * 0.09);
+      osc.stop(now + i * 0.09 + 0.34);
+    } catch {}
   });
 }
 
@@ -616,6 +704,7 @@ const COPY = {
   },
 };
 
+
 const UNIT = 90, MARGIN = 45;
 const grid = (c, r) => ({ x: MARGIN + c * UNIT, y: MARGIN + r * UNIT });
 const NODES = {
@@ -633,11 +722,6 @@ const CENTER = 22;
 const OUTER_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 0];
 const DIAGONALS = [[5, 20], [20, 21], [21, 22], [22, 23], [23, 24], [24, 15], [10, 25], [25, 26], [26, 22], [22, 27], [27, 28], [28, 0]];
 
-// Real board graph: every square a piece can stand on, and how it continues forward.
-// 0 is the start/finish corner (a piece that arrives back here is home, never "stands" on it mid-game).
-// 5 and 10 are corners with a fork: continue around the outer rim, or cut diagonally through the center.
-// 22 (the center) is itself a fork: continue the diagonal out to the far corner (15), or cut across the
-// other diagonal straight toward the start/finish corner (0) — the fastest way home.
 const DIAG_NEXT = { 20: 21, 21: 22, 23: 24, 24: 15, 25: 26, 26: 22, 27: 28, 28: 0 };
 function nextOptions(node) {
   if (node === 5) return [{ tag: 'outer', next: 6 }, { tag: 'diagonal', next: 20 }];
@@ -648,11 +732,7 @@ function nextOptions(node) {
   if (node >= 0 && node <= 18) return [{ tag: 'outer', next: node + 1 }];
   return [];
 }
-// A fork (5, 10, or the center) only offers a real choice when the piece is already resting there
-// BEFORE the throw is applied. If a throw's path merely crosses a fork partway through (the piece
-// was moving, not starting from rest on that square), it must continue automatically with no choice:
-// through 5 or 10 that always means staying on the outer rim, and through the center it means
-// continuing straight along whichever diagonal line the piece was already travelling.
+
 function pickDefaultOption(node, predecessor, options) {
   if (node === CENTER) {
     const tag = predecessor === 26 ? 'toward0' : 'toward15';
@@ -660,9 +740,7 @@ function pickDefaultOption(node, predecessor, options) {
   }
   return options.find((opt) => opt.tag === 'outer') || options[0];
 }
-// Enumerate every distinct route `steps` forward from `startNode`. A fork only branches into multiple
-// routes on the very first step of the walk (i.e. when the piece was already resting on that fork
-// square before this throw); forks encountered later, mid-walk, resolve to a single default route.
+
 function enumeratePaths(startNode, steps) {
   let frontier = [{ node: startNode, path: [], forkChoices: [] }];
   for (let i = 0; i < steps; i++) {
@@ -696,6 +774,7 @@ function enumeratePaths(startNode, steps) {
       return true;
     });
 }
+
 const FORK_LABELS = {
   ko: { outer: '바깥 테두리', diagonal: '대각선 지름길', toward15: '반대편 모서리 방향', toward0: '출발점 방향 지름길' },
   en: { outer: 'outer rim', diagonal: 'diagonal shortcut', toward15: 'toward the far corner', toward0: 'shortcut to the start corner' },
@@ -705,16 +784,16 @@ function routeHint(language, forkChoices) {
   const dict = FORK_LABELS[language] || FORK_LABELS.en;
   return ` (${forkChoices.map((tag) => dict[tag] || tag).join(' · ')})`;
 }
-function dedupeResults(results) { return results; } // enumeratePaths already dedupes
 
 const OUTCOMES = [
-  { key: 'backdo', value: -1, flats: 0, weight: 3, special: true },
-  { key: 'do', value: 1, flats: 1, weight: 35 },
+  { key: 'backdo', value: -1, flats: 1, backdoStick: true, weight: 3, special: true },
+  { key: 'do', value: 1, flats: 1, backdoStick: false, weight: 35 },
   { key: 'gae', value: 2, flats: 2, weight: 28 },
   { key: 'geol', value: 3, flats: 3, weight: 20 },
   { key: 'yut', value: 4, flats: 4, weight: 10, bonus: true },
-  { key: 'mo', value: 5, flats: 4, weight: 4, bonus: true, special: true },
+  { key: 'mo', value: 5, flats: 0, weight: 4, bonus: true, special: true },
 ];
+
 function weightedPick() {
   const total = OUTCOMES.reduce((s, o) => s + o.weight, 0);
   let r = Math.random() * total;
@@ -727,86 +806,343 @@ function weightedPick() {
 function sleep(ms) { return new Promise((resolve) => setTimeout(resolve, ms)); }
 
 const CSS = `
-.yutnori-app{--ink:#1b1815;--ink2:#241f1a;--hanji:#f1e8d8;--hanji-line:#d8c9a8;--red:#c23b32;--red-dark:#8f2a24;--blue:#2a5c8a;--blue-dark:#1c3f5f;--gold:#c99a3e;--gold-soft:#e8cf95;--wood:#7a5230;font-family:'Noto Sans KR', sans-serif;}
+.yutnori-app{--ink:#1b1815;--ink2:#241f1a;--hanji:#f4ece0;--hanji-line:#d8c9a8;--red:#c23b32;--red-dark:#8f2a24;--blue:#2a5c8a;--blue-dark:#1c3f5f;--gold:#c99a3e;--gold-soft:#e8cf95;--wood:#7a5230;font-family:'Noto Sans KR', sans-serif;}
 .yutnori-app *{box-sizing:border-box;}
-.yutnori-app .title-wrap{text-align:center;margin-bottom:14px;}
-.yutnori-app h1{font-family:'Song Myung', serif;font-size:2.1rem;letter-spacing:0.15em;color:var(--red-dark);margin:0 0 4px;}
-.yutnori-app .subtitle{font-size:0.78rem;color:var(--wood);letter-spacing:0.08em;}
-.yutnori-app .layout{width:100%;max-width:920px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:16px;}
-.yutnori-app .board-card{background:linear-gradient(160deg, var(--hanji) 0%, #e9dfc7 100%);border-radius:18px;padding:18px;box-shadow:0 0 0 1px rgba(201,154,62,0.5) inset, 0 12px 32px rgba(0,0,0,0.12);width:100%;max-width:520px;}
+.yutnori-app .title-wrap{text-align:center;margin-bottom:12px;}
+.yutnori-app h1{font-family:'Song Myung', serif;font-size:2.1rem;letter-spacing:0.18em;color:var(--red-dark);margin:0 0 2px;text-shadow:0 1px 2px rgba(0,0,0,0.1);}
+.yutnori-app .subtitle{font-size:0.8rem;color:var(--wood);letter-spacing:0.08em;font-weight:500;}
+
+/* ========== ONE-VIEW SIDE-BY-SIDE LAYOUT (한눈에 들어오는 배치) ========== */
+.yutnori-app .layout{
+  width:100%;
+  max-width:1160px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:1.05fr 1fr;
+  align-items:start;
+  gap:22px;
+}
+
+@media (max-width: 860px) {
+  .yutnori-app .layout{
+    grid-template-columns:1fr;
+    max-width:540px;
+  }
+}
+
+.yutnori-app .board-card{
+  background:linear-gradient(160deg, #f7f0e4 0%, #ebdfc7 100%);
+  border-radius:20px;
+  padding:16px;
+  box-shadow:0 0 0 1px rgba(201,154,62,0.5) inset, 0 14px 36px rgba(0,0,0,0.15);
+  width:100%;
+}
 .yutnori-app svg{width:100%;height:auto;display:block;}
-.yutnori-app .edge-line{stroke:var(--wood);stroke-width:2.5;opacity:0.55;}
-.yutnori-app .diag-line{stroke:var(--wood);stroke-width:2;opacity:0.4;stroke-dasharray:1 6;stroke-linecap:round;}
-.yutnori-app .node-dot{fill:#fffaf0;stroke:var(--wood);stroke-width:1.6;}
-.yutnori-app .node-dot.corner{fill:var(--gold-soft);stroke:var(--gold);stroke-width:2.2;}
+.yutnori-app .edge-line{stroke:var(--wood);stroke-width:2.8;opacity:0.6;}
+.yutnori-app .diag-line{stroke:var(--wood);stroke-width:2.2;opacity:0.45;stroke-dasharray:1 6;stroke-linecap:round;}
+.yutnori-app .node-dot{fill:#fffaf0;stroke:var(--wood);stroke-width:1.8;}
+.yutnori-app .node-dot.corner{fill:var(--gold-soft);stroke:var(--gold);stroke-width:2.5;}
 .yutnori-app .node-dot.center{fill:var(--gold);stroke:var(--gold);}
-.yutnori-app .piece{filter:drop-shadow(0 2px 3px rgba(0,0,0,0.35));}
-.yutnori-app .piece-count{font-family:'Noto Sans KR',sans-serif;font-size:9px;font-weight:700;fill:#fff;pointer-events:none;}
-.yutnori-app .panel{width:100%;max-width:520px;background:linear-gradient(160deg, #2a2319 0%, #1f1b15 100%);border:1px solid rgba(201,154,62,0.35);border-radius:16px;padding:16px 18px;}
-.yutnori-app .turn-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.yutnori-app .turn-badge{display:flex;align-items:center;gap:8px;font-weight:700;font-size:0.95rem;color:#fff8ec;}
-.yutnori-app .turn-dot{width:14px;height:14px;border-radius:50%;box-shadow:0 0 8px currentColor;}
+.yutnori-app .piece{filter:drop-shadow(0 3px 4px rgba(0,0,0,0.4));cursor:pointer;transition:transform .15s ease;}
+.yutnori-app .piece:hover{transform:scale(1.1);}
+.yutnori-app .piece-count{font-family:'Noto Sans KR',sans-serif;font-size:9px;font-weight:900;fill:#fff;pointer-events:none;}
+
+.yutnori-app .panel{
+  width:100%;
+  background:linear-gradient(160deg, #2c2419 0%, #1c1813 100%);
+  border:1px solid rgba(201,154,62,0.4);
+  border-radius:20px;
+  padding:18px 20px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.3);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.yutnori-app .turn-row{display:flex;align-items:center;justify-content:space-between;}
+.yutnori-app .turn-badge{display:flex;align-items:center;gap:8px;font-weight:700;font-size:0.98rem;color:#fff8ec;}
+.yutnori-app .turn-dot{width:14px;height:14px;border-radius:50%;box-shadow:0 0 10px currentColor;}
 .yutnori-app .turn-dot.red{background:var(--red);color:var(--red);}
 .yutnori-app .turn-dot.blue{background:var(--blue);color:var(--blue);}
-.yutnori-app .score-mini{font-size:0.75rem;color:#b8a888;}
-.yutnori-app .sticks-area{display:flex;justify-content:center;gap:10px;margin:14px 0 10px;min-height:78px;align-items:center;}
-.yutnori-app .stick{width:16px;height:70px;border-radius:6px;background:linear-gradient(90deg,#e8d2a0,#c9a768 40%, #e8d2a0);border:1px solid #8a6a3a;position:relative;transition:transform .5s cubic-bezier(.34,1.56,.64,1);}
-.yutnori-app .stick::before{content:'';position:absolute;inset:3px;border-radius:3px;background:repeating-linear-gradient(180deg, rgba(120,85,40,0.25) 0 2px, transparent 2px 6px);}
-.yutnori-app .stick.flat{background:linear-gradient(90deg,#3a2c1e,#5a4530 40%, #3a2c1e);}
-.yutnori-app .stick.flipping{animation:yn-flip 0.55s ease-in-out;}
-@keyframes yn-flip{0%{transform:rotateY(0deg) translateY(0);}40%{transform:rotateY(540deg) translateY(-30px);}100%{transform:rotateY(1080deg) translateY(0);}}
-.yutnori-app .result-text{text-align:center;font-family:'Song Myung', serif;font-size:1.5rem;color:var(--gold-soft);min-height:2rem;margin-bottom:10px;}
-.yutnori-app .pending-row{text-align:center;font-size:0.82rem;color:#c9b98f;margin-bottom:10px;min-height:1.1rem;}
-.yutnori-app .btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;}
-.yutnori-app button.main-btn{font-family:'Noto Sans KR', sans-serif;font-weight:700;font-size:0.95rem;padding:11px 26px;border-radius:999px;border:none;cursor:pointer;background:linear-gradient(160deg, var(--red) 0%, var(--red-dark) 100%);color:#fff8ec;box-shadow:0 6px 16px rgba(194,59,50,0.4);transition:transform .12s ease, box-shadow .12s ease;}
+.yutnori-app .score-mini{font-size:0.82rem;color:#c9b98f;font-weight:700;}
+
+/* ========== 멍석 (STRAW MAT) DESIGN ========== */
+.yutnori-app .mats-container{
+  position:relative;
+  margin:2px 0 4px;
+  border-radius:16px;
+  padding:20px 14px 16px;
+  background:
+    repeating-linear-gradient(45deg, #c79e56 0px, #b2863e 3px, #c79e56 6px, #9e752f 9px),
+    repeating-linear-gradient(-45deg, rgba(0,0,0,0.14) 0px, transparent 3px, rgba(0,0,0,0.2) 6px);
+  border:5px solid #63401c;
+  box-shadow:inset 0 0 24px rgba(30,15,5,0.8), 0 8px 20px rgba(0,0,0,0.45);
+  perspective:1000px;
+}
+.yutnori-app .mats-container::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse at center, rgba(255,235,180,0.2) 0%, rgba(0,0,0,0.35) 100%);
+  pointer-events:none;
+}
+.yutnori-app .mats-container::after{
+  content:'';
+  position:absolute;
+  inset:4px;
+  border:1.5px dashed rgba(75,45,15,0.55);
+  border-radius:10px;
+  pointer-events:none;
+}
+.yutnori-app .mat-label{
+  position:absolute;
+  top:5px;
+  left:10px;
+  font-size:0.7rem;
+  color:#4a2f15;
+  font-weight:900;
+  letter-spacing:0.12em;
+  opacity:0.85;
+  text-shadow:0 1px 0 rgba(255,240,200,0.4);
+}
+
+/* ========== 3D REALISTIC YUT STICKS ========== */
+.yutnori-app .sticks-area{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:16px;
+  min-height:114px;
+  position:relative;
+  perspective:1000px;
+  transform-style:preserve-3d;
+  z-index:2;
+}
+.yutnori-app .stick{
+  width:24px;
+  height:98px;
+  border-radius:12px;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform 0.4s cubic-bezier(0.2, 1.2, 0.4, 1);
+  box-shadow:0 8px 18px rgba(0,0,0,0.5);
+  cursor:default;
+}
+
+/* 윷 등 (Round curved bark) */
+.yutnori-app .stick .stick-back{
+  position:absolute;
+  inset:0;
+  border-radius:12px;
+  background:linear-gradient(90deg, #26140a 0%, #5e3516 18%, #965f30 48%, #5e3516 80%, #201007 100%);
+  border:1px solid #3d200d;
+  backface-visibility:hidden;
+  overflow:hidden;
+}
+.yutnori-app .stick .stick-back::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:repeating-linear-gradient(180deg, rgba(20,10,5,0.45) 0px 2px, transparent 2px 8px);
+  opacity:0.7;
+}
+.yutnori-app .stick .stick-back::after{
+  content:'';
+  position:absolute;
+  top:0; bottom:0; left:35%; width:30%;
+  background:linear-gradient(90deg, transparent, rgba(255,225,170,0.25), transparent);
+}
+
+/* 윷 배 (Flat belly) */
+.yutnori-app .stick .stick-front{
+  position:absolute;
+  inset:0;
+  border-radius:12px;
+  background:linear-gradient(90deg, #d4b882 0%, #fbf3e0 35%, #fffdf8 50%, #fbf3e0 65%, #c59f64 100%);
+  border:1px solid #947139;
+  transform:rotateY(180deg);
+  backface-visibility:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:space-evenly;
+  overflow:hidden;
+}
+.yutnori-app .stick .stick-front::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:repeating-linear-gradient(180deg, rgba(150,110,50,0.18) 0 2px, transparent 2px 10px);
+  pointer-events:none;
+}
+.yutnori-app .stick .wood-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:radial-gradient(circle, #3d240e 0%, #7d4e21 70%, transparent 100%);
+  opacity:0.9;
+}
+.yutnori-app .stick .backdo-mark{
+  font-family:'Song Myung', serif;
+  font-size:16px;
+  font-weight:900;
+  color:#b8261c;
+  line-height:1;
+  text-shadow:0 0 2px rgba(255,180,180,0.6);
+  transform:scale(1.25);
+}
+
+/* 윷 토스 물리 애니메이션 */
+.yutnori-app .stick.toss-flat-0 { animation: tossFlat0 0.65s cubic-bezier(0.2, 0.8, 0.3, 1) forwards; }
+.yutnori-app .stick.toss-flat-1 { animation: tossFlat1 0.70s cubic-bezier(0.2, 0.8, 0.3, 1) forwards; }
+.yutnori-app .stick.toss-flat-2 { animation: tossFlat2 0.68s cubic-bezier(0.2, 0.8, 0.3, 1) forwards; }
+.yutnori-app .stick.toss-flat-3 { animation: tossFlat3 0.73s cubic-bezier(0.2, 0.8, 0.3, 1) forwards; }
+
+.yutnori-app .stick.toss-round-0 { animation: tossRound0 0.65s cubic-bezier(0.2, 0.8, 0.3, 1) forwards; }
+.yutnori-app .stick.toss-round-1 { animation: tossRound1 0.70s cubic-bezier(0.2, 0.8, 0.3, 1) forwards; }
+.yutnori-app .stick.toss-round-2 { animation: tossRound2 0.68s cubic-bezier(0.2, 0.8, 0.3, 1) forwards; }
+.yutnori-app .stick.toss-round-3 { animation: tossRound3 0.73s cubic-bezier(0.2, 0.8, 0.3, 1) forwards; }
+
+@keyframes tossFlat0 {
+  0% { transform: translateY(0) rotateX(0deg) rotateZ(0deg) scale(1); }
+  40% { transform: translateY(-85px) rotateX(540deg) rotateZ(-26deg) scale(1.26); }
+  75% { transform: translateY(4px) rotateX(900deg) rotateZ(6deg) scale(0.96); }
+  90% { transform: translateY(-8px) rotateX(900deg) rotateZ(-3deg) scale(1.02); }
+  100% { transform: translateY(0) rotateY(180deg) rotateZ(-6deg) scale(1); }
+}
+@keyframes tossFlat1 {
+  0% { transform: translateY(0) rotateX(0deg) rotateZ(0deg) scale(1); }
+  45% { transform: translateY(-95px) rotateX(720deg) rotateZ(28deg) scale(1.30); }
+  75% { transform: translateY(5px) rotateX(900deg) rotateZ(-8deg) scale(0.95); }
+  90% { transform: translateY(-9px) rotateX(900deg) rotateZ(4deg) scale(1.03); }
+  100% { transform: translateY(0) rotateY(180deg) rotateZ(8deg) scale(1); }
+}
+@keyframes tossFlat2 {
+  0% { transform: translateY(0) rotateX(0deg) rotateZ(0deg) scale(1); }
+  42% { transform: translateY(-80px) rotateX(540deg) rotateZ(-20deg) scale(1.24); }
+  75% { transform: translateY(4px) rotateX(900deg) rotateZ(10deg) scale(0.97); }
+  90% { transform: translateY(-7px) rotateX(900deg) rotateZ(-2deg) scale(1.02); }
+  100% { transform: translateY(0) rotateY(180deg) rotateZ(-4deg) scale(1); }
+}
+@keyframes tossFlat3 {
+  0% { transform: translateY(0) rotateX(0deg) rotateZ(0deg) scale(1); }
+  48% { transform: translateY(-100px) rotateX(720deg) rotateZ(24deg) scale(1.32); }
+  75% { transform: translateY(6px) rotateX(900deg) rotateZ(-12deg) scale(0.94); }
+  90% { transform: translateY(-10px) rotateX(900deg) rotateZ(6deg) scale(1.04); }
+  100% { transform: translateY(0) rotateY(180deg) rotateZ(5deg) scale(1); }
+}
+
+@keyframes tossRound0 {
+  0% { transform: translateY(0) rotateX(0deg) rotateZ(0deg) scale(1); }
+  40% { transform: translateY(-85px) rotateX(720deg) rotateZ(-24deg) scale(1.26); }
+  75% { transform: translateY(4px) rotateX(1080deg) rotateZ(8deg) scale(0.96); }
+  90% { transform: translateY(-8px) rotateX(1080deg) rotateZ(-4deg) scale(1.02); }
+  100% { transform: translateY(0) rotateY(0deg) rotateZ(5deg) scale(1); }
+}
+@keyframes tossRound1 {
+  0% { transform: translateY(0) rotateX(0deg) rotateZ(0deg) scale(1); }
+  45% { transform: translateY(-95px) rotateX(900deg) rotateZ(26deg) scale(1.30); }
+  75% { transform: translateY(5px) rotateX(1080deg) rotateZ(-10deg) scale(0.95); }
+  90% { transform: translateY(-9px) rotateX(1080deg) rotateZ(5deg) scale(1.03); }
+  100% { transform: translateY(0) rotateY(0deg) rotateZ(-7deg) scale(1); }
+}
+@keyframes tossRound2 {
+  0% { transform: translateY(0) rotateX(0deg) rotateZ(0deg) scale(1); }
+  42% { transform: translateY(-80px) rotateX(720deg) rotateZ(-18deg) scale(1.24); }
+  75% { transform: translateY(4px) rotateX(1080deg) rotateZ(12deg) scale(0.97); }
+  90% { transform: translateY(-7px) rotateX(1080deg) rotateZ(-3deg) scale(1.02); }
+  100% { transform: translateY(0) rotateY(0deg) rotateZ(4deg) scale(1); }
+}
+@keyframes tossRound3 {
+  0% { transform: translateY(0) rotateX(0deg) rotateZ(0deg) scale(1); }
+  48% { transform: translateY(-100px) rotateX(900deg) rotateZ(20deg) scale(1.32); }
+  75% { transform: translateY(6px) rotateX(1080deg) rotateZ(-14deg) scale(0.94); }
+  90% { transform: translateY(-10px) rotateX(1080deg) rotateZ(7deg) scale(1.04); }
+  100% { transform: translateY(0) rotateY(0deg) rotateZ(-5deg) scale(1); }
+}
+
+.yutnori-app .result-text{text-align:center;font-family:'Song Myung', serif;font-size:1.6rem;color:var(--gold-soft);min-height:2rem;margin:2px 0 0;text-shadow:0 2px 4px rgba(0,0,0,0.5);}
+.yutnori-app .pending-row{text-align:center;font-size:0.84rem;color:#c9b98f;min-height:1.1rem;font-weight:600;}
+.yutnori-app .btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.yutnori-app button.main-btn{font-family:'Noto Sans KR', sans-serif;font-weight:700;font-size:0.98rem;padding:11px 28px;border-radius:999px;border:none;cursor:pointer;background:linear-gradient(160deg, var(--red) 0%, var(--red-dark) 100%);color:#fff8ec;box-shadow:0 6px 18px rgba(194,59,50,0.45);transition:transform .12s ease, box-shadow .12s ease;}
 .yutnori-app button.main-btn:disabled{background:#4a4238;color:#8a8070;box-shadow:none;cursor:not-allowed;}
-.yutnori-app button.main-btn:not(:disabled):hover{transform:translateY(-1px);}
+.yutnori-app button.main-btn:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(194,59,50,0.55);}
 .yutnori-app button.main-btn:not(:disabled):active{transform:translateY(1px);}
-.yutnori-app button.reset-btn{font-family:'Noto Sans KR', sans-serif;font-size:0.8rem;padding:8px 16px;border-radius:999px;border:1px solid rgba(201,154,62,0.4);background:transparent;color:#c9b98f;cursor:pointer;}
-.yutnori-app .trays{display:flex;justify-content:space-between;gap:14px;border-top:1px solid rgba(201,154,62,0.2);padding-top:12px;}
-.yutnori-app .tray{flex:1;text-align:center;}
-.yutnori-app .tray-label{font-size:0.72rem;color:#a99a80;margin-bottom:6px;letter-spacing:0.05em;}
+.yutnori-app button.reset-btn{font-family:'Noto Sans KR', sans-serif;font-size:0.8rem;font-weight:600;padding:8px 16px;border-radius:999px;border:1px solid rgba(201,154,62,0.45);background:rgba(255,248,236,0.05);color:#c9b98f;cursor:pointer;transition:all .12s ease;}
+.yutnori-app button.reset-btn:hover{background:rgba(201,154,62,0.15);border-color:var(--gold);color:#fff;}
+
+/* 알 상태 (PIECE TRAYS) */
+.yutnori-app .trays{display:flex;justify-content:space-between;gap:12px;border-top:1px solid rgba(201,154,62,0.25);padding-top:10px;}
+.yutnori-app .tray{flex:1;text-align:center;background:rgba(0,0,0,0.25);padding:8px 6px;border-radius:10px;border:1px solid rgba(201,154,62,0.15);}
+.yutnori-app .tray-label{font-size:0.75rem;color:#b8a888;margin-bottom:6px;letter-spacing:0.05em;font-weight:700;}
 .yutnori-app .tray-tokens{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
-.yutnori-app .tray-token{width:20px;height:20px;border-radius:50%;border:2px solid #fff8ec;}
+.yutnori-app .tray-token{width:20px;height:20px;border-radius:50%;border:2px solid #fff8ec;box-shadow:0 2px 4px rgba(0,0,0,0.3);}
 .yutnori-app .tray-token.red{background:var(--red);}
 .yutnori-app .tray-token.blue{background:var(--blue);}
 .yutnori-app .tray-token.home{opacity:0.35;border-style:dashed;}
-.yutnori-app .log-box{margin-top:12px;font-size:0.74rem;color:#8a7c62;text-align:center;min-height:1rem;}
-.yutnori-app .overlay{position:fixed;inset:0;background:rgba(10,8,6,0.82);display:none;align-items:center;justify-content:center;z-index:50;flex-direction:column;gap:18px;text-align:center;padding:20px;}
+
+/* 한눈에 보는 가이드 카드 (SIDE RULES SUMMARY) */
+.yutnori-app .side-rules{
+  background:rgba(255,248,236,0.04);
+  border:1px solid rgba(201,154,62,0.2);
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:0.75rem;
+  color:#c9b98f;
+  line-height:1.5;
+}
+.yutnori-app .side-rules summary{
+  cursor:pointer;
+  font-weight:700;
+  color:var(--gold-soft);
+  outline:none;
+}
+.yutnori-app .side-rules ul{
+  margin:6px 0 0;
+  padding-left:16px;
+}
+.yutnori-app .side-rules li{
+  margin-bottom:2px;
+}
+
+.yutnori-app .log-box{font-size:0.78rem;color:#a99a80;text-align:center;min-height:1.1rem;background:rgba(0,0,0,0.2);padding:6px 10px;border-radius:8px;}
+.yutnori-app .overlay{position:fixed;inset:0;background:rgba(10,8,6,0.85);display:none;align-items:center;justify-content:center;z-index:50;flex-direction:column;gap:18px;text-align:center;padding:20px;backdrop-filter:blur(3px);}
 .yutnori-app .overlay.show{display:flex;}
-.yutnori-app .overlay h2{font-family:'Song Myung', serif;font-size:2.2rem;color:var(--gold-soft);margin:0;}
-.yutnori-app .overlay p{color:#c9b98f;margin:0;font-size:0.9rem;}
-.yutnori-app .move-modal{position:fixed;inset:0;background:rgba(10,8,6,0.72);display:none;align-items:flex-end;justify-content:center;z-index:60;padding:0;}
+.yutnori-app .overlay h2{font-family:'Song Myung', serif;font-size:2.4rem;color:var(--gold-soft);margin:0;}
+.yutnori-app .overlay p{color:#c9b98f;margin:0;font-size:0.95rem;}
+.yutnori-app .move-modal{position:fixed;inset:0;background:rgba(10,8,6,0.75);display:none;align-items:flex-end;justify-content:center;z-index:60;padding:0;backdrop-filter:blur(2px);}
 .yutnori-app .move-modal.show{display:flex;}
-.yutnori-app .move-modal-inner{width:100%;max-width:520px;background:linear-gradient(160deg, #2e2618 0%, #1f1b15 100%);border:1px solid rgba(201,154,62,0.5);border-bottom:none;border-radius:20px 20px 0 0;padding:20px 18px 26px;box-shadow:0 -10px 40px rgba(0,0,0,0.6);animation:yn-slideUp .25s ease-out;max-height:80vh;overflow-y:auto;}
+.yutnori-app .move-modal-inner{width:100%;max-width:540px;background:linear-gradient(160deg, #302619 0%, #1c1813 100%);border:1.5px solid rgba(201,154,62,0.6);border-bottom:none;border-radius:22px 22px 0 0;padding:22px 20px 28px;box-shadow:0 -12px 48px rgba(0,0,0,0.7);animation:yn-slideUp .25s ease-out;max-height:82vh;overflow-y:auto;}
 @keyframes yn-slideUp{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-.yutnori-app .move-modal-title{font-family:'Song Myung', serif;font-size:1.3rem;color:var(--gold-soft);text-align:center;margin-bottom:2px;}
-.yutnori-app .move-modal-sub{text-align:center;font-size:0.78rem;color:#a99a80;margin-bottom:16px;}
-.yutnori-app .move-option{width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;background:rgba(255,248,236,0.06);border:1.5px solid rgba(201,154,62,0.35);border-radius:14px;padding:12px 16px;margin-bottom:10px;cursor:pointer;color:#f1e8d8;font-family:'Noto Sans KR', sans-serif;transition:background .12s ease, transform .1s ease, border-color .12s ease;}
-.yutnori-app .move-option:hover,.yutnori-app .move-option:active{background:rgba(201,154,62,0.16);border-color:var(--gold);transform:translateY(-1px);}
+.yutnori-app .move-modal-title{font-family:'Song Myung', serif;font-size:1.4rem;color:var(--gold-soft);text-align:center;margin-bottom:4px;}
+.yutnori-app .move-modal-sub{text-align:center;font-size:0.8rem;color:#a99a80;margin-bottom:18px;}
+.yutnori-app .move-option{width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;background:rgba(255,248,236,0.07);border:1.5px solid rgba(201,154,62,0.4);border-radius:14px;padding:12px 16px;margin-bottom:10px;cursor:pointer;color:#f1e8d8;font-family:'Noto Sans KR', sans-serif;transition:background .12s ease, transform .1s ease, border-color .12s ease;}
+.yutnori-app .move-option:hover,.yutnori-app .move-option:active{background:rgba(201,154,62,0.2);border-color:var(--gold);transform:translateY(-1px);}
 .yutnori-app .move-option .mo-main{font-weight:700;font-size:0.95rem;}
 .yutnori-app .move-option .mo-sub{font-size:0.76rem;color:#c9b98f;}
 .yutnori-app .move-option .mo-tag{display:inline-block;margin-top:4px;font-size:0.72rem;font-weight:700;padding:2px 8px;border-radius:999px;}
-.yutnori-app .mo-tag.capture{background:rgba(194,59,50,0.25);color:#ff9d92;}
-.yutnori-app .mo-tag.merge{background:rgba(42,92,138,0.28);color:#9cc4e8;}
-.yutnori-app .mo-tag.finish{background:rgba(201,154,62,0.28);color:#f0d99a;}
-.yutnori-app .tutorial-overlay{position:fixed;inset:0;background:rgba(10,8,6,0.82);display:flex;align-items:center;justify-content:center;z-index:70;padding:20px;}
-.yutnori-app .tutorial-card{width:100%;max-width:560px;max-height:86vh;overflow-y:auto;background:linear-gradient(160deg, var(--hanji) 0%, #e9dfc7 100%);border-radius:18px;padding:28px 26px;box-shadow:0 0 0 1px rgba(201,154,62,0.5) inset, 0 20px 50px rgba(0,0,0,0.55);color:var(--ink2);}
+.yutnori-app .mo-tag.capture{background:rgba(194,59,50,0.3);color:#ff9d92;border:1px solid rgba(194,59,50,0.5);}
+.yutnori-app .mo-tag.merge{background:rgba(42,92,138,0.35);color:#9cc4e8;border:1px solid rgba(42,92,138,0.5);}
+.yutnori-app .mo-tag.finish{background:rgba(201,154,62,0.35);color:#f0d99a;border:1px solid rgba(201,154,62,0.5);}
+.yutnori-app .tutorial-overlay{position:fixed;inset:0;background:rgba(10,8,6,0.85);display:flex;align-items:center;justify-content:center;z-index:70;padding:20px;backdrop-filter:blur(3px);}
+.yutnori-app .tutorial-card{width:100%;max-width:580px;max-height:88vh;overflow-y:auto;background:linear-gradient(160deg, var(--hanji) 0%, #ebdec5 100%);border-radius:20px;padding:30px 28px;box-shadow:0 0 0 1px rgba(201,154,62,0.5) inset, 0 24px 60px rgba(0,0,0,0.6);color:var(--ink2);}
 .yutnori-app .tutorial-badge{margin:0 0 6px;font-size:12px;font-weight:700;letter-spacing:.05em;color:var(--red-dark);text-transform:uppercase;}
-.yutnori-app .tutorial-card h2{font-family:'Song Myung', serif;font-size:1.5rem;margin:0 0 14px;color:var(--ink2);}
-.yutnori-app .tutorial-card h3{font-size:0.95rem;margin:18px 0 6px;color:var(--red-dark);}
-.yutnori-app .tutorial-card p{margin:0;font-size:0.9rem;line-height:1.7;color:var(--ink2);}
-.yutnori-app .tutorial-card ul{margin:6px 0 0;padding-left:18px;font-size:0.87rem;line-height:1.7;color:var(--ink2);}
-.yutnori-app .tutorial-card li{margin-bottom:4px;}
-.yutnori-app .tutorial-card button.main-btn{margin-top:20px;width:100%;}
+.yutnori-app .tutorial-card h2{font-family:'Song Myung', serif;font-size:1.6rem;margin:0 0 14px;color:var(--ink2);}
+.yutnori-app .tutorial-card h3{font-size:0.98rem;margin:18px 0 6px;color:var(--red-dark);}
+.yutnori-app .tutorial-card p{margin:0;font-size:0.92rem;line-height:1.75;color:var(--ink2);}
+.yutnori-app .tutorial-card ul{margin:6px 0 0;padding-left:18px;font-size:0.9rem;line-height:1.75;color:var(--ink2);}
+.yutnori-app .tutorial-card li{margin-bottom:5px;}
+.yutnori-app .tutorial-card button.main-btn{margin-top:22px;width:100%;}
 @media (max-width:480px){
-  .yutnori-app h1{font-size:1.7rem;}
-  .yutnori-app .stick{width:13px;height:58px;}
-  .yutnori-app .tutorial-card{padding:20px 16px;}
+  .yutnori-app h1{font-size:1.8rem;}
+  .yutnori-app .stick{width:20px;height:84px;}
+  .yutnori-app .mats-container{padding:14px 8px;}
+  .yutnori-app .tutorial-card{padding:22px 18px;}
 }
 `;
 
 export default function YutnoriGame() {
+  const handleThrowClickRef = useRef(() => {});
+  const resetGameRef = useRef(() => {});
   const { language } = useLanguage();
   const words = COPY[language] || COPY.en;
   const wordsRef = useRef(words);
@@ -814,8 +1150,8 @@ export default function YutnoriGame() {
   const rootRef = useRef(null);
   const destroyedRef = useRef(false);
   const applyLanguageRef = useRef(() => {});
-  const [tutorialOpen, setTutorialOpen] = useState(true);
-  const [hasStarted, setHasStarted] = useState(false);
+  const [tutorialOpen, setTutorialOpen] = useState(false);
+  const [hasStarted, setHasStarted] = useState(true);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -886,10 +1222,36 @@ export default function YutnoriGame() {
 
     function buildSticks() {
       sticksAreaEl.innerHTML = '';
+      const initTilts = [-4, 3, -2, 4];
       for (let i = 0; i < 4; i++) {
         const s = document.createElement('div');
         s.className = 'stick';
         s.id = 'yn-stick' + i;
+        s.style.transform = 'rotateY(0deg) rotateZ(' + initTilts[i] + 'deg)';
+        
+        // 윷 등 (Back)
+        const back = document.createElement('div');
+        back.className = 'stick-back';
+        s.appendChild(back);
+
+        // 윷 배 (Front)
+        const front = document.createElement('div');
+        front.className = 'stick-front';
+        
+        if (i === 0) {
+          const dot1 = document.createElement('div'); dot1.className = 'wood-dot';
+          const mark = document.createElement('div'); mark.className = 'backdo-mark'; mark.textContent = '✕';
+          const dot2 = document.createElement('div'); dot2.className = 'wood-dot';
+          front.appendChild(dot1);
+          front.appendChild(mark);
+          front.appendChild(dot2);
+        } else {
+          for (let d = 0; d < 3; d++) {
+            const dot = document.createElement('div'); dot.className = 'wood-dot';
+            front.appendChild(dot);
+          }
+        }
+        s.appendChild(front);
         sticksAreaEl.appendChild(s);
       }
     }
@@ -897,22 +1259,51 @@ export default function YutnoriGame() {
 
     function animateThrow(outcome) {
       return new Promise((resolve) => {
+        if (!root.querySelector('#yn-stick0')) {
+          buildSticks();
+        }
+        
+        playWoodTossSound();
+
         const flatsCount = outcome.flats;
-        const idxs = [0, 1, 2, 3].sort(() => Math.random() - 0.5);
-        const flatSet = new Set(idxs.slice(0, flatsCount));
+        let flatSet;
+        if (outcome.key === 'backdo') {
+          flatSet = new Set([0]);
+        } else if (flatsCount === 1) {
+          const nonBackdoIdxs = [1, 2, 3].sort(() => Math.random() - 0.5);
+          flatSet = new Set([nonBackdoIdxs[0]]);
+        } else {
+          const idxs = [0, 1, 2, 3].sort(() => Math.random() - 0.5);
+          flatSet = new Set(idxs.slice(0, flatsCount));
+        }
+
         for (let i = 0; i < 4; i++) {
           const el = root.querySelector('#yn-stick' + i);
-          el.classList.remove('flat');
-          el.classList.add('flipping');
+          if (el) {
+            el.style.transform = '';
+            const isFlat = flatSet.has(i);
+            el.className = 'stick ' + (isFlat ? 'toss-flat-' + i : 'toss-round-' + i);
+          }
         }
+
         setTimeout(() => {
+          playMatLandSound(outcome.bonus);
+
           for (let i = 0; i < 4; i++) {
             const el = root.querySelector('#yn-stick' + i);
-            el.classList.remove('flipping');
-            if (flatSet.has(i)) el.classList.add('flat');
+            if (el) {
+              const isFlat = flatSet.has(i);
+              const rotZ = (Math.random() * 26 - 13).toFixed(1);
+              const transX = (Math.random() * 10 - 5).toFixed(1);
+              const transY = (Math.random() * 6 - 3).toFixed(1);
+
+              el.className = 'stick';
+              el.style.transform = (isFlat ? 'rotateY(180deg)' : 'rotateY(0deg)') + 
+                ' rotateZ(' + rotZ + 'deg) translate(' + transX + 'px, ' + transY + 'px)';
+            }
           }
           resolve();
-        }, 560);
+        }, 680);
       });
     }
 
@@ -934,7 +1325,6 @@ export default function YutnoriGame() {
       return false;
     }
 
-    // Resolve a capture at `node` (a real square, never home) for `color`'s opponent.
     function resolveCapture(color, node) {
       if (node === null || node === 'home') return false;
       const oppC = oppColor(color);
@@ -945,17 +1335,19 @@ export default function YutnoriGame() {
       return true;
     }
 
-    // Move every piece currently at `fromNode` along the chosen `result` (from enumeratePaths).
     function commitMove(color, fromNode, result) {
       const group = piecesAtNode(color, fromNode);
       const landedNode = result.finished ? 'home' : result.node;
-      group.forEach((p) => { p.path = [...p.path, ...result.path]; p.node = landedNode; });
+      group.forEach((p) => {
+        p.path = [...p.path, ...result.path];
+        p.node = landedNode;
+      });
       const captured = resolveCapture(color, landedNode);
       if (landedNode === 'home') playFinishSound();
+      render();
       return { node: landedNode, captured, count: group.length, finished: landedNode === 'home' };
     }
 
-    // Bring a new piece out from the tray along `result` (from enumeratePaths(0, value)).
     function commitEnter(color, result) {
       const p = state.pieces[color].find((pp) => pp.node === null);
       if (!p) return null;
@@ -964,11 +1356,10 @@ export default function YutnoriGame() {
       p.node = landedNode;
       const captured = resolveCapture(color, landedNode);
       if (landedNode === 'home') playFinishSound();
+      render();
       return { node: landedNode, captured, finished: landedNode === 'home' };
     }
 
-    // Back-do: every piece at `fromNode` retraces its own most recent step (using its travel history,
-    // since which fork it came through can't be inferred from the node id alone).
     function commitBackdo(color, fromNode) {
       const group = piecesAtNode(color, fromNode);
       let landedNode = null;
@@ -979,12 +1370,64 @@ export default function YutnoriGame() {
         landedNode = p.node;
       });
       const captured = resolveCapture(color, landedNode);
+      render();
       return { node: landedNode, captured, count: group.length };
     }
 
-    function renderTrays() {
+    function render() {
+      if (!svg.querySelector('.edge-line')) {
+        drawStaticBoard();
+      }
+      if (!root.querySelector('#yn-stick0')) {
+        buildSticks();
+      }
+      svg.querySelectorAll('.piece-group').forEach((e) => e.remove());
+
+      ['red', 'blue'].forEach((color) => {
+        const byNode = {};
+        state.pieces[color].forEach((p) => {
+          if (p.node !== null && p.node !== 'home') {
+            byNode[p.node] = byNode[p.node] || [];
+            byNode[p.node].push(p);
+          }
+        });
+        Object.keys(byNode).forEach((nodeId) => {
+          nodeId = +nodeId;
+          const node = NODES[nodeId];
+          const group = byNode[nodeId];
+          const g = svgElNS('g', { class: 'piece-group' });
+          const ox = color === 'red' ? -6 : 6;
+          const cx = node.x + ox;
+          const cy = node.y - 4;
+          const circ = svgElNS('circle', {
+            cx, cy, r: 11,
+            fill: color === 'red' ? '#c23b32' : '#2a5c8a',
+            stroke: '#fff8ec',
+            'stroke-width': 2,
+            class: 'piece',
+          });
+          g.appendChild(circ);
+          if (group.length > 1) {
+            const txt = svgElNS('text', {
+              x: cx, y: cy + 3,
+              'text-anchor': 'middle',
+              class: 'piece-count',
+            });
+            txt.textContent = group.length;
+            g.appendChild(txt);
+          }
+          svg.appendChild(g);
+        });
+      });
+
+      turnTextEl.textContent = state.turn === 'red' ? wordsRef.current.turnMe : wordsRef.current.turnComputer;
+      turnBadgeEl.querySelector('.turn-dot').className = 'turn-dot ' + state.turn;
+
+      scoreMiniEl.textContent = wordsRef.current.finished(homeCount('red'), homeCount('blue'));
+
+      throwBtnEl.disabled = state.busy || state.gameOver || state.turn !== 'red' || state.pending.length > 0;
+
       redTrayEl.innerHTML = '';
-      blueTrayEl.innerHTML = '';
       for (let i = 0; i < offCount('red'); i++) {
         const t = document.createElement('div');
         t.className = 'tray-token red';
@@ -995,6 +1438,8 @@ export default function YutnoriGame() {
         t.className = 'tray-token red home';
         redTrayEl.appendChild(t);
       }
+
+      blueTrayEl.innerHTML = '';
       for (let i = 0; i < offCount('blue'); i++) {
         const t = document.createElement('div');
         t.className = 'tray-token blue';
@@ -1005,106 +1450,64 @@ export default function YutnoriGame() {
         t.className = 'tray-token blue home';
         blueTrayEl.appendChild(t);
       }
-    }
 
-    function updateHeader() {
-      const T = wordsRef.current;
-      turnTextEl.textContent = state.turn === 'red' ? T.turnMe : T.turnComputer;
-      turnBadgeEl.querySelector('.turn-dot').className = 'turn-dot ' + state.turn;
-      scoreMiniEl.textContent = T.finished(homeCount('red'), homeCount('blue'));
       if (state.pending.length > 0) {
-        pendingRowEl.textContent = T.pendingLabel + state.pending.map((v) => (v < 0 ? T.outcomeNames.backdo : v)).join(', ');
+        pendingRowEl.textContent = wordsRef.current.pendingLabel + state.pending.map((v) => (v < 0 ? wordsRef.current.outcomeNames.backdo : v)).join(', ');
       } else {
-        pendingRowEl.textContent = ' ';
+        pendingRowEl.textContent = '\u00A0';
       }
-      throwBtnEl.disabled = state.busy || state.gameOver || state.turn !== 'red' || state.pending.length > 0;
-    }
-
-    function render() {
-      svg.querySelectorAll('.piece-group').forEach((e) => e.remove());
-      ['red', 'blue'].forEach((color) => {
-        const byNode = {};
-        state.pieces[color].forEach((p) => {
-          if (p.node !== null && p.node !== 'home') {
-            byNode[p.node] = byNode[p.node] || [];
-            byNode[p.node].push(p);
-          }
-        });
-        Object.keys(byNode).forEach((nodeIdStr) => {
-          const nodeId = +nodeIdStr;
-          const node = NODES[nodeId];
-          const group = byNode[nodeId];
-          const g = svgElNS('g', { class: 'piece-group' });
-          const ox = color === 'red' ? -6 : 6;
-          const cx = node.x + ox, cy = node.y - 4;
-          const circle = svgElNS('circle', {
-            cx, cy, r: 11,
-            fill: color === 'red' ? 'var(--red)' : 'var(--blue)',
-            stroke: '#fff8ec', 'stroke-width': 2,
-            class: 'piece',
-          });
-          circle.style.fill = color === 'red' ? '#c23b32' : '#2a5c8a';
-          g.appendChild(circle);
-          if (group.length > 1) {
-            const t = svgElNS('text', { x: cx, y: cy + 3, 'text-anchor': 'middle', class: 'piece-count' });
-            t.textContent = group.length;
-            g.appendChild(t);
-          }
-          svg.appendChild(g);
-        });
-      });
-      renderTrays();
-      updateHeader();
-    }
-
-    function valueLabel(v) {
-      const T = wordsRef.current;
-      return v < 0 ? T.backdoValue : T.stepsValue(v);
     }
 
     async function doThrow(color) {
-      if (destroyedRef.current) return;
+      if (destroyedRef.current) return undefined;
+      ensureAudioCtx();
       state.busy = true;
-      updateHeader();
+      render();
+
       const outcome = weightedPick();
-      resultTextEl.textContent = ' ';
+      resultTextEl.textContent = '\u00A0';
+
       await animateThrow(outcome);
-      if (destroyedRef.current) return;
+      if (destroyedRef.current) return undefined;
+
       const T = wordsRef.current;
       const name = T.outcomeNames[outcome.key];
       resultTextEl.textContent = `${name} (${outcome.value})`;
+
       state.pending.push(outcome.value);
+      render();
+
       if (outcome.bonus) {
         log(T.bonusLog(name));
-        state.busy = false;
-        updateHeader();
         await sleep(color === 'red' ? 500 : 600);
-        if (destroyedRef.current) return;
+        if (destroyedRef.current) return undefined;
         return doThrow(color);
       }
+
       state.busy = false;
-      log(color === 'red' ? T.chooseMoveLog : T.computerMovingLog);
-      updateHeader();
       render();
+
+      log(color === 'red' ? T.chooseMoveLog : T.computerMovingLog);
+
       if (color === 'blue') {
         await sleep(700);
-        if (destroyedRef.current) return;
+        if (destroyedRef.current) return undefined;
         await computerResolveMoves();
       } else {
         await sleep(300);
-        if (destroyedRef.current) return;
+        if (destroyedRef.current) return undefined;
         showMoveModal();
       }
       return undefined;
     }
 
     function handleThrowClick() {
-      if (throwBtnEl.disabled) return;
+      if (throwBtnEl && throwBtnEl.disabled) return;
       doThrow('red');
     }
+    handleThrowClickRef.current = handleThrowClick;
     throwBtnEl.addEventListener('click', handleThrowClick);
 
-    // Total squares a piece at `node` has travelled so far (used only for the "Nth square" display text).
     function stepsAt(color, node) {
       const p = state.pieces[color].find((pp) => pp.node === node);
       return p ? p.path.length : 0;
@@ -1136,6 +1539,7 @@ export default function YutnoriGame() {
         const fromNode = p.node;
         const groupSize = piecesAtNode(color, fromNode).length;
         const fromSteps = stepsAt(color, fromNode);
+
         if (value < 0) {
           const newPath = p.path.slice(0, -1);
           const newNode = newPath.length > 0 ? newPath[newPath.length - 1] : null;
@@ -1149,6 +1553,7 @@ export default function YutnoriGame() {
           options.push({ type: 'move', main, sub, tag, commit: () => commitBackdo(color, fromNode) });
           return;
         }
+
         enumeratePaths(fromNode, value).forEach((result) => {
           const landedNode = result.finished ? 'home' : result.node;
           const newSteps = fromSteps + result.path.length;
@@ -1166,70 +1571,84 @@ export default function YutnoriGame() {
       return options;
     }
 
+    function valueLabel(v) {
+      const T = wordsRef.current;
+      return v < 0 ? T.backdoValue : T.stepsValue(v);
+    }
+
+    function finishOneMove(rendered) {
+      if (checkWin('red')) return;
+      if (state.pending.length === 0) {
+        state.turn = 'blue';
+        render();
+        resultTextEl.textContent = '\u00A0';
+        setTimeout(() => {
+          if (!destroyedRef.current) doThrow('blue');
+        }, 700);
+      } else {
+        setTimeout(() => {
+          if (!destroyedRef.current) showMoveModal();
+        }, 250);
+      }
+    }
+
     function showMoveModal() {
       if (state.pending.length === 0 || state.turn !== 'red' || state.gameOver) return;
       const T = wordsRef.current;
       const value = state.pending[0];
       const options = getMoveOptions('red', value);
+
       if (options.length === 0) {
         state.pending.shift();
+        render();
         log(T.noPieceLog(valueLabel(value)));
         finishOneMove(false);
         return;
       }
+
       moveModalTitleEl.textContent = T.moveModalTitle(valueLabel(value));
       moveModalSubEl.textContent = state.pending.length > 1 ? T.moveModalSubMulti(state.pending.length - 1) : T.moveModalSubSingle;
       moveModalOptionsEl.innerHTML = '';
+
       const TAG_LABEL = { capture: T.tagCapture, merge: T.tagMerge, finish: T.tagFinish };
+
       options.forEach((opt) => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'move-option';
-        btn.innerHTML = `
-          <span class="mo-main">${opt.main}</span>
-          <span class="mo-sub">${opt.sub}</span>
-          ${opt.tag ? `<span class="mo-tag ${opt.tag}">${TAG_LABEL[opt.tag]}</span>` : ''}
-        `;
-        btn.addEventListener('click', () => selectMoveOption(opt));
+        const main = document.createElement('span');
+        main.className = 'mo-main';
+        main.textContent = opt.main;
+        const sub = document.createElement('span');
+        sub.className = 'mo-sub';
+        sub.textContent = opt.sub;
+        btn.appendChild(main);
+        btn.appendChild(sub);
+        if (opt.tag) {
+          const tag = document.createElement('span');
+          tag.className = 'mo-tag ' + opt.tag;
+          tag.textContent = TAG_LABEL[opt.tag];
+          btn.appendChild(tag);
+        }
+        btn.addEventListener('click', async () => {
+          moveModalEl.classList.remove('show');
+          state.pending.shift();
+          render();
+          const res = opt.commit();
+          await sleep(200);
+          if (destroyedRef.current) return;
+          if (checkWin('red')) return;
+          if (res && res.captured) {
+            log(wordsRef.current.captureLogMe);
+            state.pending = [];
+            render();
+            return;
+          }
+          finishOneMove(true);
+        });
         moveModalOptionsEl.appendChild(btn);
       });
       moveModalEl.classList.add('show');
-    }
-
-    function hideMoveModal() { moveModalEl.classList.remove('show'); }
-
-    async function selectMoveOption(opt) {
-      hideMoveModal();
-      state.pending.shift();
-      state.busy = true;
-      updateHeader();
-      const res = opt.commit();
-      await sleep(200);
-      if (destroyedRef.current) return;
-      state.busy = false;
-      render();
-      if (checkWin('red')) return;
-      if (res && res.captured) {
-        log(wordsRef.current.captureLogMe);
-        state.pending = [];
-        updateHeader();
-        return;
-      }
-      finishOneMove(true);
-    }
-
-    function finishOneMove(rendered) {
-      if (!rendered) render();
-      if (checkWin('red')) return;
-      if (state.pending.length === 0) {
-        state.turn = 'blue';
-        resultTextEl.textContent = ' ';
-        updateHeader();
-        setTimeout(() => { if (!destroyedRef.current) doThrow('blue'); }, 700);
-      } else {
-        updateHeader();
-        setTimeout(() => { if (!destroyedRef.current) showMoveModal(); }, 250);
-      }
     }
 
     function chooseComputerMove(value) {
@@ -1275,31 +1694,27 @@ export default function YutnoriGame() {
     async function computerResolveMoves() {
       while (state.pending.length > 0) {
         const value = state.pending.shift();
+        render();
         const best = chooseComputerMove(value);
         if (!best) continue;
-        state.busy = true;
-        updateHeader();
         const res = best.commit();
         await sleep(500);
         if (destroyedRef.current) return;
-        state.busy = false;
-        render();
         if (checkWin('blue')) return;
         if (res && res.captured) {
           log(wordsRef.current.captureLogComputer);
           state.pending = [];
+          render();
           await sleep(400);
           if (destroyedRef.current) return;
           await doThrow('blue');
           return;
         }
-        updateHeader();
         await sleep(300);
         if (destroyedRef.current) return;
       }
       log(wordsRef.current.yourTurnLog);
       state.turn = 'red';
-      updateHeader();
       render();
     }
 
@@ -1311,20 +1726,25 @@ export default function YutnoriGame() {
         gameOver: false,
         busy: false,
       };
-      resultTextEl.textContent = ' ';
+      overlayEl.classList.remove('show');
+      moveModalEl.classList.remove('show');
+      resultTextEl.textContent = '\u00A0';
+      pendingRowEl.textContent = '\u00A0';
       log(wordsRef.current.startLog);
       buildSticks();
-      overlayEl.classList.remove('show');
-      hideMoveModal();
       render();
     }
+    resetGameRef.current = resetGame;
     resetBtnEl.addEventListener('click', resetGame);
     overlayResetEl.addEventListener('click', resetGame);
 
-    applyLanguageRef.current = function applyLanguage() {
+    applyLanguageRef.current = () => {
       const T = wordsRef.current;
       if (homeLabelEl) homeLabelEl.textContent = T.homeLabel;
-      updateHeader();
+      render();
+      if (!state.busy && state.pending.length === 0) {
+        log(state.turn === 'red' ? T.yourTurnLog : T.computerMovingLog);
+      }
     };
 
     log(wordsRef.current.startLog);
@@ -1336,7 +1756,6 @@ export default function YutnoriGame() {
       resetBtnEl.removeEventListener('click', resetGame);
       overlayResetEl.removeEventListener('click', resetGame);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -1351,7 +1770,7 @@ export default function YutnoriGame() {
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link href="https://fonts.googleapis.com/css2?family=Song+Myung&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
 
-      <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 18 }}>
+      <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 12 }}>
         <a href="/">{words.home}</a> / <a href="/games.html">{words.hub}</a> / {words.crumbCurrent}
       </p>
 
@@ -1361,10 +1780,12 @@ export default function YutnoriGame() {
       </div>
 
       <div className="layout">
+        {/* LEFT: 윷놀이 판 (BOARD) */}
         <div className="board-card">
           <svg id="yn-board" viewBox="0 0 600 600" />
         </div>
 
+        {/* RIGHT: 한눈에 보는 조작 패널 & 멍석 & 알 상태 & 규칙 (SIDE PANEL) */}
         <div className="panel">
           <div className="turn-row">
             <div className="turn-badge" id="yn-turnBadge">
@@ -1374,16 +1795,22 @@ export default function YutnoriGame() {
             <div className="score-mini" id="yn-scoreMini" />
           </div>
 
-          <div className="sticks-area" id="yn-sticksArea" />
+          {/* 멍석 (STRAW MAT) & 3D 윷가락 */}
+          <div className="mats-container">
+            <span className="mat-label">멍석 (Straw Mat)</span>
+            <div className="sticks-area" id="yn-sticksArea" />
+          </div>
+
           <div className="result-text" id="yn-resultText">{' '}</div>
           <div className="pending-row" id="yn-pendingRow">{' '}</div>
 
           <div className="btn-row">
-            <button type="button" className="main-btn" id="yn-throwBtn">{words.throwBtn}</button>
-            <button type="button" className="reset-btn" id="yn-resetBtn">{words.resetBtn}</button>
+            <button type="button" className="main-btn" id="yn-throwBtn" onClick={() => handleThrowClickRef.current()}>{words.throwBtn}</button>
+            <button type="button" className="reset-btn" id="yn-resetBtn" onClick={() => resetGameRef.current()}>{words.resetBtn}</button>
             <button type="button" className="reset-btn" onClick={() => setTutorialOpen(true)}>{words.tutorialBtn}</button>
           </div>
 
+          {/* 알 상태 (PIECE TRAYS) */}
           <div className="trays">
             <div className="tray">
               <div className="tray-label">{words.trayMe}</div>
@@ -1395,6 +1822,14 @@ export default function YutnoriGame() {
             </div>
           </div>
 
+          {/* 한눈에 보는 윷놀이 규칙 요약 (SIDE RULES) */}
+          <details className="side-rules" open>
+            <summary>📜 {words.introHowTitle}</summary>
+            <ul>
+              {words.introHow.map((line, i) => <li key={i}>{line}</li>)}
+            </ul>
+          </details>
+
           <div className="log-box" id="yn-logBox">{' '}</div>
         </div>
       </div>
@@ -1402,7 +1837,7 @@ export default function YutnoriGame() {
       <div className="overlay" id="yn-overlay">
         <h2 id="yn-overlayTitle" />
         <p id="yn-overlaySub" />
-        <button type="button" className="main-btn" id="yn-overlayReset">{words.playAgain}</button>
+        <button type="button" className="main-btn" id="yn-overlayReset" onClick={() => resetGameRef.current()}>{words.playAgain}</button>
       </div>
 
       <div className="move-modal" id="yn-moveModal">
@@ -1414,7 +1849,7 @@ export default function YutnoriGame() {
       </div>
 
       {tutorialOpen ? (
-        <div className="tutorial-overlay" role="dialog" aria-modal="true" aria-label={words.introTitle}>
+        <div className="tutorial-overlay" role="dialog" aria-modal="true" aria-label={words.introTitle} onClick={(e) => { if (e.target === e.currentTarget) { setHasStarted(true); setTutorialOpen(false); } }}>
           <div className="tutorial-card">
             <p className="tutorial-badge">{words.introBadge}</p>
             <h2>{words.introTitle}</h2>
