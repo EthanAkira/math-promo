@@ -23,11 +23,11 @@ function playWoodTossSound() {
   if (!ctx) return;
   const now = ctx.currentTime;
   const clicks = [
-    { delay: 0.0, freq: 920, dur: 0.032, gain: 0.35 },
-    { delay: 0.035, freq: 1150, dur: 0.028, gain: 0.28 },
-    { delay: 0.08, freq: 740, dur: 0.038, gain: 0.30 },
-    { delay: 0.14, freq: 990, dur: 0.030, gain: 0.26 },
-    { delay: 0.20, freq: 830, dur: 0.035, gain: 0.22 },
+    { delay: 0.0, freq: 950, dur: 0.032, gain: 0.38 },
+    { delay: 0.035, freq: 1180, dur: 0.028, gain: 0.30 },
+    { delay: 0.08, freq: 760, dur: 0.038, gain: 0.32 },
+    { delay: 0.14, freq: 1020, dur: 0.030, gain: 0.28 },
+    { delay: 0.20, freq: 850, dur: 0.035, gain: 0.24 },
   ];
   clicks.forEach(({ delay, freq, dur, gain }) => {
     try {
@@ -55,9 +55,9 @@ function playMatLandSound(isBonus = false) {
     const osc = ctx.createOscillator();
     const gainNode = ctx.createGain();
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(150, now);
-    osc.frequency.exponentialRampToValueAtTime(40, now + 0.13);
-    gainNode.gain.setValueAtTime(0.4, now);
+    osc.frequency.setValueAtTime(155, now);
+    osc.frequency.exponentialRampToValueAtTime(38, now + 0.14);
+    gainNode.gain.setValueAtTime(0.45, now);
     gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
     osc.connect(gainNode);
     gainNode.connect(ctx.destination);
@@ -68,9 +68,9 @@ function playMatLandSound(isBonus = false) {
     const osc2 = ctx.createOscillator();
     const gainNode2 = ctx.createGain();
     osc2.type = 'triangle';
-    osc2.frequency.setValueAtTime(520, now + 0.01);
-    osc2.frequency.exponentialRampToValueAtTime(160, now + 0.07);
-    gainNode2.gain.setValueAtTime(0.25, now + 0.01);
+    osc2.frequency.setValueAtTime(540, now + 0.01);
+    osc2.frequency.exponentialRampToValueAtTime(150, now + 0.07);
+    gainNode2.gain.setValueAtTime(0.28, now + 0.01);
     gainNode2.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
     osc2.connect(gainNode2);
     gainNode2.connect(ctx.destination);
@@ -85,7 +85,7 @@ function playMatLandSound(isBonus = false) {
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, now + 0.08 + i * 0.06);
         g.gain.setValueAtTime(0.001, now + 0.08 + i * 0.06);
-        g.gain.linearRampToValueAtTime(0.2, now + 0.08 + i * 0.06 + 0.01);
+        g.gain.linearRampToValueAtTime(0.22, now + 0.08 + i * 0.06 + 0.01);
         g.gain.exponentialRampToValueAtTime(0.001, now + 0.08 + i * 0.06 + 0.2);
         osc.connect(g);
         g.connect(ctx.destination);
@@ -104,10 +104,10 @@ function playCaptureSound() {
     const osc = ctx.createOscillator();
     const gainNode = ctx.createGain();
     osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(340, now);
+    osc.frequency.setValueAtTime(360, now);
     osc.frequency.exponentialRampToValueAtTime(80, now + 0.24);
     gainNode.gain.setValueAtTime(0.001, now);
-    gainNode.gain.linearRampToValueAtTime(0.28, now + 0.01);
+    gainNode.gain.linearRampToValueAtTime(0.3, now + 0.01);
     gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
     osc.connect(gainNode);
     gainNode.connect(ctx.destination);
@@ -127,7 +127,7 @@ function playFinishSound() {
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, now + i * 0.09);
       gainNode.gain.setValueAtTime(0.001, now + i * 0.09);
-      gainNode.gain.linearRampToValueAtTime(0.24, now + i * 0.09 + 0.01);
+      gainNode.gain.linearRampToValueAtTime(0.25, now + i * 0.09 + 0.01);
       gainNode.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.32);
       osc.connect(gainNode);
       gainNode.connect(ctx.destination);
@@ -806,135 +806,168 @@ function weightedPick() {
 function sleep(ms) { return new Promise((resolve) => setTimeout(resolve, ms)); }
 
 const CSS = `
-.yutnori-app{--ink:#1b1815;--ink2:#241f1a;--hanji:#f4ece0;--hanji-line:#d8c9a8;--red:#c23b32;--red-dark:#8f2a24;--blue:#2a5c8a;--blue-dark:#1c3f5f;--gold:#c99a3e;--gold-soft:#e8cf95;--wood:#7a5230;font-family:'Noto Sans KR', sans-serif;}
+.yutnori-app{--ink:#1b1815;--ink2:#241f1a;--hanji:#f4ece0;--hanji-line:#d8c9a8;--red:#c23b32;--red-dark:#8f2a24;--blue:#2a5c8a;--blue-dark:#1c3f5f;--gold:#c99a3e;--gold-soft:#e8cf95;--wood:#6d431c;font-family:'Noto Sans KR', sans-serif;}
 .yutnori-app *{box-sizing:border-box;}
 .yutnori-app .title-wrap{text-align:center;margin-bottom:12px;}
-.yutnori-app h1{font-family:'Song Myung', serif;font-size:2.1rem;letter-spacing:0.18em;color:var(--red-dark);margin:0 0 2px;text-shadow:0 1px 2px rgba(0,0,0,0.1);}
-.yutnori-app .subtitle{font-size:0.8rem;color:var(--wood);letter-spacing:0.08em;font-weight:500;}
+.yutnori-app h1{font-family:'Song Myung', serif;font-size:2.2rem;letter-spacing:0.18em;color:var(--red-dark);margin:0 0 2px;text-shadow:0 1px 2px rgba(0,0,0,0.1);}
+.yutnori-app .subtitle{font-size:0.82rem;color:var(--wood);letter-spacing:0.08em;font-weight:600;}
 
-/* ========== ONE-VIEW SIDE-BY-SIDE LAYOUT (한눈에 들어오는 배치) ========== */
+/* ========== ONE-VIEW SIDE-BY-SIDE LAYOUT ========== */
 .yutnori-app .layout{
   width:100%;
-  max-width:1160px;
+  max-width:1180px;
   margin:0 auto;
   display:grid;
-  grid-template-columns:1.05fr 1fr;
+  grid-template-columns:1.08fr 1fr;
   align-items:start;
-  gap:22px;
+  gap:24px;
 }
 
-@media (max-width: 860px) {
+@media (max-width: 880px) {
   .yutnori-app .layout{
     grid-template-columns:1fr;
     max-width:540px;
   }
 }
 
+/* ========== 1. 윷판 보드 = 전통 멍석판 (BOARD MAT) ========== */
 .yutnori-app .board-card{
-  background:linear-gradient(160deg, #f7f0e4 0%, #ebdfc7 100%);
-  border-radius:20px;
-  padding:16px;
-  box-shadow:0 0 0 1px rgba(201,154,62,0.5) inset, 0 14px 36px rgba(0,0,0,0.15);
-  width:100%;
+  position:relative;
+  background:
+    repeating-linear-gradient(45deg, #c79e56 0px, #b2863e 4px, #c79e56 8px, #9e752f 12px),
+    repeating-linear-gradient(-45deg, rgba(0,0,0,0.14) 0px, transparent 4px, rgba(0,0,0,0.2) 8px);
+  border:8px solid #583311;
+  border-radius:24px;
+  padding:20px;
+  box-shadow:inset 0 0 40px rgba(25,12,3,0.75), 0 16px 40px rgba(0,0,0,0.35);
 }
-.yutnori-app svg{width:100%;height:auto;display:block;}
-.yutnori-app .edge-line{stroke:var(--wood);stroke-width:2.8;opacity:0.6;}
-.yutnori-app .diag-line{stroke:var(--wood);stroke-width:2.2;opacity:0.45;stroke-dasharray:1 6;stroke-linecap:round;}
-.yutnori-app .node-dot{fill:#fffaf0;stroke:var(--wood);stroke-width:1.8;}
-.yutnori-app .node-dot.corner{fill:var(--gold-soft);stroke:var(--gold);stroke-width:2.5;}
-.yutnori-app .node-dot.center{fill:var(--gold);stroke:var(--gold);}
-.yutnori-app .piece{filter:drop-shadow(0 3px 4px rgba(0,0,0,0.4));cursor:pointer;transition:transform .15s ease;}
-.yutnori-app .piece:hover{transform:scale(1.1);}
-.yutnori-app .piece-count{font-family:'Noto Sans KR',sans-serif;font-size:9px;font-weight:900;fill:#fff;pointer-events:none;}
+.yutnori-app .board-card::before{
+  content:'';
+  position:absolute;
+  inset:6px;
+  border:2px dashed rgba(70,40,12,0.65);
+  border-radius:16px;
+  pointer-events:none;
+}
+.yutnori-app .board-card::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse at center, rgba(255,240,195,0.22) 0%, rgba(0,0,0,0.28) 100%);
+  pointer-events:none;
+  border-radius:16px;
+}
 
+.yutnori-app .board-inner{
+  position:relative;
+  background:rgba(247, 240, 228, 0.92);
+  border:2px solid #a37b42;
+  border-radius:14px;
+  padding:10px;
+  box-shadow:inset 0 0 20px rgba(100,65,20,0.18), 0 4px 12px rgba(0,0,0,0.2);
+  backdrop-filter:blur(2px);
+  z-index:2;
+}
+
+.yutnori-app svg{width:100%;height:auto;display:block;}
+.yutnori-app .edge-line{stroke:#4d2c10;stroke-width:3.2;opacity:0.75;}
+.yutnori-app .diag-line{stroke:#4d2c10;stroke-width:2.4;opacity:0.55;stroke-dasharray:2 6;stroke-linecap:round;}
+.yutnori-app .node-dot{fill:#fffdf7;stroke:#4d2c10;stroke-width:2.2;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.15));}
+.yutnori-app .node-dot.corner{fill:#fce4a6;stroke:#8f5615;stroke-width:3;}
+.yutnori-app .node-dot.center{fill:#f5ba38;stroke:#6b3c07;stroke-width:3.5;}
+.yutnori-app .piece{filter:drop-shadow(0 4px 6px rgba(0,0,0,0.45));cursor:pointer;transition:transform .15s ease;}
+.yutnori-app .piece:hover{transform:scale(1.15);}
+.yutnori-app .piece-count{font-family:'Noto Sans KR',sans-serif;font-size:9.5px;font-weight:900;fill:#fff;pointer-events:none;}
+
+/* ========== 2. 조작 패널 & 멍석 던짐판 ========== */
 .yutnori-app .panel{
   width:100%;
-  background:linear-gradient(160deg, #2c2419 0%, #1c1813 100%);
-  border:1px solid rgba(201,154,62,0.4);
-  border-radius:20px;
-  padding:18px 20px;
-  box-shadow:0 12px 30px rgba(0,0,0,0.3);
+  background:linear-gradient(160deg, #2a2217 0%, #1a150f 100%);
+  border:1.5px solid rgba(201,154,62,0.45);
+  border-radius:22px;
+  padding:20px 22px;
+  box-shadow:0 14px 36px rgba(0,0,0,0.35);
   display:flex;
   flex-direction:column;
-  gap:12px;
+  gap:13px;
 }
 .yutnori-app .turn-row{display:flex;align-items:center;justify-content:space-between;}
-.yutnori-app .turn-badge{display:flex;align-items:center;gap:8px;font-weight:700;font-size:0.98rem;color:#fff8ec;}
-.yutnori-app .turn-dot{width:14px;height:14px;border-radius:50%;box-shadow:0 0 10px currentColor;}
+.yutnori-app .turn-badge{display:flex;align-items:center;gap:8px;font-weight:700;font-size:1rem;color:#fff8ec;}
+.yutnori-app .turn-dot{width:15px;height:15px;border-radius:50%;box-shadow:0 0 12px currentColor;}
 .yutnori-app .turn-dot.red{background:var(--red);color:var(--red);}
 .yutnori-app .turn-dot.blue{background:var(--blue);color:var(--blue);}
-.yutnori-app .score-mini{font-size:0.82rem;color:#c9b98f;font-weight:700;}
+.yutnori-app .score-mini{font-size:0.85rem;color:#d4c49f;font-weight:700;}
 
-/* ========== 멍석 (STRAW MAT) DESIGN ========== */
+/* 멍석 (STRAW MAT) DEDICATED THROW PAD */
 .yutnori-app .mats-container{
   position:relative;
   margin:2px 0 4px;
-  border-radius:16px;
-  padding:20px 14px 16px;
+  border-radius:18px;
+  padding:22px 14px 18px;
   background:
-    repeating-linear-gradient(45deg, #c79e56 0px, #b2863e 3px, #c79e56 6px, #9e752f 9px),
-    repeating-linear-gradient(-45deg, rgba(0,0,0,0.14) 0px, transparent 3px, rgba(0,0,0,0.2) 6px);
-  border:5px solid #63401c;
-  box-shadow:inset 0 0 24px rgba(30,15,5,0.8), 0 8px 20px rgba(0,0,0,0.45);
+    repeating-linear-gradient(45deg, #caa05b 0px, #b88d44 3px, #caa05b 6px, #9e752f 9px),
+    repeating-linear-gradient(-45deg, rgba(0,0,0,0.15) 0px, transparent 3px, rgba(0,0,0,0.22) 6px);
+  border:6px solid #5a3411;
+  box-shadow:inset 0 0 28px rgba(30,12,3,0.85), 0 10px 24px rgba(0,0,0,0.5);
   perspective:1000px;
 }
 .yutnori-app .mats-container::before{
   content:'';
   position:absolute;
   inset:0;
-  background:radial-gradient(ellipse at center, rgba(255,235,180,0.2) 0%, rgba(0,0,0,0.35) 100%);
+  background:radial-gradient(ellipse at center, rgba(255,235,180,0.22) 0%, rgba(0,0,0,0.35) 100%);
   pointer-events:none;
 }
 .yutnori-app .mats-container::after{
   content:'';
   position:absolute;
   inset:4px;
-  border:1.5px dashed rgba(75,45,15,0.55);
-  border-radius:10px;
+  border:1.5px dashed rgba(75,45,15,0.6);
+  border-radius:12px;
   pointer-events:none;
 }
 .yutnori-app .mat-label{
   position:absolute;
   top:5px;
   left:10px;
-  font-size:0.7rem;
-  color:#4a2f15;
+  font-size:0.72rem;
+  color:#42260d;
   font-weight:900;
-  letter-spacing:0.12em;
-  opacity:0.85;
-  text-shadow:0 1px 0 rgba(255,240,200,0.4);
+  letter-spacing:0.14em;
+  opacity:0.9;
+  text-shadow:0 1px 0 rgba(255,240,200,0.5);
 }
 
-/* ========== 3D REALISTIC YUT STICKS ========== */
+/* ========== 3. 3D REALISTIC WOODEN YUT STICKS ========== */
 .yutnori-app .sticks-area{
   display:flex;
   justify-content:center;
   align-items:center;
-  gap:16px;
-  min-height:114px;
+  gap:18px;
+  min-height:124px;
   position:relative;
   perspective:1000px;
   transform-style:preserve-3d;
   z-index:2;
 }
 .yutnori-app .stick{
-  width:24px;
-  height:98px;
-  border-radius:12px;
+  width:26px;
+  height:106px;
+  border-radius:13px;
   position:relative;
   transform-style:preserve-3d;
   transition:transform 0.4s cubic-bezier(0.2, 1.2, 0.4, 1);
-  box-shadow:0 8px 18px rgba(0,0,0,0.5);
+  box-shadow:0 10px 22px rgba(0,0,0,0.55);
   cursor:default;
 }
 
-/* 윷 등 (Round curved bark) */
+/* 윷 등 (Round curved bark - 둥근 밤나무 껍질 면) */
 .yutnori-app .stick .stick-back{
   position:absolute;
   inset:0;
-  border-radius:12px;
-  background:linear-gradient(90deg, #26140a 0%, #5e3516 18%, #965f30 48%, #5e3516 80%, #201007 100%);
-  border:1px solid #3d200d;
+  border-radius:13px;
+  background:linear-gradient(90deg, #1c0c04 0%, #44210c 14%, #7d481b 45%, #b07438 50%, #7d481b 55%, #44210c 86%, #160803 100%);
+  border:1px solid #331707;
   backface-visibility:hidden;
   overflow:hidden;
 }
@@ -942,23 +975,23 @@ const CSS = `
   content:'';
   position:absolute;
   inset:0;
-  background:repeating-linear-gradient(180deg, rgba(20,10,5,0.45) 0px 2px, transparent 2px 8px);
-  opacity:0.7;
+  background:repeating-linear-gradient(180deg, rgba(15,7,3,0.5) 0px 2px, transparent 2px 8px);
+  opacity:0.75;
 }
 .yutnori-app .stick .stick-back::after{
   content:'';
   position:absolute;
-  top:0; bottom:0; left:35%; width:30%;
-  background:linear-gradient(90deg, transparent, rgba(255,225,170,0.25), transparent);
+  top:0; bottom:0; left:38%; width:24%;
+  background:linear-gradient(90deg, transparent, rgba(255,230,180,0.3), transparent);
 }
 
-/* 윷 배 (Flat belly) */
+/* 윷 배 (Flat belly - 깎아낸 밝은 원목 속살 면) */
 .yutnori-app .stick .stick-front{
   position:absolute;
   inset:0;
-  border-radius:12px;
-  background:linear-gradient(90deg, #d4b882 0%, #fbf3e0 35%, #fffdf8 50%, #fbf3e0 65%, #c59f64 100%);
-  border:1px solid #947139;
+  border-radius:13px;
+  background:linear-gradient(90deg, #caa565 0%, #fef7e9 32%, #ffffff 50%, #fef7e9 68%, #ba924d 100%);
+  border:1px solid #8f6a30;
   transform:rotateY(180deg);
   backface-visibility:hidden;
   display:flex;
@@ -971,24 +1004,25 @@ const CSS = `
   content:'';
   position:absolute;
   inset:0;
-  background:repeating-linear-gradient(180deg, rgba(150,110,50,0.18) 0 2px, transparent 2px 10px);
+  background:repeating-linear-gradient(180deg, rgba(140,100,40,0.18) 0 2px, transparent 2px 10px);
   pointer-events:none;
 }
 .yutnori-app .stick .wood-dot{
-  width:6px;
-  height:6px;
+  width:6.5px;
+  height:6.5px;
   border-radius:50%;
-  background:radial-gradient(circle, #3d240e 0%, #7d4e21 70%, transparent 100%);
-  opacity:0.9;
+  background:radial-gradient(circle, #381f0b 0%, #73451c 70%, transparent 100%);
+  opacity:0.95;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,0.6);
 }
 .yutnori-app .stick .backdo-mark{
   font-family:'Song Myung', serif;
-  font-size:16px;
+  font-size:17px;
   font-weight:900;
   color:#b8261c;
   line-height:1;
-  text-shadow:0 0 2px rgba(255,180,180,0.6);
-  transform:scale(1.25);
+  text-shadow:0 0 3px rgba(255,180,180,0.7);
+  transform:scale(1.3);
 }
 
 /* 윷 토스 물리 애니메이션 */
@@ -1004,28 +1038,28 @@ const CSS = `
 
 @keyframes tossFlat0 {
   0% { transform: translateY(0) rotateX(0deg) rotateZ(0deg) scale(1); }
-  40% { transform: translateY(-85px) rotateX(540deg) rotateZ(-26deg) scale(1.26); }
+  40% { transform: translateY(-90px) rotateX(540deg) rotateZ(-26deg) scale(1.26); }
   75% { transform: translateY(4px) rotateX(900deg) rotateZ(6deg) scale(0.96); }
   90% { transform: translateY(-8px) rotateX(900deg) rotateZ(-3deg) scale(1.02); }
   100% { transform: translateY(0) rotateY(180deg) rotateZ(-6deg) scale(1); }
 }
 @keyframes tossFlat1 {
   0% { transform: translateY(0) rotateX(0deg) rotateZ(0deg) scale(1); }
-  45% { transform: translateY(-95px) rotateX(720deg) rotateZ(28deg) scale(1.30); }
+  45% { transform: translateY(-100px) rotateX(720deg) rotateZ(28deg) scale(1.30); }
   75% { transform: translateY(5px) rotateX(900deg) rotateZ(-8deg) scale(0.95); }
   90% { transform: translateY(-9px) rotateX(900deg) rotateZ(4deg) scale(1.03); }
   100% { transform: translateY(0) rotateY(180deg) rotateZ(8deg) scale(1); }
 }
 @keyframes tossFlat2 {
   0% { transform: translateY(0) rotateX(0deg) rotateZ(0deg) scale(1); }
-  42% { transform: translateY(-80px) rotateX(540deg) rotateZ(-20deg) scale(1.24); }
+  42% { transform: translateY(-85px) rotateX(540deg) rotateZ(-20deg) scale(1.24); }
   75% { transform: translateY(4px) rotateX(900deg) rotateZ(10deg) scale(0.97); }
   90% { transform: translateY(-7px) rotateX(900deg) rotateZ(-2deg) scale(1.02); }
   100% { transform: translateY(0) rotateY(180deg) rotateZ(-4deg) scale(1); }
 }
 @keyframes tossFlat3 {
   0% { transform: translateY(0) rotateX(0deg) rotateZ(0deg) scale(1); }
-  48% { transform: translateY(-100px) rotateX(720deg) rotateZ(24deg) scale(1.32); }
+  48% { transform: translateY(-105px) rotateX(720deg) rotateZ(24deg) scale(1.32); }
   75% { transform: translateY(6px) rotateX(900deg) rotateZ(-12deg) scale(0.94); }
   90% { transform: translateY(-10px) rotateX(900deg) rotateZ(6deg) scale(1.04); }
   100% { transform: translateY(0) rotateY(180deg) rotateZ(5deg) scale(1); }
@@ -1033,41 +1067,41 @@ const CSS = `
 
 @keyframes tossRound0 {
   0% { transform: translateY(0) rotateX(0deg) rotateZ(0deg) scale(1); }
-  40% { transform: translateY(-85px) rotateX(720deg) rotateZ(-24deg) scale(1.26); }
+  40% { transform: translateY(-90px) rotateX(720deg) rotateZ(-24deg) scale(1.26); }
   75% { transform: translateY(4px) rotateX(1080deg) rotateZ(8deg) scale(0.96); }
   90% { transform: translateY(-8px) rotateX(1080deg) rotateZ(-4deg) scale(1.02); }
   100% { transform: translateY(0) rotateY(0deg) rotateZ(5deg) scale(1); }
 }
 @keyframes tossRound1 {
   0% { transform: translateY(0) rotateX(0deg) rotateZ(0deg) scale(1); }
-  45% { transform: translateY(-95px) rotateX(900deg) rotateZ(26deg) scale(1.30); }
+  45% { transform: translateY(-100px) rotateX(900deg) rotateZ(26deg) scale(1.30); }
   75% { transform: translateY(5px) rotateX(1080deg) rotateZ(-10deg) scale(0.95); }
   90% { transform: translateY(-9px) rotateX(1080deg) rotateZ(5deg) scale(1.03); }
   100% { transform: translateY(0) rotateY(0deg) rotateZ(-7deg) scale(1); }
 }
 @keyframes tossRound2 {
   0% { transform: translateY(0) rotateX(0deg) rotateZ(0deg) scale(1); }
-  42% { transform: translateY(-80px) rotateX(720deg) rotateZ(-18deg) scale(1.24); }
+  42% { transform: translateY(-85px) rotateX(720deg) rotateZ(-18deg) scale(1.24); }
   75% { transform: translateY(4px) rotateX(1080deg) rotateZ(12deg) scale(0.97); }
   90% { transform: translateY(-7px) rotateX(1080deg) rotateZ(-3deg) scale(1.02); }
   100% { transform: translateY(0) rotateY(0deg) rotateZ(4deg) scale(1); }
 }
 @keyframes tossRound3 {
   0% { transform: translateY(0) rotateX(0deg) rotateZ(0deg) scale(1); }
-  48% { transform: translateY(-100px) rotateX(900deg) rotateZ(20deg) scale(1.32); }
+  48% { transform: translateY(-105px) rotateX(900deg) rotateZ(20deg) scale(1.32); }
   75% { transform: translateY(6px) rotateX(1080deg) rotateZ(-14deg) scale(0.94); }
   90% { transform: translateY(-10px) rotateX(1080deg) rotateZ(7deg) scale(1.04); }
   100% { transform: translateY(0) rotateY(0deg) rotateZ(-5deg) scale(1); }
 }
 
-.yutnori-app .result-text{text-align:center;font-family:'Song Myung', serif;font-size:1.6rem;color:var(--gold-soft);min-height:2rem;margin:2px 0 0;text-shadow:0 2px 4px rgba(0,0,0,0.5);}
-.yutnori-app .pending-row{text-align:center;font-size:0.84rem;color:#c9b98f;min-height:1.1rem;font-weight:600;}
+.yutnori-app .result-text{text-align:center;font-family:'Song Myung', serif;font-size:1.65rem;color:var(--gold-soft);min-height:2.1rem;margin:2px 0 0;text-shadow:0 2px 4px rgba(0,0,0,0.5);}
+.yutnori-app .pending-row{text-align:center;font-size:0.85rem;color:#d4c49f;min-height:1.1rem;font-weight:600;}
 .yutnori-app .btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
-.yutnori-app button.main-btn{font-family:'Noto Sans KR', sans-serif;font-weight:700;font-size:0.98rem;padding:11px 28px;border-radius:999px;border:none;cursor:pointer;background:linear-gradient(160deg, var(--red) 0%, var(--red-dark) 100%);color:#fff8ec;box-shadow:0 6px 18px rgba(194,59,50,0.45);transition:transform .12s ease, box-shadow .12s ease;}
+.yutnori-app button.main-btn{font-family:'Noto Sans KR', sans-serif;font-weight:700;font-size:1rem;padding:11px 28px;border-radius:999px;border:none;cursor:pointer;background:linear-gradient(160deg, var(--red) 0%, var(--red-dark) 100%);color:#fff8ec;box-shadow:0 6px 18px rgba(194,59,50,0.45);transition:transform .12s ease, box-shadow .12s ease;}
 .yutnori-app button.main-btn:disabled{background:#4a4238;color:#8a8070;box-shadow:none;cursor:not-allowed;}
 .yutnori-app button.main-btn:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(194,59,50,0.55);}
 .yutnori-app button.main-btn:not(:disabled):active{transform:translateY(1px);}
-.yutnori-app button.reset-btn{font-family:'Noto Sans KR', sans-serif;font-size:0.8rem;font-weight:600;padding:8px 16px;border-radius:999px;border:1px solid rgba(201,154,62,0.45);background:rgba(255,248,236,0.05);color:#c9b98f;cursor:pointer;transition:all .12s ease;}
+.yutnori-app button.reset-btn{font-family:'Noto Sans KR', sans-serif;font-size:0.82rem;font-weight:600;padding:8px 16px;border-radius:999px;border:1px solid rgba(201,154,62,0.45);background:rgba(255,248,236,0.05);color:#c9b98f;cursor:pointer;transition:all .12s ease;}
 .yutnori-app button.reset-btn:hover{background:rgba(201,154,62,0.15);border-color:var(--gold);color:#fff;}
 
 /* 알 상태 (PIECE TRAYS) */
@@ -1134,7 +1168,7 @@ const CSS = `
 .yutnori-app .tutorial-card button.main-btn{margin-top:22px;width:100%;}
 @media (max-width:480px){
   .yutnori-app h1{font-size:1.8rem;}
-  .yutnori-app .stick{width:20px;height:84px;}
+  .yutnori-app .stick{width:22px;height:90px;}
   .yutnori-app .mats-container{padding:14px 8px;}
   .yutnori-app .tutorial-card{padding:22px 18px;}
 }
@@ -1198,12 +1232,12 @@ export default function YutnoriGame() {
         id = +id;
         const n = NODES[id];
         let cls = 'node-dot';
-        let r = 6;
-        if (id === CENTER) { cls += ' center'; r = 10; }
-        else if (CORNERS.includes(id)) { cls += ' corner'; r = 9; }
+        let r = 7;
+        if (id === CENTER) { cls += ' center'; r = 12; }
+        else if (CORNERS.includes(id)) { cls += ' corner'; r = 10; }
         svg.appendChild(svgElNS('circle', { cx: n.x, cy: n.y, r, class: cls, 'data-node': id }));
       });
-      homeLabelEl = svgElNS('text', { x: NODES[0].x, y: NODES[0].y - 16, 'text-anchor': 'middle', fill: '#8a6a3a', 'font-size': 11, 'font-family': "'Noto Sans KR',sans-serif", 'font-weight': 700 });
+      homeLabelEl = svgElNS('text', { x: NODES[0].x, y: NODES[0].y - 18, 'text-anchor': 'middle', fill: '#4d2c10', 'font-size': 12, 'font-family': "'Song Myung', serif", 'font-weight': 900 });
       homeLabelEl.textContent = wordsRef.current.homeLabel;
       svg.appendChild(homeLabelEl);
     }
@@ -1229,12 +1263,12 @@ export default function YutnoriGame() {
         s.id = 'yn-stick' + i;
         s.style.transform = 'rotateY(0deg) rotateZ(' + initTilts[i] + 'deg)';
         
-        // 윷 등 (Back)
+        // 윷 등 (Back - 둥근 밤나무 껍질)
         const back = document.createElement('div');
         back.className = 'stick-back';
         s.appendChild(back);
 
-        // 윷 배 (Front)
+        // 윷 배 (Front - 깎아낸 원목 속살)
         const front = document.createElement('div');
         front.className = 'stick-front';
         
@@ -1780,12 +1814,14 @@ export default function YutnoriGame() {
       </div>
 
       <div className="layout">
-        {/* LEFT: 윷놀이 판 (BOARD) */}
+        {/* LEFT: 윷놀이 멍석 보드판 (STRAW MAT BOARD) */}
         <div className="board-card">
-          <svg id="yn-board" viewBox="0 0 600 600" />
+          <div className="board-inner">
+            <svg id="yn-board" viewBox="0 0 600 600" />
+          </div>
         </div>
 
-        {/* RIGHT: 한눈에 보는 조작 패널 & 멍석 & 알 상태 & 규칙 (SIDE PANEL) */}
+        {/* RIGHT: 한눈에 보는 조작 패널 & 멍석 던짐판 & 3D 윷가락 & 알 상태 (SIDE PANEL) */}
         <div className="panel">
           <div className="turn-row">
             <div className="turn-badge" id="yn-turnBadge">
@@ -1795,7 +1831,7 @@ export default function YutnoriGame() {
             <div className="score-mini" id="yn-scoreMini" />
           </div>
 
-          {/* 멍석 (STRAW MAT) & 3D 윷가락 */}
+          {/* 멍석 (STRAW MAT) 던짐 영역 & 3D 윷가락 */}
           <div className="mats-container">
             <span className="mat-label">멍석 (Straw Mat)</span>
             <div className="sticks-area" id="yn-sticksArea" />
