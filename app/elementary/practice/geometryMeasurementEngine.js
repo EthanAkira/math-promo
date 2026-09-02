@@ -61,10 +61,21 @@ export function timeAddCalc(random) {
   return wordQ(
     `${hour}시 ${minute}분에서 ${addMinutes}분 후는 몇 시 몇 분일까요?`,
     '',
-    `${endHour}시 ${endMinute}분`,
+    endMinute === 0 ? `${endHour}시` : `${endHour}시 ${endMinute}분`,
     '',
     `What time is it ${addMinutes} minutes after ${hour}:${String(minute).padStart(2, '0')}?`,
   );
+}
+
+export function clockRead(random) {
+  const hour = randomInt(random, 1, 12);
+  const minute = pick(random, [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]);
+  const answer = minute === 0 ? `${hour}시` : `${hour}시 ${minute}분`;
+  return {
+    ...wordQ('시계를 보고 몇 시 몇 분인지 쓰세요.', '', answer, '', 'Read the clock and write the time.'),
+    visualKind: 'clock',
+    clock: { hour, minute },
+  };
 }
 
 export function measurementUnitConvert(random) {
@@ -148,7 +159,7 @@ export function angleBasic(random) {
   if (mode === 1) {
     const angle = randomInt(random, 5, 179);
     const type = angle < 90 ? '예각' : angle === 90 ? '직각' : '둔각';
-    return wordQ('다음 각을 예각, 직각, 둔각 중 하나로 분류하세요.', `${angle}°`, type, '', 'Classify the angle as acute, right, or obtuse.', `${angle}°`);
+    return { ...wordQ('그림의 각을 예각, 직각, 둔각 중 하나로 분류하세요.', '', type, '', 'Classify the angle shown as acute, right, or obtuse.', ''), visualKind: 'angle-figure', angle: { degrees: angle } };
   }
   const useStraight = random() < 0.5;
   const total = useStraight ? 180 : 90;
@@ -171,42 +182,79 @@ export function polygonAngleMissing(random) {
   return wordQ('사각형의 네 각 중 세 각이 주어졌습니다. 나머지 한 각을 구하세요.', `${a}°, ${b}°, ${c}°`, 360 - a - b - c, '°');
 }
 
+const POINT_LABELS = ['ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ', 'ㅂ'];
+
+export function lineRaySegmentClassify(random) {
+  const kind = pick(random, ['segment', 'ray', 'line']);
+  const [labelA, labelB] = POINT_LABELS;
+  const answer = kind === 'segment' ? '선분' : kind === 'ray' ? '반직선' : '직선';
+  return {
+    ...wordQ('그림과 같은 도형의 이름을 선분, 반직선, 직선 중에서 쓰세요.', '', answer, '', 'Name the figure shown: segment, ray, or line.'),
+    visualKind: 'point-figure',
+    figure: { kind, labelA, labelB },
+  };
+}
+
+const POINT_CLOUD_LAYOUTS = {
+  3: [[40, 110], [170, 110], [105, 25]],
+  4: [[30, 115], [175, 115], [150, 30], [55, 35]],
+  5: [[100, 20], [180, 70], [150, 135], [50, 135], [20, 70]],
+  6: [[100, 15], [175, 55], [175, 120], [100, 155], [25, 120], [25, 55]],
+};
+
+export function countFiguresFromPoints(random) {
+  const n = randomInt(random, 3, 6);
+  const points = POINT_CLOUD_LAYOUTS[n];
+  const labels = POINT_LABELS.slice(0, n);
+  const kind = pick(random, ['선분', '직선', '반직선']);
+  const answer = kind === '반직선' ? n * (n - 1) : (n * (n - 1)) / 2;
+  return {
+    ...wordQ(`그림과 같이 어느 세 점도 한 직선 위에 있지 않은 ${n}개의 점이 있습니다. 두 점을 이어 그릴 수 있는 ${kind}은(는) 모두 몇 개인가요?`, '', answer, '개', `No three of these ${n} points lie on the same line. How many ${kind === '반직선' ? 'rays' : kind === '직선' ? 'lines' : 'segments'} can be drawn through two of them?`),
+    visualKind: 'point-cloud',
+    cloud: { points, labels },
+  };
+}
+
+function withPolygon(question, shape, dims) {
+  return { ...question, visualKind: 'polygon-figure', polygon: { shape, ...dims } };
+}
+
 export function perimeterArea(random) {
   const shape = pick(random, ['rectangle', 'square', 'parallelogram', 'triangle', 'trapezoid', 'rhombus']);
   const askPerimeter = random() < 0.5;
   if (shape === 'rectangle') {
     const w = randomInt(random, 3, 20);
     const h = randomInt(random, 3, 20);
-    if (askPerimeter) return wordQ(`가로 ${w}cm, 세로 ${h}cm인 직사각형의 둘레를 구하세요.`, '', 2 * (w + h), 'cm');
-    return wordQ(`가로 ${w}cm, 세로 ${h}cm인 직사각형의 넓이를 구하세요.`, '', w * h, 'cm²');
+    if (askPerimeter) return withPolygon(wordQ('그림과 같은 직사각형의 둘레를 구하세요.', '', 2 * (w + h), 'cm', 'Find the perimeter of the rectangle shown.'), 'rectangle', { a: w, b: h });
+    return withPolygon(wordQ('그림과 같은 직사각형의 넓이를 구하세요.', '', w * h, 'cm²', 'Find the area of the rectangle shown.'), 'rectangle', { a: w, b: h });
   }
   if (shape === 'square') {
     const a = randomInt(random, 3, 20);
-    if (askPerimeter) return wordQ(`한 변이 ${a}cm인 정사각형의 둘레를 구하세요.`, '', 4 * a, 'cm');
-    return wordQ(`한 변이 ${a}cm인 정사각형의 넓이를 구하세요.`, '', a * a, 'cm²');
+    if (askPerimeter) return withPolygon(wordQ('그림과 같은 정사각형의 둘레를 구하세요.', '', 4 * a, 'cm', 'Find the perimeter of the square shown.'), 'square', { a });
+    return withPolygon(wordQ('그림과 같은 정사각형의 넓이를 구하세요.', '', a * a, 'cm²', 'Find the area of the square shown.'), 'square', { a });
   }
   if (shape === 'parallelogram') {
     const base = randomInt(random, 4, 20);
     const height = randomInt(random, 3, 15);
-    return wordQ(`밑변이 ${base}cm, 높이가 ${height}cm인 평행사변형의 넓이를 구하세요.`, '', base * height, 'cm²');
+    return withPolygon(wordQ('그림과 같은 평행사변형의 넓이를 구하세요.', '', base * height, 'cm²', 'Find the area of the parallelogram shown.'), 'parallelogram', { a: base, height });
   }
   if (shape === 'triangle') {
     const base = randomInt(random, 4, 20);
     let height = randomInt(random, 3, 15);
     if ((base * height) % 2 !== 0) height += 1;
-    return wordQ(`밑변이 ${base}cm, 높이가 ${height}cm인 삼각형의 넓이를 구하세요.`, '', (base * height) / 2, 'cm²');
+    return withPolygon(wordQ('그림과 같은 삼각형의 넓이를 구하세요.', '', (base * height) / 2, 'cm²', 'Find the area of the triangle shown.'), 'triangle', { a: base, height });
   }
   if (shape === 'trapezoid') {
     const a = randomInt(random, 4, 15);
     const b = randomInt(random, a + 2, 20);
     let height = randomInt(random, 3, 15);
     if (((a + b) * height) % 2 !== 0) height += 1;
-    return wordQ(`윗변 ${a}cm, 아랫변 ${b}cm, 높이 ${height}cm인 사다리꼴의 넓이를 구하세요.`, '', ((a + b) * height) / 2, 'cm²');
+    return withPolygon(wordQ('그림과 같은 사다리꼴의 넓이를 구하세요.', '', ((a + b) * height) / 2, 'cm²', 'Find the area of the trapezoid shown.'), 'trapezoid', { a, b, height });
   }
   let d1 = randomInt(random, 4, 20);
   let d2 = randomInt(random, 4, 20);
   if ((d1 * d2) % 2 !== 0) d2 += 1;
-  return wordQ(`두 대각선의 길이가 각각 ${d1}cm, ${d2}cm인 마름모의 넓이를 구하세요.`, '', (d1 * d2) / 2, 'cm²');
+  return withPolygon(wordQ('그림과 같은 마름모의 넓이를 구하세요.', '', (d1 * d2) / 2, 'cm²', 'Find the area of the rhombus shown.'), 'rhombus', { d1, d2 });
 }
 
 export function rangeRound(random) {

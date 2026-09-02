@@ -3,6 +3,7 @@
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
 import { findGrade, findUnit, GRADE_CATALOG, localizeGrade, localizeUnit } from './catalog';
+import { hasProblemVisual, ProblemVisual } from './ElementaryVisuals';
 import { useLanguage } from '../../language';
 import { useAuth } from '../../auth';
 import { isNonKorean, tr } from '../../i18n';
@@ -88,6 +89,7 @@ function ProblemBody({ problem, view, value, checked, onChange, language }) {
     const expression = isNonKorean(language) && problem.expressionEn ? problem.expressionEn : problem.expression;
     return <div className="word-calculation">
       <p>{prompt}</p>
+      {hasProblemVisual(problem) ? <ProblemVisual item={problem} /> : null}
       {expression ? <strong className="word-expression font-mono"><MathText value={expression} /></strong> : null}
       <div className="word-answer"><span>{isNonKorean(language) ? 'Answer' : '답'}</span>{input}{problem.answerSuffix ? <em>{problem.answerSuffix}</em> : null}</div>
     </div>;
@@ -198,7 +200,7 @@ export default function PracticeGenerator() {
           const noteKey = `dll-note:${seed}:${unit.id}:${problem.id}`;
           return (
             <Fragment key={problem.id}>
-              <article className={`vertical-problem ${problem.kind === 'inline' ? 'inline-problem' : ''} ${problem.kind === 'word' ? 'word-problem' : ''}`}>
+              <article className={`vertical-problem ${problem.kind === 'inline' ? 'inline-problem' : ''} ${problem.kind === 'word' ? 'word-problem' : ''} ${hasProblemVisual(problem) ? 'graphic-problem' : ''}`}>
                 <span className="problem-number">{problem.id}</span>
                 <ProblemBody problem={problem} view={view} value={answers[problem.id]} checked={checked} onChange={handleAnswer} language={language} />
                 {checked && view === 'problems' && hasAnswer ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{isCorrect ? (en ? 'Correct' : '맞았어요') : (en ? 'Try again' : '다시 풀기')}</span> : null}
