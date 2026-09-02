@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useLanguage } from '../../language';
 import {
-  ROWS, COLS, initialState, generateLegalMoves, applyMove, gameStatus, chooseAiMove,
-  findGeneral, isInCheck, pieceColor, pieceType, JANGGI_DIFFICULTIES,
+  ROWS, COLS, initialState, generateLegalMoves, generatePseudoMoves, applyMove, gameStatus, chooseAiMove,
+  findGeneral, pieceColor, pieceType, JANGGI_DIFFICULTIES, DEFAULT_FORMATION,
 } from './janggiEngine';
 
 const HANJA = {
@@ -23,6 +23,11 @@ const KO = {
   sideHan: '한(漢) · 선공',
   sideCho: '초(楚) · 후공',
   diffLabel: 'AI 난이도',
+  formationLabel: '포진(마·상) 설정 — 다음 대국부터 적용',
+  formationLeft: '왼쪽',
+  formationRight: '오른쪽',
+  formationHE: '마상',
+  formationEH: '상마',
   undo: '무르기 [R]',
   flip: '보드 회전 [F]',
   newGame: '새 대국 시작 [N]',
@@ -34,7 +39,7 @@ const KO = {
   tutorialBtn: '규칙 · 튜토리얼',
   yourTurn: '당신이 둘 차례입니다.',
   aiTurn: 'AI가 수를 계산하고 있습니다...',
-  check: (name) => `⚠️ 장군! ${name}의 궁이 위협받고 있습니다.`,
+  check: (name, attacker) => `⚠️ 장군! ${name}의 궁이 ${attacker}(으)로부터 위협받고 있습니다.`,
   checkmate: (win) => `외통수(체크메이트)! ${win}`,
   noMoves: (win) => `둘 수 있는 수가 없습니다! ${win}`,
   youWin: '당신의 승리입니다! 🏆',
@@ -68,6 +73,11 @@ const EN = {
   sideHan: 'Han (漢) · Moves first',
   sideCho: 'Cho (楚) · Moves second',
   diffLabel: 'AI difficulty',
+  formationLabel: 'Horse/Elephant formation — applies from the next game',
+  formationLeft: 'Left',
+  formationRight: 'Right',
+  formationHE: 'Horse-Elephant',
+  formationEH: 'Elephant-Horse',
   undo: 'Undo [R]',
   flip: 'Flip board [F]',
   newGame: 'New game [N]',
@@ -79,7 +89,7 @@ const EN = {
   tutorialBtn: 'Rules & Tutorial',
   yourTurn: 'Your move.',
   aiTurn: 'AI is calculating its move...',
-  check: (name) => `⚠️ Check! ${name}'s general is under attack.`,
+  check: (name, attacker) => `⚠️ Check! ${name}'s general is under attack from ${attacker}.`,
   checkmate: (win) => `Checkmate! ${win}`,
   noMoves: (win) => `No legal moves! ${win}`,
   youWin: 'You win! 🏆',
@@ -118,6 +128,30 @@ function PalaceLines({ x0, y0, x1, y1, x2, y2 }) {
   </g>;
 }
 
+function randomFormation() {
+  return { left: Math.random() < 0.5 ? 'HE' : 'EH', right: Math.random() < 0.5 ? 'HE' : 'EH' };
+}
+
+function FormationPicker({ T, formation, onChange }) {
+  return <div className="jg-formation-picker">
+    <p className="game-section-label">{T.formationLabel}</p>
+    <div className="jg-formation-row">
+      <span className="jg-formation-side-label">{T.formationLeft}</span>
+      <div className="game-btn-grid cols-2">
+        <button type="button" className={`game-btn jg-formation-btn ${formation.left === 'HE' ? 'active' : ''}`} onClick={() => onChange({ ...formation, left: 'HE' })}>{T.formationHE}</button>
+        <button type="button" className={`game-btn jg-formation-btn ${formation.left === 'EH' ? 'active' : ''}`} onClick={() => onChange({ ...formation, left: 'EH' })}>{T.formationEH}</button>
+      </div>
+    </div>
+    <div className="jg-formation-row">
+      <span className="jg-formation-side-label">{T.formationRight}</span>
+      <div className="game-btn-grid cols-2">
+        <button type="button" className={`game-btn jg-formation-btn ${formation.right === 'HE' ? 'active' : ''}`} onClick={() => onChange({ ...formation, right: 'HE' })}>{T.formationHE}</button>
+        <button type="button" className={`game-btn jg-formation-btn ${formation.right === 'EH' ? 'active' : ''}`} onClick={() => onChange({ ...formation, right: 'EH' })}>{T.formationEH}</button>
+      </div>
+    </div>
+  </div>;
+}
+
 function JanggiPiece({ piece, size }) {
   const color = pieceColor(piece);
   const type = pieceType(piece);
@@ -141,6 +175,7 @@ export default function JanggiGame() {
   const [aiThinking, setAiThinking] = useState(false);
   const [flipped, setFlipped] = useState(false);
   const [tutorialOpen, setTutorialOpen] = useState(true);
+  const [humanFormation, setHumanFormation] = useState(() => ({ ...DEFAULT_FORMATION }));
 
   const state = history[history.length - 1];
   const status = gameStatus(state);
@@ -150,6 +185,19 @@ export default function JanggiGame() {
     [state, selected],
   );
   const checkedGeneralSquare = status === 'check' || status === 'checkmate' ? findGeneral(state.board, state.turn) : null;
+  const checkAttackerMoves = useMemo(() => {
+    if (!checkedGeneralSquare) return [];
+    const attackerColor = state.turn === 'h' ? 'c' : 'h';
+    const attackerState = { board: state.board, turn: attackerColor };
+    return generatePseudoMoves(attackerState)
+      .filter((m) => m.to[0] === checkedGeneralSquare[0] && m.to[1] === checkedGeneralSquare[1]);
+  }, [state.board, state.turn, checkedGeneralSquare]);
+  const checkAttackers = checkAttackerMoves.map((m) => m.from);
+  const checkAttackerLabel = [...new Set(checkAttackerMoves.map((m) => {
+    const type = pieceType(m.piece);
+    const color = pieceColor(m.piece);
+    return HANJA[color][type];
+  }))].join(' · ');
 
   const captured = useMemo(() => {
     const counts = { h: {}, c: {} };
@@ -177,7 +225,9 @@ export default function JanggiGame() {
   }
 
   function newGame(nextHumanColor = humanColor) {
-    setHistory([initialState()]);
+    const aiColor = nextHumanColor === 'h' ? 'c' : 'h';
+    const formations = { [nextHumanColor]: humanFormation, [aiColor]: randomFormation() };
+    setHistory([initialState(formations)]);
     setSelected(null);
     setLastMove(null);
     setAiThinking(false);
@@ -237,8 +287,8 @@ export default function JanggiGame() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history, aiThinking, humanColor]);
 
-  const UNIT = 52;
-  const MARGIN = 40;
+  const UNIT = 66;
+  const MARGIN = 44;
   const width = MARGIN * 2 + UNIT * (COLS - 1);
   const height = MARGIN * 2 + UNIT * (ROWS - 1);
   const px = (c) => MARGIN + (flipped ? COLS - 1 - c : c) * UNIT;
@@ -251,7 +301,7 @@ export default function JanggiGame() {
     const winnerIsHuman = state.turn !== humanColor;
     if (status === 'checkmate') return T.checkmate(winnerIsHuman ? T.youWin : T.aiWin);
     if (status === 'no-moves') return T.noMoves(winnerIsHuman ? T.youWin : T.aiWin);
-    if (status === 'check') return T.check(T.turnName(state.turn));
+    if (status === 'check') return T.check(T.turnName(state.turn), checkAttackerLabel);
     return state.turn === humanColor ? T.yourTurn : T.aiTurn;
   }
 
@@ -286,11 +336,13 @@ export default function JanggiGame() {
             const isTarget = legalMoves.some((m) => m.to[0] === r && m.to[1] === c);
             const isLastMove = lastMove && ((lastMove.from[0] === r && lastMove.from[1] === c) || (lastMove.to[0] === r && lastMove.to[1] === c));
             const isCheckedGeneral = checkedGeneralSquare && checkedGeneralSquare[0] === r && checkedGeneralSquare[1] === c;
+            const isCheckAttacker = checkAttackers.some(([ar, ac]) => ar === r && ac === c);
             return <g key={`${r}-${c}`} transform={`translate(${px(c)},${py(r)})`} className="jg-point" onClick={() => handlePointClick(r, c)} role="button" aria-label={squareLabel(r, c)}>
               <circle r={UNIT / 2 - 2} className="jg-hit-target" />
               {isLastMove ? <circle r="6" className="jg-last-move-mark" /> : null}
               {isSelected ? <circle r={UNIT / 2 - 6} className="jg-selected-ring" /> : null}
               {isCheckedGeneral ? <circle r={UNIT / 2 - 4} className="jg-check-ring" /> : null}
+              {isCheckAttacker ? <circle r={UNIT / 2 - 3} className="jg-attacker-ring" /> : null}
               {piece ? <JanggiPiece piece={piece} size={UNIT / 2 - 6} /> : null}
               {isTarget ? <circle r={piece ? UNIT / 2 - 4 : 7} className={piece ? 'jg-capture-hint' : 'jg-move-hint'} /> : null}
             </g>;
@@ -328,6 +380,10 @@ export default function JanggiGame() {
             <button type="button" className={`game-btn jg-side-btn ${humanColor === 'h' ? 'active' : ''}`} onClick={() => chooseSide('h')}>{T.sideHan}</button>
             <button type="button" className={`game-btn jg-side-btn ${humanColor === 'c' ? 'active' : ''}`} onClick={() => chooseSide('c')}>{T.sideCho}</button>
           </div>
+        </div>
+
+        <div className="panel-section">
+          <FormationPicker T={T} formation={humanFormation} onChange={setHumanFormation} />
         </div>
 
         <div className="panel-section">
@@ -372,7 +428,8 @@ export default function JanggiGame() {
         <p>{T.winText}</p>
         <h3>{T.controlsSectionTitle}</h3>
         <p>{T.controlsText}</p>
-        <button type="button" className="game-btn primary full-width jg-tutorial-close" onClick={() => setTutorialOpen(false)}>{T.startBtn}</button>
+        <FormationPicker T={T} formation={humanFormation} onChange={setHumanFormation} />
+        <button type="button" className="game-btn primary full-width jg-tutorial-close" onClick={() => { newGame(humanColor); setTutorialOpen(false); }}>{T.startBtn}</button>
       </div>
     </div> : null}
 
@@ -383,7 +440,7 @@ export default function JanggiGame() {
 const CSS = `
 .janggi-app{--jg-han:#1f6b3a;--jg-cho:#b0382a;--jg-wood:#dcb578;--jg-wood-dark:#b98a4c;--jg-board-bg:#eecf95;--jg-river:rgba(255,255,255,0.14);font-family:'Noto Sans KR', sans-serif;}
 .janggi-app .jg-shell{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;justify-content:center;}
-.janggi-app .jg-board{width:100%;max-width:480px;display:block;margin:0 auto;filter:drop-shadow(0 10px 24px rgba(0,0,0,0.28));}
+.janggi-app .jg-board{width:100%;max-width:620px;display:block;margin:0 auto;filter:drop-shadow(0 10px 24px rgba(0,0,0,0.28));}
 .janggi-app .jg-board-bg{fill:var(--jg-board-bg);stroke:var(--jg-wood-dark);stroke-width:3;}
 .janggi-app .jg-river-band{fill:var(--jg-river);pointer-events:none;}
 .janggi-app .jg-grid-line{stroke:var(--jg-wood-dark);stroke-width:1.4;}
@@ -395,10 +452,12 @@ const CSS = `
 .janggi-app .jg-piece-glyph{font-size:19px;font-weight:800;text-anchor:middle;dominant-baseline:central;font-family:'Noto Serif KR','Song Myung',serif;}
 .janggi-app .jg-selected-ring{fill:none;stroke:#2a5c8a;stroke-width:3;}
 .janggi-app .jg-check-ring{fill:none;stroke:#c23b32;stroke-width:3;stroke-dasharray:4 3;}
+.janggi-app .jg-attacker-ring{fill:none;stroke:#e0a11a;stroke-width:3;stroke-dasharray:2 3;animation:jg-pulse 1.1s ease-in-out infinite;}
+@keyframes jg-pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
 .janggi-app .jg-last-move-mark{fill:#2a5c8a;opacity:0.55;}
 .janggi-app .jg-move-hint{fill:rgba(42,92,138,0.55);}
 .janggi-app .jg-capture-hint{fill:none;stroke:#c23b32;stroke-width:3;}
-.janggi-app .jg-captured-bar{display:flex;align-items:center;gap:10px;max-width:480px;margin:0 auto;padding:6px 4px;flex-wrap:wrap;}
+.janggi-app .jg-captured-bar{display:flex;align-items:center;gap:10px;max-width:620px;margin:0 auto;padding:6px 4px;flex-wrap:wrap;}
 .janggi-app .jg-captured-label{font-size:11px;color:var(--ink-soft, #766f63);white-space:nowrap;}
 .janggi-app .jg-captured-list{display:flex;flex-wrap:wrap;gap:4px;min-height:22px;}
 .janggi-app .jg-captured-item{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#fbf3df;font-size:13px;font-weight:800;border:1.4px solid currentColor;}
@@ -408,6 +467,10 @@ const CSS = `
 .janggi-app .jg-turn-dot.han{background:var(--jg-han);}
 .janggi-app .jg-turn-dot.cho{background:var(--jg-cho);}
 .janggi-app .jg-side-btn.active{background:linear-gradient(135deg,#8f2a24,#1f6b3a);color:#fff;border-color:transparent;}
+.janggi-app .jg-formation-row{margin-bottom:8px;}
+.janggi-app .jg-formation-side-label{display:block;font-size:11px;color:var(--ink-soft, #999);margin-bottom:4px;}
+.janggi-app .jg-formation-btn{font-size:12px;}
+.janggi-app .jg-formation-btn.active{background:linear-gradient(135deg,#8f2a24,#1f6b3a);color:#fff;border-color:transparent;}
 .janggi-app .jg-tutorial-overlay{position:fixed;inset:0;background:rgba(20,14,8,0.78);display:flex;align-items:center;justify-content:center;z-index:80;padding:20px;}
 .janggi-app .jg-tutorial-card{width:100%;max-width:640px;max-height:86vh;overflow-y:auto;background:linear-gradient(160deg,#fbf3df 0%,#eedfbf 100%);border-radius:18px;padding:28px 26px;box-shadow:0 20px 50px rgba(0,0,0,0.5);color:#241f1a;}
 .janggi-app .jg-tutorial-card h2{font-family:'Song Myung',serif;font-size:1.5rem;margin:0 0 10px;}

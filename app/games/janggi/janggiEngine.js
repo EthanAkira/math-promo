@@ -59,16 +59,31 @@ function cloneBoard(board) {
   return board.map((row) => [...row]);
 }
 
-export function initialBoard() {
+// Traditional Janggi lets each player choose, before the game starts, whether Horse or Elephant
+// stands closer to the center on their left pair and their right pair (a real rule called 포진 —
+// e.g. 원앙마 has both horses inside; 외상 has both elephants inside; the two are independently
+// mixable). 'HE' = Horse then Elephant reading outward-to-inward is NOT it — reading left-to-right
+// in board-column order: 'HE' puts Horse at the outer slot, Elephant at the inner slot; 'EH' is the
+// reverse. Left pair sits between the corner Chariot and the left Advisor; right pair mirrors it.
+export const DEFAULT_FORMATION = { left: 'HE', right: 'EH' };
+
+function buildBackRow(formation = DEFAULT_FORMATION) {
+  const left = formation.left === 'EH' ? ['E', 'H'] : ['H', 'E'];
+  const right = formation.right === 'EH' ? ['E', 'H'] : ['H', 'E'];
+  return ['R', left[0], left[1], 'A', null, 'A', right[0], right[1], 'R'];
+}
+
+export function initialBoard(formations = {}) {
   const board = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
-  const back = ['R', 'H', 'E', 'A', null, 'A', 'E', 'H', 'R'];
-  back.forEach((type, c) => { if (type) board[0][c] = `c${type}`; });
+  const backC = buildBackRow(formations.c);
+  backC.forEach((type, c) => { if (type) board[0][c] = `c${type}`; });
   board[1][4] = 'cG';
   board[2][1] = 'cC';
   board[2][7] = 'cC';
   [0, 2, 4, 6, 8].forEach((c) => { board[3][c] = 'cS'; });
 
-  back.forEach((type, c) => { if (type) board[9][c] = `h${type}`; });
+  const backH = buildBackRow(formations.h);
+  backH.forEach((type, c) => { if (type) board[9][c] = `h${type}`; });
   board[8][4] = 'hG';
   board[7][1] = 'hC';
   board[7][7] = 'hC';
@@ -76,8 +91,8 @@ export function initialBoard() {
   return board;
 }
 
-export function initialState() {
-  return { board: initialBoard(), turn: 'h' };
+export function initialState(formations) {
+  return { board: initialBoard(formations), turn: 'h' };
 }
 
 function stepMoves(board, r, c, color, offsets, push) {
