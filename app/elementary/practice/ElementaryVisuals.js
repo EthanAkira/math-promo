@@ -264,6 +264,78 @@ export function BlockPattern({ pattern }) {
   </svg>;
 }
 
+export function BoxSketch({ box }) {
+  const { w, d, h, highlight } = box;
+  const leftX = 40;
+  const baseY = 130;
+  const W = 90;
+  const Dh = 60;
+  const OX = 34;
+  const OY = 22;
+  const p = {
+    g: [leftX, baseY],
+    n: [leftX + W, baseY],
+    m: [leftX, baseY - Dh],
+    b: [leftX + W, baseY - Dh],
+    c: [leftX + W + OX, baseY - OY],
+    s: [leftX + W + OX, baseY - Dh - OY],
+    o: [leftX + OX, baseY - Dh - OY],
+    r: [leftX + OX, baseY - OY],
+  };
+  const seg = (a, bKey, className) => <line x1={p[a][0]} y1={p[a][1]} x2={p[bKey][0]} y2={p[bKey][1]} className={className} />;
+  return <svg className="generated-geometry" viewBox="0 0 210 150" role="img" aria-label="직육면체 겨냥도">
+    {highlight === 'front' ? <polygon className="highlight-face" points={[p.g, p.n, p.b, p.m].map((q) => q.join(',')).join(' ')} /> : null}
+    {seg('g', 'n', 'shape-outline')}{seg('n', 'b', 'shape-outline')}{seg('b', 'm', 'shape-outline')}{seg('m', 'g', 'shape-outline')}
+    {seg('n', 'c', 'shape-outline')}{seg('c', 's', 'shape-outline')}{seg('s', 'b', 'shape-outline')}
+    {seg('m', 'o', 'shape-outline')}{seg('o', 's', 'shape-outline')}
+    {seg('r', 'g', 'guide-line hidden-edge')}{seg('r', 'c', 'guide-line hidden-edge')}{seg('r', 'o', 'guide-line hidden-edge')}
+    <text x={leftX + W / 2} y={baseY + 14} textAnchor="middle" className="value-label">{w}cm</text>
+    <text x={leftX + W + OX / 2 + 8} y={baseY - OY / 2 + 4} className="value-label">{d}cm</text>
+    <text x={leftX - 14} y={baseY - Dh / 2} className="value-label">{h}cm</text>
+  </svg>;
+}
+
+const NET_FACES = [
+  { key: 'top', label: '가', xKey: 'x1', yKey: 'y0', wKey: 'w', hKey: 'd', corners: { tl: 'ㅇ', tr: 'ㅅ', bl: 'ㅁ', br: 'ㅂ' } },
+  { key: 'left', label: '나', xKey: 'x0', yKey: 'y1', wKey: 'd', hKey: 'h', corners: { tl: 'ㅇ', tr: 'ㅁ', bl: 'ㄹ', br: 'ㄱ' } },
+  { key: 'front', label: '다', xKey: 'x1', yKey: 'y1', wKey: 'w', hKey: 'h', corners: { tl: 'ㅁ', tr: 'ㅂ', bl: 'ㄱ', br: 'ㄴ' } },
+  { key: 'right', label: '라', xKey: 'x2', yKey: 'y1', wKey: 'd', hKey: 'h', corners: { tl: 'ㅂ', tr: 'ㅅ', bl: 'ㄴ', br: 'ㄷ' } },
+  { key: 'back', label: '마', xKey: 'x3', yKey: 'y1', wKey: 'w', hKey: 'h', corners: { tl: 'ㅅ', tr: 'ㅇ', bl: 'ㄷ', br: 'ㄹ' } },
+  { key: 'bottom', label: '바', xKey: 'x1', yKey: 'y2', wKey: 'w', hKey: 'd', corners: { tl: 'ㄱ', tr: 'ㄴ', bl: 'ㄹ', br: 'ㄷ' } },
+];
+
+export function BoxNet({ net }) {
+  const { w, d, h, highlight } = net;
+  const s = 11;
+  const x0 = 10;
+  const y0 = 10;
+  const x1 = x0 + d * s;
+  const x2 = x1 + w * s;
+  const x3 = x2 + d * s;
+  const x4 = x3 + w * s;
+  const y1 = y0 + d * s;
+  const y2 = y1 + h * s;
+  const y3 = y2 + d * s;
+  const coord = { x0, x1, x2, x3, x4, y0, y1, y2, y3 };
+  const dim = { w: w * s, d: d * s, h: h * s };
+  return <svg className="generated-geometry" viewBox={`0 0 ${x4 + 10} ${y3 + 10}`} role="img" aria-label="직육면체 전개도">
+    {NET_FACES.map((face) => {
+      const fx = coord[face.xKey];
+      const fy = coord[face.yKey];
+      const fw = dim[face.wKey];
+      const fh = dim[face.hKey];
+      return <g key={face.key}>
+        <rect x={fx} y={fy} width={fw} height={fh} className={highlight === face.key ? 'shape-outline highlight-face' : 'shape-outline'} />
+        <text x={fx + fw / 2} y={fy + fh / 2 + 4} textAnchor="middle" className="value-label">{face.label}</text>
+        <text x={fx - 2} y={fy - 2} className="point-label">{face.corners.tl}</text>
+        <text x={fx + fw + 2} y={fy - 2} className="point-label">{face.corners.tr}</text>
+        <text x={fx - 2} y={fy + fh + 10} className="point-label">{face.corners.bl}</text>
+        <text x={fx + fw + 2} y={fy + fh + 10} className="point-label">{face.corners.br}</text>
+      </g>;
+    })}
+  </svg>;
+}
+
 export function DataTable({ table }) {
   return <table className="generated-math-table" aria-label="자료의 표">
     <thead><tr><th />{table.categories.map((category) => <th key={category.label}>{category.label}</th>)}<th>합계</th></tr></thead>
@@ -284,9 +356,11 @@ export function ProblemVisual({ item }) {
   if (kind === 'fraction-tape') return <FractionTape tape={item.tape} />;
   if (kind === 'data-table') return <DataTable table={item.table} />;
   if (kind === 'block-pattern') return <BlockPattern pattern={item.pattern} />;
+  if (kind === 'box-sketch') return <BoxSketch box={item.box} />;
+  if (kind === 'box-net') return <BoxNet net={item.net} />;
   return null;
 }
 
 export function hasProblemVisual(item) {
-  return ['clock', 'angle-figure', 'point-figure', 'point-cloud', 'polygon-figure', 'circle-row', 'circle-pair', 'pictograph', 'fraction-tape', 'data-table', 'block-pattern'].includes(item.visualKind);
+  return ['clock', 'angle-figure', 'point-figure', 'point-cloud', 'polygon-figure', 'circle-row', 'circle-pair', 'pictograph', 'fraction-tape', 'data-table', 'block-pattern', 'box-sketch', 'box-net'].includes(item.visualKind);
 }

@@ -473,6 +473,58 @@ export function solidFigureBasic(random) {
   return wordQ(`가로 ${a}cm, 세로 ${b}cm, 높이 ${c}cm인 직육면체의 모든 모서리 길이의 합을 구하세요.`, '', 4 * (a + b + c), 'cm');
 }
 
+function withBoxSketch(question, dims) {
+  return { ...question, visualKind: 'box-sketch', box: dims };
+}
+
+function withBoxNet(question, dims) {
+  return { ...question, visualKind: 'box-net', net: dims };
+}
+
+export function solidFigureSketch(random) {
+  const w = randomInt(random, 3, 9);
+  const d = randomInt(random, 3, 9);
+  const h = randomInt(random, 3, 9);
+  const box = { w, d, h };
+  const mode = randomInt(random, 0, 6);
+  if (mode === 0) return withBoxSketch(wordQ('직육면체의 겨냥도입니다. 보이는 모서리는 모두 몇 개인가요?', '', 9, '개'), box);
+  if (mode === 1) return withBoxSketch(wordQ('직육면체의 겨냥도입니다. 보이지 않는 모서리는 모두 몇 개인가요?', '', 3, '개'), box);
+  if (mode === 2) return withBoxSketch(wordQ('직육면체의 겨냥도입니다. 보이는 면은 모두 몇 개인가요?', '', 3, '개'), box);
+  if (mode === 3) return withBoxSketch(wordQ('직육면체의 겨냥도입니다. 보이지 않는 꼭짓점은 모두 몇 개인가요?', '', 1, '개'), box);
+  if (mode === 4) return withBoxSketch(wordQ('직육면체의 겨냥도입니다. 보이지 않는 모서리의 길이의 합을 구하세요.', '', w + d + h, 'cm'), box);
+  if (mode === 5) return withBoxSketch(wordQ('직육면체의 겨냥도입니다. 색칠한 면과 평행한 면은 모두 몇 개인가요?', '', 1, '개'), { ...box, highlight: 'front' });
+  return withBoxSketch(wordQ('직육면체의 겨냥도입니다. 색칠한 면과 수직인 면은 모두 몇 개인가요?', '', 4, '개'), { ...box, highlight: 'front' });
+}
+
+const NET_FACE_LABEL = { top: '가', left: '나', front: '다', right: '라', back: '마', bottom: '바' };
+const NET_OPPOSITE = { top: 'bottom', bottom: 'top', left: 'right', right: 'left', front: 'back', back: 'front' };
+
+export function solidFigureNet(random) {
+  const w = randomInt(random, 2, 6);
+  const d = randomInt(random, 2, 6);
+  const h = randomInt(random, 2, 6);
+  const faces = ['top', 'left', 'front', 'right', 'back', 'bottom'];
+  const highlight = pick(random, faces);
+  const net = { w, d, h, highlight };
+  const mode = randomInt(random, 0, 2);
+  if (mode === 0) {
+    const opposite = NET_OPPOSITE[highlight];
+    return withBoxNet(wordQ(`직육면체의 전개도입니다. 색칠한 면 ${NET_FACE_LABEL[highlight]}와 평행한 면을 구하세요.`, '', NET_FACE_LABEL[opposite]), net);
+  }
+  if (mode === 1) {
+    const others = faces.filter((f) => f !== highlight && f !== NET_OPPOSITE[highlight]);
+    const answer = others.map((f) => NET_FACE_LABEL[f]).sort().join(', ');
+    return withBoxNet(wordQ(`직육면체의 전개도입니다. 색칠한 면 ${NET_FACE_LABEL[highlight]}와 수직인 면을 모두 구하세요.`, '', answer), net);
+  }
+  const edgeChoices = [
+    { seg: 'ㄱㄴ', value: w },
+    { seg: 'ㅁㄱ', value: h },
+    { seg: 'ㄴㄷ', value: d },
+  ];
+  const chosen = pick(random, edgeChoices);
+  return withBoxNet(wordQ(`직육면체의 전개도입니다. 이 전개도를 접으면 가로 ${w}cm, 세로 ${d}cm, 높이 ${h}cm인 직육면체가 됩니다. 선분 ${chosen.seg}의 길이를 구하세요.`, '', chosen.value, 'cm'), net);
+}
+
 export function congruenceSymmetry(random) {
   const mode = randomInt(random, 0, 2);
   if (mode === 0) {
@@ -485,6 +537,18 @@ export function congruenceSymmetry(random) {
   }
   const dist = randomInt(random, 2, 15);
   return wordQ(`선대칭도형에서 대칭축으로부터 한 점까지의 거리가 ${dist}cm입니다. 그 점과 대응하는 점까지의 대칭축으로부터의 거리를 구하세요.`, '', dist, 'cm');
+}
+
+export function pointSymmetry(random) {
+  const mode = randomInt(random, 0, 1);
+  if (mode === 0) {
+    const dist = randomInt(random, 2, 15);
+    return wordQ(`점대칭도형에서 대칭의 중심으로부터 한 점까지의 거리가 ${dist}cm입니다. 그 점과 대응하는 점까지의 대칭의 중심으로부터의 거리를 구하세요.`, '', dist, 'cm');
+  }
+  const sides = new Set();
+  while (sides.size < 3) sides.add(randomInt(random, 3, 15));
+  const [a, b, c] = [...sides];
+  return wordQ(`점대칭도형입니다. 서로 다른 세 변의 길이가 각각 ${a}cm, ${b}cm, ${c}cm이고, 점대칭도형의 성질에 따라 나머지 세 변의 길이도 각각 이와 같습니다. 이 도형의 둘레를 구하세요.`, '', 2 * (a + b + c), 'cm');
 }
 
 export function functionTable(random) {

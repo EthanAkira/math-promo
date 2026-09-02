@@ -81,6 +81,26 @@ function decimalMultiply(random) {
   return inline(`${a} × ${b}`, decimal(a * b, 5));
 }
 
+function decimalPointShift(random) {
+  const a = randomInt(random, 12, 98);
+  const b = randomInt(random, 12, 98);
+  const product = a * b;
+  const d1 = pick(random, [1, 2]);
+  const d2 = pick(random, [0, 1]);
+  const decimalA = a / 10 ** d1;
+  const decimalB = d2 === 0 ? b : b / 10 ** d2;
+  const answer = decimal(product / 10 ** (d1 + d2), d1 + d2);
+  return {
+    kind: 'word',
+    prompt: `${a} × ${b} = ${product}입니다. 이를 이용하여 다음을 계산하세요.`,
+    expression: `${decimalA} × ${decimalB}`,
+    answer: String(answer),
+    answerSuffix: '',
+    promptEn: `${a} × ${b} = ${product}. Use this fact to compute the following.`,
+    expressionEn: `${decimalA} × ${decimalB}`,
+  };
+}
+
 function decimalDivide(random) {
   const divisor = randomInt(random, 2, 25) / pick(random, [1, 10]);
   const quotient = randomInt(random, 2, 200) / pick(random, [1, 10, 100]);
@@ -435,12 +455,12 @@ export const GRADE_CATALOG = [
       { id: 'g5-reduce-common-denominator', label: '약분과 통분', description: '기약분수 만들기와 분수의 크기 비교', make: (r) => { const n = randomInt(r, 1, 9); const d = randomInt(r, n + 1, 12); const k = randomInt(r, 2, 8); return inline(`${n * k}/${d * k} → 기약분수`, fractionAnswer(n * k, d * k)); } },
       { id: 'g5-fraction-add-sub', label: '분수의 덧셈과 뺄셈', description: '분모가 다른 분수의 덧셈과 뺄셈', make: fractionAddSub },
       { id: 'g5-fraction-multiply', label: '분수의 곱셈', description: '분수와 자연수, 두세 분수의 곱셈', make: fractionMultiply },
-      { id: 'g5-decimal-multiply', label: '소수의 곱셈', description: '소수와 자연수 또는 소수의 곱셈', make: decimalMultiply },
+      { id: 'g5-decimal-multiply', label: '소수의 곱셈', description: '소수와 자연수 또는 소수의 곱셈, 곱의 소수점 위치', make: (r) => (r() < 0.7 ? decimalMultiply(r) : decimalPointShift(r)) },
       { id: 'g5-perimeter-area', label: '다각형의 둘레와 넓이', description: '직사각형·삼각형·평행사변형·사다리꼴·마름모, 직각으로 이루어진 도형', make: perimeterArea },
       { id: 'g5-range-round', label: '수의 범위와 어림', description: '이상·이하·초과·미만과 올림·버림·반올림', make: rangeRound },
       { id: 'g5-average-probability', label: '평균과 가능성', description: '자료의 평균 구하기와 가능성을 분수로 나타내기', make: averageProbability },
-      { id: 'g5-solid-figure', label: '직육면체와 정육면체', description: '면·모서리·꼭짓점의 개수와 모서리 길이의 합', make: solidFigureBasic },
-      { id: 'g5-congruence-symmetry', label: '합동과 대칭', description: '대응변·대응각과 선대칭·점대칭의 성질', make: congruenceSymmetry },
+      { id: 'g5-solid-figure', label: '직육면체와 정육면체', description: '면·모서리·꼭짓점의 개수, 겨냥도의 평행·수직 관계, 전개도', make: (r) => pick(r, [solidFigureBasic, solidFigureSketch, solidFigureNet, solidFigureNet])(r) },
+      { id: 'g5-congruence-symmetry', label: '합동과 대칭', description: '대응변·대응각과 선대칭·점대칭의 성질', make: (r) => (r() < 0.55 ? congruenceSymmetry(r) : pointSymmetry(r)) },
       { id: 'g5-function-table', label: '규칙과 대응', description: '표에서 대응 규칙을 찾아 값 구하기', make: functionTable },
       { id: 'g5-block-pattern', label: '계단 모양 규칙', description: '정사각형이 늘어나는 계단 모양을 보고 몇 번째 모양의 정사각형 수 구하기', make: blockStaircasePattern },
     ],
@@ -505,6 +525,6 @@ import {
   clockRead, congruenceSymmetry, countFiguresFromPoints, dataGraphWord, dataTableMissing,
   divisionRemainder3, fractionOfWhole, functionTable, lengthCalcSimple, lineRaySegmentClassify,
   measurementUnitConvert, percentageBasic, percentageWord, perimeterArea, pictographRead,
-  polygonAngleMissing, prismPyramidCounts, rangeRound, solidFigureBasic, timeAddCalc,
-  volumeSurfaceArea, weightCapacityConvert,
+  pointSymmetry, polygonAngleMissing, prismPyramidCounts, rangeRound, solidFigureBasic,
+  solidFigureNet, solidFigureSketch, timeAddCalc, volumeSurfaceArea, weightCapacityConvert,
 } from './geometryMeasurementEngine';
