@@ -1,29 +1,42 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { useAuth } from '../../auth';
 import { useLanguage } from '../../language';
 import { AMC_UNITS } from '../../examUnits';
 
 const COPY = {
   ko: {
     home: '홈', hub: 'AMC 기출문제', title: '단원별 AMC 기출문제',
-    intro: '단원을 선택하면 해당 단원으로 태그된 기출문제·해설·이론 자료를 모아 볼 수 있습니다.',
+    intro: '단원을 선택하면 해당 단원으로 태그된 기출문제·기출변형(응용문제)·자세한 해설·이론 자료를 모아 볼 수 있습니다.',
     loading: '자료를 불러오는 중입니다...',
     error: '자료를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.',
     empty: '아직 이 단원으로 태그된 자료가 없습니다.',
     untagged: '아직 단원 태그가 없는 자료는 연도별 보기에서 확인할 수 있습니다.',
     byYear: '연도별로 보기',
     fileCount: (n) => `${n}개 자료`,
+    checkingAuth: '접근 권한을 확인하는 중입니다...',
+    needLoginTitle: '로그인이 필요합니다',
+    needLoginDesc: '단원별 AMC 기출문제(기출변형·자세한 해설 포함)는 로그인 후 구독 회원만 볼 수 있습니다. 오른쪽 위 로그인 버튼으로 먼저 로그인해주세요.',
+    needSubTitle: 'AMC 구독이 필요합니다',
+    needSubDesc: '이 페이지는 AMC 구독 회원 전용입니다. 결제·구독 서비스는 준비 중이며, 이용을 원하시면 문의하기로 연락해주세요.',
+    contactLink: '문의하기',
   },
   en: {
     home: 'Home', hub: 'AMC Archive', title: 'AMC Archive by Topic',
-    intro: 'Pick a topic to see every problem set, solution, and theory sheet tagged with it.',
+    intro: 'Pick a topic to see every problem set, variant problem, detailed solution, and theory sheet tagged with it.',
     loading: 'Loading archive...',
     error: 'Could not load the archive. Please try again shortly.',
     empty: 'No materials tagged with this topic yet.',
     untagged: 'Materials without a topic tag are still browsable by year.',
     byYear: 'Browse by year',
     fileCount: (n) => `${n} item${n === 1 ? '' : 's'}`,
+    checkingAuth: 'Checking access...',
+    needLoginTitle: 'Login required',
+    needLoginDesc: 'The AMC archive by topic (including variant problems and detailed solutions) is available to logged-in subscribers only. Please log in using the button in the header.',
+    needSubTitle: 'AMC subscription required',
+    needSubDesc: 'This page is for AMC subscribers only. Paid subscriptions are coming soon — contact us if you would like access.',
+    contactLink: 'Contact us',
   },
 };
 
@@ -49,18 +62,35 @@ const LEVELS = ['8', '10', '12'];
 export default function AmcUnitBrowser() {
   const { language } = useLanguage();
   const words = COPY[language] || COPY.en;
+  const { user, status: authStatus } = useAuth();
+  const [subStatus, setSubStatus] = useState('loading'); // loading | active | inactive
   const [manifest, setManifest] = useState(null);
   const [status, setStatus] = useState('loading');
   const [openUnit, setOpenUnit] = useState(null);
 
   useEffect(() => {
+    if (authStatus !== 'ready') return;
+    if (!user) { setSubStatus('inactive'); return; }
+    let cancelled = false;
+    setSubStatus('loading');
+    fetch('/api/subscriptions/status?subject=amc')
+      .then((res) => res.json())
+      .then((data) => { if (!cancelled) setSubStatus(data.active ? 'active' : 'inactive'); })
+      .catch(() => { if (!cancelled) setSubStatus('inactive'); });
+    return () => { cancelled = true; };
+  }, [authStatus, user]);
+
+  const entitled = authStatus === 'ready' && !!user && subStatus === 'active';
+
+  useEffect(() => {
+    if (!entitled) return;
     let cancelled = false;
     fetch('/api/amc/manifest')
       .then((res) => { if (!res.ok) throw new Error('bad response'); return res.json(); })
       .then((data) => { if (!cancelled) { setManifest(data); setStatus('ready'); } })
       .catch(() => { if (!cancelled) setStatus('error'); });
     return () => { cancelled = true; };
-  }, []);
+  }, [entitled]);
 
   const itemsByUnit = useMemo(() => {
     const map = new Map(AMC_UNITS.map((unit) => [unit.label, []]));
@@ -90,6 +120,21 @@ export default function AmcUnitBrowser() {
       <a href="/amc" className="button button-secondary" style={{ textDecoration: 'none' }}>{words.byYear}</a>
     </div>
     <p style={{ color: 'var(--ink-soft)', margin: '0 0 8px' }}>{words.intro}</p>
+
+    {authStatus !== 'ready' || subStatus === 'loading' ? <p style={{ color: 'var(--ink-soft)' }}>{words.checkingAuth}</p> : null}
+
+    {authStatus === 'ready' && !user ? <div style={{ padding: 28, textAlign: 'center', background: 'var(--card-bg)', border: '1px dashed var(--paper-line)', borderRadius: 'var(--radius)', color: 'var(--ink-soft)' }}>
+      <p style={{ fontWeight: 700, color: 'var(--ink)', margin: '0 0 6px' }}>{words.needLoginTitle}</p>
+      <p style={{ margin: 0 }}>{words.needLoginDesc}</p>
+    </div> : null}
+
+    {authStatus === 'ready' && user && subStatus === 'inactive' ? <div style={{ padding: 28, textAlign: 'center', background: 'var(--card-bg)', border: '1px dashed var(--paper-line)', borderRadius: 'var(--radius)', color: 'var(--ink-soft)' }}>
+      <p style={{ fontWeight: 700, color: 'var(--ink)', margin: '0 0 6px' }}>🔒 {words.needSubTitle}</p>
+      <p style={{ margin: '0 0 12px' }}>{words.needSubDesc}</p>
+      <a href="/contact" className="button button-secondary" style={{ textDecoration: 'none' }}>{words.contactLink}</a>
+    </div> : null}
+
+    {entitled ? <>
     <p style={{ color: 'var(--ink-soft)', fontSize: 13, margin: '0 0 28px' }}>{words.untagged}</p>
 
     {status === 'loading' ? <p style={{ color: 'var(--ink-soft)' }}>{words.loading}</p> : null}
@@ -124,5 +169,6 @@ export default function AmcUnitBrowser() {
         </div>;
       })}
     </div> : null}
+    </> : null}
   </>;
 }
