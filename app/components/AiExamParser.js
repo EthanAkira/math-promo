@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LatexMath from './LatexMath';
 import InteractiveProblemCard from './InteractiveProblemCard';
 
@@ -134,13 +134,25 @@ Solution:
 By the Pythagorean theorem:
 $$d = \\sqrt{8^2 + 6^2} = \\sqrt{64 + 36} = \\sqrt{100} = 10$$`;
 
-export default function AiExamParser({ onSaveToArchive, examType = 'csat', language = 'ko' }) {
-  const [inputText, setInputText] = useState('');
+export default function AiExamParser({ initialText = '', onSaveToArchive, examType = 'csat', language = 'ko' }) {
+  const [inputText, setInputText] = useState(initialText || '');
   const [parsedProblems, setParsedProblems] = useState([]);
   const [previewActive, setPreviewActive] = useState(false);
   const [statusMsg, setStatusMsg] = useState('');
 
   const sampleText = examType === 'amc' ? SAMPLE_AMC_RAW_TEXT : SAMPLE_CSAT_RAW_TEXT;
+
+  useEffect(() => {
+    if (initialText) {
+      setInputText(initialText);
+      const res = parseExamText(initialText);
+      if (res.length > 0) {
+        setParsedProblems(res);
+        setPreviewActive(true);
+        setStatusMsg(`⚡ 불러온 내용에서 ${res.length}개의 문제를 성공적으로 인식하여 변환했습니다.`);
+      }
+    }
+  }, [initialText]);
 
   const handleParse = () => {
     const text = inputText.trim() || sampleText;

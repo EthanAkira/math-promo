@@ -22,6 +22,7 @@ function variantOptions(level) {
 
 export default function AmcAdmin() {
   const [adminTab, setAdminTab] = useState('parser');
+  const [parserInitialText, setParserInitialText] = useState('');
   const [password, setPassword] = useState('');
   const [level, setLevel] = useState('8');
   const [year, setYear] = useState(String(new Date().getFullYear()));
@@ -150,6 +151,37 @@ export default function AmcAdmin() {
     }
   }
 
+  async function handleConvertExisting(entryLevel, entryYear, entryVariantId, entryFileType, fileEntry) {
+    setAdminTab('parser');
+    setStatus(`${entryYear} AMC ${entryLevel} ${entryVariantId} (${fileTypeLabel(entryFileType)}) 자료를 AI 파서로 로드 중...`);
+
+    if (fileEntry?.key) {
+      try {
+        const res = await fetch(`/api/amc/file?key=${encodeURIComponent(fileEntry.key)}`);
+        if (res.ok) {
+          const contentType = res.headers.get('content-type') || '';
+          if (contentType.includes('text') || contentType.includes('json') || (fileEntry.filename && fileEntry.filename.endsWith('.txt'))) {
+            const txt = await res.text();
+            setParserInitialText(txt);
+            setStatus(`기존 등록 파일 내용을 성공적으로 불러왔습니다.`);
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn('Could not read raw text stream:', e);
+      }
+    }
+
+    const template = `[문제 1] [3점] [${entryYear} AMC ${entryLevel} ${entryVariantId}]
+What is the value of $(2 + 4 + 6) / (1 + 2 + 3)$?
+(A) $1$  (B) $2$  (C) $3$  (D) $4$  (E) $5$
+[정답] 2
+[해설]
+$2 + 4 + 6 = 12$, $1 + 2 + 3 = 6$ 이므로 정답은 (B) $2$ 입니다.`;
+    setParserInitialText(template);
+    setStatus(`${entryYear} AMC ${entryLevel} ${entryVariantId} 기본 템플릿이 로드되었습니다. PDF 내용이 필요하면 복사하여 붙여넣으신 후 변환하세요.`);
+  }
+
   const fieldStyle = { padding: '10px 12px', border: '1px solid var(--paper-line)', borderRadius: 8, font: 'inherit', background: '#fff' };
   const labelStyle = { fontSize: 13, fontWeight: 700, color: 'var(--chalk-green)' };
 
@@ -198,6 +230,7 @@ export default function AmcAdmin() {
 
     {adminTab === 'parser' ? (
       <AiExamParser
+        initialText={parserInitialText}
         examType="amc"
         language="ko"
         onSaveToArchive={(problems) => {
@@ -293,10 +326,30 @@ export default function AmcAdmin() {
           <strong>{entry.year} AMC {lvl}{variant.id !== 'AMC8' ? variant.id : ''}</strong>
           {Object.keys(variant.files).map((type) => {
             const meta = variant.files[type].meta;
-            return <span key={type} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, background: 'var(--paper)', padding: '4px 10px', borderRadius: 999 }}>
-              {fileTypeLabel(type)}
+            const fileEntry = variant.files[type];
+            return <span key={type} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, background: 'var(--paper)', padding: '5px 12px', borderRadius: 999 }}>
+              <strong>{fileTypeLabel(type)}</strong>
               {meta?.unitTag ? <em style={{ fontStyle: 'normal', color: 'var(--ink-soft)' }}>· {meta.unitTag}</em> : null}
               {meta?.accessTier === 'premium' ? <em style={{ fontStyle: 'normal', color: 'var(--red-pen)', fontWeight: 700 }}>🔒 {ACCESS_TIER_LABELS.premium}</em> : null}
+              <button
+                type="button"
+                onClick={() => handleConvertExisting(lvl, entry.year, variant.id, type, fileEntry)}
+                disabled={busy}
+                style={{
+                  border: 'none',
+                  background: 'linear-gradient(135deg, var(--red, #c23b32) 0%, var(--red-dark, #8f2a24) 100%)',
+                  color: '#ffffff',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  padding: '3px 8px',
+                  borderRadius: 6,
+                  fontSize: 12,
+                  boxShadow: '0 2px 6px rgba(194,59,50,0.3)',
+                }}
+                title="이 파일을 AI 파서로 불러와 인터랙티브 문제 세트로 즉시 변환합니다."
+              >
+                ⚡ AI 변환
+              </button>
               <button type="button" onClick={() => startMove(lvl, entry.year, variant.id, type)} disabled={busy} style={{ border: 'none', background: 'none', color: 'var(--chalk-green)', fontWeight: 700, cursor: 'pointer', padding: 0 }}>이동</button>
               <button type="button" onClick={() => handleDelete(lvl, entry.year, variant.id, type)} disabled={busy} style={{ border: 'none', background: 'none', color: 'var(--red-pen)', fontWeight: 700, cursor: 'pointer', padding: 0 }}>✕</button>
             </span>;

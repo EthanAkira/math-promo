@@ -23,6 +23,7 @@ function fileTypeLabel(type) {
 
 export default function CsatAdmin() {
   const [adminTab, setAdminTab] = useState('parser');
+  const [parserInitialText, setParserInitialText] = useState('');
   const [password, setPassword] = useState('');
   const [examType, setExamType] = useState('june');
   const [grade, setGrade] = useState('g3');
@@ -152,6 +153,37 @@ export default function CsatAdmin() {
     }
   }
 
+  async function handleConvertExisting(entryExamType, entryYear, entryVariantId, entryFileType, fileEntry) {
+    setAdminTab('parser');
+    setStatus(`${entryYear} ${EXAM_TYPE_LABELS[entryExamType] || entryExamType} ${entryVariantId} (${fileTypeLabel(entryFileType)}) 자료를 AI 파서로 로드 중...`);
+
+    if (fileEntry?.key) {
+      try {
+        const res = await fetch(`/api/csat/file?key=${encodeURIComponent(fileEntry.key)}`);
+        if (res.ok) {
+          const contentType = res.headers.get('content-type') || '';
+          if (contentType.includes('text') || contentType.includes('json') || (fileEntry.filename && fileEntry.filename.endsWith('.txt'))) {
+            const txt = await res.text();
+            setParserInitialText(txt);
+            setStatus(`기존 등록 파일 내용을 성공적으로 불러왔습니다.`);
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn('Could not read raw text stream:', e);
+      }
+    }
+
+    const template = `[문제 1] [2점] [수학 I]
+$\\sqrt[3]{24} \\times 3^{\\frac{2}{3}}$ 의 값은?
+① $6$  ② $7$  ③ $8$  ④ $9$  ⑤ $10$
+[정답] 1
+[해설]
+$\\sqrt[3]{24} = 2 \\times 3^{\\frac{1}{3}}$ 이므로 $2 \\times 3^{\\frac{1}{3}} \\times 3^{\\frac{2}{3}} = 6$ 입니다.`;
+    setParserInitialText(template);
+    setStatus(`${entryYear} ${EXAM_TYPE_LABELS[entryExamType] || entryExamType} 기본 템플릿이 로드되었습니다. PDF 내용이 필요하면 복사하여 붙여넣으신 후 변환하세요.`);
+  }
+
   const fieldStyle = { padding: '10px 12px', border: '1px solid var(--paper-line)', borderRadius: 8, font: 'inherit', background: '#fff' };
   const labelStyle = { fontSize: 13, fontWeight: 700, color: 'var(--chalk-green)' };
 
@@ -200,6 +232,7 @@ export default function CsatAdmin() {
 
     {adminTab === 'parser' ? (
       <AiExamParser
+        initialText={parserInitialText}
         examType="csat"
         language="ko"
         onSaveToArchive={(problems) => {
@@ -314,11 +347,31 @@ export default function CsatAdmin() {
           <strong>{entry.year} {EXAM_TYPE_LABELS[type]} {variant.label}</strong>
           {Object.keys(variant.files).map((fkey) => {
             const meta = variant.files[fkey].meta;
-            return <span key={fkey} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, background: 'var(--paper)', padding: '4px 10px', borderRadius: 999 }}>
-              {fileTypeLabel(fkey)}
+            const fileEntry = variant.files[fkey];
+            return <span key={fkey} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, background: 'var(--paper)', padding: '5px 12px', borderRadius: 999 }}>
+              <strong>{fileTypeLabel(fkey)}</strong>
               {meta?.unitTag ? <em style={{ fontStyle: 'normal', color: 'var(--ink-soft)' }}>· {meta.unitTag}</em> : null}
               {meta?.grade ? <em style={{ fontStyle: 'normal', color: 'var(--ink-soft)' }}>· {GRADE_LABELS[meta.grade]}</em> : null}
               {meta?.accessTier === 'premium' ? <em style={{ fontStyle: 'normal', color: 'var(--red-pen)', fontWeight: 700 }}>🔒 {ACCESS_TIER_LABELS.premium}</em> : null}
+              <button
+                type="button"
+                onClick={() => handleConvertExisting(type, entry.year, variant.id, fkey, fileEntry)}
+                disabled={busy}
+                style={{
+                  border: 'none',
+                  background: 'linear-gradient(135deg, var(--red, #c23b32) 0%, var(--red-dark, #8f2a24) 100%)',
+                  color: '#ffffff',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  padding: '3px 8px',
+                  borderRadius: 6,
+                  fontSize: 12,
+                  boxShadow: '0 2px 6px rgba(194,59,50,0.3)',
+                }}
+                title="이 파일을 AI 파서로 불러와 인터랙티브 문제 세트로 즉시 변환합니다."
+              >
+                ⚡ AI 변환
+              </button>
               <button type="button" onClick={() => startMove(type, entry.year, variant.id, fkey)} disabled={busy} style={{ border: 'none', background: 'none', color: 'var(--chalk-green)', fontWeight: 700, cursor: 'pointer', padding: 0 }}>이동</button>
               <button type="button" onClick={() => handleDelete(type, entry.year, variant.id, fkey)} disabled={busy} style={{ border: 'none', background: 'none', color: 'var(--red-pen)', fontWeight: 700, cursor: 'pointer', padding: 0 }}>✕</button>
             </span>;
