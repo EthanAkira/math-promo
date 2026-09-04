@@ -111,17 +111,62 @@ export function parseExamText(rawText) {
   const dottedRegex = /(?:^|\n)\s*(?:\[\s*문제\s*(\d{1,2})\s*\]|【\s*문제\s*(\d{1,2})\s*】|\bProblem\s+(\d{1,2})[\.:]?|\bProb\s*(\d{1,2})[\.:]?|\b문\s*(\d{1,2})[\.:]|\b문제\s*(\d{1,2})[\.:]?|(\d{1,2})\s*번[\.:]?|(\d{1,2})\s*[\.\)]\s+)/gi;
   const combinedRegex = /(?:^|\n)\s*(?:\[\s*문제\s*(\d{1,2})\s*\]|【\s*문제\s*(\d{1,2})\s*】|\bProblem\s+(\d{1,2})[\.:]?|\bProb\s*(\d{1,2})[\.:]?|\b문\s*(\d{1,2})[\.:]|\b문제\s*(\d{1,2})[\.:]?|(\d{1,2})\s*번[\.:]?|(\d{1,2})\s*[\.\)]\s+|(?<=^|\n)\s*([1-9]|[12]\d|30)\s+(?=[A-Z가-힣\"“\$\\\(]))/gi;
 
+  const INSTRUCTION_KEYWORDS = [
+    'DO NOT OPEN', 'twenty-five question', 'answer form', 'penalty for guessing',
+    'scratch paper', 'drawn to scale', 'before beginning the test', 'minutes to complete',
+    'finish the exam', 'sign your name', 'proctor', 'blackened circles',
+    'administer this exam', "teachers' manual", 'rules and instructions', 'certification form'
+  ];
+
+  function isInstructionSnippet(snippet) {
+    const s = (snippet || '').toLowerCase();
+    return INSTRUCTION_KEYWORDS.some((kw) => s.includes(kw.toLowerCase()));
+  }
+
   function collectMatches(regex) {
     const arr = [];
     let m;
     while ((m = regex.exec(examBody)) !== null) {
       const pNum = parseInt(m[1] || m[2] || m[3] || m[4] || m[5] || m[6] || m[7] || m[8] || m[9], 10);
-      arr.push({ index: m.index, pNum });
+      if (pNum >= 1 && pNum <= 30) {
+        const snippet = examBody.slice(m.index, m.index + 120);
+        if (!isInstructionSnippet(snippet)) {
+          arr.push({ index: m.index, pNum });
+        }
+      }
     }
+    arr.sort((a, b) => a.index - b.index);
     return arr;
   }
 
-  // Filter for the best increasing sequence (e.g., 1, 2, 3 ... 25 or 30), bypassing cover page instructions
+  // Extract all distinct problem numbers (handles booklet permutations, columns & standard sequence)
+  function extractBookletAwareProblems(candidates) {
+    if (!candidates || candidates.length === 0) return [];
+    const chunksByNum = new Map();
+
+    for (let i = 0; i < candidates.length; i++) {
+      const start = candidates[i].index;
+      const end = i + 1 < candidates.length ? candidates[i + 1].index : examBody.length;
+      const chunk = examBody.slice(start, end).trim();
+      const pNum = candidates[i].pNum;
+      const hasChoices = /\([A-E]\)|[①②③④⑤]/.test(chunk);
+      const existing = chunksByNum.get(pNum);
+      const existingHasChoices = existing ? /\([A-E]\)|[①②③④⑤]/.test(existing) : false;
+
+      if (!existing) {
+        chunksByNum.set(pNum, chunk);
+      } else if (hasChoices && !existingHasChoices) {
+        chunksByNum.set(pNum, chunk);
+      } else if (hasChoices === existingHasChoices && chunk.length > existing.length) {
+        chunksByNum.set(pNum, chunk);
+      }
+    }
+
+    const sortedNums = Array.from(chunksByNum.keys()).sort((a, b) => a - b);
+    return sortedNums.map((num) => ({ pNum: num, chunk: chunksByNum.get(num) }));
+  }
+
+  // Linear fallback in case booklet extraction finds very few problems
   function extractBestSequence(candidates, maxExpected = 30) {
     let sequences = [];
     let currentSeq = [];
@@ -143,24 +188,27 @@ export function parseExamText(rawText) {
     return sequences[0] || [];
   }
 
-  const dottedSeq = extractBestSequence(collectMatches(dottedRegex), 30);
-  const combinedSeq = extractBestSequence(collectMatches(combinedRegex), 30);
-  const matches = (combinedSeq.length >= dottedSeq.length && combinedSeq.length >= 5) ? combinedSeq : (dottedSeq.length > 0 ? dottedSeq : combinedSeq);
+  const rawDotted = collectMatches(dottedRegex);
+  const rawCombined = collectMatches(combinedRegex);
+  const bookletDotted = extractBookletAwareProblems(rawDotted);
+  const bookletCombined = extractBookletAwareProblems(rawCombined);
 
-  const problemBlocks = [];
-  if (matches.length > 0) {
-    for (let i = 0; i < matches.length; i++) {
-      const start = matches[i].index;
-      const end = i + 1 < matches.length ? matches[i + 1].index : examBody.length;
-      const chunk = examBody.slice(start, end).trim();
-      if (chunk) {
-        problemBlocks.push({ chunk, pNum: matches[i].pNum });
-      }
-    }
+  let problemBlocks = [];
+  if (bookletCombined.length >= 10 || bookletDotted.length >= 10) {
+    problemBlocks = bookletCombined.length >= bookletDotted.length ? bookletCombined : bookletDotted;
   } else {
-    // Fallback: split by paragraph blocks
-    const chunks = examBody.split(/\n\s*\n/).map((c) => c.trim()).filter(Boolean);
-    chunks.forEach((c, idx) => problemBlocks.push({ chunk: c, pNum: idx + 1 }));
+    const seq = extractBestSequence(rawCombined.length >= rawDotted.length ? rawCombined : rawDotted, 30);
+    if (seq.length > 0) {
+      for (let i = 0; i < seq.length; i++) {
+        const start = seq[i].index;
+        const end = i + 1 < seq.length ? seq[i + 1].index : examBody.length;
+        const chunk = examBody.slice(start, end).trim();
+        if (chunk) problemBlocks.push({ chunk, pNum: seq[i].pNum });
+      }
+    } else {
+      const chunks = examBody.split(/\n\s*\n/).map((c) => c.trim()).filter(Boolean);
+      chunks.forEach((c, idx) => problemBlocks.push({ chunk: c, pNum: idx + 1 }));
+    }
   }
 
   const parsedProblems = [];
