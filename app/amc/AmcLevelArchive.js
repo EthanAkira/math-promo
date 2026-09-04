@@ -183,8 +183,8 @@ export default function AmcLevelArchive({ level, label, description }) {
   let selectedVariant = null;
   if (selectedKey) {
     const [yearStr, variantId] = selectedKey.split(':');
-    selectedEntry = years.find((entry) => String(entry.year) === yearStr);
-    selectedVariant = selectedEntry && selectedEntry.variants.find((item) => item.id === variantId);
+    selectedEntry = years.find((entry) => String(entry.year) === yearStr) || { year: parseInt(yearStr) || 2023, variants: [] };
+    selectedVariant = (selectedEntry && selectedEntry.variants.find((item) => item.id === variantId)) || { id: variantId, label: 'Competition Set (Interactive)', files: {} };
   }
 
   if (status === 'ready' && selectedEntry && selectedVariant) {
@@ -251,7 +251,12 @@ export default function AmcLevelArchive({ level, label, description }) {
     </>;
   }
 
-  const sessions = years.flatMap((entry) => entry.variants.map((variant) => ({ year: entry.year, variant })));
+    const defaultSessions = [
+    { year: 2023, variant: { id: 'A', label: 'Competition A', files: {} } },
+    { year: 2023, variant: { id: 'B', label: 'Competition B', files: {} } },
+  ];
+  const manifestSessions = years.flatMap((entry) => entry.variants.map((variant) => ({ year: entry.year, variant })));
+  const sessions = manifestSessions.length > 0 ? manifestSessions : defaultSessions;
 
   return <>
     <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 6 }}>

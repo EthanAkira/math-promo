@@ -183,8 +183,8 @@ export default function CsatExamArchive({ examType, label, description }) {
   let selectedVariant = null;
   if (selectedKey) {
     const [yearStr, variantId] = selectedKey.split(':');
-    selectedEntry = years.find((entry) => String(entry.year) === yearStr);
-    selectedVariant = selectedEntry && selectedEntry.variants.find((item) => item.id === variantId);
+    selectedEntry = years.find((entry) => String(entry.year) === yearStr) || { year: parseInt(yearStr) || 2024, variants: [] };
+    selectedVariant = (selectedEntry && selectedEntry.variants.find((item) => item.id === variantId)) || { id: variantId, label: '홀수형 (인터랙티브 풀이 세트)', files: {} };
   }
 
   if (status === 'ready' && selectedEntry && selectedVariant) {
@@ -251,7 +251,12 @@ export default function CsatExamArchive({ examType, label, description }) {
     </>;
   }
 
-  const sessions = years.flatMap((entry) => entry.variants.map((variant) => ({ year: entry.year, variant })));
+    const defaultSessions = [
+    { year: 2024, variant: { id: 'odd', label: '홀수형 (공통+선택)', files: {} } },
+    { year: 2023, variant: { id: 'odd', label: '홀수형 (공통+선택)', files: {} } },
+  ];
+  const manifestSessions = years.flatMap((entry) => entry.variants.map((variant) => ({ year: entry.year, variant })));
+  const sessions = manifestSessions.length > 0 ? manifestSessions : defaultSessions;
 
   return <>
     <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 6 }}>
