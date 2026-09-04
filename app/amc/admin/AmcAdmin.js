@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import AiExamParser, { extractTextFromPdf } from '../../components/AiExamParser';
+import SubscriptionAdmin from '../../components/SubscriptionAdmin';
 import { AMC_UNITS } from '../../examUnits';
 
 const FILE_TYPE_LABELS = {
@@ -262,7 +263,26 @@ $$4! = 24$$`;
       >
         📁 원본 파일 (PDF/TXT) 업로드 및 관리
       </button>
+      <button
+        type="button"
+        onClick={() => setAdminTab('subscriptions')}
+        style={{
+          fontSize: '15px',
+          fontWeight: '800',
+          padding: '10px 20px',
+          borderRadius: '10px',
+          border: 'none',
+          cursor: 'pointer',
+          background: adminTab === 'subscriptions' ? 'var(--chalk-green, #2f6d4f)' : '#ede7db',
+          color: adminTab === 'subscriptions' ? '#ffffff' : 'var(--ink, #1f2733)',
+          boxShadow: adminTab === 'subscriptions' ? '0 4px 14px rgba(47,109,79,0.25)' : 'none',
+        }}
+      >
+        👑 구독 회원 관리
+      </button>
     </div>
+
+    {adminTab === 'subscriptions' ? <SubscriptionAdmin defaultSubject="amc" /> : null}
 
     {adminTab === 'parser' ? (
       <AiExamParser

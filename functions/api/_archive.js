@@ -89,3 +89,31 @@ export async function hasActiveSubscription(db, userId, subject) {
   if (!row) return false;
   return row.expires_at == null || row.expires_at > Date.now();
 }
+
+export async function findUserByEmail(db, email) {
+  if (!db || !email) return null;
+  return db.prepare('SELECT id, email, name FROM users WHERE email = ?').bind(String(email).trim().toLowerCase()).first();
+}
+
+// expiresAt: epoch ms, or null for lifetime access.
+export async function upsertSubscription(db, userId, subject, expiresAt) {
+  const now = Date.now();
+  await db.prepare(
+    `INSERT INTO user_subscriptions (user_id, subject, started_at, expires_at) VALUES (?, ?, ?, ?)
+     ON CONFLICT(user_id, subject) DO UPDATE SET expires_at = excluded.expires_at`
+  ).bind(userId, subject, now, expiresAt).run();
+}
+
+export async function deleteSubscription(db, userId, subject) {
+  await db.prepare('DELETE FROM user_subscriptions WHERE user_id = ? AND subject = ?').bind(userId, subject).run();
+}
+
+export async function listSubscriptionsWithUsers(db) {
+  if (!db) return [];
+  const { results } = await db.prepare(
+    `SELECT s.user_id, s.subject, s.started_at, s.expires_at, u.email, u.name
+     FROM user_subscriptions s JOIN users u ON u.id = s.user_id
+     ORDER BY s.started_at DESC`
+  ).all();
+  return results || [];
+}
