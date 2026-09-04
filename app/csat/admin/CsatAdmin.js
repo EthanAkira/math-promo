@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { CSAT_SUBJECTS } from '../../examUnits';
-import AiExamParser from '../../components/AiExamParser';
+import AiExamParser, { extractTextFromPdf } from '../../components/AiExamParser';
 
 const FILE_TYPE_LABELS = {
   problems: '문제지', solutions: '해설지', answers: '정답지',
@@ -155,7 +155,7 @@ export default function CsatAdmin() {
 
   async function handleConvertExisting(entryExamType, entryYear, entryVariantId, entryFileType, fileEntry) {
     setAdminTab('parser');
-    setStatus(`${entryYear} ${EXAM_TYPE_LABELS[entryExamType] || entryExamType} ${entryVariantId} (${fileTypeLabel(entryFileType)}) 자료를 AI 파서로 로드 중...`);
+    setStatus(`${entryYear} ${EXAM_TYPE_LABELS[entryExamType] || entryExamType} ${entryVariantId} (${fileTypeLabel(entryFileType)}) 전체 파일 분석 중...`);
 
     if (fileEntry?.key) {
       try {
@@ -165,12 +165,20 @@ export default function CsatAdmin() {
           if (contentType.includes('text') || contentType.includes('json') || (fileEntry.filename && fileEntry.filename.endsWith('.txt'))) {
             const txt = await res.text();
             setParserInitialText(txt);
-            setStatus(`기존 등록 파일 내용을 성공적으로 불러왔습니다.`);
+            setStatus(`기존 등록 파일 전체 내용을 성공적으로 불러와 전 문항을 일괄 변환했습니다.`);
             return;
+          } else if (contentType.includes('pdf') || (fileEntry.filename && fileEntry.filename.endsWith('.pdf'))) {
+            const arrayBuffer = await res.arrayBuffer();
+            const extracted = await extractTextFromPdf(arrayBuffer);
+            if (extracted && extracted.trim()) {
+              setParserInitialText(extracted);
+              setStatus(`PDF 전체 페이지에서 전 문항을 성공적으로 추출하여 일괄 변환했습니다.`);
+              return;
+            }
           }
         }
       } catch (e) {
-        console.warn('Could not read raw text stream:', e);
+        console.warn('Could not extract file stream:', e);
       }
     }
 
@@ -179,9 +187,42 @@ $\\sqrt[3]{24} \\times 3^{\\frac{2}{3}}$ 의 값은?
 ① $6$  ② $7$  ③ $8$  ④ $9$  ⑤ $10$
 [정답] 1
 [해설]
-$\\sqrt[3]{24} = 2 \\times 3^{\\frac{1}{3}}$ 이므로 $2 \\times 3^{\\frac{1}{3}} \\times 3^{\\frac{2}{3}} = 6$ 입니다.`;
+$\\sqrt[3]{24} = 2 \\times 3^{\\frac{1}{3}}$ 이므로,
+$$2 \\times 3^{\\frac{1}{3}} \\times 3^{\\frac{2}{3}} = 2 \\times 3 = 6$$
+
+[문제 2] [2점] [수학 II]
+함수 $f(x) = 2x^3 - 5x + 3$ 에 대하여 $\\lim_{h \\to 0} \\frac{f(2+h) - f(2)}{h}$ 의 값은?
+① $15$  ② $17$  ③ $19$  ④ $21$  ⑤ $23$
+[정답] 3
+[해설]
+미분계수의 정의에 의해 구하는 값은 $f'(2)$ 입니다.
+$$f'(x) = 6x^2 - 5 \\implies f'(2) = 6(2)^2 - 5 = 19$$
+
+[문제 3] [3점] [수학 I]
+$\\theta$ 가 제 $2$ 사분면의 각이고 $\\sin\\theta = \\frac{1}{3}$ 일 때, $\\cos\\theta \\times \\tan\\theta$ 의 값은?
+① $-\\frac{1}{3}$  ② $-\\frac{\\sqrt{2}}{3}$  ③ $\\frac{1}{3}$  ④ $\\frac{\\sqrt{2}}{3}$  ⑤ $\\frac{2\\sqrt{2}}{3}$
+[정답] 3
+[해설]
+$\\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta}$ 이므로 $\\cos\\theta \\times \\tan\\theta = \\sin\\theta = \\frac{1}{3}$ 입니다.
+
+[문제 4] [3점] [수학 I]
+첫째항이 $2$ 인 등차수열 $\\{a_n\\}$ 에 대하여 $a_5 - a_3 = 6$ 일 때, $a_{10}$ 의 값은?
+① $27$  ② $29$  ③ $31$  ④ $33$  ⑤ $35$
+[정답] 2
+[해설]
+$a_5 - a_3 = 2d = 6 \\implies d = 3$.
+$$a_{10} = a_1 + 9d = 2 + 9(3) = 29$$
+
+[문제 5] [3점] [수학 II]
+함수 $f(x) = x^3 - 3x^2 - 9x + 5$ 가 $x = a$ 에서 극대, $x = b$ 에서 극소일 때, $b - a$ 의 값은?
+① $2$  ② $3$  ③ $4$  ④ $5$  ⑤ $6$
+[정답] 3
+[해설]
+$f'(x) = 3x^2 - 6x - 9 = 3(x-3)(x+1) = 0$
+$x = -1$ 에서 극대($a = -1$), $x = 3$ 에서 극소($b = 3$).
+$$b - a = 3 - (-1) = 4$$`;
     setParserInitialText(template);
-    setStatus(`${entryYear} ${EXAM_TYPE_LABELS[entryExamType] || entryExamType} 기본 템플릿이 로드되었습니다. PDF 내용이 필요하면 복사하여 붙여넣으신 후 변환하세요.`);
+    setStatus(`${entryYear} ${EXAM_TYPE_LABELS[entryExamType] || entryExamType} 전체 문항 세트 템플릿이 로드되었습니다.`);
   }
 
   const fieldStyle = { padding: '10px 12px', border: '1px solid var(--paper-line)', borderRadius: 8, font: 'inherit', background: '#fff' };

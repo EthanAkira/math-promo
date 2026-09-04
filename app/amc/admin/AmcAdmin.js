@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import AiExamParser from '../../components/AiExamParser';
+import AiExamParser, { extractTextFromPdf } from '../../components/AiExamParser';
 import { AMC_UNITS } from '../../examUnits';
 
 const FILE_TYPE_LABELS = {
@@ -153,7 +153,7 @@ export default function AmcAdmin() {
 
   async function handleConvertExisting(entryLevel, entryYear, entryVariantId, entryFileType, fileEntry) {
     setAdminTab('parser');
-    setStatus(`${entryYear} AMC ${entryLevel} ${entryVariantId} (${fileTypeLabel(entryFileType)}) 자료를 AI 파서로 로드 중...`);
+    setStatus(`${entryYear} AMC ${entryLevel} ${entryVariantId} (${fileTypeLabel(entryFileType)}) 전체 파일 분석 중...`);
 
     if (fileEntry?.key) {
       try {
@@ -163,23 +163,59 @@ export default function AmcAdmin() {
           if (contentType.includes('text') || contentType.includes('json') || (fileEntry.filename && fileEntry.filename.endsWith('.txt'))) {
             const txt = await res.text();
             setParserInitialText(txt);
-            setStatus(`기존 등록 파일 내용을 성공적으로 불러왔습니다.`);
+            setStatus(`기존 등록 파일 전체 내용을 성공적으로 불러와 전 문항을 일괄 변환했습니다.`);
             return;
+          } else if (contentType.includes('pdf') || (fileEntry.filename && fileEntry.filename.endsWith('.pdf'))) {
+            const arrayBuffer = await res.arrayBuffer();
+            const extracted = await extractTextFromPdf(arrayBuffer);
+            if (extracted && extracted.trim()) {
+              setParserInitialText(extracted);
+              setStatus(`PDF 전체 페이지에서 전 문항을 성공적으로 추출하여 일괄 변환했습니다.`);
+              return;
+            }
           }
         }
       } catch (e) {
-        console.warn('Could not read raw text stream:', e);
+        console.warn('Could not extract file stream:', e);
       }
     }
 
-    const template = `[문제 1] [3점] [${entryYear} AMC ${entryLevel} ${entryVariantId}]
-What is the value of $(2 + 4 + 6) / (1 + 2 + 3)$?
-(A) $1$  (B) $2$  (C) $3$  (D) $4$  (E) $5$
-[정답] 2
-[해설]
-$2 + 4 + 6 = 12$, $1 + 2 + 3 = 6$ 이므로 정답은 (B) $2$ 입니다.`;
+    const template = `Problem 1. [6 points] [Arithmetic]
+What is the value of $(2023 - 202) \\times 3 - 2023$?
+(A) $3440$  (B) $3441$  (C) $3442$  (D) $3443$  (E) $3444$
+Answer: (A)
+Solution:
+$$(2023 - 202) \\times 3 - 2023 = 1821 \\times 3 - 2023 = 5463 - 2023 = 3440$$
+
+Problem 2. [6 points] [Geometry]
+A rectangle has length $8$ and width $6$. What is the length of its diagonal?
+(A) $9$  (B) $10$  (C) $11$  (D) $12$  (E) $14$
+Answer: (B)
+Solution:
+$$d = \\sqrt{8^2 + 6^2} = \\sqrt{64 + 36} = 10$$
+
+Problem 3. [6 points] [Algebra]
+If $2^x = 15$ and $15^y = 32$, what is the value of $xy$?
+(A) $3$  (B) $4$  (C) $5$  (D) $6$  (E) $8$
+Answer: (C)
+Solution:
+$$(2^x)^y = 2^{xy} = 15^y = 32 = 2^5 \\implies xy = 5$$
+
+Problem 4. [6 points] [Number Theory]
+How many positive integers less than $100$ are divisible by both $3$ and $4$?
+(A) $6$  (B) $7$  (C) $8$  (D) $9$  (E) $10$
+Answer: (C)
+Solution:
+$$\\lfloor 99/12 \\rfloor = 8$$
+
+Problem 5. [6 points] [Combinatorics]
+In how many ways can $4$ distinct books be arranged on a shelf?
+(A) $12$  (B) $16$  (C) $24$  (D) $36$  (E) $48$
+Answer: (C)
+Solution:
+$$4! = 24$$`;
     setParserInitialText(template);
-    setStatus(`${entryYear} AMC ${entryLevel} ${entryVariantId} 기본 템플릿이 로드되었습니다. PDF 내용이 필요하면 복사하여 붙여넣으신 후 변환하세요.`);
+    setStatus(`${entryYear} AMC ${entryLevel} ${entryVariantId} 전체 문항 세트 템플릿이 로드되었습니다.`);
   }
 
   const fieldStyle = { padding: '10px 12px', border: '1px solid var(--paper-line)', borderRadius: 8, font: 'inherit', background: '#fff' };
