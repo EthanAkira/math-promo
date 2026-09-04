@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { CSAT_SUBJECTS } from '../../examUnits';
+import AiExamParser from '../../components/AiExamParser';
 
 const FILE_TYPE_LABELS = {
   problems: '문제지', solutions: '해설지', answers: '정답지',
