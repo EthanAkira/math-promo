@@ -13,6 +13,86 @@ export const AMC_UNITS = [
   { id: 'logic-misc', label: '논리와 기타', labelEn: 'Logic & Miscellaneous', description: '단어 문제·논리적 추론' },
 ];
 
+// Finer-grained taxonomy for PER-PROBLEM classification (not per-file like AMC_UNITS above).
+// Used by amcProblemClassifier.js to tag individual problems extracted from uploaded AMC PDFs,
+// and by the "단원별 AMC 기출문제" browser to group actual problems (not just whole files) by topic.
+export const AMC_FINE_SUBJECTS = [
+  {
+    id: 'algebra', label: '대수', labelEn: 'Algebra',
+    units: [
+      { id: 'equations-inequalities', label: '방정식과 부등식', labelEn: 'Equations & Inequalities' },
+      { id: 'ratios-percent', label: '비·비율과 백분율', labelEn: 'Ratios, Rates & Percent' },
+      { id: 'sequences-patterns', label: '수열과 규칙', labelEn: 'Sequences & Patterns' },
+      { id: 'expressions-substitution', label: '문자식과 대입', labelEn: 'Expressions & Substitution' },
+    ],
+  },
+  {
+    id: 'geometry', label: '기하', labelEn: 'Geometry',
+    units: [
+      { id: 'angles-plane-figures', label: '평면도형과 각도', labelEn: 'Angles & Plane Figures' },
+      { id: 'triangles', label: '삼각형의 성질', labelEn: 'Triangles' },
+      { id: 'quadrilaterals-polygons', label: '사각형과 다각형', labelEn: 'Quadrilaterals & Polygons' },
+      { id: 'circles', label: '원과 부채꼴', labelEn: 'Circles & Sectors' },
+      { id: 'solids', label: '입체도형 (부피·겉넓이)', labelEn: 'Solids (Volume & Surface Area)' },
+      { id: 'coordinate-geometry', label: '좌표평면', labelEn: 'Coordinate Geometry' },
+    ],
+  },
+  {
+    id: 'number-theory', label: '정수론', labelEn: 'Number Theory',
+    units: [
+      { id: 'primes-factorization', label: '소수와 소인수분해', labelEn: 'Primes & Factorization' },
+      { id: 'divisors-multiples', label: '약수와 배수', labelEn: 'Divisors & Multiples' },
+      { id: 'remainders-divisibility', label: '나머지와 나누어떨어짐', labelEn: 'Remainders & Divisibility' },
+      { id: 'bases-digits', label: '진법과 자릿수', labelEn: 'Bases & Digit Problems' },
+    ],
+  },
+  {
+    id: 'combinatorics-probability', label: '조합과 확률', labelEn: 'Counting & Probability',
+    units: [
+      { id: 'counting', label: '경우의 수', labelEn: 'Counting Principles' },
+      { id: 'probability', label: '확률', labelEn: 'Probability' },
+      { id: 'permutations-combinations', label: '순열과 조합', labelEn: 'Permutations & Combinations' },
+    ],
+  },
+  {
+    id: 'logic-word-problems', label: '논리와 문장제', labelEn: 'Logic & Word Problems',
+    units: [
+      { id: 'logical-reasoning', label: '논리적 추론', labelEn: 'Logical Reasoning' },
+      { id: 'word-problems', label: '문장제 (속력·나이·금액)', labelEn: 'Word Problems' },
+      { id: 'games-strategy', label: '게임과 전략', labelEn: 'Games & Strategy' },
+    ],
+  },
+  {
+    id: 'functions', label: '함수', labelEn: 'Functions',
+    units: [
+      { id: 'function-properties', label: '함수의 성질과 그래프', labelEn: 'Function Properties & Graphs' },
+    ],
+  },
+  {
+    id: 'advanced', label: '삼각함수·복소수 (AMC 10·12)', labelEn: 'Trig & Complex Numbers (AMC 10/12)',
+    units: [
+      { id: 'trigonometry', label: '삼각함수', labelEn: 'Trigonometry' },
+      { id: 'complex-numbers', label: '복소수', labelEn: 'Complex Numbers' },
+    ],
+  },
+  {
+    id: 'uncategorized', label: '미분류', labelEn: 'Uncategorized',
+    units: [
+      { id: 'uncategorized', label: '자동 분류 미확정', labelEn: 'Not yet classified' },
+    ],
+  },
+];
+
+export function flattenAmcFineUnits() {
+  return AMC_FINE_SUBJECTS.flatMap((subject) => subject.units.map((unit) => ({
+    ...unit, subjectId: subject.id, subjectLabel: subject.label, subjectLabelEn: subject.labelEn,
+  })));
+}
+
+export function findAmcFineUnit(unitId) {
+  return flattenAmcFineUnits().find((unit) => unit.id === unitId) || null;
+}
+
 // Matches the site's existing 2015/2022 개정 교육과정 dual-naming convention
 // (see app/curriculumCatalog.js) so the CSAT archive doesn't invent a separate scheme.
 export const CSAT_SUBJECTS = [

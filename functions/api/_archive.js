@@ -117,3 +117,45 @@ export async function listSubscriptionsWithUsers(db) {
   ).all();
   return results || [];
 }
+
+// Per-problem archive (individual questions extracted from an uploaded exam PDF and
+// classified into a fine-grained unit), distinct from archive_items which tags whole files.
+export async function upsertArchiveProblem(db, fields) {
+  if (!db) return;
+  const {
+    subject, level = null, grade = null, examType = null, year, variant = null, problemNumber,
+    subjectId = null, unitId = null, questionText = null, choicesJson = null, answer = null,
+    explanation = null, points = null, sourceFileKey, classifyMethod = 'auto-keyword',
+  } = fields;
+  const now = Date.now();
+  await db.prepare(
+    `INSERT INTO archive_problems (
+       id, subject, level, grade, exam_type, year, variant, problem_number, subject_id, unit_id,
+       question_text, choices_json, answer, explanation, points, source_file_key, classify_method,
+       created_at, updated_at
+     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+     ON CONFLICT(subject, level, year, variant, problem_number) DO UPDATE SET
+       grade = excluded.grade, exam_type = excluded.exam_type, subject_id = excluded.subject_id,
+       unit_id = excluded.unit_id, question_text = excluded.question_text, choices_json = excluded.choices_json,
+       answer = excluded.answer, explanation = excluded.explanation, points = excluded.points,
+       source_file_key = excluded.source_file_key, classify_method = excluded.classify_method,
+       updated_at = excluded.updated_at`
+  ).bind(
+    genId(), subject, level, grade, examType, year, variant, problemNumber, subjectId, unitId,
+    questionText, choicesJson, answer, explanation, points, sourceFileKey, classifyMethod, now, now
+  ).run();
+}
+
+export async function listArchiveProblemsBySubject(db, subject, level = null) {
+  if (!db) return [];
+  const query = level
+    ? db.prepare('SELECT * FROM archive_problems WHERE subject = ? AND level = ? ORDER BY year DESC, problem_number ASC').bind(subject, level)
+    : db.prepare('SELECT * FROM archive_problems WHERE subject = ? ORDER BY year DESC, problem_number ASC').bind(subject);
+  const { results } = await query.all();
+  return results || [];
+}
+
+export async function deleteArchiveProblemsBySource(db, sourceFileKey) {
+  if (!db) return;
+  await db.prepare('DELETE FROM archive_problems WHERE source_file_key = ?').bind(sourceFileKey).run();
+}

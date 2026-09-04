@@ -5,6 +5,7 @@ import AiExamParser, { extractTextFromPdf, parseExamText } from '../../component
 import SubscriptionAdmin from '../../components/SubscriptionAdmin';
 import { AMC_UNITS } from '../../examUnits';
 import { getExamFullText } from '../../data/sampleExams';
+import { classifyAmcProblem } from '../../amcProblemClassifier';
 
 const FILE_TYPE_LABELS = {
   problems: '문제지', solutions: '해설지', answers: '정답지',
@@ -228,6 +229,68 @@ export default function AmcAdmin() {
     setStatus(`${entryYear} AMC ${entryLevel} ${entryVariantId} 전체 25문항 표준 세트가 로드되었습니다.`);
   }
 
+  async function handleClassifyLevel(targetLevel) {
+    if (!password) { setStatus('분류하려면 먼저 비밀번호를 입력해주세요.'); return; }
+    const entries = manifest?.[targetLevel] || [];
+    const files = [];
+    for (const entry of entries) {
+      for (const variant of entry.variants) {
+        for (const [type, fileEntry] of Object.entries(variant.files)) {
+          if (type === 'problems' || type === 'variant_problem') files.push({ year: entry.year, variantId: variant.id, fileEntry });
+        }
+      }
+    }
+    if (files.length === 0) { setStatus(`AMC ${targetLevel}에 등록된 문제지 파일이 없습니다.`); return; }
+
+    setBusy(true);
+    let totalSaved = 0;
+    for (let i = 0; i < files.length; i += 1) {
+      const f = files[i];
+      setStatus(`(${i + 1}/${files.length}) ${f.year} AMC ${targetLevel} ${f.variantId} 분석 중...`);
+      try {
+        const res = await fetch(`/api/amc/file?key=${encodeURIComponent(f.fileEntry.key)}`);
+        if (!res.ok) continue;
+        const contentType = res.headers.get('content-type') || '';
+        let text = '';
+        if (contentType.includes('pdf') || (f.fileEntry.filename || '').toLowerCase().endsWith('.pdf')) {
+          text = await extractTextFromPdf(await res.arrayBuffer());
+        } else {
+          text = await res.text();
+        }
+        if (!text || !text.trim()) continue;
+
+        const parsed = parseExamText(text);
+        if (!parsed.length) continue;
+
+        const items = parsed.map((p) => {
+          const cls = classifyAmcProblem(p.question);
+          return {
+            problemNumber: p.number,
+            subjectId: cls.subjectId,
+            unitId: cls.unitId,
+            question: p.question,
+            choices: p.choices,
+            answer: p.correctAnswer,
+            explanation: p.explanation,
+            points: p.points,
+          };
+        });
+
+        const saveRes = await fetch('/api/amc/problems', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password, level: targetLevel, year: f.year, variant: f.variantId, sourceFileKey: f.fileEntry.key, items }),
+        });
+        const saveData = await saveRes.json();
+        if (saveRes.ok) totalSaved += saveData.saved || 0;
+      } catch (e) {
+        console.warn('AMC problem classify error:', f.year, e);
+      }
+    }
+    setBusy(false);
+    setStatus(`✅ AMC ${targetLevel} 전체 ${files.length}개 문제지 분석 완료 — 총 ${totalSaved}개 문제를 단원별로 자동 분류·저장했습니다.`);
+  }
+
   const fieldStyle = { padding: '10px 12px', border: '1px solid var(--paper-line)', borderRadius: 8, font: 'inherit', background: '#fff' };
   const labelStyle = { fontSize: 13, fontWeight: 700, color: 'var(--chalk-green)' };
 
@@ -393,6 +456,23 @@ export default function AmcAdmin() {
       <button type="submit" className="button button-primary" disabled={busy} style={{ justifySelf: 'start' }}>업로드</button>
       {status ? <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: status.includes('완료') || status.includes('삭제') ? 'var(--chalk-green)' : 'var(--red-pen)' }}>{status}</p> : null}
     </form>
+
+    <div style={{ display: 'grid', gap: 10, padding: 18, background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', marginBottom: 24 }}>
+      <div>
+        <strong style={{ fontSize: 15 }}>🗂️ 단원별 문제은행 자동 분류</strong>
+        <p style={{ fontSize: 13, color: 'var(--ink-soft)', margin: '4px 0 0' }}>
+          레벨을 선택하면 등록된 모든 문제지(문제/변형문제) 파일을 읽어 문항별로 분리하고, 키워드 기반 규칙으로 세부 단원을 자동 태깅해 저장합니다.
+          진짜 AI(LLM) 판독이 아닌 규칙 기반 분류이므로 완벽하지 않을 수 있습니다 — 다시 실행하면 해당 파일의 분류가 갱신됩니다.
+        </p>
+      </div>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        {['8', '10', '12'].map((lvl) => (
+          <button key={lvl} type="button" className="button button-secondary" disabled={busy} onClick={() => handleClassifyLevel(lvl)}>
+            AMC {lvl} 전체 문제 분류 실행
+          </button>
+        ))}
+      </div>
+    </div>
 
     <h2 style={{ fontSize: 18, margin: '0 0 12px' }}>현재 등록된 자료</h2>
     <div style={{ display: 'grid', gap: 10 }}>
