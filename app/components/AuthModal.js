@@ -1,9 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../auth';
 import { useLanguage } from '../language';
 import { tr } from '../i18n';
+import { COUNTRIES, isKorea } from '../countries';
+
+// Grade choices depend on school type + country: a Korean general-school signup gets the
+// familiar 초/중/고 breakdown, everything else (international schools, or any other country)
+// falls back to a generic Grade 1-12 list since we don't have every country's own school
+// system mapped — see project memory for the discussion behind this scope.
+function buildGradeGroups(schoolType, country, language) {
+  if (schoolType === 'general' && isKorea(country)) {
+    return [
+      { label: language === 'ko' ? '초등학교' : 'Elementary', items: Array.from({ length: 6 }, (_, i) => (language === 'ko' ? `초등학교 ${i + 1}학년` : `Elementary Grade ${i + 1}`)) },
+      { label: language === 'ko' ? '중학교' : 'Middle School', items: Array.from({ length: 3 }, (_, i) => (language === 'ko' ? `중학교 ${i + 1}학년` : `Middle School Grade ${i + 1}`)) },
+      { label: language === 'ko' ? '고등학교' : 'High School', items: Array.from({ length: 3 }, (_, i) => (language === 'ko' ? `고등학교 ${i + 1}학년` : `High School Grade ${i + 1}`)) },
+    ];
+  }
+  return [{ label: null, items: Array.from({ length: 12 }, (_, i) => (language === 'ko' ? `${i + 1}학년 (Grade ${i + 1})` : `Grade ${i + 1}`)) }];
+}
 
 export default function AuthModal({ mode, onClose }) {
   const { language } = useLanguage();
@@ -18,6 +34,13 @@ export default function AuthModal({ mode, onClose }) {
   const [country, setCountry] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+
+  const gradeGroups = useMemo(() => buildGradeGroups(schoolType, country, language), [schoolType, country, language]);
+
+  useEffect(() => {
+    const allValues = gradeGroups.flatMap((group) => group.items);
+    if (grade && !allValues.includes(grade)) setGrade('');
+  }, [gradeGroups]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -78,10 +101,6 @@ export default function AuthModal({ mode, onClose }) {
           {activeMode === 'signup' ? (
             <>
               <label>
-                <span>{tr(language, 'authGrade')}</span>
-                <input type="text" value={grade} onChange={(event) => setGrade(event.target.value)} maxLength={20} />
-              </label>
-              <label>
                 <span>{tr(language, 'authSchoolType')}</span>
                 <select value={schoolType} onChange={(event) => setSchoolType(event.target.value)}>
                   <option value="general">{tr(language, 'authSchoolGeneral')}</option>
@@ -90,7 +109,21 @@ export default function AuthModal({ mode, onClose }) {
               </label>
               <label>
                 <span>{tr(language, 'authCountry')}</span>
-                <input type="text" value={country} onChange={(event) => setCountry(event.target.value)} maxLength={60} />
+                <input type="text" list="auth-country-options" value={country} onChange={(event) => setCountry(event.target.value)} maxLength={60} placeholder={language === 'ko' ? '입력하면 목록이 나타납니다' : 'Start typing to see suggestions'} />
+                <datalist id="auth-country-options">
+                  {COUNTRIES.map((c) => <option key={c.ko} value={language === 'ko' ? c.ko : c.en} />)}
+                </datalist>
+              </label>
+              <label>
+                <span>{tr(language, 'authGrade')}</span>
+                <select value={grade} onChange={(event) => setGrade(event.target.value)}>
+                  <option value="">{language === 'ko' ? '선택 안 함' : 'Not specified'}</option>
+                  {gradeGroups.map((group) => group.label ? (
+                    <optgroup key={group.label} label={group.label}>
+                      {group.items.map((item) => <option key={item} value={item}>{item}</option>)}
+                    </optgroup>
+                  ) : group.items.map((item) => <option key={item} value={item}>{item}</option>))}
+                </select>
               </label>
             </>
           ) : null}
