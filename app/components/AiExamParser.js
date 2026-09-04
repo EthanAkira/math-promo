@@ -102,7 +102,7 @@ export function parseExamText(rawText) {
   return parsedProblems;
 }
 
-const SAMPLE_RAW_TEXT = `[문제 1] [2점] [수학 I]
+const SAMPLE_CSAT_RAW_TEXT = `[문제 1] [2점] [수학 I]
 $\\sqrt[3]{24} \\times 3^{\\frac{2}{3}}$ 의 값은?
 ① $6$  ② $7$  ③ $8$  ④ $9$  ⑤ $10$
 [정답] 1
@@ -118,14 +118,32 @@ $$2 \\times 3^{\\frac{1}{3}} \\times 3^{\\frac{2}{3}} = 2 \\times 3 = 6$$
 [해설]
 미분계수의 정의에 의해 $f'(2) = 6(2)^2 - 5 = 19$ 입니다.`;
 
+const SAMPLE_AMC_RAW_TEXT = `Problem 1. [3 points] [Algebra]
+What is the value of $(2 + 4 + 6) / (1 + 2 + 3)$?
+(A) $1$  (B) $2$  (C) $3$  (D) $4$  (E) $5$
+Answer: (B)
+Solution:
+$2 + 4 + 6 = 12$ and $1 + 2 + 3 = 6$.
+Therefore, $\\frac{12}{6} = 2$.
+
+Problem 2. [4 points] [Geometry]
+A rectangle has length $8$ and width $6$. What is the length of its diagonal?
+(A) $9$  (B) $10$  (C) $11$  (D) $12$  (E) $14$
+Answer: (B)
+Solution:
+By the Pythagorean theorem:
+$$d = \\sqrt{8^2 + 6^2} = \\sqrt{64 + 36} = \\sqrt{100} = 10$$`;
+
 export default function AiExamParser({ onSaveToArchive, examType = 'csat', language = 'ko' }) {
   const [inputText, setInputText] = useState('');
   const [parsedProblems, setParsedProblems] = useState([]);
   const [previewActive, setPreviewActive] = useState(false);
   const [statusMsg, setStatusMsg] = useState('');
 
+  const sampleText = examType === 'amc' ? SAMPLE_AMC_RAW_TEXT : SAMPLE_CSAT_RAW_TEXT;
+
   const handleParse = () => {
-    const text = inputText.trim() || SAMPLE_RAW_TEXT;
+    const text = inputText.trim() || sampleText;
     const result = parseExamText(text);
     if (result.length === 0) {
       setStatusMsg('문제를 인식하지 못했습니다. 형식을 확인해주세요.');
@@ -137,14 +155,31 @@ export default function AiExamParser({ onSaveToArchive, examType = 'csat', langu
   };
 
   const handleLoadSample = () => {
-    setInputText(SAMPLE_RAW_TEXT);
-    setStatusMsg('수능 기출 샘플 텍스트가 로드되었습니다. "AI 분석 및 변환"을 클릭하세요.');
+    setInputText(sampleText);
+    setStatusMsg(`${examType.toUpperCase()} 기출 샘플 템플릿이 로드되었습니다. "AI 분석 및 변환"을 클릭하세요.`);
+  };
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target.result;
+      setInputText(content);
+      setStatusMsg(`📁 파일 "${file.name}" 을(를) 성공적으로 불러왔습니다. 아래 "AI 분석 및 변환하기" 버튼을 눌러주세요.`);
+    };
+    reader.readAsText(file);
   };
 
   const handleSave = () => {
     if (parsedProblems.length === 0) {
       setStatusMsg('저장할 문제가 없습니다.');
       return;
+    }
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(`custom_exam_${examType}`, JSON.stringify(parsedProblems));
+      } catch (e) {}
     }
     if (onSaveToArchive) {
       onSaveToArchive(parsedProblems);
@@ -163,44 +198,64 @@ export default function AiExamParser({ onSaveToArchive, examType = 'csat', langu
         margin: '24px 0',
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '14px' }}>
         <div>
           <h2 style={{ fontSize: '20px', fontWeight: '800', margin: 0, color: 'var(--ink, #1f2733)' }}>
             ✨ AI 시험지 텍스트/LaTeX → 인터랙티브 문제 자동 변환기
           </h2>
-          <p style={{ fontSize: '13px', color: 'var(--ink-soft, #718096)', margin: '4px 0 0' }}>
-            기출문제 텍스트, LaTeX 수식, 보기를 붙여넣으면 즉시 웹·태블릿 풀이 가능한 인터랙티브 세트로 자동 분리·변환합니다.
+          <p style={{ fontSize: '13.5px', color: 'var(--ink-soft, #718096)', margin: '4px 0 0', lineHeight: 1.5 }}>
+            PDF/한글/워드에서 복사한 텍스트 또는 TeX/TXT 파일을 불러오면 문제 번호, 배점, 본문 수식($x^2$), 5지선다(①~⑤/(A)~(E)), 정답, 해설을 AI가 자동 분리하여 웹·태블릿 풀이 세트로 변환합니다.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={handleLoadSample}
-          style={{
-            fontSize: '13px',
-            fontWeight: '700',
-            padding: '6px 12px',
-            borderRadius: '8px',
-            border: '1px solid var(--paper-line, #d8c9a8)',
-            background: '#fbf8f2',
-            cursor: 'pointer',
-          }}
-        >
-          📝 샘플 불러오기
-        </button>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <label
+            style={{
+              fontSize: '13px',
+              fontWeight: '700',
+              padding: '7px 14px',
+              borderRadius: '8px',
+              border: '1px solid var(--paper-line, #d8c9a8)',
+              background: '#f4efe6',
+              color: 'var(--ink, #1f2733)',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+            }}
+          >
+            📂 파일 불러오기 (.txt, .tex, .md)
+            <input type="file" accept=".txt,.tex,.latex,.md,.json,.csv" onChange={handleFileUpload} style={{ display: 'none' }} />
+          </label>
+          <button
+            type="button"
+            onClick={handleLoadSample}
+            style={{
+              fontSize: '13px',
+              fontWeight: '700',
+              padding: '7px 14px',
+              borderRadius: '8px',
+              border: '1px solid var(--paper-line, #d8c9a8)',
+              background: '#fbf8f2',
+              cursor: 'pointer',
+            }}
+          >
+            📝 샘플 템플릿 로드
+          </button>
+        </div>
       </div>
 
       <textarea
-        rows={8}
+        rows={9}
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
-        placeholder={`여기에 시험지 텍스트나 LaTeX 문제 내용을 붙여넣으세요...\n\n예시:\n[문제 1] [2점] [수학 I]\n$\\sqrt[3]{24} \\times 3^{2/3}$ 의 값은?\n① 6  ② 7  ③ 8  ④ 9  ⑤ 10\n[정답] 1\n[해설] 풀이 내용...`}
+        placeholder={`여기에 시험지 텍스트나 LaTeX 문제 내용을 붙여넣거나 위의 [📂 파일 불러오기]를 사용하세요...\n\n예시:\n[문제 1] [2점] [수학 I]\n$\\sqrt[3]{24} \\times 3^{2/3}$ 의 값은?\n① 6  ② 7  ③ 8  ④ 9  ⑤ 10\n[정답] 1\n[해설] 풀이 내용...`}
         style={{
           width: '100%',
           padding: '14px',
           borderRadius: '10px',
           border: '1.5px solid var(--paper-line, #d8c9a8)',
-          fontSize: '14.5px',
-          fontFamily: 'monospace',
+          fontSize: '14px',
+          fontFamily: 'Consolas, Monaco, monospace',
           lineHeight: '1.6',
           marginBottom: '14px',
           boxSizing: 'border-box',

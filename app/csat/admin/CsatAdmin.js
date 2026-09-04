@@ -22,6 +22,7 @@ function fileTypeLabel(type) {
 }
 
 export default function CsatAdmin() {
+  const [adminTab, setAdminTab] = useState('parser');
   const [password, setPassword] = useState('');
   const [examType, setExamType] = useState('june');
   const [grade, setGrade] = useState('g3');
@@ -156,9 +157,58 @@ export default function CsatAdmin() {
 
   return <>
     <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 6 }}><a href="/">홈</a> / <a href="/csat.html">수능 기출문제</a> / 관리자 업로드</p>
-    <h1 className="font-display" style={{ fontSize: 26, margin: '0 0 8px' }}>수능 자료 업로드</h1>
-    <p style={{ color: 'var(--ink-soft)', margin: '0 0 28px' }}>관리자 비밀번호로 연도별 문제지·해설지·정답지를 업로드하거나 삭제할 수 있습니다. 회차(트랙)는 연도마다 이름이 달라질 수 있어 직접 입력합니다 (예: 확통/미적분/기하, 가형/나형, 공통).</p>
+    <h1 className="font-display" style={{ fontSize: 26, margin: '0 0 8px' }}>수능 기출문제 관리자</h1>
+    <p style={{ color: 'var(--ink-soft)', margin: '0 0 20px' }}>AI 시험지 자동 파서를 통한 웹/태블릿 인터랙티브 세트 등록 및 원본 파일(PDF)을 업로드/관리할 수 있습니다.</p>
 
+    {/* Admin Mode Switcher Tabs */}
+    <div style={{ display: 'flex', gap: '10px', marginBottom: '24px', borderBottom: '2px solid var(--paper-line, #d8c9a8)', paddingBottom: '10px' }}>
+      <button
+        type="button"
+        onClick={() => setAdminTab('parser')}
+        style={{
+          fontSize: '15px',
+          fontWeight: '800',
+          padding: '10px 20px',
+          borderRadius: '10px',
+          border: 'none',
+          cursor: 'pointer',
+          background: adminTab === 'parser' ? 'linear-gradient(135deg, var(--red, #c23b32) 0%, var(--red-dark, #8f2a24) 100%)' : '#ede7db',
+          color: adminTab === 'parser' ? '#ffffff' : 'var(--ink, #1f2733)',
+          boxShadow: adminTab === 'parser' ? '0 4px 14px rgba(194,59,50,0.25)' : 'none',
+        }}
+      >
+        ✨ AI 인터랙티브 문제 자동 변환기
+      </button>
+      <button
+        type="button"
+        onClick={() => setAdminTab('files')}
+        style={{
+          fontSize: '15px',
+          fontWeight: '800',
+          padding: '10px 20px',
+          borderRadius: '10px',
+          border: 'none',
+          cursor: 'pointer',
+          background: adminTab === 'files' ? 'var(--blue, #2a5c8a)' : '#ede7db',
+          color: adminTab === 'files' ? '#ffffff' : 'var(--ink, #1f2733)',
+          boxShadow: adminTab === 'files' ? '0 4px 14px rgba(42,92,138,0.25)' : 'none',
+        }}
+      >
+        📁 원본 파일 (PDF/TXT) 업로드 및 관리
+      </button>
+    </div>
+
+    {adminTab === 'parser' ? (
+      <AiExamParser
+        examType="csat"
+        language="ko"
+        onSaveToArchive={(problems) => {
+          alert('총 ' + problems.length + '개의 수능 문제가 인터랙티브 세트로 등록되었습니다.');
+        }}
+      />
+    ) : null}
+
+    {adminTab === 'files' ? (<>
     <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 16, padding: 24, background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', marginBottom: 32 }}>
       <label style={{ display: 'grid', gap: 6 }}>
         <span style={labelStyle}>관리자 비밀번호</span>
@@ -316,5 +366,6 @@ export default function CsatAdmin() {
       </div>)))}
       {manifest && EXAM_TYPES.every((type) => !(manifest[type] || []).length) ? <p style={{ color: 'var(--ink-soft)' }}>등록된 자료가 없습니다.</p> : null}
     </div>
+    </>) : null}
   </>;
 }
