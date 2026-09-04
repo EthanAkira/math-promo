@@ -83,6 +83,18 @@ export default function HomePage() {
                   <span className="action-text">Explore Archives →</span>
                 </div>
               </a>
+
+              <a href="/amc/units" className="academic-item-card tier-units">
+                <div className="card-badge-header">
+                  <span className="academic-badge units">{language === 'ko' ? '단원별' : 'By Topic'}</span>
+                  <span className="seal-mark">🗂️ 7 Units</span>
+                </div>
+                <h4 className="card-title font-cinzel">{language === 'ko' ? '단원별로 보기' : 'Browse by Topic'}</h4>
+                <p className="card-description">{language === 'ko' ? '대수·기하·정수론·조합과 확률 등 7개 단원으로 모아보기' : 'Algebra, Geometry, Number Theory, Counting & Probability, and more'}</p>
+                <div className="card-action-footer">
+                  <span className="action-text">Explore Archives →</span>
+                </div>
+              </a>
             </div>
           </div>
 
@@ -132,6 +144,18 @@ export default function HomePage() {
                 <p className="card-description">{tr(language, 'csatNovDesc')}</p>
                 <div className="card-action-footer">
                   <span className="action-text">본수능 기출 보기 →</span>
+                </div>
+              </a>
+
+              <a href="/csat/units" className="academic-item-card tier-units">
+                <div className="card-badge-header">
+                  <span className="academic-badge units">{language === 'ko' ? '단원별' : 'By Unit'}</span>
+                  <span className="seal-mark">🗂️ 15 Units</span>
+                </div>
+                <h4 className="card-title font-display">{language === 'ko' ? '단원별로 보기' : 'Browse by Unit'}</h4>
+                <p className="card-description">{language === 'ko' ? '수학Ⅰ·수학Ⅱ·확률과 통계·미적분·기하 15개 단원으로 모아보기' : 'Math I, Math II, Probability & Statistics, Calculus, and Geometry'}</p>
+                <div className="card-action-footer">
+                  <span className="action-text">단원별 기출 보기 →</span>
                 </div>
               </a>
             </div>

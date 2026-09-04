@@ -999,6 +999,7 @@ html[dir="rtl"] .language-picker-academic select {
 .academic-item-card.csat-june::before { background: #0369a1; }
 .academic-item-card.csat-sept::before { background: #7c2d12; }
 .academic-item-card.csat-nov::before { background: var(--burgundy); }
+.academic-item-card.tier-units::before { background: var(--chalk-green); }
 
 .academic-item-card:hover {
   transform: translateY(-3px);
@@ -1027,6 +1028,7 @@ html[dir="rtl"] .language-picker-academic select {
 .academic-badge.gold { background: var(--gold-light); color: var(--gold-dark); border: 1px solid var(--gold-border); }
 .academic-badge.navy { background: var(--navy-soft); color: var(--navy-royal); border: 1px solid #c7d8ed; }
 .academic-badge.wine { background: #fdf2f2; color: #991b1b; border: 1px solid #fecaca; }
+.academic-badge.units { background: #eaf5f0; color: var(--chalk-green); border: 1px solid #bcdccb; }
 .academic-badge.burgundy { background: var(--burgundy-soft); color: var(--burgundy); border: 1px solid #f5c4ce; }
 
 .seal-mark {
