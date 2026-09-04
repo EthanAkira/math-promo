@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import katex from 'katex';
 import { useLanguage } from '../language';
 import InteractiveExamWorkspace from '../components/InteractiveExamWorkspace';
-import { SAMPLE_AMC_10_2023 } from '../data/sampleExams';
+import { getInteractiveProblems } from '../data/sampleExams';
 
 const COPY = {
   ko: {
@@ -242,7 +242,7 @@ export default function AmcLevelArchive({ level, label, description }) {
         <InteractiveExamWorkspace
           title={`${selectedEntry.year} ${selectedVariant.label}`}
           subtitle={language === 'ko' ? 'LaTeX 수식 · SVG 기하 도형 · 태블릿 펜슬 필기장 지원' : 'KaTeX Math · SVG Diagrams · Tablet Stylus Scratchpad'}
-          problems={SAMPLE_AMC_10_2023.problems}
+          problems={getInteractiveProblems('amc', level)}
           language={language}
         />
       ) : (

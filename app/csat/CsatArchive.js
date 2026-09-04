@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import katex from 'katex';
 import { useLanguage } from '../language';
 import InteractiveExamWorkspace from '../components/InteractiveExamWorkspace';
-import { SAMPLE_CSAT_2024 } from '../data/sampleExams';
+import { getInteractiveProblems } from '../data/sampleExams';
 
 const COPY = {
   ko: {
@@ -242,7 +242,7 @@ export default function CsatExamArchive({ examType, label, description }) {
         <InteractiveExamWorkspace
           title={`${selectedEntry.year} ${selectedVariant.label}`}
           subtitle={language === 'ko' ? 'LaTeX 수식 · SVG 그래픽 · 태블릿 펜슬 필기장 지원' : 'KaTeX Math · SVG Figures · Tablet Stylus Scratchpad'}
-          problems={SAMPLE_CSAT_2024.problems}
+          problems={getInteractiveProblems('csat', examType)}
           language={language}
         />
       ) : (
