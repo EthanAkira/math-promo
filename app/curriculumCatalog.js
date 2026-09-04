@@ -33,8 +33,8 @@ export const CURRICULUM_COPY = {
       open: '단원 펼쳐보기',
     },
     notices: {
-      gradeLegacyNotice: '익숙한 예전 과목명으로 분류한 화면입니다. 현행 2022 개정 과목명과 실제 개설 학년은 학교 편성에 따라 다를 수 있습니다.',
-      subject2022Notice: '2022 개정 교육과정 공식 과목 체계입니다. 공통·일반 선택·진로 선택·융합 선택·전문 과목별로 학습할 수 있습니다.',
+      gradeLegacyNotice: '2022 개정은 2025학년도 고1부터 연차 적용됩니다. 2027학년도 수능(2026년 11월 시행)까지는 고1·고2와 고3이 서로 다른 교육과정을 쓰는 과도기라, 학년마다 아래 과목명이 다릅니다 — 각 학년 카드 안내문을 확인하세요.',
+      subject2022Notice: '2022 개정 교육과정이 완전히 적용된 뒤의 공식 과목 체계(공통·일반 선택·진로 선택·융합 선택·전문)입니다. 2027학년도 수능까지는 현재 고3에게 아직 적용되지 않으며, 고3의 실제 응시 과목명은 "학년별 보기"에서 확인하세요.',
       intlNotice: '국제학교 및 해외 교육과정(Pre-Algebra, Algebra 1·2, Precalculus 등)의 독립 과정입니다. 한국 교육과정과 별도로 관리됩니다.',
       domainNotice: '학년과 교육과정을 넘어 수와 연산, 변화와 관계, 도형과 측정, 자료와 가능성 등의 수학 핵심 개념별로 탐색합니다.',
       bottomNote: '표시된 학년·과목은 탐색을 위한 대표 경로이며, 학교와 국가에 따라 단원 순서가 달라질 수 있습니다.',
@@ -76,8 +76,8 @@ export const CURRICULUM_COPY = {
       open: 'Open topics',
     },
     notices: {
-      gradeLegacyNotice: 'Organized with familiar course names. Official 2022 revised course names and actual grade placement may vary by school.',
-      subject2022Notice: 'Official 2022 Revised Korean Curriculum classification across Common, Elective, Career, and Advanced tracks.',
+      gradeLegacyNotice: 'The 2022 revision phases in starting with students who entered grade 10 in the 2025 school year. Until the CSAT for the 2027 admission cycle (held Nov 2026), grade 10-11 and grade 12 students are on different curricula, so subject names differ by grade below — check each grade card’s note.',
+      subject2022Notice: 'This is the official subject structure once the 2022 revision is fully in effect (Common / General Elective / Career Elective / Convergence / Advanced). It does not yet apply to today’s actual grade-12 students until the CSAT for the 2027 admission cycle — see "By Grade" for what grade 12 currently sits.',
       intlNotice: 'Independent progression for international school programs (Pre-Algebra, Algebra 1–2, Precalculus). Managed separately from national curricula.',
       domainNotice: 'Explore core mathematical concepts across grades: Number & Operations, Algebra, Geometry, Data & Probability.',
       bottomNote: 'These are reference pathways. Exact topic sequences vary by school, country, and syllabus.',
@@ -766,17 +766,18 @@ const KOREAN_GRADE_STAGE_SEEDS = [
     ],
   },
 
-  // 고등학교 2학년 (기존 분류: 수학Ⅰ·수학Ⅱ·확률과 통계 / 2022 개정: 대수·미적분Ⅰ·확률과 통계)
+  // 고등학교 2학년 — 2025학년도 고1부터 2022 개정이 적용되어, 현재 고2는 이미 2022 개정(대수·미적분Ⅰ·확률과 통계)을 배운다.
+  // 예전 2015 개정 이름(수학Ⅰ·수학Ⅱ)은 참고용 legacy 표기로만 남긴다.
   {
     id: 'kr-high-2-grade',
     level: 'high',
     title: '고등학교 2학년',
-    subtitle: 'Korean Grade 11 · 수학Ⅰ · 수학Ⅱ · 확률과 통계',
+    subtitle: 'Korean Grade 11 · 대수 · 미적분Ⅰ · 확률과 통계 (2022 개정)',
     availability: 'partial',
-    notice: '익숙한 예전 과목명으로 분류한 화면입니다. 현행 2022 개정 과목명과 실제 개설 학년은 학교 편성에 따라 다를 수 있습니다.',
+    notice: '2025학년도 고1부터 2022 개정이 적용되어, 현재 고2는 2022 개정 과목(대수·미적분Ⅰ·확률과 통계)을 배웁니다. 이전 2015 개정 과목명(수학Ⅰ·수학Ⅱ)은 참고용입니다.',
     topics: [
       {
-        label: '수학Ⅰ (2022 개정: 대수 — 지수·로그, 삼각함수, 수열)',
+        label: '대수 (예전 2015 개정: 수학Ⅰ — 지수·로그, 삼각함수, 수열)',
         href: '/middle-school/pre-algebra?profile=kr-high-2-algebra',
         ready: true,
         availability: 'partial',
@@ -806,14 +807,14 @@ const KOREAN_GRADE_STAGE_SEEDS = [
       { label: '군수열과 수열의 귀납적 정의', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=grouped-sequences', ready: true, availability: 'ready' },
       { label: '수학적 귀납법 · 등식과 부등식의 증명', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=induction-structure', ready: true, availability: 'ready' },
       {
-        label: '수학Ⅱ (2022 개정: 미적분Ⅰ — 함수의 극한·연속, 미분, 적분)',
+        label: '미적분Ⅰ (예전 2015 개정: 수학Ⅱ — 함수의 극한·연속, 미분, 적분)',
         href: '/middle-school/pre-algebra?profile=kr-high-2-calculus-1',
         ready: true,
         availability: 'partial',
         meta: { legacy: '수학Ⅱ', revised2022: '미적분Ⅰ', officialType: '일반 선택' },
       },
       {
-        label: '확률과 통계 (2022 개정: 확률과 통계 — 경우의 수, 확률, 통계적 추정)',
+        label: '확률과 통계 (2015·2022 개정 동일 — 경우의 수, 확률, 통계적 추정)',
         href: '/middle-school/pre-algebra?profile=kr-high-2-probability-statistics',
         ready: true,
         availability: 'partial',
@@ -822,14 +823,16 @@ const KOREAN_GRADE_STAGE_SEEDS = [
     ],
   },
 
-  // 고등학교 3학년 (기존 분류: 미적분·기하 / 2022 개정: 미적분Ⅱ·기하)
+  // 고등학교 3학년 — 2022 개정은 2025학년도 고1부터 연차 적용되므로, 2026-09 현재 고3은 아직 2022 개정 적용 이전 학년(2015 개정 마지막 세대)이다.
+  // 따라서 이 학년 카드는 2015 개정 과목명(미적분·기하)을 실제 응시 과목명으로 그대로 유지하고, 2022 개정 이름(미적분Ⅱ·기하)은 참고용으로만 덧붙인다.
+  // 2027학년도 수능(2026년 11월 시행)까지는 이 상태가 맞고, 이후 학년도부터는 전 학년이 2022 개정으로 통일된다.
   {
     id: 'kr-high-3-grade',
     level: 'high',
     title: '고등학교 3학년',
-    subtitle: 'Korean Grade 12 · 미적분 · 기하 · 수능 실전',
+    subtitle: 'Korean Grade 12 · 미적분 · 기하 (2015 개정 · 2027학년도 수능까지)',
     availability: 'partial',
-    notice: '익숙한 예전 과목명으로 분류한 화면입니다. 현행 2022 개정 과목명과 실제 개설 학년은 학교 편성에 따라 다를 수 있습니다.',
+    notice: '2022 개정은 2025학년도 고1부터 연차 적용되어, 현재 고3은 아직 2015 개정 마지막 세대입니다. 2027학년도 수능(2026년 11월 시행)까지는 미적분·기하(2015 개정)로 응시하며, 2022 개정 이름(미적분Ⅱ·기하)은 다음 학년도부터 적용될 참고용 이름입니다.',
     topics: [
       {
         label: '미적분 (2022 개정: 미적분Ⅱ — 수열의 극한, 여러 가지 미분법·적분법)',
@@ -950,13 +953,15 @@ const KOREAN_2022_SUBJECT_STAGE_SEEDS = [
     ],
   },
 
-  // 진로 선택
+  // 진로 선택 — '고3 대표'는 2022 개정이 완전히 적용된 뒤의 배정이다. 2027학년도 수능까지는
+  // 실제 고3이 아직 2015 개정(미적분·기하)을 쓰므로, 여기 미적분Ⅱ는 그 세대에는 해당하지 않는다.
   {
     id: 'kr-2022-career',
     officialType: 'career-elective',
     title: '진로 선택',
     subtitle: 'Career Electives · 미적분Ⅱ · 기하 · 경제/AI/직무 수학',
     availability: 'partial',
+    notice: '"고3 대표"는 2022 개정이 완전히 적용된 뒤(2028학년도 수능부터)의 배정 기준입니다. 2027학년도 수능까지 실제 고3은 아직 2015 개정 과목(미적분·기하)으로 응시합니다 — 지금 고3에게 맞는 이름은 "학년별 보기"를 확인하세요.',
     topics: [
       {
         label: '미적분Ⅱ (수열의 극한, 여러 가지 함수의 미분, 여러 가지 적분법)',

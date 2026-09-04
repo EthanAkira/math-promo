@@ -203,6 +203,11 @@ export default function CurriculumExplorer() {
                                               <span className="topic-name">{topic.label}</span>
                                               {topic.meta && (
                                                 <div className="topic-meta-badges">
+                                                  {topic.meta.legacy && (
+                                                    <span className="meta-badge legacy">
+                                                      {copy.labels.legacyName}: {topic.meta.legacy}
+                                                    </span>
+                                                  )}
                                                   {topic.meta.revised2022 && (
                                                     <span className="meta-badge revised">
                                                       {copy.labels.revised2022}: {topic.meta.revised2022}
@@ -263,6 +268,12 @@ export default function CurriculumExplorer() {
                           <span className={`curriculum-count ${stageStatus}`}>{availabilitySummary(stage.topics, copy)}</span>
                           <span className="sr-only">{copy.badges.open}</span>
                         </summary>
+
+                        {stage.notice && (
+                          <div className="stage-mini-notice">
+                            <span>ℹ️</span> {stage.notice}
+                          </div>
+                        )}
 
                         <div className="curriculum-topic-list">
                           {stage.topics.map((topic) => (
