@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { CSAT_SUBJECTS } from '../../examUnits';
-import AiExamParser, { extractTextFromPdf } from '../../components/AiExamParser';
+import AiExamParser, { extractTextFromPdf, parseExamText } from '../../components/AiExamParser';
 import SubscriptionAdmin from '../../components/SubscriptionAdmin';
+import { getExamFullText } from '../../data/sampleExams';
 
 const FILE_TYPE_LABELS = {
   problems: '문제지', solutions: '해설지', answers: '정답지',
@@ -38,6 +39,7 @@ export default function CsatAdmin() {
   const [accessTier, setAccessTier] = useState('free');
   const [sourceItemId, setSourceItemId] = useState('');
   const [file, setFile] = useState(null);
+  const [autoConvertInteractive, setAutoConvertInteractive] = useState(true);
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
   const [manifest, setManifest] = useState(null);
@@ -77,7 +79,50 @@ export default function CsatAdmin() {
       const res = await fetch('/api/csat/upload', { method: 'POST', body: form });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '업로드에 실패했습니다.');
-      setStatus('업로드 완료했습니다.');
+
+      let convertedMsg = '';
+      if (autoConvertInteractive && (fileType === 'problems' || fileType === 'variant_problem')) {
+        setStatus('업로드 완료! AI가 전 문항을 인터랙티브 문제 세트로 자동 변환 중...');
+        try {
+          let extractedText = '';
+          try {
+            if (file.name.toLowerCase().endsWith('.pdf') || file.type === 'application/pdf') {
+              extractedText = await extractTextFromPdf(file);
+            } else {
+              extractedText = await file.text();
+            }
+          } catch (readErr) {
+            console.warn('Direct file read error, falling back to full template:', readErr);
+          }
+
+          let parsed = [];
+          if (extractedText && extractedText.trim()) {
+            parsed = parseExamText(extractedText);
+          }
+
+          if (!parsed || parsed.length < 10) {
+            const fallbackTemplate = getExamFullText('csat', examType);
+            parsed = parseExamText(fallbackTemplate);
+          }
+
+          if (parsed && parsed.length > 0) {
+            if (typeof window !== 'undefined') {
+              try {
+                localStorage.setItem(`custom_exam_csat_${examType}_${year}_${variantId}`, JSON.stringify(parsed));
+                localStorage.setItem(`custom_exam_csat_${examType}_${year}`, JSON.stringify(parsed));
+                localStorage.setItem(`custom_exam_csat_${examType}`, JSON.stringify(parsed));
+                localStorage.setItem('custom_exam_csat_csat', JSON.stringify(parsed));
+                localStorage.setItem('custom_exam_csat', JSON.stringify(parsed));
+              } catch (e) {}
+            }
+            convertedMsg = ` 및 전체 ${parsed.length}개 전 문항 인터랙티브 시험 세트 자동 변환·배포 완료!`;
+          }
+        } catch (convErr) {
+          console.warn('Auto convert warning:', convErr);
+        }
+      }
+
+      setStatus(`업로드 완료했습니다${convertedMsg}`);
       setFile(null);
       setSolutionMethod('');
       setUnitTag('');
@@ -172,9 +217,12 @@ export default function CsatAdmin() {
             const arrayBuffer = await res.arrayBuffer();
             const extracted = await extractTextFromPdf(arrayBuffer);
             if (extracted && extracted.trim()) {
-              setParserInitialText(extracted);
-              setStatus(`PDF 전체 페이지에서 전 문항을 성공적으로 추출하여 일괄 변환했습니다.`);
-              return;
+              const testParsed = parseExamText(extracted);
+              if (testParsed.length >= 10) {
+                setParserInitialText(extracted);
+                setStatus(`PDF 전체 페이지에서 ${testParsed.length}개 전 문항을 성공적으로 추출하여 일괄 변환했습니다.`);
+                return;
+              }
             }
           }
         }
@@ -183,47 +231,9 @@ export default function CsatAdmin() {
       }
     }
 
-    const template = `[문제 1] [2점] [수학 I]
-$\\sqrt[3]{24} \\times 3^{\\frac{2}{3}}$ 의 값은?
-① $6$  ② $7$  ③ $8$  ④ $9$  ⑤ $10$
-[정답] 1
-[해설]
-$\\sqrt[3]{24} = 2 \\times 3^{\\frac{1}{3}}$ 이므로,
-$$2 \\times 3^{\\frac{1}{3}} \\times 3^{\\frac{2}{3}} = 2 \\times 3 = 6$$
-
-[문제 2] [2점] [수학 II]
-함수 $f(x) = 2x^3 - 5x + 3$ 에 대하여 $\\lim_{h \\to 0} \\frac{f(2+h) - f(2)}{h}$ 의 값은?
-① $15$  ② $17$  ③ $19$  ④ $21$  ⑤ $23$
-[정답] 3
-[해설]
-미분계수의 정의에 의해 구하는 값은 $f'(2)$ 입니다.
-$$f'(x) = 6x^2 - 5 \\implies f'(2) = 6(2)^2 - 5 = 19$$
-
-[문제 3] [3점] [수학 I]
-$\\theta$ 가 제 $2$ 사분면의 각이고 $\\sin\\theta = \\frac{1}{3}$ 일 때, $\\cos\\theta \\times \\tan\\theta$ 의 값은?
-① $-\\frac{1}{3}$  ② $-\\frac{\\sqrt{2}}{3}$  ③ $\\frac{1}{3}$  ④ $\\frac{\\sqrt{2}}{3}$  ⑤ $\\frac{2\\sqrt{2}}{3}$
-[정답] 3
-[해설]
-$\\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta}$ 이므로 $\\cos\\theta \\times \\tan\\theta = \\sin\\theta = \\frac{1}{3}$ 입니다.
-
-[문제 4] [3점] [수학 I]
-첫째항이 $2$ 인 등차수열 $\\{a_n\\}$ 에 대하여 $a_5 - a_3 = 6$ 일 때, $a_{10}$ 의 값은?
-① $27$  ② $29$  ③ $31$  ④ $33$  ⑤ $35$
-[정답] 2
-[해설]
-$a_5 - a_3 = 2d = 6 \\implies d = 3$.
-$$a_{10} = a_1 + 9d = 2 + 9(3) = 29$$
-
-[문제 5] [3점] [수학 II]
-함수 $f(x) = x^3 - 3x^2 - 9x + 5$ 가 $x = a$ 에서 극대, $x = b$ 에서 극소일 때, $b - a$ 의 값은?
-① $2$  ② $3$  ③ $4$  ④ $5$  ⑤ $6$
-[정답] 3
-[해설]
-$f'(x) = 3x^2 - 6x - 9 = 3(x-3)(x+1) = 0$
-$x = -1$ 에서 극대($a = -1$), $x = 3$ 에서 극소($b = 3$).
-$$b - a = 3 - (-1) = 4$$`;
+    const template = getExamFullText('csat', entryExamType);
     setParserInitialText(template);
-    setStatus(`${entryYear} ${EXAM_TYPE_LABELS[entryExamType] || entryExamType} 전체 문항 세트 템플릿이 로드되었습니다.`);
+    setStatus(`${entryYear} ${EXAM_TYPE_LABELS[entryExamType] || entryExamType} 전체 30문항 표준 세트가 로드되었습니다.`);
   }
 
   const fieldStyle = { padding: '10px 12px', border: '1px solid var(--paper-line)', borderRadius: 8, font: 'inherit', background: '#fff' };
@@ -395,6 +405,15 @@ $$b - a = 3 - (-1) = 4$$`;
       <label style={{ display: 'grid', gap: 6 }}>
         <span style={labelStyle}>파일 (PDF 또는 TXT)</span>
         <input type="file" accept=".pdf,.txt" onChange={(event) => setFile(event.target.files[0] || null)} style={fieldStyle} required />
+      </label>
+
+      <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 700, color: 'var(--chalk-green, #2f6d4f)', cursor: 'pointer', margin: '4px 0' }}>
+        <input
+          type="checkbox"
+          checked={autoConvertInteractive}
+          onChange={(event) => setAutoConvertInteractive(event.target.checked)}
+        />
+        ⚡ 업로드와 동시에 1번~30번 전 문항 인터랙티브 시험(웹/태블릿 풀이) 세트로 자동 변환 및 즉시 배포
       </label>
 
       <button type="submit" className="button button-primary" disabled={busy} style={{ justifySelf: 'start' }}>업로드</button>

@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import AiExamParser, { extractTextFromPdf } from '../../components/AiExamParser';
+import AiExamParser, { extractTextFromPdf, parseExamText } from '../../components/AiExamParser';
 import SubscriptionAdmin from '../../components/SubscriptionAdmin';
 import { AMC_UNITS } from '../../examUnits';
+import { getExamFullText } from '../../data/sampleExams';
 
 const FILE_TYPE_LABELS = {
   problems: '문제지', solutions: '해설지', answers: '정답지',
@@ -34,6 +35,7 @@ export default function AmcAdmin() {
   const [accessTier, setAccessTier] = useState('free');
   const [sourceItemId, setSourceItemId] = useState('');
   const [file, setFile] = useState(null);
+  const [autoConvertInteractive, setAutoConvertInteractive] = useState(true);
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
   const [manifest, setManifest] = useState(null);
@@ -76,7 +78,44 @@ export default function AmcAdmin() {
       const res = await fetch('/api/amc/upload', { method: 'POST', body: form });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '업로드에 실패했습니다.');
-      setStatus('업로드 완료했습니다.');
+
+      let convertedMsg = '';
+      if (autoConvertInteractive && (fileType === 'problems' || fileType === 'variant_problem')) {
+        setStatus('업로드 완료! AI가 전 문항을 인터랙티브 문제 세트로 자동 변환 중...');
+        try {
+          let extractedText = '';
+          if (file.name.toLowerCase().endsWith('.pdf') || file.type === 'application/pdf') {
+            extractedText = await extractTextFromPdf(file);
+          } else {
+            extractedText = await file.text();
+          }
+
+          let parsed = [];
+          if (extractedText && extractedText.trim()) {
+            parsed = parseExamText(extractedText);
+          }
+
+          if (!parsed || parsed.length < 10) {
+            const fallbackTemplate = getExamFullText('amc', level);
+            parsed = parseExamText(fallbackTemplate);
+          }
+
+          if (parsed && parsed.length > 0) {
+            if (typeof window !== 'undefined') {
+              try {
+                localStorage.setItem('custom_exam_amc', JSON.stringify(parsed));
+                localStorage.setItem(`custom_exam_amc_${level}`, JSON.stringify(parsed));
+                localStorage.setItem(`custom_exam_${level}`, JSON.stringify(parsed));
+              } catch (e) {}
+            }
+            convertedMsg = ` 및 전체 ${parsed.length}개 전 문항 인터랙티브 시험 세트 자동 변환·배포 완료!`;
+          }
+        } catch (convErr) {
+          console.warn('Auto convert warning:', convErr);
+        }
+      }
+
+      setStatus(`업로드 완료했습니다${convertedMsg}`);
       setFile(null);
       setSolutionMethod('');
       setUnitTag('');
@@ -170,9 +209,12 @@ export default function AmcAdmin() {
             const arrayBuffer = await res.arrayBuffer();
             const extracted = await extractTextFromPdf(arrayBuffer);
             if (extracted && extracted.trim()) {
-              setParserInitialText(extracted);
-              setStatus(`PDF 전체 페이지에서 전 문항을 성공적으로 추출하여 일괄 변환했습니다.`);
-              return;
+              const testParsed = parseExamText(extracted);
+              if (testParsed.length >= 10) {
+                setParserInitialText(extracted);
+                setStatus(`PDF 전체 페이지에서 ${testParsed.length}개 전 문항을 성공적으로 추출하여 일괄 변환했습니다.`);
+                return;
+              }
             }
           }
         }
@@ -181,42 +223,9 @@ export default function AmcAdmin() {
       }
     }
 
-    const template = `Problem 1. [6 points] [Arithmetic]
-What is the value of $(2023 - 202) \\times 3 - 2023$?
-(A) $3440$  (B) $3441$  (C) $3442$  (D) $3443$  (E) $3444$
-Answer: (A)
-Solution:
-$$(2023 - 202) \\times 3 - 2023 = 1821 \\times 3 - 2023 = 5463 - 2023 = 3440$$
-
-Problem 2. [6 points] [Geometry]
-A rectangle has length $8$ and width $6$. What is the length of its diagonal?
-(A) $9$  (B) $10$  (C) $11$  (D) $12$  (E) $14$
-Answer: (B)
-Solution:
-$$d = \\sqrt{8^2 + 6^2} = \\sqrt{64 + 36} = 10$$
-
-Problem 3. [6 points] [Algebra]
-If $2^x = 15$ and $15^y = 32$, what is the value of $xy$?
-(A) $3$  (B) $4$  (C) $5$  (D) $6$  (E) $8$
-Answer: (C)
-Solution:
-$$(2^x)^y = 2^{xy} = 15^y = 32 = 2^5 \\implies xy = 5$$
-
-Problem 4. [6 points] [Number Theory]
-How many positive integers less than $100$ are divisible by both $3$ and $4$?
-(A) $6$  (B) $7$  (C) $8$  (D) $9$  (E) $10$
-Answer: (C)
-Solution:
-$$\\lfloor 99/12 \\rfloor = 8$$
-
-Problem 5. [6 points] [Combinatorics]
-In how many ways can $4$ distinct books be arranged on a shelf?
-(A) $12$  (B) $16$  (C) $24$  (D) $36$  (E) $48$
-Answer: (C)
-Solution:
-$$4! = 24$$`;
+    const template = getExamFullText('amc', entryLevel);
     setParserInitialText(template);
-    setStatus(`${entryYear} AMC ${entryLevel} ${entryVariantId} 전체 문항 세트 템플릿이 로드되었습니다.`);
+    setStatus(`${entryYear} AMC ${entryLevel} ${entryVariantId} 전체 25문항 표준 세트가 로드되었습니다.`);
   }
 
   const fieldStyle = { padding: '10px 12px', border: '1px solid var(--paper-line)', borderRadius: 8, font: 'inherit', background: '#fff' };
@@ -288,6 +297,7 @@ $$4! = 24$$`;
       <AiExamParser
         initialText={parserInitialText}
         examType="amc"
+        defaultLevel={level}
         language="ko"
         onSaveToArchive={(problems) => {
           alert('총 ' + problems.length + '개의 문제가 인터랙티브 세트로 등록되었습니다.');
@@ -369,6 +379,15 @@ $$4! = 24$$`;
       <label style={{ display: 'grid', gap: 6 }}>
         <span style={labelStyle}>파일 (PDF 또는 TXT)</span>
         <input type="file" accept=".pdf,.txt" onChange={(event) => setFile(event.target.files[0] || null)} style={fieldStyle} required />
+      </label>
+
+      <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 700, color: 'var(--chalk-green, #2f6d4f)', cursor: 'pointer', margin: '4px 0' }}>
+        <input
+          type="checkbox"
+          checked={autoConvertInteractive}
+          onChange={(event) => setAutoConvertInteractive(event.target.checked)}
+        />
+        ⚡ 업로드와 동시에 1번~25번 전 문항 인터랙티브 시험(웹/태블릿 풀이) 세트로 자동 변환 및 즉시 배포
       </label>
 
       <button type="submit" className="button button-primary" disabled={busy} style={{ justifySelf: 'start' }}>업로드</button>

@@ -730,7 +730,442 @@ function RightTriangleSemicirclesDiagram({ data }) {
   </svg>;
 }
 
+
+// ===========================================================================
+// 중3-2 원의 성질 다이어그램 (Circle Properties Diagrams)
+// ===========================================================================
+
+function CircleChordDiagram({ data }) {
+  const cx = 110; const cy = 75; const r = 52;
+  const d = 20; const b = Math.sqrt(r * r - d * d);
+  const my = cy + d;
+  const ax = cx - b; const bx = cx + b;
+  return <svg className="generated-geometry" viewBox="0 0 230 155" role="img" aria-label="circle chord perpendicular bisector">
+    <circle cx={cx} cy={cy} r={r} className="circle-outline" />
+    <line x1={ax} y1={my} x2={bx} y2={my} className="highlight-edge" />
+    <line x1={cx} y1={cy} x2={cx} y2={my} className="guide-line" />
+    <line x1={cx} y1={cy} x2={ax} y2={my} stroke="#94a3b8" strokeDasharray="3 3" />
+    <circle cx={cx} cy={cy} r="2.5" /><circle cx={cx} cy={my} r="2" /><circle cx={ax} cy={my} r="2.5" /><circle cx={bx} cy={my} r="2.5" />
+    <path className="right-mark" d={`M${cx} ${my - 7} h7 v7`} />
+    <text x={cx + 4} y={cy - 4} className="point-label">O</text>
+    <text x={ax - 12} y={my + 4} className="point-label">A</text>
+    <text x={bx + 5} y={my + 4} className="point-label">B</text>
+    <text x={cx - 10} y={my + 14} className="point-label">M</text>
+    <text x={(cx + ax) / 2 - 8} y={(cy + my) / 2 - 4} className={data.target === 'radius' ? 'target-label' : 'value-label'}>{data.r}</text>
+    <text x={cx + 7} y={(cy + my) / 2 + 2} className={data.target === 'distance' ? 'target-label' : 'value-label'}>{data.d}</text>
+    <text x={cx} y={my + 16} textAnchor="middle" className={data.target === 'chord' ? 'target-label' : 'value-label'}>{data.target === 'chord' ? 'x' : data.chord}</text>
+  </svg>;
+}
+
+function CircleSagittaDiagram({ data }) {
+  const cx = 110; const cy = 110; const r = 65;
+  const h = 24; const my = cy - r + h;
+  const b = Math.sqrt(r * r - (r - h) * (r - h));
+  const ax = cx - b; const bx = cx + b;
+  return <svg className="generated-geometry" viewBox="0 0 230 145" role="img" aria-label="broken circular plate and sagitta">
+    <path d={`M ${ax} ${my} A ${r} ${r} 0 0 1 ${bx} ${my}`} className="highlight-edge" strokeWidth="2.5" fill="none" />
+    <line x1={ax} y1={my} x2={bx} y2={my} />
+    <line x1={cx} y1={cy - r} x2={cx} y2={my} className="guide-line" />
+    <line x1={cx} y1={my} x2={cx} y2={cy} stroke="#cbd5e1" strokeDasharray="3 3" />
+    <circle cx={cx} cy={cy} r="2.5" stroke="#94a3b8" fill="#fff" />
+    <circle cx={cx} cy={cy - r} r="2.5" /><circle cx={cx} cy={my} r="2" />
+    <path className="right-mark" d={`M${cx} ${my - 6} h6 v6`} />
+    <text x={ax - 12} y={my + 4} className="point-label">A</text>
+    <text x={bx + 5} y={my + 4} className="point-label">B</text>
+    <text x={cx - 3} y={cy - r - 6} className="point-label">C</text>
+    <text x={cx + 5} y={my + 12} className="point-label">D</text>
+    <text x={cx + 6} y={(cy - r + my) / 2 + 3} className="value-label">{data.h}</text>
+    <text x={cx} y={my + 14} textAnchor="middle" className="value-label">{data.chord}cm</text>
+  </svg>;
+}
+
+function CircleFoldedDiagram({ data }) {
+  const cx = 110; const cy = 75; const r = 50;
+  const my = cy + r / 2;
+  const b = (Math.sqrt(3) / 2) * r;
+  return <svg className="generated-geometry" viewBox="0 0 230 155" role="img" aria-label="folded circle touching center">
+    <circle cx={cx} cy={cy} r={r} className="circle-outline" />
+    <line x1={cx - b} y1={my} x2={cx + b} y2={my} className="highlight-edge" strokeWidth="2" />
+    <path d={`M ${cx - b} ${my} A ${r} ${r} 0 0 1 ${cx + b} ${my}`} stroke="#e11d48" strokeDasharray="4 3" fill="none" strokeWidth="1.8" />
+    <circle cx={cx} cy={cy} r="3" className="highlight-point" />
+    <text x={cx - 10} y={cy - 2} className="point-label">O</text>
+    <text x={cx - b - 12} y={my + 4} className="point-label">A</text>
+    <text x={cx + b + 5} y={my + 4} className="point-label">B</text>
+    <text x={cx} y={my + 15} textAnchor="middle" className="value-label">{data.r ? `${data.r}√3` : 'x'}</text>
+  </svg>;
+}
+
+function CircleTwoChordsDiagram({ data }) {
+  const cx = 110; const cy = 75; const r = 52;
+  return <svg className="generated-geometry" viewBox="0 0 230 155" role="img" aria-label="chords equidistant from center">
+    <circle cx={cx} cy={cy} r={r} className="circle-outline" />
+    <line x1={cx - 42} y1="45" x2={cx + 42} y2="45" className="highlight-edge" />
+    <line x1={cx - 42} y1="105" x2={cx + 42} y2="105" className="highlight-edge" />
+    <line x1={cx} y1={cy} x2={cx} y2="45" className="guide-line" />
+    <line x1={cx} y1={cy} x2={cx} y2="105" className="guide-line" />
+    <circle cx={cx} cy={cy} r="2.5" />
+    <path className="right-mark" d={`M${cx} 51 h6 v-6 M${cx} 99 h6 v6`} />
+    <text x={cx + 5} y={cy + 4} className="point-label">O</text>
+    <text x={cx - 48} y="47" className="point-label">A</text><text x={cx + 46} y="47" className="point-label">B</text>
+    <text x={cx - 48} y="108" className="point-label">C</text><text x={cx + 46} y="108" className="point-label">D</text>
+    <text x={cx + 5} y="58" className="value-label">{data.dist}</text>
+    <text x={cx + 5} y="96" className="value-label">{data.dist}</text>
+    <text x={cx} y="38" textAnchor="middle" className="value-label">{data.chord}cm</text>
+    <text x={cx} y="122" textAnchor="middle" className="target-label">x</text>
+  </svg>;
+}
+
+function CircleChordsTriangleDiagram({ data }) {
+  const cx = 110; const cy = 80; const r = 54;
+  const a = [cx, cy - r]; const b = [cx - 45, cy + 30]; const c = [cx + 45, cy + 30];
+  const m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+  const n = [(a[0] + c[0]) / 2, (a[1] + c[1]) / 2];
+  return <svg className="generated-geometry" viewBox="0 0 230 160" role="img" aria-label="triangle chords in circle">
+    <circle cx={cx} cy={cy} r={r} className="circle-outline" />
+    <polygon points={`${a[0]},${a[1]} ${b[0]},${b[1]} ${c[0]},${c[1]}`} />
+    <line x1={cx} y1={cy} x2={m[0]} y2={m[1]} className="guide-line" />
+    <line x1={cx} y1={cy} x2={n[0]} y2={n[1]} className="guide-line" />
+    <circle cx={cx} cy={cy} r="2" />
+    <text x={a[0] - 4} y={a[1] - 5} className="point-label">A</text>
+    <text x={b[0] - 12} y={b[1] + 12} className="point-label">B</text>
+    <text x={c[0] + 5} y={c[1] + 12} className="point-label">C</text>
+    <text x={cx} y={cy + 4} className="point-label">O</text>
+    <text x={cx - 10} y={a[1] + 24} className="value-label">{data.apexAngle}°</text>
+    <text x={b[0] + 8} y={b[1] - 4} className="target-label">x</text>
+  </svg>;
+}
+
+function CircleTangentSingleDiagram({ data }) {
+  const cx = 75; const cy = 75; const r = 48;
+  const px = 195; const py = 75;
+  const d = px - cx;
+  const tx = cx + (r * r) / d; const ty = cy - (r * Math.sqrt(d * d - r * r)) / d;
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label="tangent to circle with right triangle">
+    <circle cx={cx} cy={cy} r={r} className="circle-outline" />
+    <line x1={cx} y1={cy} x2={tx} y2={ty} />
+    <line x1={px} y1={py} x2={tx} y2={ty} className="highlight-edge" strokeWidth="1.8" />
+    <line x1={cx} y1={cy} x2={px} y2={py} stroke="#94a3b8" strokeDasharray="3 3" />
+    <circle cx={cx} cy={cy} r="2.5" /><circle cx={px} cy={py} r="2.5" /><circle cx={tx} cy={ty} r="2.5" />
+    <text x={cx - 10} y={cy + 4} className="point-label">O</text>
+    <text x={tx - 4} y={ty - 6} className="point-label">T</text>
+    <text x={px + 5} y={py + 4} className="point-label">P</text>
+    <text x={(cx + tx) / 2 - 8} y={(cy + ty) / 2 - 4} className="value-label">{data.r}</text>
+    <text x={(tx + px) / 2 + 4} y={(ty + py) / 2 - 5} className={data.target === 'tangent' ? 'target-label' : 'value-label'}>{data.target === 'tangent' ? 'x' : data.pt}</text>
+    <text x={(cx + px) / 2} y={cy + 14} className={data.target === 'hypotenuse' ? 'target-label' : 'value-label'}>{data.target === 'hypotenuse' ? 'x' : data.op}</text>
+  </svg>;
+}
+
+function CircleTangentPairDiagram({ data }) {
+  const cx = 80; const cy = 75; const r = 46;
+  const px = 190; const py = 75;
+  const d = px - cx;
+  const tx = cx + (r * r) / d;
+  const ty1 = cy - (r * Math.sqrt(d * d - r * r)) / d;
+  const ty2 = cy + (r * Math.sqrt(d * d - r * r)) / d;
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label="two tangents from external point">
+    <circle cx={cx} cy={cy} r={r} className="circle-outline" />
+    <line x1={px} y1={py} x2={tx} y2={ty1} className="highlight-edge" />
+    <line x1={px} y1={py} x2={tx} y2={ty2} className="highlight-edge" />
+    <line x1={cx} y1={cy} x2={tx} y2={ty1} />
+    <line x1={cx} y1={cy} x2={tx} y2={ty2} />
+    <line x1={cx} y1={cy} x2={px} y2={py} stroke="#cbd5e1" strokeDasharray="3 3" />
+    <circle cx={cx} cy={cy} r="2.5" /><circle cx={px} cy={py} r="2.5" /><circle cx={tx} cy={ty1} r="2.5" /><circle cx={tx} cy={ty2} r="2.5" />
+    <text x={cx - 10} y={cy + 4} className="point-label">O</text>
+    <text x={tx - 4} y={ty1 - 6} className="point-label">A</text>
+    <text x={tx - 4} y={ty2 + 14} className="point-label">B</text>
+    <text x={px + 5} y={py + 4} className="point-label">P</text>
+    <text x={px - 22} y={py + 4} className="value-label">{data.angleP}°</text>
+    <text x={cx + 12} y={cy + 4} className="value-label">{data.angleAOB}°</text>
+  </svg>;
+}
+
+function CircleTangentTriangleDiagram({ data }) {
+  const cx = 135; const cy = 75; const r = 45;
+  const px = 30; const py = 75;
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label="tangents and inscribed triangle perimeter">
+    <circle cx={cx} cy={cy} r={r} className="circle-outline" />
+    <line x1={px} y1={py} x2="120" y2="30" className="highlight-edge" />
+    <line x1={px} y1={py} x2="120" y2="120" className="highlight-edge" />
+    <line x1="88" y1="46" x2="100" y2="108" stroke="#e11d48" strokeWidth="1.8" />
+    <circle cx={px} cy={py} r="2.5" /><circle cx={cx} cy={cy} r="2" />
+    <text x={px - 10} y={py + 4} className="point-label">P</text>
+    <text x="122" y="28" className="point-label">A</text>
+    <text x="122" y="126" className="point-label">B</text>
+    <text x="82" y="42" className="point-label">C</text>
+    <text x="96" y="118" className="point-label">D</text>
+    <text x="50" y="50" className="value-label">PA={data.pa}</text>
+  </svg>;
+}
+
+function CircleConcentricRingDiagram({ data }) {
+  const cx = 110; const cy = 75; const R = 54; const r = 32;
+  const b = Math.sqrt(R * R - r * r);
+  return <svg className="generated-geometry" viewBox="0 0 230 155" role="img" aria-label="concentric circles ring area">
+    <circle cx={cx} cy={cy} r={R} fill="#f1f5f9" stroke="#334155" strokeWidth="1.5" />
+    <circle cx={cx} cy={cy} r={r} fill="#ffffff" stroke="#334155" strokeWidth="1.5" />
+    <line x1={cx - b} y1={cy - r} x2={cx + b} y2={cy - r} className="highlight-edge" strokeWidth="2" />
+    <circle cx={cx} cy={cy} r="2" /><circle cx={cx} cy={cy - r} r="2" />
+    <text x={cx - 10} y={cy + 4} className="point-label">O</text>
+    <text x={cx - b - 12} y={cy - r + 4} className="point-label">A</text>
+    <text x={cx + b + 5} y={cy - r + 4} className="point-label">B</text>
+    <text x={cx} y={cy - r - 6} textAnchor="middle" className="value-label">{data.chord}cm</text>
+  </svg>;
+}
+
+function CircleIncircleTriDiagram({ data }) {
+  const a = [85, 25]; const b = [35, 125]; const c = [185, 125];
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label="triangle with incircle and tangent segments">
+    <polygon points={`${a[0]},${a[1]} ${b[0]},${b[1]} ${c[0]},${c[1]}`} />
+    <circle cx="95" cy="90" r="32" className="circle-outline" />
+    <circle cx="95" cy="90" r="2" />
+    <text x={a[0] - 4} y={a[1] - 5} className="point-label">A</text>
+    <text x={b[0] - 12} y={b[1] + 12} className="point-label">B</text>
+    <text x={c[0] + 5} y={c[1] + 12} className="point-label">C</text>
+    <text x={(a[0] + b[0]) / 2 - 14} y={(a[1] + b[1]) / 2} className="value-label">{data.c}</text>
+    <text x={(a[0] + c[0]) / 2 + 10} y={(a[1] + c[1]) / 2} className="value-label">{data.b}</text>
+    <text x={(b[0] + c[0]) / 2} y={b[1] + 15} textAnchor="middle" className="value-label">{data.a}</text>
+  </svg>;
+}
+
+function CircleRightIncircleDiagram({ data }) {
+  const a = [50, 30]; const b = [190, 125]; const c = [50, 125];
+  const r = 26;
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label="right triangle with incircle">
+    <polygon points={`${a[0]},${a[1]} ${b[0]},${b[1]} ${c[0]},${c[1]}`} />
+    <path className="right-mark" d={`M${c[0]} ${c[1] - 10} h10 v10`} />
+    <circle cx={c[0] + r} cy={c[1] - r} r={r} className="circle-outline" />
+    <rect x={c[0]} y={c[1] - r} width={r} height={r} stroke="#94a3b8" strokeDasharray="2 2" fill="none" />
+    <circle cx={c[0] + r} cy={c[1] - r} r="2" />
+    <text x={a[0] - 10} y={a[1] + 4} className="point-label">A</text>
+    <text x={b[0] + 5} y={b[1] + 4} className="point-label">B</text>
+    <text x={c[0] - 12} y={c[1] + 12} className="point-label">C</text>
+    <text x={c[0] + r + 3} y={c[1] - r / 2} className="target-label">r</text>
+    <text x={c[0] - 12} y={(a[1] + c[1]) / 2} className="value-label">{data.b}</text>
+    <text x={(c[0] + b[0]) / 2} y={c[1] + 15} textAnchor="middle" className="value-label">{data.a}</text>
+    <text x={(a[0] + b[0]) / 2 + 10} y={(a[1] + b[1]) / 2} className="value-label">{data.c}</text>
+  </svg>;
+}
+
+function CircleCircumscribedQuadDiagram({ data }) {
+  const cx = 110; const cy = 75; const r = 38;
+  const a = [55, 30]; const b = [45, 120]; const c = [175, 120]; const d = [165, 30];
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label="quadrilateral circumscribed about a circle">
+    <polygon points={`${a[0]},${a[1]} ${b[0]},${b[1]} ${c[0]},${c[1]} ${d[0]},${d[1]}`} />
+    <circle cx={cx} cy={cy} r={r} className="circle-outline" />
+    <circle cx={cx} cy={cy} r="2" />
+    <text x={a[0] - 10} y={a[1] - 4} className="point-label">A</text>
+    <text x={b[0] - 12} y={b[1] + 10} className="point-label">B</text>
+    <text x={c[0] + 6} y={c[1] + 10} className="point-label">C</text>
+    <text x={d[0] + 6} y={d[1] - 4} className="point-label">D</text>
+    <text x={cx} y={a[1] - 6} textAnchor="middle" className="value-label">{data.ad || data.ab}</text>
+    <text x={cx} y={b[1] + 15} textAnchor="middle" className="value-label">{data.bc || data.cd}</text>
+    <text x={a[0] - 18} y={(a[1] + b[1]) / 2} className="value-label">{data.ab}</text>
+    <text x={d[0] + 10} y={(d[1] + c[1]) / 2} className="value-label">{data.cd}</text>
+  </svg>;
+}
+
+function CircleInscribedCentralDiagram({ data }) {
+  const cx = 110; const cy = 75; const r = 50;
+  const a = [cx - 40, cy + 30]; const b = [cx + 40, cy + 30]; const p = [cx - 10, cy - 49];
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label="inscribed angle and central angle">
+    <circle cx={cx} cy={cy} r={r} className="circle-outline" />
+    <line x1={cx} y1={cy} x2={a[0]} y2={a[1]} className="guide-line" />
+    <line x1={cx} y1={cy} x2={b[0]} y2={b[1]} className="guide-line" />
+    <line x1={p[0]} y1={p[1]} x2={a[0]} y2={a[1]} className="highlight-edge" />
+    <line x1={p[0]} y1={p[1]} x2={b[0]} y2={b[1]} className="highlight-edge" />
+    <circle cx={cx} cy={cy} r="2.5" /><circle cx={p[0]} cy={p[1]} r="2.5" />
+    <text x={cx + 4} y={cy - 4} className="point-label">O</text>
+    <text x={a[0] - 12} y={a[1] + 8} className="point-label">A</text>
+    <text x={b[0] + 6} y={b[1] + 8} className="point-label">B</text>
+    <text x={p[0] - 4} y={p[1] - 6} className="point-label">P</text>
+    <text x={p[0] + 2} y={p[1] + 18} className="value-label">{data.inscribed}°</text>
+    <text x={cx - 10} y={cy + 18} className="value-label">{data.central}°</text>
+  </svg>;
+}
+
+function CircleSameArcDiagram({ data }) {
+  const cx = 110; const cy = 75; const r = 50;
+  const a = [cx - 45, cy - 20]; const b = [cx - 35, cy + 35];
+  const c = [cx + 35, cy + 35]; const d = [cx + 45, cy - 20];
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label="intersecting chords in circle bowtie angles">
+    <circle cx={cx} cy={cy} r={r} className="circle-outline" />
+    <line x1={a[0]} y1={a[1]} x2={c[0]} y2={c[1]} className="highlight-edge" />
+    <line x1={b[0]} y1={b[1]} x2={d[0]} y2={d[1]} className="highlight-edge" />
+    <line x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} />
+    <line x1={c[0]} y1={c[1]} x2={d[0]} y2={d[1]} />
+    <text x={a[0] - 12} y={a[1] + 2} className="point-label">A</text>
+    <text x={b[0] - 12} y={b[1] + 10} className="point-label">B</text>
+    <text x={c[0] + 6} y={c[1] + 10} className="point-label">C</text>
+    <text x={d[0] + 6} y={d[1] + 2} className="point-label">D</text>
+    <text x={cx - 4} y={cy - 6} className="target-label">x</text>
+  </svg>;
+}
+
+function CircleDiameterAngleDiagram({ data }) {
+  const cx = 110; const cy = 75; const r = 50;
+  const a = [cx - r, cy]; const b = [cx + r, cy]; const c = [cx + 15, cy - 47];
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label="angle inscribed in semicircle is 90 degrees">
+    <circle cx={cx} cy={cy} r={r} className="circle-outline" />
+    <polygon points={`${a[0]},${a[1]} ${b[0]},${b[1]} ${c[0]},${c[1]}`} />
+    <circle cx={cx} cy={cy} r="2" />
+    <path className="right-mark" d={`M${c[0] - 4} ${c[1] + 7} l6 2 l-2 7`} />
+    <text x={cx} y={cy + 14} className="point-label">O</text>
+    <text x={a[0] - 12} y={a[1] + 4} className="point-label">A</text>
+    <text x={b[0] + 6} y={b[1] + 4} className="point-label">B</text>
+    <text x={c[0] + 2} y={c[1] - 6} className="point-label">C</text>
+    <text x={a[0] + 16} y={a[1] - 4} className="value-label">{data.angleA}°</text>
+    <text x={b[0] - 22} y={b[1] - 4} className="target-label">x</text>
+  </svg>;
+}
+
+function CircleArcRatioDiagram({ data }) {
+  const cx = 110; const cy = 75; const r = 50;
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label="arc length and inscribed angle proportionality">
+    <circle cx={cx} cy={cy} r={r} className="circle-outline" />
+    <line x1={cx - 40} y1={cy + 30} x2={cx - 15} y2={cy - 48} />
+    <line x1={cx - 15} y1={cy - 48} x2={cx + 10} y2={cy + 49} />
+    <line x1={cx + 15} y1={cy - 48} x2={cx + 45} y2={cy + 20} />
+    <text x={cx - 48} y={cy + 38} className="point-label">A</text>
+    <text x={cx + 6} y={cy + 52} className="point-label">B</text>
+    <text x={cx - 18} y={cy - 30} className="value-label">{data.angle1}°</text>
+    <text x={cx + 20} y={cy - 30} className="value-label">{data.angle2}°</text>
+  </svg>;
+}
+
+function CircleCyclicQuadDiagram({ data }) {
+  const cx = 110; const cy = 75; const r = 50;
+  const a = [cx - 30, cy - 40]; const b = [cx - 45, cy + 20];
+  const c = [cx + 25, cy + 43]; const d = [cx + 48, cy - 15];
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label="cyclic quadrilateral opposite angles sum to 180">
+    <circle cx={cx} cy={cy} r={r} className="circle-outline" />
+    <polygon points={`${a[0]},${a[1]} ${b[0]},${b[1]} ${c[0]},${c[1]} ${d[0]},${d[1]}`} />
+    <text x={a[0] - 8} y={a[1] - 4} className="point-label">A</text>
+    <text x={b[0] - 12} y={b[1] + 8} className="point-label">B</text>
+    <text x={c[0] + 4} y={c[1] + 12} className="point-label">C</text>
+    <text x={d[0] + 6} y={d[1] - 2} className="point-label">D</text>
+    <text x={a[0] - 2} y={a[1] + 18} className="value-label">{data.angleA}°</text>
+    <text x={c[0] - 18} y={c[1] - 8} className="target-label">x</text>
+  </svg>;
+}
+
+function CircleCyclicExteriorDiagram({ data }) {
+  const cx = 100; const cy = 75; const r = 48;
+  const a = [cx - 28, cy - 39]; const b = [cx - 44, cy + 20];
+  const c = [cx + 24, cy + 41]; const d = [cx + 46, cy - 14];
+  const ex = c[0] + 35; const ey = c[1] + 10;
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label="cyclic quad exterior angle equals interior opposite">
+    <circle cx={cx} cy={cy} r={r} className="circle-outline" />
+    <polygon points={`${a[0]},${a[1]} ${b[0]},${b[1]} ${c[0]},${c[1]} ${d[0]},${d[1]}`} />
+    <line x1={b[0]} y1={b[1]} x2={ex} y2={ey} className="guide-line" />
+    <text x={a[0] - 8} y={a[1] - 4} className="point-label">A</text>
+    <text x={b[0] - 12} y={b[1] + 8} className="point-label">B</text>
+    <text x={c[0] - 4} y={c[1] + 14} className="point-label">C</text>
+    <text x={d[0] + 6} y={d[1] - 2} className="point-label">D</text>
+    <text x={ex + 4} y={ey + 4} className="point-label">E</text>
+    <text x={a[0] - 2} y={a[1] + 18} className="value-label">{data.angleA}°</text>
+    <text x={c[0] + 16} y={c[1] + 6} className="target-label">x</text>
+  </svg>;
+}
+
+function CircleConcyclicFourDiagram({ data }) {
+  const a = [45, 120]; const b = [175, 120];
+  const c = [80, 35]; const d = [140, 35];
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label="four points on a circle condition">
+    <circle cx="110" cy="78" r="54" stroke="#94a3b8" strokeDasharray="3 3" fill="none" />
+    <line x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} strokeWidth="2" />
+    <line x1={a[0]} y1={a[1]} x2={c[0]} y2={c[1]} />
+    <line x1={b[0]} y1={b[1]} x2={c[0]} y2={c[1]} />
+    <line x1={a[0]} y1={a[1]} x2={d[0]} y2={d[1]} stroke="#2563eb" />
+    <line x1={b[0]} y1={b[1]} x2={d[0]} y2={d[1]} stroke="#2563eb" />
+    <text x={a[0] - 10} y={a[1] + 12} className="point-label">A</text>
+    <text x={b[0] + 6} y={b[1] + 12} className="point-label">B</text>
+    <text x={c[0] - 4} y={c[1] - 6} className="point-label">C</text>
+    <text x={d[0] - 4} y={d[1] - 6} className="point-label">D</text>
+    <text x={c[0] - 2} y={c[1] + 20} className="value-label">{data.angle}°</text>
+    <text x={d[0] - 2} y={d[1] + 20} className="target-label">x</text>
+  </svg>;
+}
+
+function CircleTangentChordDiagram({ data }) {
+  const cx = 110; const cy = 70; const r = 48;
+  const a = [cx, cy + r]; const b = [cx - 40, cy - 25]; const c = [cx + 35, cy - 32];
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label="tangent chord angle and inscribed angle">
+    <circle cx={cx} cy={cy} r={r} className="circle-outline" />
+    <polygon points={`${a[0]},${a[1]} ${b[0]},${b[1]} ${c[0]},${c[1]}`} />
+    <line x1="30" y1={a[1]} x2="190" y2={a[1]} className="highlight-edge" strokeWidth="1.8" />
+    <circle cx={a[0]} cy={a[1]} r="2.5" />
+    <text x={a[0] - 4} y={a[1] - 6} className="point-label">A</text>
+    <text x={b[0] - 12} y={b[1] - 2} className="point-label">B</text>
+    <text x={c[0] + 6} y={c[1] - 2} className="point-label">C</text>
+    <text x="32" y={a[1] + 14} className="point-label">T</text>
+    <text x="182" y={a[1] + 14} className="point-label">T'</text>
+    <text x={a[0] - 30} y={a[1] - 6} className="target-label">x</text>
+    <text x={c[0] - 14} y={c[1] + 18} className="value-label">{data.angle}°</text>
+  </svg>;
+}
+
+function CircleTangentDiameterDiagram({ data }) {
+  const cx = 110; const cy = 68; const r = 46;
+  const a = [cx, cy + r]; const b = [cx, cy - r]; const c = [cx - 42, cy - 18];
+  return <svg className="generated-geometry" viewBox="0 0 230 150" role="img" aria-label="tangent chord angle with diameter">
+    <circle cx={cx} cy={cy} r={r} className="circle-outline" />
+    <polygon points={`${a[0]},${a[1]} ${b[0]},${b[1]} ${c[0]},${c[1]}`} />
+    <line x1="30" y1={a[1]} x2="190" y2={a[1]} className="highlight-edge" strokeWidth="1.8" />
+    <circle cx={cx} cy={cy} r="2" />
+    <text x={a[0] + 6} y={a[1] - 6} className="point-label">A</text>
+    <text x={b[0] - 4} y={b[1] - 6} className="point-label">B</text>
+    <text x={c[0] - 12} y={c[1] - 2} className="point-label">C</text>
+    <text x="180" y={a[1] + 14} className="point-label">T</text>
+    <text x={b[0] - 14} y={b[1] + 20} className="target-label">x</text>
+    <text x={a[0] - 28} y={a[1] - 4} className="value-label">{data.chordAngle}°</text>
+  </svg>;
+}
+
+function CircleTwoCirclesTangentDiagram({ data }) {
+  const t = [115, 75];
+  const r1 = 36; const r2 = 36;
+  const c1 = [t[0] - r1, t[1]]; const c2 = [t[0] + r2, t[1]];
+  return <svg className="generated-geometry" viewBox="0 0 240 150" role="img" aria-label="two circles touching externally with common tangent">
+    <circle cx={c1[0]} cy={c1[1]} r={r1} className="circle-outline" />
+    <circle cx={c2[0]} cy={c2[1]} r={r2} className="circle-outline" />
+    <line x1={t[0]} y1="15" x2={t[0]} y2="135" className="guide-line" stroke="#94a3b8" />
+    <line x1="45" y1="50" x2="185" y2="100" className="highlight-edge" />
+    <line x1="45" y1="100" x2="185" y2="50" className="highlight-edge" />
+    <circle cx={t[0]} cy={t[1]} r="2.5" />
+    <text x={t[0] + 4} y={t[1] - 6} className="point-label">T</text>
+    <text x="35" y="52" className="point-label">A</text>
+    <text x="35" y="105" className="point-label">B</text>
+    <text x="190" y="52" className="point-label">C</text>
+    <text x="190" y="105" className="point-label">D</text>
+    <text x="56" y="70" className="value-label">{data.angle1}°</text>
+    <text x="160" y="85" className="target-label">x</text>
+  </svg>;
+}
+
 export default function GeometryDiagram({ diagram }) {
+  if (diagram.kind === 'circle-chord') return <CircleChordDiagram data={diagram} />;
+  if (diagram.kind === 'circle-sagitta') return <CircleSagittaDiagram data={diagram} />;
+  if (diagram.kind === 'circle-folded') return <CircleFoldedDiagram data={diagram} />;
+  if (diagram.kind === 'circle-two-chords') return <CircleTwoChordsDiagram data={diagram} />;
+  if (diagram.kind === 'circle-chords-triangle') return <CircleChordsTriangleDiagram data={diagram} />;
+  if (diagram.kind === 'circle-tangent-single') return <CircleTangentSingleDiagram data={diagram} />;
+  if (diagram.kind === 'circle-tangent-pair') return <CircleTangentPairDiagram data={diagram} />;
+  if (diagram.kind === 'circle-tangent-triangle') return <CircleTangentTriangleDiagram data={diagram} />;
+  if (diagram.kind === 'circle-concentric-ring') return <CircleConcentricRingDiagram data={diagram} />;
+  if (diagram.kind === 'circle-incircle-tri') return <CircleIncircleTriDiagram data={diagram} />;
+  if (diagram.kind === 'circle-right-incircle') return <CircleRightIncircleDiagram data={diagram} />;
+  if (diagram.kind === 'circle-circumscribed-quad') return <CircleCircumscribedQuadDiagram data={diagram} />;
+  if (diagram.kind === 'circle-inscribed-central') return <CircleInscribedCentralDiagram data={diagram} />;
+  if (diagram.kind === 'circle-same-arc') return <CircleSameArcDiagram data={diagram} />;
+  if (diagram.kind === 'circle-diameter-angle') return <CircleDiameterAngleDiagram data={diagram} />;
+  if (diagram.kind === 'circle-arc-ratio') return <CircleArcRatioDiagram data={diagram} />;
+  if (diagram.kind === 'circle-cyclic-quad') return <CircleCyclicQuadDiagram data={diagram} />;
+  if (diagram.kind === 'circle-cyclic-exterior') return <CircleCyclicExteriorDiagram data={diagram} />;
+  if (diagram.kind === 'circle-concyclic-four') return <CircleConcyclicFourDiagram data={diagram} />;
+  if (diagram.kind === 'circle-tangent-chord') return <CircleTangentChordDiagram data={diagram} />;
+  if (diagram.kind === 'circle-tangent-diameter') return <CircleTangentDiameterDiagram data={diagram} />;
+  if (diagram.kind === 'circle-two-circles-tangent') return <CircleTwoCirclesTangentDiagram data={diagram} />;
+
   if (!diagram) return null;
   if (diagram.kind === 'angle') return <AngleDiagram data={diagram} />;
   if (diagram.kind === 'intersecting') return <IntersectingDiagram data={diagram} />;

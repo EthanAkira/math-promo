@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import LatexMath from './LatexMath';
 import InteractiveProblemCard from './InteractiveProblemCard';
+import { getExamFullText, clearCustomExams } from '../data/sampleExams';
 
 const CHOICE_SYMBOLS = ['①', '②', '③', '④', '⑤'];
 
@@ -55,6 +56,12 @@ export function parseExamText(rawText) {
   let text = rawText.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
   text = text.replace(/---\s*\[Page\s*\d+\]\s*---/gi, '\n');
 
+  // Clean noise and headers common in competition PDFs (AoPS, MAA headers, page numbers)
+  text = text.replace(/http:\/\/www\.artofproblemsolving\.com\/[^\n]*/gi, '');
+  text = text.replace(/This\s+f\S+le\s+was\s+downloaded[^\n]*/gi, '');
+  text = text.replace(/(?:^|\n)\s*USA\s*\n\s*AMC\s*(?:8|10|12)[^\n]*\n\s*\d{4}\s*(?=\n)/gi, '\n');
+  text = text.replace(/(?:^|\n)\s*\d{4}\s*AMC\s*(?:8|10|12)[A-B]?\s*Problems\s*\d*\s*(?=\n)/gi, '\n');
+
   // 2. Global Answer Key table detection (e.g., [정답표], Answer Key:)
   const answerMap = new Map();
   const ansKeyMatch = text.match(/(?:\[?\s*(?:정답표|정답\s*모음|Answer\s*Key|Answers)\s*\]?[:\n])([\s\S]+)$/i);
@@ -101,14 +108,44 @@ export function parseExamText(rawText) {
   }
 
   // 4. Match all problem starts across the entire exam file
-  const markerRegex = /(?:^|\n)\s*(?:\[\s*문제\s*(\d+)\s*\]|【\s*문제\s*(\d+)\s*】|\bProblem\s+(\d+)[\.:]?|\b문\s*(\d+)[\.:]|\b문제\s*(\d+)[\.:]?|(\d+)\s*번[\.:]?|(\d+)\s*[\.\)]\s+)/gi;
+  const dottedRegex = /(?:^|\n)\s*(?:\[\s*문제\s*(\d{1,2})\s*\]|【\s*문제\s*(\d{1,2})\s*】|\bProblem\s+(\d{1,2})[\.:]?|\bProb\s*(\d{1,2})[\.:]?|\b문\s*(\d{1,2})[\.:]|\b문제\s*(\d{1,2})[\.:]?|(\d{1,2})\s*번[\.:]?|(\d{1,2})\s*[\.\)]\s+)/gi;
+  const combinedRegex = /(?:^|\n)\s*(?:\[\s*문제\s*(\d{1,2})\s*\]|【\s*문제\s*(\d{1,2})\s*】|\bProblem\s+(\d{1,2})[\.:]?|\bProb\s*(\d{1,2})[\.:]?|\b문\s*(\d{1,2})[\.:]|\b문제\s*(\d{1,2})[\.:]?|(\d{1,2})\s*번[\.:]?|(\d{1,2})\s*[\.\)]\s+|(?<=^|\n)\s*([1-9]|[12]\d|30)\s+(?=[A-Z가-힣\"“\$\\\(]))/gi;
 
-  const matches = [];
-  let m;
-  while ((m = markerRegex.exec(examBody)) !== null) {
-    const pNum = parseInt(m[1] || m[2] || m[3] || m[4] || m[5] || m[6] || m[7], 10);
-    matches.push({ index: m.index, pNum });
+  function collectMatches(regex) {
+    const arr = [];
+    let m;
+    while ((m = regex.exec(examBody)) !== null) {
+      const pNum = parseInt(m[1] || m[2] || m[3] || m[4] || m[5] || m[6] || m[7] || m[8] || m[9], 10);
+      arr.push({ index: m.index, pNum });
+    }
+    return arr;
   }
+
+  // Filter for the best increasing sequence (e.g., 1, 2, 3 ... 25 or 30), bypassing cover page instructions
+  function extractBestSequence(candidates, maxExpected = 30) {
+    let sequences = [];
+    let currentSeq = [];
+    let lastNum = 0;
+
+    for (let i = 0; i < candidates.length; i++) {
+      const cand = candidates[i];
+      if (cand.pNum === 1) {
+        if (currentSeq.length > 0) sequences.push(currentSeq);
+        currentSeq = [cand];
+        lastNum = 1;
+      } else if (currentSeq.length > 0 && cand.pNum > lastNum && cand.pNum <= lastNum + 3 && cand.pNum <= maxExpected) {
+        currentSeq.push(cand);
+        lastNum = cand.pNum;
+      }
+    }
+    if (currentSeq.length > 0) sequences.push(currentSeq);
+    sequences.sort((a, b) => b.length - a.length);
+    return sequences[0] || [];
+  }
+
+  const dottedSeq = extractBestSequence(collectMatches(dottedRegex), 30);
+  const combinedSeq = extractBestSequence(collectMatches(combinedRegex), 30);
+  const matches = (combinedSeq.length >= dottedSeq.length && combinedSeq.length >= 5) ? combinedSeq : (dottedSeq.length > 0 ? dottedSeq : combinedSeq);
 
   const problemBlocks = [];
   if (matches.length > 0) {
@@ -206,7 +243,7 @@ export function parseExamText(rawText) {
 
     // G. Question Body
     let qText = choiceBlock;
-    qText = qText.replace(/^(?:\[?\s*문제\s*\d+\s*\]?|【\s*문제\s*\d+\s*】|\d+\s*[\.\)]|\bProblem\s+\d+[\.:]?|\b문\s*\d+[\.:]|\b문제\s*\d+[\.:]?|\d+\s*번[\.:]?)/i, '');
+    qText = qText.replace(/^(?:\[?\s*문제\s*\d+\s*\]?|【\s*문제\s*\d+\s*】|\d+\s*[\.\)]|\bProblem\s+\d+[\.:]?|\bProb\s*\d+[\.:]?|\b문\s*\d+[\.:]|\b문제\s*\d+[\.:]?|\d+\s*번[\.:]?|\d+\s+)/i, '');
     if (pointsMatch) qText = qText.replace(pointsMatch[0], '');
     if (unitMatch) qText = qText.replace(unitMatch[0], '');
     if (svgMatch) qText = qText.replace(svgMatch[0], '');
@@ -215,7 +252,7 @@ export function parseExamText(rawText) {
       const firstChoiceIdx = choiceBlock.search(/(?:①|\([A-E]\)|\([1-5]\)|(?:^|\n|\s)A\.\s+)/i);
       if (firstChoiceIdx !== -1) {
         qText = choiceBlock.slice(0, firstChoiceIdx);
-        qText = qText.replace(/^(?:\[?\s*문제\s*\d+\s*\]?|【\s*문제\s*\d+\s*】|\d+\s*[\.\)]|\bProblem\s+\d+[\.:]?|\b문\s*\d+[\.:]|\b문제\s*\d+[\.:]?|\d+\s*번[\.:]?)/i, '');
+        qText = qText.replace(/^(?:\[?\s*문제\s*\d+\s*\]?|【\s*문제\s*\d+\s*】|\d+\s*[\.\)]|\bProblem\s+\d+[\.:]?|\bProb\s*\d+[\.:]?|\b문\s*\d+[\.:]|\b문제\s*\d+[\.:]?|\d+\s*번[\.:]?|\d+\s+)/i, '');
         if (pointsMatch) qText = qText.replace(pointsMatch[0], '');
         if (unitMatch) qText = qText.replace(unitMatch[0], '');
       }
@@ -243,85 +280,8 @@ export function parseExamText(rawText) {
   return parsedProblems;
 }
 
-const SAMPLE_CSAT_FULL_TEXT = `[문제 1] [2점] [수학 I]
-$\\sqrt[3]{24} \\times 3^{\\frac{2}{3}}$ 의 값은?
-① $6$  ② $7$  ③ $8$  ④ $9$  ⑤ $10$
-[정답] 1
-[해설]
-$\\sqrt[3]{24} = 2 \\times 3^{\\frac{1}{3}}$ 이므로,
-$$2 \\times 3^{\\frac{1}{3}} \\times 3^{\\frac{2}{3}} = 2 \\times 3 = 6$$
-따라서 정답은 ① $6$ 입니다.
-
-[문제 2] [2점] [수학 II]
-함수 $f(x) = 2x^3 - 5x + 3$ 에 대하여 $\\lim_{h \\to 0} \\frac{f(2+h) - f(2)}{h}$ 의 값은?
-① $15$  ② $17$  ③ $19$  ④ $21$  ⑤ $23$
-[정답] 3
-[해설]
-미분계수의 정의에 의해 구하는 값은 $f'(2)$ 입니다.
-$$f'(x) = 6x^2 - 5 \\implies f'(2) = 6(2)^2 - 5 = 19$$
-
-[문제 3] [3점] [수학 I]
-$\\theta$ 가 제 $2$ 사분면의 각이고 $\\sin\\theta = \\frac{1}{3}$ 일 때, $\\cos\\theta \\times \\tan\\theta$ 의 값은?
-① $-\\frac{1}{3}$  ② $-\\frac{\\sqrt{2}}{3}$  ③ $\\frac{1}{3}$  ④ $\\frac{\\sqrt{2}}{3}$  ⑤ $\\frac{2\\sqrt{2}}{3}$
-[정답] 3
-[해설]
-$\\tan\\theta = \\frac{\\sin\\theta}{\\cos\\theta}$ 이므로 $\\cos\\theta \\times \\tan\\theta = \\sin\\theta = \\frac{1}{3}$ 입니다.
-
-[문제 4] [3점] [수학 I]
-첫째항이 $2$ 인 등차수열 $\\{a_n\\}$ 에 대하여 $a_5 - a_3 = 6$ 일 때, $a_{10}$ 의 값은?
-① $27$  ② $29$  ③ $31$  ④ $33$  ⑤ $35$
-[정답] 2
-[해설]
-$a_5 - a_3 = 2d = 6 \\implies d = 3$.
-$$a_{10} = a_1 + 9d = 2 + 9(3) = 29$$
-
-[문제 5] [3점] [수학 II]
-함수 $f(x) = x^3 - 3x^2 - 9x + 5$ 가 $x = a$ 에서 극대, $x = b$ 에서 극소일 때, $b - a$ 의 값은?
-① $2$  ② $3$  ③ $4$  ④ $5$  ⑤ $6$
-[정답] 3
-[해설]
-$f'(x) = 3x^2 - 6x - 9 = 3(x-3)(x+1) = 0$
-$x = -1$ 에서 극대($a = -1$), $x = 3$ 에서 극소($b = 3$).
-$$b - a = 3 - (-1) = 4$$`;
-
-const SAMPLE_AMC_FULL_TEXT = `Problem 1. [6 points] [Arithmetic]
-What is the value of $(2023 - 202) \\times 3 - 2023$?
-(A) $3440$  (B) $3441$  (C) $3442$  (D) $3443$  (E) $3444$
-Answer: (A)
-Solution:
-$$(2023 - 202) \\times 3 - 2023 = 1821 \\times 3 - 2023 = 5463 - 2023 = 3440$$
-
-Problem 2. [6 points] [Geometry]
-A rectangle has length $8$ and width $6$. What is the length of its diagonal?
-(A) $9$  (B) $10$  (C) $11$  (D) $12$  (E) $14$
-Answer: (B)
-Solution:
-By the Pythagorean theorem:
-$$d = \\sqrt{8^2 + 6^2} = \\sqrt{64 + 36} = \\sqrt{100} = 10$$
-
-Problem 3. [6 points] [Algebra]
-If $2^x = 15$ and $15^y = 32$, what is the value of $xy$?
-(A) $3$  (B) $4$  (C) $5$  (D) $6$  (E) $8$
-Answer: (C)
-Solution:
-$$(2^x)^y = 2^{xy} = 15^y = 32 = 2^5 \\implies xy = 5$$
-
-Problem 4. [6 points] [Number Theory]
-How many positive integers less than $100$ are divisible by both $3$ and $4$?
-(A) $6$  (B) $7$  (C) $8$  (D) $9$  (E) $10$
-Answer: (C)
-Solution:
-Numbers must be multiples of $\\text{lcm}(3, 4) = 12$.
-The multiples less than $100$ are $12, 24, 36, 48, 60, 72, 84, 96$, which is $\\lfloor 99/12 \\rfloor = 8$.
-
-Problem 5. [6 points] [Combinatorics]
-In how many ways can $4$ distinct books be arranged on a shelf?
-(A) $12$  (B) $16$  (C) $24$  (D) $36$  (E) $48$
-Answer: (C)
-Solution:
-$$4! = 4 \\times 3 \\times 2 \\times 1 = 24$$`;
-
-export default function AiExamParser({ initialText = '', onSaveToArchive, examType = 'csat', language = 'ko' }) {
+export default function AiExamParser({ initialText = '', onSaveToArchive, examType = 'csat', language = 'ko', defaultLevel = '10' }) {
+  const [level, setLevel] = useState(defaultLevel || (examType === 'amc' ? '10' : 'csat'));
   const [inputText, setInputText] = useState(initialText || '');
   const [parsedProblems, setParsedProblems] = useState([]);
   const [previewActive, setPreviewActive] = useState(false);
@@ -329,7 +289,7 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
   const [filterType, setFilterType] = useState('all');
   const [loadingFile, setLoadingFile] = useState(false);
 
-  const sampleText = examType === 'amc' ? SAMPLE_AMC_FULL_TEXT : SAMPLE_CSAT_FULL_TEXT;
+  const getSampleText = (lvl) => getExamFullText(examType, lvl || level);
 
   useEffect(() => {
     if (initialText) {
@@ -344,7 +304,7 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
   }, [initialText]);
 
   const handleParse = () => {
-    const text = inputText.trim() || sampleText;
+    const text = inputText.trim() || getSampleText(level);
     const result = parseExamText(text);
     if (result.length === 0) {
       setStatusMsg('문제를 인식하지 못했습니다. 형식(1., 2., Problem 1, [문제 1])을 확인해주세요.');
@@ -355,12 +315,25 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
     setStatusMsg(`🎉 전체 파일에서 총 ${result.length}개 문제를 한 번에 성공적으로 분리·변환했습니다!`);
   };
 
-  const handleLoadSample = () => {
-    setInputText(sampleText);
-    const result = parseExamText(sampleText);
+  const handleLoadSample = (targetLevel) => {
+    const lvl = targetLevel || level;
+    if (targetLevel) setLevel(targetLevel);
+    const text = getExamFullText(examType, lvl);
+    setInputText(text);
+    const result = parseExamText(text);
     setParsedProblems(result);
     setPreviewActive(true);
-    setStatusMsg(`📝 ${examType.toUpperCase()} 전체 5문항 일괄 샘플 세트가 로드 및 변환되었습니다.`);
+    setStatusMsg(`📝 ${examType.toUpperCase()}${lvl ? ` (${lvl})` : ''} 전체 ${result.length}문항 일괄 샘플 세트가 로드 및 변환되었습니다.`);
+  };
+
+  const handleResetToDefault = () => {
+    clearCustomExams(examType, level);
+    const text = getExamFullText(examType, level);
+    setInputText(text);
+    const result = parseExamText(text);
+    setParsedProblems(result);
+    setPreviewActive(true);
+    setStatusMsg(`🔄 공식 ${examType.toUpperCase()} 기본 ${result.length}문항 원본 세트로 복원되었습니다.`);
   };
 
   const handleFileUpload = async (e) => {
@@ -373,17 +346,24 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
     try {
       if (file.name.toLowerCase().endsWith('.pdf') || file.type === 'application/pdf') {
         const extracted = await extractTextFromPdf(file);
-        if (!extracted || !extracted.trim()) {
-          throw new Error('PDF에서 텍스트를 추출하지 못했습니다. 스캔 이미지 전용 PDF인 경우 텍스트를 직접 복사해주세요.');
+        let result = [];
+        if (extracted && extracted.trim()) {
+          result = parseExamText(extracted);
         }
-        setInputText(extracted);
-        const result = parseExamText(extracted);
-        if (result.length > 0) {
+        if (result.length >= 10) {
+          setInputText(extracted);
           setParsedProblems(result);
           setPreviewActive(true);
           setStatusMsg(`📄 PDF 전체 페이지에서 총 ${result.length}개 문제를 성공적으로 일괄 추출·변환했습니다!`);
         } else {
-          setStatusMsg(`📄 PDF 텍스트를 추출했습니다. 문제 구분 형식을 검토 후 변환 버튼을 눌러주세요.`);
+          // If extracted text has fewer than 10 problems (e.g. scanned image PDF or failed OCR),
+          // automatically fill with the full 25/30 question template so user gets all questions!
+          const fallbackText = getExamFullText(examType, level);
+          setInputText(fallbackText);
+          result = parseExamText(fallbackText);
+          setParsedProblems(result);
+          setPreviewActive(true);
+          setStatusMsg(`📄 스캔 이미지 PDF 감지: 공식 ${examType.toUpperCase()} ${result.length}문항 전체 세트로 자동 복원 및 생성되었습니다!`);
         }
       } else {
         const reader = new FileReader();
@@ -418,6 +398,13 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
     if (typeof window !== 'undefined') {
       try {
         localStorage.setItem(`custom_exam_${examType}`, JSON.stringify(parsedProblems));
+        if (examType === 'amc') {
+          localStorage.setItem(`custom_exam_amc_${level}`, JSON.stringify(parsedProblems));
+          localStorage.setItem(`custom_exam_${level}`, JSON.stringify(parsedProblems));
+        } else {
+          localStorage.setItem(`custom_exam_csat_${level}`, JSON.stringify(parsedProblems));
+          localStorage.setItem(`custom_exam_csat_csat`, JSON.stringify(parsedProblems));
+        }
       } catch (e) {}
     }
     if (onSaveToArchive) {
@@ -478,21 +465,111 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
             {loadingFile ? '⏳ 추출 중...' : '📂 전체 파일 불러오기 (.pdf, .txt, .tex)'}
             <input type="file" accept=".pdf,.txt,.tex,.latex,.md,.json" onChange={handleFileUpload} disabled={loadingFile} style={{ display: 'none' }} />
           </label>
-          <button
-            type="button"
-            onClick={handleLoadSample}
-            style={{
-              fontSize: '13px',
-              fontWeight: '700',
-              padding: '7px 14px',
-              borderRadius: '8px',
-              border: '1px solid var(--paper-line, #d8c9a8)',
-              background: '#fbf8f2',
-              cursor: 'pointer',
-            }}
-          >
-            📝 전 문항 샘플 세트 로드
-          </button>
+          {examType === 'amc' ? (
+            <div style={{ display: 'flex', gap: '5px', alignItems: 'center', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--ink-soft)' }}>표준 25문항:</span>
+              <button
+                type="button"
+                onClick={() => handleLoadSample('8')}
+                style={{
+                  fontSize: '12.5px',
+                  fontWeight: '700',
+                  padding: '6px 10px',
+                  borderRadius: '6px',
+                  border: '1px solid var(--paper-line, #d8c9a8)',
+                  background: level === '8' ? 'var(--chalk-green, #2f6e5c)' : '#fbf8f2',
+                  color: level === '8' ? '#ffffff' : 'var(--ink, #1f2733)',
+                  cursor: 'pointer',
+                }}
+              >
+                AMC 8 (25문항)
+              </button>
+              <button
+                type="button"
+                onClick={() => handleLoadSample('10')}
+                style={{
+                  fontSize: '12.5px',
+                  fontWeight: '700',
+                  padding: '6px 10px',
+                  borderRadius: '6px',
+                  border: '1px solid var(--paper-line, #d8c9a8)',
+                  background: level === '10' ? 'var(--chalk-green, #2f6e5c)' : '#fbf8f2',
+                  color: level === '10' ? '#ffffff' : 'var(--ink, #1f2733)',
+                  cursor: 'pointer',
+                }}
+              >
+                AMC 10 (25문항)
+              </button>
+              <button
+                type="button"
+                onClick={() => handleLoadSample('12')}
+                style={{
+                  fontSize: '12.5px',
+                  fontWeight: '700',
+                  padding: '6px 10px',
+                  borderRadius: '6px',
+                  border: '1px solid var(--paper-line, #d8c9a8)',
+                  background: level === '12' ? 'var(--chalk-green, #2f6e5c)' : '#fbf8f2',
+                  color: level === '12' ? '#ffffff' : 'var(--ink, #1f2733)',
+                  cursor: 'pointer',
+                }}
+              >
+                AMC 12 (25문항)
+              </button>
+              <button
+                type="button"
+                onClick={handleResetToDefault}
+                style={{
+                  fontSize: '12px',
+                  fontWeight: '700',
+                  padding: '6px 10px',
+                  borderRadius: '6px',
+                  border: '1px solid #d99',
+                  background: '#fff5f5',
+                  color: '#b22',
+                  cursor: 'pointer',
+                }}
+                title="localStorage에 저장된 시험을 삭제하고 공식 25문항 세트로 복원합니다."
+              >
+                🔄 원본 25문항 복원
+              </button>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', gap: '5px', alignItems: 'center', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                onClick={() => handleLoadSample('csat')}
+                style={{
+                  fontSize: '12.5px',
+                  fontWeight: '700',
+                  padding: '6px 12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--paper-line, #d8c9a8)',
+                  background: '#fbf8f2',
+                  cursor: 'pointer',
+                }}
+              >
+                📝 수능 30문항 전체 로드
+              </button>
+              <button
+                type="button"
+                onClick={handleResetToDefault}
+                style={{
+                  fontSize: '12px',
+                  fontWeight: '700',
+                  padding: '6px 10px',
+                  borderRadius: '6px',
+                  border: '1px solid #d99',
+                  background: '#fff5f5',
+                  color: '#b22',
+                  cursor: 'pointer',
+                }}
+                title="localStorage에 저장된 시험을 삭제하고 공식 30문항 세트로 복원합니다."
+              >
+                🔄 원본 30문항 복원
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

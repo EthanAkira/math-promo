@@ -4,6 +4,7 @@ import { ADVANCED_GEOMETRY_CHALLENGE_UNITS } from './advancedGeometryChallengeEn
 import { MIDDLE_GEOMETRY_BASIC_UNITS } from './middleGeometryBasicsEngine';
 import { TRIANGLE_QUADRILATERAL_UNITS } from './triangleQuadrilateralEngine';
 import { TRIANGLE_SIMILARITY_UNITS } from './triangleSimilarityEngine';
+import { CIRCLE_PROPERTIES_UNITS } from './circlePropertiesEngine';
 
 function randomInt(random, min, max) {
   return Math.floor(random() * (max - min + 1)) + min;
@@ -324,6 +325,15 @@ const CURRICULUM_PROFILES = {
   'midsegment-theorem': ['kr-middle-2', 'geometry'],
   'triangle-centroid-median': ['kr-middle-2', 'geometry'],
   'pythagorean-applications': ['kr-middle-2', 'geometry'],
+
+  // CIRCLE_PROPERTIES_UNITS (circlePropertiesEngine.js - RPM 중3-2 원의 성질)
+  'circle-chord-properties': ['kr-middle-3', 'geometry', 'amc12'],
+  'circle-tangent-properties': ['kr-middle-3', 'geometry', 'amc12'],
+  'circle-inscribed-circumscribed': ['kr-middle-3', 'geometry', 'amc12'],
+  'circle-inscribed-angles': ['kr-middle-3', 'geometry', 'amc12'],
+  'circle-cyclic-quadrilaterals': ['kr-middle-3', 'geometry', 'amc12'],
+  'circle-tangent-chord-angles': ['kr-middle-3', 'geometry', 'amc12'],
+  'circle-properties-mixed': ['kr-middle-3', 'geometry', 'amc12'],
 };
 
 function withCurriculumProfiles(units) {
@@ -344,6 +354,7 @@ export const BASIC_FIGURE_UNITS = [
   ...withCurriculumProfiles(MIDDLE_GEOMETRY_BASIC_UNITS),
   ...withCurriculumProfiles(TRIANGLE_QUADRILATERAL_UNITS),
   ...withCurriculumProfiles(TRIANGLE_SIMILARITY_UNITS),
+  ...withCurriculumProfiles(CIRCLE_PROPERTIES_UNITS),
   ...ADVANCED_GEOMETRY_UNITS,
   ...ADVANCED_GEOMETRY_CHALLENGE_UNITS,
 ];

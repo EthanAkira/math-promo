@@ -1772,22 +1772,116 @@ export const SAMPLE_AMC_12_FULL = {
 };
 
 // Dynamic helper returning problem set for given level & exam
-export function getInteractiveProblems(category, levelOrType) {
+export function getInteractiveProblems(category, levelOrType, year, variantId) {
   if (typeof window !== 'undefined') {
     try {
-      const customData = localStorage.getItem(`custom_exam_${levelOrType}`);
-      if (customData) {
-        const parsed = JSON.parse(customData);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      const keys = [];
+      if (year && variantId) {
+        keys.push(`custom_exam_${category}_${levelOrType}_${year}_${variantId}`);
+      }
+      if (year) {
+        keys.push(`custom_exam_${category}_${levelOrType}_${year}`);
+      }
+      keys.push(
+        `custom_exam_${category}_${levelOrType}`,
+        `custom_exam_${levelOrType}`,
+        `custom_exam_${category}`
+      );
+
+      for (const k of keys) {
+        const customData = localStorage.getItem(k);
+        if (customData) {
+          try {
+            const parsed = JSON.parse(customData);
+            // If stored custom exam has fewer than 10 problems while standard exam has 25/30,
+            // it is an outdated fallback snippet from older builds — discard & purge it!
+            if (Array.isArray(parsed) && parsed.length >= 10) {
+              return parsed;
+            } else if (Array.isArray(parsed) && parsed.length < 10) {
+              localStorage.removeItem(k);
+            }
+          } catch (pe) {
+            localStorage.removeItem(k);
+          }
+        }
       }
     } catch (e) {}
   }
 
   if (category === 'amc') {
-    if (levelOrType === '8') return SAMPLE_AMC_8_FULL.problems;
-    if (levelOrType === '12') return SAMPLE_AMC_12_FULL.problems;
+    if (String(levelOrType) === '8') return SAMPLE_AMC_8_FULL.problems;
+    if (String(levelOrType) === '12') return SAMPLE_AMC_12_FULL.problems;
     return SAMPLE_AMC_10_2023.problems;
   }
 
   return SAMPLE_CSAT_2024.problems;
 }
+
+export function clearCustomExams(category, levelOrType, year, variantId) {
+  if (typeof window === 'undefined') return;
+  try {
+    const keys = [
+      `custom_exam_${category}_${levelOrType}`,
+      `custom_exam_${levelOrType}`,
+      `custom_exam_${category}`,
+      'custom_exam_amc',
+      'custom_exam_csat',
+      'custom_exam_8',
+      'custom_exam_10',
+      'custom_exam_12',
+    ];
+    if (year && variantId) {
+      keys.push(`custom_exam_${category}_${levelOrType}_${year}_${variantId}`);
+    }
+    if (year) {
+      keys.push(`custom_exam_${category}_${levelOrType}_${year}`);
+    }
+    keys.forEach((k) => localStorage.removeItem(k));
+  } catch (e) {}
+}
+
+export function formatExamAsText(exam) {
+  if (!exam || !exam.problems) return '';
+  const choiceMarkers = ['(A)', '(B)', '(C)', '(D)', '(E)'];
+  const numMarkers = ['①', '②', '③', '④', '⑤'];
+  const isCsat = exam.examType === 'csat';
+
+  return exam.problems.map((p) => {
+    const pNum = p.number || 1;
+    const pts = p.points ? (isCsat ? ` [${p.points}점]` : ` [${p.points} points]`) : '';
+    const unit = p.unit ? ` [${p.unit}]` : '';
+    const header = isCsat ? `[문제 ${pNum}]${pts}${unit}` : `Problem ${pNum}.${pts}${unit}`;
+
+    let choicesStr = '';
+    if (p.choices && p.choices.length > 0) {
+      choicesStr = '\n' + p.choices.map((c, idx) => {
+        const marker = isCsat ? numMarkers[idx] : choiceMarkers[idx];
+        return `${marker} ${c}`;
+      }).join('  ');
+    }
+
+    let answerStr = '';
+    if (p.type === 'subjective') {
+      answerStr = `\n${isCsat ? '[정답]' : 'Answer:'} ${p.correctAnswer}`;
+    } else {
+      const ansIdx = typeof p.correctAnswer === 'number' ? p.correctAnswer : 0;
+      const ansChar = isCsat ? (ansIdx + 1) : (choiceMarkers[ansIdx] || '(A)');
+      answerStr = `\n${isCsat ? '[정답]' : 'Answer:'} ${ansChar}`;
+    }
+
+    const solHeader = isCsat ? '[해설]' : 'Solution:';
+    const solStr = p.explanation ? `\n${solHeader}\n${p.explanation}` : '';
+
+    return `${header}\n${p.question}${choicesStr}${answerStr}${solStr}`;
+  }).join('\n\n');
+}
+
+export function getExamFullText(category, levelOrType) {
+  if (category === 'amc') {
+    if (String(levelOrType) === '8') return formatExamAsText(SAMPLE_AMC_8_FULL);
+    if (String(levelOrType) === '12') return formatExamAsText(SAMPLE_AMC_12_FULL);
+    return formatExamAsText(SAMPLE_AMC_10_2023);
+  }
+  return formatExamAsText(SAMPLE_CSAT_2024);
+}
+

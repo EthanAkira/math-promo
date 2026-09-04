@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import katex from 'katex';
 import { useLanguage } from '../language';
 import InteractiveExamWorkspace from '../components/InteractiveExamWorkspace';
-import { getInteractiveProblems } from '../data/sampleExams';
+import { getInteractiveProblems, clearCustomExams } from '../data/sampleExams';
+import { extractTextFromPdf, parseExamText } from '../components/AiExamParser';
 
 const COPY = {
   ko: {
@@ -139,6 +140,8 @@ export default function CsatExamArchive({ examType, label, description }) {
   const [status, setStatus] = useState('loading');
   const [selectedKey, setSelectedKey] = useState(null);
   const [viewMode, setViewMode] = useState('interactive');
+  const [interactiveProblems, setInteractiveProblems] = useState(null);
+  const [loadingInteractive, setLoadingInteractive] = useState(false);
 
   useEffect(() => {
     function syncFromUrl() {
@@ -150,6 +153,21 @@ export default function CsatExamArchive({ examType, label, description }) {
     syncFromUrl();
     window.addEventListener('popstate', syncFromUrl);
     return () => window.removeEventListener('popstate', syncFromUrl);
+  }, []);
+
+  useEffect(() => {
+    // Automatically purge any stale snippets with < 10 problems from previous test sessions
+    try {
+      ['custom_exam_8', 'custom_exam_10', 'custom_exam_12', 'custom_exam_amc', 'custom_exam_csat'].forEach((k) => {
+        const item = localStorage.getItem(k);
+        if (item) {
+          const parsed = JSON.parse(item);
+          if (Array.isArray(parsed) && parsed.length < 10) {
+            localStorage.removeItem(k);
+          }
+        }
+      });
+    } catch (e) {}
   }, []);
 
   useEffect(() => {
@@ -186,6 +204,57 @@ export default function CsatExamArchive({ examType, label, description }) {
     selectedEntry = years.find((entry) => String(entry.year) === yearStr) || { year: parseInt(yearStr) || 2024, variants: [] };
     selectedVariant = (selectedEntry && selectedEntry.variants.find((item) => item.id === variantId)) || { id: variantId, label: '홀수형 (인터랙티브 풀이 세트)', files: {} };
   }
+
+  useEffect(() => {
+    if (!selectedEntry || !selectedVariant) return;
+
+    // 1. Initial check: cached session problems in localStorage or fallback 30 problems
+    const current = getInteractiveProblems('csat', examType, selectedEntry.year, selectedVariant.id);
+    setInteractiveProblems(current);
+
+    // 2. If problem file exists in session and not yet cached for this session, extract & parse
+    const problemFile = selectedVariant.files?.problems || selectedVariant.files?.variant_problem;
+    const sessionKey = `custom_exam_csat_${examType}_${selectedEntry.year}_${selectedVariant.id}`;
+    let isAlreadyCached = false;
+    try {
+      isAlreadyCached = !!localStorage.getItem(sessionKey);
+    } catch (e) {}
+
+    if (problemFile?.key && !isAlreadyCached) {
+      let cancelled = false;
+      setLoadingInteractive(true);
+      fetch(`/api/csat/file?key=${encodeURIComponent(problemFile.key)}`)
+        .then((res) => {
+          if (!res.ok) throw new Error('Could not fetch file');
+          return res.arrayBuffer();
+        })
+        .then(async (ab) => {
+          let extracted = '';
+          try {
+            extracted = await extractTextFromPdf(ab);
+          } catch (e) {}
+          let parsed = [];
+          if (extracted && extracted.trim()) {
+            parsed = parseExamText(extracted);
+          }
+          if (!cancelled) {
+            if (parsed.length >= 10) {
+              try {
+                localStorage.setItem(sessionKey, JSON.stringify(parsed));
+                localStorage.setItem(`custom_exam_csat_${examType}`, JSON.stringify(parsed));
+              } catch (e) {}
+              setInteractiveProblems(parsed);
+            }
+            setLoadingInteractive(false);
+          }
+        })
+        .catch(() => {
+          if (!cancelled) setLoadingInteractive(false);
+        });
+
+      return () => { cancelled = true; };
+    }
+  }, [examType, selectedEntry?.year, selectedVariant?.id, selectedVariant?.files?.problems?.key]);
 
   if (status === 'ready' && selectedEntry && selectedVariant) {
     const allTypes = Object.keys(selectedVariant.files);
@@ -236,13 +305,41 @@ export default function CsatExamArchive({ examType, label, description }) {
         >
           📄 {language === 'ko' ? '기출 PDF/파일 뷰어' : 'PDF / File Viewer'}
         </button>
+        <button
+          type="button"
+          onClick={() => {
+            clearCustomExams('csat', examType, selectedEntry?.year, selectedVariant?.id);
+            const refreshed = getInteractiveProblems('csat', examType, selectedEntry?.year, selectedVariant?.id);
+            setInteractiveProblems(refreshed);
+          }}
+          style={{
+            fontSize: '13px',
+            fontWeight: '600',
+            padding: '9px 14px',
+            borderRadius: '10px',
+            border: '1px solid #d8c9a8',
+            cursor: 'pointer',
+            background: '#faf7f2',
+            color: '#666',
+            marginLeft: 'auto',
+          }}
+          title="기출 기본 30문항으로 초기화"
+        >
+          🔄 {language === 'ko' ? '기본 30문항 복원' : 'Reset 30Q'}
+        </button>
       </div>
+
+      {loadingInteractive ? (
+        <div style={{ padding: '12px 18px', marginBottom: '16px', background: '#fdf3d7', border: '1px solid #e0c885', borderRadius: '8px', fontSize: '14px', color: '#8a6508' }}>
+          ⏳ 등록된 수능 PDF 원본 시험지에서 전 문항(30문항)을 인터랙티브 문제 세트로 분석·불러오는 중입니다...
+        </div>
+      ) : null}
 
       {viewMode === 'interactive' ? (
         <InteractiveExamWorkspace
           title={`${selectedEntry.year} ${selectedVariant.label}`}
           subtitle={language === 'ko' ? 'LaTeX 수식 · SVG 그래픽 · 태블릿 펜슬 필기장 지원' : 'KaTeX Math · SVG Figures · Tablet Stylus Scratchpad'}
-          problems={getInteractiveProblems('csat', examType)}
+          problems={interactiveProblems || getInteractiveProblems('csat', examType, selectedEntry?.year, selectedVariant?.id)}
           language={language}
         />
       ) : (
