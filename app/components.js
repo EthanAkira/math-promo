@@ -12,6 +12,7 @@ export function SiteHeader() {
   const [authMode, setAuthMode] = useState(null);
 
   return (
+    <>
     <header className="site-header-academic">
       <div className="site-header-inner">
         <a href="/" className="site-brand-academic">
@@ -65,9 +66,10 @@ export function SiteHeader() {
           ) : null}
         </div>
       </div>
-
-      {authMode ? <AuthModal mode={authMode} onClose={() => setAuthMode(null)} /> : null}
     </header>
+
+    {authMode ? <AuthModal mode={authMode} onClose={() => setAuthMode(null)} /> : null}
+    </>
   );
 }
 
