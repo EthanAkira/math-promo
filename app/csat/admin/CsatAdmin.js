@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { CSAT_SUBJECTS } from '../../examUnits';
 
 const FILE_TYPE_LABELS = {
   problems: '문제지', solutions: '해설지', answers: '정답지',
@@ -233,7 +234,12 @@ export default function CsatAdmin() {
         </label> : null}
         <label style={{ display: 'grid', gap: 6 }}>
           <span style={labelStyle}>단원 태그 (선택)</span>
-          <input type="text" value={unitTag} onChange={(event) => setUnitTag(event.target.value)} placeholder="예: 미분법" style={fieldStyle} />
+          <select value={unitTag} onChange={(event) => setUnitTag(event.target.value)} style={fieldStyle}>
+            <option value="">단원 없음</option>
+            {CSAT_SUBJECTS.map((subject) => <optgroup key={subject.id} label={`${subject.label} (2022개정: ${subject.revised2022})`}>
+              {subject.units.map((unit) => <option key={unit.id} value={`${subject.label} · ${unit.label}`}>{unit.label}</option>)}
+            </optgroup>)}
+          </select>
         </label>
         <label style={{ display: 'grid', gap: 6 }}>
           <span style={labelStyle}>원본 문제 ID (변형·관련·예상 문제일 때)</span>

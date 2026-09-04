@@ -1,0 +1,128 @@
+'use client';
+
+import { useEffect, useMemo, useState } from 'react';
+import { useLanguage } from '../../language';
+import { AMC_UNITS } from '../../examUnits';
+
+const COPY = {
+  ko: {
+    home: '홈', hub: 'AMC 기출문제', title: '단원별 AMC 기출문제',
+    intro: '단원을 선택하면 해당 단원으로 태그된 기출문제·해설·이론 자료를 모아 볼 수 있습니다.',
+    loading: '자료를 불러오는 중입니다...',
+    error: '자료를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.',
+    empty: '아직 이 단원으로 태그된 자료가 없습니다.',
+    untagged: '아직 단원 태그가 없는 자료는 연도별 보기에서 확인할 수 있습니다.',
+    byYear: '연도별로 보기',
+    fileCount: (n) => `${n}개 자료`,
+  },
+  en: {
+    home: 'Home', hub: 'AMC Archive', title: 'AMC Archive by Topic',
+    intro: 'Pick a topic to see every problem set, solution, and theory sheet tagged with it.',
+    loading: 'Loading archive...',
+    error: 'Could not load the archive. Please try again shortly.',
+    empty: 'No materials tagged with this topic yet.',
+    untagged: 'Materials without a topic tag are still browsable by year.',
+    byYear: 'Browse by year',
+    fileCount: (n) => `${n} item${n === 1 ? '' : 's'}`,
+  },
+};
+
+const FILE_TYPE_LABELS = {
+  ko: {
+    problems: '문제지', solutions: '해설지', answers: '정답지', theory: '이론',
+    variant_problem: '변형문제', related_problem: '관련문제', forecast: '예상문제', stats: '통계',
+  },
+  en: {
+    problems: 'Problems', solutions: 'Solutions', answers: 'Answer Key', theory: 'Theory',
+    variant_problem: 'Variant problems', related_problem: 'Related problems', forecast: 'Forecast problems', stats: 'Statistics',
+  },
+};
+
+function fileTypeLabel(type, language) {
+  const labels = FILE_TYPE_LABELS[language] || FILE_TYPE_LABELS.en;
+  if (type.startsWith('solutions__')) return `${labels.solutions} (${type.slice('solutions__'.length)})`;
+  return labels[type] || type;
+}
+
+const LEVELS = ['8', '10', '12'];
+
+export default function AmcUnitBrowser() {
+  const { language } = useLanguage();
+  const words = COPY[language] || COPY.en;
+  const [manifest, setManifest] = useState(null);
+  const [status, setStatus] = useState('loading');
+  const [openUnit, setOpenUnit] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/amc/manifest')
+      .then((res) => { if (!res.ok) throw new Error('bad response'); return res.json(); })
+      .then((data) => { if (!cancelled) { setManifest(data); setStatus('ready'); } })
+      .catch(() => { if (!cancelled) setStatus('error'); });
+    return () => { cancelled = true; };
+  }, []);
+
+  const itemsByUnit = useMemo(() => {
+    const map = new Map(AMC_UNITS.map((unit) => [unit.label, []]));
+    if (!manifest) return map;
+    for (const level of LEVELS) {
+      for (const entry of manifest[level] || []) {
+        for (const variant of entry.variants) {
+          for (const [fileType, file] of Object.entries(variant.files)) {
+            const tag = file.meta?.unitTag;
+            if (tag && map.has(tag)) {
+              map.get(tag).push({ level, year: entry.year, variant, fileType, file });
+            }
+          }
+        }
+      }
+    }
+    for (const list of map.values()) list.sort((a, b) => b.year - a.year);
+    return map;
+  }, [manifest]);
+
+  return <>
+    <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 6 }}>
+      <a href="/">{words.home}</a> / <a href="/amc.html">{words.hub}</a> / {words.title}
+    </p>
+    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, marginBottom: 8 }}>
+      <h1 className="font-display" style={{ fontSize: 26, margin: 0 }}>{words.title}</h1>
+      <a href="/amc" className="button button-secondary" style={{ textDecoration: 'none' }}>{words.byYear}</a>
+    </div>
+    <p style={{ color: 'var(--ink-soft)', margin: '0 0 8px' }}>{words.intro}</p>
+    <p style={{ color: 'var(--ink-soft)', fontSize: 13, margin: '0 0 28px' }}>{words.untagged}</p>
+
+    {status === 'loading' ? <p style={{ color: 'var(--ink-soft)' }}>{words.loading}</p> : null}
+    {status === 'error' ? <p style={{ color: 'var(--red-pen)' }}>{words.error}</p> : null}
+
+    {status === 'ready' ? <div style={{ display: 'grid', gap: 10 }}>
+      {AMC_UNITS.map((unit) => {
+        const items = itemsByUnit.get(unit.label) || [];
+        const open = openUnit === unit.id;
+        return <div key={unit.id} style={{ background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', overflow: 'hidden' }}>
+          <button
+            type="button"
+            onClick={() => setOpenUnit(open ? null : unit.id)}
+            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '16px 20px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', font: 'inherit' }}
+          >
+            <span>
+              <span style={{ fontSize: 17, fontWeight: 700, color: 'var(--ink)' }}>{unit.label}</span>
+              <span style={{ display: 'block', fontSize: 13, color: 'var(--ink-soft)', marginTop: 2 }}>{unit.description}</span>
+            </span>
+            <span style={{ fontSize: 12, color: 'var(--ink-soft)', whiteSpace: 'nowrap' }}>{words.fileCount(items.length)} {open ? '▲' : '▼'}</span>
+          </button>
+          {open ? <div style={{ padding: '0 20px 16px', display: 'grid', gap: 8 }}>
+            {items.length === 0 ? <p style={{ color: 'var(--ink-soft)', fontSize: 14, margin: 0 }}>{words.empty}</p> : items.map(({ level, year, variant, fileType, file }) => <a
+              key={`${level}-${year}-${variant.id}-${fileType}`}
+              href={`/amc/${level}?year=${year}&variant=${variant.id}`}
+              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'var(--paper)', borderRadius: 8, textDecoration: 'none', color: 'var(--ink)' }}
+            >
+              <span>{file.meta?.accessTier === 'premium' ? '🔒 ' : ''}{year} AMC {level}{variant.id !== 'AMC8' ? variant.id : ''} · {variant.label}</span>
+              <span style={{ fontSize: 13, color: 'var(--ink-soft)' }}>{fileTypeLabel(fileType, language)} →</span>
+            </a>)}
+          </div> : null}
+        </div>;
+      })}
+    </div> : null}
+  </>;
+}

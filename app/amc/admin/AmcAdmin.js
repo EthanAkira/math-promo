@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { AMC_UNITS } from '../../examUnits';
 
 const FILE_TYPE_LABELS = {
   problems: '문제지', solutions: '해설지', answers: '정답지',
@@ -213,7 +214,10 @@ export default function AmcAdmin() {
         </label> : null}
         <label style={{ display: 'grid', gap: 6 }}>
           <span style={labelStyle}>단원 태그 (선택)</span>
-          <input type="text" value={unitTag} onChange={(event) => setUnitTag(event.target.value)} placeholder="예: 정수론" style={fieldStyle} />
+          <select value={unitTag} onChange={(event) => setUnitTag(event.target.value)} style={fieldStyle}>
+            <option value="">단원 없음</option>
+            {AMC_UNITS.map((unit) => <option key={unit.id} value={unit.label}>{unit.label} — {unit.description}</option>)}
+          </select>
         </label>
         <label style={{ display: 'grid', gap: 6 }}>
           <span style={labelStyle}>원본 문제 ID (변형·관련·예상 문제일 때)</span>
