@@ -74,7 +74,7 @@ export default function AuthModal({ mode, onClose }) {
 
         <form className="auth-modal-form" onSubmit={handleSubmit}>
           {activeMode === 'signup' ? (
-            <>
+            <div className="auth-modal-form-grid">
               <label>
                 <span>{tr(language, 'authName')}</span>
                 <input type="text" value={name} onChange={(event) => setName(event.target.value)} required maxLength={60} />
@@ -82,10 +82,10 @@ export default function AuthModal({ mode, onClose }) {
               <label>
                 <span>{tr(language, 'authBirthDate')}</span>
                 <input type="date" value={birthDate} onChange={(event) => setBirthDate(event.target.value)} required max={new Date().toISOString().slice(0, 10)} />
-                <small>{tr(language, 'authBirthDateHint')}</small>
               </label>
-            </>
+            </div>
           ) : null}
+          {activeMode === 'signup' ? <small style={{ marginTop: -6 }}>{tr(language, 'authBirthDateHint')}</small> : null}
 
           <label>
             <span>{tr(language, 'authEmail')}</span>
@@ -99,7 +99,7 @@ export default function AuthModal({ mode, onClose }) {
           </label>
 
           {activeMode === 'signup' ? (
-            <>
+            <div className="auth-modal-form-grid">
               <label>
                 <span>{tr(language, 'authSchoolType')}</span>
                 <select value={schoolType} onChange={(event) => setSchoolType(event.target.value)}>
@@ -125,7 +125,7 @@ export default function AuthModal({ mode, onClose }) {
                   ) : group.items.map((item) => <option key={item} value={item}>{item}</option>))}
                 </select>
               </label>
-            </>
+            </div>
           ) : null}
 
           {error ? <p className="auth-modal-error">{error}</p> : null}

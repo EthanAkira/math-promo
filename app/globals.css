@@ -255,8 +255,10 @@ html[dir="rtl"] .language-picker-academic select {
   position: fixed;
   inset: 0;
   background: rgba(14, 26, 43, 0.55);
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
   z-index: 200;
   padding: 20px;
 }
@@ -265,12 +267,13 @@ html[dir="rtl"] .language-picker-academic select {
   position: relative;
   width: 100%;
   max-width: 380px;
-  max-height: 90vh;
+  max-height: calc(100vh - 40px);
   overflow-y: auto;
   background: var(--card-bg);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   padding: 28px 24px 24px;
+  margin: auto;
 }
 
 .auth-modal-close {
@@ -313,6 +316,12 @@ html[dir="rtl"] .language-picker-academic select {
 .auth-modal-form {
   display: flex;
   flex-direction: column;
+  gap: 14px;
+}
+
+.auth-modal-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   gap: 14px;
 }
 
