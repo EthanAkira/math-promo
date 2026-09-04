@@ -1,4 +1,5 @@
 // Complete Interactive Math Exam Datasets for CSAT & AMC (Full 25/30 Problem Sets)
+import amc8Catalog from './amc8ProblemCatalog.json';
 
 export const SAMPLE_CSAT_2024 = {
   id: 'csat-2024-math-full',
@@ -1809,7 +1810,26 @@ export function getInteractiveProblems(category, levelOrType, year, variantId) {
   }
 
   if (category === 'amc') {
-    if (String(levelOrType) === '8') return SAMPLE_AMC_8_FULL.problems;
+    if (String(levelOrType) === '8') {
+      if (year) {
+        const yNum = parseInt(year, 10);
+        const matched = amc8Catalog.filter((p) => p.year === yNum);
+        if (matched.length > 0) {
+          return matched.map((p) => ({
+            id: p.id,
+            number: p.problemNumber,
+            points: p.points || 1,
+            unit: p.unitId,
+            type: p.choices && p.choices.length ? 'multiple_choice' : 'subjective',
+            question: p.question,
+            choices: p.choices || [],
+            correctAnswer: parseInt(p.answer, 10) || 0,
+            explanation: p.explanation,
+          }));
+        }
+      }
+      return SAMPLE_AMC_8_FULL.problems;
+    }
     if (String(levelOrType) === '12') return SAMPLE_AMC_12_FULL.problems;
     return SAMPLE_AMC_10_2023.problems;
   }

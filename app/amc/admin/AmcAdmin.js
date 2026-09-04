@@ -106,10 +106,36 @@ export default function AmcAdmin() {
               try {
                 localStorage.setItem('custom_exam_amc', JSON.stringify(parsed));
                 localStorage.setItem(`custom_exam_amc_${level}`, JSON.stringify(parsed));
+                localStorage.setItem(`custom_exam_amc_${level}_${year}_${variantId}`, JSON.stringify(parsed));
                 localStorage.setItem(`custom_exam_${level}`, JSON.stringify(parsed));
               } catch (e) {}
             }
-            convertedMsg = ` 및 전체 ${parsed.length}개 전 문항 인터랙티브 시험 세트 자동 변환·배포 완료!`;
+
+            // Real-time synchronization to Cloudflare D1 archive_problems (unit-by-unit catalog)
+            try {
+              const items = parsed.map((p) => {
+                const cls = classifyAmcProblem(p.question);
+                return {
+                  problemNumber: p.number,
+                  subjectId: cls.subjectId,
+                  unitId: cls.unitId,
+                  question: p.question,
+                  choices: p.choices,
+                  answer: p.correctAnswer,
+                  explanation: p.explanation,
+                  points: p.points,
+                };
+              });
+              await fetch('/api/amc/problems', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password, level, year: parseInt(year, 10), variant: variantId, sourceFileKey: data.key, items }),
+              });
+            } catch (d1Err) {
+              console.warn('D1 problem sync warning:', d1Err);
+            }
+
+            convertedMsg = ` 및 전체 ${parsed.length}개 전 문항 인터랙티브 시험 세트 & 세부 단원 자동 분류·동기화 완료!`;
           }
         } catch (convErr) {
           console.warn('Auto convert warning:', convErr);
