@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import katex from 'katex';
-import 'katex/dist/katex.min.css';
 import { useLanguage } from '../language';
+import InteractiveExamWorkspace from '../components/InteractiveExamWorkspace';
+import { SAMPLE_AMC_10_2023 } from '../data/sampleExams';
 
 const COPY = {
   ko: {
@@ -137,6 +138,7 @@ export default function AmcLevelArchive({ level, label, description }) {
   const [manifest, setManifest] = useState(null);
   const [status, setStatus] = useState('loading');
   const [selectedKey, setSelectedKey] = useState(null);
+  const [viewMode, setViewMode] = useState('interactive');
 
   useEffect(() => {
     function syncFromUrl() {
@@ -196,8 +198,56 @@ export default function AmcLevelArchive({ level, label, description }) {
         <a href="/">{words.home}</a> / <a href="/amc.html">{words.hub}</a> / <a href={`/amc/${level}`} onClick={(event) => { event.preventDefault(); closeEntry(); }}>{label}</a> / {selectedEntry.year} {selectedVariant.label}
       </p>
       <button type="button" onClick={closeEntry} className="button button-secondary no-print" style={{ marginBottom: 16 }}>{words.back}</button>
-      <h1 className="font-display" style={{ fontSize: 26, margin: '0 0 24px' }}>{selectedEntry.year} {selectedVariant.label}</h1>
-      {fileTypes.length === 0 ? <p style={{ color: 'var(--ink-soft)' }}>{words.noFiles}</p> : fileTypes.map((type) => <ExamSection key={type} typeLabel={fileTypeLabel(type, words)} fileEntry={selectedVariant.files[type]} words={words} />)}
+      <h1 className="font-display" style={{ fontSize: 26, margin: '0 0 16px' }}>{selectedEntry.year} {selectedVariant.label}</h1>
+
+      {/* Mode Switch Tabs: Interactive Solving vs Original PDF */}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', borderBottom: '2px solid var(--paper-line, #d8c9a8)', paddingBottom: '10px' }}>
+        <button
+          type="button"
+          onClick={() => setViewMode('interactive')}
+          style={{
+            fontSize: '15px',
+            fontWeight: '800',
+            padding: '9px 18px',
+            borderRadius: '10px',
+            border: 'none',
+            cursor: 'pointer',
+            background: viewMode === 'interactive' ? 'linear-gradient(135deg, var(--red, #c23b32) 0%, var(--red-dark, #8f2a24) 100%)' : '#ede7db',
+            color: viewMode === 'interactive' ? '#ffffff' : 'var(--ink, #1f2733)',
+            boxShadow: viewMode === 'interactive' ? '0 4px 14px rgba(194,59,50,0.25)' : 'none',
+          }}
+        >
+          ✍️ {language === 'ko' ? '웹/태블릿으로 풀기 (인터랙티브)' : 'Solve on Web/Tablet'}
+        </button>
+        <button
+          type="button"
+          onClick={() => setViewMode('files')}
+          style={{
+            fontSize: '15px',
+            fontWeight: '800',
+            padding: '9px 18px',
+            borderRadius: '10px',
+            border: 'none',
+            cursor: 'pointer',
+            background: viewMode === 'files' ? 'var(--blue, #2a5c8a)' : '#ede7db',
+            color: viewMode === 'files' ? '#ffffff' : 'var(--ink, #1f2733)',
+            boxShadow: viewMode === 'files' ? '0 4px 14px rgba(42,92,138,0.25)' : 'none',
+          }}
+        >
+          📄 {language === 'ko' ? '기출 PDF/파일 뷰어' : 'PDF / File Viewer'}
+        </button>
+      </div>
+
+      {viewMode === 'interactive' ? (
+        <InteractiveExamWorkspace
+          title={`${selectedEntry.year} ${selectedVariant.label}`}
+          subtitle={language === 'ko' ? 'LaTeX 수식 · SVG 기하 도형 · 태블릿 펜슬 필기장 지원' : 'KaTeX Math · SVG Diagrams · Tablet Stylus Scratchpad'}
+          problems={SAMPLE_AMC_10_2023.problems}
+          language={language}
+        />
+      ) : (
+        fileTypes.length === 0 ? <p style={{ color: 'var(--ink-soft)' }}>{words.noFiles}</p> : fileTypes.map((type) => <ExamSection key={type} typeLabel={fileTypeLabel(type, words)} fileEntry={selectedVariant.files[type]} words={words} />)
+      )}
     </>;
   }
 
