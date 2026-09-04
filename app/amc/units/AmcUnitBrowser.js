@@ -15,12 +15,9 @@ const COPY = {
     untagged: '아직 단원 태그가 없는 자료는 연도별 보기에서 확인할 수 있습니다.',
     byYear: '연도별로 보기',
     fileCount: (n) => `${n}개 자료`,
-    checkingAuth: '접근 권한을 확인하는 중입니다...',
-    needLoginTitle: '로그인이 필요합니다',
-    needLoginDesc: '단원별 AMC 기출문제(기출변형·자세한 해설 포함)는 로그인 후 구독 회원만 볼 수 있습니다. 오른쪽 위 로그인 버튼으로 먼저 로그인해주세요.',
-    needSubTitle: 'AMC 구독이 필요합니다',
-    needSubDesc: '이 페이지는 AMC 구독 회원 전용입니다. 결제·구독 서비스는 준비 중이며, 이용을 원하시면 문의하기로 연락해주세요.',
-    contactLink: '문의하기',
+    memberNotice: '단원별 자료(기출변형·자세한 해설 포함)는 로그인 후 AMC 구독 회원만 열람할 수 있습니다. 목록은 자유롭게 둘러보세요.',
+    alertNeedLogin: '로그인이 필요한 서비스입니다. 오른쪽 위 로그인 버튼으로 먼저 로그인해주세요.',
+    alertNeedSub: '구독이 필요한 서비스입니다. 결제·구독 서비스는 준비 중이며, 이용을 원하시면 문의하기로 연락해주세요.',
   },
   en: {
     home: 'Home', hub: 'AMC Archive', title: 'AMC Archive by Topic',
@@ -31,12 +28,9 @@ const COPY = {
     untagged: 'Materials without a topic tag are still browsable by year.',
     byYear: 'Browse by year',
     fileCount: (n) => `${n} item${n === 1 ? '' : 's'}`,
-    checkingAuth: 'Checking access...',
-    needLoginTitle: 'Login required',
-    needLoginDesc: 'The AMC archive by topic (including variant problems and detailed solutions) is available to logged-in subscribers only. Please log in using the button in the header.',
-    needSubTitle: 'AMC subscription required',
-    needSubDesc: 'This page is for AMC subscribers only. Paid subscriptions are coming soon — contact us if you would like access.',
-    contactLink: 'Contact us',
+    memberNotice: 'Materials by topic (including variant problems and detailed solutions) are available to logged-in AMC subscribers only. Feel free to browse the list.',
+    alertNeedLogin: 'Login required. Please log in using the button in the header.',
+    alertNeedSub: 'A subscription is required. Paid subscriptions are coming soon — contact us if you would like access.',
   },
 };
 
@@ -83,14 +77,13 @@ export default function AmcUnitBrowser() {
   const entitled = authStatus === 'ready' && !!user && subStatus === 'active';
 
   useEffect(() => {
-    if (!entitled) return;
     let cancelled = false;
     fetch('/api/amc/manifest')
       .then((res) => { if (!res.ok) throw new Error('bad response'); return res.json(); })
       .then((data) => { if (!cancelled) { setManifest(data); setStatus('ready'); } })
       .catch(() => { if (!cancelled) setStatus('error'); });
     return () => { cancelled = true; };
-  }, [entitled]);
+  }, []);
 
   const itemsByUnit = useMemo(() => {
     const map = new Map(AMC_UNITS.map((unit) => [unit.label, []]));
@@ -111,6 +104,13 @@ export default function AmcUnitBrowser() {
     return map;
   }, [manifest]);
 
+  function handleItemClick(event) {
+    if (entitled) return;
+    event.preventDefault();
+    if (authStatus !== 'ready' || subStatus === 'loading') return;
+    window.alert(!user ? words.alertNeedLogin : words.alertNeedSub);
+  }
+
   return <>
     <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 6 }}>
       <a href="/">{words.home}</a> / <a href="/amc.html">{words.hub}</a> / {words.title}
@@ -120,21 +120,7 @@ export default function AmcUnitBrowser() {
       <a href="/amc" className="button button-secondary" style={{ textDecoration: 'none' }}>{words.byYear}</a>
     </div>
     <p style={{ color: 'var(--ink-soft)', margin: '0 0 8px' }}>{words.intro}</p>
-
-    {authStatus !== 'ready' || subStatus === 'loading' ? <p style={{ color: 'var(--ink-soft)' }}>{words.checkingAuth}</p> : null}
-
-    {authStatus === 'ready' && !user ? <div style={{ padding: 28, textAlign: 'center', background: 'var(--card-bg)', border: '1px dashed var(--paper-line)', borderRadius: 'var(--radius)', color: 'var(--ink-soft)' }}>
-      <p style={{ fontWeight: 700, color: 'var(--ink)', margin: '0 0 6px' }}>{words.needLoginTitle}</p>
-      <p style={{ margin: 0 }}>{words.needLoginDesc}</p>
-    </div> : null}
-
-    {authStatus === 'ready' && user && subStatus === 'inactive' ? <div style={{ padding: 28, textAlign: 'center', background: 'var(--card-bg)', border: '1px dashed var(--paper-line)', borderRadius: 'var(--radius)', color: 'var(--ink-soft)' }}>
-      <p style={{ fontWeight: 700, color: 'var(--ink)', margin: '0 0 6px' }}>🔒 {words.needSubTitle}</p>
-      <p style={{ margin: '0 0 12px' }}>{words.needSubDesc}</p>
-      <a href="/contact" className="button button-secondary" style={{ textDecoration: 'none' }}>{words.contactLink}</a>
-    </div> : null}
-
-    {entitled ? <>
+    {!entitled ? <p style={{ color: 'var(--red-pen)', fontSize: 13, margin: '0 0 8px' }}>🔒 {words.memberNotice}</p> : null}
     <p style={{ color: 'var(--ink-soft)', fontSize: 13, margin: '0 0 28px' }}>{words.untagged}</p>
 
     {status === 'loading' ? <p style={{ color: 'var(--ink-soft)' }}>{words.loading}</p> : null}
@@ -160,15 +146,15 @@ export default function AmcUnitBrowser() {
             {items.length === 0 ? <p style={{ color: 'var(--ink-soft)', fontSize: 14, margin: 0 }}>{words.empty}</p> : items.map(({ level, year, variant, fileType, file }) => <a
               key={`${level}-${year}-${variant.id}-${fileType}`}
               href={`/amc/${level}?year=${year}&variant=${variant.id}`}
+              onClick={handleItemClick}
               style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'var(--paper)', borderRadius: 8, textDecoration: 'none', color: 'var(--ink)' }}
             >
-              <span>{file.meta?.accessTier === 'premium' ? '🔒 ' : ''}{year} AMC {level}{variant.id !== 'AMC8' ? variant.id : ''} · {variant.label}</span>
+              <span>{!entitled || file.meta?.accessTier === 'premium' ? '🔒 ' : ''}{year} AMC {level}{variant.id !== 'AMC8' ? variant.id : ''} · {variant.label}</span>
               <span style={{ fontSize: 13, color: 'var(--ink-soft)' }}>{fileTypeLabel(fileType, language)} →</span>
             </a>)}
           </div> : null}
         </div>;
       })}
     </div> : null}
-    </> : null}
   </>;
 }
