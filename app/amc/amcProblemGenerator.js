@@ -38,6 +38,10 @@ function gcd(a, b) {
   return x;
 }
 
+function lcm(a, b) {
+  return (a * b) / gcd(a, b);
+}
+
 /**
  * Helper to build 5 unique choices given the correct answer and distractor generator
  */
@@ -1064,6 +1068,267 @@ export const GENERATORS = {
 
       return { question, choices, correctIdx, explanation };
     }
+  },
+
+  // -----------------------------------------------------------------------
+  // Added from "The Essential Guide to Prealgebra" (Harim Yoo / Hermon House),
+  // a Korean-published AMC/boarding-school-prep textbook — structure and solving
+  // technique only, no source text or problems reproduced verbatim.
+  // -----------------------------------------------------------------------
+  'counting': (lang) => {
+    const variant = pickRandom(['inclusive-range', 'evenly-spaced', 'digit-count']);
+
+    if (variant === 'inclusive-range') {
+      const a = randInt(20, 60);
+      const b = a + randInt(80, 250);
+      const correctAns = b - a + 1;
+      const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+        if (i === 1) return b - a;
+        if (i === 2) return b - a - 1;
+        if (i === 3) return correctAns + randInt(2, 5);
+        return Math.max(1, correctAns - randInt(2, 5));
+      });
+
+      const question = lang === 'ko'
+        ? `$${a}$부터 $${b}$까지의 정수는 모두 몇 개입니까? (양 끝 값 포함)`
+        : `How many integers are there from $${a}$ to $${b}$, inclusive?`;
+
+      const explanation = lang === 'ko'
+        ? `**[Essential Guide to Prealgebra Ch.14 1대1 대응 (1-to-1 Counting)]**\n\n$${a}, ${a + 1}, \\ldots, ${b}$를 $1, 2, \\ldots$과 1대1로 대응시키면, 구하는 개수는\n\n$$${b} - ${a} + 1 = ${correctAns}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${correctAns}$개)** 입니다.`
+        : `**[Essential Guide to Prealgebra Ch.14 1-to-1 Counting]**\n\nMatching $${a}, ${a + 1}, \\ldots, ${b}$ one-to-one with $1, 2, \\ldots$, the count is\n\n$$${b} - ${a} + 1 = ${correctAns}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${correctAns})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'evenly-spaced') {
+      const step = pickRandom([2, 3, 4, 5]);
+      const start = step * randInt(3, 8);
+      const end = start + step * randInt(30, 80);
+      const gap = (end - start) / step;
+      const correctAns = gap + 1;
+      const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+        if (i === 1) return gap;
+        if (i === 2) return correctAns + 1;
+        if (i === 3) return correctAns - 1;
+        return correctAns + randInt(2, 4);
+      });
+
+      const question = lang === 'ko'
+        ? `$${start}, ${start + step}, ${start + 2 * step}, \\ldots, ${end}$처럼 $${step}$씩 커지는 수열이 있습니다. 이 수열의 항은 모두 몇 개입니까?`
+        : `Consider the list $${start}, ${start + step}, ${start + 2 * step}, \\ldots, ${end}$, increasing by $${step}$ each time. How many terms are in this list?`;
+
+      const explanation = lang === 'ko'
+        ? `**[Essential Guide to Prealgebra Ch.14 등간격 1대1 대응]**\n\n각 항에서 $${start}$을 빼고 $${step}$으로 나누면 $0, 1, 2, \\ldots$과 1대1 대응됩니다:\n\n$$\\frac{${end} - ${start}}{${step}} + 1 = ${gap} + 1 = ${correctAns}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${correctAns}$개)** 입니다.`
+        : `**[Essential Guide to Prealgebra Ch.14 Evenly-Spaced 1-to-1 Counting]**\n\nSubtract $${start}$ from each term and divide by $${step}$ to match with $0, 1, 2, \\ldots$:\n\n$$\\frac{${end} - ${start}}{${step}} + 1 = ${correctAns}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${correctAns})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // digit-count
+    const digitsUpTo = (n) => {
+      let total = 0;
+      let digits = 1;
+      let start = 1;
+      while (start <= n) {
+        const end = Math.min(n, start * 10 - 1);
+        total += (end - start + 1) * digits;
+        digits += 1;
+        start *= 10;
+      }
+      return total;
+    };
+    const N = randInt(150, 600);
+    const correctAns = digitsUpTo(N);
+    const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+      if (i === 1) return N;
+      if (i === 2) return correctAns - 9;
+      if (i === 3) return correctAns + 9;
+      return correctAns + randInt(3, 15);
+    });
+
+    const question = lang === 'ko'
+      ? `$1$부터 $${N}$까지의 양의 정수를 모두 종이에 적을 때, 사용되는 숫자(0~9)는 모두 몇 개입니까?`
+      : `When all the positive integers from $1$ to $${N}$ are written down, how many digits are used in total?`;
+
+    const explanation = lang === 'ko'
+      ? `**[Essential Guide to Prealgebra Ch.14 자릿수 세기]**\n\n자릿수별 구간으로 나누어 셉니다 ($1$~$9$는 $9$개 $\\times 1$자리, $10$~$99$는 $90$개 $\\times 2$자리, ...), $${N}$까지 누적하면\n\n$$\\text{총 숫자 개수} = ${correctAns}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${correctAns}$개)** 입니다.`
+      : `**[Essential Guide to Prealgebra Ch.14 Digit Counting]**\n\nSplit by digit-length blocks ($1$–$9$: $9 \\times 1$ digit, $10$–$99$: $90 \\times 2$ digits, ...) up to $${N}$:\n\n$$\\text{Total digits} = ${correctAns}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${correctAns})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  'angles-plane-figures': (lang) => {
+    const variant = pickRandom(['parallel-transversal', 'triangle-angle-sum']);
+
+    if (variant === 'parallel-transversal') {
+      const given = randInt(30, 150);
+      const relation = pickRandom(['corresponding', 'alternate', 'co-interior']);
+      const correctAns = relation === 'co-interior' ? 180 - given : given;
+      const relationKo = relation === 'corresponding' ? '동위각' : relation === 'alternate' ? '엇각' : '같은 쪽 내각(동측내각)';
+      const relationEn = relation === 'corresponding' ? 'corresponding angle' : relation === 'alternate' ? 'alternate angle' : 'co-interior (same-side interior) angle';
+
+      const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+        if (i === 1) return 180 - correctAns;
+        if (i === 2) return given;
+        if (i === 3) return correctAns + randInt(5, 15);
+        return Math.max(1, correctAns - randInt(5, 15));
+      });
+
+      const question = lang === 'ko'
+        ? `두 평행선이 한 직선(횡단선)과 만날 때 생기는 한 각의 크기가 $${given}^\\circ$입니다. 이 각의 ${relationKo}의 크기는 몇 도입니까?`
+        : `Two parallel lines are cut by a transversal, forming an angle of $${given}^\\circ$. What is the measure of its ${relationEn}, in degrees?`;
+
+      const explanation = relation === 'co-interior'
+        ? (lang === 'ko'
+          ? `**[Essential Guide to Prealgebra Ch.10 평행선과 각]**\n\n같은 쪽 내각(동측내각)은 서로 보각(합이 $180^\\circ$)입니다:\n\n$$180^\\circ - ${given}^\\circ = ${correctAns}^\\circ$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${correctAns}^\\circ$)** 입니다.`
+          : `**[Essential Guide to Prealgebra Ch.10 Angles & Parallel Lines]**\n\nCo-interior angles are supplementary:\n\n$$180^\\circ - ${given}^\\circ = ${correctAns}^\\circ$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${correctAns}°)**.`)
+        : (lang === 'ko'
+          ? `**[Essential Guide to Prealgebra Ch.10 평행선과 각]**\n\n두 평행선이 한 횡단선과 만날 때, ${relationKo}은 서로 크기가 같습니다:\n\n$$${correctAns}^\\circ$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${correctAns}^\\circ$)** 입니다.`
+          : `**[Essential Guide to Prealgebra Ch.10 Angles & Parallel Lines]**\n\nWhen two parallel lines are cut by a transversal, ${relationEn}s are congruent:\n\n$$${correctAns}^\\circ$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${correctAns}°)**.`);
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // triangle-angle-sum via ratio
+    const ratioPool = [[2, 3, 4], [1, 2, 3], [3, 4, 5], [2, 5, 8], [1, 4, 5], [3, 5, 7], [2, 3, 7], [1, 3, 5], [4, 5, 6], [1, 2, 6]];
+    const [r1, r2, r3] = pickRandom(ratioPool);
+    const sum = r1 + r2 + r3;
+    const x = 180 / sum;
+    const angles = [r1 * x, r2 * x, r3 * x];
+    const correctAns = Math.max(...angles);
+    const sorted = [...angles].sort((a, b) => a - b);
+
+    const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+      if (i === 1) return sorted[0];
+      if (i === 2) return sorted[1];
+      if (i === 3) return correctAns + randInt(5, 15);
+      return Math.max(1, correctAns - randInt(5, 15));
+    });
+
+    const question = lang === 'ko'
+      ? `어떤 삼각형의 세 내각의 크기의 비가 $${r1} : ${r2} : ${r3}$일 때, 가장 큰 내각의 크기는 몇 도입니까?`
+      : `The three interior angles of a triangle are in the ratio $${r1} : ${r2} : ${r3}$. What is the measure of the largest angle, in degrees?`;
+
+    const explanation = lang === 'ko'
+      ? `**[Essential Guide to Prealgebra Ch.10 삼각형의 내각의 합]**\n\n비의 합 $${r1}+${r2}+${r3}=${sum}$ 등분으로 $180^\\circ$를 나누면 한 등분은 $\\frac{180^\\circ}{${sum}}=${x}^\\circ$입니다. 가장 큰 비율(${Math.max(r1, r2, r3)})의 각은\n\n$$${Math.max(r1, r2, r3)} \\times ${x}^\\circ = ${correctAns}^\\circ$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${correctAns}^\\circ$)** 입니다.`
+      : `**[Essential Guide to Prealgebra Ch.10 Triangle Angle Sum]**\n\nDividing $180^\\circ$ into $${r1}+${r2}+${r3}=${sum}$ parts gives $\\frac{180^\\circ}{${sum}}=${x}^\\circ$ per part. The largest angle (${Math.max(r1, r2, r3)} parts) is\n\n$$${Math.max(r1, r2, r3)} \\times ${x}^\\circ = ${correctAns}^\\circ$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${correctAns}°)**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  'quadrilaterals-polygons': (lang) => {
+    const pool = [[2, 3, 6], [2, 4, 4], [3, 3, 3], [2, 2, 2], [2, 2, 4]];
+    const [p, q, r] = pickRandom(pool);
+    const D = lcm(lcm(p, q), r);
+    const N = D + D / p + D / q + D / r;
+    const k = Math.round((360 * D) / N);
+    const mB = k / p;
+    const mC = k / q;
+    const mD = k / r;
+    const correctAns = k;
+
+    const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+      if (i === 1) return mB;
+      if (i === 2) return mC;
+      if (i === 3) return mD;
+      return Math.max(1, correctAns - randInt(10, 30));
+    });
+
+    const question = lang === 'ko'
+      ? `사각형 $ABCD$의 네 내각이 $m\\angle A = ${p}\\,m\\angle B = ${q}\\,m\\angle C = ${r}\\,m\\angle D$를 만족합니다. $\\angle A$의 크기는 몇 도입니까?`
+      : `In quadrilateral $ABCD$, the angles satisfy $m\\angle A = ${p}\\,m\\angle B = ${q}\\,m\\angle C = ${r}\\,m\\angle D$. What is the measure of $\\angle A$, in degrees?`;
+
+    const degenerateNote = correctAns === 180
+      ? (lang === 'ko' ? ' (참고: $\\angle A=180^\\circ$이면 세 꼭짓점이 일직선을 이루는 특수한 경우입니다.)' : ' (Note: $\\angle A=180^\\circ$ means three of the vertices are actually collinear — a degenerate case!)')
+      : '';
+
+    const explanation = lang === 'ko'
+      ? `**[Essential Guide to Prealgebra Ch.12 사각형의 내각 비율]**\n\n$m\\angle A = k$라 하면 $m\\angle B=\\frac{k}{${p}}$, $m\\angle C=\\frac{k}{${q}}$, $m\\angle D=\\frac{k}{${r}}$입니다. 분모의 최소공배수 $\\text{lcm}(${p},${q},${r})=${D}$로 통분하고, 사각형의 내각의 합이 $360^\\circ$임을 이용하면\n\n$$k\\left(1+\\frac{1}{${p}}+\\frac{1}{${q}}+\\frac{1}{${r}}\\right) = 360^\\circ \\implies k = ${correctAns}^\\circ$$${degenerateNote}\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${correctAns}^\\circ$)** 입니다.`
+      : `**[Essential Guide to Prealgebra Ch.12 Angle Ratios in a Quadrilateral]**\n\nLet $m\\angle A = k$, so $m\\angle B=\\frac{k}{${p}}$, $m\\angle C=\\frac{k}{${q}}$, $m\\angle D=\\frac{k}{${r}}$. Using $\\text{lcm}(${p},${q},${r})=${D}$ as a common denominator and the $360^\\circ$ angle sum:\n\n$$k\\left(1+\\frac{1}{${p}}+\\frac{1}{${q}}+\\frac{1}{${r}}\\right) = 360^\\circ \\implies k = ${correctAns}^\\circ$$${degenerateNote}\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${correctAns}°)**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  'solids': (lang) => {
+    const variant = pickRandom(['rect-prism', 'triangular-prism']);
+
+    if (variant === 'rect-prism') {
+      const l = randInt(3, 10);
+      const w = randInt(3, 10);
+      const h = randInt(3, 10);
+      const correctAns = 2 * (l * w + w * h + l * h);
+
+      const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+        if (i === 1) return l * w * h;
+        if (i === 2) return 2 * (l * w) + 2 * (w * h);
+        if (i === 3) return (l + w + h) * 2;
+        return correctAns + randInt(4, 12);
+      });
+
+      const question = lang === 'ko'
+        ? `가로 $${l}$, 세로 $${w}$, 높이 $${h}$인 직육면체의 겉넓이는 얼마입니까?`
+        : `A rectangular box has dimensions $${l} \\times ${w} \\times ${h}$. What is its surface area?`;
+
+      const explanation = lang === 'ko'
+        ? `**[Essential Guide to Prealgebra Ch.13 입체도형의 겉넓이]**\n\n직육면체는 서로 합동인 세 쌍의 면(가로×세로, 세로×높이, 가로×높이)으로 이루어져 있습니다:\n\n$$S = 2(${l}\\times${w} + ${w}\\times${h} + ${l}\\times${h}) = ${correctAns}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${correctAns}$)** 입니다.`
+        : `**[Essential Guide to Prealgebra Ch.13 Surface Area via Nets]**\n\nA rectangular box has three congruent pairs of faces:\n\n$$S = 2(${l}\\times${w} + ${w}\\times${h} + ${l}\\times${h}) = ${correctAns}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${correctAns})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // triangular-prism: right-triangle cross section (Pythagorean triple legs a,b, hyp c), prism length L
+    const triples = [[3, 4, 5], [6, 8, 10], [5, 12, 13], [8, 15, 17], [9, 12, 15]];
+    const [a, b, c] = pickRandom(triples);
+    const L = randInt(4, 12);
+    const correctAns = a * b + (a + b + c) * L;
+
+    const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+      if (i === 1) return a * b * L;
+      if (i === 2) return (a + b + c) * L;
+      if (i === 3) return a * b + (a + b) * L;
+      return correctAns + randInt(6, 20);
+    });
+
+    const question = lang === 'ko'
+      ? `직각을 낀 두 변의 길이가 $${a}$, $${b}$이고 빗변의 길이가 $${c}$인 직각삼각형을 밑면으로 하고, 높이(기둥의 길이)가 $${L}$인 삼각기둥의 겉넓이는 얼마입니까?`
+      : `A triangular prism has a right-triangle base with legs $${a}$ and $${b}$ and hypotenuse $${c}$, and a prism length of $${L}$. What is its surface area?`;
+
+    const explanation = lang === 'ko'
+      ? `**[Essential Guide to Prealgebra Ch.13 삼각기둥의 겉넓이 (전개도 이용)]**\n\n두 밑면(합동인 직각삼각형)의 넓이 합과, 옆면 세 직사각형의 넓이 합을 더합니다:\n\n$$S = \\underbrace{${a}\\times${b}}_{\\text{두 밑면}} + \\underbrace{(${a}+${b}+${c})\\times${L}}_{\\text{옆면 세 개}} = ${correctAns}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${correctAns}$)** 입니다.`
+      : `**[Essential Guide to Prealgebra Ch.13 Triangular Prism Surface Area (Net Method)]**\n\nAdd the two congruent triangular base faces and the three rectangular lateral faces:\n\n$$S = \\underbrace{${a}\\times${b}}_{\\text{2 bases}} + \\underbrace{(${a}+${b}+${c})\\times${L}}_{\\text{3 lateral faces}} = ${correctAns}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${correctAns})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  'word-problems': (lang) => {
+    const denomPool = [[2, 3, 4], [2, 3, 6], [3, 4, 6], [2, 4, 5], [3, 5, 6], [2, 5, 10]];
+    const [d1, d2, d3] = pickRandom(denomPool);
+    const L = lcm(lcm(d1, d2), d3);
+    const shareUnits = [L / d1, L / d2, L / d3];
+    const totalUnits = shareUnits.reduce((s, v) => s + v, 0);
+    const perUnit = randInt(2, 8);
+    const total = totalUnits * perUnit;
+    const shares = shareUnits.map((u) => u * perUnit);
+    const correctAns = Math.max(...shares);
+    const sortedShares = [...shares].sort((a, b) => a - b);
+    const maxUnit = Math.max(...shareUnits);
+
+    const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+      if (i === 1) return sortedShares[0];
+      if (i === 2) return sortedShares[1];
+      if (i === 3) return Math.round(total / 3);
+      return correctAns + randInt(5, 20);
+    });
+
+    const question = lang === 'ko'
+      ? `세 형제가 $${total}$달러짜리 상품권을 $\\frac{1}{${d1}} : \\frac{1}{${d2}} : \\frac{1}{${d3}}$의 비로 나누어 가지려고 합니다. 이 중 가장 많이 받는 사람의 금액은 얼마입니까?`
+      : `Three siblings split a $${total} gift card in the ratio $\\frac{1}{${d1}} : \\frac{1}{${d2}} : \\frac{1}{${d3}}$. What is the greatest amount, in dollars, that any of them receives?`;
+
+    const explanation = lang === 'ko'
+      ? `**[Essential Guide to Prealgebra Ch.7 역수 비 분배]**\n\n분수의 비는 분모의 최소공배수 $\\text{lcm}(${d1},${d2},${d3})=${L}$를 곱해 정수비로 바꿉니다:\n\n$$\\frac{1}{${d1}} : \\frac{1}{${d2}} : \\frac{1}{${d3}} = ${shareUnits[0]} : ${shareUnits[1]} : ${shareUnits[2]}$$\n\n비의 합은 $${totalUnits}$이고 전체 금액이 $${total}$이므로, 한 단위는 $${total} \\div ${totalUnits} = ${perUnit}$달러입니다. 가장 큰 비율(${maxUnit})을 가진 사람은\n\n$$${maxUnit} \\times ${perUnit} = ${correctAns}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${correctAns}$달러)** 입니다.`
+      : `**[Essential Guide to Prealgebra Ch.7 Splitting by Reciprocal Ratios]**\n\nMultiply each fraction by $\\text{lcm}(${d1},${d2},${d3})=${L}$ to convert to a whole-number ratio:\n\n$$\\frac{1}{${d1}} : \\frac{1}{${d2}} : \\frac{1}{${d3}} = ${shareUnits[0]} : ${shareUnits[1]} : ${shareUnits[2]}$$\n\nThe ratio parts sum to $${totalUnits}$, and the total is $${total}$, so one part is worth $${total} \\div ${totalUnits} = ${perUnit}$. The largest share (${maxUnit} parts) is\n\n$$${maxUnit} \\times ${perUnit} = ${correctAns}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} ($${correctAns})**.`;
+
+    return { question, choices, correctIdx, explanation };
   },
 };
 
