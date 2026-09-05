@@ -6,6 +6,7 @@ import { TRIANGLE_QUADRILATERAL_UNITS } from './triangleQuadrilateralEngine';
 import { TRIANGLE_SIMILARITY_UNITS } from './triangleSimilarityEngine';
 import { CIRCLE_PROPERTIES_UNITS } from './circlePropertiesEngine';
 import { TRANSFORMATIONS_UNITS } from './transformationsEngine';
+import { LOGICAL_REASONING_UNITS } from './logicalReasoningEngine';
 
 function randomInt(random, min, max) {
   return Math.floor(random() * (max - min + 1)) + min;
@@ -343,6 +344,14 @@ const CURRICULUM_PROFILES = {
   'transform-rotation': ['kr-high-1', 'geometry'],
   'transform-dilation': ['kr-high-1', 'geometry'],
   'transform-dilation-area': ['kr-high-1', 'geometry'],
+
+  // LOGICAL_REASONING_UNITS (logicalReasoningEngine.js) — truth tables/conditional forms are
+  // 2022 개정 공통수학2 "명제" content (고1); detachment/syllogism and the equality properties
+  // used in two-column proofs are the same course's introduction to formal proof.
+  'logic-truth-tables': ['kr-high-1', 'geometry'],
+  'logic-conditional-forms': ['kr-high-1', 'geometry'],
+  'logic-detachment-syllogism': ['kr-high-1', 'geometry'],
+  'logic-segment-angle-properties': ['kr-high-1', 'geometry'],
 };
 
 function withCurriculumProfiles(units) {
@@ -365,6 +374,7 @@ export const BASIC_FIGURE_UNITS = [
   ...withCurriculumProfiles(TRIANGLE_SIMILARITY_UNITS),
   ...withCurriculumProfiles(CIRCLE_PROPERTIES_UNITS),
   ...withCurriculumProfiles(TRANSFORMATIONS_UNITS),
+  ...withCurriculumProfiles(LOGICAL_REASONING_UNITS),
   ...ADVANCED_GEOMETRY_UNITS,
   ...ADVANCED_GEOMETRY_CHALLENGE_UNITS,
 ];

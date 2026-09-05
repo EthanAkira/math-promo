@@ -773,6 +773,10 @@ const KOREAN_GRADE_STAGE_SEEDS = [
       { label: '공통수학2 · 도형의 대칭이동', href: '/middle-school/basic-figures?profile=kr&unit=transform-reflection', ready: true, availability: 'ready' },
       { label: '공통수학2 · 도형의 회전이동', href: '/middle-school/basic-figures?profile=kr&unit=transform-rotation', ready: true, availability: 'ready' },
       { label: '공통수학2 · 닮음변환과 좌표', href: '/middle-school/basic-figures?profile=kr&unit=transform-dilation', ready: true, availability: 'ready' },
+      { label: '공통수학2 · 명제와 진리표', href: '/middle-school/basic-figures?profile=kr&unit=logic-truth-tables', ready: true, availability: 'ready' },
+      { label: '공통수학2 · 명제의 역·이·대우', href: '/middle-school/basic-figures?profile=kr&unit=logic-conditional-forms', ready: true, availability: 'ready' },
+      { label: '공통수학2 · 삼단논법과 추론의 타당성', href: '/middle-school/basic-figures?profile=kr&unit=logic-detachment-syllogism', ready: true, availability: 'ready' },
+      { label: '공통수학2 · 증명의 등식 성질(반사성·대칭성·이행성)', href: '/middle-school/basic-figures?profile=kr&unit=logic-segment-angle-properties', ready: true, availability: 'ready' },
     ],
   },
 
@@ -1109,6 +1113,10 @@ const INTERNATIONAL_COURSE_STAGE_SEEDS = [
     availability: 'ready',
     topics: [
       { label: 'Geometry Foundations (Points, Lines, Angles)', href: '/middle-school/basic-figures?unit=visual-foundations', ready: true, availability: 'ready' },
+      { label: 'Truth Tables & Logical Statements', href: '/middle-school/basic-figures?profile=international&unit=logic-truth-tables', ready: true, availability: 'ready' },
+      { label: 'Converse, Inverse & Contrapositive', href: '/middle-school/basic-figures?profile=international&unit=logic-conditional-forms', ready: true, availability: 'ready' },
+      { label: 'Law of Detachment & Law of Syllogism', href: '/middle-school/basic-figures?profile=international&unit=logic-detachment-syllogism', ready: true, availability: 'ready' },
+      { label: 'Algebraic & Geometric Proof Properties', href: '/middle-school/basic-figures?profile=international&unit=logic-segment-angle-properties', ready: true, availability: 'ready' },
       { label: 'Congruence & Similarity', href: '/middle-school/basic-figures?unit=triangle-congruence-similarity', ready: true, availability: 'ready' },
       { label: 'Isosceles Triangles & Right-Triangle Congruence', href: '/middle-school/basic-figures?unit=isosceles-triangle-properties', ready: true, availability: 'ready' },
       { label: 'Circumcenter & Incenter', href: '/middle-school/basic-figures?unit=triangle-circumcenter', ready: true, availability: 'ready' },
@@ -1221,6 +1229,9 @@ const DOMAIN_STAGE_SEEDS = [
       { label: '원의 성질 (원과 직선 · 원주각과 접선)', href: '/middle-school/basic-figures?profile=kr&unit=circle-properties-mixed', ready: true, availability: 'ready' },
       { label: '원주각과 내접사각형', href: '/middle-school/basic-figures?profile=kr&unit=circle-cyclic-quadrilaterals', ready: true, availability: 'ready' },
       { label: '도형의 이동 (평행이동·대칭이동·회전이동·닮음변환)', href: '/middle-school/basic-figures?profile=kr&unit=transform-translation', ready: true, availability: 'ready' },
+      { label: '명제와 진리표 · 역·이·대우', href: '/middle-school/basic-figures?profile=kr&unit=logic-truth-tables', ready: true, availability: 'ready' },
+      { label: '삼단논법과 타당한 추론', href: '/middle-school/basic-figures?profile=kr&unit=logic-detachment-syllogism', ready: true, availability: 'ready' },
+      { label: '도형 증명의 등식 성질 (반사성·대칭성·이행성)', href: '/middle-school/basic-figures?profile=kr&unit=logic-segment-angle-properties', ready: true, availability: 'ready' },
     ],
   },
   {
