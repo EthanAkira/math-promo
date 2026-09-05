@@ -553,8 +553,9 @@ export const GENERATORS = {
       const { choices, correctIdx } = buildChoices(`${totalDiscount}\\%`, (i) => {
         if (i === 1) return `${d1 + d2}\\%`;
         if (i === 2) return `${totalDiscount + 2}\\%`;
-        if (i === 3) return `${totalDiscount - 2}\\%`;
-        return `${100 - (d1 + d2)}\\%`;
+        // Guaranteed-fresh for every later retry, so a small (d1,d2) combo space never
+        // forces the generic "value + N" text-concat fallback onto a percent choice.
+        return `${totalDiscount - 2 - i}\\%`;
       });
 
       const question = lang === 'ko'
@@ -579,7 +580,8 @@ export const GENERATORS = {
       if (i === 1) return `${p2}\\%`;
       if (i === 2) return `${p1 * mult}\\%`;
       if (i === 3) return `${ansY / 2}\\%`;
-      return `${ansY + 10}\\%`;
+      // Guaranteed-fresh for every later retry.
+      return `${ansY + 10 + i}\\%`;
     });
 
     const question = lang === 'ko'
@@ -611,8 +613,9 @@ export const GENERATORS = {
     const { choices, correctIdx } = buildChoices(`${finalConc}\\%`, (i) => {
       if (i === 1) return `${(C1 + C2) / 2}\\%`;
       if (i === 2) return `${Math.round((finalConc + 2.5) * 10) / 10}\\%`;
-      if (i === 3) return `${Math.round((finalConc - 2.5) * 10) / 10}\\%`;
-      return `${C2}\\%`;
+      if (i === 3) return `${C2}\\%`;
+      // Guaranteed-fresh for every later retry.
+      return `${Math.round((finalConc - 2.5 - i) * 10) / 10}\\%`;
     });
 
     const question = lang === 'ko'
@@ -657,30 +660,71 @@ export const GENERATORS = {
   // 13. COUNTING & COMBINATIONS
   // -----------------------------------------------------------------------
   'permutations-combinations': (lang) => {
-    const n = randInt(6, 9);
-    const r = randInt(2, 3);
-    let num = 1;
-    let den = 1;
-    for (let i = 0; i < r; i += 1) {
-      num *= (n - i);
-      den *= (i + 1);
+    const variant = pickRandom(['committee', 'stars-and-bars']);
+
+    if (variant === 'committee') {
+      const n = randInt(6, 9);
+      const r = randInt(2, 3);
+      let num = 1;
+      let den = 1;
+      for (let i = 0; i < r; i += 1) {
+        num *= (n - i);
+        den *= (i + 1);
+      }
+      const ans = num / den;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return num;
+        if (i === 2) return ans + randInt(2, 6);
+        if (i === 3) return Math.max(1, ans - randInt(2, 5));
+        return ans * 2;
+      });
+
+      const question = lang === 'ko'
+        ? `수학 동아리에 속한 $${n}$명의 학생 중에서 대표 $${r}$명을 선출하는 방법의 수는 모두 몇 가지입니까?`
+        : `A math club has $${n}$ members. In how many different ways can a committee of $${r}$ members be chosen?`;
+
+      const explanation = lang === 'ko'
+        ? `**[조합(Combination) 기본 공식]**\n\n서로 다른 $n$명 중에서 순서에 상관없이 $r$명을 선택하는 조합의 수 $\\binom{n}{r}$:\n\n$$\\binom{${n}}{${r}} = \\frac{${n}!}{( ${n} - ${r} )! \\times ${r}!} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${ans}$가지)** 입니다.`
+        : `**[Combinations Formula]**\n\nChoosing $r$ elements from $n$ distinct elements without regard to order:\n\n$$\\binom{${n}}{${r}} = \\frac{${n}!}{(${n}-${r})! \\times ${r}!} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
     }
-    const ans = num / den;
+
+    // stars-and-bars (combination allowing repetition), from
+    // "The Essential Guide to Competition Math: Counting and Probability" Topic 2.4
+    const k = randInt(3, 5); // number of variables
+    const positive = Math.random() < 0.5; // xi >= 1 (positive) or xi >= 0 (nonnegative)
+    const total = positive ? randInt(k + 3, k + 12) : randInt(4, 14);
+    const binom = (a, b) => {
+      if (b < 0 || b > a) return 0;
+      let r = 1;
+      for (let i = 0; i < b; i += 1) r = (r * (a - i)) / (i + 1);
+      return Math.round(r);
+    };
+    const ans = positive ? binom(total - 1, k - 1) : binom(total + k - 1, k - 1);
 
     const { choices, correctIdx } = buildChoices(ans, (i) => {
-      if (i === 1) return num;
-      if (i === 2) return ans + randInt(2, 6);
-      if (i === 3) return Math.max(1, ans - randInt(2, 5));
-      return ans * 2;
+      if (i === 1) return binom(total, k - 1);
+      if (i === 2) return binom(total - 1, k);
+      if (i === 3) return ans + randInt(2, 10);
+      return Math.max(1, ans - randInt(2, 10));
     });
 
-    const question = lang === 'ko'
-      ? `수학 동아리에 속한 $${n}$명의 학생 중에서 대표 $${r}$명을 선출하는 방법의 수는 모두 몇 가지입니까?`
-      : `A math club has $${n}$ members. In how many different ways can a committee of $${r}$ members be chosen?`;
+    const varNames = ['x_1', 'x_2', 'x_3', 'x_4', 'x_5'].slice(0, k).join(' + ');
+    const condition = positive ? `x_1, x_2, \\ldots, x_${k} \\geq 1` : `x_1, x_2, \\ldots, x_${k} \\geq 0`;
 
-    const explanation = lang === 'ko'
-      ? `**[조합(Combination) 기본 공식]**\n\n서로 다른 $n$명 중에서 순서에 상관없이 $r$명을 선택하는 조합의 수 $\\binom{n}{r}$:\n\n$$\\binom{${n}}{${r}} = \\frac{${n}!}{( ${n} - ${r} )! \\times ${r}!} = ${ans}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${ans}$가지)** 입니다.`
-      : `**[Combinations Formula]**\n\nChoosing $r$ elements from $n$ distinct elements without regard to order:\n\n$$\\binom{${n}}{${r}} = \\frac{${n}!}{(${n}-${r})! \\times ${r}!} = ${ans}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${ans})**.`;
+    const question = lang === 'ko'
+      ? `방정식 $${varNames} = ${total}$을 만족하는 정수해 $(x_1, x_2, \\ldots, x_${k})$의 개수를 구하시오. (단, ${condition})`
+      : `Find the number of integer solutions $(x_1, x_2, \\ldots, x_${k})$ to $${varNames} = ${total}$, where $${condition}$.`;
+
+    const explanation = positive
+      ? (lang === 'ko'
+        ? `**[Essential Guide to Competition Math (C&P) Topic 2.4 별과 막대 (Stars and Bars)]**\n\n$${k}$개의 양의 정수 변수의 합이 $${total}$이 되는 경우의 수는, 별 $${total}$개를 일렬로 놓고 그 사이 $${total - 1}$개의 틈 중 $${k - 1}$개를 골라 막대를 꽂는 것과 같습니다:\n\n$$\\binom{${total} - 1}{${k} - 1} = \\binom{${total - 1}}{${k - 1}} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${ans}$가지)** 입니다.`
+        : `**[Essential Guide to Competition Math (C&P) Topic 2.4 Stars and Bars]**\n\nWith $${k}$ positive-integer variables summing to $${total}$, line up $${total}$ stars and choose $${k - 1}$ of the $${total - 1}$ gaps between them for bars:\n\n$$\\binom{${total} - 1}{${k} - 1} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`)
+      : (lang === 'ko'
+        ? `**[Essential Guide to Competition Math (C&P) Topic 2.4 별과 막대 (0 이상 허용)]**\n\n$0$ 이상인 정수 변수 $${k}$개의 합이 $${total}$일 때는, 각 변수에 $1$씩 더해 양의 정수 문제로 바꿉니다 (합은 $${total} + ${k}$):\n\n$$\\binom{${total} + ${k} - 1}{${k} - 1} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${ans}$가지)** 입니다.`
+        : `**[Essential Guide to Competition Math (C&P) Topic 2.4 Stars and Bars (Nonnegative)]**\n\nFor $${k}$ nonnegative-integer variables summing to $${total}$, substitute $x_i' = x_i + 1$ to reduce to the positive case with sum $${total} + ${k}$:\n\n$$\\binom{${total} + ${k} - 1}{${k} - 1} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`);
 
     return { question, choices, correctIdx, explanation };
   },
@@ -689,32 +733,118 @@ export const GENERATORS = {
   // 14. PROBABILITY
   // -----------------------------------------------------------------------
   'probability': (lang) => {
-    const targetSum = pickRandom([7, 8, 9, 10]);
-    let favorable = 0;
-    for (let d1 = 1; d1 <= 6; d1 += 1) {
-      for (let d2 = 1; d2 <= 6; d2 += 1) {
-        if (d1 + d2 === targetSum) favorable += 1;
-      }
-    }
-    const g = gcd(favorable, 36);
-    const num = favorable / g;
-    const den = 36 / g;
-    const ans = `\\frac{${num}}{${den}}`;
+    const variant = pickRandom(['dice-sum', 'conditional', 'geometric']);
 
-    const { choices, correctIdx } = buildChoices(ans, (i) => {
-      if (i === 1) return `\\frac{${num + 1}}{${den}}`;
-      if (i === 2) return `\\frac{${Math.max(1, num - 1)}}{${den}}`;
-      if (i === 3) return `\\frac{1}{${targetSum}}`;
-      return `\\frac{${num}}{${den + 2}}`;
+    if (variant === 'dice-sum') {
+      const targetSum = pickRandom([7, 8, 9, 10]);
+      let favorable = 0;
+      for (let d1 = 1; d1 <= 6; d1 += 1) {
+        for (let d2 = 1; d2 <= 6; d2 += 1) {
+          if (d1 + d2 === targetSum) favorable += 1;
+        }
+      }
+      const g = gcd(favorable, 36);
+      const num = favorable / g;
+      const den = 36 / g;
+      const ans = `\\frac{${num}}{${den}}`;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) {
+          const g1 = gcd(num + 1, den);
+          return `\\frac{${(num + 1) / g1}}{${den / g1}}`;
+        }
+        if (i === 2) {
+          const g2 = gcd(Math.max(1, num - 1), den);
+          return `\\frac{${Math.max(1, num - 1) / g2}}{${den / g2}}`;
+        }
+        // Guaranteed-fresh for every later retry: perturb the denominator by i so this
+        // never repeats the same wrong fraction twice within the retry loop.
+        const g3 = gcd(favorable, 36 + i);
+        return `\\frac{${favorable / g3}}{${(36 + i) / g3}}`;
+      });
+
+      const question = lang === 'ko'
+        ? `서로 다른 두 개의 주사위를 동시에 던질 때, 나오는 두 눈의 수의 합이 $${targetSum}$이 될 확률은 얼마입니까?`
+        : `When two fair standard six-sided dice are rolled simultaneously, what is the probability that the sum of the numbers rolled is $${targetSum}$?`;
+
+      const explanation = lang === 'ko'
+        ? `**[주사위 확률과 표본공간]**\n\n두 주사위를 던질 때 나오는 모든 경우의 수는 $6 \\times 6 = 36$가지입니다.\n\n두 눈의 합이 $${targetSum}$이 되는 순서쌍 $(d_1, d_2)$의 개수는 총 $${favorable}$가지입니다.\n\n따라서 확률은:\n\n$$P = \\frac{${favorable}}{36} = \\frac{${num}}{${den}}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${ans}$)** 입니다.`
+        : `**[Dice Probability & Sample Space]**\n\nThe total number of outcomes when rolling two dice is $6 \\times 6 = 36$.\n\nThere are $${favorable}$ pairs $(d_1, d_2)$ that sum to $${targetSum}$.\n\nThus the probability is $\\frac{${favorable}}{36} = \\frac{${num}}{${den}}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'conditional') {
+      // Bag of colored items; given at least one drawn is the target color, find P(both target).
+      // From "Essential Guide to Competition Math (C&P)" Topic 3.2 Conditional Probability.
+      const otherColors = [randInt(1, 3), randInt(1, 3)];
+      const m = randInt(3, 6); // target color count
+      const other = otherColors[0] + otherColors[1];
+      const totalItems = m + other;
+      const c2 = (x) => (x * (x - 1)) / 2;
+      const numer = c2(m);
+      const denom = c2(m) + m * other; // = C(total,2) - C(other,2)
+      const g = gcd(numer, denom);
+      const num = numer / g;
+      const den = denom / g;
+      const ansStr = `\\frac{${num}}{${den}}`;
+
+      const { choices, correctIdx } = buildChoices(ansStr, (i) => {
+        if (i === 1) {
+          const g1 = gcd(c2(m), c2(totalItems));
+          return `\\frac{${c2(m) / g1}}{${c2(totalItems) / g1}}`; // forgot to condition on B at all
+        }
+        if (i === 2) return `\\frac{1}{${m}}`; // naive: 1/(number of green)
+        // Guaranteed-fresh for every later retry: denominator grows with i, so this
+        // never repeats the same wrong fraction twice within the retry loop.
+        const gi = gcd(num, den + i);
+        return `\\frac{${num / gi}}{${(den + i) / gi}}`;
+      });
+
+      const question = lang === 'ko'
+        ? `가방에 빨간 구슬이 $${otherColors[0]}$개, 파란 구슬이 $${otherColors[1]}$개, 초록 구슬이 $${m}$개 들어 있습니다. 이 중 $2$개를 임의로 꺼낼 때, 적어도 하나가 초록 구슬이라는 조건 하에서 두 개 모두 초록 구슬일 확률은 얼마입니까?`
+        : `A bag has $${otherColors[0]}$ red beads, $${otherColors[1]}$ blue beads, and $${m}$ green beads. If two beads are drawn at random, what is the probability that both are green, given that at least one of them is green?`;
+
+      const explanation = lang === 'ko'
+        ? `**[Essential Guide to Competition Math (C&P) Topic 3.2 조건부확률]**\n\n사건 $A$ = "둘 다 초록", 사건 $B$ = "적어도 하나가 초록"이라 하면, 전체 $${totalItems}$개 중 초록이 아닌 것은 $${other}$개이므로\n\n$$P(A|B) = \\frac{n(A)}{n(B)} = \\frac{\\binom{${m}}{2}}{\\binom{${totalItems}}{2} - \\binom{${other}}{2}} = \\frac{${c2(m)}}{${denom}} = ${ansStr}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+        : `**[Essential Guide to Competition Math (C&P) Topic 3.2 Conditional Probability]**\n\nLet $A$ = "both green", $B$ = "at least one green". Out of $${totalItems}$ beads, $${other}$ are not green, so\n\n$$P(A|B) = \\frac{n(A)}{n(B)} = \\frac{\\binom{${m}}{2}}{\\binom{${totalItems}}{2} - \\binom{${other}}{2}} = \\frac{${c2(m)}}{${denom}} = ${ansStr}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // geometric probability: dart lands uniformly in a square, find P(within r of a corner)
+    const S = randInt(6, 12);
+    const r = randInt(2, S - 1);
+    const rr = r * r;
+    const ss = S * S;
+    // Reduce every "Nπ/D" candidate to lowest terms first, so distractors that are
+    // algebraically equal (e.g. forgetting to reduce) never appear as two different-
+    // looking-but-numerically-identical choices.
+    const piFrac = (n, d) => {
+      const g = gcd(n, d);
+      return `\\frac{${n / g}\\pi}{${d / g}}`;
+    };
+    const ansStr = piFrac(rr, 4 * ss);
+
+    const { choices, correctIdx } = buildChoices(ansStr, (i) => {
+      if (i === 1) return piFrac(rr, ss); // forgot the quarter-circle factor of 4
+      if (i === 2) return piFrac(rr, 2 * ss); // used a semicircle instead of a quarter-circle
+      if (i === 3) {
+        const g = gcd(rr, 4 * ss);
+        return `\\frac{${rr / g}}{${(4 * ss) / g}}`; // forgot the π entirely
+      }
+      // Guaranteed-fresh for every later retry: perturb the denominator by i so this
+      // never repeats the same wrong fraction twice within the retry loop.
+      return piFrac(rr, 4 * ss + i);
     });
 
     const question = lang === 'ko'
-      ? `서로 다른 두 개의 주사위를 동시에 던질 때, 나오는 두 눈의 수의 합이 $${targetSum}$이 될 확률은 얼마입니까?`
-      : `When two fair standard six-sided dice are rolled simultaneously, what is the probability that the sum of the numbers rolled is $${targetSum}$?`;
+      ? `한 변의 길이가 $${S}$인 정사각형 안에 다트를 임의로 던집니다. 다트가 정사각형의 한 꼭짓점으로부터 거리 $${r}$ 이내에 떨어질 확률은 얼마입니까?`
+      : `A dart is thrown uniformly at random inside a square with side length $${S}$. What is the probability that it lands within a distance of $${r}$ from one specific corner?`;
 
     const explanation = lang === 'ko'
-      ? `**[주사위 확률과 표본공간]**\n\n두 주사위를 던질 때 나오는 모든 경우의 수는 $6 \\times 6 = 36$가지입니다.\n\n두 눈의 합이 $${targetSum}$이 되는 순서쌍 $(d_1, d_2)$의 개수는 총 $${favorable}$가지입니다.\n\n따라서 확률은:\n\n$$P = \\frac{${favorable}}{36} = \\frac{${num}}{${den}}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${ans}$)** 입니다.`
-      : `**[Dice Probability & Sample Space]**\n\nThe total number of outcomes when rolling two dice is $6 \\times 6 = 36$.\n\nThere are $${favorable}$ pairs $(d_1, d_2)$ that sum to $${targetSum}$.\n\nThus the probability is $\\frac{${favorable}}{36} = \\frac{${num}}{${den}}$.\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]}**.`;
+      ? `**[Essential Guide to Competition Math (C&P) Topic 3.3 기하학적 확률]**\n\n한 꼭짓점에서 거리 $${r}$ 이내의 영역은 반지름 $${r}$인 사분원(넓이 $\\frac{\\pi \\cdot ${r}^2}{4}$)입니다. 기하학적 확률은 넓이의 비이므로:\n\n$$P = \\frac{\\frac{1}{4}\\pi ${r}^2}{${S}^2} = ${ansStr}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+      : `**[Essential Guide to Competition Math (C&P) Topic 3.3 Geometric Probability]**\n\nThe region within distance $${r}$ of one corner is a quarter-circle of radius $${r}$ (area $\\frac{\\pi \\cdot ${r}^2}{4}$). Geometric probability is the ratio of areas:\n\n$$P = \\frac{\\frac{1}{4}\\pi ${r}^2}{${S}^2} = ${ansStr}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
 
     return { question, choices, correctIdx, explanation };
   },
@@ -769,7 +899,8 @@ export const GENERATORS = {
           if (i === 1) return `(${lineA + (lineA - px)}, ${py + 1})`;
           if (i === 2) return `(${reflectedX}, ${-py})`;
           if (i === 3) return `(${2 * lineA + px}, ${py})`;
-          return `(${reflectedX - 2}, ${py})`;
+          // Guaranteed-fresh for every later retry.
+          return `(${reflectedX - 2 - i}, ${py})`;
         });
 
         const question = lang === 'ko'
@@ -791,7 +922,8 @@ export const GENERATORS = {
           if (i === 1) return `(${-px}, ${reflectedY})`;
           if (i === 2) return `(${px}, ${2 * lineB + py})`;
           if (i === 3) return `(${px + 1}, ${reflectedY})`;
-          return `(${px}, ${reflectedY - 2})`;
+          // Guaranteed-fresh for every later retry.
+          return `(${px}, ${reflectedY - 2 - i})`;
         });
 
         const question = lang === 'ko'
@@ -821,9 +953,11 @@ export const GENERATORS = {
 
       const { choices, correctIdx } = buildChoices(correctVal, (i) => {
         if (i === 1) return `${Math.round(360 / (poly.n - 1))}^\\circ`;
-        if (i === 2) return `${Math.round(180 * (poly.n - 2) / poly.n)}^\\circ`;
+        if (i === 2) return `${Math.round((180 * (poly.n - 2)) / poly.n)}^\\circ`;
         if (i === 3) return `${angle * 2}^\\circ`;
-        return `${Math.max(15, angle - 15)}^\\circ`;
+        // Guaranteed-fresh for every later retry (the small fixed polygon pool otherwise
+        // makes these four formulas collide often for a handful of n values).
+        return `${Math.max(5, angle - 15 - i)}^\\circ`;
       });
 
       const question = lang === 'ko'
@@ -850,7 +984,8 @@ export const GENERATORS = {
       if (i === 1) return `(${cx + px}, ${cy + py})`;
       if (i === 2) return `(${rx}, ${-ry})`;
       if (i === 3) return `(${rx + 2}, ${ry - 1})`;
-      return `(${rx - 1}, ${ry + 2})`;
+      // Guaranteed-fresh for every later retry.
+      return `(${rx - 1 - i}, ${ry + 2})`;
     });
 
     const question = lang === 'ko'
@@ -1026,7 +1161,41 @@ export const GENERATORS = {
       return r;
     };
 
-    const variant = Math.random() < 0.5 ? 'together' : 'not-together';
+    const variant = pickRandom(['together', 'not-together', 'repeated-letters']);
+
+    if (variant === 'repeated-letters') {
+      // Multinomial arrangements of a word with repeated letters,
+      // from Essential Guide to Competition Math (C&P) Topic 2.3.
+      const words = [
+        { word: 'BANANA', counts: [3, 2, 1] }, // A,N,B
+        { word: 'MISSISSIPPI', counts: [4, 4, 2, 1] }, // I,S,P,M
+        { word: 'ALABAMA', counts: [4, 1, 1, 1] }, // A,L,B,M
+        { word: 'STATISTICS', counts: [3, 3, 2, 1, 1] }, // S,T,I,A,C
+      ];
+      const chosen = pickRandom(words);
+      const n = chosen.word.length;
+      let denom = 1;
+      for (const c of chosen.counts) denom *= fact(c);
+      const correctAns = fact(n) / denom;
+
+      const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+        if (i === 1) return fact(n);
+        if (i === 2) return fact(n) / fact(Math.max(...chosen.counts));
+        if (i === 3) return correctAns * 2;
+        return Math.max(1, Math.round(correctAns / 2));
+      });
+
+      const question = lang === 'ko'
+        ? `단어 $\\text{"${chosen.word}"}$에 있는 모든 알파벳을 한 번씩 사용하여 만들 수 있는 서로 다른 문자열의 개수는 몇 개입니까?`
+        : `How many distinct arrangements are there of all the letters in the word "${chosen.word}"?`;
+
+      const countsStr = chosen.counts.map((c) => `${c}!`).join(' \\times ');
+      const explanation = lang === 'ko'
+        ? `**[Essential Guide to Competition Math (C&P) Topic 2.3 반복이 있는 순열]**\n\n전체 $${n}$개의 문자를 나열하는 방법의 수 $${n}!$에서, 같은 문자끼리 서로 바꿔도 구분되지 않는 중복을 나누어 줍니다:\n\n$$\\frac{${n}!}{${countsStr}} = ${correctAns}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${correctAns}$가지)** 입니다.`
+        : `**[Essential Guide to Competition Math (C&P) Topic 2.3 Permutations with Repetition]**\n\nDivide the naive $${n}!$ arrangements by the internal arrangements of each repeated letter (which look identical):\n\n$$\\frac{${n}!}{${countsStr}} = ${correctAns}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${correctAns})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'together') {
       const correctAns = fact(N - 1) * 2;
@@ -1076,7 +1245,54 @@ export const GENERATORS = {
   // technique only, no source text or problems reproduced verbatim.
   // -----------------------------------------------------------------------
   'counting': (lang) => {
-    const variant = pickRandom(['inclusive-range', 'evenly-spaced', 'digit-count']);
+    const variant = pickRandom(['inclusive-range', 'evenly-spaced', 'digit-count', 'casework-complements']);
+
+    if (variant === 'casework-complements') {
+      const sub = pickRandom(['at-least-one-flip', 'not-divisible']);
+
+      if (sub === 'at-least-one-flip') {
+        const N = randInt(4, 8);
+        const total = 2 ** N;
+        const correctAns = total - 1;
+        const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+          if (i === 1) return total;
+          if (i === 2) return N * 2;
+          if (i === 3) return correctAns - 2;
+          return correctAns + randInt(2, 6);
+        });
+
+        const question = lang === 'ko'
+          ? `공정한 동전을 $${N}$번 던질 때, 적어도 한 번은 앞면이 나오는 경우의 수는 모두 몇 가지입니까?`
+          : `A fair coin is flipped $${N}$ times. In how many outcomes does at least one flip come up heads?`;
+
+        const explanation = lang === 'ko'
+          ? `**[Essential Guide to Competition Math (C&P) Topic 1.4 여사건(Complement)]**\n\n"적어도 하나"는 여사건("전부 뒷면")을 빼서 구하는 것이 빠릅니다. 전체 경우의 수는 $2^${N}=${total}$이고, 모두 뒷면인 경우는 $1$가지뿐이므로:\n\n$$2^${N} - 1 = ${correctAns}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${correctAns}$가지)** 입니다.`
+          : `**[Essential Guide to Competition Math (C&P) Topic 1.4 Complement Counting]**\n\nFor "at least one," it's fastest to subtract the complement ("all tails") from the total. Total outcomes: $2^${N}=${total}$; all-tails outcomes: $1$:\n\n$$2^${N} - 1 = ${correctAns}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${correctAns})**.`;
+
+        return { question, choices, correctIdx, explanation };
+      }
+
+      const N = randInt(80, 300);
+      const k = pickRandom([3, 4, 6, 7]);
+      const divisibleCount = Math.floor(N / k);
+      const correctAns = N - divisibleCount;
+      const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+        if (i === 1) return divisibleCount;
+        if (i === 2) return correctAns + 1;
+        if (i === 3) return correctAns - 1;
+        return correctAns + randInt(2, 5);
+      });
+
+      const question = lang === 'ko'
+        ? `$1$부터 $${N}$까지의 정수 중에서 $${k}$의 배수가 아닌 것은 모두 몇 개입니까?`
+        : `Among the integers from $1$ to $${N}$, how many are NOT multiples of $${k}$?`;
+
+      const explanation = lang === 'ko'
+        ? `**[Essential Guide to Competition Math (C&P) Topic 1.4 여사건(Complement)]**\n\n$${k}$의 배수의 개수는 $\\left\\lfloor \\frac{${N}}{${k}} \\right\\rfloor = ${divisibleCount}$개이므로, 배수가 아닌 것은 전체에서 이를 뺀\n\n$$${N} - ${divisibleCount} = ${correctAns}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${correctAns}$개)** 입니다.`
+        : `**[Essential Guide to Competition Math (C&P) Topic 1.4 Complement Counting]**\n\nThere are $\\left\\lfloor \\frac{${N}}{${k}} \\right\\rfloor = ${divisibleCount}$ multiples of $${k}$, so the non-multiples number\n\n$$${N} - ${divisibleCount} = ${correctAns}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${correctAns})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'inclusive-range') {
       const a = randInt(20, 60);
