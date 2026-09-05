@@ -769,6 +769,10 @@ const KOREAN_GRADE_STAGE_SEEDS = [
         ready: true,
         availability: 'ready',
       },
+      { label: '공통수학2 · 도형의 평행이동', href: '/middle-school/basic-figures?profile=kr&unit=transform-translation', ready: true, availability: 'ready' },
+      { label: '공통수학2 · 도형의 대칭이동', href: '/middle-school/basic-figures?profile=kr&unit=transform-reflection', ready: true, availability: 'ready' },
+      { label: '공통수학2 · 도형의 회전이동', href: '/middle-school/basic-figures?profile=kr&unit=transform-rotation', ready: true, availability: 'ready' },
+      { label: '공통수학2 · 닮음변환과 좌표', href: '/middle-school/basic-figures?profile=kr&unit=transform-dilation', ready: true, availability: 'ready' },
     ],
   },
 
@@ -1117,6 +1121,11 @@ const INTERNATIONAL_COURSE_STAGE_SEEDS = [
       { label: 'Tangents & Circumscribed Polygons', href: '/middle-school/basic-figures?profile=international&unit=circle-tangent-properties', ready: true, availability: 'ready' },
       { label: 'Inscribed Angles & Cyclic Quadrilaterals', href: '/middle-school/basic-figures?profile=international&unit=circle-inscribed-angles', ready: true, availability: 'ready' },
       { label: 'Tangent-Chord Angles & Circle Geometry', href: '/middle-school/basic-figures?profile=international&unit=circle-tangent-chord-angles', ready: true, availability: 'ready' },
+      { label: 'Translations', href: '/middle-school/basic-figures?profile=international&unit=transform-translation', ready: true, availability: 'ready' },
+      { label: 'Reflections', href: '/middle-school/basic-figures?profile=international&unit=transform-reflection', ready: true, availability: 'ready' },
+      { label: 'Rotations', href: '/middle-school/basic-figures?profile=international&unit=transform-rotation', ready: true, availability: 'ready' },
+      { label: 'Dilations & Scale Factor', href: '/middle-school/basic-figures?profile=international&unit=transform-dilation', ready: true, availability: 'ready' },
+      { label: 'Dilations & Area Ratio', href: '/middle-school/basic-figures?profile=international&unit=transform-dilation-area', ready: true, availability: 'ready' },
     ],
   },
   {
@@ -1211,6 +1220,7 @@ const DOMAIN_STAGE_SEEDS = [
       { label: '삼각비와 삼각함수 도형 활용', href: '/middle-school/basic-figures?unit=radians-trig-ratios&profile=csat', ready: true, availability: 'ready' },
       { label: '원의 성질 (원과 직선 · 원주각과 접선)', href: '/middle-school/basic-figures?profile=kr&unit=circle-properties-mixed', ready: true, availability: 'ready' },
       { label: '원주각과 내접사각형', href: '/middle-school/basic-figures?profile=kr&unit=circle-cyclic-quadrilaterals', ready: true, availability: 'ready' },
+      { label: '도형의 이동 (평행이동·대칭이동·회전이동·닮음변환)', href: '/middle-school/basic-figures?profile=kr&unit=transform-translation', ready: true, availability: 'ready' },
     ],
   },
   {

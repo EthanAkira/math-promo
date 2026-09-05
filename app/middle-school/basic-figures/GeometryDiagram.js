@@ -324,6 +324,41 @@ function CoordinateGeometryDiagram({ data }) {
   </svg>;
 }
 
+// Shows a polygon and its transformed image together on one coordinate grid
+// (translation/reflection/rotation/dilation) — solid original, dashed image.
+function CoordTransformDiagram({ data }) {
+  const allPoints = [...data.points, ...data.transformedPoints];
+  const maxAbs = Math.max(6, ...allPoints.flat().map((v) => Math.abs(v)));
+  const gridHalf = Math.ceil(maxAbs) + 1;
+  const size = 220;
+  const origin = size / 2;
+  const scale = (size / 2 - 15) / gridHalf;
+  const map = ([x, y]) => [origin + x * scale, origin - y * scale];
+  const poly = (points) => points.map(map).map((point) => point.join(',')).join(' ');
+  const gridLines = [];
+  for (let v = -gridHalf; v <= gridHalf; v += 1) {
+    gridLines.push(<line key={`v${v}`} x1={origin + v * scale} y1={15} x2={origin + v * scale} y2={size - 15} className="coord-grid" />);
+    gridLines.push(<line key={`h${v}`} x1={15} y1={origin + v * scale} x2={size - 15} y2={origin + v * scale} className="coord-grid" />);
+  }
+  return <svg className="generated-geometry generated-coordinate-geometry generated-coord-transform" viewBox={`0 0 ${size} ${size}`} role="img" aria-label="coordinate transformation diagram">
+    {gridLines}
+    <line x1={10} y1={origin} x2={size - 10} y2={origin} className="axis-line" />
+    <line x1={origin} y1={size - 10} x2={origin} y2={10} className="axis-line" />
+    <polygon points={poly(data.points)} className="shape-outline" />
+    <polygon points={poly(data.transformedPoints)} className="guide-line" />
+    {data.points.map((point, index) => {
+      const [x, y] = map(point);
+      return <g key={`orig-${index}`}><circle cx={x} cy={y} r="3" className="highlight-point" /><text x={x + 5} y={y - 6} className="point-label">{data.labels[index]}</text></g>;
+    })}
+    {data.transformedPoints.map((point, index) => {
+      const [x, y] = map(point);
+      return <g key={`img-${index}`}><circle cx={x} cy={y} r="3" className="target-point" /><text x={x + 5} y={y - 6} className="target-label">{data.labels[index]}&apos;</text></g>;
+    })}
+    <text x={size - 14} y={origin + 12} className="line-label">x</text>
+    <text x={origin + 6} y={16} className="line-label">y</text>
+  </svg>;
+}
+
 const BOX_POINTS = { A: [65, 28], B: [34, 58], C: [34, 128], D: [65, 98], E: [154, 28], F: [123, 58], G: [123, 128], H: [154, 98] };
 const BOX_EDGES = [['A','B'],['B','C'],['C','D'],['D','A'],['E','F'],['F','G'],['G','H'],['H','E'],['A','E'],['B','F'],['C','G'],['D','H']];
 
@@ -1190,6 +1225,7 @@ export default function GeometryDiagram({ diagram }) {
   if (diagram.kind === 'right-triangle') return <RightTriangleDiagram data={diagram} />;
   if (diagram.kind === 'rectangle-diagonal') return <RectangleDiagonalDiagram data={diagram} />;
   if (diagram.kind === 'coordinate-geometry') return <CoordinateGeometryDiagram data={diagram} />;
+  if (diagram.kind === 'coord-transform') return <CoordTransformDiagram data={diagram} />;
   if (diagram.kind === 'solid') return <SolidDiagram data={diagram} />;
   if (diagram.kind === 'polygon-basic') return <PolygonBasicDiagram data={diagram} />;
   if (diagram.kind === 'circle-parts') return <CirclePartsDiagram data={diagram} />;

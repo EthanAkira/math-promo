@@ -5,6 +5,7 @@ import { MIDDLE_GEOMETRY_BASIC_UNITS } from './middleGeometryBasicsEngine';
 import { TRIANGLE_QUADRILATERAL_UNITS } from './triangleQuadrilateralEngine';
 import { TRIANGLE_SIMILARITY_UNITS } from './triangleSimilarityEngine';
 import { CIRCLE_PROPERTIES_UNITS } from './circlePropertiesEngine';
+import { TRANSFORMATIONS_UNITS } from './transformationsEngine';
 
 function randomInt(random, min, max) {
   return Math.floor(random() * (max - min + 1)) + min;
@@ -334,6 +335,14 @@ const CURRICULUM_PROFILES = {
   'circle-cyclic-quadrilaterals': ['kr-middle-3', 'geometry', 'amc12'],
   'circle-tangent-chord-angles': ['kr-middle-3', 'geometry', 'amc12'],
   'circle-properties-mixed': ['kr-middle-3', 'geometry', 'amc12'],
+
+  // TRANSFORMATIONS_UNITS (transformationsEngine.js) — coordinate translation/reflection/
+  // rotation/dilation; in the 2022 개정 Korean curriculum this is 공통수학2 (고1) content.
+  'transform-translation': ['kr-high-1', 'geometry'],
+  'transform-reflection': ['kr-high-1', 'geometry'],
+  'transform-rotation': ['kr-high-1', 'geometry'],
+  'transform-dilation': ['kr-high-1', 'geometry'],
+  'transform-dilation-area': ['kr-high-1', 'geometry'],
 };
 
 function withCurriculumProfiles(units) {
@@ -355,6 +364,7 @@ export const BASIC_FIGURE_UNITS = [
   ...withCurriculumProfiles(TRIANGLE_QUADRILATERAL_UNITS),
   ...withCurriculumProfiles(TRIANGLE_SIMILARITY_UNITS),
   ...withCurriculumProfiles(CIRCLE_PROPERTIES_UNITS),
+  ...withCurriculumProfiles(TRANSFORMATIONS_UNITS),
   ...ADVANCED_GEOMETRY_UNITS,
   ...ADVANCED_GEOMETRY_CHALLENGE_UNITS,
 ];
