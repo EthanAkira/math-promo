@@ -59,6 +59,7 @@ export default function DashboardClient() {
         <span className="section-kicker">MY DASHBOARD</span>
         <h1 className="section-main-title">{tr(language, 'dashboardTitle')}</h1>
         <p>{tr(language, 'dashboardDesc')}</p>
+        <p style={{ fontSize: 13, color: 'var(--red-pen)', margin: '4px 0 0' }}>{tr(language, 'dashboardPrivacyNotice')}</p>
       </div>
 
       {loading ? (
