@@ -6,6 +6,7 @@ import { useLanguage } from '../../language';
 import { AMC_UNITS, AMC_FINE_SUBJECTS } from '../../examUnits';
 import InteractiveProblemCard from '../../components/InteractiveProblemCard';
 import staticAmc8Catalog from '../../data/amc8ProblemCatalog.json';
+import { generateAmcVariantProblem } from '../amcProblemGenerator';
 
 const COPY = {
   ko: {
@@ -126,6 +127,7 @@ export default function AmcUnitBrowser() {
   const [expandedProblemId, setExpandedProblemId] = useState(null);
   const [userAnswers, setUserAnswers] = useState({});
   const [openFileUnit, setOpenFileUnit] = useState(null);
+  const [generatedVariants, setGeneratedVariants] = useState({});
 
   // Auth check
   useEffect(() => {
@@ -299,6 +301,19 @@ export default function AmcUnitBrowser() {
       return;
     }
     setExpandedProblemId((current) => (current === problem.id ? null : problem.id));
+  }
+
+  function handleGenerateVariant(openKey, unit) {
+    const variant = generateAmcVariantProblem(unit, language);
+    setGeneratedVariants((prev) => ({ ...prev, [openKey]: variant }));
+  }
+
+  function handleCloseVariant(openKey) {
+    setGeneratedVariants((prev) => {
+      const next = { ...prev };
+      delete next[openKey];
+      return next;
+    });
   }
 
   return (
@@ -582,8 +597,8 @@ export default function AmcUnitBrowser() {
                                 font: 'inherit',
                               }}
                             >
-                              <div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                              <div style={{ flex: '1 1 auto', marginRight: 12 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                                   <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink, #111827)' }}>
                                     {unit.label}
                                   </span>
@@ -594,8 +609,37 @@ export default function AmcUnitBrowser() {
                                 <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-soft)', marginTop: 2 }}>
                                   {unit.desc}
                                 </span>
+
+                                {/* Curriculum Mapping Badges (Volume 1, International Math, Domains) */}
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 6, alignItems: 'center' }}>
+                                  {unit.vol1Chapter && (
+                                    <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(217, 119, 6, 0.12)', color: '#b45309', border: '1px solid rgba(217, 119, 6, 0.25)' }}>
+                                      📖 {unit.vol1Chapter}
+                                    </span>
+                                  )}
+                                  {unit.intlCourse && (
+                                    <a
+                                      href={unit.intlCourse.href}
+                                      onClick={(e) => e.stopPropagation()}
+                                      style={{ textDecoration: 'none', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(37, 99, 235, 0.08)', color: '#1d4ed8', border: '1px solid rgba(37, 99, 235, 0.2)' }}
+                                      title="국제학교 과정 커리큘럼 보기"
+                                    >
+                                      🌐 국제학교: {language === 'ko' ? unit.intlCourse.labelKo : unit.intlCourse.label} ↗
+                                    </a>
+                                  )}
+                                  {unit.domain && (
+                                    <a
+                                      href={unit.domain.href}
+                                      onClick={(e) => e.stopPropagation()}
+                                      style={{ textDecoration: 'none', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(16, 185, 129, 0.08)', color: '#047857', border: '1px solid rgba(16, 185, 129, 0.2)' }}
+                                      title="수학 영역별 커리큘럼 보기"
+                                    >
+                                      📐 영역: {language === 'ko' ? unit.domain.labelKo : unit.domain.label} ↗
+                                    </a>
+                                  )}
+                                </div>
                               </div>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
                                 <span style={{ fontSize: 12, fontWeight: 600, padding: '3px 9px', borderRadius: 12, background: 'var(--paper-line, #e5e7eb)', color: 'var(--ink, #374151)' }}>
                                   {words.problemCount(list.length)}
                                 </span>
@@ -605,9 +649,94 @@ export default function AmcUnitBrowser() {
                               </div>
                             </button>
 
-                            {/* Accordion Body: Problems List */}
+                            {/* Accordion Body: Problem Generator & Actual Archive Problems */}
                             {isOpen && (
-                              <div style={{ padding: '4px 16px 16px', display: 'grid', gap: 10 }}>
+                              <div style={{ padding: '4px 16px 16px', display: 'grid', gap: 14 }}>
+                                {/* Variant Generator Action Bar */}
+                                <div
+                                  style={{
+                                    padding: '14px 16px',
+                                    borderRadius: 12,
+                                    background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(245, 158, 11, 0.06) 100%)',
+                                    border: '1px dashed rgba(99, 102, 241, 0.35)',
+                                  }}
+                                >
+                                  <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
+                                    <div>
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                        <span style={{ fontSize: 14, fontWeight: 800, color: '#4338ca' }}>
+                                          ✨ {language === 'ko' ? 'AMC 8 유사 변형 문제 생성 엔진' : 'AMC 8 Similar Problem Generator'}
+                                        </span>
+                                        <span style={{ fontSize: 10, fontWeight: 700, padding: '1px 6px', borderRadius: 10, background: '#4338ca', color: '#ffffff' }}>
+                                          ALGORITHMIC
+                                        </span>
+                                      </div>
+                                      <p style={{ margin: '3px 0 0', fontSize: 12, color: 'var(--ink-soft, #4b5563)' }}>
+                                        {language === 'ko'
+                                          ? 'AMC 8 Preparation Vol. 1 및 기출 패턴 기반으로 KaTeX 수식과 풀이가 포함된 유사 문제를 무한 생성합니다.'
+                                          : 'Generates infinite algorithmic practice problems with KaTeX math and detailed solutions.'}
+                                      </p>
+                                    </div>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleGenerateVariant(openKey, unit)}
+                                      style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: 6,
+                                        padding: '7px 14px',
+                                        borderRadius: 8,
+                                        fontSize: 12,
+                                        fontWeight: 700,
+                                        background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+                                        color: '#ffffff',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        boxShadow: '0 2px 6px rgba(79, 70, 229, 0.25)',
+                                      }}
+                                    >
+                                      <span>⚡</span>
+                                      <span>
+                                        {generatedVariants[openKey]
+                                          ? (language === 'ko' ? '다른 변형 문제 생성 🔄' : 'New Variant 🔄')
+                                          : (language === 'ko' ? '유사 문제 생성하기 ✨' : 'Generate Variant ✨')}
+                                      </span>
+                                    </button>
+                                  </div>
+
+                                  {/* Rendered Generated Variant Card */}
+                                  {generatedVariants[openKey] && (
+                                    <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid rgba(99, 102, 241, 0.2)' }}>
+                                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                                        <span style={{ fontSize: 12, fontWeight: 700, color: '#4f46e5' }}>
+                                          🎯 {language === 'ko' ? '실시간 생성된 변형 문제 (웹·태블릿 인터랙티브 풀이)' : 'Real-Time Generated Variant Problem'}
+                                        </span>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleCloseVariant(openKey)}
+                                          style={{ fontSize: 11, background: 'none', border: 'none', color: 'var(--ink-soft)', cursor: 'pointer', textDecoration: 'underline' }}
+                                        >
+                                          {language === 'ko' ? '닫기 ✕' : 'Close ✕'}
+                                        </button>
+                                      </div>
+                                      <InteractiveProblemCard
+                                        problem={generatedVariants[openKey]}
+                                        userAnswer={userAnswers[generatedVariants[openKey].id] ?? null}
+                                        onSelectAnswer={(ans) => setUserAnswers((prev) => ({ ...prev, [generatedVariants[openKey].id]: ans }))}
+                                        isExamMode={false}
+                                        showResult={false}
+                                        language={language}
+                                      />
+                                    </div>
+                                  )}
+                                </div>
+
+                                {/* Actual Past Exam Problems Header */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '4px 0 2px' }}>
+                                  <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink, #111827)' }}>
+                                    📁 {language === 'ko' ? `AMC 8 실제 기출문제 (${list.length}문항)` : `Past AMC 8 Competition Problems (${list.length})`}
+                                  </span>
+                                </div>
                                 {list.map((problem) => {
                                   const isCardOpen = expandedProblemId === problem.id;
                                   return (
