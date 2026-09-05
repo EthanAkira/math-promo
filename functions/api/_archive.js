@@ -5,7 +5,7 @@ export function genId() {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-export const VALID_SUBJECTS = ['amc', 'csat'];
+export const VALID_SUBJECTS = ['amc', 'csat', 'curriculum-advanced'];
 export const VALID_CONTENT_TYPES = ['problem', 'answer', 'solution', 'theory', 'variant_problem', 'related_problem', 'forecast', 'stats'];
 export const VALID_ACCESS_TIERS = ['free', 'premium'];
 

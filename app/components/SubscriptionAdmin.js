@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 const labelStyle = { fontSize: 12, fontWeight: 700, color: 'var(--ink-soft)' };
 const fieldStyle = { width: '100%', padding: '9px 11px', border: '1px solid var(--paper-line)', borderRadius: 8, background: '#fff', font: 'inherit', boxSizing: 'border-box' };
-const SUBJECT_LABELS = { amc: 'AMC', csat: '수능(CSAT)' };
+const SUBJECT_LABELS = { amc: 'AMC', csat: '수능(CSAT)', 'curriculum-advanced': '일반과정 심화' };
 const DURATION_OPTIONS = [
   { value: '', label: '무기한(평생)' },
   { value: '30', label: '30일' },
@@ -90,6 +90,7 @@ export default function SubscriptionAdmin({ defaultSubject = 'amc' }) {
           <select value={subject} onChange={(event) => setSubject(event.target.value)} style={fieldStyle}>
             <option value="amc">AMC</option>
             <option value="csat">수능(CSAT)</option>
+            <option value="curriculum-advanced">일반과정 심화</option>
           </select>
         </label>
         <label style={{ display: 'grid', gap: 6 }}>

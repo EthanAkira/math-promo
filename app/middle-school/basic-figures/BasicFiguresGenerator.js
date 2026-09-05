@@ -13,6 +13,14 @@ import { recordAttempts } from '../../lib/submissions';
 
 const PROBLEM_COUNT = 20;
 
+// Pilot scope for the server-side "advanced tier" (functions/api/curriculum-advanced) — only
+// these unit ids have advanced content today. This is just a routing list of ids, not the
+// generation logic itself (that lives entirely under functions/ and is never bundled here).
+const ADVANCED_UNIT_IDS = new Set([
+  'transform-translation', 'transform-reflection', 'transform-rotation', 'transform-dilation', 'transform-dilation-area',
+  'logic-truth-tables', 'logic-conditional-forms', 'logic-detachment-syllogism', 'logic-segment-angle-properties',
+]);
+
 function hashSeed(text) {
   let hash = 2166136261;
   for (let index = 0; index < text.length; index += 1) {
@@ -118,7 +126,7 @@ function buildUrl(seed, unitId, profileId, view = 'problems') {
 
 export default function BasicFiguresGenerator() {
   const { language } = useLanguage();
-  const { user } = useAuth();
+  const { user, status: authStatus } = useAuth();
   const foreign = isNonKorean(language);
   const [unitId, setUnitId] = useState('visual-foundations');
   const [profileId, setProfileId] = useState('kr');
@@ -128,6 +136,10 @@ export default function BasicFiguresGenerator() {
   const [checked, setChecked] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState('');
   const [ready, setReady] = useState(false);
+  const [tier, setTier] = useState('basic');
+  const [advancedSubStatus, setAdvancedSubStatus] = useState('loading');
+  const [advancedProblems, setAdvancedProblems] = useState(null);
+  const [advancedState, setAdvancedState] = useState('idle');
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -144,7 +156,47 @@ export default function BasicFiguresGenerator() {
   const unit = findBasicFigureUnit(unitId);
   const profile = findGeometryProfile(profileId);
   const availableUnits = useMemo(() => BASIC_FIGURE_UNITS.filter((item) => !item.profiles || item.profiles.includes(profileId)), [profileId]);
-  const problems = useMemo(() => makeProblems(seed, unit, profile), [seed, unit, profile]);
+  const basicProblems = useMemo(() => makeProblems(seed, unit, profile), [seed, unit, profile]);
+  const hasAdvancedContent = ADVANCED_UNIT_IDS.has(unitId);
+
+  // Subscription check for the separate 'curriculum-advanced' subject, mirroring the AMC/CSAT
+  // archive's login+subscription gating pattern (app/amc/units/AmcUnitBrowser.js).
+  useEffect(() => {
+    if (authStatus !== 'ready') return;
+    if (!user) { setAdvancedSubStatus('inactive'); return; }
+    let cancelled = false;
+    setAdvancedSubStatus('loading');
+    fetch('/api/subscriptions/status?subject=curriculum-advanced')
+      .then((res) => res.json())
+      .then((data) => { if (!cancelled) setAdvancedSubStatus(data.active ? 'active' : 'inactive'); })
+      .catch(() => { if (!cancelled) setAdvancedSubStatus('inactive'); });
+    return () => { cancelled = true; };
+  }, [authStatus, user]);
+
+  const advancedEntitled = authStatus === 'ready' && !!user && advancedSubStatus === 'active';
+
+  // Advanced-tier problems are generated server-side (functions/api/curriculum-advanced/generate.js)
+  // and fetched only once the viewer is confirmed entitled — unlike basicProblems above, this is
+  // never computed client-side, so the generation logic itself is never exposed to the browser.
+  useEffect(() => {
+    if (tier !== 'advanced' || !advancedEntitled || !hasAdvancedContent) return;
+    let cancelled = false;
+    setAdvancedState('loading');
+    const params = new URLSearchParams({ unit: unitId, profile: profileId, seed });
+    fetch(`/api/curriculum-advanced/generate?${params.toString()}`)
+      .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+      .then(({ ok, data }) => {
+        if (cancelled) return;
+        if (!ok || !Array.isArray(data.problems)) { setAdvancedState('error'); return; }
+        setAdvancedProblems(data.problems);
+        setAdvancedState('ready');
+      })
+      .catch(() => { if (!cancelled) setAdvancedState('error'); });
+    return () => { cancelled = true; };
+  }, [tier, advancedEntitled, hasAdvancedContent, unitId, profileId, seed]);
+
+  const showingAdvanced = tier === 'advanced' && advancedState === 'ready' && advancedProblems;
+  const problems = showingAdvanced ? advancedProblems : basicProblems;
   const correctCount = problems.filter((item) => normalizeAnswer(answers[item.id]) === normalizeAnswer(item.answer)).length;
 
   useEffect(() => {
@@ -152,12 +204,24 @@ export default function BasicFiguresGenerator() {
     QRCode.toDataURL(buildUrl(seed, unitId, profileId), { width: 220, margin: 1, errorCorrectionLevel: 'M', color: { dark: '#1f2733', light: '#fffefb' } }).then(setQrDataUrl);
   }, [seed, unitId, profileId, ready]);
 
+  function chooseTier(nextTier) {
+    if (nextTier === tier) return;
+    if (nextTier === 'advanced') {
+      if (authStatus !== 'ready' || advancedSubStatus === 'loading') return;
+      if (!user) { window.alert(tr(language, 'advancedAlertNeedLogin')); return; }
+      if (advancedSubStatus !== 'active') { window.alert(tr(language, 'advancedAlertNeedSub')); return; }
+      if (!hasAdvancedContent) { window.alert(tr(language, 'advancedNotReady')); return; }
+    }
+    setTier(nextTier); setAnswers({}); setChecked(false);
+  }
+
   const replaceUrl = useCallback((nextSeed, nextUnit, nextProfile, nextView) => {
     window.history.replaceState({}, '', buildUrl(nextSeed, nextUnit, nextProfile, nextView));
   }, []);
 
   function reset(nextSeed, nextUnit = unitId, nextProfile = profileId) {
     setSeed(nextSeed); setUnitId(nextUnit); setProfileId(nextProfile); setView('problems'); setAnswers({}); setChecked(false);
+    setTier('basic'); setAdvancedState('idle'); setAdvancedProblems(null);
     replaceUrl(nextSeed, nextUnit, nextProfile, 'problems');
   }
 
@@ -193,7 +257,16 @@ export default function BasicFiguresGenerator() {
       <div className="control-actions"><button className="button button-secondary" onClick={() => window.print()}>{tr(language, 'printPdf')}</button><button className="button button-secondary" onClick={() => changeView(view === 'problems' ? 'answers' : 'problems')}>{tr(language, view === 'problems' ? 'answerKey' : 'worksheet')}</button><button className="button button-primary" onClick={() => reset(createSeed())}>{tr(language, 'newWorksheet')}</button></div>
     </section>
 
-    <div className={`worksheet-paper middle-worksheet ${view === 'answers' ? 'answer-sheet' : ''}`}>
+    <div className="tier-toggle no-print" role="tablist" aria-label={tr(language, 'tierAdvanced')}>
+      <button type="button" role="tab" aria-selected={tier === 'basic'} className={`tier-tab${tier === 'basic' ? ' active' : ''}`} onClick={() => chooseTier('basic')}>{tr(language, 'tierBasic')}</button>
+      <button type="button" role="tab" aria-selected={tier === 'advanced'} className={`tier-tab${tier === 'advanced' ? ' active' : ''}`} onClick={() => chooseTier('advanced')}>{tr(language, 'tierAdvanced')}</button>
+    </div>
+
+    {tier === 'advanced' && advancedState !== 'ready' ? (
+      <div className="advanced-status no-print">
+        {advancedState === 'error' ? tr(language, 'advancedError') : tr(language, 'advancedLoading')}
+      </div>
+    ) : <div className={`worksheet-paper middle-worksheet ${view === 'answers' ? 'answer-sheet' : ''}`}>
       <header className="worksheet-heading"><div className="worksheet-brand"><span className="brand-mark">DAILY</span><strong>{tr(language, 'dailyLab')}</strong></div><div className="worksheet-title"><span>{profile.shortLabel}</span><h2>{unitLabel} {tr(language, view === 'answers' ? 'answerSheet' : 'worksheetWord')}</h2><p>{unitDescription}</p></div><div className="worksheet-identity"><div><span>{tr(language, 'worksheetId')}</span><strong>{seed}</strong><small>{tr(language, 'scanQr')}</small></div>{qrDataUrl ? <img src={qrDataUrl} alt={`Worksheet ${seed} QR code`} /> : null}</div></header>
       <div className="student-row"><span>{tr(language, 'name')}</span><i /><span>{tr(language, 'date')}</span><i /><span className="sheet-kind">{tr(language, view === 'answers' ? 'answers' : 'problems20')}</span></div>
       <section className="problem-grid word-problem-grid prime-problem-grid" aria-label={`${unitLabel} ${foreign ? 'problems' : '문제'}`}>
@@ -209,9 +282,9 @@ export default function BasicFiguresGenerator() {
         })}
       </section>
       <footer className="worksheet-footer"><span className="worksheet-signature">Built &amp; Designed by Chae</span><span>{tr(language, 'dailyLab')}</span><span>{seed} · {profile.shortLabel} · {unitLabel}</span></footer>
-    </div>
+    </div>}
 
-    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Choose an option or type your numeric answer, then check.' : '객관식은 보기를 고르고, 주관식은 숫자만 입력하세요.'}</p></div><button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
+    {(tier === 'basic' || showingAdvanced) && view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Choose an option or type your numeric answer, then check.' : '객관식은 보기를 고르고, 주관식은 숫자만 입력하세요.'}</p></div><button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
     <style jsx global>{`
       .difficulty-strip { display:flex; flex-wrap:wrap; gap:5px; margin:0 0 7px; }
       .difficulty-strip span { padding:3px 7px; border-radius:999px; background:#fff2d8; color:#7c4a08; border:1px solid #e7bd79; font-size:10px; font-weight:800; }
@@ -221,6 +294,11 @@ export default function BasicFiguresGenerator() {
       .choice-diagnostics { margin-top:8px; padding:7px 9px; background:#fff8ec; border:1px solid #edcf9d; font-size:11px; }
       .choice-diagnostics summary { cursor:pointer; font-weight:800; color:#805216; }.choice-diagnostics p { margin:5px 0 0; line-height:1.45; }
       @media print { .choice-diagnostics { display:block; }.choice-diagnostics summary { display:none; } }
+      .tier-toggle { display:flex; gap:8px; margin:0 0 14px; }
+      .tier-tab { padding:8px 16px; border-radius:999px; border:1px solid var(--paper-line); background:#fff; font-weight:700; font-size:13px; cursor:pointer; color:var(--ink-soft); }
+      .tier-tab.active { background:#1f2733; color:#fff; border-color:#1f2733; }
+      .advanced-status { padding:40px 20px; text-align:center; color:var(--ink-soft); background:var(--card-bg); border:1px solid var(--paper-line); border-radius:var(--radius); }
+      @media print { .tier-toggle { display:none; } }
     `}</style>
   </div>;
 }
