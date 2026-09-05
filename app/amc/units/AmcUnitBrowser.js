@@ -610,11 +610,16 @@ export default function AmcUnitBrowser() {
                                   {unit.desc}
                                 </span>
 
-                                {/* Curriculum Mapping Badges (Volume 1, International Math, Domains) */}
+                                {/* Curriculum Mapping Badges (Volume 1, Volume 2, International Math, Domains) */}
                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 6, alignItems: 'center' }}>
                                   {unit.vol1Chapter && (
                                     <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(217, 119, 6, 0.12)', color: '#b45309', border: '1px solid rgba(217, 119, 6, 0.25)' }}>
-                                      📖 {unit.vol1Chapter}
+                                      📙 Vol 1: {unit.vol1Chapter}
+                                    </span>
+                                  )}
+                                  {unit.vol2Chapter && (
+                                    <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(147, 51, 234, 0.12)', color: '#7e22ce', border: '1px solid rgba(147, 51, 234, 0.25)' }}>
+                                      📘 Vol 2: {unit.vol2Chapter}
                                     </span>
                                   )}
                                   {unit.intlCourse && (
@@ -673,8 +678,8 @@ export default function AmcUnitBrowser() {
                                       </div>
                                       <p style={{ margin: '3px 0 0', fontSize: 12, color: 'var(--ink-soft, #4b5563)' }}>
                                         {language === 'ko'
-                                          ? 'AMC 8 Preparation Vol. 1 및 기출 패턴 기반으로 KaTeX 수식과 풀이가 포함된 유사 문제를 무한 생성합니다.'
-                                          : 'Generates infinite algorithmic practice problems with KaTeX math and detailed solutions.'}
+                                          ? 'AMC 8 Preparation Vol. 1·2 및 기출 패턴 기반으로 KaTeX 수식과 풀이가 포함된 유사 문제를 무한 생성합니다.'
+                                          : 'Generates infinite algorithmic practice problems with KaTeX math and detailed solutions based on AMC 8 Prep Vol. 1 & 2.'}
                                       </p>
                                     </div>
                                     <button

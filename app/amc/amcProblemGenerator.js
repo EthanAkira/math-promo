@@ -9,6 +9,13 @@
  *     Chapter 4: Operations with Fractions
  *     Chapter 5: Even and Odd
  *     Chapter 6: Word Problems related to Percentage
+ * - "AMC 8 Preparation (Volume 2)" by mymathcounts.com:
+ *     Chapter 7: Transformations
+ *     Chapter 8: Consecutive Integers
+ *     Chapter 9: Operations with Decimals
+ *     Chapter 10: Sets and Venn Diagrams
+ *     Chapter 11: Counting Techniques
+ *     Chapter 12: Divisibility
  * - And standard AMC 8 past competition topics (Geometry, Number Theory, Algebra, Combinatorics, Probability).
  */
 
@@ -387,61 +394,143 @@ export const GENERATORS = {
   },
 
   // -----------------------------------------------------------------------
-  // 8. OPERATIONS WITH FRACTIONS (Ch 4: Operations with Fractions)
+  // 8. OPERATIONS WITH FRACTIONS & DECIMALS (Vol 1 Ch 4 & Vol 2 Ch 9)
   // -----------------------------------------------------------------------
   'arithmetic-operations': (lang) => {
-    // Telescoping fraction product: (1 - 1/2)(1 - 1/3)...(1 - 1/n) = 1/n
-    const n = randInt(15, 50);
-    const correctFraction = `\\frac{1}{${n}}`;
+    const variant = pickRandom(['telescoping', 'repeating-decimal']);
 
-    const { choices, correctIdx } = buildChoices(correctFraction, (i) => {
-      if (i === 1) return `\\frac{1}{${n - 1}}`;
-      if (i === 2) return `\\frac{2}{${n}}`;
-      if (i === 3) return `\\frac{${n - 1}}{${n}}`;
-      return `\\frac{1}{${n + 1}}`;
+    if (variant === 'telescoping') {
+      // Telescoping fraction product: (1 - 1/2)(1 - 1/3)...(1 - 1/n) = 1/n
+      const n = randInt(15, 50);
+      const correctFraction = `\\frac{1}{${n}}`;
+
+      const { choices, correctIdx } = buildChoices(correctFraction, (i) => {
+        if (i === 1) return `\\frac{1}{${n - 1}}`;
+        if (i === 2) return `\\frac{2}{${n}}`;
+        if (i === 3) return `\\frac{${n - 1}}{${n}}`;
+        return `\\frac{1}{${n + 1}}`;
+      });
+
+      const question = lang === 'ko'
+        ? `다음 분수의 곱셈 식을 간단히 계산한 값은 얼마입니까?\n\n$$\\left(1 - \\frac{1}{2}\\right)\\left(1 - \\frac{1}{3}\\right)\\left(1 - \\frac{1}{4}\\right) \\cdots \\left(1 - \\frac{1}{${n}}\\right)$$`
+        : `What is the simplified value of the following product of fractions?\n\n$$\\left(1 - \\frac{1}{2}\\right)\\left(1 - \\frac{1}{3}\\right)\\left(1 - \\frac{1}{4}\\right) \\cdots \\left(1 - \\frac{1}{${n}}\\right)$$`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 1 Ch.4 분수 망원급수(Telescoping Product)]**\n\n각 괄호 안의 식을 계산하면 분자와 분모가 연쇄적으로 약분됩니다:\n\n$$\\left(\\frac{1}{2}\\right) \\times \\left(\\frac{2}{3}\\right) \\times \\left(\\frac{3}{4}\\right) \\times \\cdots \\times \\left(\\frac{${n - 1}}{${n}}\\right)$$\n\n첫 번째 분수의 분자 $1$과 마지막 분수의 분모 $${n}$만 남고 중간의 모든 항이 약분되므로:\n\n$$S = \\frac{1}{${n}}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${correctFraction}$)** 입니다.`
+        : `**[AMC 8 Prep Vol. 1 Ch.4 Telescoping Fraction Product]**\n\nSimplify each term in parentheses:\n\n$$\\left(\\frac{1}{2}\\right) \\left(\\frac{2}{3}\\right) \\left(\\frac{3}{4}\\right) \\cdots \\left(\\frac{${n - 1}}{${n}}\\right)$$\n\nNotice that the numerator of each term cancels with the denominator of the preceding term. Only the first numerator ($1$) and the last denominator ($${n}$) survive:\n\n$$S = \\frac{1}{${n}}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]}**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // Repeating decimal to simplified fraction (Vol 2 Ch 9)
+    const ab = randInt(12, 85);
+    const g = gcd(ab, 99);
+    const p = ab / g;
+    const q = 99 / g;
+    const sumPQ = p + q;
+
+    const { choices, correctIdx } = buildChoices(sumPQ, (i) => {
+      if (i === 1) return ab + 99;
+      if (i === 2) return p + q + 10;
+      if (i === 3) return p * q;
+      return Math.max(1, sumPQ - 8);
     });
 
     const question = lang === 'ko'
-      ? `다음 분수의 곱셈 식을 간단히 계산한 값은 얼마입니까?\n\n$$\\left(1 - \\frac{1}{2}\\right)\\left(1 - \\frac{1}{3}\\right)\\left(1 - \\frac{1}{4}\\right) \\cdots \\left(1 - \\frac{1}{${n}}\\right)$$`
-      : `What is the simplified value of the following product of fractions?\n\n$$\\left(1 - \\frac{1}{2}\\right)\\left(1 - \\frac{1}{3}\\right)\\left(1 - \\frac{1}{4}\\right) \\cdots \\left(1 - \\frac{1}{${n}}\\right)$$`;
+      ? `순환소수 $0.\\overline{${ab < 10 ? '0' + ab : ab}}$를 서로소인 두 자연수 $p, q$에 대하여 기약분수 $\\frac{p}{q}$로 나타낼 때, 분모와 분자의 합 $p + q$의 값은 얼마입니까?`
+      : `When the repeating decimal $0.\\overline{${ab < 10 ? '0' + ab : ab}}$ is written as a simplified fraction $\\frac{p}{q}$ in lowest terms (where $p$ and $q$ are relatively prime positive integers), what is the value of $p + q$?`;
 
     const explanation = lang === 'ko'
-      ? `**[AMC 8 Prep Vol. 1 Ch.4 분수 망원급수(Telescoping Product)]**\n\n각 괄호 안의 식을 계산하면 분자와 분모가 연쇄적으로 약분됩니다:\n\n$$\\left(\\frac{1}{2}\\right) \\times \\left(\\frac{2}{3}\\right) \\times \\left(\\frac{3}{4}\\right) \\times \\cdots \\times \\left(\\frac{${n - 1}}{${n}}\\right)$$\n\n첫 번째 분수의 분자 $1$과 마지막 분수의 분모 $${n}$만 남고 중간의 모든 항이 약분되므로:\n\n$$S = \\frac{1}{${n}}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${correctFraction}$)** 입니다.`
-      : `**[AMC 8 Prep Vol. 1 Ch.4 Telescoping Fraction Product]**\n\nSimplify each term in parentheses:\n\n$$\\left(\\frac{1}{2}\\right) \\left(\\frac{2}{3}\\right) \\left(\\frac{3}{4}\\right) \\cdots \\left(\\frac{${n - 1}}{${n}}\\right)$$\n\nNotice that the numerator of each term cancels with the denominator of the preceding term. Only the first numerator ($1$) and the last denominator ($${n}$) survive:\n\n$$S = \\frac{1}{${n}}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]}**.`;
+      ? `**[AMC 8 Prep Vol. 2 Ch.9 순환소수의 분수 변환 공식]**\n\n소수점 아래 $2$자리가 순환하는 순환소수 $x = 0.\\overline{${ab < 10 ? '0' + ab : ab}}$는 다음과 같이 분수로 바꿉니다:\n\n$$100x = ${ab}.\\overline{${ab < 10 ? '0' + ab : ab}}$$\n$$-x = 0.\\overline{${ab < 10 ? '0' + ab : ab}}$$\n$$99x = ${ab} \\implies x = \\frac{${ab}}{99}$$\n\n분자와 분모의 최대공약수 $\\gcd(${ab}, 99) = ${g}$로 약분하여 기약분수로 나타내면:\n\n$$\\frac{p}{q} = \\frac{${p}}{${q}}$$\n\n따라서 분모와 분자의 합은:\n\n$$p + q = ${p} + ${q} = ${sumPQ}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${sumPQ}$)** 입니다.`
+      : `**[AMC 8 Prep Vol. 2 Ch.9 Converting Repeating Decimals to Fractions]**\n\nFor a two-digit repetend $x = 0.\\overline{${ab < 10 ? '0' + ab : ab}}$:\n\n$$100x - x = ${ab} \\implies 99x = ${ab} \\implies x = \\frac{${ab}}{99}$$\n\nReducing by the greatest common divisor $\\gcd(${ab}, 99) = ${g}$:\n\n$$\\frac{p}{q} = \\frac{${p}}{${q}}$$\n\nThe sum of the numerator and denominator is:\n\n$$p + q = ${p} + ${q} = ${sumPQ}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${sumPQ})**.`;
 
     return { question, choices, correctIdx, explanation };
   },
 
   // -----------------------------------------------------------------------
-  // 9. EVEN AND ODD (Ch 5: Even and Odd)
+  // 9. EVEN/ODD & DIVISIBILITY (Vol 1 Ch 5 & Vol 2 Ch 12)
   // -----------------------------------------------------------------------
   'remainders-divisibility': (lang) => {
-    // Number of odd multiples of 3 between start and end (Vol 1 Ex 6)
-    const start = randInt(10, 30);
-    const end = randInt(start + 20, start + 60);
-    let oddMult3 = 0;
-    let evenMult3 = 0;
-    for (let x = start; x <= end; x += 1) {
-      if (x % 3 === 0) {
-        if (x % 2 === 1) oddMult3 += 1;
-        else evenMult3 += 1;
+    const variant = pickRandom(['parity-multiples', 'trailing-zeros', 'divisibility-digit']);
+
+    if (variant === 'parity-multiples') {
+      // Number of odd multiples of 3 between start and end (Vol 1 Ex 6)
+      const start = randInt(10, 30);
+      const end = randInt(start + 20, start + 60);
+      let oddMult3 = 0;
+      let evenMult3 = 0;
+      for (let x = start; x <= end; x += 1) {
+        if (x % 3 === 0) {
+          if (x % 2 === 1) oddMult3 += 1;
+          else evenMult3 += 1;
+        }
       }
+
+      const { choices, correctIdx } = buildChoices(oddMult3, (i) => {
+        if (i === 1) return evenMult3;
+        if (i === 2) return oddMult3 + evenMult3;
+        if (i === 3) return oddMult3 + 2;
+        return Math.max(1, oddMult3 - 2);
+      });
+
+      const question = lang === 'ko'
+        ? `$${start}$ 부터 $${end}$ 까지의 정수 중에서 $3$의 배수이면서 홀수인 정수는 모두 몇 개입니까?`
+        : `How many integers between $${start}$ and $${end}$ (inclusive) are odd multiples of $3$?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 1 Ch.5 홀짝성과 배수(Even and Odd)]**\n\n$3$의 배수이면서 홀수인 정수는 $3 \\times (\\text{홀수})$ 꼴입니다 (예: $3 \\times 1, 3 \\times 3, 3 \\times 5, \\dots$). 이는 공차가 $6$인 등차수열을 이룹니다.\n\n$${start}$ 이상 $${end}$ 이하의 홀수인 $3$의 배수를 확인하면 총 **$${oddMult3}$개**입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${oddMult3}개)** 입니다.`
+        : `**[AMC 8 Prep Vol. 1 Ch.5 Parity & Multiples]**\n\nAn odd multiple of $3$ has the form $3 \\times (\\text{odd integer})$, which forms an arithmetic progression with common difference $6$.\n\nCounting the values in range $[${start}, ${end}]$ yields **${oddMult3}** numbers.\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${oddMult3})**.`;
+
+      return { question, choices, correctIdx, explanation };
     }
 
-    const { choices, correctIdx } = buildChoices(oddMult3, (i) => {
-      if (i === 1) return evenMult3;
-      if (i === 2) return oddMult3 + evenMult3;
-      if (i === 3) return oddMult3 + 2;
-      return Math.max(1, oddMult3 - 2);
+    if (variant === 'trailing-zeros') {
+      // Vol 2 Ch 12: Trailing zeros of N! using Legendre formula
+      const N = pickRandom([30, 40, 50, 60, 75, 80, 100]);
+      const zeros = Math.floor(N / 5) + Math.floor(N / 25);
+
+      const { choices, correctIdx } = buildChoices(zeros, (i) => {
+        if (i === 1) return Math.floor(N / 5);
+        if (i === 2) return Math.floor(N / 10);
+        if (i === 3) return zeros + 3;
+        return Math.max(1, zeros - 3);
+      });
+
+      const question = lang === 'ko'
+        ? `$${N}! = 1 \\times 2 \\times 3 \\times \\cdots \\times ${N}$ 의 계산 결과에서 맨 끝에 연속으로 붙어 있는 $0$의 개수는 모두 몇 개입니까?`
+        : `How many trailing zeros are at the end of the number $${N}! = 1 \\times 2 \\times 3 \\times \\cdots \\times ${N}$?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 2 Ch.12 르장드르 공식과 끝자리 0의 개수]**\n\n자연수의 끝자리 $0$은 소인수 $10 = 2 \\times 5$의 개수에 의해 결정됩니다. $N!$에는 소인수 $2$가 소인수 $5$보다 훨씬 많으므로, 끝자리 $0$의 개수는 $N!$에 포함된 소인수 $5$의 지수와 정확히 일치합니다.\n\n르장드르 공식(Legendre's Formula):\n\n$$E_5(${N}!) = \\left\\lfloor \\frac{${N}}{5} \\right\\rfloor + \\left\\lfloor \\frac{${N}}{25} \\right\\rfloor = ${Math.floor(N / 5)} + ${Math.floor(N / 25)} = ${zeros}$$\n\n따라서 맨 끝에 연속으로 붙는 $0$의 개수는 **$${zeros}$개**입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${zeros}$개)** 입니다.`
+        : `**[AMC 8 Prep Vol. 2 Ch.12 Legendre's Formula for Trailing Zeros]**\n\nEach trailing zero is produced by a factor of $10 = 2 \\times 5$. In $N!$, factors of $2$ are far more abundant than factors of $5$, so the number of trailing zeros equals the exponent of $5$ in the prime factorization of $N!$.\n\nBy Legendre's Formula:\n\n$$E_5(${N}!) = \\left\\lfloor \\frac{${N}}{5} \\right\\rfloor + \\left\\lfloor \\frac{${N}}{25} \\right\\rfloor = ${Math.floor(N / 5)} + ${Math.floor(N / 25)} = ${zeros}$$\n\nThe number of trailing zeros is **${zeros}**.\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${zeros})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // Missing digit divisible by 9
+    const d1 = randInt(2, 9);
+    const d2 = randInt(1, 9);
+    const d3 = randInt(1, 9);
+    const d4 = randInt(1, 9);
+    const partialSum = d1 + d2 + d3 + d4;
+    const mod = partialSum % 9;
+    const missingDigit = mod === 0 ? 9 : 9 - mod;
+    const totalSum = partialSum + missingDigit;
+
+    const { choices, correctIdx } = buildChoices(missingDigit, (i) => {
+      if (i === 1) return (missingDigit + 1) % 10;
+      if (i === 2) return (missingDigit + 8) % 10;
+      if (i === 3) return Math.min(9, missingDigit + 2);
+      return Math.max(0, missingDigit - 2);
     });
 
     const question = lang === 'ko'
-      ? `$${start}$ 부터 $${end}$ 까지의 정수 중에서 $3$의 배수이면서 홀수인 정수는 모두 몇 개입니까?`
-      : `How many integers between $${start}$ and $${end}$ (inclusive) are odd multiples of $3$?`;
+      ? `다섯 자리 자연수 $${d1}${d2}A${d3}${d4}$ 가 $9$의 배수일 때, 가운데 자리 숫자 $A$의 값은 얼마입니까?`
+      : `The five-digit integer $${d1}${d2}A${d3}${d4}$ is a multiple of $9$. What is the digit $A$?`;
 
     const explanation = lang === 'ko'
-      ? `**[AMC 8 Prep Vol. 1 Ch.5 홀짝성과 배수(Even and Odd)]**\n\n$3$의 배수이면서 홀수인 정수는 $3 \\times (\\text{홀수})$ 꼴입니다 (예: $3 \\times 1, 3 \\times 3, 3 \\times 5, \\dots$). 이는 공차가 $6$인 등차수열을 이룹니다.\n\n$${start}$ 이상 $${end}$ 이하의 홀수인 $3$의 배수를 확인하면 총 **$${oddMult3}$개**입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${oddMult3}개)** 입니다.`
-      : `**[AMC 8 Prep Vol. 1 Ch.5 Parity & Multiples]**\n\nAn odd multiple of $3$ has the form $3 \\times (\\text{odd integer})$, which forms an arithmetic progression with common difference $6$.\n\nCounting the values in range $[${start}, ${end}]$ yields **${oddMult3}** numbers.\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${oddMult3})**.`;
+      ? `**[AMC 8 Prep Vol. 2 Ch.12 9의 배수 판정법]**\n\n어떤 자연수가 $9$의 배수가 되기 위한 필요충분조건은 **모든 자릿수의 합이 $9$의 배수**가 되는 것입니다.\n\n자릿수의 합:\n\n$$${d1} + ${d2} + A + ${d3} + ${d4} = ${partialSum} + A$$\n\n$A$는 $0$부터 $9$ 사이의 한 자리 숫자이므로, $${partialSum} + A$가 $9$의 배수가 되는 값은:\n\n$$${partialSum} + A = ${totalSum} \\implies A = ${missingDigit}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${missingDigit}$)** 입니다.`
+      : `**[AMC 8 Prep Vol. 2 Ch.12 Divisibility by 9 Rule]**\n\nAn integer is divisible by $9$ if and only if the sum of its digits is divisible by $9$.\n\nSum of digits:\n\n$$${d1} + ${d2} + A + ${d3} + ${d4} = ${partialSum} + A$$\n\nSince $A$ is a single digit ($0 \\le A \\le 9$), the only value making the sum a multiple of $9$ is:\n\n$$${partialSum} + A = ${totalSum} \\implies A = ${missingDigit}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${missingDigit})**.`;
 
     return { question, choices, correctIdx, explanation };
   },
@@ -654,6 +743,328 @@ export const GENERATORS = {
 
     return { question, choices, correctIdx, explanation };
   },
+
+  // -----------------------------------------------------------------------
+  // 16. SYMMETRY & TRANSFORMATIONS (Vol 2 Ch 7: Transformations)
+  // -----------------------------------------------------------------------
+  'symmetry-transformations': (lang) => {
+    const variant = pickRandom(['line-reflection', 'point-reflection', 'rotational-symmetry']);
+
+    if (variant === 'line-reflection') {
+      const isXReflection = Math.random() < 0.5;
+      const px = randInt(1, 8);
+      const py = randInt(1, 8);
+
+      if (isXReflection) {
+        const lineA = randInt(px + 1, px + 5);
+        const reflectedX = 2 * lineA - px;
+        const reflectedY = py;
+        const correctCoord = `(${reflectedX}, ${reflectedY})`;
+
+        const { choices, correctIdx } = buildChoices(correctCoord, (i) => {
+          if (i === 1) return `(${lineA + (lineA - px)}, ${py + 1})`;
+          if (i === 2) return `(${reflectedX}, ${-py})`;
+          if (i === 3) return `(${2 * lineA + px}, ${py})`;
+          return `(${reflectedX - 2}, ${py})`;
+        });
+
+        const question = lang === 'ko'
+          ? `좌표평면 위의 점 $P(${px}, ${py})$를 직선 $x = ${lineA}$에 대하여 대칭이동한 점 $P'$의 좌표는 무엇입니까?`
+          : `Point $P(${px}, ${py})$ in the coordinate plane is reflected across the line $x = ${lineA}$ to point $P'$. What are the coordinates of $P'$?`;
+
+        const explanation = lang === 'ko'
+          ? `**[AMC 8 Prep Vol. 2 Ch.7 선대칭 변환 공식]**\n\n좌표평면 위의 점 $(x, y)$를 직선 $x = a$에 대하여 대칭이동한 점 $(x', y')$는:\n\n$$x' = 2a - x, \\quad y' = y$$\n\n주어진 점 $P(${px}, ${py})$와 직선 $x = ${lineA}$를 대입하면:\n\n$$x' = 2(${lineA}) - ${px} = ${2 * lineA} - ${px} = ${reflectedX}$$\n$$y' = ${py}$$\n\n따라서 대칭이동한 점 $P'$의 좌표는 $(${reflectedX}, ${reflectedY})$ 입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${correctCoord}$)** 입니다.`
+          : `**[AMC 8 Prep Vol. 2 Ch.7 Line Reflection Formula]**\n\nReflecting a point $(x, y)$ across a vertical line $x = a$ reflects only the $x$-coordinate across $a$ while the $y$-coordinate remains unchanged:\n\n$$x' = 2a - x, \\quad y' = y$$\n\nSubstituting $P(${px}, ${py})$ and $a = ${lineA}$:\n\n$$x' = 2(${lineA}) - ${px} = ${reflectedX}, \\quad y' = ${py}$$\n\nThus the reflected point is $(${reflectedX}, ${reflectedY})$.\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]}**.`;
+
+        return { question, choices, correctIdx, explanation };
+      } else {
+        const lineB = randInt(py + 1, py + 5);
+        const reflectedX = px;
+        const reflectedY = 2 * lineB - py;
+        const correctCoord = `(${reflectedX}, ${reflectedY})`;
+
+        const { choices, correctIdx } = buildChoices(correctCoord, (i) => {
+          if (i === 1) return `(${-px}, ${reflectedY})`;
+          if (i === 2) return `(${px}, ${2 * lineB + py})`;
+          if (i === 3) return `(${px + 1}, ${reflectedY})`;
+          return `(${px}, ${reflectedY - 2})`;
+        });
+
+        const question = lang === 'ko'
+          ? `좌표평면 위의 점 $P(${px}, ${py})$를 직선 $y = ${lineB}$에 대하여 대칭이동한 점 $P'$의 좌표는 무엇입니까?`
+          : `Point $P(${px}, ${py})$ in the coordinate plane is reflected across the line $y = ${lineB}$ to point $P'$. What are the coordinates of $P'$?`;
+
+        const explanation = lang === 'ko'
+          ? `**[AMC 8 Prep Vol. 2 Ch.7 선대칭 변환 공식]**\n\n좌표평면 위의 점 $(x, y)$를 가로 직선 $y = b$에 대하여 대칭이동한 점 $(x', y')$는:\n\n$$x' = x, \\quad y' = 2b - y$$\n\n주어진 점 $P(${px}, ${py})$와 직선 $y = ${lineB}$를 대입하면:\n\n$$x' = ${px}$$\n$$y' = 2(${lineB}) - ${py} = ${2 * lineB} - ${py} = ${reflectedY}$$\n\n따라서 대칭이동한 점 $P'$의 좌표는 $(${reflectedX}, ${reflectedY})$ 입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${correctCoord}$)** 입니다.`
+          : `**[AMC 8 Prep Vol. 2 Ch.7 Line Reflection Formula]**\n\nReflecting a point $(x, y)$ across a horizontal line $y = b$ reflects only the $y$-coordinate across $b$:\n\n$$x' = x, \\quad y' = 2b - y$$\n\nSubstituting $P(${px}, ${py})$ and $b = ${lineB}$:\n\n$$x' = ${px}, \\quad y' = 2(${lineB}) - ${py} = ${reflectedY}$$\n\nThus the reflected point is $(${reflectedX}, ${reflectedY})$.\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]}**.`;
+
+        return { question, choices, correctIdx, explanation };
+      }
+    }
+
+    if (variant === 'rotational-symmetry') {
+      const polygons = [
+        { n: 5, ko: '정오각형', en: 'regular pentagon' },
+        { n: 6, ko: '정육각형', en: 'regular hexagon' },
+        { n: 8, ko: '정팔각형', en: 'regular octagon' },
+        { n: 9, ko: '정구각형', en: 'regular nonagon' },
+        { n: 10, ko: '정십각형', en: 'regular decagon' },
+        { n: 12, ko: '정십이각형', en: 'regular dodecagon' },
+      ];
+      const poly = pickRandom(polygons);
+      const angle = 360 / poly.n;
+      const correctVal = `${angle}^\\circ`;
+
+      const { choices, correctIdx } = buildChoices(correctVal, (i) => {
+        if (i === 1) return `${Math.round(360 / (poly.n - 1))}^\\circ`;
+        if (i === 2) return `${Math.round(180 * (poly.n - 2) / poly.n)}^\\circ`;
+        if (i === 3) return `${angle * 2}^\\circ`;
+        return `${Math.max(15, angle - 15)}^\\circ`;
+      });
+
+      const question = lang === 'ko'
+        ? `${poly.ko}을 그 중심을 회전축으로 하여 회전시킬 때, 처음 도형과 완전히 겹쳐지도록 하는 최소의 양의 회전 각도는 몇 도($^\\circ$)입니까?`
+        : `A ${poly.en} is rotated about its center. What is the smallest positive angle of rotation (in degrees) that maps the polygon onto itself?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 2 Ch.7 정다각형의 회전 대칭(Rotational Symmetry)]**\n\n변의 개수가 $n$개인 정다각형은 중심을 기준으로 한 바퀴($360^\\circ$)를 $n$등분한 각도만큼 회전할 때마다 원래 도형과 일치합니다:\n\n$$\\theta = \\frac{360^\\circ}{n}$$\n\n${poly.ko}은 $n = ${poly.n}$ 이므로:\n\n$$\\theta = \\frac{360^\\circ}{${poly.n}} = ${angle}^\\circ$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${correctVal}$)** 입니다.`
+        : `**[AMC 8 Prep Vol. 2 Ch.7 Rotational Symmetry of Regular Polygons]**\n\nA regular $n$-gon has rotational symmetry of order $n$. The smallest positive rotation angle mapping the figure onto itself is:\n\n$$\\theta = \\frac{360^\\circ}{n}$$\n\nFor a ${poly.en} ($n = ${poly.n}$):\n\n$$\\theta = \\frac{360^\\circ}{${poly.n}} = ${angle}^\\circ$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${correctVal})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // Point reflection
+    const px = randInt(1, 6);
+    const py = randInt(1, 6);
+    const cx = randInt(px + 1, px + 4);
+    const cy = randInt(py + 1, py + 4);
+    const rx = 2 * cx - px;
+    const ry = 2 * cy - py;
+    const correctCoord = `(${rx}, ${ry})`;
+
+    const { choices, correctIdx } = buildChoices(correctCoord, (i) => {
+      if (i === 1) return `(${cx + px}, ${cy + py})`;
+      if (i === 2) return `(${rx}, ${-ry})`;
+      if (i === 3) return `(${rx + 2}, ${ry - 1})`;
+      return `(${rx - 1}, ${ry + 2})`;
+    });
+
+    const question = lang === 'ko'
+      ? `좌표평면 위의 점 $P(${px}, ${py})$를 점 $C(${cx}, ${cy})$에 대하여 점대칭 이동한 점 $P'$의 좌표는 무엇입니까?`
+      : `Point $P(${px}, ${py})$ is reflected through the point $C(${cx}, ${cy})$ to point $P'$. What are the coordinates of $P'$?`;
+
+    const explanation = lang === 'ko'
+      ? `**[AMC 8 Prep Vol. 2 Ch.7 점대칭 변환 공식]**\n\n점 $C(a, b)$는 선분 $PP'$의 중점이므로:\n\n$$\\frac{x + x'}{2} = a \\implies x' = 2a - x$$\n$$\\frac{y + y'}{2} = b \\implies y' = 2b - y$$\n\n주어진 값 $P(${px}, ${py})$, $C(${cx}, ${cy})$를 대입하면:\n\n$$x' = 2(${cx}) - ${px} = ${2 * cx} - ${px} = ${rx}$$\n$$y' = 2(${cy}) - ${py} = ${2 * cy} - ${py} = ${ry}$$\n\n따라서 $P'(${rx}, ${ry})$ 입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${correctCoord}$)** 입니다.`
+      : `**[AMC 8 Prep Vol. 2 Ch.7 Point Reflection Formula]**\n\nThe center of symmetry $C(a, b)$ is the midpoint of segment $PP'$:\n\n$$x' = 2a - x, \\quad y' = 2b - y$$\n\nWith $P(${px}, ${py})$ and $C(${cx}, ${cy})$:\n\n$$x' = 2(${cx}) - ${px} = ${rx}, \\quad y' = 2(${cy}) - ${py} = ${ry}$$\n\nThus $P' = (${rx}, ${ry})$.\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${correctCoord})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // 17. CONSECUTIVE INTEGERS & EQUATIONS (Vol 2 Ch 8: Consecutive Integers)
+  // -----------------------------------------------------------------------
+  'equations-inequalities': (lang) => {
+    const variant = pickRandom(['consecutive-integers', 'consecutive-odd']);
+
+    if (variant === 'consecutive-integers') {
+      const k = pickRandom([5, 7, 9]);
+      const start = randInt(11, 40);
+      const median = start + (k - 1) / 2;
+      const sum = k * median;
+      const largest = start + k - 1;
+
+      const { choices, correctIdx } = buildChoices(largest, (i) => {
+        if (i === 1) return median;
+        if (i === 2) return start;
+        if (i === 3) return largest + 2;
+        return Math.max(1, largest - 3);
+      });
+
+      const question = lang === 'ko'
+        ? `연속하는 $${k}$개의 정수의 합이 $${sum}$입니다. 이 정수들 중 가장 큰 수는 얼마입니까?`
+        : `The sum of $${k}$ consecutive integers is $${sum}$. What is the largest of these integers?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 2 Ch.8 연속한 정수의 합과 중앙값 성질]**\n\n연속하는 $k$개(홀수 개)의 정수의 합 $S$는 중앙값(Median)에 $k$를 곱한 것과 같습니다:\n\n$$\\text{중앙값} = \\frac{\\text{합}}{k} = \\frac{${sum}}{${k}} = ${median}$$\n\n총 $${k}$개의 정수 중 중앙값은 가운데에 위치하므로, 가장 큰 정수는 중앙값에서 $${(k - 1) / 2}$만큼 더 큰 수입니다:\n\n$$\\text{가장 큰 정수} = ${median} + \\frac{${k} - 1}{2} = ${median} + ${(k - 1) / 2} = ${largest}$$\n\n(검산: $${start} + ${start + 1} + \\dots + ${largest} = ${sum}$)\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${largest}$)** 입니다.`
+        : `**[AMC 8 Prep Vol. 2 Ch.8 Sum of Consecutive Integers & Median Property]**\n\nWhen adding an odd number ($k = ${k}$) of consecutive integers, their average is the exact middle integer (median):\n\n$$\\text{Median} = \\frac{\\text{Sum}}{k} = \\frac{${sum}}{${k}} = ${median}$$\n\nSince the median is in the middle of $${k}$ integers, the largest integer is:\n\n$$\\text{Largest} = ${median} + \\frac{${k}-1}{2} = ${median} + ${(k - 1) / 2} = ${largest}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${largest})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // Consecutive odd integers
+    const k = pickRandom([3, 5, 7]);
+    const startOdd = 2 * randInt(6, 25) + 1;
+    const median = startOdd + (k - 1);
+    const sum = k * median;
+    const largest = startOdd + 2 * (k - 1);
+
+    const { choices, correctIdx } = buildChoices(largest, (i) => {
+      if (i === 1) return median;
+      if (i === 2) return startOdd;
+      if (i === 3) return largest + 4;
+      return Math.max(1, largest - 4);
+    });
+
+    const question = lang === 'ko'
+      ? `연속하는 $${k}$개의 홀수의 합이 $${sum}$입니다. 이 수들 중 가장 큰 홀수는 얼마입니까?`
+      : `The sum of $${k}$ consecutive odd integers is $${sum}$. What is the largest of these integers?`;
+
+    const explanation = lang === 'ko'
+      ? `**[AMC 8 Prep Vol. 2 Ch.8 연속한 홀수의 합]**\n\n연속하는 홀수들은 $2$씩 증가하는 등차수열을 이룹니다. $${k}$개의 홀수의 중앙값은:\n\n$$\\text{중앙값} = \\frac{\\text{합}}{${k}} = \\frac{${sum}}{${k}} = ${median}$$\n\n가장 큰 홀수는 중앙값보다 ${(k - 1)} \\times 2 = ${2 * (k - 1)}$만큼 큽니다:\n\n$$\\text{가장 큰 홀수} = ${median} + ${2 * (k - 1)} = ${largest}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${largest}$)** 입니다.`
+      : `**[AMC 8 Prep Vol. 2 Ch.8 Sum of Consecutive Odd Integers]**\n\nConsecutive odd numbers have a common difference of $2$. The median is:\n\n$$\\text{Median} = \\frac{${sum}}{${k}} = ${median}$$\n\nThe largest integer is $(k-1)$ steps of $2$ above the median:\n\n$$\\text{Largest} = ${median} + ${(k - 1) * 2} = ${largest}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${largest})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // 18. SETS & VENN DIAGRAMS (Vol 2 Ch 10: Sets and Venn Diagrams)
+  // -----------------------------------------------------------------------
+  'venn-sets': (lang) => {
+    const total = randInt(40, 90);
+    const neither = randInt(5, 15);
+    const inUnion = total - neither;
+    const both = randInt(8, 22);
+    const onlyA = randInt(10, 25);
+    const onlyB = inUnion - onlyA - both;
+    const A = onlyA + both;
+    const B = onlyB + both;
+
+    const askBoth = Math.random() < 0.6;
+    if (askBoth) {
+      const { choices, correctIdx } = buildChoices(both, (i) => {
+        if (i === 1) return A + B - total;
+        if (i === 2) return Math.abs(A - B);
+        if (i === 3) return both + 4;
+        return Math.max(1, both - 4);
+      });
+
+      const question = lang === 'ko'
+        ? `어느 학교의 학생 $${total}$명을 대상으로 조사한 결과, $${A}$명이 수학 동아리에 가입했고, $${B}$명이 과학 동아리에 가입했습니다. 두 동아리 중 어느 곳에도 가입하지 않은 학생이 $${neither}$명일 때, 두 동아리에 모두 가입한 학생은 몇 명입니까?`
+        : `In a group of $${total}$ students, $${A}$ joined the Math Club and $${B}$ joined the Science Club. If $${neither}$ students joined neither club, how many students joined both clubs?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 2 Ch.10 벤다이어그램과 포함배제의 원리(PIE)]**\n\n1. 적어도 한 동아리에 가입한 학생 수 $|A \\cup B|$는 전체 학생 수에서 아무 곳에도 가입하지 않은 학생 수를 뺀 값입니다:\n\n$$|A \\cup B| = ${total} - ${neither} = ${inUnion}$$\n\n2. 두 집합의 포함배제 원리 공식:\n\n$$|A \\cup B| = |A| + |B| - |A \\cap B|$$\n\n3. 양쪽 모두 가입한 학생 수 $|A \\cap B|$는:\n\n$$|A \\cap B| = |A| + |B| - |A \\cup B| = ${A} + ${B} - ${inUnion} = ${A + B} - ${inUnion} = ${both}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${both}$명)** 입니다.`
+        : `**[AMC 8 Prep Vol. 2 Ch.10 Principle of Inclusion-Exclusion (PIE)]**\n\n1. The number of students in at least one club is the total minus those in neither:\n\n$$|A \\cup B| = ${total} - ${neither} = ${inUnion}$$\n\n2. By the Principle of Inclusion-Exclusion:\n\n$$|A \\cup B| = |A| + |B| - |A \\cap B|$$\n\n3. Solving for the intersection $|A \\cap B|$ (both clubs):\n\n$$|A \\cap B| = ${A} + ${B} - ${inUnion} = ${both}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${both})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    } else {
+      const exactlyOne = onlyA + onlyB;
+      const { choices, correctIdx } = buildChoices(exactlyOne, (i) => {
+        if (i === 1) return inUnion;
+        if (i === 2) return both;
+        if (i === 3) return exactlyOne + 5;
+        return Math.max(1, exactlyOne - 5);
+      });
+
+      const question = lang === 'ko'
+        ? `학생 $${total}$명 중 $${A}$명이 축구를 좋아하고, $${B}$명이 농구를 좋아합니다. 두 운동을 모두 좋아하지 않는 학생이 $${neither}$명이고, 두 운동을 모두 좋아하는 학생이 $${both}$명일 때, 두 운동 중 오직 한 가지만 좋아하는 학생은 몇 명입니까?`
+        : `Among $${total}$ students, $${A}$ like soccer and $${B}$ like basketball. If $${neither}$ students like neither and $${both}$ students like both, how many students like exactly one of the two sports?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 2 Ch.10 집합의 대칭차(오직 하나만 속하는 원소)]**\n\n적어도 하나의 운동을 좋아하는 학생 수는 $${total} - ${neither} = ${inUnion}$명입니다.\n\n두 운동 중 오직 한 가지만 좋아하는 학생 수는 합집합에서 교집합(둘 다 좋아하는 학생)을 뺀 것과 같습니다:\n\n$$\\text{오직 한 가지만} = |A \\cup B| - |A \\cap B| = ${inUnion} - ${both} = ${exactlyOne}$$\n\n(또는 오직 축구만 $${A} - ${both} = ${onlyA}$명, 오직 농구만 $${B} - ${both} = ${onlyB}$명이므로 $${onlyA} + ${onlyB} = ${exactlyOne}$명)\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${exactlyOne}$명)** 입니다.`
+        : `**[AMC 8 Prep Vol. 2 Ch.10 Symmetric Difference]**\n\nThe number of students liking at least one sport is $${total} - ${neither} = ${inUnion}$.\n\nSubtracting those who like both gives the number who like exactly one:\n\n$$\\text{Exactly one} = |A \\cup B| - |A \\cap B| = ${inUnion} - ${both} = ${exactlyOne}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${exactlyOne})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+  },
+
+  // -----------------------------------------------------------------------
+  // 19. GRID PATHS & ROUTING (Vol 2 Ch 11: Counting Techniques)
+  // -----------------------------------------------------------------------
+  'paths-grids': (lang) => {
+    const x1 = randInt(1, 3);
+    const y1 = randInt(1, 3);
+    const dx = randInt(1, 3);
+    const dy = randInt(1, 3);
+    const W = x1 + dx;
+    const H = y1 + dy;
+
+    const nCr = (n, r) => {
+      if (r < 0 || r > n) return 0;
+      if (r === 0 || r === n) return 1;
+      let res = 1;
+      for (let i = 1; i <= r; i += 1) {
+        res = (res * (n - i + 1)) / i;
+      }
+      return Math.round(res);
+    };
+
+    const ways1 = nCr(x1 + y1, x1);
+    const ways2 = nCr(dx + dy, dx);
+    const totalPaths = ways1 * ways2;
+
+    const { choices, correctIdx } = buildChoices(totalPaths, (i) => {
+      if (i === 1) return nCr(W + H, W);
+      if (i === 2) return ways1 + ways2;
+      if (i === 3) return totalPaths + 6;
+      return Math.max(1, totalPaths - 4);
+    });
+
+    const question = lang === 'ko'
+      ? `가로 $${W}$칸, 세로 $${H}$칸 크기의 직사각형 격자판이 있습니다. 점 $A(0, 0)$에서 점 $B(${W}, ${H})$까지 오른쪽이나 위쪽으로만 이동하는 최단 경로 중, 반드시 중간 지점 $C(${x1}, ${y1})$를 거쳐 가는 경로의 수는 모두 몇 가지입니까?`
+      : `On a rectangular grid of size $${W} \\times ${H}$, how many shortest paths from $A(0, 0)$ to $B(${W}, ${H})$ move only right and up, and pass through the checkpoint $C(${x1}, ${y1})$?`;
+
+    const explanation = lang === 'ko'
+      ? `**[AMC 8 Prep Vol. 2 Ch.11 격자 최단 경로와 곱의 법칙]**\n\n최단 경로는 반드시 오른쪽(R) 또는 위쪽(U)으로만 이동해야 합니다.\n\n1. **$A(0, 0) \\to C(${x1}, ${y1})$ 이동**: 총 $${x1 + y1}$번(오른쪽 $${x1}$번, 위쪽 $${y1}$번) 이동하므로 경우의 수는:\n\n$$\\binom{${x1 + y1}}{${x1}} = \\frac{${x1 + y1}!}{${x1}! ${y1}!} = ${ways1}$$\n\n2. **$C(${x1}, ${y1}) \\to B(${W}, ${H})$ 이동**: 오른쪽으로 $${dx}$칸, 위쪽으로 $${dy}$칸(총 $${dx + dy}$번) 이동하므로:\n\n$$\\binom{${dx + dy}}{${dx}} = \\frac{${dx + dy}!}{${dx}! ${dy}!} = ${ways2}$$\n\n3. 곱의 법칙에 의해 $C$를 거치는 전체 경로의 수는:\n\n$$\\text{전체 경로} = ${ways1} \\times ${ways2} = ${totalPaths}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${totalPaths}$가지)** 입니다.`
+      : `**[AMC 8 Prep Vol. 2 Ch.11 Grid Paths & Multiplication Rule]**\n\nEvery shortest path moves only Right ($R$) and Up ($U$):\n\n1. From $A(0, 0)$ to $C(${x1}, ${y1})$: requires $${x1}$ Right and $${y1}$ Up moves:\n\n$$\\binom{${x1 + y1}}{${x1}} = ${ways1}$$\n\n2. From $C(${x1}, ${y1})$ to $B(${W}, ${H})$: requires $${dx}$ Right and $${dy}$ Up moves:\n\n$$\\binom{${dx + dy}}{${dx}} = ${ways2}$$\n\n3. By the multiplication principle:\n\n$$\\text{Total Paths} = ${ways1} \\times ${ways2} = ${totalPaths}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${totalPaths})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // 20. PERMUTATIONS & RESTRICTED ARRANGEMENTS (Vol 2 Ch 11: Counting Techniques)
+  // -----------------------------------------------------------------------
+  'permutations-arrangements': (lang) => {
+    const N = randInt(5, 7);
+    const fact = (num) => {
+      let r = 1;
+      for (let i = 2; i <= num; i += 1) r *= i;
+      return r;
+    };
+
+    const variant = Math.random() < 0.5 ? 'together' : 'not-together';
+
+    if (variant === 'together') {
+      const correctAns = fact(N - 1) * 2;
+      const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+        if (i === 1) return fact(N);
+        if (i === 2) return fact(N - 1);
+        if (i === 3) return fact(N - 2) * 2;
+        return correctAns + 48;
+      });
+
+      const question = lang === 'ko'
+        ? `서로 다른 $${N}$권의 책을 책꽂이에 일렬로 꽂으려고 합니다. 이 중 수학책과 과학책 두 권이 반드시 서로 이웃하게 꽂히는 방법의 수는 모두 몇 가지입니까?`
+        : `In how many ways can $${N}$ distinct books be arranged on a shelf if a specific math book and a specific science book must be placed adjacent to each other?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 2 Ch.11 이웃한 조건 순열: 묶음법(Tie-Together Method)]**\n\n1. 반드시 이웃해야 하는 수학책과 과학책을 하나의 묶음($1$권)으로 생각합니다.\n2. 그러면 전체 책은 묶음 $1$개와 나머지 책 $${N - 2}$권으로 총 **$${N - 1}$개의 대상**을 일렬로 나열하는 것과 같습니다:\n\n$$(${N} - 1)! = ${N - 1}! = ${fact(N - 1)}$$\n\n3. 묶음 내부에서 수학책과 과학책의 순서를 바꾸는 방법이 $2! = 2$가지이므로:\n\n$$\\text{경우의 수} = ${fact(N - 1)} \\times 2 = ${correctAns}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${correctAns}$가지)** 입니다.`
+        : `**[AMC 8 Prep Vol. 2 Ch.11 The Tie-Together (Block) Method]**\n\n1. Treat the math book and science book as a single block.\n2. We now arrange $(${N} - 1)$ items (the block + the other $${N - 2}$ books):\n\n$$(${N} - 1)! = ${fact(N - 1)}$$\n\n3. The two books inside the block can be ordered in $2! = 2$ ways:\n\n$$\\text{Total} = ${fact(N - 1)} \\times 2 = ${correctAns}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${correctAns})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    } else {
+      const togetherWays = fact(N - 1) * 2;
+      const totalWays = fact(N);
+      const correctAns = totalWays - togetherWays;
+
+      const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+        if (i === 1) return togetherWays;
+        if (i === 2) return totalWays;
+        if (i === 3) return correctAns + 48;
+        return Math.max(1, correctAns - 48);
+      });
+
+      const question = lang === 'ko'
+        ? `서로 다른 $${N}$권의 책을 책꽂이에 일렬로 꽂을 때, 수학책과 과학책 두 권이 서로 이웃하지 않도록 꽂는 방법의 수는 모두 몇 가지입니까?`
+        : `In how many ways can $${N}$ distinct books be arranged on a shelf such that a math book and a science book are NOT adjacent to each other?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 2 Ch.11 여사건을 이용한 순열 계산]**\n\n'이웃하지 않는 경우의 수'는 전체 순열의 수에서 '이웃하는 경우의 수'를 빼서 구합니다:\n\n1. 아무 조건 없이 $${N}$권을 나열하는 총 경우의 수:\n\n$$${N}! = ${totalWays}$$\n\n2. 두 권이 이웃하는 경우의 수 (묶음법):\n\n$$(${N} - 1)! \\times 2! = ${fact(N - 1)} \\times 2 = ${togetherWays}$$\n\n3. 이웃하지 않는 경우의 수:\n\n$$\\text{경우의 수} = ${totalWays} - ${togetherWays} = ${correctAns}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${correctAns}$가지)** 입니다.`
+        : `**[AMC 8 Prep Vol. 2 Ch.11 Complementary Counting for Permutations]**\n\nSubtract the arrangements where the two books are adjacent from the total unrestricted arrangements:\n\n1. Total unrestricted arrangements: $${N}! = ${totalWays}$\n2. Arrangements where they are together: $(${N}-1)! \\times 2 = ${togetherWays}$\n3. Arrangements where they are not adjacent:\n\n$$${totalWays} - ${togetherWays} = ${correctAns}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${correctAns})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+  },
 };
 
 /**
@@ -663,22 +1074,28 @@ export const GENERATORS = {
 export function getGeneratorForUnit(unitId) {
   if (GENERATORS[unitId]) return GENERATORS[unitId];
 
-  // Subject-based fallbacks
+  // Specific mappings for AMC fine units
+  if (unitId.includes('symmetry') || unitId.includes('transform')) return GENERATORS['symmetry-transformations'];
+  if (unitId.includes('equation') || unitId.includes('inequal') || unitId.includes('consecutive')) return GENERATORS['equations-inequalities'];
+  if (unitId.includes('venn') || unitId.includes('set')) return GENERATORS['venn-sets'];
+  if (unitId.includes('path') || unitId.includes('routing')) return GENERATORS['paths-grids'];
+  if (unitId.includes('arrangement')) return GENERATORS['permutations-arrangements'];
   if (unitId.includes('triangle') || unitId.includes('angle')) return GENERATORS['triangles'];
-  if (unitId.includes('circle')) return GENERATORS['area-perimeter'];
+  if (unitId.includes('circle') || unitId.includes('quadrilateral') || unitId.includes('solid')) return GENERATORS['area-perimeter'];
   if (unitId.includes('coordinate') || unitId.includes('grid')) return GENERATORS['coordinate-geometry'];
   if (unitId.includes('digit') || unitId.includes('base')) return GENERATORS['units-digit-cycles'];
   if (unitId.includes('sequence') || unitId.includes('pattern')) return GENERATORS['sequences-patterns'];
   if (unitId.includes('logic') || unitId.includes('game') || unitId.includes('clock')) return GENERATORS['logical-reasoning'];
   if (unitId.includes('crypt') || unitId.includes('puzzle')) return GENERATORS['cryptarithms-puzzles'];
-  if (unitId.includes('arithmetic') || unitId.includes('fraction') || unitId.includes('expression')) return GENERATORS['arithmetic-operations'];
+  if (unitId.includes('arithmetic') || unitId.includes('fraction') || unitId.includes('decimal') || unitId.includes('expression')) return GENERATORS['arithmetic-operations'];
   if (unitId.includes('prime') || unitId.includes('divisor') || unitId.includes('gcd')) return GENERATORS['primes-factorization'];
   if (unitId.includes('remainder') || unitId.includes('divisib')) return GENERATORS['remainders-divisibility'];
-  if (unitId.includes('percent') || unitId.includes('money') || unitId.includes('rate')) return GENERATORS['percentages-money'];
+  if (unitId.includes('percent') || unitId.includes('money') || unitId.includes('rate') || unitId.includes('interest')) return GENERATORS['percentages-money'];
   if (unitId.includes('ratio')) return GENERATORS['ratios-percent'];
   if (unitId.includes('speed') || unitId.includes('distance') || unitId.includes('work')) return GENERATORS['speed-distance-time'];
   if (unitId.includes('count') || unitId.includes('permutation') || unitId.includes('combination')) return GENERATORS['permutations-combinations'];
   if (unitId.includes('prob') || unitId.includes('dice') || unitId.includes('card')) return GENERATORS['probability'];
+  if (unitId.includes('stat') || unitId.includes('average') || unitId.includes('mean')) return GENERATORS['equations-inequalities'];
 
   // Default fallback: area-perimeter
   return GENERATORS['area-perimeter'];

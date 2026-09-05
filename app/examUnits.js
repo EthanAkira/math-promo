@@ -25,11 +25,13 @@ export const AMC_FINE_SUBJECTS = [
       {
         id: 'arithmetic-operations', label: '사칙연산과 계산 법칙', labelEn: 'Arithmetic & Operations', desc: '분수·소수 계산, 연산 순서, 거듭제곱과 부호',
         vol1Chapter: 'Ch 4. Operations with Fractions (분수 사칙연산·번분수)',
+        vol2Chapter: 'Ch 9. Operations with Decimals (소수 연산·순환소수)',
         intlCourse: { id: 'intl-arithmetic', label: 'Arithmetic', labelKo: '기초 산술 및 유리수 연산', href: '/curriculum#intl-arithmetic' },
         domain: { id: 'domain-numbers', label: 'Number & Operations', labelKo: '수와 연산', href: '/curriculum#domain-numbers' },
       },
       {
         id: 'equations-inequalities', label: '방정식과 부등식', labelEn: 'Equations & Inequalities', desc: '일차방정식, 연립방정식, 절댓값 방정식',
+        vol2Chapter: 'Ch 8. Consecutive Integers (연속한 정수의 합·방정식)',
         intlCourse: { id: 'intl-algebra-1', label: 'Algebra 1', labelKo: '대수 1 (일차방정식·부등식)', href: '/curriculum#intl-algebra-1' },
         domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
       },
@@ -58,6 +60,7 @@ export const AMC_FINE_SUBJECTS = [
       {
         id: 'sequences-patterns', label: '수열과 규칙성', labelEn: 'Sequences & Patterns', desc: '등차수열, 계차수열, 수 배열과 패턴 규칙',
         vol1Chapter: 'Ch 2. Patterns (수열·홀수의 합·삼각수)',
+        vol2Chapter: 'Ch 8. Consecutive Integers (연속 수열 합과 평균)',
         intlCourse: { id: 'intl-algebra-2', label: 'Algebra 2', labelKo: '수열과 일반항 (Sequences & Series)', href: '/curriculum#intl-algebra-2' },
         domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
       },
@@ -76,12 +79,14 @@ export const AMC_FINE_SUBJECTS = [
       {
         id: 'primes-factorization', label: '소수와 소인수분해', labelEn: 'Primes & Factorization', desc: '소수 판별, 소인수분해, 소인수의 합과 곱',
         vol1Chapter: 'Ch 5. Even and Odd (소수와 2의 유일성)',
+        vol2Chapter: 'Ch 12. Divisibility (소인수분해와 끝자리 0의 개수)',
         intlCourse: { id: 'intl-pre-algebra', label: 'Pre-Algebra', labelKo: '소수와 소인수분해', href: '/curriculum#intl-pre-algebra' },
         domain: { id: 'domain-numbers', label: 'Number & Operations', labelKo: '수와 연산', href: '/curriculum#domain-numbers' },
       },
       {
         id: 'divisors-multiples', label: '약수와 배수 (약수의 개수)', labelEn: 'Divisors & Multiples', desc: '약수의 개수와 총합, 공약수와 공배수',
         vol1Chapter: 'Ch 5. Even and Odd (약수·배수 개수와 홀짝성)',
+        vol2Chapter: 'Ch 12. Divisibility (배수의 성질과 약수 분석)',
         intlCourse: { id: 'intl-pre-algebra', label: 'Pre-Algebra', labelKo: '약수와 배수', href: '/curriculum#intl-pre-algebra' },
         domain: { id: 'domain-numbers', label: 'Number & Operations', labelKo: '수와 연산', href: '/curriculum#domain-numbers' },
       },
@@ -93,6 +98,7 @@ export const AMC_FINE_SUBJECTS = [
       {
         id: 'remainders-divisibility', label: '나머지와 배수 판정법', labelEn: 'Remainders & Divisibility', desc: '배수 판정법, 나눗셈과 나머지 연산',
         vol1Chapter: 'Ch 5. Even and Odd (홀짝성 불변량·배수 판정법)',
+        vol2Chapter: 'Ch 12. Divisibility (배수 판정법·나머지·자리수 합)',
         intlCourse: { id: 'intl-pre-algebra', label: 'Pre-Algebra', labelKo: '배수 판정과 합동식 기초', href: '/curriculum#intl-pre-algebra' },
         domain: { id: 'domain-numbers', label: 'Number & Operations', labelKo: '수와 연산', href: '/curriculum#domain-numbers' },
       },
@@ -104,6 +110,7 @@ export const AMC_FINE_SUBJECTS = [
       },
       {
         id: 'bases-digits', label: '자릿수 분석과 진법', labelEn: 'Digits & Number Bases', desc: '각 자리 숫자의 합, 십진법 자릿수 구조, n진법',
+        vol2Chapter: 'Ch 9. Operations with Decimals (소수 자릿수) / Ch 12 Divisibility',
         intlCourse: { id: 'intl-pre-algebra', label: 'Pre-Algebra', labelKo: '진법과 자릿수 체계', href: '/curriculum#intl-pre-algebra' },
         domain: { id: 'domain-numbers', label: 'Number & Operations', labelKo: '수와 연산', href: '/curriculum#domain-numbers' },
       },
@@ -150,11 +157,13 @@ export const AMC_FINE_SUBJECTS = [
       {
         id: 'coordinate-geometry', label: '좌표평면과 격자점', labelEn: 'Coordinate & Lattice', desc: '좌표, 중점, 기울기, 격자점 세기',
         vol1Chapter: 'Ch 1. Perimeter and Area (격자점과 픽의 정리 Pick\'s Law)',
+        vol2Chapter: 'Ch 7. Transformations (좌표평면 대칭 변환)',
         intlCourse: { id: 'intl-geometry', label: 'Geometry', labelKo: '좌표기하와 격자점 (Pick\'s Law)', href: '/curriculum#intl-geometry' },
         domain: { id: 'domain-geometry', label: 'Geometry & Measurement', labelKo: '도형과 측정 · 기하', href: '/curriculum#domain-geometry' },
       },
       {
         id: 'symmetry-transformations', label: '대칭·회전과 공간지각', labelEn: 'Symmetry & Spatial Vision', desc: '선대칭, 점대칭, 회전체, 접기/펼치기',
+        vol2Chapter: 'Ch 7. Transformations (선대칭·점대칭·회전 변환)',
         intlCourse: { id: 'intl-geometry', label: 'Geometry', labelKo: '대칭과 변환 (Transformations)', href: '/curriculum#intl-geometry' },
         domain: { id: 'domain-geometry', label: 'Geometry & Measurement', labelKo: '도형과 측정 · 기하', href: '/curriculum#domain-geometry' },
       },
@@ -166,26 +175,31 @@ export const AMC_FINE_SUBJECTS = [
     units: [
       {
         id: 'counting', label: '경우의 수 (합·곱의 법칙)', labelEn: 'Counting Principles', desc: '수형도, 합의 법칙, 곱의 법칙, 체계적 나열',
+        vol2Chapter: 'Ch 11. Counting Techniques (합·곱의 법칙·증가수 Rising Numbers)',
         intlCourse: { id: 'intl-algebra-1', label: 'Algebra 1', labelKo: '경우의 수 (Counting Principles)', href: '/curriculum#intl-algebra-1' },
         domain: { id: 'domain-data', label: 'Data & Probability', labelKo: '자료와 가능성 · 확률과 통계', href: '/curriculum#domain-data' },
       },
       {
         id: 'permutations-arrangements', label: '순열과 나열하기', labelEn: 'Permutations & Orderings', desc: '서로 다른 n개 중 r개 일렬 나열, 조건부 나열',
+        vol2Chapter: 'Ch 11. Counting Techniques (순열·이웃한 나열 조건)',
         intlCourse: { id: 'intl-algebra-2', label: 'Algebra 2', labelKo: '순열과 나열 (Permutations)', href: '/curriculum#intl-algebra-2' },
         domain: { id: 'domain-data', label: 'Data & Probability', labelKo: '자료와 가능성 · 확률과 통계', href: '/curriculum#domain-data' },
       },
       {
         id: 'permutations-combinations', label: '순열과 조합 (팀 선택)', labelEn: 'Combinations & Selection', desc: '대표 선출, 조 편성, 부분집합 선택',
+        vol2Chapter: 'Ch 11. Counting Techniques (조합·대표 선출 공식)',
         intlCourse: { id: 'intl-algebra-2', label: 'Algebra 2', labelKo: '조합과 대표 선출 (Combinations)', href: '/curriculum#intl-algebra-2' },
         domain: { id: 'domain-data', label: 'Data & Probability', labelKo: '자료와 가능성 · 확률과 통계', href: '/curriculum#domain-data' },
       },
       {
         id: 'venn-sets', label: '벤다이어그램과 집합', labelEn: 'Venn Diagrams & Sets', desc: '두/세 집합 교집합·합집합, 포함배제',
+        vol2Chapter: 'Ch 10. Sets and Venn Diagrams (집합과 벤다이어그램·포함배제)',
         intlCourse: { id: 'intl-pre-algebra', label: 'Pre-Algebra', labelKo: '집합과 벤다이어그램 (Venn Diagrams)', href: '/curriculum#intl-pre-algebra' },
         domain: { id: 'domain-data', label: 'Data & Probability', labelKo: '자료와 가능성 · 확률과 통계', href: '/curriculum#domain-data' },
       },
       {
         id: 'paths-grids', label: '경로 찾기와 격자길', labelEn: 'Grid Paths & Routing', desc: '최단거리 길찾기, 파스칼 삼각형 응용',
+        vol2Chapter: 'Ch 11. Counting Techniques (최단 경로와 경유점)',
         intlCourse: { id: 'intl-algebra-2', label: 'Algebra 2', labelKo: '최단 경로와 격자길 (Grid Routing)', href: '/curriculum#intl-algebra-2' },
         domain: { id: 'domain-data', label: 'Data & Probability', labelKo: '자료와 가능성 · 확률과 통계', href: '/curriculum#domain-data' },
       },
