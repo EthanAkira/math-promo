@@ -12,6 +12,17 @@ import { hasProblemVisual, MathText, ProblemVisual } from './PreAlgebraVisuals';
 
 const PROBLEM_COUNT = 20;
 
+const TIER_ORDER = { basic: 0, intermediate: 1, advanced: 2 };
+const TIER_LABELS = {
+  basic: { ko: '하', en: 'Basic' },
+  intermediate: { ko: '중', en: 'Intermediate' },
+  advanced: { ko: '상', en: 'Advanced' },
+};
+function tierWithin(unitTier, ceiling) {
+  if (!unitTier) return true;
+  return TIER_ORDER[unitTier] <= TIER_ORDER[ceiling];
+}
+
 function hashSeed(text) {
   let hash = 2166136261;
   for (let index = 0; index < text.length; index += 1) { hash ^= text.charCodeAt(index); hash = Math.imul(hash, 16777619); }
@@ -51,6 +62,31 @@ function makeProblems(seed, unit) {
     used.add(key);
     return { id: index + 1, ...item };
   });
+}
+
+function makeCombinedProblems(seed, unitIds, tierCeiling, count, units) {
+  const eligibleUnits = units.filter((item) => unitIds.includes(item.id) && tierWithin(item.tier, tierCeiling));
+  if (!eligibleUnits.length) return [];
+  const random = seededRandom(`${seed}:core:${unitIds.join(',')}:${tierCeiling}:${count}`);
+  const used = new Set();
+  const pool = [];
+  let index = 0;
+  let guard = 0;
+  while (pool.length < count && guard < count * 25) {
+    guard += 1;
+    const unit = eligibleUnits[index % eligibleUnits.length];
+    index += 1;
+    const item = finalizeGeneratedProblem(unit.make(random), unit);
+    const key = JSON.stringify([unit.id, item.prompt, item.expression, item.answer]);
+    if (used.has(key) && guard < count * 20) continue;
+    used.add(key);
+    pool.push({ sourceUnitId: unit.id, sourceUnitLabel: unit.label, sourceUnitLabelEn: unit.en?.[0] || unit.label, ...item });
+  }
+  for (let i = pool.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.map((item, position) => ({ id: position + 1, ...item }));
 }
 
 function normalize(value) {
@@ -97,6 +133,14 @@ export default function PreAlgebraGenerator() {
   const [checked, setChecked] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState('');
   const [ready, setReady] = useState(false);
+  const [mode, setMode] = useState('single');
+  const [coreSelectedUnitIds, setCoreSelectedUnitIds] = useState([]);
+  const [coreTierCeiling, setCoreTierCeiling] = useState('advanced');
+  const [coreCount, setCoreCount] = useState(20);
+  const [coreSeed, setCoreSeed] = useState('');
+  const [coreAnswers, setCoreAnswers] = useState({});
+  const [coreChecked, setCoreChecked] = useState(false);
+  const [coreView, setCoreView] = useState('problems');
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -118,6 +162,44 @@ export default function PreAlgebraGenerator() {
   const visibleUnits = useMemo(() => units.filter((item) => item.category === category), [units, category]);
   const problems = useMemo(() => makeProblems(seed, unit), [seed, unit]);
   const correctCount = problems.filter((item) => equivalent(answers[item.id], item.answer)).length;
+
+  useEffect(() => {
+    if (!coreSeed) setCoreSeed(createSeed());
+  }, [coreSeed]);
+  useEffect(() => {
+    setCoreSelectedUnitIds([]);
+  }, [profileId]);
+  function toggleCoreUnit(id) {
+    setCoreSelectedUnitIds((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
+    setCoreChecked(false);
+  }
+  function toggleCoreCategory(categoryName) {
+    const idsInCategory = units.filter((item) => item.category === categoryName).map((item) => item.id);
+    const allSelected = idsInCategory.every((id) => coreSelectedUnitIds.includes(id));
+    setCoreSelectedUnitIds((current) => (allSelected
+      ? current.filter((id) => !idsInCategory.includes(id))
+      : [...new Set([...current, ...idsInCategory])]));
+    setCoreChecked(false);
+  }
+  const coreProblems = useMemo(
+    () => (coreSeed ? makeCombinedProblems(coreSeed, coreSelectedUnitIds, coreTierCeiling, coreCount, units) : []),
+    [coreSeed, coreSelectedUnitIds, coreTierCeiling, coreCount, units],
+  );
+  const coreCorrectCount = coreProblems.filter((item) => equivalent(coreAnswers[item.id], item.answer)).length;
+  function regenerateCore() { setCoreSeed(createSeed()); setCoreAnswers({}); setCoreChecked(false); setCoreView('problems'); }
+  function changeCoreAnswer(id, value) { setCoreAnswers((current) => ({ ...current, [id]: value })); setCoreChecked(false); }
+  function checkCoreAnswers() {
+    setCoreChecked(true);
+    recordAttempts(user, coreProblems
+      .filter((item) => coreAnswers[item.id] !== undefined && coreAnswers[item.id] !== '')
+      .map((item) => ({
+        grade: profileId,
+        unit: item.sourceUnitId,
+        problemType: item.kind === 'choice' ? 'mcq' : 'short',
+        isCorrect: equivalent(coreAnswers[item.id], item.answer),
+        answer: coreAnswers[item.id],
+      })));
+  }
 
   useEffect(() => {
     if (!ready) return;
@@ -171,6 +253,14 @@ export default function PreAlgebraGenerator() {
           <a href="/curriculum">{language === 'ko' ? '다른 과정 보기 ↗' : 'Other curricula ↗'}</a>
         </div>
       </div>
+      <div className="control-group control-group-mode">
+        <label>{language === 'ko' ? '생성 방식' : 'Mode'}</label>
+        <div className="mode-toggle">
+          <button type="button" className={mode === 'single' ? 'active' : ''} onClick={() => setMode('single')}>{language === 'ko' ? '단원별 연습' : 'By Unit'}</button>
+          <button type="button" className={mode === 'core' ? 'active' : ''} onClick={() => setMode('core')}>{language === 'ko' ? '종합 테스트 만들기' : 'Core Practice Test'}</button>
+        </div>
+      </div>
+      {mode === 'single' ? <>
       <div className="control-group control-group-domain">
         <label htmlFor="pre-algebra-category">{copy.controls[1]}</label>
         <select id="pre-algebra-category" value={category} onChange={(event) => chooseCategory(event.target.value)}>
@@ -183,14 +273,60 @@ export default function PreAlgebraGenerator() {
           {visibleUnits.map((item) => <option key={item.id} value={item.id}>{localizePreAlgebraUnit(item, language)}</option>)}
         </select>
       </div>
+      </> : null}
+      {mode === 'core' ? <div className="control-group control-group-core-tier">
+        <label>{language === 'ko' ? '난이도 상한' : 'Difficulty Ceiling'}</label>
+        <div className="tier-toggle">
+          {['basic', 'intermediate', 'advanced'].map((tier) => (
+            <button type="button" key={tier} className={coreTierCeiling === tier ? 'active' : ''} onClick={() => { setCoreTierCeiling(tier); setCoreChecked(false); }}>
+              {language === 'ko' ? `${TIER_LABELS[tier].ko}까지` : `Up to ${TIER_LABELS[tier].en}`}
+            </button>
+          ))}
+        </div>
+      </div> : null}
+      {mode === 'core' ? <div className="control-group control-group-core-count">
+        <label htmlFor="core-count">{language === 'ko' ? '문제 수' : 'Problem Count'}</label>
+        <input id="core-count" type="number" min={5} max={100} value={coreCount} onChange={(event) => { const next = Number(event.target.value) || 20; setCoreCount(Math.min(100, Math.max(5, next))); setCoreChecked(false); }} />
+      </div> : null}
       <div className="control-actions">
         <button className="button button-secondary" onClick={() => window.print()}>{tr(language, 'printPdf')}</button>
-        <button className="button button-secondary" onClick={() => changeView(view === 'problems' ? 'answers' : 'problems')}>{tr(language, view === 'problems' ? 'answerKey' : 'worksheet')}</button>
-        <button className="button button-primary" onClick={() => reset(createSeed())}>{tr(language, 'newWorksheet')}</button>
+        {mode === 'single' ? <>
+          <button className="button button-secondary" onClick={() => changeView(view === 'problems' ? 'answers' : 'problems')}>{tr(language, view === 'problems' ? 'answerKey' : 'worksheet')}</button>
+          <button className="button button-primary" onClick={() => reset(createSeed())}>{tr(language, 'newWorksheet')}</button>
+        </> : <>
+          <button className="button button-secondary" onClick={() => setCoreView(coreView === 'problems' ? 'answers' : 'problems')}>{tr(language, coreView === 'problems' ? 'answerKey' : 'worksheet')}</button>
+          <button className="button button-primary" onClick={regenerateCore}>{language === 'ko' ? '테스트 생성' : 'Generate Test'}</button>
+        </>}
       </div>
     </section>
 
-    <div className={`worksheet-paper middle-worksheet ${view === 'answers' ? 'answer-sheet' : ''}`}>
+    {mode === 'core' ? <section className="core-unit-picker no-print" aria-label={language === 'ko' ? '단원 선택' : 'Select units'}>
+      <p className="core-unit-picker-hint">{language === 'ko'
+        ? `시험 범위에 해당하는 단원을 모두 선택하세요. 현재 ${coreSelectedUnitIds.length}개 단원 선택됨.`
+        : `Select every unit that's in scope for the test. ${coreSelectedUnitIds.length} unit(s) selected.`}</p>
+      {categories.map((categoryName) => {
+        const unitsInCategory = units.filter((item) => item.category === categoryName);
+        const allSelected = unitsInCategory.every((item) => coreSelectedUnitIds.includes(item.id));
+        return <div className="core-unit-category" key={categoryName}>
+          <div className="core-unit-category-header">
+            <strong>{preAlgebraCategory(categoryName, language)}</strong>
+            <button type="button" className="button-link" onClick={() => toggleCoreCategory(categoryName)}>{allSelected ? (language === 'ko' ? '전체 해제' : 'Deselect all') : (language === 'ko' ? '전체 선택' : 'Select all')}</button>
+          </div>
+          <div className="core-unit-list">
+            {unitsInCategory.map((item) => {
+              const outOfRange = !tierWithin(item.tier, coreTierCeiling);
+              return <label key={item.id} className={`core-unit-checkbox${outOfRange ? ' out-of-range' : ''}`}>
+                <input type="checkbox" checked={coreSelectedUnitIds.includes(item.id)} onChange={() => toggleCoreUnit(item.id)} />
+                <span>{localizePreAlgebraUnit(item, language)}</span>
+                {item.tier ? <em className={`tier-tag tier-${item.tier}`}>{language === 'ko' ? TIER_LABELS[item.tier].ko : TIER_LABELS[item.tier].en}</em> : null}
+              </label>;
+            })}
+          </div>
+        </div>;
+      })}
+    </section> : null}
+
+    {mode === 'single' ? <div className={`worksheet-paper middle-worksheet ${view === 'answers' ? 'answer-sheet' : ''}`}>
       <header className="worksheet-heading"><div className="worksheet-brand"><span className="brand-mark">DAILY</span><strong>{tr(language, 'dailyLab')}</strong></div><div className="worksheet-title"><span>{profileLabel}</span><h2>{unitLabel} {tr(language, view === 'answers' ? 'answerSheet' : 'worksheetWord')}</h2><p>{unitDescription}</p></div><div className="worksheet-identity"><div><span>{tr(language, 'worksheetId')}</span><strong>{seed}</strong><small>{tr(language, 'scanQr')}</small></div>{qrDataUrl ? <img src={qrDataUrl} alt={`Worksheet ${seed} QR code`} /> : null}</div></header>
       <div className="student-row"><span>{tr(language, 'name')}</span><i /><span>{tr(language, 'date')}</span><i /><span className="sheet-kind">{tr(language, view === 'answers' ? 'answers' : 'problems20')}</span></div>
       <section className="problem-grid word-problem-grid prime-problem-grid" aria-label={`${unitLabel} ${foreign ? 'problems' : '문제'}`}>
@@ -211,9 +347,37 @@ export default function PreAlgebraGenerator() {
         })}
       </section>
       <footer className="worksheet-footer"><span className="worksheet-signature">Built &amp; Designed by Chae</span><span>{tr(language, 'dailyLab')}</span><span>{seed} · {profileLabel} · {unitLabel}</span></footer>
-    </div>
+    </div> : null}
 
-    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Fractions: 3/4 · Coordinates: 2,-3 · Inequalities: x<=4' : '분수는 3/4, 좌표는 2,-3, 부등식은 x<=4처럼 입력할 수 있습니다.'}</p></div><button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
+    {mode === 'core' ? (coreProblems.length === 0 ? <p className="core-empty-notice no-print">{language === 'ko'
+      ? '선택한 단원과 난이도 상한에 해당하는 문제를 만들 수 없습니다. 단원을 하나 이상 선택하세요.'
+      : 'No problems can be generated for the selected units and difficulty ceiling. Select at least one unit.'}</p> : <div className={`worksheet-paper middle-worksheet ${coreView === 'answers' ? 'answer-sheet' : ''}`}>
+      <header className="worksheet-heading"><div className="worksheet-brand"><span className="brand-mark">DAILY</span><strong>{tr(language, 'dailyLab')}</strong></div><div className="worksheet-title"><span>{profileLabel}</span><h2>{language === 'ko' ? '종합 테스트' : 'Core Practice Test'} {tr(language, coreView === 'answers' ? 'answerSheet' : 'worksheetWord')}</h2><p>{language === 'ko' ? `${coreSelectedUnitIds.length}개 단원 · ${coreProblems.length}문항 · 난이도 ${TIER_LABELS[coreTierCeiling].ko}까지` : `${coreSelectedUnitIds.length} units · ${coreProblems.length} problems · up to ${TIER_LABELS[coreTierCeiling].en}`}</p></div><div className="worksheet-identity"><div><span>{tr(language, 'worksheetId')}</span><strong>{coreSeed}</strong></div></div></header>
+      <div className="student-row"><span>{tr(language, 'name')}</span><i /><span>{tr(language, 'date')}</span><i /><span className="sheet-kind">{language === 'ko' ? `${coreProblems.length}문항` : `${coreProblems.length} problems`}</span></div>
+      <section className="problem-grid word-problem-grid prime-problem-grid" aria-label={language === 'ko' ? '종합 테스트 문제' : 'core practice problems'}>
+        {coreProblems.map((item) => {
+          const value = coreAnswers[item.id] || '';
+          const isCorrect = equivalent(value, item.answer);
+          const prompt = foreign && item.promptEn ? item.promptEn : item.prompt;
+          const expression = foreign && item.expressionEn ? item.expressionEn : item.expression;
+          const choices = foreign ? item.choicesEn : item.choicesKo;
+          return <article className={`vertical-problem word-problem prime-problem${hasProblemVisual(item) ? ' graphic-problem' : ''}`} key={item.id}>
+            <span className="problem-number">{item.id}</span><div className="word-calculation">
+              <p className="core-source-unit">{foreign ? item.sourceUnitLabelEn : item.sourceUnitLabel}</p>
+              <p><MathText value={prompt} /></p>
+              {expression ? <strong className="word-expression font-mono"><MathText value={expression} /></strong> : null}
+              <ProblemVisual item={item} language={language} />
+              <div className="word-answer"><span>{tr(language, 'answer')}</span>{item.kind === 'choice' && choices ? <div className="choice-answer">{coreView === 'answers' ? <strong>{choices[Number(item.answer) - 1]}</strong> : choices.map((choice, index) => <button type="button" key={`${choice}-${index}`} className={value === String(index + 1) ? 'selected' : ''} onClick={() => changeCoreAnswer(item.id, String(index + 1))}>{choice}</button>)}</div> : <span className="inline-answer">{coreView === 'answers' ? <strong><MathText value={item.answer} /></strong> : <><input aria-label={`${tr(language, 'answer')} ${item.id}`} value={value} onChange={(event) => changeCoreAnswer(item.id, event.target.value)} className={coreChecked && value ? (isCorrect ? 'correct' : 'wrong') : ''} /><span className="print-answer-space" aria-hidden="true" /></>}</span>}{item.answerSuffix && !foreign ? <em>{item.answerSuffix}</em> : null}</div>
+              {coreView === 'answers' ? <p className="generated-explanation"><strong>{foreign ? 'Why: ' : '풀이: '}</strong><MathText value={foreign ? item.explanationEn : item.explanation} /></p> : null}
+            </div>{coreChecked && coreView === 'problems' && value ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{tr(language, isCorrect ? 'correct' : 'tryAgain')}</span> : null}
+          </article>;
+        })}
+      </section>
+      <footer className="worksheet-footer"><span className="worksheet-signature">Built &amp; Designed by Chae</span><span>{tr(language, 'dailyLab')}</span><span>{coreSeed} · {profileLabel}</span></footer>
+    </div>) : null}
+
+    {mode === 'single' && view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Fractions: 3/4 · Coordinates: 2,-3 · Inequalities: x<=4' : '분수는 3/4, 좌표는 2,-3, 부등식은 x<=4처럼 입력할 수 있습니다.'}</p></div><button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
+    {mode === 'core' && coreView === 'problems' && coreProblems.length > 0 ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Fractions: 3/4 · Coordinates: 2,-3 · Inequalities: x<=4' : '분수는 3/4, 좌표는 2,-3, 부등식은 x<=4처럼 입력할 수 있습니다.'}</p></div><button className="button button-primary" onClick={checkCoreAnswers}>{tr(language, 'checkAnswers')}</button>{coreChecked ? <strong className="score">{tr(language, 'score', { count: coreCorrectCount })}</strong> : null}</section> : null}
 
     <style jsx global>{`
       .pre-algebra-controls { display: flex; align-items: flex-start; gap: 16px; }
@@ -226,6 +390,27 @@ export default function PreAlgebraGenerator() {
       .current-profile-badge strong { font-size: 14px; color: var(--ink, #111827); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .current-profile-badge a { flex-shrink: 0; font-size: 12px; font-weight: 600; color: var(--chalk-green, #245c59); text-decoration: none; }
       .current-profile-badge a:hover { text-decoration: underline; }
+      .control-group-mode { flex: 1; min-width: 220px; }
+      .mode-toggle, .tier-toggle { display: flex; gap: 6px; height: 44px; }
+      .mode-toggle button, .tier-toggle button { flex: 1; border: 1px solid var(--paper-line, #d1d5db); background: var(--paper, #f3f4f6); border-radius: 8px; font-size: 12.5px; font-weight: 600; cursor: pointer; color: var(--ink-soft, #4b5563); padding: 0 8px; }
+      .mode-toggle button.active, .tier-toggle button.active { background: var(--chalk-green, #245c59); border-color: var(--chalk-green, #245c59); color: #fff; }
+      .control-group-core-count input { width: 100%; height: 44px; box-sizing: border-box; border: 1px solid var(--paper-line, #d1d5db); border-radius: 8px; padding: 0 12px; font-size: 14px; }
+      .core-unit-picker { margin: 4px 0 16px; padding: 14px 16px; border: 1px solid var(--paper-line, #d1d5db); border-radius: 10px; background: var(--paper, #f9fafb); }
+      .core-unit-picker-hint { margin: 0 0 10px; font-size: 12.5px; color: var(--ink-soft, #4b5563); }
+      .core-unit-category { margin-bottom: 10px; }
+      .core-unit-category-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+      .core-unit-category-header strong { font-size: 13px; }
+      .button-link { background: none; border: none; color: var(--chalk-green, #245c59); font-size: 12px; font-weight: 600; cursor: pointer; padding: 0; }
+      .core-unit-list { display: flex; flex-wrap: wrap; gap: 6px; }
+      .core-unit-checkbox { display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--paper-line, #d1d5db); border-radius: 7px; padding: 5px 9px; font-size: 12.5px; cursor: pointer; background: #fff; }
+      .core-unit-checkbox.out-of-range { opacity: 0.45; }
+      .core-unit-checkbox input { margin: 0; }
+      .tier-tag { font-style: normal; font-size: 10px; padding: 1px 5px; border-radius: 999px; }
+      .tier-tag.tier-basic { background: #e0f2e9; color: #1a7a4c; }
+      .tier-tag.tier-intermediate { background: #fef3c7; color: #92640a; }
+      .tier-tag.tier-advanced { background: #fde2e2; color: #b91c1c; }
+      .core-source-unit { margin: 0 0 4px; font-size: 11px; color: var(--ink-soft, #4b5563); font-weight: 600; }
+      .core-empty-notice { padding: 20px; text-align: center; color: var(--ink-soft, #4b5563); border: 1px dashed var(--paper-line, #d1d5db); border-radius: 10px; }
       .generated-math-table { border-collapse: collapse; margin: 12px auto; min-width: 210px; text-align: center; background: #fff; }
       .generated-math-table th,.generated-math-table td { border: 1.5px solid #64748b; padding: 6px 12px; }
       .generated-math-table th { background: #eef5ff; }

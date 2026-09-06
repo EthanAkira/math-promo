@@ -229,7 +229,98 @@ const SOURCE_GROUPS = [
 
 const IMPORTED_UNITS = SOURCE_GROUPS.flatMap(([category, profiles, units]) => units.map((unit) => ({ ...unit, category, profiles })));
 
-export const PRE_ALGEBRA_UNITS = [...IMPORTED_UNITS, ...NEW_UNITS, ...SECONDARY_ALGEBRA_UNITS, ...ALGEBRA_COMPLETION_UNITS, ...KOREAN_HIGH2_UNITS, ...PRECALCULUS_UNITS, ...KOREAN_HIGH3_UNITS, ...AP_CALCULUS_UNITS];
+// `tier` ('basic'|'intermediate'|'advanced' -> 하/중/상), for the "종합 테스트 만들기" core-practice
+// test generator's difficulty ceiling. No per-problem difficulty signal exists anywhere in these
+// engines to derive this from — hand-judged from each unit's own scope/grade level, keyed by id
+// so it applies across every source file without touching each one individually.
+const UNIT_TIERS = {
+  // prime-factorization/catalog.js
+  'prime-composite': 'basic', 'prime-factorization': 'basic', 'power-form': 'basic', 'powers': 'basic',
+  'all-divisors': 'basic', 'divisor-count': 'intermediate', 'prime-mixed': 'intermediate',
+  // gcd-lcm/catalog.js
+  'gcd-basic': 'basic', 'lcm-basic': 'basic', 'common-divisors-gcd': 'basic', 'common-multiples-lcm': 'basic',
+  'coprime': 'intermediate', 'gcd-prime-form': 'intermediate', 'lcm-prime-form': 'intermediate',
+  'gcd-lcm-relation': 'intermediate', 'gcd-lcm-application': 'intermediate', 'gcd-lcm-mixed': 'intermediate',
+  // integers-rationals/catalog.js
+  'positive-negative': 'basic', 'number-line': 'basic', 'absolute-value': 'basic', 'number-comparison': 'basic',
+  'integer-classification': 'basic', 'rational-classification': 'basic', 'rational-addition': 'basic',
+  'rational-subtraction': 'basic', 'rational-add-subtract': 'intermediate', 'rational-multiplication': 'basic',
+  'rational-division': 'intermediate', 'rational-four-operations': 'intermediate', 'rational-operations-review': 'intermediate',
+  'inequality-expression': 'intermediate', 'integer-solutions': 'intermediate', 'integer-rational-mixed': 'intermediate',
+  // algebra-basics/catalog.js
+  'notation': 'basic', 'expression-values': 'basic', 'verbal-expressions': 'basic', 'polynomial-basics': 'basic',
+  'simplify-linear': 'intermediate', 'monomial-multiply-divide': 'intermediate', 'expressions-review': 'intermediate',
+  'equation-identity': 'intermediate', 'equality-properties': 'intermediate', 'linear-equations': 'intermediate',
+  'advanced-linear-equations': 'advanced', 'equation-word-problems': 'intermediate', 'distance-speed-time': 'intermediate',
+  'concentration': 'advanced', 'equations-review': 'intermediate',
+  // coordinate-plane/catalog.js
+  'plane-read-point': 'basic', 'plane-find-point': 'basic', 'quadrant-identify': 'basic', 'quadrant-sign': 'basic',
+  'symmetric-points': 'intermediate', 'quadrant-transform': 'intermediate', 'ordered-pair-condition': 'intermediate',
+  'coordinate-mixed': 'intermediate', 'trip-graph': 'intermediate',
+  // proportion/catalog.js
+  'direct-relation': 'basic', 'direct-classify': 'basic', 'direct-evaluate': 'basic', 'direct-graph': 'intermediate',
+  'inverse-relation': 'basic', 'inverse-classify': 'basic', 'inverse-evaluate': 'intermediate', 'inverse-graph': 'intermediate',
+  'proportion-application': 'intermediate', 'proportion-mixed': 'intermediate',
+  // NEW_UNITS (this file)
+  'order-of-operations': 'basic', 'decimal-operations': 'basic', 'fraction-operations': 'basic',
+  'fraction-decimal-percent': 'basic', 'ratio-rate-table': 'basic', 'percent-problems': 'basic',
+  'one-step-inequality': 'intermediate', 'center-spread': 'basic', 'stem-leaf': 'basic', 'frequency-table': 'intermediate',
+  // secondaryAlgebraEngine.js
+  'repeating-decimals': 'basic', 'exponent-laws': 'basic', 'polynomial-operations-2': 'intermediate',
+  'linear-inequalities-2': 'intermediate', 'systems-linear': 'intermediate', 'linear-functions-2': 'intermediate',
+  'probability-2': 'intermediate', 'radicals-real-numbers': 'intermediate', 'identities-factoring': 'intermediate',
+  'quadratic-equations': 'intermediate', 'quadratic-functions': 'intermediate', 'quadratic-max-min': 'advanced',
+  'data-variation': 'intermediate', 'remainder-factor-theorem': 'advanced', 'complex-numbers': 'advanced',
+  'quadratic-inequalities': 'advanced', 'permutations-combinations': 'advanced', 'circular-permutations': 'advanced',
+  'matrices': 'intermediate', 'sets-logic': 'intermediate', 'function-composition': 'intermediate',
+  'rational-radical-functions': 'advanced', 'exponential-equations': 'intermediate', 'logarithms': 'intermediate',
+  'sequences': 'intermediate', 'algebra-modeling': 'intermediate',
+  // algebraCompletionEngine.js
+  'polynomial-division': 'intermediate', 'polynomial-zeros-multiplicity': 'advanced', 'complex-quadratic-roots': 'advanced',
+  'completing-square': 'intermediate', 'discriminant-roots': 'intermediate', 'absolute-value-equations': 'intermediate',
+  'literal-equations': 'intermediate', 'systems-inequalities': 'intermediate', 'linear-quadratic-systems': 'advanced',
+  'finite-domain-range': 'intermediate', 'piecewise-functions': 'intermediate', 'average-rate-change': 'intermediate',
+  'function-transformations': 'intermediate', 'inverse-functions-complete': 'advanced', 'exponential-modeling': 'intermediate',
+  'regression-modeling': 'intermediate', 'two-way-tables': 'intermediate', 'rational-expressions': 'advanced',
+  'rational-equations': 'advanced', 'radical-equations': 'advanced', 'logarithmic-modeling': 'advanced',
+  'geometric-sequences': 'intermediate', 'binomial-theorem': 'advanced', 'variation-modeling': 'intermediate',
+  'conditional-probability': 'advanced', 'algebra2-trigonometry': 'intermediate', 'internal-division-coordinate': 'intermediate',
+  'external-division-coordinate': 'intermediate', 'line-distance-conditions': 'advanced', 'circle-equations-complete': 'intermediate',
+  'coordinate-transformations': 'intermediate', 'propositions-complete': 'intermediate', 'matrix-multiplication': 'intermediate',
+  'kr-high-1-complete-review': 'advanced', 'algebra-1-complete-review': 'intermediate', 'algebra-2-complete-review': 'advanced',
+  // koreanHigh2Engine.js (고2)
+  'h2-exponential-log-functions': 'intermediate', 'h2-radians-trig': 'intermediate', 'h2-sine-cosine-laws': 'intermediate',
+  'h2-sequence-sums-induction': 'advanced', 'h2-function-limits': 'intermediate', 'h2-continuity': 'intermediate',
+  'h2-derivative-definition': 'intermediate', 'h2-derivative-rules': 'intermediate', 'h2-tangent-lines': 'intermediate',
+  'h2-monotonic-extrema': 'advanced', 'h2-motion-derivatives': 'advanced', 'h2-antiderivatives': 'intermediate',
+  'h2-definite-integrals': 'intermediate', 'h2-integral-area': 'advanced', 'h2-expected-value': 'intermediate',
+  'h2-binomial-distribution': 'advanced', 'h2-normal-distribution': 'advanced', 'h2-sample-mean': 'intermediate',
+  'h2-confidence-interval': 'advanced', 'h2-sample-proportion': 'advanced',
+  // precalculusEngine.js
+  'precalc-polynomial-end-behavior': 'intermediate', 'precalc-rational-features': 'advanced',
+  'precalc-exp-log-transformations': 'intermediate', 'precalc-trig-graphs': 'intermediate', 'precalc-trig-identities': 'advanced',
+  'precalc-inverse-trig': 'advanced', 'precalc-polar-coordinates': 'advanced', 'precalc-parametric-functions': 'advanced',
+  'precalc-conic-sections': 'advanced', 'precalc-vectors': 'advanced', 'precalc-transformation-matrices': 'intermediate',
+  // koreanHigh3Engine.js (고3)
+  'h3-sequence-limits': 'intermediate', 'h3-infinite-series': 'advanced', 'h3-exp-log-derivatives': 'intermediate',
+  'h3-trig-derivatives': 'intermediate', 'h3-advanced-derivative-rules': 'advanced', 'h3-implicit-differentiation': 'advanced',
+  'h3-substitution-integration': 'advanced', 'h3-integration-by-parts': 'advanced', 'h3-volume-integrals': 'advanced',
+  'h3-parabola': 'intermediate', 'h3-ellipse': 'intermediate', 'h3-hyperbola': 'advanced', 'h3-vector-angle': 'intermediate',
+  'h3-lines-planes': 'advanced', 'h3-space-coordinates': 'intermediate', 'h3-sphere-equations': 'advanced',
+  // apCalculusEngine.js
+  'concavity-second-derivative': 'intermediate', 'optimization-closed-interval': 'intermediate', 'riemann-sums': 'intermediate',
+  'related-rates': 'advanced', 'lhopital-rule': 'intermediate', 'differential-equations-separable': 'advanced',
+  'partial-fractions-integration': 'advanced', 'improper-integrals': 'advanced', 'euler-method': 'advanced',
+  'logistic-growth': 'advanced', 'arc-length': 'advanced', 'parametric-vector-calculus': 'advanced',
+  'polar-calculus': 'advanced', 'series-convergence-tests': 'advanced', 'power-series-radius-of-convergence': 'advanced',
+  'taylor-maclaurin-series': 'advanced',
+};
+
+function withDifficultyTier(units) {
+  return units.map((unit) => (UNIT_TIERS[unit.id] ? { ...unit, tier: UNIT_TIERS[unit.id] } : unit));
+}
+
+export const PRE_ALGEBRA_UNITS = withDifficultyTier([...IMPORTED_UNITS, ...NEW_UNITS, ...SECONDARY_ALGEBRA_UNITS, ...ALGEBRA_COMPLETION_UNITS, ...KOREAN_HIGH2_UNITS, ...PRECALCULUS_UNITS, ...KOREAN_HIGH3_UNITS, ...AP_CALCULUS_UNITS]);
 
 export const PRE_ALGEBRA_PROFILES = [
   { id: 'kr-middle-1', label: '중1 · 소인수분해·정수·문자와 식·좌표', labelEn: 'Grade 7 · Numbers, Expressions & Coordinates', description: '2022 개정 교육과정 중1 비기하 핵심 단원 연습', descriptionEn: 'Core non-geometry Grade 7 topics in Korea’s 2022 curriculum' },

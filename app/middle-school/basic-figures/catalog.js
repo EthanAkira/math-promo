@@ -360,7 +360,133 @@ function withCurriculumProfiles(units) {
   ));
 }
 
-export const BASIC_FIGURE_UNITS = [
+// `tier` ('basic'|'intermediate'|'advanced' -> 하/중/상) and `category` (대단원 grouping, used by
+// the "종합 테스트 만들기" checkbox tree) are hand-judged static metadata added for the core-practice
+// test generator — no per-problem difficulty signal exists anywhere in this engine to derive them
+// from automatically (only ADVANCED_GEOMETRY_CHALLENGE_UNITS carries an informal `difficulty`
+// object, and only on 7 of ~90 units). Judged from each unit's own scope/grade level, not measured.
+const UNIT_META = {
+  'terms-ox': { tier: 'basic', category: 'basic-figures-intro' },
+  'distance-midpoint': { tier: 'basic', category: 'basic-figures-intro' },
+  'angle-classify': { tier: 'basic', category: 'basic-figures-intro' },
+  'straight-angle': { tier: 'basic', category: 'basic-figures-intro' },
+  'vertical-angle': { tier: 'basic', category: 'basic-figures-intro' },
+  'perpendicular': { tier: 'basic', category: 'basic-figures-intro' },
+  'basic-figures-mixed': { tier: 'basic', category: 'basic-figures-intro' },
+
+  'visual-foundations': { tier: 'basic', category: 'core-geometry' },
+  'visual-angles': { tier: 'basic', category: 'core-geometry' },
+  'perpendicular-distance': { tier: 'basic', category: 'core-geometry' },
+  'parallel-lines': { tier: 'basic', category: 'core-geometry' },
+  'triangle-angles': { tier: 'basic', category: 'core-geometry' },
+  'ruler-compass-construction': { tier: 'basic', category: 'core-geometry' },
+  'triangle-side-angle-relations': { tier: 'intermediate', category: 'core-geometry' },
+  'circle-sector': { tier: 'basic', category: 'core-geometry' },
+  'triangle-congruence-similarity': { tier: 'intermediate', category: 'core-geometry' },
+  'pythagorean-theorem': { tier: 'intermediate', category: 'core-geometry' },
+  'high-coordinate-geometry': { tier: 'intermediate', category: 'core-geometry' },
+  'solid-elements': { tier: 'basic', category: 'core-geometry' },
+  'solid-relations': { tier: 'basic', category: 'core-geometry' },
+
+  'polygon-foundations-basic': { tier: 'basic', category: 'middle-geometry-basics' },
+  'polygon-diagonals-basic': { tier: 'basic', category: 'middle-geometry-basics' },
+  'polygon-angles-basic': { tier: 'intermediate', category: 'middle-geometry-basics' },
+  'triangle-interior-exterior-basic': { tier: 'basic', category: 'middle-geometry-basics' },
+  'circle-parts-basic': { tier: 'basic', category: 'middle-geometry-basics' },
+  'circle-sector-proportion': { tier: 'intermediate', category: 'middle-geometry-basics' },
+  'circle-sector-inverse-basic': { tier: 'intermediate', category: 'middle-geometry-basics' },
+  'annulus-composite-circle': { tier: 'intermediate', category: 'middle-geometry-basics' },
+  'annular-sector-measures': { tier: 'intermediate', category: 'middle-geometry-basics' },
+  'polyhedron-counts-general': { tier: 'basic', category: 'middle-geometry-basics' },
+  'polyhedron-concepts-euler': { tier: 'intermediate', category: 'middle-geometry-basics' },
+  'regular-polyhedra-basic': { tier: 'basic', category: 'middle-geometry-basics' },
+  'solids-revolution-nets': { tier: 'intermediate', category: 'middle-geometry-basics' },
+  'solids-revolution-sections': { tier: 'intermediate', category: 'middle-geometry-basics' },
+  'metric-solid-nets': { tier: 'intermediate', category: 'middle-geometry-basics' },
+  'prism-cylinder-measures': { tier: 'intermediate', category: 'middle-geometry-basics' },
+  'pyramid-cone-measures': { tier: 'intermediate', category: 'middle-geometry-basics' },
+  'expanded-solid-measures': { tier: 'advanced', category: 'middle-geometry-basics' },
+  'sphere-measures-basic': { tier: 'intermediate', category: 'middle-geometry-basics' },
+  'hemisphere-sphere-ratios': { tier: 'advanced', category: 'middle-geometry-basics' },
+  'solid-volume-ratios': { tier: 'intermediate', category: 'middle-geometry-basics' },
+
+  'isosceles-triangle-properties': { tier: 'intermediate', category: 'triangle-quadrilateral' },
+  'triangle-circumcenter': { tier: 'intermediate', category: 'triangle-quadrilateral' },
+  'triangle-incenter': { tier: 'intermediate', category: 'triangle-quadrilateral' },
+  'parallelogram-properties': { tier: 'intermediate', category: 'triangle-quadrilateral' },
+  'special-quadrilaterals': { tier: 'intermediate', category: 'triangle-quadrilateral' },
+
+  'similarity-conditions': { tier: 'intermediate', category: 'triangle-similarity' },
+  'right-triangle-similarity': { tier: 'intermediate', category: 'triangle-similarity' },
+  'similar-solids-ratio': { tier: 'advanced', category: 'triangle-similarity' },
+  'parallel-line-segment-ratio': { tier: 'intermediate', category: 'triangle-similarity' },
+  'midsegment-theorem': { tier: 'intermediate', category: 'triangle-similarity' },
+  'triangle-centroid-median': { tier: 'intermediate', category: 'triangle-similarity' },
+  'pythagorean-applications': { tier: 'advanced', category: 'triangle-similarity' },
+
+  'circle-chord-properties': { tier: 'intermediate', category: 'circle-properties' },
+  'circle-tangent-properties': { tier: 'intermediate', category: 'circle-properties' },
+  'circle-inscribed-circumscribed': { tier: 'advanced', category: 'circle-properties' },
+  'circle-inscribed-angles': { tier: 'advanced', category: 'circle-properties' },
+  'circle-cyclic-quadrilaterals': { tier: 'advanced', category: 'circle-properties' },
+  'circle-tangent-chord-angles': { tier: 'advanced', category: 'circle-properties' },
+  'circle-properties-mixed': { tier: 'advanced', category: 'circle-properties' },
+
+  'transform-translation': { tier: 'basic', category: 'transformations' },
+  'transform-reflection': { tier: 'basic', category: 'transformations' },
+  'transform-rotation': { tier: 'intermediate', category: 'transformations' },
+  'transform-dilation': { tier: 'intermediate', category: 'transformations' },
+  'transform-dilation-area': { tier: 'advanced', category: 'transformations' },
+
+  'logic-truth-tables': { tier: 'basic', category: 'logical-reasoning' },
+  'logic-conditional-forms': { tier: 'intermediate', category: 'logical-reasoning' },
+  'logic-detachment-syllogism': { tier: 'intermediate', category: 'logical-reasoning' },
+  'logic-segment-angle-properties': { tier: 'intermediate', category: 'logical-reasoning' },
+
+  'radians-trig-ratios': { tier: 'advanced', category: 'advanced-geometry' },
+  'sine-cosine-laws': { tier: 'advanced', category: 'advanced-geometry' },
+  'advanced-circle-theorems': { tier: 'advanced', category: 'advanced-geometry' },
+  'triangle-centers': { tier: 'advanced', category: 'advanced-geometry' },
+  'olympiad-geometry': { tier: 'advanced', category: 'advanced-geometry' },
+  'conic-sections': { tier: 'advanced', category: 'advanced-geometry' },
+  'plane-vectors': { tier: 'advanced', category: 'advanced-geometry' },
+  'space-geometry-coordinates': { tier: 'advanced', category: 'advanced-geometry' },
+  'trigonometric-graphs': { tier: 'advanced', category: 'advanced-geometry' },
+  'calculus-geometry-visuals': { tier: 'advanced', category: 'advanced-geometry' },
+  'statistics-visuals': { tier: 'advanced', category: 'advanced-geometry' },
+  'amc12-geometry-mixed': { tier: 'advanced', category: 'advanced-geometry' },
+  'csat-geometry-mixed': { tier: 'advanced', category: 'advanced-geometry' },
+  'g12-visual-mixed': { tier: 'advanced', category: 'advanced-geometry' },
+
+  'amc12-multi-theorem': { tier: 'advanced', category: 'advanced-geometry-challenge' },
+  'csat-geometry-reasoning': { tier: 'advanced', category: 'advanced-geometry-challenge' },
+  'g12-geometry-challenge': { tier: 'advanced', category: 'advanced-geometry-challenge' },
+  'tangent-power-challenge': { tier: 'advanced', category: 'advanced-geometry-challenge' },
+  'similarity-area-challenge': { tier: 'advanced', category: 'advanced-geometry-challenge' },
+  'conic-vector-challenge': { tier: 'advanced', category: 'advanced-geometry-challenge' },
+  'space-projection-challenge': { tier: 'advanced', category: 'advanced-geometry-challenge' },
+};
+
+export const UNIT_CATEGORY_LABELS = {
+  'basic-figures-intro': { label: '기본 도형 (점·선·면·각)', labelEn: 'Basic Figures (Points, Lines & Angles)' },
+  'core-geometry': { label: '평면도형 기초', labelEn: 'Core Plane Geometry' },
+  'middle-geometry-basics': { label: '다각형·원·입체도형', labelEn: 'Polygons, Circles & Solids' },
+  'triangle-quadrilateral': { label: '삼각형과 사각형의 성질', labelEn: 'Triangle & Quadrilateral Properties' },
+  'triangle-similarity': { label: '도형의 닮음', labelEn: 'Similarity' },
+  'circle-properties': { label: '원의 성질', labelEn: 'Circle Properties' },
+  'transformations': { label: '이동과 변환', labelEn: 'Transformations' },
+  'logical-reasoning': { label: '명제와 논리', labelEn: 'Logical Reasoning' },
+  'advanced-geometry': { label: '심화 기하 (고교·경시)', labelEn: 'Advanced Geometry (G12/Competition)' },
+  'advanced-geometry-challenge': { label: '심화 기하 챌린지', labelEn: 'Advanced Geometry Challenge' },
+};
+
+function withDifficultyTier(units) {
+  return units.map((unit) => (
+    UNIT_META[unit.id] ? { ...unit, tier: UNIT_META[unit.id].tier, category: UNIT_META[unit.id].category } : unit
+  ));
+}
+
+export const BASIC_FIGURE_UNITS = withDifficultyTier([
   { id: 'terms-ox', label: '점·선·면 정오 판별', description: '점·선·면의 성질, 직선/반직선/선분의 표현, 입체도형의 면·꼭짓점·모서리 판별하기', en: ['Points, Lines & Planes (True/False)', 'Check statements about points, lines, planes, and solid shapes'], make: termsOx },
   { id: 'distance-midpoint', label: '두 점 사이의 거리와 중점', description: '중점과 삼등분점을 이용해 선분의 길이 구하기', en: ['Distance & Midpoints', 'Use midpoints and trisection points to find segment lengths'], make: distanceMidpoint },
   { id: 'angle-classify', label: '각의 분류', description: '주어진 각을 예각·직각·둔각·평각으로 분류하기', en: ['Classifying Angles', 'Classify a given angle as acute, right, obtuse, or straight'], make: angleClassify },
@@ -377,7 +503,7 @@ export const BASIC_FIGURE_UNITS = [
   ...withCurriculumProfiles(LOGICAL_REASONING_UNITS),
   ...ADVANCED_GEOMETRY_UNITS,
   ...ADVANCED_GEOMETRY_CHALLENGE_UNITS,
-];
+]);
 
 export function findBasicFigureUnit(unitId) {
   return BASIC_FIGURE_UNITS.find((unit) => unit.id === unitId)

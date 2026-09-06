@@ -74,6 +74,26 @@ function fileTypeLabel(type, language) {
   return labels[type] || type;
 }
 
+const TIER_ORDER = { basic: 0, intermediate: 1, advanced: 2 };
+const TIER_LABELS = {
+  basic: { ko: '하', en: 'Basic' },
+  intermediate: { ko: '중', en: 'Intermediate' },
+  advanced: { ko: '상', en: 'Advanced' },
+};
+function tierWithin(unitTier, ceiling) {
+  if (!unitTier) return true;
+  return TIER_ORDER[unitTier] <= TIER_ORDER[ceiling];
+}
+
+function shuffleArray(values) {
+  const result = [...values];
+  for (let index = result.length - 1; index > 0; index -= 1) {
+    const target = Math.floor(Math.random() * (index + 1));
+    [result[index], result[target]] = [result[target], result[index]];
+  }
+  return result;
+}
+
 const SUBJECT_COLORS = {
   math1: { bg: 'rgba(59, 130, 246, 0.08)', border: '#3b82f6', text: '#1d4ed8' },
   math2: { bg: 'rgba(16, 185, 129, 0.08)', border: '#10b981', text: '#047857' },
@@ -94,6 +114,12 @@ export default function CsatUnitBrowser() {
   const [searchQuery, setSearchQuery] = useState('');
   const [openFileUnit, setOpenFileUnit] = useState(null);
   const [selectedUnitId, setSelectedUnitId] = useState(null);
+
+  // Core practice test (multi-unit, count- and difficulty-configurable) state
+  const [coreSelectedUnitIds, setCoreSelectedUnitIds] = useState([]);
+  const [coreTierCeiling, setCoreTierCeiling] = useState('advanced');
+  const [coreCount, setCoreCount] = useState(20);
+  const [coreProblems, setCoreProblems] = useState(null);
 
   // Sync selected unit with URL query
   useEffect(() => {
@@ -206,6 +232,27 @@ export default function CsatUnitBrowser() {
     return map;
   }, [manifest]);
 
+  function toggleCoreUnit(unitId) {
+    setCoreSelectedUnitIds((current) => (current.includes(unitId) ? current.filter((id) => id !== unitId) : [...current, unitId]));
+  }
+
+  function toggleCoreSubject(subject) {
+    const idsInSubject = subject.units.map((unit) => unit.id);
+    const allSelected = idsInSubject.every((id) => coreSelectedUnitIds.includes(id));
+    setCoreSelectedUnitIds((current) => (allSelected
+      ? current.filter((id) => !idsInSubject.includes(id))
+      : [...new Set([...current, ...idsInSubject])]));
+  }
+
+  const allUnitsFlat = useMemo(() => CSAT_SUBJECTS.flatMap((subject) => subject.units.map((unit) => ({ ...unit, subjectId: subject.id }))), []);
+
+  function generateCoreTest() {
+    const eligibleUnits = allUnitsFlat.filter((unit) => coreSelectedUnitIds.includes(unit.id) && tierWithin(unit.tier, coreTierCeiling));
+    const eligibleUnitIds = new Set(eligibleUnits.map((unit) => unit.id));
+    const matching = staticCsatCatalog.filter((problem) => eligibleUnitIds.has(problem.unitId));
+    setCoreProblems(shuffleArray(matching).slice(0, coreCount));
+  }
+
   function handleItemClick(event) {
     if (entitled) return;
     event.preventDefault();
@@ -308,7 +355,118 @@ export default function CsatUnitBrowser() {
         >
           {words.tabFiles}
         </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('core')}
+          style={{
+            padding: '10px 18px',
+            fontSize: 15,
+            fontWeight: 700,
+            border: 'none',
+            background: 'none',
+            cursor: 'pointer',
+            borderBottom: activeTab === 'core' ? '3px solid var(--primary, #2563eb)' : '3px solid transparent',
+            color: activeTab === 'core' ? 'var(--primary, #2563eb)' : 'var(--ink-soft, #6b7280)',
+            marginBottom: -2,
+            transition: 'all 0.15s ease',
+          }}
+        >
+          {language === 'ko' ? '🎯 종합 테스트 만들기' : '🎯 Core Practice Test'}
+        </button>
       </div>
+
+      {/* VIEW 3: CORE PRACTICE TEST (multi-unit, count- & difficulty-configurable, archive-pool based) */}
+      {activeTab === 'core' && (
+        coreProblems !== null ? (
+          <div>
+            <button type="button" className="button button-secondary" style={{ marginBottom: 12 }} onClick={() => setCoreProblems(null)}>
+              ← {language === 'ko' ? '단원 선택으로 돌아가기' : 'Back to unit selection'}
+            </button>
+            {coreProblems.length < coreCount ? (
+              <div style={{ background: 'rgba(217, 119, 6, 0.08)', border: '1px solid rgba(217, 119, 6, 0.25)', borderRadius: 10, padding: '10px 14px', margin: '0 0 16px', fontSize: 13, color: '#92400e' }}>
+                {language === 'ko'
+                  ? `선택한 조건에 맞는 기출문제 중 ${coreProblems.length}개를 찾았습니다 (요청: ${coreCount}개). CSAT 기출 아카이브는 단원당 문항 수가 제한적입니다 — 더 많은 단원을 선택하거나 난이도 상한을 올려보세요.`
+                  : `Found ${coreProblems.length} archived problems matching your selection (requested: ${coreCount}). The CSAT archive has a limited number of tagged problems per unit — try selecting more units or raising the difficulty ceiling.`}
+              </div>
+            ) : null}
+            <TopicWorksheetView
+              category="csat"
+              subjectLabel={language === 'ko' ? `${coreSelectedUnitIds.length}개 단원 선택` : `${coreSelectedUnitIds.length} units selected`}
+              unit={{
+                label: '종합 테스트',
+                labelEn: 'Core Practice Test',
+                desc: language === 'ko'
+                  ? `${coreProblems.length}문항 · 난이도 ${TIER_LABELS[coreTierCeiling].ko}까지`
+                  : `${coreProblems.length} problems · up to ${TIER_LABELS[coreTierCeiling].en}`,
+              }}
+              problems={coreProblems}
+              onBack={() => setCoreProblems(null)}
+              language={language}
+            />
+          </div>
+        ) : (
+          <div>
+            <p style={{ color: 'var(--ink-soft)', fontSize: 14, margin: '0 0 16px' }}>
+              {language === 'ko'
+                ? '기말고사·모의고사 범위에 맞춰 여러 단원을 한 번에 선택하고, 문제 수와 난이도 상한을 지정해 종합 테스트를 만드세요. CSAT은 기출 아카이브 문항만 사용하므로, 조건에 맞는 문항이 요청 수보다 적을 수 있습니다.'
+                : 'Select every unit covered by your final or mock-exam scope, then set a problem count and a difficulty ceiling. CSAT draws only from the archived catalog, so a narrow selection may return fewer problems than requested.'}
+            </p>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20, marginBottom: 20 }}>
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 700, margin: '0 0 6px', color: 'var(--ink)' }}>{language === 'ko' ? '난이도 상한' : 'Difficulty Ceiling'}</p>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  {['basic', 'intermediate', 'advanced'].map((tier) => (
+                    <button type="button" key={tier} onClick={() => setCoreTierCeiling(tier)} style={{ padding: '7px 14px', borderRadius: 8, fontSize: 12.5, fontWeight: 700, border: coreTierCeiling === tier ? '1.5px solid #111827' : '1px solid var(--paper-line, #d1d5db)', background: coreTierCeiling === tier ? '#111827' : 'var(--card-bg, #fff)', color: coreTierCeiling === tier ? '#fff' : 'var(--ink)', cursor: 'pointer' }}>
+                      {language === 'ko' ? `${TIER_LABELS[tier].ko}까지` : `Up to ${TIER_LABELS[tier].en}`}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 700, margin: '0 0 6px', color: 'var(--ink)' }}>{language === 'ko' ? '문제 수' : 'Problem Count'}</p>
+                <input type="number" min={5} max={100} value={coreCount} onChange={(event) => setCoreCount(Math.min(100, Math.max(5, Number(event.target.value) || 20)))} style={{ width: 100, height: 34, borderRadius: 8, border: '1px solid var(--paper-line, #d1d5db)', padding: '0 10px', fontSize: 14 }} />
+              </div>
+              <div style={{ alignSelf: 'flex-end' }}>
+                <button type="button" className="button button-primary" onClick={generateCoreTest} disabled={coreSelectedUnitIds.length === 0}
+                  style={{ opacity: coreSelectedUnitIds.length === 0 ? 0.5 : 1, cursor: coreSelectedUnitIds.length === 0 ? 'not-allowed' : 'pointer' }}>
+                  {language === 'ko' ? `테스트 생성 (${coreSelectedUnitIds.length}개 단원 선택됨)` : `Generate Test (${coreSelectedUnitIds.length} selected)`}
+                </button>
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gap: 16 }}>
+              {CSAT_SUBJECTS.map((subject) => {
+                const idsInSubject = subject.units.map((unit) => unit.id);
+                const allSelected = idsInSubject.every((id) => coreSelectedUnitIds.includes(id));
+                return (
+                  <div key={subject.id} style={{ border: '1px solid var(--paper-line, #e5e7eb)', borderRadius: 12, padding: '14px 16px', background: 'var(--card-bg, #fff)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                      <strong style={{ fontSize: 14 }}>{subject.label} <span style={{ fontWeight: 500, fontSize: 12, color: 'var(--ink-soft)' }}>({language === 'en' ? subject.labelEn : `2022개정: ${subject.revised2022}`})</span></strong>
+                      <button type="button" onClick={() => toggleCoreSubject(subject)} style={{ background: 'none', border: 'none', color: 'var(--primary, #2563eb)', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+                        {allSelected ? (language === 'ko' ? '전체 해제' : 'Deselect all') : (language === 'ko' ? '전체 선택' : 'Select all')}
+                      </button>
+                    </div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                      {subject.units.map((unit) => {
+                        const count = problemsByUnit.get(unit.id)?.length || 0;
+                        const outOfRange = !tierWithin(unit.tier, coreTierCeiling);
+                        return (
+                          <label key={unit.id} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, border: '1px solid var(--paper-line, #d1d5db)', borderRadius: 7, padding: '5px 9px', fontSize: 12.5, cursor: 'pointer', background: '#fff', opacity: outOfRange ? 0.45 : 1 }}>
+                            <input type="checkbox" checked={coreSelectedUnitIds.includes(unit.id)} onChange={() => toggleCoreUnit(unit.id)} style={{ margin: 0 }} />
+                            <span>{unit.label} ({count})</span>
+                            {unit.tier ? <em style={{ fontStyle: 'normal', fontSize: 10, padding: '1px 5px', borderRadius: 999, background: unit.tier === 'basic' ? '#e0f2e9' : unit.tier === 'intermediate' ? '#fef3c7' : '#fde2e2', color: unit.tier === 'basic' ? '#1a7a4c' : unit.tier === 'intermediate' ? '#92640a' : '#b91c1c' }}>{language === 'ko' ? TIER_LABELS[unit.tier].ko : TIER_LABELS[unit.tier].en}</em> : null}
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )
+      )}
 
       {/* VIEW 1: CSAT Topic Worksheets Browser */}
       {activeTab === 'problems' && (
