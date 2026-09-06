@@ -296,7 +296,7 @@ export default function ProportionGenerator() {
           return <article className={`vertical-problem word-problem prime-problem${graphic ? ' graphic-problem' : ''}`} key={item.id}>
             <span className="problem-number">{item.id}</span>
             <div className="word-calculation">
-              <p>{prompt}</p>
+              <p><MathText value={prompt} /></p>
               {item.diagram ? <RpmDiagram diagram={item.diagram} /> : null}
               {item.expression ? <strong className="word-expression font-mono"><ProportionText value={item.expression} /></strong> : null}
               {!item.diagram && item.kind === 'proportion-graph' ? <ProportionGraphSvg graph={item.graph} /> : null}
@@ -304,8 +304,8 @@ export default function ProportionGenerator() {
                 <span>{tr(language, 'answer')}</span>
                 {item.kind === 'choice' ? (
                   <div className="choice-answer">
-                    {view === 'answers' ? <strong>{choices[Number(item.answer) - 1]}</strong> : choices.map((choice, index) => (
-                      <button type="button" key={choice} className={value === String(index + 1) ? 'selected' : ''} onClick={() => changeAnswer(item.id, String(index + 1))}>{choice}</button>
+                    {view === 'answers' ? <strong><MathText value={choices[Number(item.answer) - 1]} /></strong> : choices.map((choice, index) => (
+                      <button type="button" key={choice} className={value === String(index + 1) ? 'selected' : ''} onClick={() => changeAnswer(item.id, String(index + 1))}><MathText value={choice} /></button>
                     ))}
                   </div>
                 ) : (

@@ -239,13 +239,13 @@ export default function PrimeFactorizationGenerator() {
           return <article className="vertical-problem word-problem prime-problem" key={item.id}>
             <span className="problem-number">{item.id}</span>
             <div className="word-calculation">
-              <p>{foreign && item.promptEn ? item.promptEn : item.prompt}</p>
+              <p><MathText value={foreign && item.promptEn ? item.promptEn : item.prompt} /></p>
               {item.diagram ? <RpmDiagram diagram={item.diagram} /> : null}
               {item.expression ? <strong className="word-expression font-mono"><PowerText value={item.expression} /></strong> : null}
               {item.choices ? (
                 <div className="choice-answer">
                   {view === 'answers' ? (
-                    <strong>{selectedChoice ? `${selectedChoice.value}. ${foreign ? selectedChoice.labelEn : selectedChoice.label}` : item.answer}</strong>
+                    <strong><MathText value={selectedChoice ? `${selectedChoice.value}. ${foreign ? selectedChoice.labelEn : selectedChoice.label}` : item.answer} /></strong>
                   ) : (
                     item.choices.map((choice) => (
                       <button
@@ -255,7 +255,7 @@ export default function PrimeFactorizationGenerator() {
                         onClick={() => changeAnswer(item.id, choice.value)}
                         aria-pressed={value === choice.value}
                       >
-                        <span>{choice.value}</span>{foreign ? choice.labelEn : choice.label}
+                        <span>{choice.value}</span><MathText value={foreign ? choice.labelEn : choice.label} />
                       </button>
                     ))
                   )}

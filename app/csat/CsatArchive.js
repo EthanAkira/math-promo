@@ -6,6 +6,8 @@ import { useLanguage } from '../language';
 import InteractiveExamWorkspace from '../components/InteractiveExamWorkspace';
 import { getInteractiveProblems, clearCustomExams } from '../data/sampleExams';
 import { extractTextFromPdf, parseExamText } from '../components/AiExamParser';
+import MathText from '../components/MathText';
+import { transformLatexMath } from '../components/LatexMath';
 
 const COPY = {
   ko: {
@@ -68,13 +70,14 @@ function tokenizeMath(text) {
 }
 
 function MathSpan({ token }) {
-  if (token.type === 'text') return <>{token.value}</>;
+  if (token.type === 'text') return <MathText value={token.value} />;
   try {
-    const html = katex.renderToString(token.value, { throwOnError: false, displayMode: token.type === 'block' });
+    const transformed = transformLatexMath(token.value);
+    const html = katex.renderToString(transformed, { throwOnError: false, displayMode: token.type === 'block' });
     // eslint-disable-next-line react/no-danger
     return <span dangerouslySetInnerHTML={{ __html: html }} />;
   } catch {
-    return <>{token.value}</>;
+    return <MathText value={token.value} />;
   }
 }
 

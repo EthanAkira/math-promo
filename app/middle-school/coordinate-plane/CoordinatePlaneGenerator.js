@@ -309,7 +309,7 @@ export default function CoordinatePlaneGenerator() {
           return <article className={`vertical-problem word-problem prime-problem${graphic ? ' graphic-problem' : ''}`} key={item.id}>
             <span className="problem-number">{item.id}</span>
             <div className="word-calculation">
-              <p>{prompt}</p>
+              <p><MathText value={prompt} /></p>
               {item.diagram ? <RpmDiagram diagram={item.diagram} /> : null}
               {!item.diagram && item.kind === 'coordinate-plane' ? <CoordinatePlaneSvg plane={item.plane} /> : null}
               {!item.diagram && item.kind === 'trip-graph' ? <TripGraphSvg graph={item.graph} /> : null}
@@ -317,13 +317,13 @@ export default function CoordinatePlaneGenerator() {
                 <span>{tr(language, 'answer')}</span>
                 {item.kind === 'choice' ? (
                   <div className="choice-answer">
-                    {view === 'answers' ? <strong>{choices[Number(item.answer) - 1]}</strong> : choices.map((choice, index) => (
-                      <button type="button" key={choice} className={value === String(index + 1) ? 'selected' : ''} onClick={() => changeAnswer(item.id, String(index + 1))}>{choice}</button>
+                    {view === 'answers' ? <strong><MathText value={choices[Number(item.answer) - 1]} /></strong> : choices.map((choice, index) => (
+                      <button type="button" key={choice} className={value === String(index + 1) ? 'selected' : ''} onClick={() => changeAnswer(item.id, String(index + 1))}><MathText value={choice} /></button>
                     ))}
                   </div>
                 ) : (
                   <span className="inline-answer">
-                    {view === 'answers' ? <strong>{item.answer}</strong> : <>
+                    {view === 'answers' ? <strong><MathText value={item.answer} /></strong> : <>
                       <input
                         aria-label={`${tr(language, 'answer')} ${item.id}`}
                         value={value}

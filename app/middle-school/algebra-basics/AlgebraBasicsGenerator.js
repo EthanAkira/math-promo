@@ -259,7 +259,7 @@ export default function AlgebraBasicsGenerator() {
                 {item.kind === 'choice' ? (
                   <div className="choice-answer">
                     {view === 'answers' ? (
-                      <strong>{choices[Number(item.answer) - 1]}</strong>
+                      <strong><MathText value={choices[Number(item.answer) - 1]} /></strong>
                     ) : (
                       choices.map((choice, index) => (
                         <button
@@ -268,7 +268,7 @@ export default function AlgebraBasicsGenerator() {
                           className={value === String(index + 1) ? 'selected' : ''}
                           onClick={() => changeAnswer(item.id, String(index + 1))}
                         >
-                          {choice}
+                          <MathText value={choice} />
                         </button>
                       ))
                     )}

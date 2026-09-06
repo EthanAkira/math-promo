@@ -1694,11 +1694,99 @@ html[dir="rtl"] .language-picker-academic select {
 .geometry-problem .word-calculation p { min-height: 44px; }
 .geometry-explanation { min-height: 0 !important; margin: 8px 0 0; padding: 8px 10px; border-left: 3px solid var(--red-pen); background: color-mix(in srgb, var(--paper) 82%, white); color: var(--ink-soft); font-size: 12px; line-height: 1.55; }
 .geometry-explanation b { display: inline-block; margin-right: 7px; color: var(--red-pen); }
-.mixed-fraction { display: inline-flex; align-items: center; gap: .16em; margin: 0 .08em; vertical-align: middle; white-space: nowrap; }
-.whole-number { display: inline-block; }
-.stacked-fraction { display: inline-grid; grid-template-rows: 1fr 1fr; align-items: center; min-width: 1.35em; line-height: 1; text-align: center; vertical-align: middle; }
-.fraction-numerator { padding: 0 .12em .1em; border-bottom: .075em solid currentColor; }
-.fraction-denominator { padding: .1em .12em 0; }
+.signed-fraction {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.12em;
+  margin: 0 0.1em;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.mixed-fraction {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18em;
+  margin: 0 0.1em;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.whole-number {
+  display: inline-block;
+  font-weight: 600;
+}
+.stacked-fraction {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  vertical-align: -0.38em;
+  padding: 0 0.14em;
+  min-width: 1.15em;
+  line-height: 1.05;
+  text-align: center;
+}
+.fraction-numerator {
+  display: block;
+  width: 100%;
+  padding: 0 0.12em 0.08em;
+  border-bottom: 0.08em solid currentColor;
+  text-align: center;
+  font-size: 0.88em;
+  line-height: 1;
+}
+.fraction-denominator {
+  display: block;
+  width: 100%;
+  padding: 0.08em 0.12em 0;
+  text-align: center;
+  font-size: 0.88em;
+  line-height: 1;
+}
+.math-perm-comb {
+  display: inline-flex;
+  align-items: baseline;
+  vertical-align: baseline;
+  margin: 0 0.12em;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.math-perm-sub-left {
+  display: inline-block;
+  font-size: 0.72em;
+  line-height: 0;
+  vertical-align: -0.22em;
+  margin-right: 0.06em;
+  font-style: normal;
+}
+.math-perm-op {
+  display: inline-block;
+  font-size: 1.02em;
+  font-weight: 700;
+  font-family: "Times New Roman", "Cambria Math", serif;
+  font-style: normal;
+  line-height: 1;
+  padding: 0 0.02em;
+}
+.math-perm-sub-right {
+  display: inline-block;
+  font-size: 0.72em;
+  line-height: 0;
+  vertical-align: -0.22em;
+  margin-left: 0.06em;
+  font-style: normal;
+}
+.math-sup {
+  font-size: 0.72em;
+  line-height: 0;
+  vertical-align: 0.55em;
+  font-style: normal;
+}
+.math-sub {
+  font-size: 0.72em;
+  line-height: 0;
+  vertical-align: -0.25em;
+  font-style: normal;
+}
 .result-mark { position: absolute; right: 8px; bottom: 8px; font-size: 10px; font-weight: 700; }
 .result-mark.correct { color: var(--chalk-green); }
 .result-mark.wrong { color: var(--red-pen); }

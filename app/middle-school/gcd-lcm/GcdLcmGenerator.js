@@ -238,7 +238,7 @@ export default function GcdLcmGenerator() {
           return <article className="vertical-problem word-problem prime-problem" key={item.id}>
             <span className="problem-number">{item.id}</span>
             <div className="word-calculation">
-              <p>{foreign && item.promptEn ? item.promptEn : item.prompt}</p>
+              <p><MathText value={foreign && item.promptEn ? item.promptEn : item.prompt} /></p>
               {item.diagram ? <RpmDiagram diagram={item.diagram} /> : null}
               {item.expression ? <strong className="word-expression font-mono"><PowerText value={item.expression} /></strong> : null}
               <div className="word-answer">

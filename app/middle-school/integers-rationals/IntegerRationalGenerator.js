@@ -271,7 +271,7 @@ export default function IntegerRationalGenerator() {
           return <article className="vertical-problem word-problem prime-problem" key={item.id}>
             <span className="problem-number">{item.id}</span>
             <div className="word-calculation">
-              <p>{prompt}</p>
+              <p><MathText value={prompt} /></p>
               {item.diagram ? <RpmDiagram diagram={item.diagram} /> : item.kind === 'number-line' ? <NumberLine line={item.line} /> : expression ? <strong className="word-expression font-mono"><RationalText value={expression} /></strong> : null}
               <div className="word-answer">
                 <span>{tr(language, 'answer')}</span>

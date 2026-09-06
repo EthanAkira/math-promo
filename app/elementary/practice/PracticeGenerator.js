@@ -88,7 +88,7 @@ function ProblemBody({ problem, view, value, checked, onChange, language }) {
     const prompt = isNonKorean(language) && problem.promptEn ? problem.promptEn : problem.prompt;
     const expression = isNonKorean(language) && problem.expressionEn ? problem.expressionEn : problem.expression;
     return <div className="word-calculation">
-      <p>{prompt}</p>
+      <p><MathText value={prompt} /></p>
       {hasProblemVisual(problem) ? <ProblemVisual item={problem} /> : null}
       {expression ? <strong className="word-expression font-mono"><MathText value={expression} /></strong> : null}
       <div className="word-answer"><span>{isNonKorean(language) ? 'Answer' : '답'}</span>{input}{problem.answerSuffix ? <em>{problem.answerSuffix}</em> : null}</div>
