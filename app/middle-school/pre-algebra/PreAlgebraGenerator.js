@@ -160,15 +160,43 @@ export default function PreAlgebraGenerator() {
   const unitLabel = localizePreAlgebraUnit(unit, language);
   const unitDescription = localizePreAlgebraUnit(unit, language, 'description');
   const profileLabel = preAlgebraProfileLabel(profile, language);
-  const koreanProfiles = PRE_ALGEBRA_PROFILES.filter((item) => item.id.startsWith('kr-'));
+  const koreanMiddleProfiles = PRE_ALGEBRA_PROFILES.filter((item) => item.id.startsWith('kr-middle-'));
+  const koreanHighProfiles = PRE_ALGEBRA_PROFILES.filter((item) => item.id.startsWith('kr-high-'));
   const internationalProfiles = PRE_ALGEBRA_PROFILES.filter((item) => !item.id.startsWith('kr-'));
 
   return <div className="worksheet-app pre-algebra-app">
     <section className="worksheet-controls pre-algebra-controls no-print" aria-label={tr(language, 'worksheetSettings')}>
-      <div><label htmlFor="pre-algebra-profile">{copy.controls[0]}</label><select id="pre-algebra-profile" value={profileId} onChange={(event) => chooseProfile(event.target.value)}><optgroup label={copy.controls[2]}>{koreanProfiles.map((item) => <option key={item.id} value={item.id}>{preAlgebraProfileLabel(item, language)}</option>)}</optgroup><optgroup label={copy.controls[3]}>{internationalProfiles.map((item) => <option key={item.id} value={item.id}>{preAlgebraProfileLabel(item, language)}</option>)}</optgroup></select><p>{foreign ? profile.descriptionEn : profile.description}</p></div>
-      <div><label htmlFor="pre-algebra-category">{copy.controls[1]}</label><select id="pre-algebra-category" value={category} onChange={(event) => chooseCategory(event.target.value)}>{categories.map((item) => <option key={item} value={item}>{preAlgebraCategory(item, language)}</option>)}</select></div>
-      <div><label htmlFor="pre-algebra-unit">{tr(language, 'skill')}</label><select id="pre-algebra-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>{visibleUnits.map((item) => <option key={item.id} value={item.id}>{localizePreAlgebraUnit(item, language)}</option>)}</select><p>{unitDescription}</p></div>
-      <div className="control-actions"><button className="button button-secondary" onClick={() => window.print()}>{tr(language, 'printPdf')}</button><button className="button button-secondary" onClick={() => changeView(view === 'problems' ? 'answers' : 'problems')}>{tr(language, view === 'problems' ? 'answerKey' : 'worksheet')}</button><button className="button button-primary" onClick={() => reset(createSeed())}>{tr(language, 'newWorksheet')}</button></div>
+      <div className="control-group control-group-profile">
+        <label htmlFor="pre-algebra-profile">{copy.controls[0]}</label>
+        <select id="pre-algebra-profile" value={profileId} onChange={(event) => chooseProfile(event.target.value)}>
+          <optgroup label={copy.controls[2] || '한국 중학교'}>
+            {koreanMiddleProfiles.map((item) => <option key={item.id} value={item.id}>{preAlgebraProfileLabel(item, language)}</option>)}
+          </optgroup>
+          <optgroup label={copy.controls[3] || '한국 고등학교 (2022 개정)'}>
+            {koreanHighProfiles.map((item) => <option key={item.id} value={item.id}>{preAlgebraProfileLabel(item, language)}</option>)}
+          </optgroup>
+          <optgroup label={copy.controls[4] || '국제학교 및 해외과정'}>
+            {internationalProfiles.map((item) => <option key={item.id} value={item.id}>{preAlgebraProfileLabel(item, language)}</option>)}
+          </optgroup>
+        </select>
+      </div>
+      <div className="control-group control-group-domain">
+        <label htmlFor="pre-algebra-category">{copy.controls[1]}</label>
+        <select id="pre-algebra-category" value={category} onChange={(event) => chooseCategory(event.target.value)}>
+          {categories.map((item) => <option key={item} value={item}>{preAlgebraCategory(item, language)}</option>)}
+        </select>
+      </div>
+      <div className="control-group control-group-skill">
+        <label htmlFor="pre-algebra-unit">{tr(language, 'skill')}</label>
+        <select id="pre-algebra-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>
+          {visibleUnits.map((item) => <option key={item.id} value={item.id}>{localizePreAlgebraUnit(item, language)}</option>)}
+        </select>
+      </div>
+      <div className="control-actions">
+        <button className="button button-secondary" onClick={() => window.print()}>{tr(language, 'printPdf')}</button>
+        <button className="button button-secondary" onClick={() => changeView(view === 'problems' ? 'answers' : 'problems')}>{tr(language, view === 'problems' ? 'answerKey' : 'worksheet')}</button>
+        <button className="button button-primary" onClick={() => reset(createSeed())}>{tr(language, 'newWorksheet')}</button>
+      </div>
     </section>
 
     <div className={`worksheet-paper middle-worksheet ${view === 'answers' ? 'answer-sheet' : ''}`}>
@@ -197,8 +225,11 @@ export default function PreAlgebraGenerator() {
     {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Fractions: 3/4 · Coordinates: 2,-3 · Inequalities: x<=4' : '분수는 3/4, 좌표는 2,-3, 부등식은 x<=4처럼 입력할 수 있습니다.'}</p></div><button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
 
     <style jsx global>{`
-      .pre-algebra-controls { grid-template-columns: minmax(190px,.8fr) minmax(150px,.55fr) minmax(240px,1fr) auto; align-items: end; }
-      .pre-algebra-controls > div { min-width: 0; }
+      .pre-algebra-controls { display: flex; align-items: flex-start; gap: 16px; }
+      .pre-algebra-controls .control-group-profile { flex: 1.2; min-width: 220px; }
+      .pre-algebra-controls .control-group-domain { flex: 0.85; min-width: 140px; }
+      .pre-algebra-controls .control-group-skill { flex: 1.35; min-width: 220px; }
+      .pre-algebra-controls .control-actions { margin-top: 26px; flex-shrink: 0; }
       .pre-algebra-controls select { width: 100%; }
       .generated-math-table { border-collapse: collapse; margin: 12px auto; min-width: 210px; text-align: center; background: #fff; }
       .generated-math-table th,.generated-math-table td { border: 1.5px solid #64748b; padding: 6px 12px; }
@@ -218,8 +249,21 @@ export default function PreAlgebraGenerator() {
       .generated-matrix-operation { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 14px auto; }
       .matrix-wrap { display: grid; grid-template-columns: repeat(2,34px); gap: 5px; padding: 5px 10px; border-left: 2px solid #334155; border-right: 2px solid #334155; text-align: center; font-family: ui-monospace,monospace; }
       .generated-explanation { margin: 8px 0 0; padding: 8px 10px; border-left: 3px solid #66a3a0; background: #f3faf9; color: #334155; font-size: 12px; line-height: 1.55; }
-      @media (max-width: 900px) { .pre-algebra-controls { grid-template-columns: 1fr 1fr; } .pre-algebra-controls .control-actions { grid-column: 1 / -1; } }
-      @media (max-width: 600px) { .pre-algebra-controls { grid-template-columns: 1fr; } .pre-algebra-controls .control-actions { grid-column: auto; } }
+      @media (max-width: 1060px) {
+        .pre-algebra-controls { flex-wrap: wrap; }
+        .pre-algebra-controls .control-group-profile,
+        .pre-algebra-controls .control-group-domain,
+        .pre-algebra-controls .control-group-skill { flex: 1 1 calc(33.333% - 12px); min-width: 180px; }
+        .pre-algebra-controls .control-actions { margin-top: 8px; width: 100%; justify-content: flex-end; }
+      }
+      @media (max-width: 768px) {
+        .pre-algebra-controls { flex-direction: column; align-items: stretch; gap: 12px; }
+        .pre-algebra-controls .control-group-profile,
+        .pre-algebra-controls .control-group-domain,
+        .pre-algebra-controls .control-group-skill { width: 100%; min-width: 0; }
+        .pre-algebra-controls .control-actions { margin-top: 6px; width: 100%; justify-content: stretch; }
+        .pre-algebra-controls .control-actions .button { flex: 1 1 110px; }
+      }
       @media print { .generated-explanation { break-inside: avoid; } }
     `}</style>
   </div>;

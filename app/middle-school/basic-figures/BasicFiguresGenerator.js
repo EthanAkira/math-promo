@@ -250,11 +250,33 @@ export default function BasicFiguresGenerator() {
   const unitLabel = localizeBasicFigureUnit(unit, contentLocale);
   const unitDescription = localizeBasicFigureUnit(unit, contentLocale, 'description');
 
+  const koreanProfiles = GEOMETRY_PROFILES.filter((item) => ['kr', 'csat'].includes(item.id));
+  const internationalProfiles = GEOMETRY_PROFILES.filter((item) => !['kr', 'csat'].includes(item.id));
+
   return <div className="worksheet-app">
     <section className="worksheet-controls no-print" aria-label={tr(language, 'worksheetSettings')}>
-      <div><label htmlFor="geometry-profile">{language === 'ko' ? '교육과정 · 시험' : 'Curriculum · exam'}</label><select id="geometry-profile" value={profileId} onChange={(event) => chooseProfile(event.target.value)}>{GEOMETRY_PROFILES.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select><p>{profile.description}</p></div>
-      <div><label htmlFor="basic-figures-unit">{tr(language, 'skill')}</label><select id="basic-figures-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>{availableUnits.map((item) => <option key={item.id} value={item.id}>{localizeBasicFigureUnit(item, contentLocale)}</option>)}</select><p>{unitDescription}</p></div>
-      <div className="control-actions"><button className="button button-secondary" onClick={() => window.print()}>{tr(language, 'printPdf')}</button><button className="button button-secondary" onClick={() => changeView(view === 'problems' ? 'answers' : 'problems')}>{tr(language, view === 'problems' ? 'answerKey' : 'worksheet')}</button><button className="button button-primary" onClick={() => reset(createSeed())}>{tr(language, 'newWorksheet')}</button></div>
+      <div className="control-group control-group-profile">
+        <label htmlFor="geometry-profile">{language === 'ko' ? '교육과정 · 시험' : 'Curriculum · exam'}</label>
+        <select id="geometry-profile" value={profileId} onChange={(event) => chooseProfile(event.target.value)}>
+          <optgroup label={language === 'ko' ? '🇰🇷 한국 교육과정 (중등 · 고등)' : '🇰🇷 Korea Curricula (Middle & High)'}>
+            {koreanProfiles.map((item) => <option key={item.id} value={item.id}>{language === 'ko' ? item.label : (item.labelEn || item.label)}</option>)}
+          </optgroup>
+          <optgroup label={language === 'ko' ? '🌐 국제학교 및 경시대회' : '🌐 International & Competitions'}>
+            {internationalProfiles.map((item) => <option key={item.id} value={item.id}>{language === 'ko' ? item.label : (item.labelEn || item.label)}</option>)}
+          </optgroup>
+        </select>
+      </div>
+      <div className="control-group control-group-skill">
+        <label htmlFor="basic-figures-unit">{tr(language, 'skill')}</label>
+        <select id="basic-figures-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>
+          {availableUnits.map((item) => <option key={item.id} value={item.id}>{localizeBasicFigureUnit(item, contentLocale)}</option>)}
+        </select>
+      </div>
+      <div className="control-actions">
+        <button className="button button-secondary" onClick={() => window.print()}>{tr(language, 'printPdf')}</button>
+        <button className="button button-secondary" onClick={() => changeView(view === 'problems' ? 'answers' : 'problems')}>{tr(language, view === 'problems' ? 'answerKey' : 'worksheet')}</button>
+        <button className="button button-primary" onClick={() => reset(createSeed())}>{tr(language, 'newWorksheet')}</button>
+      </div>
     </section>
 
     <div className="tier-toggle no-print" role="tablist" aria-label={tr(language, 'tierAdvanced')}>

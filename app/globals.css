@@ -1510,12 +1510,14 @@ html[dir="rtl"] .language-picker-academic select {
 .grade-tabs { display: flex; gap: 6px; padding: 8px; margin-bottom: 10px; background: rgba(255,254,251,.95); border: 1px solid var(--paper-line); border-radius: var(--radius); }
 .grade-tabs button { flex: 1; min-height: 46px; color: var(--ink-soft); background: transparent; border: 1px solid transparent; border-radius: 9px; font: inherit; font-weight: 700; cursor: pointer; }
 .grade-tabs button.active { color: var(--card-bg); background: var(--chalk-green); border-color: var(--chalk-green); }
-.worksheet-controls { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; padding: 18px 20px; margin-bottom: 20px; background: rgba(255,254,251,.95); border: 1px solid var(--paper-line); border-radius: var(--radius); box-shadow: var(--shadow); }
-.worksheet-controls label { display: block; margin-bottom: 6px; color: var(--chalk-green); font-size: 13px; font-weight: 700; }
-.worksheet-controls select { width: min(420px,80vw); padding: 11px 38px 11px 12px; color: var(--ink); background: var(--card-bg); border: 1px solid var(--paper-line); border-radius: 9px; font: inherit; font-weight: 600; }
-.worksheet-controls p { margin: 5px 0 0; color: var(--ink-soft); font-size: 12px; }
-.control-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
-.button { min-height: 44px; padding: 10px 16px; border-radius: 9px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+.worksheet-controls { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px; padding: 18px 20px; margin-bottom: 20px; background: rgba(255,254,251,.95); border: 1px solid var(--paper-line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.worksheet-controls > div:not(.control-actions) { display: flex; flex-direction: column; flex: 1 1 200px; min-width: 0; }
+.worksheet-controls label { display: block; height: 20px; line-height: 20px; margin-bottom: 6px; color: var(--chalk-green); font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.worksheet-controls select { width: 100%; height: 44px; line-height: 42px; padding: 0 34px 0 12px; box-sizing: border-box; color: var(--ink); background: var(--card-bg); border: 1px solid var(--paper-line); border-radius: 9px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: border-color .15s ease, box-shadow .15s ease; }
+.worksheet-controls select:focus { outline: none; border-color: var(--chalk-green); box-shadow: 0 0 0 3px var(--chalk-green-soft); }
+.worksheet-controls p { display: none !important; }
+.control-actions { display: flex; align-items: center; gap: 8px; margin-top: 26px; flex-shrink: 0; }
+.button { height: 44px; min-height: 44px; padding: 0 16px; border-radius: 9px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; white-space: nowrap; }
 .button-primary { color: var(--card-bg); background: var(--red-pen); border: 1px solid var(--red-pen); }
 .button-primary:hover { background: var(--red-pen-dark); }
 .button-secondary { color: var(--chalk-green); background: var(--card-bg); border: 1px solid var(--chalk-green); }
@@ -1735,10 +1737,11 @@ html[dir="rtl"] .generated-proportion-graph {
   .academic-inquiry-box { flex-direction: column; text-align: center; }
   .inquiry-call-btn { width: 100%; text-align: center; }
   .worksheet-page { padding: 24px 10px 0; }
-  .worksheet-controls { align-items: stretch; flex-direction: column; }
+  .worksheet-controls { align-items: stretch; flex-direction: column; gap: 12px; }
+  .worksheet-controls > div:not(.control-actions) { width: 100%; min-width: 0; }
   .worksheet-controls select { width: 100%; }
-  .control-actions { justify-content: stretch; }
-  .control-actions .button { flex: 1 1 130px; }
+  .control-actions { margin-top: 6px; justify-content: stretch; width: 100%; }
+  .control-actions .button { flex: 1 1 110px; }
   .worksheet-heading { grid-template-columns: 1fr; }
   .worksheet-brand,.worksheet-title { border-right: 0; border-bottom: 1px solid var(--ink); }
   .worksheet-brand { flex-direction: row; align-items: center; justify-content: flex-start; gap: 8px; }
