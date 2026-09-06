@@ -540,6 +540,128 @@ export const GENERATORS = {
   },
 
   // -----------------------------------------------------------------------
+  // BASES & DIGITS (Essential Guide to Competition Math (Fundamentals) Topic 5:
+  // Base Expression and Modular Expression / Chinese Remainder Theorem)
+  // -----------------------------------------------------------------------
+  'bases-digits': (lang) => {
+    const variant = pickRandom(['to-base', 'from-base', 'digit-sum-base', 'crt-simple']);
+
+    const toBase = (n, b) => {
+      if (n === 0) return '0';
+      const digits = [];
+      let x = n;
+      while (x > 0) {
+        digits.unshift(x % b);
+        x = Math.floor(x / b);
+      }
+      return digits.join('');
+    };
+    const fromBase = (str, b) => String(str).split('').reduce((acc, ch) => acc * b + Number(ch), 0);
+
+    if (variant === 'to-base') {
+      const base = pickRandom([2, 3, 4, 5, 6, 7, 8, 9]);
+      const N = randInt(20, 200);
+      const ans = toBase(N, base);
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return toBase(N + 1, base);
+        if (i === 2) return toBase(Math.max(1, N - 1), base);
+        if (i === 3) return toBase(N, base === 9 ? 8 : base + 1);
+        return toBase(N + i + 2, base);
+      });
+
+      const question = lang === 'ko'
+        ? `십진법 수 $${N}$을 $${base}$진법으로 나타내세요.`
+        : `Express the decimal number $${N}$ in base $${base}$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[Essential Guide to Competition Math (Fundamentals) Topic 5.3 진법 변환]**\n\n$${N}$을 $${base}$로 계속 나누어 나머지를 거꾸로 읽으면 $${base}$진법 표현을 얻습니다:\n\n$$${N}_{10} = ${ans}_{${base}}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+        : `**[Essential Guide to Competition Math (Fundamentals) Topic 5.3 Base Conversion]**\n\nRepeatedly divide $${N}$ by $${base}$ and read the remainders in reverse to get the base-$${base}$ representation:\n\n$$${N}_{10} = ${ans}_{${base}}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'from-base') {
+      const base = pickRandom([2, 3, 4, 5, 6, 7, 8, 9]);
+      const len = randInt(3, 4);
+      const digits = [randInt(1, base - 1)];
+      for (let k = 1; k < len; k += 1) digits.push(randInt(0, base - 1));
+      const numeral = digits.join('');
+      const ans = fromBase(numeral, base);
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return fromBase(numeral, base + 1);
+        if (i === 2) return ans + 1;
+        if (i === 3) return Math.max(0, ans - 1);
+        return ans + (i + 1) * 2;
+      });
+
+      const terms = digits.map((d, idx) => `${d}\\times ${base}^{${len - 1 - idx}}`).join(' + ');
+      const question = lang === 'ko'
+        ? `$${base}$진법으로 나타낸 수 $${numeral}_{${base}}$를 십진법으로 나타내세요.`
+        : `Convert the base-$${base}$ numeral $${numeral}_{${base}}$ to decimal (base 10).`;
+
+      const explanation = lang === 'ko'
+        ? `**[Essential Guide to Competition Math (Fundamentals) Topic 5.3 진법 변환]**\n\n각 자리의 값에 자릿값($${base}$의 거듭제곱)을 곱하여 더합니다:\n\n$$${numeral}_{${base}} = ${terms} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+        : `**[Essential Guide to Competition Math (Fundamentals) Topic 5.3 Base Conversion]**\n\nMultiply each digit by its place value (a power of $${base}$) and sum:\n\n$$${numeral}_{${base}} = ${terms} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'digit-sum-base') {
+      const base = pickRandom([2, 3, 4, 5, 6, 7, 8, 9]);
+      const N = randInt(30, 300);
+      const rep = toBase(N, base);
+      const ans = rep.split('').reduce((s, d) => s + Number(d), 0);
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return ans + 1;
+        if (i === 2) return Math.max(0, ans - 1);
+        if (i === 3) return rep.length;
+        return ans + i + 2;
+      });
+
+      const question = lang === 'ko'
+        ? `십진법 수 $${N}$을 $${base}$진법으로 나타냈을 때, 각 자리 숫자의 합을 구하세요.`
+        : `When the decimal number $${N}$ is written in base $${base}$, what is the sum of its digits?`;
+
+      const explanation = lang === 'ko'
+        ? `**[Essential Guide to Competition Math (Fundamentals) Topic 5.3 진법과 자릿수 합]**\n\n$${N}$을 $${base}$진법으로 나타내면 $${rep}_{${base}}$이므로, 각 자리 숫자의 합은\n\n$$${rep.split('').join(' + ')} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+        : `**[Essential Guide to Competition Math (Fundamentals) Topic 5.3 Digit Sums in Other Bases]**\n\n$${N}$ in base $${base}$ is $${rep}_{${base}}$, so the digit sum is\n\n$$${rep.split('').join(' + ')} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // crt-simple: Chinese Remainder Theorem for two small coprime moduli
+    const m1 = pickRandom([3, 4, 5]);
+    let m2 = pickRandom([4, 5, 7, 9, 11]);
+    while (gcd(m1, m2) !== 1) m2 = pickRandom([4, 5, 7, 9, 11]);
+    const r1 = randInt(1, m1 - 1);
+    const r2 = randInt(1, m2 - 1);
+    let ans = 0;
+    for (let x = 1; x <= m1 * m2; x += 1) {
+      if (x % m1 === r1 && x % m2 === r2) { ans = x; break; }
+    }
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return ans + m1;
+      if (i === 2) return ans + m2;
+      if (i === 3) return Math.max(1, ans - Math.min(m1, m2));
+      return ans + m1 * m2 + i;
+    });
+
+    const question = lang === 'ko'
+      ? `$x$를 $${m1}$으로 나누면 나머지가 $${r1}$이고, $${m2}$로 나누면 나머지가 $${r2}$인 가장 작은 양의 정수 $x$를 구하세요.`
+      : `Find the smallest positive integer $x$ such that $x$ leaves a remainder of $${r1}$ when divided by $${m1}$, and a remainder of $${r2}$ when divided by $${m2}$.`;
+
+    const explanation = lang === 'ko'
+      ? `**[Essential Guide to Competition Math (Fundamentals) Topic 5.2 중국인의 나머지 정리(CRT)]**\n\n$${m1}$과 $${m2}$는 서로소이므로, 두 조건을 동시에 만족하는 해는 $\\text{lcm}(${m1},${m2})=${m1 * m2}$를 주기로 유일하게 존재합니다. $x \\equiv ${r1} \\pmod{${m1}}$을 만족하는 수를 차례로 확인하여 $x \\equiv ${r2} \\pmod{${m2}}$도 만족하는 첫 값을 찾으면:\n\n$$x = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+      : `**[Essential Guide to Competition Math (Fundamentals) Topic 5.2 Chinese Remainder Theorem]**\n\nSince $${m1}$ and $${m2}$ are coprime, a unique solution exists modulo $\\text{lcm}(${m1},${m2})=${m1 * m2}$. Checking numbers $\\equiv ${r1} \\pmod{${m1}}$ in order until one is also $\\equiv ${r2} \\pmod{${m2}}$ gives:\n\n$$x = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
   // 10. PERCENTAGES & FINANCE (Ch 6: Word Problems Related to Percentage)
   // -----------------------------------------------------------------------
   'percentages-money': (lang) => {
@@ -733,7 +855,45 @@ export const GENERATORS = {
   // 14. PROBABILITY
   // -----------------------------------------------------------------------
   'probability': (lang) => {
-    const variant = pickRandom(['dice-sum', 'conditional', 'geometric']);
+    const variant = pickRandom(['dice-sum', 'conditional', 'geometric', 'combinatorial']);
+
+    if (variant === 'combinatorial') {
+      const n = randInt(8, 14);
+      const r = randInt(3, Math.min(6, n - 2));
+      const binom = (a, b) => {
+        if (b < 0 || b > a) return 0;
+        let result = 1;
+        for (let k = 0; k < b; k += 1) result = (result * (a - k)) / (k + 1);
+        return Math.round(result);
+      };
+      const numer = binom(n - 2, r - 2);
+      const denom = binom(n, r);
+      const g = gcd(numer, denom);
+      const num = numer / g;
+      const den = denom / g;
+      const ans = `\\frac{${num}}{${den}}`;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) {
+          const alt = binom(n - 1, r - 1); // only conditioned on one specific person, not both
+          const g1 = gcd(alt, denom);
+          return `\\frac{${alt / g1}}{${denom / g1}}`;
+        }
+        if (i === 2) return `\\frac{2}{${n}}`; // naive guess
+        const gi = gcd(num, den + i);
+        return `\\frac{${num / gi}}{${(den + i) / gi}}`;
+      });
+
+      const question = lang === 'ko'
+        ? `학생 $${n}$명 중에서 무작위로 $${r}$명을 뽑아 위원회를 구성합니다. 특정한 두 학생 A, B가 모두 위원회에 뽑힐 확률은 얼마입니까?`
+        : `A committee of $${r}$ people is chosen at random from a group of $${n}$ people. What is the probability that two specific people, A and B, are both chosen?`;
+
+      const explanation = lang === 'ko'
+        ? `**[Essential Guide to Competition Math (Fundamentals) Topic 3.2 조합적 확률]**\n\n전체 경우의 수는 $\\binom{${n}}{${r}}$이고, A와 B가 모두 뽑히는 경우의 수는 나머지 $${n - 2}$명 중 $${r - 2}$명을 뽑는 $\\binom{${n - 2}}{${r - 2}}$입니다:\n\n$$P = \\frac{\\binom{${n - 2}}{${r - 2}}}{\\binom{${n}}{${r}}} = \\frac{${numer}}{${denom}} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+        : `**[Essential Guide to Competition Math (Fundamentals) Topic 3.2 Combinatorial Probability]**\n\nThe total number of committees is $\\binom{${n}}{${r}}$, and the number with both A and B is $\\binom{${n - 2}}{${r - 2}}$ (choosing the rest from the remaining $${n - 2}$ people):\n\n$$P = \\frac{\\binom{${n - 2}}{${r - 2}}}{\\binom{${n}}{${r}}} = \\frac{${numer}}{${denom}} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'dice-sum') {
       const targetSum = pickRandom([7, 8, 9, 10]);
@@ -1059,6 +1219,42 @@ export const GENERATORS = {
   // 18. SETS & VENN DIAGRAMS (Vol 2 Ch 10: Sets and Venn Diagrams)
   // -----------------------------------------------------------------------
   'venn-sets': (lang) => {
+    if (Math.random() < 0.35) {
+      // triple-union: build 7 mutually exclusive regions directly so every derived count
+      // (|A|, |B|, |C|, pairwise and triple intersections, union) is automatically consistent.
+      const onlyA = randInt(8, 20);
+      const onlyB = randInt(8, 20);
+      const onlyC = randInt(8, 20);
+      const ab = randInt(3, 8);
+      const ac = randInt(3, 8);
+      const bc = randInt(3, 8);
+      const abc = randInt(1, 4);
+      const A = onlyA + ab + ac + abc;
+      const B = onlyB + ab + bc + abc;
+      const C = onlyC + ac + bc + abc;
+      const AB = ab + abc;
+      const AC = ac + abc;
+      const BC = bc + abc;
+      const union = onlyA + onlyB + onlyC + ab + ac + bc + abc;
+
+      const { choices, correctIdx } = buildChoices(union, (i) => {
+        if (i === 1) return A + B + C; // forgot to subtract any overlaps at all
+        if (i === 2) return A + B + C - AB - AC - BC; // forgot to add back the triple overlap
+        if (i === 3) return union - abc;
+        return union + i + 2;
+      });
+
+      const question = lang === 'ko'
+        ? `어느 동아리 박람회에서 학생들의 관심사를 조사했습니다. 축구에 관심 있는 학생은 $${A}$명, 농구는 $${B}$명, 야구는 $${C}$명입니다. 축구와 농구 모두에 관심 있는 학생은 $${AB}$명, 축구와 야구 모두는 $${AC}$명, 농구와 야구 모두는 $${BC}$명이며, 세 가지 모두에 관심 있는 학생은 $${abc}$명입니다. 적어도 한 가지 운동에 관심 있는 학생은 모두 몇 명입니까?`
+        : `At a club fair, $${A}$ students are interested in soccer, $${B}$ in basketball, and $${C}$ in baseball. $${AB}$ are interested in both soccer and basketball, $${AC}$ in both soccer and baseball, $${BC}$ in both basketball and baseball, and $${abc}$ in all three. How many students are interested in at least one of the three sports?`;
+
+      const explanation = lang === 'ko'
+        ? `**[Essential Guide to Competition Math (Fundamentals) Topic 1.2 세 집합의 포함배제의 원리]**\n\n$$|A\\cup B\\cup C| = |A|+|B|+|C| - |A\\cap B| - |A\\cap C| - |B\\cap C| + |A\\cap B\\cap C|$$\n\n$$= ${A}+${B}+${C} - ${AB} - ${AC} - ${BC} + ${abc} = ${union}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${union}$명)** 입니다.`
+        : `**[Essential Guide to Competition Math (Fundamentals) Topic 1.2 Three-Set Inclusion-Exclusion]**\n\n$$|A\\cup B\\cup C| = |A|+|B|+|C| - |A\\cap B| - |A\\cap C| - |B\\cap C| + |A\\cap B\\cap C|$$\n\n$$= ${A}+${B}+${C} - ${AB} - ${AC} - ${BC} + ${abc} = ${union}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${union})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
     const total = randInt(40, 90);
     const neither = randInt(5, 15);
     const inUnion = total - neither;
@@ -1248,7 +1444,33 @@ export const GENERATORS = {
     const variant = pickRandom(['inclusive-range', 'evenly-spaced', 'digit-count', 'casework-complements']);
 
     if (variant === 'casework-complements') {
-      const sub = pickRandom(['at-least-one-flip', 'not-divisible']);
+      const sub = pickRandom(['at-least-one-flip', 'not-divisible', 'direct-casework']);
+
+      if (sub === 'direct-casework') {
+        // Direct case enumeration (not a complement): case on y = 1, 2, 3, ... and count how
+        // many keep x = N - 2y a positive integer. Computed by an explicit loop, not a closed
+        // formula, so there's no off-by-one risk to verify.
+        const N = randInt(12, 30);
+        let correctAns = 0;
+        for (let y = 1; N - 2 * y >= 1; y += 1) correctAns += 1;
+
+        const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+          if (i === 1) return correctAns + 1;
+          if (i === 2) return Math.max(1, correctAns - 1);
+          if (i === 3) return Math.floor(N / 2);
+          return correctAns + i + 2;
+        });
+
+        const question = lang === 'ko'
+          ? `$x + 2y = ${N}$을 만족하는 양의 정수 순서쌍 $(x, y)$는 모두 몇 개입니까?`
+          : `How many ordered pairs of positive integers $(x, y)$ satisfy $x + 2y = ${N}$?`;
+
+        const explanation = lang === 'ko'
+          ? `**[Essential Guide to Competition Math (Fundamentals) Topic 1.1 경우 나누기(Casework)]**\n\n$y=1, 2, 3, \\ldots$로 경우를 나누어 $x=${N}-2y$가 양의 정수가 되는 $y$의 값을 세면 됩니다. $y$가 커질수록 $x$가 줄어들다가 $0$ 이하가 되면 멈추므로, 총 **$${correctAns}$가지**입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${correctAns}$가지)** 입니다.`
+          : `**[Essential Guide to Competition Math (Fundamentals) Topic 1.1 Casework]**\n\nCase on $y=1,2,3,\\ldots$: each gives $x=${N}-2y$, which stays a positive integer until it drops to $0$ or below. Counting these cases gives **${correctAns}** pairs.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${correctAns})**.`;
+
+        return { question, choices, correctIdx, explanation };
+      }
 
       if (sub === 'at-least-one-flip') {
         const N = randInt(4, 8);
@@ -1374,7 +1596,51 @@ export const GENERATORS = {
   },
 
   'angles-plane-figures': (lang) => {
-    const variant = pickRandom(['parallel-transversal', 'triangle-angle-sum']);
+    const variant = pickRandom(['parallel-transversal', 'triangle-angle-sum', 'angle-bisector']);
+
+    if (variant === 'angle-bisector') {
+      // Build AB, AC, BD, DC from a shared ratio r1:r2 so BD/DC = AB/AC holds by construction,
+      // with scale1 > scale2 guaranteeing BC < AB + AC (a valid triangle) — verified, not assumed.
+      let r1;
+      let r2;
+      let scale1;
+      let scale2;
+      let ab;
+      let ac;
+      let BD;
+      let DC;
+      let BCtotal;
+      let attempts = 0;
+      do {
+        r1 = randInt(1, 5);
+        r2 = randInt(1, 5);
+        scale2 = randInt(2, 5);
+        scale1 = scale2 + randInt(2, 5);
+        ab = r1 * scale1;
+        ac = r2 * scale1;
+        BD = r1 * scale2;
+        DC = r2 * scale2;
+        BCtotal = BD + DC;
+        attempts += 1;
+      } while ((ab + ac <= BCtotal || ab + BCtotal <= ac || ac + BCtotal <= ab) && attempts < 30);
+
+      const { choices, correctIdx } = buildChoices(BD, (i) => {
+        if (i === 1) return DC;
+        if (i === 2) return Math.round((BCtotal * ac) / (ab + ac));
+        if (i === 3) return BD + 2;
+        return Math.max(1, BD - 2 - i);
+      });
+
+      const question = lang === 'ko'
+        ? `삼각형 $ABC$에서 $\\overline{AD}$가 $\\angle A$의 이등분선이고 $D$는 $\\overline{BC}$ 위에 있습니다. $AB=${ab}$, $AC=${ac}$, $BC=${BCtotal}$일 때, $BD$의 길이를 구하세요.`
+        : `In triangle $ABC$, $\\overline{AD}$ bisects $\\angle A$ with $D$ on $\\overline{BC}$. If $AB=${ab}$, $AC=${ac}$, and $BC=${BCtotal}$, find $BD$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[Essential Guide to Competition Math (Fundamentals) Topic 6.2 각의 이등분선 정리]**\n\n각의 이등분선 정리에 의해 $\\frac{BD}{DC}=\\frac{AB}{AC}=\\frac{${ab}}{${ac}}$입니다. $BD+DC=${BCtotal}$이므로 비례식을 풀면:\n\n$$BD = ${BCtotal} \\times \\frac{${ab}}{${ab}+${ac}} = ${BD}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+        : `**[Essential Guide to Competition Math (Fundamentals) Topic 6.2 Angle Bisector Theorem]**\n\nBy the Angle Bisector Theorem, $\\frac{BD}{DC}=\\frac{AB}{AC}=\\frac{${ab}}{${ac}}$. Since $BD+DC=${BCtotal}$, solving the proportion gives:\n\n$$BD = ${BCtotal} \\times \\frac{${ab}}{${ab}+${ac}} = ${BD}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'parallel-transversal') {
       const given = randInt(30, 150);
@@ -1433,6 +1699,36 @@ export const GENERATORS = {
   },
 
   'quadrilaterals-polygons': (lang) => {
+    if (Math.random() < 0.35) {
+      // cyclic-quadrilateral: opposite angles of a cyclic quadrilateral are supplementary
+      const angleA = randInt(50, 110);
+      const angleB = randInt(60, 120);
+      const angleC = 180 - angleA;
+      const angleD = 180 - angleB;
+      const askC = Math.random() < 0.5;
+      const given = askC ? angleA : angleB;
+      const ans = askC ? angleC : angleD;
+      const givenLabel = askC ? 'A' : 'B';
+      const targetLabel = askC ? 'C' : 'D';
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return given;
+        if (i === 2) return Math.max(1, 360 - given - ans);
+        if (i === 3) return ans + randInt(5, 15);
+        return Math.max(1, ans - randInt(5, 15) - i);
+      });
+
+      const question = lang === 'ko'
+        ? `사각형 $ABCD$가 원에 내접합니다. $\\angle ${givenLabel} = ${given}^\\circ$일 때, $\\angle ${targetLabel}$의 크기를 구하세요.`
+        : `Quadrilateral $ABCD$ is inscribed in a circle. If $\\angle ${givenLabel} = ${given}^\\circ$, find $\\angle ${targetLabel}$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[Essential Guide to Competition Math (Fundamentals) Topic 7.1 원에 내접하는 사각형]**\n\n원에 내접하는 사각형의 마주보는 두 각의 크기의 합은 $180^\\circ$입니다:\n\n$$\\angle ${givenLabel} + \\angle ${targetLabel} = 180^\\circ \\implies \\angle ${targetLabel} = 180^\\circ - ${given}^\\circ = ${ans}^\\circ$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+        : `**[Essential Guide to Competition Math (Fundamentals) Topic 7.1 Cyclic Quadrilaterals]**\n\nOpposite angles of a cyclic quadrilateral are supplementary:\n\n$$\\angle ${givenLabel} + \\angle ${targetLabel} = 180^\\circ \\implies \\angle ${targetLabel} = 180^\\circ - ${given}^\\circ = ${ans}^\\circ$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
     const pool = [[2, 3, 6], [2, 4, 4], [3, 3, 3], [2, 2, 2], [2, 2, 4]];
     const [p, q, r] = pickRandom(pool);
     const D = lcm(lcm(p, q), r);
@@ -1461,6 +1757,116 @@ export const GENERATORS = {
     const explanation = lang === 'ko'
       ? `**[Essential Guide to Prealgebra Ch.12 사각형의 내각 비율]**\n\n$m\\angle A = k$라 하면 $m\\angle B=\\frac{k}{${p}}$, $m\\angle C=\\frac{k}{${q}}$, $m\\angle D=\\frac{k}{${r}}$입니다. 분모의 최소공배수 $\\text{lcm}(${p},${q},${r})=${D}$로 통분하고, 사각형의 내각의 합이 $360^\\circ$임을 이용하면\n\n$$k\\left(1+\\frac{1}{${p}}+\\frac{1}{${q}}+\\frac{1}{${r}}\\right) = 360^\\circ \\implies k = ${correctAns}^\\circ$$${degenerateNote}\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${correctAns}^\\circ$)** 입니다.`
       : `**[Essential Guide to Prealgebra Ch.12 Angle Ratios in a Quadrilateral]**\n\nLet $m\\angle A = k$, so $m\\angle B=\\frac{k}{${p}}$, $m\\angle C=\\frac{k}{${q}}$, $m\\angle D=\\frac{k}{${r}}$. Using $\\text{lcm}(${p},${q},${r})=${D}$ as a common denominator and the $360^\\circ$ angle sum:\n\n$$k\\left(1+\\frac{1}{${p}}+\\frac{1}{${q}}+\\frac{1}{${r}}\\right) = 360^\\circ \\implies k = ${correctAns}^\\circ$$${degenerateNote}\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${correctAns}°)**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // CIRCLES & SECTORS (Essential Guide to Competition Math (Fundamentals)
+  // Topic 7.2: Circles)
+  // -----------------------------------------------------------------------
+  'circles': (lang) => {
+    const variant = pickRandom(['sector-area', 'arc-length', 'inscribed-angle', 'tangent-length']);
+    const fmtPi = (n, d) => {
+      const g = gcd(n, d) || 1;
+      const nn = n / g;
+      const dd = d / g;
+      return dd === 1 ? `${nn}\\pi` : `\\frac{${nn}\\pi}{${dd}}`;
+    };
+
+    if (variant === 'sector-area') {
+      const angle = pickRandom([30, 45, 60, 72, 90, 120, 135, 150, 180, 270]);
+      const r = randInt(2, 12);
+      const ans = fmtPi(angle * r * r, 360);
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return fmtPi(angle * r, 360); // forgot to square the radius
+        if (i === 2) return fmtPi(r * r, 1); // used the full circle, ignoring the sector angle
+        if (i === 3) return fmtPi(angle * 4 * r * r, 360); // used diameter instead of radius
+        return fmtPi(angle * r * r, 360 + i);
+      });
+
+      const question = lang === 'ko'
+        ? `반지름이 $${r}$이고 중심각이 $${angle}^\\circ$인 부채꼴의 넓이를 구하세요.`
+        : `Find the area of a sector with radius $${r}$ and central angle $${angle}^\\circ$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[Essential Guide to Competition Math (Fundamentals) Topic 7.2 원과 부채꼴]**\n\n부채꼴의 넓이는 원 전체 넓이에서 중심각이 차지하는 비율만큼입니다:\n\n$$\\frac{${angle}}{360} \\times \\pi \\times ${r}^2 = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+        : `**[Essential Guide to Competition Math (Fundamentals) Topic 7.2 Circles & Sectors]**\n\nA sector's area is the fraction of the full circle's area given by its central angle:\n\n$$\\frac{${angle}}{360} \\times \\pi \\times ${r}^2 = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'arc-length') {
+      const angle = pickRandom([30, 45, 60, 72, 90, 120, 135, 150, 180, 270]);
+      const r = randInt(2, 12);
+      const ans = fmtPi(angle * r, 180);
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return fmtPi(angle * r, 360); // dropped the factor of 2 from the circumference
+        if (i === 2) return fmtPi(angle * r * r, 180); // squared the radius by mistake
+        if (i === 3) return fmtPi(r, 1); // used the radius alone, ignoring the angle fraction
+        return fmtPi(angle * r, 180 + i);
+      });
+
+      const question = lang === 'ko'
+        ? `반지름이 $${r}$이고 중심각이 $${angle}^\\circ$인 부채꼴의 호의 길이를 구하세요.`
+        : `Find the arc length of a sector with radius $${r}$ and central angle $${angle}^\\circ$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[Essential Guide to Competition Math (Fundamentals) Topic 7.2 원과 부채꼴]**\n\n호의 길이는 원 전체 둘레에서 중심각이 차지하는 비율만큼입니다:\n\n$$\\frac{${angle}}{360} \\times 2\\pi \\times ${r} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+        : `**[Essential Guide to Competition Math (Fundamentals) Topic 7.2 Circles & Sectors]**\n\nAn arc's length is the fraction of the full circumference given by its central angle:\n\n$$\\frac{${angle}}{360} \\times 2\\pi \\times ${r} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'inscribed-angle') {
+      const inscribed = pickRandom([20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75]);
+      const central = 2 * inscribed;
+      const askCentral = Math.random() < 0.5;
+      const given = askCentral ? inscribed : central;
+      const ans = askCentral ? central : inscribed;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return given;
+        if (i === 2) return askCentral ? 180 - central : 180 - inscribed;
+        if (i === 3) return ans + randInt(5, 15);
+        return Math.max(1, ans - 10 - i);
+      });
+
+      const question = askCentral
+        ? (lang === 'ko'
+          ? `원 위의 한 점에서 호 $AB$에 대해 만든 원주각이 $${given}^\\circ$일 때, 같은 호 $AB$에 대한 중심각의 크기는 몇 도입니까?`
+          : `An inscribed angle subtending arc $AB$ measures $${given}^\\circ$. What is the measure of the central angle subtending the same arc?`)
+        : (lang === 'ko'
+          ? `호 $AB$에 대한 중심각이 $${given}^\\circ$일 때, 같은 호 $AB$에 대해 원 위의 한 점에서 만든 원주각(내접각)의 크기는 몇 도입니까?`
+          : `The central angle subtending arc $AB$ measures $${given}^\\circ$. What is the measure of an inscribed angle subtending the same arc?`);
+
+      const explanation = lang === 'ko'
+        ? `**[Essential Guide to Competition Math (Fundamentals) Topic 7.2 원주각의 정리]**\n\n원주각의 정리에 의해, 같은 호에 대한 원주각은 중심각의 절반입니다:\n\n$$\\text{중심각} = 2 \\times \\text{원주각} \\implies ${askCentral ? `2 \\times ${given}^\\circ = ${ans}^\\circ` : `\\text{원주각} = \\frac{${given}^\\circ}{2} = ${ans}^\\circ`}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+        : `**[Essential Guide to Competition Math (Fundamentals) Topic 7.2 Inscribed Angle Theorem]**\n\nBy the Inscribed Angle Theorem, an inscribed angle is half the central angle subtending the same arc:\n\n$$${askCentral ? `2 \\times ${given}^\\circ = ${ans}^\\circ` : `\\frac{${given}^\\circ}{2} = ${ans}^\\circ`}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // tangent-length: right triangle formed by the radius, tangent segment, and distance to center
+    const triples = [[3, 4, 5], [6, 8, 10], [5, 12, 13], [9, 12, 15], [8, 15, 17], [7, 24, 25], [10, 24, 26]];
+    const [r, T, d] = pickRandom(triples);
+
+    const { choices, correctIdx } = buildChoices(T, (i) => {
+      if (i === 1) return d - r;
+      if (i === 2) return d + r;
+      if (i === 3) return r;
+      return T + i + 1;
+    });
+
+    const question = lang === 'ko'
+      ? `원의 중심 $O$로부터의 거리가 $${d}$인 점 $P$에서 원에 접선을 그었습니다. 원의 반지름이 $${r}$일 때, 접선의 길이(접점까지의 거리)를 구하세요.`
+      : `Point $P$ is at distance $${d}$ from the center $O$ of a circle with radius $${r}$. A tangent line is drawn from $P$ to the circle. Find the length of the tangent segment (from $P$ to the point of tangency).`;
+
+    const explanation = lang === 'ko'
+      ? `**[Essential Guide to Competition Math (Fundamentals) Topic 7.2 원과 접선]**\n\n반지름은 접점에서 접선과 수직이므로, 반지름 $${r}$, 접선의 길이, 중심까지의 거리 $${d}$는 직각삼각형을 이룹니다:\n\n$$\\text{접선 길이} = \\sqrt{${d}^2 - ${r}^2} = ${T}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+      : `**[Essential Guide to Competition Math (Fundamentals) Topic 7.2 Tangent Lines]**\n\nThe radius is perpendicular to the tangent at the point of tangency, forming a right triangle with the radius $${r}$, the tangent length, and the distance $${d}$ to the center:\n\n$$\\text{Tangent length} = \\sqrt{${d}^2 - ${r}^2} = ${T}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
 
     return { question, choices, correctIdx, explanation };
   },
