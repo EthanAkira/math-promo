@@ -1392,6 +1392,21 @@ html[dir="rtl"] .language-picker-academic select {
   font-family: 'Cinzel', serif;
 }
 
+.contact-qr-card {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.contact-qr-group {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.contact-qr-image {
+  width: 110px;
+  aspect-ratio: 1 / 1;
+}
+
 /* =========================================================
    ACADEMIC SITE FOOTER
 ========================================================= */

@@ -310,6 +310,31 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* Direct Contact QR Banner (KakaoTalk / WhatsApp) */}
+        <section id="direct-contact" style={{ margin: '32px 0 8px', scrollMarginTop: 90 }}>
+          <div className="academic-social-card contact-qr-card">
+            <div className="social-card-content">
+              <div className="social-kicker font-mono">DIRECT CONTACT</div>
+              <h3 className="social-title font-cinzel">카카오톡 · WhatsApp</h3>
+              <p className="social-desc">문제나 사이트에 대한 문의는 아래 QR코드로 편하게 주셔도 됩니다.</p>
+            </div>
+            <div className="contact-qr-group">
+              <div className="social-qr-frame">
+                <div className="social-qr-link">
+                  <img src="/kakaotalk-qr.png" alt="카카오톡 QR 코드" className="social-qr-image contact-qr-image" />
+                  <span className="qr-caption">KakaoTalk</span>
+                </div>
+              </div>
+              <div className="social-qr-frame">
+                <div className="social-qr-link">
+                  <img src="/whatsapp-qr.png" alt="WhatsApp QR 코드" className="social-qr-image contact-qr-image" />
+                  <span className="qr-caption">WhatsApp</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
       <SiteFooter />
     </>
