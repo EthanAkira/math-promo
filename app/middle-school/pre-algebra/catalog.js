@@ -9,6 +9,7 @@ import { ALGEBRA_COMPLETION_UNITS } from './algebraCompletionEngine';
 import { KOREAN_HIGH2_UNITS } from './koreanHigh2Engine';
 import { PRECALCULUS_UNITS } from './precalculusEngine';
 import { KOREAN_HIGH3_UNITS } from './koreanHigh3Engine';
+import { AP_CALCULUS_UNITS } from './apCalculusEngine';
 
 function randomInt(random, min, max) {
   return Math.floor(random() * (max - min + 1)) + min;
@@ -228,22 +229,24 @@ const SOURCE_GROUPS = [
 
 const IMPORTED_UNITS = SOURCE_GROUPS.flatMap(([category, profiles, units]) => units.map((unit) => ({ ...unit, category, profiles })));
 
-export const PRE_ALGEBRA_UNITS = [...IMPORTED_UNITS, ...NEW_UNITS, ...SECONDARY_ALGEBRA_UNITS, ...ALGEBRA_COMPLETION_UNITS, ...KOREAN_HIGH2_UNITS, ...PRECALCULUS_UNITS, ...KOREAN_HIGH3_UNITS];
+export const PRE_ALGEBRA_UNITS = [...IMPORTED_UNITS, ...NEW_UNITS, ...SECONDARY_ALGEBRA_UNITS, ...ALGEBRA_COMPLETION_UNITS, ...KOREAN_HIGH2_UNITS, ...PRECALCULUS_UNITS, ...KOREAN_HIGH3_UNITS, ...AP_CALCULUS_UNITS];
 
 export const PRE_ALGEBRA_PROFILES = [
-  { id: 'kr-middle-1', label: '한국 중학교 1학년', labelEn: 'Korea Middle School 1', description: '2022 개정 교육과정 중1 비기하 핵심 단원 연습', descriptionEn: 'Core non-geometry Grade 7 topics in Korea’s 2022 curriculum' },
-  { id: 'kr-middle-2', label: '한국 중학교 2학년', labelEn: 'Korea Middle School 2', description: '식의 계산·부등식·연립방정식·일차함수·확률 핵심 연습', descriptionEn: 'Expressions, inequalities, systems, linear functions and probability' },
-  { id: 'kr-middle-3', label: '한국 중학교 3학년', labelEn: 'Korea Middle School 3', description: '제곱근·인수분해·이차방정식·이차함수·통계 핵심 연습', descriptionEn: 'Radicals, factoring, quadratics and data transformations' },
-  { id: 'kr-high-1', label: '한국 고1 · 공통수학 (구 수학(상)·(하))', labelEn: 'Korea High 1 · Common Math (Classic Math A/B)', description: '2022 개정 공통수학1·2 핵심 단원 연습 (다항식·방정식·집합·함수·행렬)', descriptionEn: 'Core practice for Korea Common Mathematics 1–2 (Polynomials, Sets, Functions, Matrices)' },
-  { id: 'kr-high-2-algebra', label: '한국 고2 · 대수 (구 수학Ⅰ)', labelEn: 'Korea Grade 11 · Algebra (Classic Math I)', description: '2022 개정 일반 선택 [대수]: 지수·로그, 삼각함수, 수열', descriptionEn: 'Korea 2022 Algebra (General Elective): exponents, logarithms, trigonometry and sequences' },
-  { id: 'kr-high-2-calculus-1', label: '한국 고2 · 미적분Ⅰ (구 수학Ⅱ)', labelEn: 'Korea Grade 11 · Calculus I (Classic Math II)', description: '2022 개정 일반 선택 [미적분Ⅰ]: 극한·연속, 미분, 적분', descriptionEn: 'Korea 2022 Calculus I (General Elective): limits, continuity, derivatives and integrals' },
-  { id: 'kr-high-2-probability-statistics', label: '한국 고2 · 확률과 통계', labelEn: 'Korea Grade 11 · Probability & Statistics', description: '2022 개정 일반 선택 [확률과 통계]: 경우의 수, 확률분포, 통계적 추정', descriptionEn: 'Korea 2022 Probability & Statistics (General Elective): counting, distributions and inference' },
-  { id: 'kr-high-3-calculus-2', label: '한국 고3 · 미적분Ⅱ (구 미적분)', labelEn: 'Korea Grade 12 · Calculus II (Classic Calculus)', description: '2022 개정 진로 선택 [미적분Ⅱ]: 수열의 극한, 여러 가지 미분법과 적분법', descriptionEn: 'Korea 2022 Calculus II (Career Elective): sequence limits, advanced differentiation and integration' },
-  { id: 'kr-high-3-geometry', label: '한국 고3 · 기하', labelEn: 'Korea Grade 12 · Geometry', description: '2022 개정 진로 선택 [기하]: 이차곡선, 벡터, 공간도형과 공간좌표', descriptionEn: 'Korea 2022 Geometry (Career Elective): conics, vectors, spatial geometry and coordinates' },
-  { id: 'pre-algebra', label: 'Pre-Algebra', labelEn: 'Pre-Algebra', description: '미국 Grade 6~8 대수 준비 핵심 단원 연습', descriptionEn: 'Core non-geometry preparation across U.S. Grades 6–8' },
-  { id: 'algebra-1', label: 'Algebra 1', labelEn: 'Algebra 1', description: 'Common Core 대수·함수·모델링 핵심 단원 연습', descriptionEn: 'Common Core Algebra/Functions/Modeling core practice coverage' },
-  { id: 'algebra-2', label: 'Algebra 2', labelEn: 'Algebra 2', description: '확장 대수·함수·통계·삼각함수 핵심 단원 연습', descriptionEn: 'Extended algebra, functions, statistics and trigonometry core practice' },
-  { id: 'precalculus', label: 'Precalculus', labelEn: 'Precalculus', description: '다항·유리·지수·로그·삼각함수와 극좌표·매개변수·벡터', descriptionEn: 'Polynomial, rational, exponential, logarithmic and trigonometric functions with polar, parametric and vector topics' },
+  { id: 'kr-middle-1', label: '중1 · 소인수분해·정수·문자와 식·좌표', labelEn: 'Grade 7 · Numbers, Expressions & Coordinates', description: '2022 개정 교육과정 중1 비기하 핵심 단원 연습', descriptionEn: 'Core non-geometry Grade 7 topics in Korea’s 2022 curriculum' },
+  { id: 'kr-middle-2', label: '중2 · 식의 계산·부등식·연립방정식·일차함수', labelEn: 'Grade 8 · Expressions, Systems & Functions', description: '식의 계산·부등식·연립방정식·일차함수·확률 핵심 연습', descriptionEn: 'Expressions, inequalities, systems, linear functions and probability' },
+  { id: 'kr-middle-3', label: '중3 · 제곱근·인수분해·이차방정식·이차함수', labelEn: 'Grade 9 · Radicals, Quadratics & Statistics', description: '제곱근·인수분해·이차방정식·이차함수·통계 핵심 연습', descriptionEn: 'Radicals, factoring, quadratics and data transformations' },
+  { id: 'kr-high-1', label: '고1 · 공통수학 1·2 (다항식·방정식·함수·행렬)', labelEn: 'Grade 10 · Common Math 1–2 (Polynomials, Functions, Matrices)', description: '2022 개정 공통수학1·2 핵심 단원 연습 (다항식·방정식·집합·함수·행렬)', descriptionEn: 'Core practice for Korea Common Mathematics 1–2 (Polynomials, Sets, Functions, Matrices)' },
+  { id: 'kr-high-2-algebra', label: '고2 · 대수 [구 수학Ⅰ] (지수·로그·삼각함수·수열)', labelEn: 'Grade 11 · Algebra [Classic Math I]', description: '2022 개정 일반 선택 [대수]: 지수·로그, 삼각함수, 수열', descriptionEn: 'Korea 2022 Algebra (General Elective): exponents, logarithms, trigonometry and sequences' },
+  { id: 'kr-high-2-calculus-1', label: '고2 · 미적분Ⅰ [구 수학Ⅱ] (극한·연속·미적분)', labelEn: 'Grade 11 · Calculus I [Classic Math II]', description: '2022 개정 일반 선택 [미적분Ⅰ]: 극한·연속, 미분, 적분', descriptionEn: 'Korea 2022 Calculus I (General Elective): limits, continuity, derivatives and integrals' },
+  { id: 'kr-high-2-probability-statistics', label: '고2 · 확률과 통계 (순열·조합·확률분포·통계)', labelEn: 'Grade 11 · Probability & Statistics', description: '2022 개정 일반 선택 [확률과 통계]: 경우의 수, 확률분포, 통계적 추정', descriptionEn: 'Korea 2022 Probability & Statistics (General Elective): counting, distributions and inference' },
+  { id: 'kr-high-3-calculus-2', label: '고3 · 미적분Ⅱ [구 미적분] (초월함수 미적분·급수)', labelEn: 'Grade 12 · Calculus II [Classic Calculus]', description: '2022 개정 진로 선택 [미적분Ⅱ]: 수열의 극한, 여러 가지 미분법과 적분법', descriptionEn: 'Korea 2022 Calculus II (Career Elective): sequence limits, advanced differentiation and integration' },
+  { id: 'kr-high-3-geometry', label: '고3 · 기하 (이차곡선·벡터·공간도형)', labelEn: 'Grade 12 · Geometry [Classic Geometry]', description: '2022 개정 진로 선택 [기하]: 이차곡선, 벡터, 공간도형과 공간좌표', descriptionEn: 'Korea 2022 Geometry (Career Elective): conics, vectors, spatial geometry and coordinates' },
+  { id: 'pre-algebra', label: 'Pre-Algebra (Grade 6–8 대수 기초)', labelEn: 'Pre-Algebra (Grades 6–8 Foundations)', description: '미국 Grade 6~8 대수 준비 핵심 단원 연습', descriptionEn: 'Core non-geometry preparation across U.S. Grades 6–8' },
+  { id: 'algebra-1', label: 'Algebra 1 (Grade 8–9 대수·함수)', labelEn: 'Algebra 1 (Grades 8–9 Expressions & Functions)', description: 'Common Core 대수·함수·모델링 핵심 단원 연습', descriptionEn: 'Common Core Algebra/Functions/Modeling core practice coverage' },
+  { id: 'algebra-2', label: 'Algebra 2 (Grade 10–11 심화 대수·삼각함수)', labelEn: 'Algebra 2 (Grades 10–11 Advanced Topics)', description: '확장 대수·함수·통계·삼각함수 핵심 단원 연습', descriptionEn: 'Extended algebra, functions, statistics and trigonometry core practice' },
+  { id: 'precalculus', label: 'Precalculus (Grade 11–12 미적분 선수)', labelEn: 'Precalculus (Grades 11–12 College Prep)', description: '다항·유리·지수·로그·삼각함수와 극좌표·매개변수·벡터', descriptionEn: 'Polynomial, rational, exponential, logarithmic and trigonometric functions with polar, parametric and vector topics' },
+  { id: 'ap-calc-ab', label: 'AP Calculus AB (미적분 기초·적분 응용)', labelEn: 'AP Calculus AB (Intro & Applications)', description: '극한·미분·적분과 그 활용 (AP Calculus AB 범위)', descriptionEn: 'Limits, derivatives, integrals and their applications (AP Calculus AB scope)' },
+  { id: 'ap-calc-bc', label: 'AP Calculus BC (심화 미적분·급수·극좌표)', labelEn: 'AP Calculus BC (Advanced & Series)', description: 'AB 전체 범위 + 급수·매개변수·극좌표·수치해법 (AP Calculus BC 범위)', descriptionEn: 'Everything in AB, plus series, parametric/polar calculus and numerical methods (AP Calculus BC scope)' },
 ];
 
 export function unitsForProfile(profileId) {

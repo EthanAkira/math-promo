@@ -9,6 +9,9 @@ const choice = (choicesKo, choicesEn = choicesKo) => ({ kind: 'choice', choicesK
 
 const H2A = ['kr-high-2-algebra'];
 const H2C = ['kr-high-2-calculus-1'];
+// AP Calculus AB/BC additive tags: these 10 units are core AB-level content in the US framework
+// (limits through basic integration), so every AP Calculus profile should also surface them.
+const H2C_AP = [...H2C, 'ap-calc-ab', 'ap-calc-bc'];
 const H2S = ['kr-high-2-probability-statistics'];
 
 function exponentialLogFunctions(random) {
@@ -139,16 +142,16 @@ export const KOREAN_HIGH2_UNITS = [
   unit('h2-radians-trig', '삼각함수', '일반각과 호도법', 'Angles & radians', '각을 호도법으로 나타내고 삼각함수와 연결', 'Convert angles to radians', H2A, radiansAndTrig),
   unit('h2-sine-cosine-laws', '삼각함수', '사인법칙과 코사인법칙', 'Sine & Cosine Laws', '삼각형의 변과 각 사이의 관계', 'Solve triangles using the Sine and Cosine Laws', H2A, sineCosineLaws),
   unit('h2-sequence-sums-induction', '수열', '수열의 합과 수학적 귀납법', 'Sequence sums & induction', '수열의 합 공식과 귀납적 증명 절차', 'Use sum formulas and mathematical induction', H2A, sequenceSumsInduction),
-  unit('h2-function-limits', '미적분', '함수의 극한', 'Limits of functions', '다항함수의 극한과 극한값 계산', 'Evaluate limits of functions', H2C, polynomialLimit),
-  unit('h2-continuity', '미적분', '함수의 연속', 'Continuity', '연속 조건을 이용한 미지수 결정', 'Use continuity conditions', H2C, continuityParameter),
-  unit('h2-derivative-definition', '미적분', '미분계수', 'Derivative at a point', '한 점에서의 순간변화율', 'Find derivatives at specified points', H2C, derivativeDefinition),
-  unit('h2-derivative-rules', '미적분', '도함수', 'Derivative rules', '다항함수의 도함수 계산', 'Differentiate polynomial functions', H2C, derivativeRules),
-  unit('h2-tangent-lines', '미적분', '접선의 방정식', 'Tangent lines', '접선의 기울기와 도함수', 'Find tangent slopes and equations', H2C, tangentSlope),
-  unit('h2-monotonic-extrema', '미적분', '함수의 증가·감소와 극값', 'Monotonicity & extrema', '도함수와 함수의 극대·극소', 'Analyze extrema using derivatives', H2C, extrema),
-  unit('h2-motion-derivatives', '미적분', '속도와 가속도', 'Motion & derivatives', '위치함수와 순간속도', 'Apply derivatives to motion', H2C, motionDerivative),
-  unit('h2-antiderivatives', '미적분', '부정적분', 'Indefinite integrals', '다항함수의 원시함수', 'Find antiderivatives', H2C, antiderivative),
-  unit('h2-definite-integrals', '미적분', '정적분', 'Definite integrals', '정적분의 계산', 'Evaluate definite integrals', H2C, definiteIntegral),
-  unit('h2-integral-area', '미적분', '정적분과 넓이', 'Area by integration', '정적분을 이용한 넓이', 'Find area using definite integrals', H2C, areaByIntegral),
+  unit('h2-function-limits', '미적분', '함수의 극한', 'Limits of functions', '다항함수의 극한과 극한값 계산', 'Evaluate limits of functions', H2C_AP, polynomialLimit),
+  unit('h2-continuity', '미적분', '함수의 연속', 'Continuity', '연속 조건을 이용한 미지수 결정', 'Use continuity conditions', H2C_AP, continuityParameter),
+  unit('h2-derivative-definition', '미적분', '미분계수', 'Derivative at a point', '한 점에서의 순간변화율', 'Find derivatives at specified points', H2C_AP, derivativeDefinition),
+  unit('h2-derivative-rules', '미적분', '도함수', 'Derivative rules', '다항함수의 도함수 계산', 'Differentiate polynomial functions', H2C_AP, derivativeRules),
+  unit('h2-tangent-lines', '미적분', '접선의 방정식', 'Tangent lines', '접선의 기울기와 도함수', 'Find tangent slopes and equations', H2C_AP, tangentSlope),
+  unit('h2-monotonic-extrema', '미적분', '함수의 증가·감소와 극값', 'Monotonicity & extrema', '도함수와 함수의 극대·극소', 'Analyze extrema using derivatives', H2C_AP, extrema),
+  unit('h2-motion-derivatives', '미적분', '속도와 가속도', 'Motion & derivatives', '위치함수와 순간속도', 'Apply derivatives to motion', H2C_AP, motionDerivative),
+  unit('h2-antiderivatives', '미적분', '부정적분', 'Indefinite integrals', '다항함수의 원시함수', 'Find antiderivatives', H2C_AP, antiderivative),
+  unit('h2-definite-integrals', '미적분', '정적분', 'Definite integrals', '정적분의 계산', 'Evaluate definite integrals', H2C_AP, definiteIntegral),
+  unit('h2-integral-area', '미적분', '정적분과 넓이', 'Area by integration', '정적분을 이용한 넓이', 'Find area using definite integrals', H2C_AP, areaByIntegral),
   unit('h2-expected-value', '확률과 통계', '확률변수와 기댓값', 'Random variables & expectation', '이산확률변수의 기댓값', 'Find expected values of discrete random variables', H2S, expectedValue),
   unit('h2-binomial-distribution', '확률과 통계', '이항분포', 'Binomial distribution', '독립시행의 성공 횟수 확률', 'Calculate binomial probabilities', H2S, binomialDistribution),
   unit('h2-normal-distribution', '확률과 통계', '정규분포', 'Normal distribution', '정규분포의 대칭성과 확률', 'Use symmetry of normal distributions', H2S, normalDistribution),

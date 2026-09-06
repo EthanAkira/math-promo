@@ -8,6 +8,11 @@ const choice = (choicesKo, choicesEn = choicesKo) => ({ kind: 'choice', choicesK
 
 const C2 = ['kr-high-3-calculus-2'];
 const GEO = ['kr-high-3-geometry'];
+// AP Calculus additive tags: derivative-rule/substitution/volume units are AB-level content in
+// the US framework even though they live in Korean 고3; the rest (sequence limits, infinite
+// series, integration by parts) are genuinely BC-only.
+const C2_AB = [...C2, 'ap-calc-ab', 'ap-calc-bc'];
+const C2_BC = [...C2, 'ap-calc-bc'];
 
 function sequenceLimit(random) {
   const a = nz(random); const b = ri(random, -8, 8); const c = nz(random); const d = ri(random, -8, 8);
@@ -98,15 +103,15 @@ function sphereEquation(random) {
 const unit = (id, category, label, enLabel, description, enDescription, profiles, generator) => ({ id, category, label, description, en: [enLabel, enDescription], profiles, make: generator });
 
 export const KOREAN_HIGH3_UNITS = [
-  unit('h3-sequence-limits', '수열의 극한', '수열의 극한', 'Limits of sequences', '수열의 수렴과 발산 및 극한값', 'Evaluate limits of sequences', C2, sequenceLimit),
-  unit('h3-infinite-series', '수열의 극한', '급수와 무한등비급수', 'Infinite series', '무한등비급수의 수렴과 합', 'Analyze and sum infinite geometric series', C2, geometricSeries),
-  unit('h3-exp-log-derivatives', '미분법', '지수·로그함수의 미분', 'Exponential & logarithmic derivatives', '지수함수와 로그함수의 도함수', 'Differentiate exponential and logarithmic functions', C2, expLogDerivative),
-  unit('h3-trig-derivatives', '미분법', '삼각함수의 미분', 'Trigonometric derivatives', '삼각함수와 합성함수의 도함수', 'Differentiate trigonometric functions', C2, trigDerivative),
-  unit('h3-advanced-derivative-rules', '미분법', '여러 가지 미분법', 'Advanced derivative rules', '곱·몫·연쇄법칙', 'Use product, quotient and chain rules', C2, productQuotientChain),
-  unit('h3-implicit-differentiation', '미분법', '음함수의 미분', 'Implicit differentiation', '음함수 관계에서 도함수 구하기', 'Differentiate implicit relations', C2, implicitDerivative),
-  unit('h3-substitution-integration', '적분법', '치환적분법', 'Integration by substitution', '치환을 이용한 부정적분', 'Integrate using substitution', C2, substitutionIntegral),
-  unit('h3-integration-by-parts', '적분법', '부분적분법', 'Integration by parts', '곱으로 된 함수의 적분', 'Integrate products by parts', C2, integrationByParts),
-  unit('h3-volume-integrals', '적분법', '정적분의 활용', 'Applications of definite integrals', '회전체의 부피 계산', 'Find volumes using definite integrals', C2, volumeIntegral),
+  unit('h3-sequence-limits', '수열의 극한', '수열의 극한', 'Limits of sequences', '수열의 수렴과 발산 및 극한값', 'Evaluate limits of sequences', C2_BC, sequenceLimit),
+  unit('h3-infinite-series', '수열의 극한', '급수와 무한등비급수', 'Infinite series', '무한등비급수의 수렴과 합', 'Analyze and sum infinite geometric series', C2_BC, geometricSeries),
+  unit('h3-exp-log-derivatives', '미분법', '지수·로그함수의 미분', 'Exponential & logarithmic derivatives', '지수함수와 로그함수의 도함수', 'Differentiate exponential and logarithmic functions', C2_AB, expLogDerivative),
+  unit('h3-trig-derivatives', '미분법', '삼각함수의 미분', 'Trigonometric derivatives', '삼각함수와 합성함수의 도함수', 'Differentiate trigonometric functions', C2_AB, trigDerivative),
+  unit('h3-advanced-derivative-rules', '미분법', '여러 가지 미분법', 'Advanced derivative rules', '곱·몫·연쇄법칙', 'Use product, quotient and chain rules', C2_AB, productQuotientChain),
+  unit('h3-implicit-differentiation', '미분법', '음함수의 미분', 'Implicit differentiation', '음함수 관계에서 도함수 구하기', 'Differentiate implicit relations', C2_AB, implicitDerivative),
+  unit('h3-substitution-integration', '적분법', '치환적분법', 'Integration by substitution', '치환을 이용한 부정적분', 'Integrate using substitution', C2_AB, substitutionIntegral),
+  unit('h3-integration-by-parts', '적분법', '부분적분법', 'Integration by parts', '곱으로 된 함수의 적분', 'Integrate products by parts', C2_BC, integrationByParts),
+  unit('h3-volume-integrals', '적분법', '정적분의 활용', 'Applications of definite integrals', '회전체의 부피 계산', 'Find volumes using definite integrals', C2_AB, volumeIntegral),
   unit('h3-parabola', '이차곡선', '포물선', 'Parabolas', '초점과 준선 및 표준형', 'Use focus, directrix and standard forms', GEO, parabolaFocus),
   unit('h3-ellipse', '이차곡선', '타원', 'Ellipses', '타원의 초점과 표준형', 'Find ellipse features from standard forms', GEO, ellipseFeatures),
   unit('h3-hyperbola', '이차곡선', '쌍곡선', 'Hyperbolas', '쌍곡선의 초점과 점근선', 'Find hyperbola features and asymptotes', GEO, hyperbolaAsymptotes),
