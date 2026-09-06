@@ -638,7 +638,7 @@ export default function AmcUnitBrowser() {
                     <div style={{ display: 'grid', gap: 12 }}>
                       {subject.units.map((unit) => {
                         const list = problemsByFineUnit.get(unit.id) || [];
-                        if (list.length === 0) return null;
+                        if (hasActiveSearch && list.length === 0) return null;
 
                         return (
                           <div
@@ -708,27 +708,29 @@ export default function AmcUnitBrowser() {
 
                             {/* Action Buttons: Open Worksheet View & Generate Variant */}
                             <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                              <button
-                                type="button"
-                                onClick={() => handleOpenWorksheet(unit.id)}
-                                style={{
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  gap: 6,
-                                  padding: '9px 18px',
-                                  borderRadius: 8,
-                                  fontSize: 13,
-                                  fontWeight: 700,
-                                  background: 'var(--primary, #2563eb)',
-                                  color: '#ffffff',
-                                  border: 'none',
-                                  cursor: 'pointer',
-                                  boxShadow: '0 2px 6px rgba(37, 99, 235, 0.25)',
-                                }}
-                              >
-                                <span>📝</span>
-                                <span>{language === 'ko' ? `실전 학습지 풀기 (${list.length}문항) →` : `Open Worksheet (${list.length}) →`}</span>
-                              </button>
+                              {list.length > 0 && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleOpenWorksheet(unit.id)}
+                                  style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: 6,
+                                    padding: '9px 18px',
+                                    borderRadius: 8,
+                                    fontSize: 13,
+                                    fontWeight: 700,
+                                    background: 'var(--primary, #2563eb)',
+                                    color: '#ffffff',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 2px 6px rgba(37, 99, 235, 0.25)',
+                                  }}
+                                >
+                                  <span>📝</span>
+                                  <span>{language === 'ko' ? `실전 학습지 풀기 (${list.length}문항) →` : `Open Worksheet (${list.length}) →`}</span>
+                                </button>
+                              )}
 
                               <button
                                 type="button"
@@ -740,18 +742,25 @@ export default function AmcUnitBrowser() {
                                   display: 'inline-flex',
                                   alignItems: 'center',
                                   gap: 4,
-                                  padding: '8px 12px',
+                                  padding: list.length > 0 ? '8px 12px' : '9px 18px',
                                   borderRadius: 8,
-                                  fontSize: 12,
-                                  fontWeight: 600,
-                                  background: 'rgba(79, 70, 229, 0.08)',
-                                  color: '#4338ca',
-                                  border: '1px solid rgba(79, 70, 229, 0.2)',
+                                  fontSize: list.length > 0 ? 12 : 13,
+                                  fontWeight: list.length > 0 ? 600 : 700,
+                                  background: list.length > 0 ? 'rgba(79, 70, 229, 0.08)' : 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+                                  color: list.length > 0 ? '#4338ca' : '#ffffff',
+                                  border: list.length > 0 ? '1px solid rgba(79, 70, 229, 0.2)' : 'none',
                                   cursor: 'pointer',
+                                  boxShadow: list.length > 0 ? 'none' : '0 2px 6px rgba(79, 70, 229, 0.25)',
                                 }}
                               >
                                 <span>✨</span>
-                                <span>{language === 'ko' ? '유사 문제' : 'Variant'}</span>
+                                <span>
+                                  {list.length > 0
+                                    ? (language === 'ko' ? '유사 문제' : 'Variant')
+                                    : (language === 'ko'
+                                      ? `이 레벨은 기출문제 준비 중 · 유사 문제로 학습하기 →`
+                                      : `No archived problems for this level yet — practice with generated variants →`)}
+                                </span>
                               </button>
                             </div>
                           </div>
