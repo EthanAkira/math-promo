@@ -5,7 +5,7 @@ import QRCode from 'qrcode';
 import { useLanguage } from '../../language';
 import { useAuth } from '../../auth';
 import { isNonKorean, tr } from '../../i18n';
-import { PRE_ALGEBRA_PROFILES, finalizeGeneratedProblem, findPreAlgebraProfile, findPreAlgebraUnit, localizePreAlgebraUnit, unitsForProfile } from './catalog';
+import { finalizeGeneratedProblem, findPreAlgebraProfile, findPreAlgebraUnit, localizePreAlgebraUnit, unitsForProfile } from './catalog';
 import { recordAttempts } from '../../lib/submissions';
 import { preAlgebraCategory, preAlgebraCopy, preAlgebraProfileLabel } from './localization';
 import { hasProblemVisual, MathText, ProblemVisual } from './PreAlgebraVisuals';
@@ -129,12 +129,6 @@ export default function PreAlgebraGenerator() {
     setSeed(nextSeed); setProfileId(nextProfile); setUnitId(nextUnit); setView('problems'); setAnswers({}); setChecked(false);
     replaceUrl(nextSeed, nextProfile, nextUnit, 'problems');
   }
-  function chooseProfile(nextProfile) {
-    const nextUnits = unitsForProfile(nextProfile);
-    const nextCategory = nextUnits[0].category;
-    setCategory(nextCategory);
-    reset(createSeed(), nextProfile, nextUnits[0].id);
-  }
   function chooseCategory(nextCategory) {
     const nextUnit = units.find((item) => item.category === nextCategory);
     setCategory(nextCategory);
@@ -160,25 +154,22 @@ export default function PreAlgebraGenerator() {
   const unitLabel = localizePreAlgebraUnit(unit, language);
   const unitDescription = localizePreAlgebraUnit(unit, language, 'description');
   const profileLabel = preAlgebraProfileLabel(profile, language);
-  const koreanMiddleProfiles = PRE_ALGEBRA_PROFILES.filter((item) => item.id.startsWith('kr-middle-'));
-  const koreanHighProfiles = PRE_ALGEBRA_PROFILES.filter((item) => item.id.startsWith('kr-high-'));
-  const internationalProfiles = PRE_ALGEBRA_PROFILES.filter((item) => !item.id.startsWith('kr-'));
 
   return <div className="worksheet-app pre-algebra-app">
     <section className="worksheet-controls pre-algebra-controls no-print" aria-label={tr(language, 'worksheetSettings')}>
+      {/* A full cross-curriculum "jump to any subject" dropdown here duplicated the job the
+          curriculum explorer already does to get you to this specific profile in the first
+          place — landing on e.g. Algebra 1 and immediately being offered a from-scratch pick
+          across Korea Middle/High + every international course read as two competing paths to
+          the same choice. This is now a plain label; switching subjects goes through /curriculum
+          (the one place that job belongs), while Domain/Skill below still switch freely within
+          the current subject. */}
       <div className="control-group control-group-profile">
-        <label htmlFor="pre-algebra-profile">{copy.controls[0]}</label>
-        <select id="pre-algebra-profile" value={profileId} onChange={(event) => chooseProfile(event.target.value)}>
-          <optgroup label={copy.controls[2] || '한국 중학교'}>
-            {koreanMiddleProfiles.map((item) => <option key={item.id} value={item.id}>{preAlgebraProfileLabel(item, language)}</option>)}
-          </optgroup>
-          <optgroup label={copy.controls[3] || '한국 고등학교 (2022 개정)'}>
-            {koreanHighProfiles.map((item) => <option key={item.id} value={item.id}>{preAlgebraProfileLabel(item, language)}</option>)}
-          </optgroup>
-          <optgroup label={copy.controls[4] || '국제학교 및 해외과정'}>
-            {internationalProfiles.map((item) => <option key={item.id} value={item.id}>{preAlgebraProfileLabel(item, language)}</option>)}
-          </optgroup>
-        </select>
+        <label>{copy.controls[0]}</label>
+        <div className="current-profile-badge">
+          <strong>{profileLabel}</strong>
+          <a href="/curriculum">{language === 'ko' ? '다른 과정 보기 ↗' : 'Other curricula ↗'}</a>
+        </div>
       </div>
       <div className="control-group control-group-domain">
         <label htmlFor="pre-algebra-category">{copy.controls[1]}</label>
@@ -231,6 +222,10 @@ export default function PreAlgebraGenerator() {
       .pre-algebra-controls .control-group-skill { flex: 1.35; min-width: 220px; }
       .pre-algebra-controls .control-actions { margin-top: 26px; flex-shrink: 0; }
       .pre-algebra-controls select { width: 100%; }
+      .current-profile-badge { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; height: 44px; padding: 0 14px; box-sizing: border-box; border: 1px solid var(--paper-line, #d1d5db); border-radius: 9px; background: var(--paper, #f3f4f6); }
+      .current-profile-badge strong { font-size: 14px; color: var(--ink, #111827); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .current-profile-badge a { flex-shrink: 0; font-size: 12px; font-weight: 600; color: var(--chalk-green, #245c59); text-decoration: none; }
+      .current-profile-badge a:hover { text-decoration: underline; }
       .generated-math-table { border-collapse: collapse; margin: 12px auto; min-width: 210px; text-align: center; background: #fff; }
       .generated-math-table th,.generated-math-table td { border: 1.5px solid #64748b; padding: 6px 12px; }
       .generated-math-table th { background: #eef5ff; }
