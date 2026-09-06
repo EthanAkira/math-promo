@@ -1084,7 +1084,6 @@ const INTERNATIONAL_COURSE_STAGE_SEEDS = [
     subtitle: 'Prepare for symbolic algebra',
     availability: 'ready',
     topics: [
-      { label: 'Pre-Algebra Core Practice Generator', href: '/middle-school/pre-algebra?profile=pre-algebra', ready: true, availability: 'ready' },
       { label: 'Primes & Prime Factorization', href: '/middle-school/prime-factorization', ready: true, availability: 'ready' },
       { label: 'GCF & LCM', href: '/middle-school/gcd-lcm', ready: true, availability: 'ready' },
       { label: 'Integers & Rational Numbers', href: '/middle-school/integers-rationals', ready: true, availability: 'ready' },
@@ -1098,7 +1097,6 @@ const INTERNATIONAL_COURSE_STAGE_SEEDS = [
     subtitle: 'Expressions, equations and graphs',
     availability: 'ready',
     topics: [
-      { label: 'Algebra 1 Core Practice Generator', href: '/middle-school/pre-algebra?profile=algebra-1', ready: true, availability: 'ready' },
       { label: 'Linear Inequalities', href: '/middle-school/pre-algebra?profile=algebra-1&unit=linear-inequalities-2', ready: true, availability: 'ready' },
       { label: 'Systems of Linear Equations', href: '/middle-school/pre-algebra?profile=algebra-1&unit=systems-linear', ready: true, availability: 'ready' },
       { label: 'Linear Functions & Graphs', href: '/middle-school/pre-algebra?profile=algebra-1&unit=linear-functions-2', ready: true, availability: 'ready' },
@@ -1142,7 +1140,6 @@ const INTERNATIONAL_COURSE_STAGE_SEEDS = [
     subtitle: 'Functions, polynomials and exponentials',
     availability: 'ready',
     topics: [
-      { label: 'Algebra 2 Core Practice Generator', href: '/middle-school/pre-algebra?profile=algebra-2', ready: true, availability: 'ready' },
       { label: 'Polynomials & Complex Numbers', href: '/middle-school/pre-algebra?profile=algebra-2&unit=complex-numbers', ready: true, availability: 'ready' },
       { label: 'Rational & Radical Functions', href: '/middle-school/pre-algebra?profile=algebra-2&unit=rational-radical-functions', ready: true, availability: 'ready' },
       { label: 'Exponential & Logarithmic Functions', href: '/middle-school/pre-algebra?profile=algebra-2&unit=exponential-equations', ready: true, availability: 'ready' },
@@ -1162,7 +1159,6 @@ const INTERNATIONAL_COURSE_STAGE_SEEDS = [
     subtitle: 'Advanced functions, trigonometry and vectors',
     availability: 'ready',
     topics: [
-      { label: 'Precalculus Core Practice Generator', href: '/middle-school/pre-algebra?profile=precalculus', ready: true, availability: 'ready' },
       { label: 'Polynomial & Rational Functions', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-rational-features', ready: true, availability: 'ready' },
       { label: 'Trigonometric Functions & Identities', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-trig-graphs', ready: true, availability: 'ready' },
       { label: 'Polar & Parametric Functions', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-polar-coordinates', ready: true, availability: 'ready' },
