@@ -27,7 +27,7 @@ export default function PreAlgebraIntro() {
 
   return <>
     <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 6 }}>
-      <a href="/">{tr(language, 'home')}</a> / <a href="/curriculum">{copy.breadcrumb}</a> / {profileLabel}
+      <a href="/">{tr(language, 'home')}</a> / <a href="/#curriculum-title">{copy.breadcrumb}</a> / {profileLabel}
     </p>
     <h1 className="font-display" style={{ fontSize: 28, margin: '0 0 8px' }}>
       {language === 'ko' ? `${profileLabel} 문제 생성기` : `${profileLabel} Worksheet Generator`}

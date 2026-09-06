@@ -250,7 +250,7 @@ export default function PreAlgebraGenerator() {
         <label>{copy.controls[0]}</label>
         <div className="current-profile-badge">
           <strong>{profileLabel}</strong>
-          <a href="/curriculum">{language === 'ko' ? '다른 과정 보기 ↗' : 'Other curricula ↗'}</a>
+          <a href="/#curriculum-title">{language === 'ko' ? '다른 과정 보기 ↗' : 'Other curricula ↗'}</a>
         </div>
       </div>
       <div className="control-group control-group-mode">
