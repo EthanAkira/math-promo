@@ -4,10 +4,12 @@
 // the tier switch happens client-side (see BasicFiguresGenerator.js), not via a different unit id.
 import { TRANSFORMATIONS_ADVANCED_ENGINES } from './transformationsAdvancedEngine.js';
 import { LOGICAL_REASONING_ADVANCED_ENGINES } from './logicalReasoningAdvancedEngine.js';
+import { RPM_ADVANCED_ENGINES } from './rpmAppliedEngine.js';
 
 export const CURRICULUM_ADVANCED_ENGINES = {
   ...TRANSFORMATIONS_ADVANCED_ENGINES,
   ...LOGICAL_REASONING_ADVANCED_ENGINES,
+  ...RPM_ADVANCED_ENGINES,
 };
 
 export function findAdvancedGenerator(unitId) {
