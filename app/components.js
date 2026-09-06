@@ -20,8 +20,14 @@ export function SiteHeader() {
             <span className="crest-latin">DLL</span>
           </div>
           <div className="brand-text-wrap">
-            <span className="brand-main font-display">매일 배움 연구소</span>
-            <span className="brand-sub font-cinzel">DAILY LEARNING LAB</span>
+            <span className="brand-main font-display">
+              <span className="brand-name-lead">매일 배움</span>{' '}
+              <span className="brand-name-unit">연구소</span>
+            </span>
+            <span className="brand-sub font-cinzel">
+              <span className="brand-sub-lead">DAILY LEARNING</span>{' '}
+              <span className="brand-sub-unit">LAB</span>
+            </span>
           </div>
         </a>
 

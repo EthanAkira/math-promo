@@ -113,6 +113,7 @@ select:focus-visible {
   gap: 12px;
   text-decoration: none;
   color: var(--ink);
+  flex-shrink: 0;
 }
 
 .brand-crest {
@@ -124,6 +125,7 @@ select:focus-visible {
   border: 1.5px solid var(--gold);
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  flex-shrink: 0;
 }
 
 .crest-latin {
@@ -145,6 +147,8 @@ select:focus-visible {
   line-height: 1.2;
   color: var(--navy-deep);
   letter-spacing: -0.01em;
+  word-break: keep-all;
+  overflow-wrap: normal;
 }
 
 .brand-sub {
@@ -153,6 +157,16 @@ select:focus-visible {
   letter-spacing: 0.15em;
   color: var(--gold-dark);
   margin-top: 1px;
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+
+.brand-name-lead,
+.brand-name-unit,
+.brand-sub-lead,
+.brand-sub-unit {
+  white-space: nowrap;
+  display: inline-block;
 }
 
 .site-nav-academic {
