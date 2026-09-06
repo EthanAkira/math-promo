@@ -5,6 +5,7 @@ import LatexMath from './LatexMath';
 import NoteCanvas from './NoteCanvas';
 
 const CHOICE_SYMBOLS = ['①', '②', '③', '④', '⑤'];
+const CHOICE_LETTERS = ['(A)', '(B)', '(C)', '(D)', '(E)'];
 
 export default function InteractiveProblemCard({
   problem,
@@ -13,6 +14,7 @@ export default function InteractiveProblemCard({
   isExamMode = false,
   showResult = false,
   language = 'ko',
+  forceSolutionOpen = false,
 }) {
   const [scratchpadOpen, setScratchpadOpen] = useState(false);
   const [solutionOpen, setSolutionOpen] = useState(false);
@@ -30,12 +32,18 @@ export default function InteractiveProblemCard({
     correctAnswer, // 0-based index or string number
     explanation,
     unit,
+    sourceLabel,
+    choiceMarkerType,
+    examType,
   } = problem;
 
   const isAnswered = userAnswer !== undefined && userAnswer !== null && userAnswer !== '';
   const isCorrect = isAnswered && String(userAnswer) === String(correctAnswer);
 
   const displayResult = isExamMode ? showResult : checkedInPractice;
+  const isLetterChoices = choiceMarkerType === 'letters' || examType === 'amc';
+  const symbols = isLetterChoices ? CHOICE_LETTERS : CHOICE_SYMBOLS;
+  const isSolutionVisible = solutionOpen || forceSolutionOpen || (isExamMode && showResult && explanation);
 
   return (
     <div
@@ -63,7 +71,7 @@ export default function InteractiveProblemCard({
           paddingBottom: '10px',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
           <span
             style={{
               fontSize: '18px',
@@ -74,6 +82,26 @@ export default function InteractiveProblemCard({
           >
             {language === 'ko' ? `[문제 ${number}]` : `[Problem ${number}]`}
           </span>
+          {sourceLabel ? (
+            <span
+              style={{
+                fontSize: '12px',
+                fontWeight: '700',
+                padding: '3px 10px',
+                borderRadius: '6px',
+                background: 'rgba(37, 99, 235, 0.08)',
+                color: '#1d4ed8',
+                border: '1px solid rgba(37, 99, 235, 0.22)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}
+              title="출제 정보 (기출 연도 및 번호)"
+            >
+              <span>📌</span>
+              <span>{sourceLabel}</span>
+            </span>
+          ) : null}
           {points ? (
             <span
               style={{
@@ -228,7 +256,7 @@ export default function InteractiveProblemCard({
                     color: isSelected ? 'var(--blue, #2a5c8a)' : 'var(--ink-soft, #718096)',
                   }}
                 >
-                  {CHOICE_SYMBOLS[idx] || `(${idx + 1})`}
+                  {symbols[idx] || `(${idx + 1})`}
                 </span>
                 <span style={{ flex: 1, lineHeight: 1.4 }}>
                   <LatexMath text={choiceText} />
@@ -307,7 +335,7 @@ export default function InteractiveProblemCard({
               >
                 {isCorrect
                   ? (language === 'ko' ? '🎉 정답입니다!' : '🎉 Correct!')
-                  : (language === 'ko' ? `❌ 오답입니다. (정답: ${type === 'multiple_choice' ? CHOICE_SYMBOLS[correctAnswer] || correctAnswer + 1 : correctAnswer})` : `❌ Incorrect (Answer: ${correctAnswer})`)}
+                  : (language === 'ko' ? `❌ 오답입니다. (정답: ${type === 'multiple_choice' ? symbols[correctAnswer] || correctAnswer + 1 : correctAnswer})` : `❌ Incorrect (Answer: ${correctAnswer})`)}
               </span>
             ) : null}
           </div>
@@ -327,14 +355,14 @@ export default function InteractiveProblemCard({
                 cursor: 'pointer',
               }}
             >
-              {solutionOpen ? (language === 'ko' ? '해설 닫기 ▲' : 'Hide Solution ▲') : (language === 'ko' ? '해설 보기 ▼' : 'View Solution ▼')}
+              {isSolutionVisible ? (language === 'ko' ? '해설 닫기 ▲' : 'Hide Solution ▲') : (language === 'ko' ? '해설 보기 ▼' : 'View Solution ▼')}
             </button>
           ) : null}
         </div>
       ) : null}
 
       {/* Explanation Drawer */}
-      {solutionOpen || (isExamMode && showResult && explanation) ? (
+      {isSolutionVisible ? (
         <div
           style={{
             marginTop: '16px',

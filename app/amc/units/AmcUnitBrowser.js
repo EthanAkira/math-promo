@@ -5,6 +5,7 @@ import { useAuth } from '../../auth';
 import { useLanguage } from '../../language';
 import { AMC_UNITS, AMC_FINE_SUBJECTS } from '../../examUnits';
 import InteractiveProblemCard from '../../components/InteractiveProblemCard';
+import TopicWorksheetView from '../../components/TopicWorksheetView';
 import staticAmc8Catalog from '../../data/amc8ProblemCatalog.json';
 import { generateAmcVariantProblem } from '../amcProblemGenerator';
 
@@ -128,6 +129,22 @@ export default function AmcUnitBrowser() {
   const [userAnswers, setUserAnswers] = useState({});
   const [openFileUnit, setOpenFileUnit] = useState(null);
   const [generatedVariants, setGeneratedVariants] = useState({});
+  const [selectedUnitId, setSelectedUnitId] = useState(null);
+
+  // Sync selected unit with URL query parameter
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const u = params.get('unit');
+    if (u) setSelectedUnitId(u);
+
+    const handlePopState = () => {
+      const p = new URLSearchParams(window.location.search);
+      setSelectedUnitId(p.get('unit'));
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   // Auth check
   useEffect(() => {
@@ -243,6 +260,11 @@ export default function AmcUnitBrowser() {
     return filteredProblems.length;
   }, [filteredProblems]);
 
+  // Only an active search query should ever hide a subject/unit for having 0 matching
+  // problems — a real-catalog count of 0 from the level filter alone must not, since the
+  // per-unit generator works regardless of how many past-exam problems are classified.
+  const hasActiveSearch = searchQuery.trim().length > 0;
+
   // File manifest items by unit
   const itemsByUnit = useMemo(() => {
     const map = new Map(AMC_UNITS.map((unit) => [unit.label, []]));
@@ -308,12 +330,56 @@ export default function AmcUnitBrowser() {
     setGeneratedVariants((prev) => ({ ...prev, [openKey]: variant }));
   }
 
-  function handleCloseVariant(openKey) {
-    setGeneratedVariants((prev) => {
-      const next = { ...prev };
-      delete next[openKey];
-      return next;
-    });
+  function handleOpenWorksheet(unitId) {
+    setSelectedUnitId(unitId);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('unit', unitId);
+      window.history.pushState({}, '', url.toString());
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  function handleBackToCatalog() {
+    setSelectedUnitId(null);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('unit');
+      window.history.pushState({}, '', url.toString());
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  const activeSubjectAndUnit = useMemo(() => {
+    if (!selectedUnitId) return null;
+    for (const subject of AMC_FINE_SUBJECTS) {
+      for (const unit of subject.units) {
+        if (unit.id === selectedUnitId) {
+          return { subject, unit };
+        }
+      }
+    }
+    return null;
+  }, [selectedUnitId]);
+
+  if (activeSubjectAndUnit) {
+    const { subject, unit } = activeSubjectAndUnit;
+    const unitProblems = problemsByFineUnit.get(unit.id) || [];
+    return (
+      <div style={{ maxWidth: 1040, margin: '0 auto', padding: '10px 0 60px' }}>
+        <TopicWorksheetView
+          category="amc"
+          subjectLabel={language === 'en' ? subject.labelEn : subject.label}
+          unit={unit}
+          problems={unitProblems}
+          onBack={handleBackToCatalog}
+          language={language}
+          onGenerateVariant={() => handleGenerateVariant(unit.id, unit)}
+          variantProblem={generatedVariants[unit.id]}
+          onCloseVariant={() => handleCloseVariant(unit.id)}
+        />
+      </div>
+    );
   }
 
   return (
@@ -527,7 +593,13 @@ export default function AmcUnitBrowser() {
           {/* Problem List */}
           {problemsStatus === 'loading' ? <p style={{ color: 'var(--ink-soft)' }}>{words.loading}</p> : null}
 
-          {totalFilteredCount === 0 ? (
+          {/* A real-catalog problem count of 0 only means no PAST EXAM problems have been
+              classified yet for the selected level (currently true for every AMC 10/12 unit,
+              since only AMC 8 has been classified) — it does NOT mean the topic itself is
+              unavailable, since every unit's "유사 문제 생성" generator works independent of the
+              real catalog. So only the search box hides subjects/units on a 0 count; the level
+              filter alone must never hide a topic the generator can still serve. */}
+          {hasActiveSearch && totalFilteredCount === 0 ? (
             <div style={{ padding: '36px 20px', textAlign: 'center', background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 12 }}>
               <p style={{ color: 'var(--ink-soft)', margin: 0, fontSize: 14 }}>{words.noProblemsFound}</p>
             </div>
@@ -536,7 +608,8 @@ export default function AmcUnitBrowser() {
               {AMC_FINE_SUBJECTS.filter((subject) => {
                 if (subject.id === 'uncategorized') return false;
                 if (selectedSubject !== 'all' && selectedSubject !== subject.id) return false;
-                return (subjectCounts[subject.id] || 0) > 0;
+                if (hasActiveSearch) return (subjectCounts[subject.id] || 0) > 0;
+                return true;
               }).map((subject) => {
                 const totalInSubject = subjectCounts[subject.id] || 0;
                 const domainStyle = DOMAIN_COLORS[subject.id] || DOMAIN_COLORS.algebra;
@@ -561,261 +634,126 @@ export default function AmcUnitBrowser() {
                       </div>
                     </div>
 
-                    {/* Fine Unit Accordions */}
-                    <div style={{ display: 'grid', gap: 10 }}>
+                    {/* Fine Unit Cards */}
+                    <div style={{ display: 'grid', gap: 12 }}>
                       {subject.units.map((unit) => {
                         const list = problemsByFineUnit.get(unit.id) || [];
                         if (list.length === 0) return null;
-                        const openKey = `${subject.id}-${unit.id}`;
-                        const isOpen = openUnits.has(openKey);
 
                         return (
                           <div
                             key={unit.id}
                             style={{
                               border: '1px solid var(--paper-line, #e5e7eb)',
-                              borderRadius: 10,
-                              background: isOpen ? 'var(--paper, #faf8f5)' : 'var(--card-bg, #ffffff)',
-                              overflow: 'hidden',
+                              borderRadius: 12,
+                              background: 'var(--card-bg, #ffffff)',
+                              padding: '16px 20px',
+                              boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+                              display: 'flex',
+                              flexWrap: 'wrap',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              gap: 14,
                               transition: 'all 0.15s ease',
                             }}
                           >
-                            {/* Accordion Toggle Header */}
-                            <button
-                              type="button"
-                              onClick={() => toggleUnit(openKey)}
-                              style={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                width: '100%',
-                                padding: '12px 16px',
-                                background: 'none',
-                                border: 'none',
-                                cursor: 'pointer',
-                                textAlign: 'left',
-                                font: 'inherit',
-                              }}
-                            >
-                              <div style={{ flex: '1 1 auto', marginRight: 12 }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                                  <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink, #111827)' }}>
-                                    {unit.label}
-                                  </span>
-                                  <span style={{ fontSize: 12, color: 'var(--ink-soft)' }}>
-                                    ({unit.labelEn})
-                                  </span>
-                                </div>
-                                <span style={{ display: 'block', fontSize: 12, color: 'var(--ink-soft)', marginTop: 2 }}>
-                                  {unit.desc}
+                            <div style={{ flex: '1 1 340px' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                                <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink, #111827)' }}>
+                                  {unit.label}
                                 </span>
-
-                                {/* Curriculum Mapping Badges (Volume 1, Volume 2, International Math, Domains) */}
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 6, alignItems: 'center' }}>
-                                  {unit.vol1Chapter && (
-                                    <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(217, 119, 6, 0.12)', color: '#b45309', border: '1px solid rgba(217, 119, 6, 0.25)' }}>
-                                      📙 Vol 1: {unit.vol1Chapter}
-                                    </span>
-                                  )}
-                                  {unit.vol2Chapter && (
-                                    <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(147, 51, 234, 0.12)', color: '#7e22ce', border: '1px solid rgba(147, 51, 234, 0.25)' }}>
-                                      📘 Vol 2: {unit.vol2Chapter}
-                                    </span>
-                                  )}
-                                  {unit.intlCourse && (
-                                    <a
-                                      href={unit.intlCourse.href}
-                                      onClick={(e) => e.stopPropagation()}
-                                      style={{ textDecoration: 'none', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(37, 99, 235, 0.08)', color: '#1d4ed8', border: '1px solid rgba(37, 99, 235, 0.2)' }}
-                                      title="국제학교 과정 커리큘럼 보기"
-                                    >
-                                      🌐 국제학교: {language === 'ko' ? unit.intlCourse.labelKo : unit.intlCourse.label} ↗
-                                    </a>
-                                  )}
-                                  {unit.domain && (
-                                    <a
-                                      href={unit.domain.href}
-                                      onClick={(e) => e.stopPropagation()}
-                                      style={{ textDecoration: 'none', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(16, 185, 129, 0.08)', color: '#047857', border: '1px solid rgba(16, 185, 129, 0.2)' }}
-                                      title="수학 영역별 커리큘럼 보기"
-                                    >
-                                      📐 영역: {language === 'ko' ? unit.domain.labelKo : unit.domain.label} ↗
-                                    </a>
-                                  )}
-                                </div>
-                              </div>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-                                <span style={{ fontSize: 12, fontWeight: 600, padding: '3px 9px', borderRadius: 12, background: 'var(--paper-line, #e5e7eb)', color: 'var(--ink, #374151)' }}>
+                                <span style={{ fontSize: 13, color: 'var(--ink-soft)' }}>
+                                  ({unit.labelEn})
+                                </span>
+                                <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 10, background: 'var(--paper-line, #e5e7eb)', color: 'var(--ink, #374151)' }}>
                                   {words.problemCount(list.length)}
                                 </span>
-                                <span style={{ fontSize: 12, color: 'var(--ink-soft)' }}>
-                                  {isOpen ? '▲' : '▼'}
-                                </span>
                               </div>
-                            </button>
+                              <span style={{ display: 'block', fontSize: 13, color: 'var(--ink-soft)', marginTop: 4 }}>
+                                {unit.desc}
+                              </span>
 
-                            {/* Accordion Body: Problem Generator & Actual Archive Problems */}
-                            {isOpen && (
-                              <div style={{ padding: '4px 16px 16px', display: 'grid', gap: 14 }}>
-                                {/* Variant Generator Action Bar */}
-                                <div
-                                  style={{
-                                    padding: '14px 16px',
-                                    borderRadius: 12,
-                                    background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(245, 158, 11, 0.06) 100%)',
-                                    border: '1px dashed rgba(99, 102, 241, 0.35)',
-                                  }}
-                                >
-                                  <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
-                                    <div>
-                                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                        <span style={{ fontSize: 14, fontWeight: 800, color: '#4338ca' }}>
-                                          ✨ {language === 'ko' ? 'AMC 8 유사 변형 문제 생성 엔진' : 'AMC 8 Similar Problem Generator'}
-                                        </span>
-                                        <span style={{ fontSize: 10, fontWeight: 700, padding: '1px 6px', borderRadius: 10, background: '#4338ca', color: '#ffffff' }}>
-                                          ALGORITHMIC
-                                        </span>
-                                      </div>
-                                      <p style={{ margin: '3px 0 0', fontSize: 12, color: 'var(--ink-soft, #4b5563)' }}>
-                                        {language === 'ko'
-                                          ? 'AMC 8 Preparation Vol. 1·2 및 기출 패턴 기반으로 KaTeX 수식과 풀이가 포함된 유사 문제를 무한 생성합니다.'
-                                          : 'Generates infinite algorithmic practice problems with KaTeX math and detailed solutions based on AMC 8 Prep Vol. 1 & 2.'}
-                                      </p>
-                                    </div>
-                                    <button
-                                      type="button"
-                                      onClick={() => handleGenerateVariant(openKey, unit)}
-                                      style={{
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: 6,
-                                        padding: '7px 14px',
-                                        borderRadius: 8,
-                                        fontSize: 12,
-                                        fontWeight: 700,
-                                        background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
-                                        color: '#ffffff',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        boxShadow: '0 2px 6px rgba(79, 70, 229, 0.25)',
-                                      }}
-                                    >
-                                      <span>⚡</span>
-                                      <span>
-                                        {generatedVariants[openKey]
-                                          ? (language === 'ko' ? '다른 변형 문제 생성 🔄' : 'New Variant 🔄')
-                                          : (language === 'ko' ? '유사 문제 생성하기 ✨' : 'Generate Variant ✨')}
-                                      </span>
-                                    </button>
-                                  </div>
-
-                                  {/* Rendered Generated Variant Card */}
-                                  {generatedVariants[openKey] && (
-                                    <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid rgba(99, 102, 241, 0.2)' }}>
-                                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                                        <span style={{ fontSize: 12, fontWeight: 700, color: '#4f46e5' }}>
-                                          🎯 {language === 'ko' ? '실시간 생성된 변형 문제 (웹·태블릿 인터랙티브 풀이)' : 'Real-Time Generated Variant Problem'}
-                                        </span>
-                                        <button
-                                          type="button"
-                                          onClick={() => handleCloseVariant(openKey)}
-                                          style={{ fontSize: 11, background: 'none', border: 'none', color: 'var(--ink-soft)', cursor: 'pointer', textDecoration: 'underline' }}
-                                        >
-                                          {language === 'ko' ? '닫기 ✕' : 'Close ✕'}
-                                        </button>
-                                      </div>
-                                      <InteractiveProblemCard
-                                        problem={generatedVariants[openKey]}
-                                        userAnswer={userAnswers[generatedVariants[openKey].id] ?? null}
-                                        onSelectAnswer={(ans) => setUserAnswers((prev) => ({ ...prev, [generatedVariants[openKey].id]: ans }))}
-                                        isExamMode={false}
-                                        showResult={false}
-                                        language={language}
-                                      />
-                                    </div>
-                                  )}
-                                </div>
-
-                                {/* Actual Past Exam Problems Header */}
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '4px 0 2px' }}>
-                                  <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--ink, #111827)' }}>
-                                    📁 {language === 'ko' ? `AMC 8 실제 기출문제 (${list.length}문항)` : `Past AMC 8 Competition Problems (${list.length})`}
+                              {/* Curriculum Mapping Badges (Volume 1, Volume 2, International Math, Domains) */}
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8, alignItems: 'center' }}>
+                                {unit.vol1Chapter && (
+                                  <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(217, 119, 6, 0.12)', color: '#b45309', border: '1px solid rgba(217, 119, 6, 0.25)' }}>
+                                    📙 Vol 1: {unit.vol1Chapter}
                                   </span>
-                                </div>
-                                {list.map((problem) => {
-                                  const isCardOpen = expandedProblemId === problem.id;
-                                  return (
-                                    <div
-                                      key={problem.id}
-                                      style={{
-                                        border: '1px solid var(--paper-line, #e5e7eb)',
-                                        borderRadius: 8,
-                                        background: 'var(--card-bg, #ffffff)',
-                                        overflow: 'hidden',
-                                      }}
-                                    >
-                                      <button
-                                        type="button"
-                                        onClick={() => handleProblemClick(problem)}
-                                        style={{
-                                          display: 'flex',
-                                          justifyContent: 'space-between',
-                                          alignItems: 'center',
-                                          width: '100%',
-                                          padding: '10px 14px',
-                                          background: isCardOpen ? 'rgba(37, 99, 235, 0.04)' : 'none',
-                                          border: 'none',
-                                          cursor: 'pointer',
-                                          textAlign: 'left',
-                                          font: 'inherit',
-                                          color: 'var(--ink)',
-                                        }}
-                                      >
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                                          <span style={{ fontWeight: 700, fontSize: 14 }}>
-                                            {!entitled ? '🔒 ' : ''}
-                                            {words.problemLabel(problem.level, problem.year, problem.problemNumber)}
-                                          </span>
-                                          <span style={{ fontSize: 11, padding: '1px 6px', borderRadius: 4, background: 'var(--paper, #f3f4f6)', color: 'var(--ink-soft)' }}>
-                                            {problem.points || 1}점
-                                          </span>
-                                          <span style={{ fontSize: 12, color: 'var(--ink-soft)', maxWidth: 460, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                            {problem.question ? problem.question.slice(0, 70) : ''}
-                                          </span>
-                                        </div>
-                                        <span style={{ fontSize: 12, color: 'var(--primary, #2563eb)', fontWeight: 600, whiteSpace: 'nowrap', marginLeft: 8 }}>
-                                          {isCardOpen ? words.collapse : words.open}
-                                        </span>
-                                      </button>
-
-                                      {/* Interactive Card */}
-                                      {isCardOpen && entitled ? (
-                                        <div style={{ padding: '14px 16px', borderTop: '1px solid var(--paper-line, #e5e7eb)' }}>
-                                          <InteractiveProblemCard
-                                            problem={{
-                                              id: problem.id,
-                                              number: problem.problemNumber,
-                                              points: problem.points || 1,
-                                              type: problem.choices && problem.choices.length ? 'multiple_choice' : 'subjective',
-                                              question: problem.question,
-                                              choices: problem.choices || [],
-                                              correctAnswer: problem.answer,
-                                              explanation: problem.explanation,
-                                              unit: unit.label,
-                                            }}
-                                            userAnswer={userAnswers[problem.id] ?? null}
-                                            onSelectAnswer={(ans) => setUserAnswers((prev) => ({ ...prev, [problem.id]: ans }))}
-                                            isExamMode={false}
-                                            showResult={false}
-                                            language={language}
-                                          />
-                                        </div>
-                                      ) : null}
-                                    </div>
-                                  );
-                                })}
+                                )}
+                                {unit.vol2Chapter && (
+                                  <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(147, 51, 234, 0.12)', color: '#7e22ce', border: '1px solid rgba(147, 51, 234, 0.25)' }}>
+                                    📘 Vol 2: {unit.vol2Chapter}
+                                  </span>
+                                )}
+                                {unit.intlCourse && (
+                                  <a
+                                    href={unit.intlCourse.href}
+                                    style={{ textDecoration: 'none', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(37, 99, 235, 0.08)', color: '#1d4ed8', border: '1px solid rgba(37, 99, 235, 0.2)' }}
+                                    title="국제학교 과정 커리큘럼 보기"
+                                  >
+                                    🌐 국제학교: {language === 'ko' ? unit.intlCourse.labelKo : unit.intlCourse.label} ↗
+                                  </a>
+                                )}
+                                {unit.domain && (
+                                  <a
+                                    href={unit.domain.href}
+                                    style={{ textDecoration: 'none', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(16, 185, 129, 0.08)', color: '#047857', border: '1px solid rgba(16, 185, 129, 0.2)' }}
+                                    title="수학 영역별 커리큘럼 보기"
+                                  >
+                                    📐 영역: {language === 'ko' ? unit.domain.labelKo : unit.domain.label} ↗
+                                  </a>
+                                )}
                               </div>
-                            )}
+                            </div>
+
+                            {/* Action Buttons: Open Worksheet View & Generate Variant */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                              <button
+                                type="button"
+                                onClick={() => handleOpenWorksheet(unit.id)}
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: 6,
+                                  padding: '9px 18px',
+                                  borderRadius: 8,
+                                  fontSize: 13,
+                                  fontWeight: 700,
+                                  background: 'var(--primary, #2563eb)',
+                                  color: '#ffffff',
+                                  border: 'none',
+                                  cursor: 'pointer',
+                                  boxShadow: '0 2px 6px rgba(37, 99, 235, 0.25)',
+                                }}
+                              >
+                                <span>📝</span>
+                                <span>{language === 'ko' ? `실전 학습지 풀기 (${list.length}문항) →` : `Open Worksheet (${list.length}) →`}</span>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  handleGenerateVariant(unit.id, unit);
+                                  handleOpenWorksheet(unit.id);
+                                }}
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: 4,
+                                  padding: '8px 12px',
+                                  borderRadius: 8,
+                                  fontSize: 12,
+                                  fontWeight: 600,
+                                  background: 'rgba(79, 70, 229, 0.08)',
+                                  color: '#4338ca',
+                                  border: '1px solid rgba(79, 70, 229, 0.2)',
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                <span>✨</span>
+                                <span>{language === 'ko' ? '유사 문제' : 'Variant'}</span>
+                              </button>
+                            </div>
                           </div>
                         );
                       })}

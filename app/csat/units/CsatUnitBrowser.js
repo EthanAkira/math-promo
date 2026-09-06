@@ -4,14 +4,25 @@ import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../../auth';
 import { useLanguage } from '../../language';
 import { CSAT_SUBJECTS, csatUnitTagLabel } from '../../examUnits';
+import TopicWorksheetView from '../../components/TopicWorksheetView';
+import staticCsatCatalog from '../../data/csatProblemCatalog.json';
 
 const COPY = {
   ko: {
-    home: '홈', hub: '수능 기출문제', title: '단원별 수능 기출문제',
-    intro: '수능 출제 범위인 수학Ⅰ·수학Ⅱ·확률과 통계·미적분·기하 다섯 과목을 세부 단원으로 나눠, 해당 단원으로 태그된 기출문제·기출변형(응용문제)·자세한 해설 자료를 모아 볼 수 있습니다.',
+    home: '홈',
+    hub: '수능 기출문제',
+    title: '단원별 수능 기출문제',
+    subtitle: '수능 출제 범위인 수학Ⅰ·수학Ⅱ·확률과 통계·미적분·기하 다섯 과목을 세부 단원별 학습지로 풀어보고, 실시간 수식과 해설을 확인해보세요.',
+    tabProblems: '✍️ 세부 단원별 문항 풀기',
+    tabFiles: '📁 대단원별 파일 다운로드 (PDF)',
+    allSubjects: '전체 과목',
+    problemCount: (n) => `${n}문항`,
+    totalProblemsCount: (n) => `총 ${n}문항 등록됨`,
+    searchPlaceholder: '단원명, 키워드로 검색 (예: 지수, 미분, 적분, 삼각함수, 확률)...',
     loading: '자료를 불러오는 중입니다...',
     error: '자료를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.',
-    empty: '아직 이 단원으로 태그된 자료가 없습니다.',
+    empty: '아직 이 단원으로 등록된 기출문항이 없습니다.',
+    emptyFiles: '아직 이 단원으로 태그된 자료가 없습니다.',
     untagged: '아직 단원 태그가 없는 자료는 시험 종류별 보기에서 확인할 수 있습니다.',
     byType: '시험 종류별로 보기',
     fileCount: (n) => `${n}개 자료`,
@@ -20,11 +31,20 @@ const COPY = {
     alertNeedSub: '구독이 필요한 서비스입니다. 결제·구독 서비스는 준비 중이며, 이용을 원하시면 문의하기로 연락해주세요.',
   },
   en: {
-    home: 'Home', hub: 'CSAT Archive', title: 'CSAT Archive by Unit',
-    intro: 'The five CSAT subjects (Math I, Math II, Probability & Statistics, Calculus, Geometry) are broken down into curriculum units so you can browse every problem set, variant problem, and detailed solution tagged with a unit at once.',
+    home: 'Home',
+    hub: 'CSAT Archive',
+    title: 'CSAT Archive by Unit',
+    subtitle: 'Practice all five CSAT math subjects (Math I, Math II, Probability & Statistics, Calculus, Geometry) as structured topic worksheets with step-by-step solutions.',
+    tabProblems: '✍️ Practice by Unit (Worksheets)',
+    tabFiles: '📁 Download by Subject (PDF)',
+    allSubjects: 'All Subjects',
+    problemCount: (n) => `${n} problem${n === 1 ? '' : 's'}`,
+    totalProblemsCount: (n) => `${n} problems in catalog`,
+    searchPlaceholder: 'Search unit, keywords (e.g. log, derivative, integral, trig, probability)...',
     loading: 'Loading archive...',
     error: 'Could not load the archive. Please try again shortly.',
-    empty: 'No materials tagged with this unit yet.',
+    empty: 'No problems in this unit yet.',
+    emptyFiles: 'No materials tagged with this unit yet.',
     untagged: 'Materials without a unit tag are still browsable by exam type.',
     byType: 'Browse by exam type',
     fileCount: (n) => `${n} item${n === 1 ? '' : 's'}`,
@@ -54,6 +74,14 @@ function fileTypeLabel(type, language) {
   return labels[type] || type;
 }
 
+const SUBJECT_COLORS = {
+  math1: { bg: 'rgba(59, 130, 246, 0.08)', border: '#3b82f6', text: '#1d4ed8' },
+  math2: { bg: 'rgba(16, 185, 129, 0.08)', border: '#10b981', text: '#047857' },
+  'prob-stats': { bg: 'rgba(168, 85, 247, 0.08)', border: '#a855f7', text: '#7e22ce' },
+  calculus: { bg: 'rgba(245, 158, 11, 0.08)', border: '#f59e0b', text: '#b45309' },
+  geometry: { bg: 'rgba(236, 72, 153, 0.08)', border: '#ec4899', text: '#be185d' },
+};
+
 export default function CsatUnitBrowser() {
   const { language } = useLanguage();
   const words = COPY[language] || COPY.en;
@@ -61,8 +89,48 @@ export default function CsatUnitBrowser() {
   const [subStatus, setSubStatus] = useState('loading'); // loading | active | inactive
   const [manifest, setManifest] = useState(null);
   const [status, setStatus] = useState('loading');
-  const [openUnit, setOpenUnit] = useState(null);
+  const [activeTab, setActiveTab] = useState('problems'); // 'problems' | 'files'
+  const [selectedSubject, setSelectedSubject] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [openFileUnit, setOpenFileUnit] = useState(null);
+  const [selectedUnitId, setSelectedUnitId] = useState(null);
 
+  // Sync selected unit with URL query
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const u = params.get('unit');
+    if (u) setSelectedUnitId(u);
+
+    const handlePopState = () => {
+      const p = new URLSearchParams(window.location.search);
+      setSelectedUnitId(p.get('unit'));
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  function handleOpenWorksheet(unitId) {
+    setSelectedUnitId(unitId);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('unit', unitId);
+      window.history.pushState({}, '', url.toString());
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  function handleBackToCatalog() {
+    setSelectedUnitId(null);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('unit');
+      window.history.pushState({}, '', url.toString());
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  // Auth check
   useEffect(() => {
     if (authStatus !== 'ready') return;
     if (!user) { setSubStatus('inactive'); return; }
@@ -77,6 +145,7 @@ export default function CsatUnitBrowser() {
 
   const entitled = authStatus === 'ready' && !!user && subStatus === 'active';
 
+  // Fetch file manifest
   useEffect(() => {
     let cancelled = false;
     fetch('/api/csat/manifest')
@@ -86,6 +155,35 @@ export default function CsatUnitBrowser() {
     return () => { cancelled = true; };
   }, []);
 
+  // Group problems by unit
+  const problemsByUnit = useMemo(() => {
+    const map = new Map();
+    for (const subject of CSAT_SUBJECTS) {
+      for (const unit of subject.units) {
+        map.set(unit.id, []);
+      }
+    }
+    for (const p of staticCsatCatalog) {
+      if (p.unitId && map.has(p.unitId)) {
+        map.get(p.unitId).push(p);
+      }
+    }
+    return map;
+  }, []);
+
+  const subjectCounts = useMemo(() => {
+    const counts = {};
+    for (const subject of CSAT_SUBJECTS) {
+      let sum = 0;
+      for (const unit of subject.units) {
+        sum += (problemsByUnit.get(unit.id) || []).length;
+      }
+      counts[subject.id] = sum;
+    }
+    return counts;
+  }, [problemsByUnit]);
+
+  // Manifest items by tag
   const itemsByTag = useMemo(() => {
     const map = new Map();
     for (const subject of CSAT_SUBJECTS) {
@@ -115,53 +213,349 @@ export default function CsatUnitBrowser() {
     window.alert(!user ? words.alertNeedLogin : words.alertNeedSub);
   }
 
-  return <>
-    <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 6 }}>
-      <a href="/">{words.home}</a> / <a href="/csat.html">{words.hub}</a> / {words.title}
-    </p>
-    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, marginBottom: 8 }}>
-      <h1 className="font-display" style={{ fontSize: 26, margin: 0 }}>{words.title}</h1>
-      <a href="/csat" className="button button-secondary" style={{ textDecoration: 'none' }}>{words.byType}</a>
-    </div>
-    <p style={{ color: 'var(--ink-soft)', margin: '0 0 8px' }}>{words.intro}</p>
-    {!entitled ? <p style={{ color: 'var(--red-pen)', fontSize: 13, margin: '0 0 8px' }}>🔒 {words.memberNotice}</p> : null}
-    <p style={{ color: 'var(--ink-soft)', fontSize: 13, margin: '0 0 28px' }}>{words.untagged}</p>
+  // Active Subject & Unit when worksheet is open
+  const activeSubjectAndUnit = useMemo(() => {
+    if (!selectedUnitId) return null;
+    for (const subject of CSAT_SUBJECTS) {
+      for (const unit of subject.units) {
+        if (unit.id === selectedUnitId) {
+          return { subject, unit };
+        }
+      }
+    }
+    return null;
+  }, [selectedUnitId]);
 
-    {status === 'loading' ? <p style={{ color: 'var(--ink-soft)' }}>{words.loading}</p> : null}
-    {status === 'error' ? <p style={{ color: 'var(--red-pen)' }}>{words.error}</p> : null}
+  if (activeSubjectAndUnit) {
+    const { subject, unit } = activeSubjectAndUnit;
+    const unitProblems = problemsByUnit.get(unit.id) || [];
+    return (
+      <div style={{ maxWidth: 1040, margin: '0 auto', padding: '10px 0 60px' }}>
+        <TopicWorksheetView
+          category="csat"
+          subjectLabel={`${subject.label} (${subject.revised2022 || ''})`}
+          unit={{
+            ...unit,
+            revised2022: subject.revised2022,
+          }}
+          problems={unitProblems}
+          onBack={handleBackToCatalog}
+          language={language}
+        />
+      </div>
+    );
+  }
 
-    {status === 'ready' ? CSAT_SUBJECTS.map((subject) => <section key={subject.id} style={{ marginBottom: 28 }}>
-      <h2 style={{ fontSize: 18, margin: '0 0 4px' }}>{subject.label}</h2>
-      <p style={{ fontSize: 12, color: 'var(--ink-soft)', margin: '0 0 10px' }}>2022개정: {subject.revised2022}</p>
-      <div style={{ display: 'grid', gap: 10 }}>
-        {subject.units.map((unit) => {
-          const tag = csatUnitTagLabel(subject, unit);
-          const items = itemsByTag.get(tag) || [];
-          const openKey = `${subject.id}-${unit.id}`;
-          const open = openUnit === openKey;
-          return <div key={unit.id} style={{ background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', overflow: 'hidden' }}>
+  return (
+    <div style={{ maxWidth: 1040, margin: '0 auto', paddingBottom: 60 }}>
+      {/* Breadcrumb */}
+      <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 6 }}>
+        <a href="/">{words.home}</a> / <a href="/csat.html">{words.hub}</a> / {words.title}
+      </p>
+
+      {/* Header */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, marginBottom: 8 }}>
+        <div>
+          <h1 className="font-display" style={{ fontSize: 26, margin: '0 0 6px' }}>{words.title}</h1>
+          <p style={{ color: 'var(--ink-soft)', margin: 0, fontSize: 14 }}>{words.subtitle}</p>
+        </div>
+        <a href="/csat" className="button button-secondary" style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}>
+          {words.byType} →
+        </a>
+      </div>
+
+      {!entitled ? (
+        <div style={{ background: 'rgba(239, 68, 68, 0.07)', border: '1px solid rgba(239, 68, 68, 0.25)', borderRadius: 10, padding: '10px 14px', margin: '14px 0 18px', fontSize: 13, color: 'var(--red-pen, #dc2626)' }}>
+          🔒 {words.memberNotice}
+        </div>
+      ) : null}
+
+      {/* View Mode Switcher (Tab bar) */}
+      <div style={{ display: 'flex', gap: 8, borderBottom: '2px solid var(--paper-line, #e5e7eb)', margin: '20px 0 20px' }}>
+        <button
+          type="button"
+          onClick={() => setActiveTab('problems')}
+          style={{
+            padding: '10px 18px',
+            fontSize: 15,
+            fontWeight: 700,
+            border: 'none',
+            background: 'none',
+            cursor: 'pointer',
+            borderBottom: activeTab === 'problems' ? '3px solid var(--primary, #2563eb)' : '3px solid transparent',
+            color: activeTab === 'problems' ? 'var(--primary, #2563eb)' : 'var(--ink-soft, #6b7280)',
+            marginBottom: -2,
+            transition: 'all 0.15s ease',
+          }}
+        >
+          {words.tabProblems} <span style={{ fontSize: 12, fontWeight: 500, opacity: 0.85 }}>({staticCsatCatalog.length})</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('files')}
+          style={{
+            padding: '10px 18px',
+            fontSize: 15,
+            fontWeight: 700,
+            border: 'none',
+            background: 'none',
+            cursor: 'pointer',
+            borderBottom: activeTab === 'files' ? '3px solid var(--primary, #2563eb)' : '3px solid transparent',
+            color: activeTab === 'files' ? 'var(--primary, #2563eb)' : 'var(--ink-soft, #6b7280)',
+            marginBottom: -2,
+            transition: 'all 0.15s ease',
+          }}
+        >
+          {words.tabFiles}
+        </button>
+      </div>
+
+      {/* VIEW 1: CSAT Topic Worksheets Browser */}
+      {activeTab === 'problems' && (
+        <div>
+          {/* Subject Filter Pills */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
             <button
               type="button"
-              onClick={() => setOpenUnit(open ? null : openKey)}
-              style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '14px 20px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', font: 'inherit' }}
+              onClick={() => setSelectedSubject('all')}
+              style={{
+                padding: '5px 12px',
+                borderRadius: 16,
+                fontSize: 12,
+                fontWeight: selectedSubject === 'all' ? 700 : 500,
+                border: selectedSubject === 'all' ? '1.5px solid #111827' : '1px solid var(--paper-line, #e5e7eb)',
+                background: selectedSubject === 'all' ? '#111827' : 'var(--card-bg, #ffffff)',
+                color: selectedSubject === 'all' ? '#ffffff' : 'var(--ink, #374151)',
+                cursor: 'pointer',
+              }}
             >
-              <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)' }}>{unit.label}</span>
-              <span style={{ fontSize: 12, color: 'var(--ink-soft)', whiteSpace: 'nowrap' }}>{words.fileCount(items.length)} {open ? '▲' : '▼'}</span>
+              {words.allSubjects} ({staticCsatCatalog.length})
             </button>
-            {open ? <div style={{ padding: '0 20px 16px', display: 'grid', gap: 8 }}>
-              {items.length === 0 ? <p style={{ color: 'var(--ink-soft)', fontSize: 14, margin: 0 }}>{words.empty}</p> : items.map(({ examType, year, variant, fileType, file }) => <a
-                key={`${examType}-${year}-${variant.id}-${fileType}`}
-                href={`/csat/${examType}?year=${year}&variant=${variant.id}`}
-                onClick={handleItemClick}
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'var(--paper)', borderRadius: 8, textDecoration: 'none', color: 'var(--ink)' }}
-              >
-                <span>{!entitled || file.meta?.accessTier === 'premium' ? '🔒 ' : ''}{year} {EXAM_TYPE_LABELS[examType]} · {variant.label}</span>
-                <span style={{ fontSize: 13, color: 'var(--ink-soft)' }}>{fileTypeLabel(fileType, language)} →</span>
-              </a>)}
-            </div> : null}
-          </div>;
-        })}
-      </div>
-    </section>) : null}
-  </>;
+            {CSAT_SUBJECTS.map((subject) => {
+              const active = selectedSubject === subject.id;
+              const count = subjectCounts[subject.id] || 0;
+              const styleMeta = SUBJECT_COLORS[subject.id] || SUBJECT_COLORS.math1;
+              return (
+                <button
+                  key={subject.id}
+                  type="button"
+                  onClick={() => setSelectedSubject(active ? 'all' : subject.id)}
+                  style={{
+                    padding: '5px 12px',
+                    borderRadius: 16,
+                    fontSize: 12,
+                    fontWeight: active ? 700 : 500,
+                    border: active ? `1.5px solid ${styleMeta.border}` : '1px solid var(--paper-line, #e5e7eb)',
+                    background: active ? styleMeta.border : styleMeta.bg,
+                    color: active ? '#ffffff' : styleMeta.text,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  {subject.label} ({count})
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Search bar */}
+          <div style={{ marginBottom: 20 }}>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={words.searchPlaceholder}
+              style={{
+                width: '100%',
+                padding: '9px 14px',
+                borderRadius: 8,
+                border: '1px solid var(--paper-line, #d1d5db)',
+                background: 'var(--card-bg, #ffffff)',
+                fontSize: 13,
+                color: 'var(--ink, #111827)',
+                outline: 'none',
+                boxSizing: 'border-box',
+              }}
+            />
+          </div>
+
+          {/* Subject Sections */}
+          <div style={{ display: 'grid', gap: 24 }}>
+            {CSAT_SUBJECTS.filter((subject) => {
+              if (selectedSubject !== 'all' && selectedSubject !== subject.id) return false;
+              return true;
+            }).map((subject) => {
+              const styleMeta = SUBJECT_COLORS[subject.id] || SUBJECT_COLORS.math1;
+              const totalInSubject = subjectCounts[subject.id] || 0;
+
+              return (
+                <section
+                  key={subject.id}
+                  style={{
+                    background: 'var(--card-bg, #ffffff)',
+                    border: '1px solid var(--paper-line, #e5e7eb)',
+                    borderRadius: 14,
+                    padding: '20px 22px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+                  }}
+                >
+                  {/* Subject Header */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--paper-line, #e5e7eb)', paddingBottom: 12, marginBottom: 14 }}>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <span style={{ width: 10, height: 10, borderRadius: '50%', background: styleMeta.border }}></span>
+                        <h2 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: 'var(--ink, #111827)' }}>
+                          {subject.label}{' '}
+                          <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--ink-soft)' }}>
+                            ({language === 'en' ? subject.labelEn : `2022개정: ${subject.revised2022}`})
+                          </span>
+                        </h2>
+                        <span style={{ fontSize: 12, padding: '2px 8px', borderRadius: 10, background: styleMeta.bg, color: styleMeta.text, fontWeight: 600 }}>
+                          {words.problemCount(totalInSubject)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Units List */}
+                  <div style={{ display: 'grid', gap: 12 }}>
+                    {subject.units.filter((unit) => {
+                      if (!searchQuery) return true;
+                      const q = searchQuery.toLowerCase().trim();
+                      return unit.label.toLowerCase().includes(q) || (unit.labelEn || '').toLowerCase().includes(q);
+                    }).map((unit) => {
+                      const list = problemsByUnit.get(unit.id) || [];
+
+                      return (
+                        <div
+                          key={unit.id}
+                          style={{
+                            border: '1px solid var(--paper-line, #e5e7eb)',
+                            borderRadius: 12,
+                            background: 'var(--card-bg, #ffffff)',
+                            padding: '16px 20px',
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            gap: 14,
+                            transition: 'all 0.15s ease',
+                          }}
+                        >
+                          <div style={{ flex: '1 1 340px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                              <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink, #111827)' }}>
+                                {unit.label}
+                              </span>
+                              <span style={{ fontSize: 13, color: 'var(--ink-soft)' }}>
+                                ({unit.labelEn})
+                              </span>
+                              <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 10, background: 'var(--paper-line, #e5e7eb)', color: 'var(--ink, #374151)' }}>
+                                {words.problemCount(list.length)}
+                              </span>
+                            </div>
+
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8, alignItems: 'center' }}>
+                              <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(99, 102, 241, 0.1)', color: '#4338ca', border: '1px solid rgba(99, 102, 241, 0.25)' }}>
+                                🏛️ 2022개정: {subject.revised2022}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Action Button: Open Worksheet */}
+                          <div>
+                            <button
+                              type="button"
+                              onClick={() => handleOpenWorksheet(unit.id)}
+                              style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: 6,
+                                padding: '9px 18px',
+                                borderRadius: 8,
+                                fontSize: 13,
+                                fontWeight: 700,
+                                background: 'var(--primary, #2563eb)',
+                                color: '#ffffff',
+                                border: 'none',
+                                cursor: 'pointer',
+                                boxShadow: '0 2px 6px rgba(37, 99, 235, 0.25)',
+                              }}
+                            >
+                              <span>📝</span>
+                              <span>{language === 'ko' ? `실전 학습지 풀기 (${list.length}문항) →` : `Open Worksheet (${list.length}) →`}</span>
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* VIEW 2: PDF File Manifest Browser */}
+      {activeTab === 'files' && (
+        <div>
+          <p style={{ color: 'var(--ink-soft)', fontSize: 14, margin: '0 0 16px' }}>{words.untagged}</p>
+          {status === 'loading' ? <p style={{ color: 'var(--ink-soft)' }}>{words.loading}</p> : null}
+          {status === 'error' ? <p style={{ color: 'var(--red-pen)' }}>{words.error}</p> : null}
+
+          {status === 'ready' && (
+            <div style={{ display: 'grid', gap: 24 }}>
+              {CSAT_SUBJECTS.map((subject) => (
+                <section key={subject.id}>
+                  <h2 style={{ fontSize: 18, margin: '0 0 4px' }}>{subject.label}</h2>
+                  <p style={{ fontSize: 12, color: 'var(--ink-soft)', margin: '0 0 10px' }}>2022개정: {subject.revised2022}</p>
+                  <div style={{ display: 'grid', gap: 10 }}>
+                    {subject.units.map((unit) => {
+                      const tag = csatUnitTagLabel(subject, unit);
+                      const items = itemsByTag.get(tag) || [];
+                      const openKey = `${subject.id}-${unit.id}`;
+                      const open = openFileUnit === openKey;
+                      return (
+                        <div key={unit.id} style={{ background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', overflow: 'hidden' }}>
+                          <button
+                            type="button"
+                            onClick={() => setOpenFileUnit(open ? null : openKey)}
+                            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '14px 20px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', font: 'inherit' }}
+                          >
+                            <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)' }}>{unit.label}</span>
+                            <span style={{ fontSize: 12, color: 'var(--ink-soft)', whiteSpace: 'nowrap' }}>{words.fileCount(items.length)} {open ? '▲' : '▼'}</span>
+                          </button>
+                          {open ? (
+                            <div style={{ padding: '0 20px 16px', display: 'grid', gap: 8 }}>
+                              {items.length === 0 ? (
+                                <p style={{ color: 'var(--ink-soft)', fontSize: 14, margin: 0 }}>{words.emptyFiles}</p>
+                              ) : (
+                                items.map(({ examType, year, variant, fileType, file }) => (
+                                  <a
+                                    key={`${examType}-${year}-${variant.id}-${fileType}`}
+                                    href={`/csat/${examType}?year=${year}&variant=${variant.id}`}
+                                    onClick={handleItemClick}
+                                    style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'var(--paper)', borderRadius: 8, textDecoration: 'none', color: 'var(--ink)' }}
+                                  >
+                                    <span>{!entitled || file.meta?.accessTier === 'premium' ? '🔒 ' : ''}{year} {EXAM_TYPE_LABELS[examType]} · {variant.label}</span>
+                                    <span style={{ fontSize: 13, color: 'var(--ink-soft)' }}>{fileTypeLabel(fileType, language)} →</span>
+                                  </a>
+                                ))
+                              )}
+                            </div>
+                          ) : null}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
 }
