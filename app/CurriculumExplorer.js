@@ -29,6 +29,66 @@ function topicAvailabilityLabel(topic, copy) {
   return topic.availability === 'partial' ? copy.badges.partial : copy.badges.ready;
 }
 
+// Shared by both Korean sub-views (기존 학년별 분류 and 2022 개정 과목별 분류) — the two only differ
+// in which meta badges a topic happens to carry (legacy/revised2022/officialType vs legacy/grade),
+// and by International Courses/수학 영역별, which never set meta at all.
+function renderTopicItem(topic, copy) {
+  return (
+    <div key={topic.catalogId || topic.label} className="curriculum-topic-item">
+      {topic.ready ? (
+        <a href={topic.href} className="topic-link">
+          <div className="topic-link-main">
+            <span className="topic-name">{topic.label}</span>
+            {topic.meta && (
+              <div className="topic-meta-badges">
+                {topic.meta.legacy && <span className="meta-badge legacy">{copy.labels.legacyName}: {topic.meta.legacy}</span>}
+                {topic.meta.revised2022 && <span className="meta-badge revised">{copy.labels.revised2022}: {topic.meta.revised2022}</span>}
+                {topic.meta.officialType && <span className="meta-badge official">{topic.meta.officialType}</span>}
+                {topic.meta.grade && <span className="meta-badge grade">{copy.labels.targetGrade}: {topic.meta.grade}</span>}
+              </div>
+            )}
+          </div>
+          <span className={`action-tag ${topic.availability || 'ready'}`}>{topicAvailabilityLabel(topic, copy)} →</span>
+        </a>
+      ) : (
+        <div className="topic-disabled">
+          <div className="topic-link-main">
+            <span className="topic-name">{topic.label}</span>
+            {topic.meta && topic.meta.grade && (
+              <div className="topic-meta-badges">
+                <span className="meta-badge grade">{copy.labels.targetGrade}: {topic.meta.grade}</span>
+              </div>
+            )}
+          </div>
+          <small className="planned-tag">{copy.badges.planned}</small>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function renderStage(stage, copy, { openByDefault = false, extraClassName = '' } = {}) {
+  const stageStatus = availabilityForTopics(stage.topics);
+  return (
+    <details className={`curriculum-stage ${extraClassName}`.trim()} key={stage.id} open={openByDefault}>
+      <summary>
+        <span>
+          <strong>{stage.title}</strong>
+          <small>{stage.subtitle}</small>
+        </span>
+        <span className={`curriculum-count ${stageStatus}`}>{availabilitySummary(stage.topics, copy)}</span>
+        <span className="sr-only">{copy.badges.open}</span>
+      </summary>
+      {stage.notice && (
+        <div className="stage-mini-notice">
+          <span>ℹ️</span> {stage.notice}
+        </div>
+      )}
+      <div className="curriculum-topic-list">{stage.topics.map((topic) => renderTopicItem(topic, copy))}</div>
+    </details>
+  );
+}
+
 export default function CurriculumExplorer() {
   const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState(() => (language === 'ko' ? 'korea' : 'courses'));
@@ -125,206 +185,106 @@ export default function CurriculumExplorer() {
         aria-labelledby={`curriculum-tab-${activeTab}`}
       >
         {/* Tab 1: 한국 교육과정 */}
+        {/* The 학년별/2022개정 과목별 toggle only ever meant something for high school — 2022 개정
+            "과목" names (수학Ⅰ·수학Ⅱ·확률과통계·미적분·기하 등) don't exist as a classification for
+            elementary/middle grades, which just have one 수학 course per grade either way. It used
+            to be a page-wide switch that replaced the ENTIRE Korean view, so choosing "2022개정
+            과목별 보기" made the elementary/middle sections vanish even though nothing was wrong —
+            they just have no 2022-subject equivalent to show. The toggle now lives inside the high
+            school group only; elementary and middle always render via the 학년별 stage data. */}
         {activeTab === 'korea' && (
           <div className="korean-curriculum-wrap">
-            {/* Sub-view Switcher for Korean Curriculum */}
-            <div className="curriculum-subview-bar">
-              <div className="subview-toggle-group" role="group" aria-label="한국 교육과정 보기 방식">
-                <button
-                  type="button"
-                  className={`subview-btn ${krSubView === 'grade' ? 'active' : ''}`}
-                  onClick={() => setKrSubView('grade')}
-                >
-                  <span className="subview-icon">🏫</span>
-                  <strong>{copy.subViews.byGrade}</strong>
-                </button>
-                <button
-                  type="button"
-                  className={`subview-btn ${krSubView === 'subject2022' ? 'active' : ''}`}
-                  onClick={() => setKrSubView('subject2022')}
-                >
-                  <span className="subview-icon">📘</span>
-                  <strong>{copy.subViews.bySubject2022}</strong>
-                </button>
-              </div>
-            </div>
+            <div className="school-level-list">
+              {koreanSchoolGroups.map((group) => {
+                if (group.id !== 'high') {
+                  const groupTopics = group.stages.flatMap((stage) => stage.topics);
+                  const groupStatus = availabilityForTopics(groupTopics);
+                  return (
+                    <details className={`school-level-group ${group.id}-group`} key={group.id}>
+                      <summary>
+                        <span>
+                          <strong>{group.title}</strong>
+                          <small>{group.subtitle}</small>
+                        </span>
+                        <span className={`curriculum-count ${groupStatus}`}>{availabilitySummary(groupTopics, copy)}</span>
+                        <span className="sr-only">{copy.badges.open}</span>
+                      </summary>
+                      <div className="school-level-content">
+                        <div className="curriculum-stage-grid">
+                          {group.stages.map((stage) => renderStage(stage, copy))}
+                        </div>
+                      </div>
+                    </details>
+                  );
+                }
 
-            {/* View A: 학년별 보기 (기존 분류 기반 기본 탐색) */}
-            {krSubView === 'grade' && (
-              <div className="grade-view-container">
-                {/* High School Alert Notice */}
-                <div className="curriculum-notice-banner">
-                  <span className="notice-icon">💡</span>
-                  <p>{copy.notices.gradeLegacyNotice}</p>
-                </div>
+                // High school group: carries the 학년별(기존분류)/2022개정 과목별 toggle, scoped to
+                // itself so switching it never touches elementary/middle above.
+                const activeTopics = krSubView === 'subject2022'
+                  ? KOREAN_2022_SUBJECT_STAGES.flatMap((stage) => stage.topics)
+                  : group.stages.flatMap((stage) => stage.topics);
+                const groupStatus = availabilityForTopics(activeTopics);
+                return (
+                  <details className="school-level-group high-group" key={group.id} open>
+                    <summary>
+                      <span>
+                        <strong>{group.title}</strong>
+                        <small>{group.subtitle}</small>
+                      </span>
+                      <span className={`curriculum-count ${groupStatus}`}>{availabilitySummary(activeTopics, copy)}</span>
+                      <span className="sr-only">{copy.badges.open}</span>
+                    </summary>
+                    <div className="school-level-content">
+                      <div className="curriculum-subview-bar">
+                        <div className="subview-toggle-group" role="group" aria-label="한국 고등학교 교육과정 보기 방식">
+                          <button
+                            type="button"
+                            className={`subview-btn ${krSubView === 'grade' ? 'active' : ''}`}
+                            onClick={() => setKrSubView('grade')}
+                          >
+                            <span className="subview-icon">🏫</span>
+                            <strong>{copy.subViews.byGrade}</strong>
+                          </button>
+                          <button
+                            type="button"
+                            className={`subview-btn ${krSubView === 'subject2022' ? 'active' : ''}`}
+                            onClick={() => setKrSubView('subject2022')}
+                          >
+                            <span className="subview-icon">📘</span>
+                            <strong>{copy.subViews.bySubject2022}</strong>
+                          </button>
+                        </div>
+                      </div>
 
-                <div className="school-level-list">
-                  {koreanSchoolGroups.map((group) => {
-                    const groupTopics = group.stages.flatMap((stage) => stage.topics);
-                    const groupStatus = availabilityForTopics(groupTopics);
-                    return (
-                      <details className={`school-level-group ${group.id}-group`} key={group.id} open={group.id === 'high'}>
-                        <summary>
-                          <span>
-                            <strong>{group.title}</strong>
-                            <small>{group.subtitle}</small>
-                          </span>
-                          <span className={`curriculum-count ${groupStatus}`}>{availabilitySummary(groupTopics, copy)}</span>
-                          <span className="sr-only">{copy.badges.open}</span>
-                        </summary>
-                        <div className="school-level-content">
+                      {krSubView === 'grade' ? (
+                        <>
+                          <div className="curriculum-notice-banner">
+                            <span className="notice-icon">💡</span>
+                            <p>{copy.notices.gradeLegacyNotice}</p>
+                          </div>
                           <div className="curriculum-stage-grid">
-                            {group.stages.map((stage) => {
-                              const stageStatus = availabilityForTopics(stage.topics);
-                              const isHigh = stage.level === 'high';
-                              return (
-                                <details className={`curriculum-stage ${isHigh ? 'high-stage' : ''}`} key={stage.id}>
-                                  <summary>
-                                    <span>
-                                      <strong>{stage.title}</strong>
-                                      <small>{stage.subtitle}</small>
-                                    </span>
-                                    <span className={`curriculum-count ${stageStatus}`}>{availabilitySummary(stage.topics, copy)}</span>
-                                    <span className="sr-only">{copy.badges.open}</span>
-                                  </summary>
-
-                                  {stage.notice && (
-                                    <div className="stage-mini-notice">
-                                      <span>ℹ️</span> {stage.notice}
-                                    </div>
-                                  )}
-
-                                  <div className="curriculum-topic-list">
-                                    {stage.topics.map((topic) => (
-                                      <div key={topic.catalogId || topic.label} className="curriculum-topic-item">
-                                        {topic.ready ? (
-                                          <a href={topic.href} className="topic-link">
-                                            <div className="topic-link-main">
-                                              <span className="topic-name">{topic.label}</span>
-                                              {topic.meta && (
-                                                <div className="topic-meta-badges">
-                                                  {topic.meta.legacy && (
-                                                    <span className="meta-badge legacy">
-                                                      {copy.labels.legacyName}: {topic.meta.legacy}
-                                                    </span>
-                                                  )}
-                                                  {topic.meta.revised2022 && (
-                                                    <span className="meta-badge revised">
-                                                      {copy.labels.revised2022}: {topic.meta.revised2022}
-                                                    </span>
-                                                  )}
-                                                  {topic.meta.officialType && (
-                                                    <span className="meta-badge official">{topic.meta.officialType}</span>
-                                                  )}
-                                                </div>
-                                              )}
-                                            </div>
-                                            <span className={`action-tag ${topic.availability || 'ready'}`}>
-                                              {topicAvailabilityLabel(topic, copy)} →
-                                            </span>
-                                          </a>
-                                        ) : (
-                                          <div className="topic-disabled">
-                                            <div className="topic-link-main">
-                                              <span className="topic-name">{topic.label}</span>
-                                            </div>
-                                            <small className="planned-tag">{copy.badges.planned}</small>
-                                          </div>
-                                        )}
-                                      </div>
-                                    ))}
-                                  </div>
-                                </details>
-                              );
-                            })}
+                            {group.stages.map((stage) => renderStage(stage, copy, { extraClassName: 'high-stage' }))}
                           </div>
-                        </div>
-                      </details>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* View B: 2022 개정 과목별 보기 (공식 구분별 탐색) */}
-            {krSubView === 'subject2022' && (
-              <div className="subject2022-view-container">
-                <div className="curriculum-notice-banner official">
-                  <span className="notice-icon">📋</span>
-                  <p>{copy.notices.subject2022Notice}</p>
-                </div>
-
-                <div className="curriculum-stage-grid">
-                  {KOREAN_2022_SUBJECT_STAGES.map((stage, index) => {
-                    const stageStatus = availabilityForTopics(stage.topics);
-                    const isProfessional = stage.officialType === 'professional';
-                    return (
-                      <details className={`curriculum-stage subject-stage ${isProfessional ? 'professional-stage' : ''}`} key={stage.id} open={index < 3}>
-                        <summary>
-                          <span>
-                            <strong>{stage.title}</strong>
-                            <small>{stage.subtitle}</small>
-                          </span>
-                          <span className={`curriculum-count ${stageStatus}`}>{availabilitySummary(stage.topics, copy)}</span>
-                          <span className="sr-only">{copy.badges.open}</span>
-                        </summary>
-
-                        {stage.notice && (
-                          <div className="stage-mini-notice">
-                            <span>ℹ️</span> {stage.notice}
+                        </>
+                      ) : (
+                        <>
+                          <div className="curriculum-notice-banner official">
+                            <span className="notice-icon">📋</span>
+                            <p>{copy.notices.subject2022Notice}</p>
                           </div>
-                        )}
-
-                        <div className="curriculum-topic-list">
-                          {stage.topics.map((topic) => (
-                            <div key={topic.label} className="curriculum-topic-item">
-                              {topic.ready ? (
-                                <a href={topic.href} className="topic-link">
-                                  <div className="topic-link-main">
-                                    <span className="topic-name">{topic.label}</span>
-                                    {topic.meta && (
-                                      <div className="topic-meta-badges">
-                                        {topic.meta.legacy && (
-                                          <span className="meta-badge legacy">
-                                            {copy.labels.legacyName}: {topic.meta.legacy}
-                                          </span>
-                                        )}
-                                        {topic.meta.grade && (
-                                          <span className="meta-badge grade">
-                                            {copy.labels.targetGrade}: {topic.meta.grade}
-                                          </span>
-                                        )}
-                                      </div>
-                                    )}
-                                  </div>
-                                  <span className={`action-tag ${topic.availability || 'ready'}`}>
-                                    {topicAvailabilityLabel(topic, copy)} →
-                                  </span>
-                                </a>
-                              ) : (
-                                <div className="topic-disabled">
-                                  <div className="topic-link-main">
-                                    <span className="topic-name">{topic.label}</span>
-                                    {topic.meta && topic.meta.grade && (
-                                      <div className="topic-meta-badges">
-                                        <span className="meta-badge grade">
-                                          {copy.labels.targetGrade}: {topic.meta.grade}
-                                        </span>
-                                      </div>
-                                    )}
-                                  </div>
-                                  <small className="planned-tag">{copy.badges.planned}</small>
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </details>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+                          <div className="curriculum-stage-grid">
+                            {KOREAN_2022_SUBJECT_STAGES.map((stage, index) => renderStage(stage, copy, {
+                              openByDefault: index < 3,
+                              extraClassName: `subject-stage ${stage.officialType === 'professional' ? 'professional-stage' : ''}`,
+                            }))}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </details>
+                );
+              })}
+            </div>
           </div>
         )}
 
