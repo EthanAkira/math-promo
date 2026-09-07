@@ -295,7 +295,7 @@ function integerSolutions(random) {
 const mixedGenerators = [positiveNegative, integerClassification, rationalClassification, numberLine, absoluteValue, comparison, inequalityExpression, integerSolutions];
 const rationalOperationGenerators = [rationalAddition, rationalSubtraction, rationalAddSubtract, rationalMultiplication, rationalDivision, rationalFourOperations];
 
-export const INTEGER_RATIONAL_UNITS = [
+export const INTEGER_RATIONAL_BASIC_UNITS = [
   { id: 'positive-negative', label: '양수와 음수', description: '반대되는 상황을 +와 − 기호로 나타내기', en: ['Positive & negative numbers', 'Represent opposite situations with signs'], make: positiveNegative },
   { id: 'integer-classification', label: '정수의 분류', description: '양의 정수·0·음의 정수와 자연수 구분하기', en: ['Classifying integers', 'Classify positive, zero and negative integers'], make: integerClassification },
   { id: 'rational-classification', label: '유리수의 분류', description: '양·음의 유리수와 정수가 아닌 유리수 구분하기', en: ['Classifying rational numbers', 'Classify positive, negative and non-integer rationals'], make: rationalClassification },
@@ -314,12 +314,140 @@ export const INTEGER_RATIONAL_UNITS = [
   { id: 'rational-operations-review', label: '유리수의 사칙계산 종합', description: '덧셈·뺄셈·곱셈·나눗셈을 골고루 연습하기', en: ['Rational operations review', 'Mixed practice across all rational operations'], make: (random) => pick(random, rationalOperationGenerators)(random) },
 ];
 
+export const RPM_INTEGER_RATIONAL_APPLIED_UNITS = [
+  {
+    id: 'rpm-ir-sign-situation',
+    label: '[유형 01] 부호를 사용하여 나타내기 (서로 반대되는 성질)',
+    description: '이익·손해, 해발·해저, 득점·실점, 영상·영하, 증가·감소 등 반대 성질의 부호(+,-) 적용 및 옳은 것/옳지 않은 것 판별',
+    en: ['[Type 01] Representing Situations with Signs', 'Apply positive and negative signs to opposing real-world quantities and identify correct statements'],
+    make: (random) => rpmIrSignSituation(random),
+  },
+  {
+    id: 'rpm-ir-classify-integers',
+    label: '[유형 02] 정수의 분류 및 약분 분수 판별',
+    description: '양의 정수(자연수), 0, 음의 정수 분류 및 약분되어 정수가 되는 분수(-4/2, +6/2 등) 함정 구별하기',
+    en: ['[Type 02] Integer Classification & Reducible Fractions', 'Classify positive integers, 0, and negative integers; identify fractions that reduce to integers'],
+    make: (random) => rpmIrClassifyIntegers(random),
+  },
+  {
+    id: 'rpm-ir-classify-rationals',
+    label: '[유형 03] 유리수의 분류 및 체계',
+    description: '양의 유리수, 음의 유리수, 정수가 아닌 유리수(분수·소수)의 개수 구하기 및 수 체계 참·거짓 명제 판별',
+    en: ['[Type 03] Rational Number Classification & Systems', 'Count positive, negative, and non-integer rational numbers, and evaluate truth values of number systems'],
+    make: (random) => rpmIrClassifyRationals(random),
+  },
+  {
+    id: 'rpm-ir-number-line-read',
+    label: '[유형 04] 수직선 위의 점과 가장 가까운 정수',
+    description: '수직선에 표시된 점 A, B, C, D, E의 유리수 좌표 읽기, 가장 가까운 정수 찾기 및 두 수의 차/합',
+    en: ['[Type 04] Points on the Number Line & Closest Integers', 'Read rational coordinates on a number line, find closest integers, and calculate differences/sums'],
+    make: (random) => rpmIrNumberLineRead(random),
+  },
+  {
+    id: 'rpm-ir-midpoint-distance',
+    label: '[유형 05] 수직선 위 같은 거리(중점)와 양 끝점 역추론',
+    description: '두 점으로부터 같은 거리에 있는 중점의 수 구하기, 한 점과 거리 d가 주어졌을 때 반대편 점 좌표 구하기',
+    en: ['[Type 05] Equidistant Points (Midpoints) & Endpoints', 'Find the midpoint equidistant from two numbers, or deduce endpoints given distance and one coordinate'],
+    make: (random) => rpmIrMidpointDistance(random),
+  },
+  {
+    id: 'rpm-ir-abs-basic-extremum',
+    label: '[유형 06] 절댓값의 계산과 최대·최소',
+    description: '절댓값의 기본 연산, 절댓값이 가장 큰 수와 가장 작은 수 찾기 및 두 수의 차/합',
+    en: ['[Type 06] Absolute Value Calculation & Extrema', 'Compute absolute values, identify numbers with maximum/minimum absolute value, and calculate their sum/difference'],
+    make: (random) => rpmIrAbsBasicExtremum(random),
+  },
+  {
+    id: 'rpm-ir-abs-properties',
+    label: '[유형 07] 절댓값의 성질과 참·거짓',
+    description: '|a| >= 0, 0의 절댓값, 원점과의 거리 성질, 절댓값 관련 명제의 옳고 그름 판별',
+    en: ['[Type 07] Properties of Absolute Value & True/False', 'Evaluate statements regarding properties of absolute values, distance from origin, and non-negativity'],
+    make: (random) => rpmIrAbsProperties(random),
+  },
+  {
+    id: 'rpm-ir-abs-range-count',
+    label: '[유형 08] 절댓값 범위와 조건을 만족하는 정수 개수',
+    description: '|x| <= k, m <= |x| < n 범위 및 0 포함 여부에 따른 정수 x의 개수 구하기',
+    en: ['[Type 08] Absolute Value Ranges & Integer Counts', 'Count integer solutions satisfying absolute value range conditions |x| <= k or m <= |x| < n'],
+    make: (random) => rpmIrAbsRangeCount(random),
+  },
+  {
+    id: 'rpm-ir-opposite-signs-abs',
+    label: '[유형 09] 절댓값이 같고 부호가 반대인 두 수',
+    description: '수직선 위에서 원점 대칭인 두 점 사이의 거리가 D일 때 두 수 a, b (a > b) 각각 구하기',
+    en: ['[Type 09] Numbers with Equal Absolute Value & Opposite Signs', 'Find two opposite-signed numbers with equal absolute value given the distance between them on the number line'],
+    make: (random) => rpmIrOppositeSignsAbs(random),
+  },
+  {
+    id: 'rpm-ir-compare-order',
+    label: '[유형 10] 유리수와 절댓값의 대소 관계 및 순서',
+    description: '양수·음수·절댓값의 대소 비교, 가장 작은 수부터 나열할 때 k번째 수 찾기',
+    en: ['[Type 10] Comparing & Ordering Rational Numbers', 'Compare signed numbers and absolute values; find the k-th number when sorted in ascending order'],
+    make: (random) => rpmIrCompareOrder(random),
+  },
+  {
+    id: 'rpm-ir-inequality-phrasing',
+    label: '[유형 11] 문장 조건의 부등호 표현',
+    description: '‘~보다 작지 않다(>=)’, ‘~보다 크지 않다(<=)’, ‘초과·미만’ 등의 일상 언어 조건을 부등호로 바르게 표현하기',
+    en: ['[Type 11] Verbal Conditions to Inequality Expressions', 'Accurately convert expressions like "not less than" (>=) and "not greater than" (<=) to inequalities'],
+    make: (random) => rpmIrInequalityPhrasing(random),
+  },
+  {
+    id: 'rpm-ir-between-integers-fractions',
+    label: '[유형 12] 두 유리수 사이의 정수 및 기약분수 개수',
+    description: '두 유리수 A와 B 사이의 정수 개수 및 합, 분모가 d인 기약분수의 개수 구하기',
+    en: ['[Type 12] Integers & Irreducible Fractions Between Two Rationals', 'Count integers and irreducible fractions with denominator d between two rational endpoints'],
+    make: (random) => rpmIrBetweenIntegersFractions(random),
+  },
+  {
+    id: 'rpm-ir-abs-pairs-ratio',
+    label: '[유형 13] 절댓값 조건 응용 및 순서쌍 / 거리 비율',
+    description: '|a| + |b| = k를 만족하는 순서쌍 (a, b)의 개수, 수직선 내분 비율 점 역추론',
+    en: ['[Type 13] Absolute Value Pairs & Distance Ratios', 'Count ordered pairs satisfying |a| + |b| = k; deduce points dividing number line segments into specific ratios'],
+    make: (random) => rpmIrAbsPairsRatio(random),
+  },
+  {
+    id: 'rpm-ir-deduce-multi-order',
+    label: '[유형 14] 다중 수의 조건과 수직선 대소 추론',
+    description: '여러 조건(부호, 절댓값 관계, 순서)을 만족하는 a, b, c, d의 대소 관계 및 수직선 배치 추론',
+    en: ['[Type 14] Multi-variable Deductions & Number Line Ordering', 'Deduce the order of multiple numbers a, b, c, d from compound relational conditions and absolute values'],
+    make: (random) => rpmIrDeduceMultiOrder(random),
+  },
+  {
+    id: 'rpm-ir-all-types-mixed',
+    label: '[응용 실전 종합] RPM 정수와 유리수 실전 종합',
+    description: 'RPM 정수와 유리수 유형 01~14 및 중단원 마무리·서술형·실력UP 전 유형 실전 모의고사',
+    en: ['[Applied Exam Review] RPM Integers & Rationals Comprehensive', 'Full practice exam covering all RPM Types 01 through 14, chapter finish, and challenge problems'],
+    make: (random) => rpmIrAllTypesMixed(random),
+  },
+];
+
+export const INTEGER_RATIONAL_UNITS = [...INTEGER_RATIONAL_BASIC_UNITS, ...RPM_INTEGER_RATIONAL_APPLIED_UNITS];
+
 export function findIntegerRationalUnit(unitId) {
-  return INTEGER_RATIONAL_UNITS.find((unit) => unit.id === unitId) || INTEGER_RATIONAL_UNITS[0];
+  return INTEGER_RATIONAL_UNITS.find((unit) => unit.id === unitId) || INTEGER_RATIONAL_BASIC_UNITS[0];
 }
 
 export function localizeIntegerRationalUnit(unit, language, field = 'label') {
   if (language === 'ko') return unit[field];
   return localizeRegionalUnit(unit.id, language, unit.en[field === 'label' ? 0 : 1], field);
 }
+
+import {
+  rpmIrSignSituation,
+  rpmIrClassifyIntegers,
+  rpmIrClassifyRationals,
+  rpmIrNumberLineRead,
+  rpmIrMidpointDistance,
+  rpmIrAbsBasicExtremum,
+  rpmIrAbsProperties,
+  rpmIrAbsRangeCount,
+  rpmIrOppositeSignsAbs,
+  rpmIrCompareOrder,
+  rpmIrInequalityPhrasing,
+  rpmIrBetweenIntegersFractions,
+  rpmIrAbsPairsRatio,
+  rpmIrDeduceMultiOrder,
+  rpmIrAllTypesMixed,
+} from '../rpmAppliedEngine';
 import { localizeRegionalUnit } from '../../regionalCatalog';

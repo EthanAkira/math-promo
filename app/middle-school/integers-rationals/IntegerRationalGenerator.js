@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
-import { findIntegerRationalUnit, INTEGER_RATIONAL_UNITS, localizeIntegerRationalUnit } from './catalog';
+import { findIntegerRationalUnit, INTEGER_RATIONAL_BASIC_UNITS, RPM_INTEGER_RATIONAL_APPLIED_UNITS, INTEGER_RATIONAL_UNITS, localizeIntegerRationalUnit } from './catalog';
 import { findRpmAppliedGenerator } from '../rpmAppliedEngine';
 import RpmDiagram from '../RpmDiagram';
 import CurriculumMappingBar from '../CurriculumMappingBar';
@@ -51,7 +51,7 @@ function makeBasicProblems(seed, unit) {
 }
 
 function makeAppliedProblems(seed, unit) {
-  const appliedGenerator = findRpmAppliedGenerator(unit.id);
+  const appliedGenerator = findRpmAppliedGenerator(unit.id) || unit.make;
   if (!appliedGenerator) return makeBasicProblems(seed, unit);
   const random = seededRandom(`${seed}:${unit.id}:applied`);
   const used = new Set();
@@ -83,10 +83,12 @@ function parseRationalAnswer(value) {
 }
 
 function answersEquivalent(left, right) {
+  if (left === undefined || right === undefined) return false;
+  if (normalizeAnswer(left) === normalizeAnswer(right)) return true;
   const parsedLeft = parseRationalAnswer(left);
   const parsedRight = parseRationalAnswer(right);
   if (parsedLeft && parsedRight) return parsedLeft.n * parsedRight.d === parsedRight.n * parsedLeft.d;
-  return normalizeAnswer(left) === normalizeAnswer(right);
+  return false;
 }
 
 function buildUrl(seed, unitId, tier = 'basic', view = 'problems') {
@@ -125,7 +127,7 @@ export default function IntegerRationalGenerator() {
   const { language } = useLanguage();
   const { user, status: authStatus } = useAuth();
   const foreign = isNonKorean(language);
-  const [unitId, setUnitId] = useState(INTEGER_RATIONAL_UNITS[0].id);
+  const [unitId, setUnitId] = useState(INTEGER_RATIONAL_BASIC_UNITS[0].id);
   const [seed, setSeed] = useState('PREVIEW1');
   const [tier, setTier] = useState('basic');
   const [view, setView] = useState('problems');
@@ -149,15 +151,19 @@ export default function IntegerRationalGenerator() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const initialUnit = findIntegerRationalUnit(params.get('unit')).id;
-    const initialSeed = (params.get('sheet') || createSeed()).toUpperCase();
     const initialTier = params.get('tier') === 'advanced' ? 'advanced' : 'basic';
+    const tierUnits = initialTier === 'advanced' ? RPM_INTEGER_RATIONAL_APPLIED_UNITS : INTEGER_RATIONAL_BASIC_UNITS;
+    const requestedUnitId = params.get('unit');
+    const matchedUnit = tierUnits.find((u) => u.id === requestedUnitId) || findIntegerRationalUnit(requestedUnitId);
+    const initialUnit = matchedUnit.id;
+    const initialSeed = (params.get('sheet') || createSeed()).toUpperCase();
     const initialView = params.get('view') === 'answers' ? 'answers' : 'problems';
     setUnitId(initialUnit); setSeed(initialSeed); setTier(initialTier); setView(initialView);
     window.history.replaceState({}, '', buildUrl(initialSeed, initialUnit, initialTier, initialView));
     setReady(true);
   }, []);
 
+  const currentUnits = tier === 'advanced' ? RPM_INTEGER_RATIONAL_APPLIED_UNITS : INTEGER_RATIONAL_BASIC_UNITS;
   const unit = findIntegerRationalUnit(unitId);
   const basicProblems = useMemo(() => makeBasicProblems(seed, unit), [seed, unit]);
   const appliedProblems = useMemo(() => makeAppliedProblems(seed, unit), [seed, unit]);
@@ -190,8 +196,10 @@ export default function IntegerRationalGenerator() {
       if (!user) { window.alert(tr(language, 'advancedAlertNeedLogin')); return; }
       if (advancedSubStatus !== 'active') { window.alert(tr(language, 'advancedAlertNeedSub')); return; }
     }
-    setTier(nextTier); setAnswers({}); setChecked(false);
-    replaceUrl(seed, unitId, nextTier, view);
+    const targetUnits = nextTier === 'advanced' ? RPM_INTEGER_RATIONAL_APPLIED_UNITS : INTEGER_RATIONAL_BASIC_UNITS;
+    const nextUnitId = targetUnits.some((u) => u.id === unitId) ? unitId : targetUnits[0].id;
+    setTier(nextTier); setUnitId(nextUnitId); setAnswers({}); setChecked(false);
+    replaceUrl(seed, nextUnitId, nextTier, view);
   }
 
   function checkAnswers() {
@@ -217,7 +225,7 @@ export default function IntegerRationalGenerator() {
       <div>
         <label htmlFor="integer-rational-unit">{tr(language, 'skill')}</label>
         <select id="integer-rational-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>
-          {INTEGER_RATIONAL_UNITS.map((item) => <option key={item.id} value={item.id}>{localizeIntegerRationalUnit(item, language)}</option>)}
+          {currentUnits.map((item) => <option key={item.id} value={item.id}>{localizeIntegerRationalUnit(item, language)}</option>)}
         </select>
         <p>{unitDescription}</p>
       </div>
@@ -268,26 +276,47 @@ export default function IntegerRationalGenerator() {
           const isCorrect = answersEquivalent(value, item.answer);
           const prompt = foreign && item.promptEn ? item.promptEn : item.prompt;
           const expression = foreign && item.expressionEn ? item.expressionEn : item.expression;
+          const selectedChoice = item.choices?.find((c) => c.value === item.answer);
           return <article className="vertical-problem word-problem prime-problem" key={item.id}>
             <span className="problem-number">{item.id}</span>
             <div className="word-calculation">
               <p><MathText value={prompt} /></p>
               {item.diagram ? <RpmDiagram diagram={item.diagram} /> : item.kind === 'number-line' ? <NumberLine line={item.line} /> : expression ? <strong className="word-expression font-mono"><RationalText value={expression} /></strong> : null}
-              <div className="word-answer">
-                <span>{tr(language, 'answer')}</span>
-                <span className="inline-answer">
-                  {view === 'answers' ? <strong><RationalText value={item.answer} /></strong> : <>
-                    <input
-                      aria-label={`${tr(language, 'answer')} ${item.id}`}
-                      value={value}
-                      onChange={(event) => changeAnswer(item.id, event.target.value)}
-                      className={checked && value ? (isCorrect ? 'correct' : 'wrong') : ''}
-                    />
-                    <span className="print-answer-space" aria-hidden="true" />
-                  </>}
-                </span>
-                {item.answerSuffix && !foreign ? <em>{item.answerSuffix}</em> : null}
-              </div>
+              {item.choices ? (
+                <div className="choice-answer">
+                  {view === 'answers' ? (
+                    <strong><MathText value={selectedChoice ? `${selectedChoice.value}. ${foreign && selectedChoice.labelEn ? selectedChoice.labelEn : selectedChoice.label}` : item.answer} /></strong>
+                  ) : (
+                    item.choices.map((choice) => (
+                      <button
+                        type="button"
+                        key={choice.value}
+                        className={`${value === choice.value ? 'selected' : ''} ${checked && value === choice.value ? (isCorrect ? 'correct' : 'wrong') : ''}`}
+                        onClick={() => changeAnswer(item.id, choice.value)}
+                        aria-pressed={value === choice.value}
+                      >
+                        <span>{choice.value}</span><MathText value={foreign && choice.labelEn ? choice.labelEn : choice.label} />
+                      </button>
+                    ))
+                  )}
+                </div>
+              ) : (
+                <div className="word-answer">
+                  <span>{tr(language, 'answer')}</span>
+                  <span className="inline-answer">
+                    {view === 'answers' ? <strong><RationalText value={item.answer} /></strong> : <>
+                      <input
+                        aria-label={`${tr(language, 'answer')} ${item.id}`}
+                        value={value}
+                        onChange={(event) => changeAnswer(item.id, event.target.value)}
+                        className={checked && value ? (isCorrect ? 'correct' : 'wrong') : ''}
+                      />
+                      <span className="print-answer-space" aria-hidden="true" />
+                    </>}
+                  </span>
+                  {item.answerSuffix && !foreign ? <em>{item.answerSuffix}</em> : null}
+                </div>
+              )}
               {view === 'answers' && item.explanation ? (
                 <p className="geometry-explanation" style={{ fontSize: '11px', marginTop: '6px', color: 'var(--ink-soft)' }}>
                   <b>{language === 'ko' ? '풀이' : 'Solution'}: </b><MathText value={item.explanation} />

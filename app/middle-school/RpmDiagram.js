@@ -6,45 +6,105 @@ export default function RpmDiagram({ diagram }) {
   if (!diagram || !diagram.kind) return null;
 
   if (diagram.kind === 'rpm-number-line') {
-    const { min = -5, max = 5, step = 1, points = [], highlightSegment } = diagram;
-    const width = 280;
-    const height = 70;
+    const {
+      min = -5,
+      max = 5,
+      step = 1,
+      subStep,
+      points = [],
+      brackets = [],
+      highlightSegment,
+      customTicks,
+      width = 280,
+      height = brackets.length ? 84 : 72,
+    } = diagram;
     const leftPad = 25;
     const rightPad = width - 25;
     const xFor = (val) => leftPad + ((val - min) / (max - min)) * (rightPad - leftPad);
     const tickCount = Math.round((max - min) / step);
+    const lineY = brackets.some((b) => !b.below) ? 42 : 36;
 
     return (
       <svg className="generated-geometry" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="수직선 다이어그램">
-        <line x1="10" y1="36" x2={width - 10} y2="36" stroke="var(--ink)" strokeWidth="1.8" />
-        <path d={`M 10 36 L 18 32 L 18 40 Z`} fill="var(--ink)" />
-        <path d={`M ${width - 10} 36 L ${width - 18} 32 L ${width - 18} 40 Z`} fill="var(--ink)" />
+        <line x1="10" y1={lineY} x2={width - 10} y2={lineY} stroke="var(--ink)" strokeWidth="1.8" />
+        <path d={`M 10 ${lineY} L 18 ${lineY - 4} L 18 ${lineY + 4} Z`} fill="var(--ink)" />
+        <path d={`M ${width - 10} ${lineY} L ${width - 18} ${lineY - 4} L ${width - 18} ${lineY + 4} Z`} fill="var(--ink)" />
 
         {/* Highlight segment */}
         {highlightSegment && (
           <line
             x1={xFor(highlightSegment.from)}
-            y1="36"
+            y1={lineY}
             x2={xFor(highlightSegment.to)}
-            y2="36"
+            y2={lineY}
             stroke="var(--red-pen)"
             strokeWidth="3.2"
           />
         )}
 
+        {/* Sub-ticks (minor fractional marks) */}
+        {subStep && Array.from({ length: Math.round((max - min) / subStep) + 1 }, (_, i) => {
+          const val = min + i * subStep;
+          if (Math.abs((val - min) % step) < 1e-6) return null;
+          const x = xFor(val);
+          return <line key={`sub-${i}`} x1={x} y1={lineY - 3} x2={x} y2={lineY + 3} stroke="var(--ink-soft)" strokeWidth="0.8" opacity="0.6" />;
+        })}
+
         {/* Ticks */}
-        {Array.from({ length: tickCount + 1 }, (_, i) => {
+        {customTicks ? customTicks.map((ct, i) => {
+          const x = xFor(ct.val);
+          return (
+            <g key={i}>
+              <line x1={x} y1={lineY - 5} x2={x} y2={lineY + 5} stroke="var(--ink)" strokeWidth="1.2" />
+              {ct.label && (
+                <text x={x} y={lineY + 18} textAnchor="middle" fontSize="11" fill="var(--ink)">
+                  {ct.label}
+                </text>
+              )}
+            </g>
+          );
+        }) : Array.from({ length: tickCount + 1 }, (_, i) => {
           const val = min + i * step;
           const x = xFor(val);
           const showLabel = val === min || val === 0 || val === max || points.some((p) => p.val === val);
           return (
             <g key={i}>
-              <line x1={x} y1="31" x2={x} y2="41" stroke="var(--ink)" strokeWidth="1.2" />
+              <line x1={x} y1={lineY - 5} x2={x} y2={lineY + 5} stroke="var(--ink)" strokeWidth="1.2" />
               {showLabel && (
-                <text x={x} y="54" textAnchor="middle" fontSize="11" fill="var(--ink)">
+                <text x={x} y={lineY + 18} textAnchor="middle" fontSize="11" fill="var(--ink)">
                   {val}
                 </text>
               )}
+            </g>
+          );
+        })}
+
+        {/* Brackets (distance / ratio indicators) */}
+        {brackets.map((b, bi) => {
+          const x1 = xFor(b.from);
+          const x2 = xFor(b.to);
+          const xm = (x1 + x2) / 2;
+          const yStart = b.below ? lineY + 10 : lineY - 10;
+          const yArc = b.below ? lineY + 24 : lineY - 24;
+          return (
+            <g key={`b-${bi}`}>
+              <path
+                d={`M ${x1} ${yStart} Q ${xm} ${yArc} ${x2} ${yStart}`}
+                fill="none"
+                stroke={b.color || 'var(--ink-soft)'}
+                strokeWidth="1.2"
+                strokeDasharray="3 2"
+              />
+              <text
+                x={xm}
+                y={b.below ? yArc + 12 : yArc - 2}
+                textAnchor="middle"
+                fontSize="10"
+                fontWeight="600"
+                fill={b.color || 'var(--ink)'}
+              >
+                {b.label}
+              </text>
             </g>
           );
         })}
@@ -54,10 +114,10 @@ export default function RpmDiagram({ diagram }) {
           const x = xFor(p.val);
           return (
             <g key={i}>
-              <circle cx={x} cy="36" r={p.highlight ? 4.5 : 3.5} fill={p.highlight ? 'var(--red-pen)' : '#176b87'} />
+              <circle cx={x} cy={lineY} r={p.highlight ? 4.5 : 3.5} fill={p.highlight ? 'var(--red-pen)' : '#176b87'} />
               <text
                 x={x}
-                y="24"
+                y={lineY - 10}
                 textAnchor="middle"
                 fontSize="12"
                 fontWeight="700"
@@ -66,7 +126,7 @@ export default function RpmDiagram({ diagram }) {
                 {p.label}
               </text>
               {p.subLabel && (
-                <text x={x} y="66" textAnchor="middle" fontSize="10" fill="var(--ink-soft)">
+                <text x={x} y={lineY + 28} textAnchor="middle" fontSize="10" fill="var(--ink-soft)">
                   {p.subLabel}
                 </text>
               )}

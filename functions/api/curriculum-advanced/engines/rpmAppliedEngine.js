@@ -736,42 +736,446 @@ const rpmGcdRemainder = rpmGcdWordRemainder;
 // -------------------------------------------------------------
 // 03: 정수와 유리수 응용
 // -------------------------------------------------------------
-function rpmRationalLineDivision(random, profile) {
-  const leftVal = pick(random, [-4, -3, -2, -1]);
-  const rightVal = pick(random, [2, 3, 4, 5, 6]);
-  const m = pick(random, [1, 2]);
-  const n = pick(random, [2, 3]);
-  const dist = rightVal - leftVal;
-  const num = leftVal * (m + n) + dist * m;
-  const den = m + n;
-  const common = gcd(num, den);
-  const reducedNum = num / common;
-  const reducedDen = den / common;
-  const ans = reducedDen === 1 ? String(reducedNum) : `${reducedNum}/${reducedDen}`;
+function fracStr(n, d) {
+  const g = gcd(n, d);
+  let num = n / g;
+  let den = d / g;
+  if (den < 0) { num = -num; den = -den; }
+  if (den === 1) return String(num);
+  return `${num}/${den}`;
+}
+
+// 1. 부호를 사용하여 나타내기 (RPM 유형 01, #0270, #0271, #0272, #0324)
+function rpmIrSignSituation(random, profile) {
+  const isMultipleChoice = random() < 0.6;
+  if (isMultipleChoice) {
+    const findCorrect = random() < 0.5;
+    const pool = [
+      { ko: '지하 {v}층', en: 'Floor {v} below ground', sign: '-', wrong: '+' },
+      { ko: '지출 {v}000원', en: 'Expense of {v}000 KRW', sign: '-', wrong: '+' },
+      { ko: '{v}% 증가', en: '{v}% increase', sign: '+', wrong: '-' },
+      { ko: '출발 {v}일 전', en: '{v} days before departure', sign: '-', wrong: '+' },
+      { ko: '출발 {v}시간 후', en: '{v} hours after departure', sign: '+', wrong: '-' },
+      { ko: '용돈 {v}000원 인상', en: 'Allowance raised by {v}000 KRW', sign: '+', wrong: '-' },
+      { ko: '해저 {v}00 m', en: '{v}00 m below sea level', sign: '-', wrong: '+' },
+      { ko: '해발 {v}00 m', en: '{v}00 m above sea level', sign: '+', wrong: '-' },
+      { ko: '영하 {v}℃', en: '{v}°C below zero', sign: '-', wrong: '+' },
+      { ko: '영상 {v}℃', en: '{v}°C above zero', sign: '+', wrong: '-' },
+    ];
+    const shuffled = [...pool].sort(() => random() - 0.5).slice(0, 5);
+    const targetIdx = ri(random, 0, 4);
+
+    const choices = shuffled.map((item, idx) => {
+      const v = ri(random, 2, 8);
+      const isTarget = idx === targetIdx;
+      const useCorrect = findCorrect ? isTarget : !isTarget;
+      const sign = useCorrect ? item.sign : item.wrong;
+      const labelKo = `${item.ko.replace('{v}', v)}: ${sign}${v}`;
+      const labelEn = `${item.en.replace('{v}', v)}: ${sign}${v}`;
+      return {
+        value: String(idx + 1),
+        label: tx(profile, labelKo, labelEn),
+      };
+    });
+
+    return {
+      prompt: tx(profile,
+        findCorrect ? '다음 중 부호 + 또는 -를 사용하여 나타낸 것으로 옳은 것은?' : '다음 중 부호 + 또는 -를 사용하여 나타낸 것으로 옳지 않은 것은?',
+        findCorrect ? 'Which statement correctly represents the quantity with + or -?' : 'Which statement incorrectly represents the quantity with + or -?'),
+      expression: choices.map((c) => `${c.value}. ${c.label}`).join('   '),
+      choices,
+      answer: String(targetIdx + 1),
+      explanation: tx(profile,
+        `반대되는 성질을 가진 수량에서 이익·증가·영상·해발 등은 '+', 손해·감소·영하·해저 등은 '-' 부호를 사용합니다.`,
+        `Quantities indicating increase/above use '+', while decrease/below use '-'.`),
+    };
+  }
+
+  const items = [
+    { ko: '해저 200 m', en: '200 m below sea level', correct: '-200 m', given: random() < 0.5 ? '-200 m' : '+200 m' },
+    { ko: '500원 손해', en: '500 KRW loss', correct: '-500원', given: random() < 0.5 ? '-500원' : '+500원' },
+    { ko: '지상 7층', en: 'Floor 7 above ground', correct: '+7층', given: random() < 0.5 ? '+7층' : '-7층' },
+    { ko: '영하 3℃', en: '3°C below zero', correct: '-3℃', given: random() < 0.5 ? '-3℃' : '+3℃' },
+    { ko: '출발 10분 전', en: '10 mins before departure', correct: '-10분', given: random() < 0.5 ? '-10분' : '+10분' },
+  ];
+  const rightCount = items.filter((it) => it.correct === it.given).length;
+  const tags = ['ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ'];
 
   return {
     prompt: tx(profile,
-      `수직선 위의 두 점 A(${leftVal}), B(${rightVal})를 이은 선분을 ${m} : ${n}으로 나누는 점 C가 나타내는 수를 구하시오.`,
-      `On the number line, points A(${leftVal}) and B(${rightVal}) form a segment. Find the coordinate of point C dividing AB in ratio ${m} : ${n}.`),
-    expression: `A(${leftVal}), B(${rightVal}), AC:CB = ${m}:${n}`,
-    answer: ans,
-    diagram: {
-      kind: 'rpm-number-line',
-      min: leftVal - 1,
-      max: rightVal + 1,
-      step: 1,
-      points: [
-        { val: leftVal, label: 'A' },
-        { val: rightVal, label: 'B' },
-        { val: num / den, label: 'C', highlight: true, subLabel: `${m}:${n}` },
-      ],
-      highlightSegment: { from: leftVal, to: rightVal },
-    },
+      '다음 보기 중 부호 + 또는 -를 사용하여 나타낸 것으로 옳은 것은 모두 몇 개인지 구하시오.',
+      'How many of the following statements correctly use the + or - sign?'),
+    expression: items.map((it, idx) => `${tags[idx]}. ${tx(profile, it.ko, it.en)}: ${it.given}`).join(',  '),
+    answer: String(rightCount),
+    answerSuffix: tx(profile, '개', ''),
     explanation: tx(profile,
-      `거리 ${dist}의 ${m}/${den}만큼 점 A에서 오른쪽으로 이동하면 ${leftVal} + ${dist * m}/${den} = ${ans}입니다.`,
-      `Moving ${dist * m}/${den} right from A gives ${ans}.`),
+      `주어진 보기를 올바른 부호로 검증하면 옳은 것은 총 ${rightCount}개입니다.`,
+      `Verifying the statements yields ${rightCount} correct ones.`),
   };
 }
+
+// 2. 정수의 분류 및 약분 분수 (RPM 유형 02, #0273, #0274, #0275, #0276)
+function rpmIrClassifyIntegers(random, profile) {
+  const k1 = ri(random, 2, 4);
+  const m1 = k1 * ri(random, 2, 4);
+  const k2 = ri(random, 2, 3);
+  const m2 = k2 * ri(random, 1, 3);
+  const negInt = -ri(random, 2, 7);
+  const nonIntFrac = pick(random, ['7/2', '5/3', '4/3', '9/5', '11/4']);
+  const list = [
+    { val: `${negInt}`, isInt: true },
+    { val: `+${m1}/${k1}`, isInt: true },
+    { val: `-${m2}/${k2}`, isInt: true },
+    { val: '0', isInt: true },
+    { val: nonIntFrac, isInt: false },
+  ].sort(() => random() - 0.5);
+
+  const wrongIdx = list.findIndex((x) => !x.isInt);
+  const choices = list.map((item, idx) => ({
+    value: String(idx + 1),
+    label: item.val,
+  }));
+
+  return {
+    prompt: tx(profile, '다음 중 정수가 아닌 것은?', 'Which of the following is NOT an integer?'),
+    expression: choices.map((c) => `${c.value}. ${c.label}`).join('   '),
+    choices,
+    answer: String(wrongIdx + 1),
+    explanation: tx(profile,
+      `${choices[wrongIdx].label}은 약분하여도 분모가 1이 되지 않으므로 정수가 아닙니다.`,
+      `${choices[wrongIdx].label} does not simplify to an integer.`),
+  };
+}
+
+// 3. 유리수의 분류 및 체계 (RPM 유형 03, #0277, #0278, #0279, #0326, #0329)
+function rpmIrClassifyRationals(random, profile) {
+  const list = [
+    { text: `-${ri(random, 3, 7)}`, isPosRat: false, isNegRat: true, isNonIntRat: false },
+    { text: `${ri(random, 2, 7)}.${ri(random, 1, 9)}`, isPosRat: true, isNegRat: false, isNonIntRat: true },
+    { text: `-${ri(random, 1, 4)}/${ri(random, 5, 7)}`, isPosRat: false, isNegRat: true, isNonIntRat: true },
+    { text: `${ri(random, 1, 3)}/${ri(random, 4, 6)}`, isPosRat: true, isNegRat: false, isNonIntRat: true },
+    { text: `-${ri(random, 1, 4)}.${ri(random, 1, 8)}`, isPosRat: false, isNegRat: true, isNonIntRat: true },
+    { text: `+${ri(random, 8, 16)}/4`, isPosRat: true, isNegRat: false, isNonIntRat: (ri(random, 8, 16) % 4 !== 0) },
+    { text: `${ri(random, 2, 6)}`, isPosRat: true, isNegRat: false, isNonIntRat: false },
+  ].sort(() => random() - 0.5);
+
+  const x = list.filter((item) => item.isPosRat).length;
+  const y = list.filter((item) => item.isNegRat).length;
+  const z = list.filter((item) => item.isNonIntRat).length;
+  const ans = x - y + z;
+
+  return {
+    prompt: tx(profile,
+      '다음 수 중에서 양의 유리수의 개수를 x개, 음의 유리수의 개수를 y개, 정수가 아닌 유리수의 개수를 z개라 할 때, x - y + z의 값을 구하시오.',
+      'Let x = positive rationals, y = negative rationals, z = non-integer rationals. Find x - y + z.'),
+    expression: list.map((it) => it.text).join(',  '),
+    answer: String(ans),
+    explanation: tx(profile,
+      `x = ${x}, y = ${y}, z = ${z}이므로 x - y + z = ${ans}입니다.`,
+      `x = ${x}, y = ${y}, z = ${z}, so x - y + z = ${ans}.`),
+  };
+}
+
+// 4. 수직선 위의 점과 가장 가까운 정수 (RPM 유형 04, #0280~0285, #0325, #0348)
+function rpmIrNumberLineRead(random, profile) {
+  const aNum = ri(random, 5, 8);
+  const aDen = pick(random, [3, 4]);
+  const bNum = ri(random, 11, 15);
+  const bDen = pick(random, [3, 4]);
+
+  const aVal = -aNum / aDen;
+  const bVal = bNum / bDen;
+  const closestA = Math.round(aVal);
+  const closestB = Math.round(bVal);
+  const count = closestB - closestA;
+
+  return {
+    prompt: tx(profile,
+      `수직선 위에서 -${aNum}/${aDen}에 가장 가까운 정수를 a, ${bNum}/${bDen}에 가장 가까운 정수를 b라 할 때, a보다 크고 b보다 크지 않은 정수의 개수를 구하시오.`,
+      `Let a be the closest integer to -${aNum}/${aDen}, and b the closest integer to ${bNum}/${bDen}. How many integers satisfy a < x ≤ b?`),
+    expression: `a = [-${aNum}/${aDen} 근처 정수], b = [${bNum}/${bDen} 근처 정수]`,
+    answer: String(count),
+    answerSuffix: tx(profile, '개', ''),
+    explanation: tx(profile,
+      `a = ${closestA}, b = ${closestB}이므로 ${closestA} < x ≤ ${closestB}인 정수는 총 ${count}개입니다.`,
+      `a = ${closestA}, b = ${closestB}, giving ${count} integers satisfying ${closestA} < x ≤ ${closestB}.`),
+  };
+}
+
+// 5. 수직선 위 같은 거리(중점)와 양 끝점 역추론 (RPM 유형 05, #0286~0288, #0333, #0349, #0350)
+function rpmIrMidpointDistance(random, profile) {
+  const p1 = -ri(random, 3, 7);
+  const d = ri(random, 3, 6) * 2;
+  const p2 = p1 + d;
+  const mid = (p1 + p2) / 2;
+
+  const diagram = {
+    kind: 'rpm-number-line',
+    min: p1 - 2,
+    max: p2 + 2,
+    step: 2,
+    points: [
+      { val: p1, label: `${p1}` },
+      { val: p2, label: `${p2}` },
+      { val: mid, label: 'M', highlight: true },
+    ],
+    brackets: [
+      { from: p1, to: mid, label: `${d / 2}` },
+      { from: mid, to: p2, label: `${d / 2}` },
+    ],
+  };
+
+  return {
+    prompt: tx(profile,
+      `수직선 위에서 ${p1}과 ${p2}를 나타내는 두 점으로부터 같은 거리에 있는 점이 나타내는 수를 구하시오.`,
+      `Find the number represented by the point equidistant from ${p1} and ${p2} on the number line.`),
+    expression: `중점 = (${p1} + ${p2}) ÷ 2`,
+    answer: String(mid),
+    diagram,
+    explanation: tx(profile,
+      `두 점의 한가운데 점은 (${p1} + ${p2}) ÷ 2 = ${mid}입니다.`,
+      `The midpoint is (${p1} + ${p2}) ÷ 2 = ${mid}.`),
+  };
+}
+
+// 6. 절댓값의 계산과 최대·최소 (RPM 유형 06, #0289~0292, #0344)
+function rpmIrAbsBasicExtremum(random, profile) {
+  const d1 = pick(random, [2, 3]);
+  const d2 = pick(random, [3, 4, 5]);
+  const n1 = 1;
+  const n2 = ri(random, 1, d2 - 1);
+  const sumNum = n1 * d2 + n2 * d1;
+  const sumDen = d1 * d2;
+  const ans = fracStr(sumNum, sumDen);
+
+  return {
+    prompt: tx(profile,
+      `두 수 a, b에 대하여 a의 절댓값이 ${n1}/${d1}이고 b의 절댓값이 ${n2}/${d2}일 때, a + b의 값 중에서 가장 큰 값을 구하시오.`,
+      `If |a| = ${n1}/${d1} and |b| = ${n2}/${d2}, find the maximum possible value of a + b.`),
+    expression: `|a| = ${n1}/${d1}, |b| = ${n2}/${d2}`,
+    answer: ans,
+    explanation: tx(profile,
+      `a = ${n1}/${d1}, b = ${n2}/${d2}일 때 a + b의 최댓값 ${ans}을 갖습니다.`,
+      `Maximum occurs when both are positive, yielding ${ans}.`),
+  };
+}
+
+// 7. 절댓값의 성질과 참·거짓 (RPM 유형 07, #0293~0295, #0338, #0339, #0340)
+function rpmIrAbsProperties(random, profile) {
+  const list = [
+    { text: `3`, v: 3, abs: 3 },
+    { text: `-1.5`, v: -1.5, abs: 1.5 },
+    { text: `5/4`, v: 1.25, abs: 1.25 },
+    { text: `-7/2`, v: -3.5, abs: 3.5 },
+    { text: `4/3`, v: 1.333, abs: 1.333 },
+    { text: `-2`, v: -2, abs: 2 },
+  ].sort(() => random() - 0.5);
+
+  const sorted = [...list].sort((a, b) => b.abs - a.abs);
+  const farthest = sorted[0].text;
+  const closest = sorted[sorted.length - 1].text;
+
+  return {
+    prompt: tx(profile,
+      '다음 수를 수직선 위에 나타내었을 때, 원점에서 가장 멀리 떨어진 수를 A, 원점에 가장 가까운 수를 B라 할 때, A와 B를 차례로 구하시오.',
+      'Find the number farthest from the origin (A) and closest to the origin (B) in order.'),
+    expression: list.map((x) => x.text).join(',  '),
+    answer: `${farthest}, ${closest}`,
+    explanation: tx(profile,
+      `절댓값이 가장 큰 수가 원점에서 가장 멀고(${farthest}), 가장 작은 수가 가장 가깝습니다(${closest}).`,
+      `Farthest is ${farthest}, closest is ${closest}.`),
+  };
+}
+
+// 8. 절댓값 범위와 조건을 만족하는 정수 개수 (RPM 유형 08, #0296~0299, #0331, #0342, #0347)
+function rpmIrAbsRangeCount(random, profile) {
+  const num = pick(random, [9, 11, 13, 17]);
+  const den = pick(random, [3, 4, 5]);
+  const maxInt = Math.floor(num / den);
+  const count = 2 * maxInt + 1;
+
+  return {
+    prompt: tx(profile,
+      `절댓값이 ${num}/${den} 이하인 정수의 개수를 구하시오.`,
+      `How many integers have an absolute value of at most ${num}/${den}?`),
+    expression: `|x| ≤ ${num}/${den}`,
+    answer: String(count),
+    answerSuffix: tx(profile, '개', ''),
+    explanation: tx(profile,
+      `|x| ≤ ${num}/${den} (≈ ${(num / den).toFixed(2)})을 만족하는 정수는 -${maxInt}부터 ${maxInt}까지 총 ${count}개입니다.`,
+      `Integers from -${maxInt} to ${maxInt} give ${count} values.`),
+  };
+}
+
+// 9. 절댓값이 같고 부호가 반대인 두 수 (RPM 유형 09, #0300~0303, #0341, #0345)
+function rpmIrOppositeSignsAbs(random, profile) {
+  const num = pick(random, [10, 14, 16]);
+  const den = pick(random, [3, 5]);
+  const ans = fracStr(num, 2 * den);
+
+  const diagram = {
+    kind: 'rpm-number-line',
+    min: -Math.ceil(num / den),
+    max: Math.ceil(num / den),
+    step: 1,
+    points: [
+      { val: -num / (2 * den), label: 'B' },
+      { val: 0, label: '0' },
+      { val: num / (2 * den), label: 'A', highlight: true },
+    ],
+    brackets: [
+      { from: -num / (2 * den), to: num / (2 * den), label: `거리 ${num}/${den}` },
+    ],
+  };
+
+  return {
+    prompt: tx(profile,
+      `절댓값이 같고 부호가 반대인 두 수를 수직선 위에 나타내었을 때의 두 점 사이의 거리가 ${num}/${den}이다. 이때 두 수 중 큰 수는?`,
+      `Two numbers have equal absolute values and opposite signs. If the distance between them is ${num}/${den}, what is the greater number?`),
+    expression: `거리 = ${num}/${den}`,
+    answer: ans,
+    diagram,
+    explanation: tx(profile,
+      `원점으로부터의 거리는 (${num}/${den}) × 1/2 = ${ans}이며 큰 수는 양수이므로 ${ans}입니다.`,
+      `Distance from origin is (${num}/${den}) × 1/2 = ${ans}.`),
+  };
+}
+
+// 10. 유리수와 절댓값의 대소 관계 및 순서 (RPM 유형 10, #0304~0310, #0328, #0330, #0337)
+function rpmIrCompareOrder(random, profile) {
+  const list = [
+    { text: `-9`, abs: 9 },
+    { text: `5`, abs: 5 },
+    { text: `-5/2`, abs: 2.5 },
+    { text: `-3`, abs: 3 },
+    { text: `-6.5`, abs: 6.5 },
+    { text: `0`, abs: 0 },
+  ].sort(() => random() - 0.5);
+
+  const sorted = [...list].sort((a, b) => b.abs - a.abs);
+  const ans = sorted[1].text;
+
+  return {
+    prompt: tx(profile,
+      '다음 수 중에서 절댓값이 두 번째로 큰 수를 구하시오.',
+      'Find the number with the second greatest absolute value.'),
+    expression: list.map((x) => x.text).join(',  '),
+    answer: ans,
+    explanation: tx(profile,
+      `절댓값을 크기순으로 나열했을 때 두 번째로 큰 수는 ${ans}입니다.`,
+      `The second largest absolute value is ${ans}.`),
+  };
+}
+
+// 11. 문장 조건의 부등호 표현 ('작지 않다'·'크지 않다') (RPM 유형 11, #0311~0313, #0327, #0332)
+function rpmIrInequalityPhrasing(random, profile) {
+  const a = ri(random, 5, 9);
+  const frac = `-${ri(random, 1, 3)}/5`;
+  const ans = `${frac} ≤ x ≤ ${a}`;
+
+  return {
+    prompt: tx(profile,
+      `'x는 ${a} 이하이고 ${frac}보다 작지 않다.'를 부등호를 사용하여 나타내시오.`,
+      `Express 'x is at most ${a} and not less than ${frac}' using inequalities.`),
+    expression: `x ≤ ${a}, x ≥ ${frac}`,
+    answer: ans,
+    explanation: tx(profile,
+      `'${a} 이하'는 x ≤ ${a}, '${frac}보다 작지 않다'는 x ≥ ${frac}이므로 ${ans}입니다.`,
+      `'At most ${a}' is x ≤ ${a} and 'not less than ${frac}' is x ≥ ${frac}, giving ${ans}.`),
+  };
+}
+
+// 12. 두 유리수 사이의 정수 및 기약분수 개수 (RPM 유형 12, #0314~0317, #0335, #0336, #0346)
+function rpmIrBetweenIntegersFractions(random, profile) {
+  const aNum = ri(random, 7, 11);
+  const aDen = 2;
+  const bNum = ri(random, 5, 8);
+  const bDen = 3;
+
+  const minInt = Math.ceil(-aNum / aDen);
+  const maxInt = Math.floor(bNum / bDen);
+  const count = maxInt - minInt + 1;
+
+  return {
+    prompt: tx(profile,
+      `두 유리수 -${aNum}/${aDen}와 ${bNum}/${bDen} 사이에 있는 정수의 개수를 구하시오.`,
+      `How many integers lie between -${aNum}/${aDen} and ${bNum}/${bDen}?`),
+    expression: `-${aNum}/${aDen} < x < ${bNum}/${bDen}`,
+    answer: String(count),
+    answerSuffix: tx(profile, '개', ''),
+    explanation: tx(profile,
+      `${minInt}부터 ${maxInt}까지 총 ${count}개의 정수가 있습니다.`,
+      `There are ${count} integers from ${minInt} to ${maxInt}.`),
+  };
+}
+
+// 13. 절댓값 조건 응용 및 순서쌍 / 거리 비율 (RPM 유형 13, #0318~0320, #0351, #0353, #0355)
+function rpmIrAbsPairsRatio(random, profile) {
+  const r = pick(random, [2, 3, 4]);
+  const bAbs = ri(random, 2, 4);
+  const dist = (r + 1) * bAbs;
+  const aVal = r * bAbs;
+  const bVal = -bAbs;
+
+  return {
+    prompt: tx(profile,
+      `부호가 반대인 두 정수 a, b에 대하여 a의 절댓값은 b의 절댓값의 ${r}배이고 a > b이다. 수직선 위에서 a, b를 나타내는 두 점 사이의 거리가 ${dist}일 때, 두 정수 a, b의 값을 구하시오.`,
+      `Two integers a, b have opposite signs with a > b. If |a| = ${r}|b| and distance is ${dist}, find a and b.`),
+    expression: `|a| = ${r}|b|, 거리 = ${dist}`,
+    answer: `a=${aVal}, b=${bVal}`,
+    explanation: tx(profile,
+      `두 점 사이의 거리는 ${r + 1}|b| = ${dist}이므로 |b| = ${bAbs}입니다. a = ${aVal}, b = ${bVal}입니다.`,
+      `Distance is ${r + 1}|b| = ${dist}, so |b| = ${bAbs}. a = ${aVal}, b = ${bVal}.`),
+  };
+}
+
+// 14. 다중 수의 조건과 수직선 대소 추론 (RPM 유형 14, #0321~0323, #0354)
+function rpmIrDeduceMultiOrder(random, profile) {
+  const choices = [
+    { value: '1', label: 'd < a < c < b' },
+    { value: '2', label: 'd < a < b < c' },
+    { value: '3', label: 'a < d < c < b' },
+    { value: '4', label: 'd < c < a < b' },
+    { value: '5', label: 'a < c < b < d' },
+  ];
+
+  return {
+    prompt: tx(profile,
+      `다음 조건을 모두 만족시키는 서로 다른 네 수 a, b, c, d의 대소 관계를 부등호를 사용하여 나타낸 것으로 옳은 것은?\n(가) a는 0보다 작다.\n(나) b는 c보다 크다.\n(다) a의 절댓값과 c의 절댓값은 같다.\n(라) d는 a, b, c, d 중 가장 작은 수이다.`,
+      `Order a, b, c, d given: (a) a < 0, (b) b > c, (c) |a| = |c|, (d) d is the smallest.`),
+    expression: `a < 0, b > c, |a| = |c|, d = min`,
+    choices,
+    answer: '1',
+    explanation: tx(profile,
+      `a < 0이고 |a| = |c|이므로 c > 0입니다. b > c이므로 a < c < b이고 d가 가장 작으므로 d < a < c < b입니다.`,
+      `Since a < 0 and |a| = |c|, c > 0. Since b > c, a < c < b. With d smallest, d < a < c < b.`),
+  };
+}
+
+// 15. 정수와 유리수 응용 종합 실전 모의고사
+const rpmIrServerList = [
+  rpmIrSignSituation,
+  rpmIrClassifyIntegers,
+  rpmIrClassifyRationals,
+  rpmIrNumberLineRead,
+  rpmIrMidpointDistance,
+  rpmIrAbsBasicExtremum,
+  rpmIrAbsProperties,
+  rpmIrAbsRangeCount,
+  rpmIrOppositeSignsAbs,
+  rpmIrCompareOrder,
+  rpmIrInequalityPhrasing,
+  rpmIrBetweenIntegersFractions,
+  rpmIrAbsPairsRatio,
+  rpmIrDeduceMultiOrder,
+];
+
+function rpmIrAllTypesMixed(random, profile) {
+  return pick(random, rpmIrServerList)(random, profile);
+}
+
+// Legacy alias
+const rpmRationalLineDivision = rpmIrNumberLineRead;
 
 // -------------------------------------------------------------
 // 04: 문자의 사용과 식의 계산 응용
@@ -959,15 +1363,37 @@ export const RPM_ADVANCED_ENGINES = {
   'gcd-lcm-application': rpmGcdWordTileFence,
   'gcd-lcm-mixed': rpmGcdLcmAllTypesMixed,
 
-  'positive-negative': rpmRationalLineDivision,
-  'integer-classification': rpmRationalLineDivision,
-  'rational-classification': rpmRationalLineDivision,
-  'number-line': rpmRationalLineDivision,
-  'absolute-value': rpmRationalLineDivision,
-  'number-comparison': rpmRationalLineDivision,
-  'inequality-expression': rpmRationalLineDivision,
-  'integer-solutions': rpmRationalLineDivision,
-  'integer-rational-mixed': rpmRationalLineDivision,
+  // 03 정수와 유리수 RPM 세부 유형 (RPM 1-1 Pages 38~49)
+  'rpm-ir-sign-situation': rpmIrSignSituation,
+  'rpm-ir-classify-integers': rpmIrClassifyIntegers,
+  'rpm-ir-classify-rationals': rpmIrClassifyRationals,
+  'rpm-ir-number-line-read': rpmIrNumberLineRead,
+  'rpm-ir-midpoint-distance': rpmIrMidpointDistance,
+  'rpm-ir-abs-basic-extremum': rpmIrAbsBasicExtremum,
+  'rpm-ir-abs-properties': rpmIrAbsProperties,
+  'rpm-ir-abs-range-count': rpmIrAbsRangeCount,
+  'rpm-ir-opposite-signs-abs': rpmIrOppositeSignsAbs,
+  'rpm-ir-compare-order': rpmIrCompareOrder,
+  'rpm-ir-inequality-phrasing': rpmIrInequalityPhrasing,
+  'rpm-ir-between-integers-fractions': rpmIrBetweenIntegersFractions,
+  'rpm-ir-abs-pairs-ratio': rpmIrAbsPairsRatio,
+  'rpm-ir-deduce-multi-order': rpmIrDeduceMultiOrder,
+  'rpm-ir-all-types-mixed': rpmIrAllTypesMixed,
+
+  // Legacy aliases
+  'rpmRationalEquidistant': rpmIrMidpointDistance,
+  'rpmRationalAbsoluteCount': rpmIrAbsRangeCount,
+
+  // 03 정수와 유리수 기본 탭 호환
+  'positive-negative': rpmIrSignSituation,
+  'integer-classification': rpmIrClassifyIntegers,
+  'rational-classification': rpmIrClassifyRationals,
+  'number-line': rpmIrNumberLineRead,
+  'absolute-value': rpmIrAbsBasicExtremum,
+  'number-comparison': rpmIrCompareOrder,
+  'inequality-expression': rpmIrInequalityPhrasing,
+  'integer-solutions': rpmIrBetweenIntegersFractions,
+  'integer-rational-mixed': rpmIrAllTypesMixed,
   'rational-addition': rpmRationalLineDivision,
   'rational-subtraction': rpmRationalLineDivision,
   'rational-add-subtract': rpmRationalLineDivision,
