@@ -47,90 +47,496 @@ function factorText(factors) {
 }
 
 // -------------------------------------------------------------
-// CHAPTER 01: 소인수분해 응용 (Prime Factorization Applied)
+// -------------------------------------------------------------
+// CHAPTER 01: 소인수분해 응용 (RPM 1-1 Pages 10 ~ 15)
 // -------------------------------------------------------------
 
-// 1. 제곱수 만들기: N * x = y^2 (RPM p.13 #61, p.15 #81)
-export function rpmPrimeMakeSquare(random) {
-  const base1 = pick(random, [2, 3]);
-  const base2 = pick(random, [3, 5, 7]);
-  const base3 = pick(random, [5, 7, 11]);
-  // Odd exponents that need multiplying
-  const e1 = pick(random, [1, 3]);
-  const e2 = pick(random, [1, 2]);
-  const e3 = 1;
-  const n = (base1 ** e1) * (base2 ** e2) * (base3 ** e3);
-  const factors = factorize(n);
-  // Need to multiply prime factors with odd exponent
-  let x = 1;
-  factors.forEach(([p, e]) => {
-    if (e % 2 !== 0) x *= p;
-  });
-  const y = Math.round(Math.sqrt(n * x));
-
-  const askSum = random() < 0.55;
-  const promptKo = `${n}에 가능한 한 가장 작은 자연수 x를 곱하여 어떤 자연수 y의 제곱이 되도록 할 때, ${askSum ? 'x + y의 값' : '가장 작은 자연수 x의 값'}을 구하시오.`;
-  const promptEn = `Multiply ${n} by the smallest natural number x so that the result is the square of a natural number y. Find ${askSum ? 'the value of x + y' : 'the smallest natural number x'}.`;
-  const ans = askSum ? x + y : x;
-
-  return {
-    prompt: promptKo,
-    promptEn,
-    expression: `${n} × x = y^2`,
-    answer: String(ans),
-    explanation: `${n}을 소인수분해하면 ${factorText(factors)}입니다. 제곱수가 되려면 모든 소인수의 지수가 짝수이어야 하므로 가장 작은 x = ${x}입니다. 이때 y² = ${n * x} = ${y}²이므로 y = ${y}입니다. 따라서 ${askSum ? `x + y = ${x} + ${y} = ${ans}` : `x = ${x}`}입니다.`,
-  };
+// [유형 01] 소수와 합성수의 성질 및 추론 (RPM #36, #37, #38, #39, #71, #75)
+export function rpmPrimePropClosest(random) {
+  const variant = pick(random, ['closest', 'countInList', 'lessThanCount']);
+  if (variant === 'closest') {
+    const T = pick(random, [14, 20, 32, 38, 62, 74]);
+    const a = T - 1;
+    const b = T + 1;
+    const ans = a + b;
+    return {
+      prompt: `${T}에 가장 가까운 소수를 a, ${T}을 제외하고 가장 가까운 합성수를 b라 할 때, a + b의 값을 구하시오.`,
+      promptEn: `Let a be the prime closest to ${T}, and b be the composite number closest to ${T} (excluding ${T}). Find a + b.`,
+      expression: `소수 a = ${a}, 합성수 b = ${b}`,
+      answer: String(ans),
+      explanation: `${T}에 가장 가까운 소수는 ${a}이고, ${T}을 제외하고 가장 가까운 합성수는 ${b}입니다. 따라서 a + b = ${a} + ${b} = ${ans}입니다.`,
+    };
+  } else if (variant === 'countInList') {
+    const askPrime = random() < 0.5;
+    const primesPool = [7, 23, 47, 71, 101, 113, 127];
+    const trickyCompositesPool = [21, 33, 91, 119, 143, 161, 237];
+    const selectedPrimes = [];
+    const primeCount = ri(random, 2, 4);
+    for (let i = 0; i < primeCount; i += 1) {
+      const p = pick(random, primesPool.filter((x) => !selectedPrimes.includes(x)));
+      if (p) selectedPrimes.push(p);
+    }
+    const selectedComposites = [];
+    const compCount = ri(random, 2, 4);
+    for (let i = 0; i < compCount; i += 1) {
+      const c = pick(random, trickyCompositesPool.filter((x) => !selectedComposites.includes(x)));
+      if (c) selectedComposites.push(c);
+    }
+    const list = [1, ...selectedPrimes, ...selectedComposites].sort(() => random() - 0.5);
+    const ans = askPrime ? selectedPrimes.length : selectedComposites.length;
+    return {
+      prompt: `다음 수 중에서 ${askPrime ? '소수' : '합성수'}는 모두 몇 개인지 구하시오.`,
+      promptEn: `How many ${askPrime ? 'prime numbers' : 'composite numbers'} are in the following list?`,
+      expression: list.join(', '),
+      answer: String(ans),
+      answerSuffix: '개',
+      explanation: `1은 소수도 아니고 합성수도 아닙니다. 리스트의 수 중 소수는 [${selectedPrimes.sort((x, y) => x - y).join(', ')}] (${selectedPrimes.length}개)이고, 합성수는 [${selectedComposites.sort((x, y) => x - y).join(', ')}] (${selectedComposites.length}개)입니다. 따라서 정답은 ${ans}개입니다.`,
+    };
+  } else {
+    const N = pick(random, [20, 25, 30]);
+    let primeCount = 0;
+    for (let i = 2; i < N; i += 1) {
+      if (isPrime(i)) primeCount += 1;
+    }
+    const ans = (N - 1) - 1 - primeCount;
+    return {
+      prompt: `${N} 미만의 자연수 중에서 합성수는 모두 몇 개인지 구하시오.`,
+      promptEn: `How many composite numbers are strictly less than ${N}?`,
+      expression: `1 이상 ${N} 미만의 자연수`,
+      answer: String(ans),
+      answerSuffix: '개',
+      explanation: `1부터 ${N - 1}까지의 자연수 총 ${N - 1}개 중에서 1은 소수도 합성수도 아니므로 제외합니다. 이 중 소수는 ${primeCount}개이므로, 합성수의 개수는 (${N - 1} - 1) - ${primeCount} = ${ans}개입니다.`,
+    };
+  }
 }
 
-// 2. 약수의 개수가 주어졌을 때 지수/미지수 구하기 (RPM p.12 #58, #59)
+// [유형 02] 거듭제곱의 성질과 일의 자리 규칙 (RPM #40, #41, #42, #43, #68, #74, #83)
+export function rpmPrimePowerRules(random) {
+  const variant = pick(random, ['unitsDigit', 'powerEquation', 'combinedPower']);
+  if (variant === 'unitsDigit') {
+    const base1 = pick(random, [2, 3, 7, 8]);
+    const exp1 = ri(random, 21, 65);
+    const base2 = pick(random, [3, 7, 8, 9]);
+    const exp2 = ri(random, 5, 35);
+    const getUnitsCycle = (b) => {
+      const cycle = [];
+      let cur = b % 10;
+      while (!cycle.includes(cur)) {
+        cycle.push(cur);
+        cur = (cur * b) % 10;
+      }
+      return cycle;
+    };
+    const cycle1 = getUnitsCycle(base1);
+    const cycle2 = getUnitsCycle(base2);
+    const u1 = cycle1[(exp1 - 1) % cycle1.length];
+    const u2 = cycle2[(exp2 - 1) % cycle2.length];
+    const ans = (u1 * u2) % 10;
+    return {
+      prompt: `${base1}^${exp1} × ${base2}^${exp2}의 일의 자리의 숫자를 구하시오.`,
+      promptEn: `Find the units digit of ${base1}^${exp1} × ${base2}^${exp2}.`,
+      expression: `${base1}^${exp1} × ${base2}^${exp2}의 일의 자리`,
+      answer: String(ans),
+      explanation: `${base1}의 거듭제곱의 일의 자리는 [${cycle1.join(', ')}]로 주기가 ${cycle1.length}입니다. ${exp1}번째는 ${u1}입니다. ${base2}의 거듭제곱의 일의 자리는 [${cycle2.join(', ')}]로 주기가 ${cycle2.length}이며 ${exp2}번째는 ${u2}입니다. 따라서 일의 자리 숫자는 (${u1} × ${u2})의 일의 자리인 ${ans}입니다.`,
+    };
+  } else if (variant === 'powerEquation') {
+    const p = pick(random, [2, 3]);
+    const a = p === 2 ? ri(random, 4, 7) : ri(random, 3, 6);
+    const q = p === 2 ? pick(random, [3, 5]) : pick(random, [2, 5]);
+    const b = q === 2 ? ri(random, 4, 7) : ri(random, 2, 4);
+    const v1 = p ** a;
+    const v2 = q ** b;
+    const ans = a + b;
+    return {
+      prompt: `${p}^a = ${v1}, ${q}^b = ${v2}일 때, a + b의 값을 구하시오. (단, a, b는 자연수)`,
+      promptEn: `If ${p}^a = ${v1} and ${q}^b = ${v2}, find a + b where a, b are natural numbers.`,
+      expression: `${p}^a = ${v1}, ${q}^b = ${v2}`,
+      answer: String(ans),
+      explanation: `${p}^${a} = ${v1}이므로 a = ${a}이고, ${q}^${b} = ${v2}이므로 b = ${b}입니다. 따라서 a + b = ${a} + ${b} = ${ans}입니다.`,
+    };
+  } else {
+    const countA = ri(random, 2, 4);
+    const countB = ri(random, 2, 4);
+    const countC = ri(random, 1, 3);
+    const arr = [
+      ...Array(countA).fill('a'),
+      ...Array(countB).fill('b'),
+      ...Array(countC).fill('c'),
+    ].sort(() => random() - 0.5);
+    const ans = countA + countB - countC;
+    return {
+      prompt: `${arr.join(' × ')} = a^x × b^y × c^z일 때, x + y - z의 값을 구하시오. (단, a, b, c는 서로 다른 소수이고 x, y, z는 자연수)`,
+      promptEn: `If ${arr.join(' × ')} = a^x × b^y × c^z, find x + y - z.`,
+      expression: `${arr.join(' × ')}`,
+      answer: String(ans),
+      explanation: `a가 ${countA}번 곱해졌으므로 x = ${countA}, b가 ${countB}번 곱해졌으므로 y = ${countB}, c가 ${countC}번 곱해졌으므로 z = ${countC}입니다. 따라서 x + y - z = ${countA} + ${countB} - ${countC} = ${ans}입니다.`,
+    };
+  }
+}
+
+// [유형 03] 소인수분해와 지수 연산 (RPM #44, #45, #46, #47, #69)
+export function rpmPrimeFactorizeExponents(random) {
+  const variant = pick(random, ['solveLinearFactors', 'orderedPrimes', 'correctFactorization']);
+  if (variant === 'solveLinearFactors') {
+    const [a, b, c] = pick(random, [
+      [3, 2, 5],
+      [3, 2, 7],
+      [4, 1, 5],
+      [2, 3, 5],
+      [3, 2, 11],
+    ]);
+    const N = (2 ** a) * (3 ** b) * c;
+    const ans = a - b + c;
+    return {
+      prompt: `${N}을 소인수분해하면 2^a × 3^b × c일 때, a - b + c의 값을 구하시오. (단, a, b는 자연수이고 c는 5 이상의 소수)`,
+      promptEn: `When ${N} is factored into 2^a × 3^b × c, find a - b + c where c is a prime ≥ 5.`,
+      expression: `${N} = 2^a × 3^b × c`,
+      answer: String(ans),
+      explanation: `${N}을 소인수분해하면 2^${a} × 3^${b} × ${c}입니다. 따라서 a = ${a}, b = ${b}, c = ${c}이므로 a - b + c = ${a} - ${b} + ${c} = ${ans}입니다.`,
+    };
+  } else if (variant === 'orderedPrimes') {
+    const [a, b, m, n] = pick(random, [
+      [3, 5, 2, 2],
+      [2, 3, 3, 2],
+      [2, 3, 2, 3],
+      [2, 5, 3, 2],
+      [3, 5, 3, 2],
+      [2, 7, 3, 2],
+    ]);
+    const N = (a ** m) * (b ** n);
+    const ans = a + b - m + n;
+    return {
+      prompt: `${N}을 a^m × b^n으로 소인수분해하였을 때, 자연수 a, b, m, n에 대하여 a + b - m + n의 값을 구하시오. (단, a, b는 a < b인 서로 다른 소수)`,
+      promptEn: `When ${N} is factored into a^m × b^n (a < b primes), find a + b - m + n.`,
+      expression: `${N} = a^m × b^n`,
+      answer: String(ans),
+      explanation: `${N}을 소인수분해하면 ${a}^${m} × ${b}^${n}입니다. a < b이므로 a = ${a}, b = ${b}, m = ${m}, n = ${n}입니다. 따라서 a + b - m + n = ${a} + ${b} - ${m} + ${n} = ${ans}입니다.`,
+    };
+  } else {
+    const [val, correctStr, wrong1, wrong2, wrong3] = pick(random, [
+      [504, '2^3 × 3^2 × 7', '2^3 × 3^4', '2^3 × 11^2', '2^2 × 3^3 × 5'],
+      [360, '2^3 × 3^2 × 5', '2^4 × 3 × 5', '2^3 × 9 × 5', '2^2 × 3^3 × 5'],
+      [180, '2^2 × 3^2 × 5', '2 × 3^2 × 10', '2^3 × 3 × 5', '4 × 9 × 5'],
+    ]);
+    const choices = [
+      { value: '1', label: correctStr },
+      { value: '2', label: wrong1 },
+      { value: '3', label: wrong2 },
+      { value: '4', label: wrong3 },
+    ].sort(() => random() - 0.5);
+    const correctIdx = choices.findIndex((c) => c.label === correctStr) + 1;
+    return {
+      prompt: `다음 중 ${val}을 올바르게 소인수분해한 것을 고르시오.`,
+      promptEn: `Which of the following is the correct prime factorization of ${val}?`,
+      expression: `${val}`,
+      answer: String(correctIdx),
+      choices,
+      explanation: `${val}을 소인수분해하면 거듭제곱과 소수들의 곱으로 나타내어 ${correctStr}입니다. 합성수가 남아있거나 곱의 결과가 다른 보기는 올바르지 않습니다. 정답은 ${correctIdx}번(${correctStr})입니다.`,
+    };
+  }
+}
+
+// [유형 04] 소인수의 합과 소인수 분석 (RPM #48, #49, #50, #51, #72)
+export function rpmPrimeFactorAnalysis(random) {
+  const variant = pick(random, ['sumOfFactors', 'compositeExam', 'oddFactorSet']);
+  if (variant === 'sumOfFactors') {
+    const N = pick(random, [84, 126, 150, 210, 330, 420]);
+    const factors = factorize(N);
+    const primes = factors.map(([p]) => p);
+    const ans = primes.reduce((sum, p) => sum + p, 0);
+    return {
+      prompt: `${N}의 모든 소인수의 합을 구하시오.`,
+      promptEn: `Find the sum of all prime factors of ${N}.`,
+      expression: `${N}의 소인수의 합`,
+      answer: String(ans),
+      explanation: `${N}을 소인수분해하면 ${factorText(factors)}입니다. 따라서 ${N}의 소인수는 ${primes.join(', ')}이므로 그 합은 ${primes.join(' + ')} = ${ans}입니다.`,
+    };
+  } else if (variant === 'compositeExam') {
+    const N1 = 90;
+    const N2 = 108;
+    const c = 4;
+    const a = 10;
+    const b = 12;
+    const ans = a + b - c;
+    return {
+      prompt: `${N1}의 소인수의 합을 a, ${N2}의 약수의 개수를 b개, 한 자리의 소수의 개수를 c개라 할 때, a + b - c의 값을 구하시오.`,
+      promptEn: `Let a be the sum of prime factors of ${N1}, b be the number of divisors of ${N2}, and c be the number of 1-digit primes. Find a + b - c.`,
+      expression: `a = ${a}, b = ${b}, c = ${c}`,
+      answer: String(ans),
+      explanation: `${N1} = 2 × 3² × 5이므로 소인수의 합 a = 2 + 3 + 5 = ${a}입니다. ${N2} = 2² × 3³이므로 약수의 개수 b = (2+1)(3+1) = ${b}개입니다. 한 자리의 소수는 2, 3, 5, 7로 c = ${c}개입니다. 따라서 a + b - c = ${a} + ${b} - ${c} = ${ans}입니다.`,
+    };
+  } else {
+    const baseList = [18, 48, 54, 144];
+    const diffNumber = pick(random, [42, 60, 70, 84]);
+    const all = [...baseList, diffNumber].sort(() => random() - 0.5);
+    const diffFactors = factorize(diffNumber).map(([p]) => p).join(', ');
+    return {
+      prompt: `다음 수 중에서 소인수의 종류가 나머지 네 수와 다른 하나를 구하시오.`,
+      promptEn: `Which number has a different set of prime factors compared to the other four?`,
+      expression: all.join(', '),
+      answer: String(diffNumber),
+      explanation: `${baseList.join(', ')}은 모두 소인수가 {2, 3}뿐이지만, ${diffNumber}의 소인수는 {${diffFactors}}입니다. 따라서 소인수가 다른 수는 ${diffNumber}입니다.`,
+    };
+  }
+}
+
+// [유형 05] 약수와 거듭제곱 약수의 성질 (RPM #52, #53, #54, #55, #73, #77)
+export function rpmPrimeDivisorProperties(random) {
+  const variant = pick(random, ['squareDivisors', 'secondRankedDivisors', 'invalidDivisor']);
+  if (variant === 'squareDivisors') {
+    const [p1, p2, e1, e2] = pick(random, [
+      [2, 3, 3, 3],
+      [2, 3, 4, 2],
+      [2, 5, 4, 2],
+      [2, 3, 6, 2],
+      [2, 3, 2, 4],
+    ]);
+    const N = (p1 ** e1) * (p2 ** e2);
+    const countP1 = Math.floor(e1 / 2) + 1;
+    const countP2 = Math.floor(e2 / 2) + 1;
+    const ans = countP1 * countP2;
+    return {
+      prompt: `${N}의 약수 중에서 어떤 자연수의 제곱이 되는 수의 개수를 구하시오.`,
+      promptEn: `Find the number of divisors of ${N} that are perfect squares.`,
+      expression: `${N} = ${p1}^${e1} × ${p2}^${e2}`,
+      answer: String(ans),
+      answerSuffix: '개',
+      explanation: `${N} = ${p1}^${e1} × ${p2}^${e2}의 약수 중 어떤 자연수의 제곱이 되는 수는 소인수의 지수가 모두 짝수(0 포함)이어야 합니다. ${p1}의 지수로 가능한 것은 ${countP1}개, ${p2}의 지수로 가능한 것은 ${countP2}개이므로 총 개수는 ${countP1} × ${countP2} = ${ans}개입니다.`,
+    };
+  } else if (variant === 'secondRankedDivisors') {
+    const p1 = pick(random, [2, 3]);
+    const p2 = p1 === 2 ? pick(random, [3, 5]) : 5;
+    const p3 = p2 === 3 ? 5 : 7;
+    const e1 = ri(random, 1, 2);
+    const N = (p1 ** e1) * p2 * p3;
+    const a = p1;
+    const b = N / p1;
+    const ans = a + b;
+    return {
+      prompt: `${N}의 약수 중 두 번째로 작은 수를 a, 두 번째로 큰 수를 b라 할 때, a + b의 값을 구하시오.`,
+      promptEn: `Let a be the 2nd smallest divisor and b be the 2nd largest divisor of ${N}. Find a + b.`,
+      expression: `${N}의 약수`,
+      answer: String(ans),
+      explanation: `모든 자연수의 가장 작은 약수는 1이므로 두 번째로 작은 약수는 가장 작은 소인수인 ${a}(= a)입니다. 가장 큰 약수는 자기 자신인 ${N}이므로 두 번째로 큰 약수는 ${N} ÷ ${a} = ${b}(= b)입니다. 따라서 a + b = ${a} + ${b} = ${ans}입니다.`,
+    };
+  } else {
+    const baseFact = '2^3 × 5 × 7^2';
+    const correctWrongChoice = '2^3 × 3';
+    const choices = [
+      { value: '1', label: correctWrongChoice },
+      { value: '2', label: '2^2 × 7' },
+      { value: '3', label: '5 × 7^2' },
+      { value: '4', label: '2^3 × 5' },
+    ].sort(() => random() - 0.5);
+    const ansIdx = choices.findIndex((c) => c.label === correctWrongChoice) + 1;
+    return {
+      prompt: `다음 중 ${baseFact}의 약수가 아닌 것을 고르시오.`,
+      promptEn: `Which of the following is NOT a divisor of ${baseFact}?`,
+      expression: `${baseFact}`,
+      answer: String(ansIdx),
+      choices,
+      explanation: `${baseFact}의 약수는 소인수 2, 5, 7만을 포함하며 각 지수가 원래 수의 지수 이하이어야 합니다. ${correctWrongChoice}은 소인수 3을 포함하고 있으므로 약수가 될 수 없습니다. 정답은 ${ansIdx}번입니다.`,
+    };
+  }
+}
+
+// [유형 06] 약수의 개수 공식과 미지수 지수 (RPM #56, #57, #58, #59, #70, #80)
 export function rpmPrimeDivisorCountReverse(random) {
-  const p1 = pick(random, [2, 3]);
-  const p2 = p1 === 2 ? 3 : 5;
-  const p3 = p2 === 3 ? 5 : 7;
-  const e1 = ri(random, 2, 4);
-  const targetN = ri(random, 1, 4);
-  const totalDivisors = (e1 + 1) * 2 * (targetN + 1);
-
-  const promptKo = `${p1}^${e1} × ${p2} × ${p3}^n의 약수의 개수가 ${totalDivisors}개일 때, 자연수 n의 값을 구하시오.`;
-  const promptEn = `The number of divisors of ${p1}^${e1} × ${p2} × ${p3}^n is ${totalDivisors}. Find the natural number n.`;
-
-  return {
-    prompt: promptKo,
-    promptEn,
-    expression: `약수의 개수: ${totalDivisors}개`,
-    answer: String(targetN),
-    explanation: `약수의 개수는 각 소인수의 (지수 + 1)의 곱이므로, (${e1} + 1) × (1 + 1) × (n + 1) = ${totalDivisors}입니다. 즉 ${ (e1 + 1) * 2 } × (n + 1) = ${totalDivisors}에서 n + 1 = ${targetN + 1}, 따라서 n = ${targetN}입니다.`,
-  };
+  const variant = pick(random, ['findExponent', 'equalDivisors', 'unknownPrimeSquare']);
+  if (variant === 'findExponent') {
+    const e1 = 3;
+    const targetA = ri(random, 2, 5);
+    const e3 = 2;
+    const totalDivisors = (e1 + 1) * (targetA + 1) * (e3 + 1);
+    return {
+      prompt: `8 × 3^a × 5^2의 약수의 개수가 ${totalDivisors}개일 때, 자연수 a의 값을 구하시오.`,
+      promptEn: `The number of divisors of 8 × 3^a × 5^2 is ${totalDivisors}. Find the natural number a.`,
+      expression: `약수의 개수: ${totalDivisors}개`,
+      answer: String(targetA),
+      explanation: `8 = 2³이므로 8 × 3^a × 5² = 2³ × 3^a × 5²입니다. 약수의 개수는 (3 + 1)(a + 1)(2 + 1) = 12(a + 1) = ${totalDivisors}개입니다. 따라서 a + 1 = ${targetA + 1}이므로 a = ${targetA}입니다.`,
+    };
+  } else if (variant === 'equalDivisors') {
+    const targetN = ri(random, 2, 4);
+    const givenDivisors = 6 * (targetN + 1);
+    return {
+      prompt: `약수의 개수가 ${givenDivisors}개인 수와 2^2 × 3 × 5^n의 약수의 개수가 같을 때, 자연수 n의 값을 구하시오.`,
+      promptEn: `A number has ${givenDivisors} divisors. If 2^2 × 3 × 5^n has the same number of divisors, find the natural number n.`,
+      expression: `(2+1) × (1+1) × (n+1) = ${givenDivisors}`,
+      answer: String(targetN),
+      explanation: `2² × 3 × 5^n의 약수의 개수는 (2 + 1)(1 + 1)(n + 1) = 6(n + 1)입니다. 6(n + 1) = ${givenDivisors}에서 n + 1 = ${targetN + 1}이므로 n = ${targetN}입니다.`,
+    };
+  } else {
+    const ans = 144;
+    return {
+      prompt: `x = 2^4 × a^2 (a는 소수)의 약수의 개수가 15개일 때, 가장 작은 자연수 x의 값을 구하시오.`,
+      promptEn: `Given x = 2^4 × a^2 where a is a prime, and x has 15 divisors. Find the smallest natural number x.`,
+      expression: `x = 2^4 × a^2, 약수 15개`,
+      answer: String(ans),
+      explanation: `만약 a = 2이면 x = 2^6이 되어 약수의 개수는 7개이므로 조건에 맞지 않습니다. 따라서 a는 2가 아닌 소수이어야 하며, 약수의 개수는 (4 + 1)(2 + 1) = 15개입니다. x가 가장 작은 자연수가 되려면 a는 2가 아닌 가장 작은 소수인 3이어야 합니다. 따라서 x = 2⁴ × 3² = 16 × 9 = ${ans}입니다.`,
+    };
+  }
 }
 
-// 3. 약수 중 두 번째로 작은 수와 두 번째로 큰 수 (RPM p.15 #77)
-export function rpmPrimeRankDivisors(random) {
-  const p1 = pick(random, [2, 3]);
-  const p2 = pick(random, [3, 5, 7]);
-  const e1 = ri(random, 1, 3);
-  const e2 = ri(random, 1, 2);
-  const n = (p1 ** e1) * (p2 ** e2);
-  const smallestPrime = Math.min(p1, p2);
-  const secondSmallest = smallestPrime;
-  const secondLargest = n / smallestPrime;
-  const ans = secondSmallest + secondLargest;
-
-  const promptKo = `${n}의 약수 중 두 번째로 작은 수를 a, 두 번째로 큰 수를 b라 할 때, a + b의 값을 구하시오.`;
-  const promptEn = `Let a be the second smallest divisor of ${n}, and b be the second largest divisor of ${n}. Find a + b.`;
-
-  return {
-    prompt: promptKo,
-    promptEn,
-    expression: `${n}의 약수`,
-    answer: String(ans),
-    explanation: `${n}의 약수 중 가장 작은 수는 1이고, 두 번째로 작은 수는 가장 작은 소인수인 ${secondSmallest}(= a)입니다. 가장 큰 약수는 ${n}이고, 두 번째로 큰 수는 ${n} ÷ ${secondSmallest} = ${secondLargest}(= b)입니다. 따라서 a + b = ${secondSmallest} + ${secondLargest} = ${ans}입니다.`,
-  };
+// [유형 07] 제곱인 수 만들기 (RPM #60, #61, #62, #63, #76, #81)
+export function rpmPrimeMakeSquare(random) {
+  const variant = pick(random, ['multiplySquare', 'divideSquare', 'secondSmallestMultiplier']);
+  if (variant === 'multiplySquare') {
+    const base1 = pick(random, [2, 3]);
+    const base2 = pick(random, [3, 5, 7]);
+    const base3 = pick(random, [5, 7, 11]);
+    const e1 = pick(random, [1, 3]);
+    const e2 = pick(random, [1, 2]);
+    const e3 = 1;
+    const n = (base1 ** e1) * (base2 ** e2) * (base3 ** e3);
+    const factors = factorize(n);
+    let x = 1;
+    factors.forEach(([p, e]) => {
+      if (e % 2 !== 0) x *= p;
+    });
+    const y = Math.round(Math.sqrt(n * x));
+    const askSum = random() < 0.55;
+    const ans = askSum ? x + y : x;
+    return {
+      prompt: `${n}에 가능한 한 가장 작은 자연수 x를 곱하여 어떤 자연수 y의 제곱이 되도록 할 때, ${askSum ? 'x + y의 값' : '가장 작은 자연수 x의 값'}을 구하시오.`,
+      promptEn: `Multiply ${n} by the smallest natural number x to make it a square of natural number y. Find ${askSum ? 'x + y' : 'x'}.`,
+      expression: `${n} × x = y^2`,
+      answer: String(ans),
+      explanation: `${n}을 소인수분해하면 ${factorText(factors)}입니다. 제곱수가 되려면 모든 소인수의 지수가 짝수이어야 하므로 곱해야 할 가장 작은 수 x = ${x}입니다. 이때 y² = ${n * x} = ${y}²이므로 y = ${y}입니다. 따라서 ${askSum ? `x + y = ${x} + ${y} = ${ans}` : `x = ${x}`}입니다.`,
+    };
+  } else if (variant === 'divideSquare') {
+    const [n, a, b] = pick(random, [
+      [180, 5, 6],
+      [525, 21, 5],
+      [72, 2, 6],
+      [240, 15, 4],
+      [200, 2, 10],
+    ]);
+    const askSum = random() < 0.5;
+    const ans = askSum ? a + b : a;
+    return {
+      prompt: `${n}을 가장 작은 자연수 a로 나누어 어떤 자연수 b의 제곱이 되도록 할 때, ${askSum ? 'a + b의 값' : '나누어야 하는 수 a'}을 구하시오.`,
+      promptEn: `Divide ${n} by the smallest natural number a to make it a square of natural number b. Find ${askSum ? 'a + b' : 'a'}.`,
+      expression: `${n} ÷ a = b^2`,
+      answer: String(ans),
+      explanation: `${n}을 소인수분해하면 지수가 홀수인 소인수들의 곱이 ${a}입니다. 따라서 가장 작은 자연수 a = ${a}로 나누면 ${n} ÷ ${a} = ${b * b} = ${b}²이 되어 b = ${b}입니다. 따라서 ${askSum ? `a + b = ${a} + ${b} = ${ans}` : `a = ${a}`}입니다.`,
+    };
+  } else {
+    const [n, minK] = pick(random, [
+      [540, 15],
+      [72, 2],
+      [120, 30],
+      [84, 21],
+    ]);
+    const ans = minK * 4;
+    return {
+      prompt: `${n}에 자연수를 곱하여 어떤 자연수의 제곱이 되도록 할 때, 곱해야 하는 자연수 중 두 번째로 작은 수를 구하시오.`,
+      promptEn: `When multiplying ${n} by a natural number to make it a square, find the second smallest such multiplier.`,
+      expression: `${n} × k = □^2`,
+      answer: String(ans),
+      explanation: `${n}을 소인수분해했을 때 지수가 홀수인 소인수의 곱은 ${minK}입니다. 제곱수가 되기 위해 곱하는 수는 ${minK} × 1², ${minK} × 2², ${minK} × 3² ... 의 형태입니다. 따라서 가장 작은 수는 ${minK}이고, 두 번째로 작은 수는 ${minK} × 2² = ${minK} × 4 = ${ans}입니다.`,
+    };
+  }
 }
 
-// 4. 소인수분해 종합 응용
-export function rpmPrimeFactorizationMixed(random) {
-  const fn = pick(random, [rpmPrimeMakeSquare, rpmPrimeDivisorCountReverse, rpmPrimeRankDivisors]);
-  return fn(random);
+// [유형 08] 약수의 개수가 주어질 때 □ 구하기 (RPM #64, #65, #78)
+export function rpmPrimeUnknownInDivisorCount(random) {
+  const variant = pick(random, ['selectBox', 'smallestBox', 'cannotBeBox']);
+  if (variant === 'smallestBox') {
+    const ans = 4;
+    return {
+      prompt: `2 × 3 × □의 약수의 개수가 8개일 때, □ 안에 들어갈 수 있는 가장 작은 자연수를 구하시오.`,
+      promptEn: `The number of divisors of 2 × 3 × □ is 8. Find the smallest natural number for □.`,
+      expression: `2 × 3 × □의 약수 = 8개`,
+      answer: String(ans),
+      explanation: `약수의 개수가 8개이므로 (1) □ = 5(새로운 소수)이면 2 × 3 × 5의 약수의 개수는 (1+1)(1+1)(1+1) = 8개입니다. (2) □ = 2² = 4이면 2³ × 3의 약수의 개수는 (3+1)(1+1) = 8개입니다. (3) □ = 3² = 9이면 2 × 3³의 약수의 개수는 8개입니다. 이 중 가장 작은 자연수는 □ = ${ans}입니다.`,
+    };
+  } else if (variant === 'cannotBeBox') {
+    const choices = [
+      { value: '1', label: '2' },
+      { value: '2', label: '3' },
+      { value: '3', label: '5' },
+      { value: '4', label: '7' },
+      { value: '5', label: '11' },
+    ];
+    return {
+      prompt: `8 × □의 약수의 개수가 8개일 때, 다음 중 □ 안에 들어갈 수 없는 수는?`,
+      promptEn: `The number of divisors of 8 × □ is 8. Which of the following CANNOT be □?`,
+      expression: `8 × □`,
+      answer: '1',
+      choices,
+      explanation: `8 = 2³입니다. □ = 2이면 8 × 2 = 2⁴이 되어 약수의 개수는 4 + 1 = 5개이므로 8개가 되지 않습니다. (다른 보기 3, 5, 7, 11 등 서로 다른 소수가 들어가면 2³ × p의 약수의 개수는 4 × 2 = 8개로 모두 성립합니다.) 따라서 정답은 1번(2)입니다.`,
+    };
+  } else {
+    const choices = [
+      { value: '1', label: '2' },
+      { value: '2', label: '3' },
+      { value: '3', label: '4' },
+      { value: '4', label: '5' },
+      { value: '5', label: '6' },
+    ];
+    return {
+      prompt: `24 × □의 약수의 개수가 16개일 때, 다음 중 □ 안에 알맞은 수는?`,
+      promptEn: `The number of divisors of 24 × □ is 16. Which number fits in □?`,
+      expression: `24 × □`,
+      answer: '4',
+      choices,
+      explanation: `24 = 2³ × 3입니다. □ = 5일 때 2³ × 3 × 5가 되어 약수의 개수는 (3+1)(1+1)(1+1) = 16개로 조건을 만족합니다. 정답은 4번(5)입니다.`,
+    };
+  }
+}
+
+// [유형 09] 약수의 개수가 n개인 자연수 추론 (RPM #66, #67, #79, #82)
+export function rpmPrimeDivisorCountReverseDeduce(random) {
+  const variant = pick(random, ['functionProduct', 'countExactSix', 'conditionSmallest']);
+  if (variant === 'functionProduct') {
+    const [A, B, ans, expReason] = pick(random, [
+      [35, 36, 36, '35 = 5 × 7이므로 f(35) = 4입니다. 4 × f(x) = 36에서 f(x) = 9입니다. 약수의 개수가 9개인 수 중 가장 작은 수는 2² × 3² = 36입니다. (2^8 = 256 > 36)'],
+      [120, 64, 6, '120 = 2³ × 3 × 5이므로 N(120) = 16입니다. 16 × N(x) = 64에서 N(x) = 4입니다. 약수의 개수가 4개인 수 중 가장 작은 수는 2 × 3 = 6입니다. (2³ = 8 > 6)'],
+      [20, 36, 12, '20 = 2² × 5이므로 f(20) = 6입니다. 6 × f(x) = 36에서 f(x) = 6입니다. 약수의 개수가 6개인 수 중 가장 작은 수는 2² × 3 = 12입니다. (2^5 = 32 > 12)'],
+    ]);
+    return {
+      prompt: `자연수 n의 약수의 개수를 f(n)이라 할 때, f(${A}) × f(x) = ${B}를 만족시키는 가장 작은 자연수 x의 값을 구하시오.`,
+      promptEn: `Let f(n) be the number of divisors of n. If f(${A}) × f(x) = ${B}, find the smallest natural number x.`,
+      expression: `f(${A}) × f(x) = ${B}`,
+      answer: String(ans),
+      explanation: `${expReason} 따라서 가장 작은 자연수 x = ${ans}입니다.`,
+    };
+  } else if (variant === 'countExactSix') {
+    const ans = 8;
+    return {
+      prompt: `1에서 50까지의 자연수 중에서 약수의 개수가 6개인 수는 모두 몇 개인지 구하시오.`,
+      promptEn: `How many natural numbers from 1 to 50 have exactly 6 divisors?`,
+      expression: `1부터 50까지, 약수의 개수 6개`,
+      answer: String(ans),
+      answerSuffix: '개',
+      explanation: `약수의 개수가 6개인 수는 a^5 꼴 또는 a² × b 꼴 (a, b는 서로 다른 소수)입니다. (1) a^5 꼴: 2^5 = 32 (1개). (2) a² × b 꼴: 2² × b에서 b = 3, 5, 7, 11 (12, 20, 28, 44로 4개), 3² × b에서 b = 2, 5 (18, 45로 2개), 5² × b에서 b = 2 (50으로 1개). 따라서 모두 합하면 1 + 4 + 2 + 1 = ${ans}개입니다.`,
+    };
+  } else {
+    const ans = 405;
+    return {
+      prompt: `다음 조건을 모두 만족하는 자연수 A의 값을 구하시오.\n(가) A를 소인수분해하면 소인수는 3, 5뿐이다.\n(나) A는 약수의 개수가 10개인 가장 작은 수이다.`,
+      promptEn: `Find natural number A satisfying: (a) Prime factors of A are only 3 and 5. (b) A is the smallest number with 10 divisors.`,
+      expression: `소인수 {3, 5}, 약수의 개수 10개인 최소 자연수`,
+      answer: String(ans),
+      explanation: `소인수가 3과 5뿐이므로 A = 3^a × 5^b (a, b는 자연수) 꼴입니다. 약수의 개수가 10개이므로 (a + 1)(b + 1) = 10에서 {a + 1, b + 1} = {2, 5}, 즉 {a, b} = {1, 4}입니다. A가 가장 작은 수가 되려면 밑이 작은 소수 3에 더 큰 지수 4를 주어야 하므로 A = 3⁴ × 5¹ = 81 × 5 = ${ans}입니다. (5⁴ × 3 = 1875보다 405가 더 작음)`,
+    };
+  }
+}
+
+// [응용 실전 종합] RPM 소인수분해 실전 종합 (RPM 유형 01~09 및 중단원/실력UP)
+export function rpmPrimeAllTypesMixed(random) {
+  const allEngines = [
+    rpmPrimePropClosest,
+    rpmPrimePowerRules,
+    rpmPrimeFactorizeExponents,
+    rpmPrimeFactorAnalysis,
+    rpmPrimeDivisorProperties,
+    rpmPrimeDivisorCountReverse,
+    rpmPrimeMakeSquare,
+    rpmPrimeUnknownInDivisorCount,
+    rpmPrimeDivisorCountReverseDeduce,
+  ];
+  return pick(random, allEngines)(random);
 }
 
 // -------------------------------------------------------------
@@ -758,14 +1164,26 @@ export function rpmPropGearPhysics(random) {
 // -------------------------------------------------------------
 
 export const RPM_APPLIED_GENERATORS = {
-  // 01 소인수분해
-  'prime-composite': rpmPrimeFactorizationMixed,
-  'powers': rpmPrimeFactorizationMixed,
-  'power-form': rpmPrimeFactorizationMixed,
+  // 01 소인수분해 RPM 세부 유형 (RPM 1-1 Pages 10~15)
+  'rpm-prime-prop-closest': rpmPrimePropClosest,
+  'rpm-prime-power-rules': rpmPrimePowerRules,
+  'rpm-prime-factorize-exponents': rpmPrimeFactorizeExponents,
+  'rpm-prime-factor-analysis': rpmPrimeFactorAnalysis,
+  'rpm-prime-divisor-properties': rpmPrimeDivisorProperties,
+  'rpm-prime-divisor-count-reverse': rpmPrimeDivisorCountReverse,
+  'rpm-prime-make-square': rpmPrimeMakeSquare,
+  'rpm-prime-unknown-in-divisor-count': rpmPrimeUnknownInDivisorCount,
+  'rpm-prime-divisor-count-reverse-deduce': rpmPrimeDivisorCountReverseDeduce,
+  'rpm-prime-all-types-mixed': rpmPrimeAllTypesMixed,
+
+  // 01 소인수분해 기본 탭 호환
+  'prime-composite': rpmPrimePropClosest,
+  'powers': rpmPrimePowerRules,
+  'power-form': rpmPrimePowerRules,
   'prime-factorization': rpmPrimeMakeSquare,
-  'all-divisors': rpmPrimeRankDivisors,
+  'all-divisors': rpmPrimeDivisorProperties,
   'divisor-count': rpmPrimeDivisorCountReverse,
-  'prime-mixed': rpmPrimeFactorizationMixed,
+  'prime-mixed': rpmPrimeAllTypesMixed,
 
   // 02 최대공약수와 최소공배수
   'common-divisors-gcd': rpmGcdRemainder,

@@ -41,75 +41,204 @@ const tx = (profile, ko, en) => (profile?.locale === 'ko' ? ko : en || ko);
 // -------------------------------------------------------------
 // 01: 소인수분해 응용
 // -------------------------------------------------------------
-function rpmPrimeMakeSquare(random, profile) {
-  const base1 = pick(random, [2, 3]);
-  const base2 = pick(random, [3, 5, 7]);
-  const base3 = pick(random, [5, 7, 11]);
-  const e1 = pick(random, [1, 3]);
-  const e2 = pick(random, [1, 2]);
-  const e3 = 1;
-  const n = (base1 ** e1) * (base2 ** e2) * (base3 ** e3);
-  const factors = factorize(n);
-  let x = 1;
-  factors.forEach(([p, e]) => {
-    if (e % 2 !== 0) x *= p;
-  });
-  const y = Math.round(Math.sqrt(n * x));
-  const askSum = random() < 0.55;
+// -------------------------------------------------------------
+// 01: 소인수분해 응용 (RPM 1-1 Pages 10~15)
+// -------------------------------------------------------------
 
+function rpmPrimePropClosest(random, profile) {
+  const T = pick(random, [14, 20, 32, 38, 62, 74]);
+  const a = T - 1;
+  const b = T + 1;
+  const ans = a + b;
   return {
     prompt: tx(profile,
-      `${n}에 가능한 한 가장 작은 자연수 x를 곱하여 어떤 자연수 y의 제곱이 되도록 할 때, ${askSum ? 'x + y의 값' : '가장 작은 자연수 x의 값'}을 구하시오.`,
-      `Multiply ${n} by the smallest natural number x so that the result is the square of a natural number y. Find ${askSum ? 'x + y' : 'the smallest natural number x'}.`),
-    expression: `${n} × x = y^2`,
-    answer: String(askSum ? x + y : x),
+      `${T}에 가장 가까운 소수를 a, ${T}을 제외하고 가장 가까운 합성수를 b라 할 때, a + b의 값을 구하시오.`,
+      `Let a be the prime closest to ${T}, and b be the composite number closest to ${T} (excluding ${T}). Find a + b.`),
+    expression: `소수 a = ${a}, 합성수 b = ${b}`,
+    answer: String(ans),
     explanation: tx(profile,
-      `${n}을 소인수분해하면 ${factorText(factors)}입니다. 제곱수가 되려면 모든 소인수의 지수가 짝수이어야 하므로 x = ${x}입니다. 이때 y² = ${y}²이므로 y = ${y}입니다. 따라서 ${askSum ? `x + y = ${x + y}` : `x = ${x}`}입니다.`,
-      `Factoring ${n} gives ${factorText(factors)}. For a square, all exponents must be even, so x = ${x}. Then y = ${y}, so ${askSum ? `x + y = ${x + y}` : `x = ${x}`}.`),
+      `${T}에 가장 가까운 소수는 ${a}이고, 가장 가까운 합성수는 ${b}입니다. a + b = ${ans}입니다.`,
+      `The closest prime is ${a}, and closest composite is ${b}. a + b = ${ans}.`),
+  };
+}
+
+function rpmPrimePowerRules(random, profile) {
+  const base1 = pick(random, [2, 3, 7, 8]);
+  const exp1 = ri(random, 21, 65);
+  const base2 = pick(random, [3, 7, 8, 9]);
+  const exp2 = ri(random, 5, 35);
+  const getUnitsCycle = (b) => {
+    const cycle = [];
+    let cur = b % 10;
+    while (!cycle.includes(cur)) {
+      cycle.push(cur);
+      cur = (cur * b) % 10;
+    }
+    return cycle;
+  };
+  const cycle1 = getUnitsCycle(base1);
+  const cycle2 = getUnitsCycle(base2);
+  const u1 = cycle1[(exp1 - 1) % cycle1.length];
+  const u2 = cycle2[(exp2 - 1) % cycle2.length];
+  const ans = (u1 * u2) % 10;
+  return {
+    prompt: tx(profile,
+      `${base1}^${exp1} × ${base2}^${exp2}의 일의 자리의 숫자를 구하시오.`,
+      `Find the units digit of ${base1}^${exp1} × ${base2}^${exp2}.`),
+    expression: `${base1}^${exp1} × ${base2}^${exp2}`,
+    answer: String(ans),
+    explanation: tx(profile,
+      `${base1}의 일의 자리 주기는 ${cycle1.length}, ${base2}의 주기는 ${cycle2.length}이므로 일의 자리는 (${u1} × ${u2})의 일의 자리인 ${ans}입니다.`,
+      `Cycle lengths are ${cycle1.length} and ${cycle2.length}, giving units digit (${u1} × ${u2}) mod 10 = ${ans}.`),
+  };
+}
+
+function rpmPrimeFactorizeExponents(random, profile) {
+  const [a, b, c] = pick(random, [
+    [3, 2, 5],
+    [3, 2, 7],
+    [4, 1, 5],
+    [2, 3, 5],
+    [3, 2, 11],
+  ]);
+  const N = (2 ** a) * (3 ** b) * c;
+  const ans = a - b + c;
+  return {
+    prompt: tx(profile,
+      `${N}을 소인수분해하면 2^a × 3^b × c일 때, a - b + c의 값을 구하시오. (단, a, b는 자연수이고 c는 5 이상의 소수)`,
+      `When ${N} is factored into 2^a × 3^b × c, find a - b + c where c is a prime ≥ 5.`),
+    expression: `${N} = 2^a × 3^b × c`,
+    answer: String(ans),
+    explanation: tx(profile,
+      `${N} = 2^${a} × 3^${b} × ${c}이므로 a - b + c = ${ans}입니다.`,
+      `${N} = 2^${a} × 3^${b} × ${c}, so a - b + c = ${ans}.`),
+  };
+}
+
+function rpmPrimeFactorAnalysis(random, profile) {
+  const N = pick(random, [84, 126, 150, 210, 330, 420]);
+  const factors = factorize(N);
+  const primes = factors.map(([p]) => p);
+  const ans = primes.reduce((sum, p) => sum + p, 0);
+  return {
+    prompt: tx(profile,
+      `${N}의 모든 소인수의 합을 구하시오.`,
+      `Find the sum of all prime factors of ${N}.`),
+    expression: `${N}의 소인수의 합`,
+    answer: String(ans),
+    explanation: tx(profile,
+      `${N}의 소인수는 ${primes.join(', ')}이므로 합은 ${ans}입니다.`,
+      `The prime factors are ${primes.join(', ')}, with sum = ${ans}.`),
+  };
+}
+
+function rpmPrimeDivisorProperties(random, profile) {
+  const [p1, p2, e1, e2] = pick(random, [
+    [2, 3, 3, 3],
+    [2, 3, 4, 2],
+    [2, 5, 4, 2],
+    [2, 3, 6, 2],
+    [2, 3, 2, 4],
+  ]);
+  const N = (p1 ** e1) * (p2 ** e2);
+  const countP1 = Math.floor(e1 / 2) + 1;
+  const countP2 = Math.floor(e2 / 2) + 1;
+  const ans = countP1 * countP2;
+  return {
+    prompt: tx(profile,
+      `${N}의 약수 중에서 어떤 자연수의 제곱이 되는 수의 개수를 구하시오.`,
+      `Find the number of divisors of ${N} that are perfect squares.`),
+    expression: `${N} = ${p1}^${e1} × ${p2}^${e2}`,
+    answer: String(ans),
+    answerSuffix: tx(profile, '개', ''),
+    explanation: tx(profile,
+      `지수가 모두 짝수인 약수의 개수는 ${countP1} × ${countP2} = ${ans}개입니다.`,
+      `Even-exponent divisors count = ${countP1} × ${countP2} = ${ans}.`),
+  };
+}
+
+function rpmPrimeMakeSquare(random, profile) {
+  const [n, minK] = pick(random, [
+    [540, 15],
+    [180, 5],
+    [525, 21],
+    [72, 2],
+    [84, 21],
+  ]);
+  const askSecond = random() < 0.4;
+  const ans = askSecond ? minK * 4 : minK;
+  return {
+    prompt: tx(profile,
+      `${n}에 자연수를 곱하여 어떤 자연수의 제곱이 되도록 할 때, 곱해야 하는 ${askSecond ? '두 번째로 작은 수' : '가장 작은 수'}를 구하시오.`,
+      `Find the ${askSecond ? 'second smallest' : 'smallest'} natural number to multiply by ${n} to obtain a perfect square.`),
+    expression: `${n} × x = y^2`,
+    answer: String(ans),
+    explanation: tx(profile,
+      `${n}을 소인수분해하여 지수가 홀수인 소인수의 곱은 ${minK}입니다. 따라서 정답은 ${ans}입니다.`,
+      `The product of prime factors with odd exponents is ${minK}. Answer is ${ans}.`),
   };
 }
 
 function rpmPrimeDivisorCountReverse(random, profile) {
-  const p1 = pick(random, [2, 3]);
-  const p2 = p1 === 2 ? 3 : 5;
-  const p3 = p2 === 3 ? 5 : 7;
-  const e1 = ri(random, 2, 4);
-  const targetN = ri(random, 1, 4);
-  const totalDivisors = (e1 + 1) * 2 * (targetN + 1);
-
+  const targetA = ri(random, 2, 5);
+  const totalDivisors = 12 * (targetA + 1);
   return {
     prompt: tx(profile,
-      `${p1}^${e1} × ${p2} × ${p3}^n의 약수의 개수가 ${totalDivisors}개일 때, 자연수 n의 값을 구하시오.`,
-      `The number of divisors of ${p1}^${e1} × ${p2} × ${p3}^n is ${totalDivisors}. Find natural number n.`),
+      `8 × 3^a × 5^2의 약수의 개수가 ${totalDivisors}개일 때, 자연수 a의 값을 구하시오.`,
+      `The number of divisors of 8 × 3^a × 5^2 is ${totalDivisors}. Find natural number a.`),
     expression: `약수의 개수: ${totalDivisors}개`,
-    answer: String(targetN),
+    answer: String(targetA),
     explanation: tx(profile,
-      `약수의 개수는 (${e1}+1)×(1+1)×(n+1) = ${totalDivisors}에서 n = ${targetN}입니다.`,
-      `Divisors count = (${e1}+1)(2)(n+1) = ${totalDivisors}, hence n = ${targetN}.`),
+      `8 = 2³이므로 (3+1)(a+1)(2+1) = 12(a+1) = ${totalDivisors}에서 a = ${targetA}입니다.`,
+      `8 = 2³, so (3+1)(a+1)(2+1) = 12(a+1) = ${totalDivisors}, giving a = ${targetA}.`),
   };
 }
 
-function rpmPrimeRankDivisors(random, profile) {
-  const p1 = pick(random, [2, 3]);
-  const p2 = pick(random, [3, 5, 7]);
-  const e1 = ri(random, 1, 3);
-  const e2 = ri(random, 1, 2);
-  const n = (p1 ** e1) * (p2 ** e2);
-  const smallestPrime = Math.min(p1, p2);
-  const secondSmallest = smallestPrime;
-  const secondLargest = n / smallestPrime;
-  const ans = secondSmallest + secondLargest;
-
+function rpmPrimeUnknownInDivisorCount(random, profile) {
+  const ans = 4;
   return {
     prompt: tx(profile,
-      `${n}의 약수 중 두 번째로 작은 수를 a, 두 번째로 큰 수를 b라 할 때, a + b의 값을 구하시오.`,
-      `Let a be the second smallest divisor of ${n}, and b be the second largest. Find a + b.`),
-    expression: `${n}의 약수`,
+      `2 × 3 × □의 약수의 개수가 8개일 때, □ 안에 들어갈 수 있는 가장 작은 자연수를 구하시오.`,
+      `The number of divisors of 2 × 3 × □ is 8. Find the smallest natural number for □.`),
+    expression: `2 × 3 × □의 약수 = 8개`,
     answer: String(ans),
     explanation: tx(profile,
-      `두 번째로 작은 약수는 ${secondSmallest}, 두 번째로 큰 약수는 ${secondLargest}이므로 a + b = ${ans}입니다.`,
-      `The second smallest divisor is ${secondSmallest}, second largest is ${secondLargest}, so a + b = ${ans}.`),
+      `□ = 4(2²)일 때 2³ × 3으로 약수의 개수가 8개가 되며, 이는 소수 5보다 작으므로 가장 작은 수는 ${ans}입니다.`,
+      `When □ = 4 (2²), 2³ × 3 has 8 divisors, and 4 < 5, so the smallest is ${ans}.`),
   };
+}
+
+function rpmPrimeDivisorCountReverseDeduce(random, profile) {
+  const [A, B, ans] = pick(random, [
+    [35, 36, 36],
+    [120, 64, 6],
+    [20, 36, 12],
+  ]);
+  return {
+    prompt: tx(profile,
+      `자연수 n의 약수의 개수를 f(n)이라 할 때, f(${A}) × f(x) = ${B}를 만족시키는 가장 작은 자연수 x의 값을 구하시오.`,
+      `Let f(n) be the number of divisors of n. If f(${A}) × f(x) = ${B}, find the smallest natural number x.`),
+    expression: `f(${A}) × f(x) = ${B}`,
+    answer: String(ans),
+    explanation: tx(profile,
+      `조건을 만족하는 약수의 개수를 구하면 가장 작은 자연수는 ${ans}입니다.`,
+      `Solving for the smallest number yields ${ans}.`),
+  };
+}
+
+function rpmPrimeAllTypesMixed(random, profile) {
+  const allEngines = [
+    rpmPrimePropClosest,
+    rpmPrimePowerRules,
+    rpmPrimeFactorizeExponents,
+    rpmPrimeFactorAnalysis,
+    rpmPrimeDivisorProperties,
+    rpmPrimeDivisorCountReverse,
+    rpmPrimeMakeSquare,
+    rpmPrimeUnknownInDivisorCount,
+    rpmPrimeDivisorCountReverseDeduce,
+  ];
+  return pick(random, allEngines)(random, profile);
 }
 
 // -------------------------------------------------------------
@@ -356,13 +485,26 @@ function rpmPropIntersection(random, profile) {
 }
 
 export const RPM_ADVANCED_ENGINES = {
-  'prime-composite': rpmPrimeMakeSquare,
-  'powers': rpmPrimeDivisorCountReverse,
-  'power-form': rpmPrimeMakeSquare,
+  // 01 소인수분해 RPM 세부 유형 (RPM 1-1 Pages 10~15)
+  'rpm-prime-prop-closest': rpmPrimePropClosest,
+  'rpm-prime-power-rules': rpmPrimePowerRules,
+  'rpm-prime-factorize-exponents': rpmPrimeFactorizeExponents,
+  'rpm-prime-factor-analysis': rpmPrimeFactorAnalysis,
+  'rpm-prime-divisor-properties': rpmPrimeDivisorProperties,
+  'rpm-prime-divisor-count-reverse': rpmPrimeDivisorCountReverse,
+  'rpm-prime-make-square': rpmPrimeMakeSquare,
+  'rpm-prime-unknown-in-divisor-count': rpmPrimeUnknownInDivisorCount,
+  'rpm-prime-divisor-count-reverse-deduce': rpmPrimeDivisorCountReverseDeduce,
+  'rpm-prime-all-types-mixed': rpmPrimeAllTypesMixed,
+
+  // 01 소인수분해 기본 탭 호환
+  'prime-composite': rpmPrimePropClosest,
+  'powers': rpmPrimePowerRules,
+  'power-form': rpmPrimePowerRules,
   'prime-factorization': rpmPrimeMakeSquare,
-  'all-divisors': rpmPrimeRankDivisors,
+  'all-divisors': rpmPrimeDivisorProperties,
   'divisor-count': rpmPrimeDivisorCountReverse,
-  'prime-mixed': (r, p) => pick(r, [rpmPrimeMakeSquare, rpmPrimeDivisorCountReverse, rpmPrimeRankDivisors])(r, p),
+  'prime-mixed': rpmPrimeAllTypesMixed,
 
   'common-divisors-gcd': rpmGcdLcmReverseProduct,
   'gcd-basic': rpmGcdLcmReverseProduct,

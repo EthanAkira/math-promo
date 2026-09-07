@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
-import { findPrimeUnit, localizePrimeUnit, PRIME_UNITS } from './catalog';
+import { findPrimeUnit, localizePrimeUnit, PRIME_BASIC_UNITS, RPM_PRIME_APPLIED_UNITS, PRIME_UNITS } from './catalog';
 import { findRpmAppliedGenerator } from '../rpmAppliedEngine';
 import RpmDiagram from '../RpmDiagram';
 import CurriculumMappingBar from '../CurriculumMappingBar';
@@ -57,7 +57,7 @@ function makeBasicProblems(seed, unit) {
 }
 
 function makeAppliedProblems(seed, unit) {
-  const appliedGenerator = findRpmAppliedGenerator(unit.id);
+  const appliedGenerator = findRpmAppliedGenerator(unit.id) || unit.make;
   if (!appliedGenerator) return makeBasicProblems(seed, unit);
   const random = seededRandom(`${seed}:${unit.id}:applied`);
   const used = new Set();
@@ -94,7 +94,7 @@ export default function PrimeFactorizationGenerator() {
   const { language } = useLanguage();
   const { user, status: authStatus } = useAuth();
   const foreign = isNonKorean(language);
-  const [unitId, setUnitId] = useState(PRIME_UNITS[0].id);
+  const [unitId, setUnitId] = useState(PRIME_BASIC_UNITS[0].id);
   const [seed, setSeed] = useState('PREVIEW1');
   const [tier, setTier] = useState('basic');
   const [view, setView] = useState('problems');
@@ -118,15 +118,19 @@ export default function PrimeFactorizationGenerator() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const initialUnit = findPrimeUnit(params.get('unit')).id;
-    const initialSeed = (params.get('sheet') || createSeed()).toUpperCase();
     const initialTier = params.get('tier') === 'advanced' ? 'advanced' : 'basic';
+    const tierUnits = initialTier === 'advanced' ? RPM_PRIME_APPLIED_UNITS : PRIME_BASIC_UNITS;
+    const requestedUnitId = params.get('unit');
+    const matchedUnit = tierUnits.find((u) => u.id === requestedUnitId) || findPrimeUnit(requestedUnitId);
+    const initialUnit = matchedUnit.id;
+    const initialSeed = (params.get('sheet') || createSeed()).toUpperCase();
     const initialView = params.get('view') === 'answers' ? 'answers' : 'problems';
     setUnitId(initialUnit); setSeed(initialSeed); setTier(initialTier); setView(initialView);
     window.history.replaceState({}, '', buildUrl(initialSeed, initialUnit, initialTier, initialView));
     setReady(true);
   }, []);
 
+  const currentUnits = tier === 'advanced' ? RPM_PRIME_APPLIED_UNITS : PRIME_BASIC_UNITS;
   const unit = findPrimeUnit(unitId);
   const basicProblems = useMemo(() => makeBasicProblems(seed, unit), [seed, unit]);
   const appliedProblems = useMemo(() => makeAppliedProblems(seed, unit), [seed, unit]);
@@ -159,8 +163,14 @@ export default function PrimeFactorizationGenerator() {
       if (!user) { window.alert(tr(language, 'advancedAlertNeedLogin')); return; }
       if (advancedSubStatus !== 'active') { window.alert(tr(language, 'advancedAlertNeedSub')); return; }
     }
-    setTier(nextTier); setAnswers({}); setChecked(false);
-    replaceUrl(seed, unitId, nextTier, view);
+    const nextUnits = nextTier === 'advanced' ? RPM_PRIME_APPLIED_UNITS : PRIME_BASIC_UNITS;
+    const isCurrentValid = nextUnits.some((u) => u.id === unitId);
+    const nextUnitId = isCurrentValid ? unitId : nextUnits[0].id;
+    setTier(nextTier);
+    setUnitId(nextUnitId);
+    setAnswers({});
+    setChecked(false);
+    replaceUrl(seed, nextUnitId, nextTier, view);
   }
 
   function checkAnswers() {
@@ -186,7 +196,7 @@ export default function PrimeFactorizationGenerator() {
       <div>
         <label htmlFor="prime-unit">{tr(language, 'skill')}</label>
         <select id="prime-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>
-          {PRIME_UNITS.map((item) => <option key={item.id} value={item.id}>{localizePrimeUnit(item, language)}</option>)}
+          {currentUnits.map((item) => <option key={item.id} value={item.id}>{localizePrimeUnit(item, language)}</option>)}
         </select>
         <p>{unitDescription}</p>
       </div>

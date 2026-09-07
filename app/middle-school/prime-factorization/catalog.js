@@ -117,7 +117,7 @@ function divisorCount(random) {
 
 const generators = [primeComposite, powers, powerForm, primeFactorization, allDivisors, divisorCount];
 
-export const PRIME_UNITS = [
+export const PRIME_BASIC_UNITS = [
   { id: 'prime-composite', label: '소수와 합성수', description: '자연수가 소수인지 합성수인지 판별하기', en: ['Primes and composites', 'Classify numbers as prime or composite'], make: primeComposite },
   { id: 'powers', label: '거듭제곱과 지수', description: '밑과 지수를 찾고 같은 수의 곱을 거듭제곱으로 나타내기', en: ['Powers and exponents', 'Identify bases and exponents; write repeated products'], make: powers },
   { id: 'power-form', label: '거듭제곱으로 나타내기', description: '자연수를 주어진 밑의 거듭제곱으로 나타내기', en: ['Writing powers', 'Express a number as a power of a given base'], make: powerForm },
@@ -127,12 +127,100 @@ export const PRIME_UNITS = [
   { id: 'prime-mixed', label: '소인수분해 기본 종합', description: '소수·거듭제곱·소인수분해·약수 유형을 골고루 연습하기', en: ['Prime factorization review', 'Mixed practice with primes, powers, factors and divisors'], make: (random) => pick(random, generators)(random) },
 ];
 
+import {
+  rpmPrimePropClosest,
+  rpmPrimePowerRules,
+  rpmPrimeFactorizeExponents,
+  rpmPrimeFactorAnalysis,
+  rpmPrimeDivisorProperties,
+  rpmPrimeDivisorCountReverse,
+  rpmPrimeMakeSquare,
+  rpmPrimeUnknownInDivisorCount,
+  rpmPrimeDivisorCountReverseDeduce,
+  rpmPrimeAllTypesMixed,
+} from '../rpmAppliedEngine.js';
+
+export const RPM_PRIME_APPLIED_UNITS = [
+  {
+    id: 'rpm-prime-prop-closest',
+    label: '[유형 01] 소수와 합성수의 성질 및 추론',
+    description: '소수·합성수 참/거짓 판별, 특정 수에 가장 가까운 소수·합성수 합 및 개수 구하기',
+    en: ['[Type 01] Properties of Primes & Composites', 'Determine prime/composite properties, find closest primes/composites and count'],
+    make: rpmPrimePropClosest,
+  },
+  {
+    id: 'rpm-prime-power-rules',
+    label: '[유형 02] 거듭제곱의 성질과 일의 자리 규칙',
+    description: '거듭제곱 표현 판별, 거듭제곱 방정식 m^a=p, 거듭제곱의 일의 자리 수의 주기성 규칙',
+    en: ['[Type 02] Power Rules & Units Digits', 'Verify power expressions, solve base-power equations, and find units digits via periodicity'],
+    make: rpmPrimePowerRules,
+  },
+  {
+    id: 'rpm-prime-factorize-exponents',
+    label: '[유형 03] 소인수분해와 지수 연산',
+    description: '소인수분해 바르게 된 것 판별 및 2^a×3^b×c 꼴에서 소인수와 지수의 대수식 계산',
+    en: ['[Type 03] Prime Factorization & Exponent Algebra', 'Identify correct factorization forms and compute linear expressions in prime factors and exponents'],
+    make: rpmPrimeFactorizeExponents,
+  },
+  {
+    id: 'rpm-prime-factor-analysis',
+    label: '[유형 04] 소인수의 합과 소인수 분석',
+    description: '소인수의 합, 같은 소인수를 갖는 수 찾기, 소인수 종류가 다른 수 판별',
+    en: ['[Type 04] Prime Factor Sums & Set Analysis', 'Find sum of prime factors, identify numbers with identical prime factor sets, and find outliers'],
+    make: rpmPrimeFactorAnalysis,
+  },
+  {
+    id: 'rpm-prime-divisor-properties',
+    label: '[유형 05] 약수와 거듭제곱 약수의 성질',
+    description: '소인수분해를 이용한 약수 판별, 완전제곱수가 되는 약수의 개수, 두 번째로 큰/작은 약수',
+    en: ['[Type 05] Divisor Properties & Square Divisors', 'Identify valid divisors, count square divisors, and find 2nd largest and 2nd smallest divisors'],
+    make: rpmPrimeDivisorProperties,
+  },
+  {
+    id: 'rpm-prime-divisor-count-reverse',
+    label: '[유형 06] 약수의 개수 공식과 미지수 지수',
+    description: '약수의 개수 공식을 이용한 지수 미지수 n 구하기, 2^4×a^2의 약수 개수로 최소 자연수 구하기',
+    en: ['[Type 06] Divisor Counting Formula & Exponent Reverse', 'Find unknown exponents from divisor counts and deduce smallest numbers with given divisor counts'],
+    make: rpmPrimeDivisorCountReverse,
+  },
+  {
+    id: 'rpm-prime-make-square',
+    label: '[유형 07] 제곱인 수 만들기',
+    description: '자연수를 곱하거나 나누어 어떤 수의 제곱 만들기, 두 번째로 작은 곱하는 수 구하기',
+    en: ['[Type 07] Making Perfect Squares', 'Multiply or divide by minimal natural numbers to create squares; find 2nd smallest multiplier'],
+    make: rpmPrimeMakeSquare,
+  },
+  {
+    id: 'rpm-prime-unknown-in-divisor-count',
+    label: '[유형 08] 약수의 개수가 주어질 때 □ 구하기',
+    description: 'N×□의 약수의 개수가 주어질 때 □에 들어갈 수 있는 수/없는 수 및 가장 작은 자연수',
+    en: ['[Type 08] Finding Box Value in Divisor Counts', 'Determine valid or invalid natural numbers in N × □ to yield given divisor count'],
+    make: rpmPrimeUnknownInDivisorCount,
+  },
+  {
+    id: 'rpm-prime-divisor-count-reverse-deduce',
+    label: '[유형 09] 약수의 개수가 n개인 자연수 추론',
+    description: '약수 개수 함수 f(A)×f(x)=B 역추론, 약수 개수가 6개인 수의 개수, 소인수 조건이 주어진 최소 수',
+    en: ['[Type 09] Deducing Numbers with n Divisors', 'Solve f(A)×f(x)=B, count numbers with exactly 6 divisors in a range, and deduce constrained minimums'],
+    make: rpmPrimeDivisorCountReverseDeduce,
+  },
+  {
+    id: 'rpm-prime-all-types-mixed',
+    label: '[응용 실전 종합] RPM 소인수분해 실전 종합',
+    description: 'RPM 소인수분해 유형 01~09 및 중단원 마무리·서술형·실력UP 전 유형 실전 모의고사',
+    en: ['[Applied Exam Review] RPM Prime Factorization Comprehensive', 'Full practice exam covering all RPM Types 01 through 09, chapter finish, and challenge problems'],
+    make: rpmPrimeAllTypesMixed,
+  },
+];
+
+export const PRIME_UNITS = [...PRIME_BASIC_UNITS, ...RPM_PRIME_APPLIED_UNITS];
+
 export function findPrimeUnit(unitId) {
-  return PRIME_UNITS.find((unit) => unit.id === unitId) || PRIME_UNITS[0];
+  return PRIME_UNITS.find((unit) => unit.id === unitId) || PRIME_BASIC_UNITS[0];
 }
 
 export function localizePrimeUnit(unit, language, field = 'label') {
   if (language === 'ko') return unit[field];
   return localizeRegionalUnit(unit.id, language, unit.en[field === 'label' ? 0 : 1], field);
 }
-import { localizeRegionalUnit } from '../../regionalCatalog';
+import { localizeRegionalUnit } from '../../regionalCatalog.js';
