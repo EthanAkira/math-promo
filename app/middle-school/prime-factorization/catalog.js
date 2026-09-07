@@ -206,9 +206,9 @@ export const RPM_PRIME_APPLIED_UNITS = [
   },
   {
     id: 'rpm-prime-all-types-mixed',
-    label: '[응용 실전 종합] RPM 소인수분해 실전 종합',
-    description: 'RPM 소인수분해 유형 01~09 및 중단원 마무리·서술형·실력UP 전 유형 실전 모의고사',
-    en: ['[Applied Exam Review] RPM Prime Factorization Comprehensive', 'Full practice exam covering all RPM Types 01 through 09, chapter finish, and challenge problems'],
+    label: '[단원 실전 다지기] 매일 소인수분해 종합',
+    description: '소인수분해 핵심 유형 01~09 및 발전·심화 문제를 골고루 풀어보는 단원 실전 다지기',
+    en: ['[Daily Practice Review] Daily Prime Factorization Comprehensive', 'Comprehensive practice set covering core and advanced prime factorization problem types'],
     make: rpmPrimeAllTypesMixed,
   },
 ];

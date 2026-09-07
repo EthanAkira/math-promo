@@ -1178,6 +1178,663 @@ function rpmIrAllTypesMixed(random, profile) {
 const rpmRationalLineDivision = rpmIrNumberLineRead;
 
 // -------------------------------------------------------------
+// CHAPTER 04: 정수와 유리수의 계산 응용 (RPM 1-1 Pages 54 ~ 71)
+// -------------------------------------------------------------
+
+function fracObj(n, d = 1) {
+  if (d === 0) throw new Error('Zero denominator');
+  const sign = d < 0 ? -1 : 1;
+  const common = gcd(n, d);
+  return { n: (n * sign) / common, d: Math.abs(d) / common };
+}
+function fracAdd(f1, f2) {
+  return fracObj(f1.n * f2.d + f2.n * f1.d, f1.d * f2.d);
+}
+function fracSub(f1, f2) {
+  return fracObj(f1.n * f2.d - f2.n * f1.d, f1.d * f2.d);
+}
+function fracMul(f1, f2) {
+  return fracObj(f1.n * f2.n, f1.d * f2.d);
+}
+function fracDiv(f1, f2) {
+  if (f2.n === 0) throw new Error('Division by zero');
+  return fracObj(f1.n * f2.d, f1.d * f2.n);
+}
+function fracSignedStr(f) {
+  const str = fracStr(f.n, f.d);
+  return f.n > 0 ? `+${str}` : str;
+}
+function parenSignedFrac(f) {
+  return `(${fracSignedStr(f)})`;
+}
+
+// 1. 유리수의 덧셈과 계산 법칙
+function rpmIrcAdditionLaws(random, profile) {
+  const mode = pick(random, ['law-identity', 'two-fractions', 'three-fractions']);
+  if (mode === 'law-identity') {
+    const a = ri(random, 2, 6);
+    const b = ri(random, 3, 7);
+    const choices = [
+      { value: '1', label: '㈎ 덧셈의 교환법칙, ㈏ 덧셈의 결합법칙', labelEn: '(a) Commutative property, (b) Associative property', isRight: true },
+      { value: '2', label: '㈎ 덧셈의 결합법칙, ㈏ 덧셈의 교환법칙', labelEn: '(a) Associative property, (b) Commutative property', isRight: false },
+      { value: '3', label: '㈎ 덧셈의 교환법칙, ㈏ 분배법칙', labelEn: '(a) Commutative property, (b) Distributive property', isRight: false },
+      { value: '4', label: '㈎ 곱셈의 교환법칙, ㈏ 덧셈의 결합법칙', labelEn: '(a) Mult commutative, (b) Add associative', isRight: false },
+      { value: '5', label: '㈎ 덧셈의 결합법칙, ㈏ 곱셈의 결합법칙', labelEn: '(a) Add associative, (b) Mult associative', isRight: false },
+    ];
+    return {
+      prompt: tx(profile,
+        '다음 계산 과정에서 ㈎, ㈏에 이용된 덧셈의 연산 법칙을 바르게 짝지은 것은?',
+        'Which option correctly identifies the addition properties used in steps (a) and (b)?'),
+      expression: `(+${a}/5) + (-2/${b}) + (-${a + 5}/5)\n= (+${a}/5) + (-${a + 5}/5) + (-2/${b})  ... [㈎]\n= {(+${a}/5) + (-${a + 5}/5)} + (-2/${b})  ... [㈏]\n= (-1) + (-2/${b}) = -${b + 2}/${b}`,
+      choices,
+      answer: '1',
+      explanation: tx(profile,
+        '두 수의 자리를 바꾼 [㈎]는 덧셈의 교환법칙이고, 앞의 두 수를 먼저 묶어 계산한 [㈏]는 덧셈의 결합법칙입니다.',
+        'Swapping positions is commutative property [a]; grouping is associative property [b].'),
+    };
+  }
+  if (mode === 'two-fractions') {
+    const d1 = pick(random, [3, 4, 5, 6]);
+    let d2 = pick(random, [2, 3, 4, 6, 8]);
+    while (d1 === d2) d2 = pick(random, [2, 3, 5, 7]);
+    const n1 = -ri(random, 1, d1 - 1);
+    const n2 = ri(random, 1, d2 - 1);
+    const f1 = fracObj(n1, d1);
+    const f2 = fracObj(n2, d2);
+    const sum = fracAdd(f1, f2);
+    const ans = fracStr(sum.n, sum.d);
+    return {
+      prompt: tx(profile, '다음을 계산하시오.', 'Calculate the following sum.'),
+      expression: `${parenSignedFrac(f1)} + ${parenSignedFrac(f2)}`,
+      answer: ans,
+      explanation: tx(profile,
+        `통분하여 계산하면 (${fracSignedStr(fracObj(f1.n * (lcm(d1, d2)/d1), lcm(d1, d2)))}) + (${fracSignedStr(fracObj(f2.n * (lcm(d1, d2)/d2), lcm(d1, d2)))}) = ${ans}입니다.`,
+        `Finding common denominator gives ${ans}.`),
+    };
+  }
+  const d = pick(random, [3, 4, 5, 7]);
+  const f1 = fracObj(ri(random, 1, 4), d);
+  const f2 = fracObj(-ri(random, 2, 8), pick(random, [2, 6, 9]));
+  const f3 = fracObj(-ri(random, 5, 12), d);
+  const sum = fracAdd(fracAdd(f1, f3), f2);
+  const ans = fracStr(sum.n, sum.d);
+  return {
+    prompt: tx(profile, '덧셈의 연산 법칙을 이용하여 다음을 계산하시오.', 'Evaluate using the properties of addition.'),
+    expression: `${parenSignedFrac(f1)} + ${parenSignedFrac(f2)} + ${parenSignedFrac(f3)}`,
+    answer: ans,
+    explanation: tx(profile,
+      `분모가 같은 ${parenSignedFrac(f1)}와 ${parenSignedFrac(f3)}를 먼저 결합하여 계산하면 ${ans}입니다.`,
+      `Group fractions with same denominator first to get ${ans}.`),
+  };
+}
+
+// 2. 유리수의 뺄셈
+function rpmIrcSubtractionBasic(random, profile) {
+  const d1 = pick(random, [3, 4, 5, 6]);
+  const d2 = pick(random, [2, 3, 4, 5]);
+  const f1 = fracObj(ri(random, -5, 5) || -1, d1);
+  const f2 = fracObj(ri(random, -5, 5) || 2, d2);
+  const diff = fracSub(f1, f2);
+  const ans = fracStr(diff.n, diff.d);
+  return {
+    prompt: tx(profile, '다음을 계산하시오.', 'Calculate the subtraction.'),
+    expression: `${parenSignedFrac(f1)} - ${parenSignedFrac(f2)}`,
+    answer: ans,
+    explanation: tx(profile,
+      `빼는 수의 부호를 바꾸어 덧셈으로 계산하면 ${parenSignedFrac(f1)} + ${parenSignedFrac({ n: -f2.n, d: f2.d })} = ${ans}입니다.`,
+      `Change subtraction to addition of opposite sign to get ${ans}.`),
+  };
+}
+
+// 3. 정수의 덧셈과 뺄셈의 혼합 계산
+function rpmIrcAddSubIntegers(random, profile) {
+  const a = ri(random, 3, 9);
+  const b = -ri(random, 2, 8);
+  const c = ri(random, 4, 9);
+  const d = -ri(random, 3, 7);
+  const val = a + b - c - d;
+  return {
+    prompt: tx(profile, '다음을 계산하시오.', 'Evaluate the mixed integer operations.'),
+    expression: `(+${a}) + (${b}) - (+${c}) - (${d})`,
+    answer: String(val),
+    explanation: tx(profile,
+      `뺄셈을 덧셈으로 바꾸면 (+${a}) + (${b}) + (-${c}) + (+${-d}) = ${val}입니다.`,
+      `Convert subtractions to additions to evaluate: ${val}.`),
+  };
+}
+
+// 4. 유리수의 덧셈과 뺄셈의 혼합 계산
+function rpmIrcAddSubRationals(random, profile) {
+  const isDecimalMix = random() < 0.4;
+  if (isDecimalMix) {
+    const dec = ri(random, 21, 49) / 10;
+    const n1 = ri(random, 3, 8);
+    const n2 = ri(random, 5, 12);
+    const ans = n2 - n1;
+    return {
+      prompt: tx(profile, '다음을 계산하시오.', 'Calculate the following expression.'),
+      expression: `(-${dec}) - (+${n1}) + (+${n2}) - (-${dec})`,
+      answer: String(ans),
+      explanation: tx(profile,
+        `(-${dec})와 -(-${dec}) = +${dec}가 서로 상쇄되므로 -(+${n1}) + (+${n2}) = ${ans}입니다.`,
+        `The terms (-${dec}) and -(-${dec}) cancel each other out, giving ${ans}.`),
+    };
+  }
+  const f1 = fracObj(-1, 2);
+  const f2 = fracObj(2, 3);
+  const f3 = fracObj(-3, 4);
+  const f4 = fracObj(-5, 6);
+  const res = fracAdd(fracSub(fracAdd(f1, f2), f3), f4);
+  const ans = fracStr(res.n, res.d);
+  return {
+    prompt: tx(profile, '다음을 계산하시오.', 'Evaluate the rational expression.'),
+    expression: `${parenSignedFrac(f1)} + ${parenSignedFrac(f2)} - ${parenSignedFrac(f3)} + ${parenSignedFrac(f4)}`,
+    answer: ans,
+    explanation: tx(profile,
+      `최소공배수 12로 통분하여 계산하면 ${ans}입니다.`,
+      `Using common denominator 12 yields ${ans}.`),
+  };
+}
+
+// 5. 부호가 생략된 수의 덧셈과 뺄셈
+function rpmIrcOmittedSigns(random, profile) {
+  const isFraction = random() < 0.5;
+  if (isFraction) {
+    const f1 = fracObj(-3, 4);
+    const f2 = fracObj(11, 20);
+    const f3 = fracObj(-3, 10);
+    const res = fracAdd(fracAdd(f1, f2), f3);
+    const ans = fracStr(res.n, res.d);
+    return {
+      prompt: tx(profile, '다음을 계산하시오.', 'Evaluate the expression without parentheses.'),
+      expression: `-3/4 + 11/20 - 3/10`,
+      answer: ans,
+      explanation: tx(profile,
+        `분모의 최소공배수인 20으로 통분하면 -15/20 + 11/20 - 6/20 = ${ans}입니다.`,
+        `With common denominator 20, result is ${ans}.`),
+    };
+  }
+  const a = -ri(random, 4, 9);
+  const b = ri(random, 10, 18);
+  const c = -ri(random, 5, 12);
+  const d = ri(random, 2, 8);
+  const ans = a + b + c + d;
+  return {
+    prompt: tx(profile, '다음을 계산하시오.', 'Evaluate the following sum with omitted signs.'),
+    expression: `${a} + ${b} - ${Math.abs(c)} + ${d}`,
+    answer: String(ans),
+    explanation: tx(profile,
+      `양수는 양수끼리, 음수는 음수끼리 모아서 계산하면 ${ans}입니다.`,
+      `Grouping positives and negatives yields ${ans}.`),
+  };
+}
+
+// 6. 어떤 수보다 □만큼 큰 수·작은 수
+function rpmIrcRelativeDifference(random, profile) {
+  const n1 = ri(random, 3, 5);
+  const fA_base = fracObj(-n1 * 2 - 1, 2);
+  const diffA = -ri(random, 1, 3);
+  const a = fracSub(fA_base, fracObj(diffA, 1));
+
+  const n2 = ri(random, 2, 4);
+  const fB_base = fracObj(n2, 1);
+  const diffB = fracObj(-1, pick(random, [3, 4]));
+  const b = fracAdd(fB_base, diffB);
+
+  const lowVal = a.n / a.d;
+  const highVal = b.n / b.d;
+  let count = 0;
+  for (let x = Math.ceil(lowVal + 0.0001); x <= Math.floor(highVal - 0.0001); x++) {
+    count++;
+  }
+
+  return {
+    prompt: tx(profile,
+      `${fracStr(fA_base.n, fA_base.d)}보다 ${diffA}만큼 작은 수를 a, ${n2}보다 ${fracStr(diffB.n, diffB.d)}만큼 큰 수를 b라 할 때, a < x < b를 만족시키는 정수 x의 개수를 구하시오.`,
+      `Let a be ${diffA} less than ${fracStr(fA_base.n, fA_base.d)}, and b be ${fracStr(diffB.n, diffB.d)} greater than ${n2}. Find the number of integers x satisfying a < x < b.`),
+    expression: `a = (${fracStr(fA_base.n, fA_base.d)}) - (${diffA}),  b = ${n2} + (${fracStr(diffB.n, diffB.d)})`,
+    answer: String(count),
+    answerSuffix: tx(profile, '개', ''),
+    explanation: tx(profile,
+      `a = ${fracStr(a.n, a.d)}, b = ${fracStr(b.n, b.d)}이므로 ${fracStr(a.n, a.d)} < x < ${fracStr(b.n, b.d)}를 만족하는 정수 x는 총 ${count}개입니다.`,
+      `Since a = ${fracStr(a.n, a.d)} and b = ${fracStr(b.n, b.d)}, there are ${count} integers satisfying the condition.`),
+  };
+}
+
+// 7. □ 안에 알맞은 수 구하기 (1) 덧셈·뺄셈
+function rpmIrcUnknownAddSub(random, profile) {
+  const d1 = pick(random, [3, 4, 5]);
+  const d2 = pick(random, [2, 3, 4]);
+  const fA = fracObj(-ri(random, 1, 4), d1);
+  const fB = fracObj(ri(random, 1, 3), d2);
+  const box = fracSub(fA, fB);
+  const ans = fracStr(box.n, box.d);
+  return {
+    prompt: tx(profile, '다음 □ 안에 알맞은 수를 구하시오.', 'Find the number that fits in □.'),
+    expression: `${parenSignedFrac(fA)} - □ = ${fracStr(fB.n, fB.d)}`,
+    answer: ans,
+    explanation: tx(profile,
+      `□ = ${parenSignedFrac(fA)} - ${parenSignedFrac(fB)} = ${ans}입니다.`,
+      `□ = ${parenSignedFrac(fA)} - ${parenSignedFrac(fB)} = ${ans}.`),
+  };
+}
+
+// 8. 절댓값이 주어진 두 수의 덧셈과 뺄셈
+function rpmIrcAbsExtremumAddSub(random, profile) {
+  const d1 = pick(random, [2, 3, 4]);
+  const d2 = pick(random, [3, 4, 5]);
+  const absA = fracObj(ri(random, 1, d1 - 1) || 1, d1);
+  const absB = fracObj(ri(random, 1, d2 - 1) || 2, d2);
+  const sum = fracAdd(absA, absB);
+  const M = sum;
+  const m = fracObj(-sum.n, sum.d);
+  const diff = fracMul(fracObj(2, 1), sum);
+  const ans = fracStr(diff.n, diff.d);
+  return {
+    prompt: tx(profile,
+      `두 유리수 a, b에 대하여 a의 절댓값은 ${fracStr(absA.n, absA.d)}, b의 절댓값은 ${fracStr(absB.n, absB.d)}이다. a - b의 값 중에서 가장 큰 값을 M, 가장 작은 값을 m이라 할 때, M - m의 값을 구하시오.`,
+      `Given |a| = ${fracStr(absA.n, absA.d)} and |b| = ${fracStr(absB.n, absB.d)}, let M and m be the maximum and minimum values of a - b. Find M - m.`),
+    expression: `|a| = ${fracStr(absA.n, absA.d)},  |b| = ${fracStr(absB.n, absB.d)}`,
+    answer: ans,
+    explanation: tx(profile,
+      `M = ${fracStr(M.n, M.d)}, m = ${fracStr(m.n, m.d)}이므로 M - m = ${ans}입니다.`,
+      `M = ${fracStr(M.n, M.d)}, m = ${fracStr(m.n, m.d)}, yielding M - m = ${ans}.`),
+  };
+}
+
+// 9. 덧셈·뺄셈의 활용 (마방진 및 게임 점수)
+function rpmIrcMagicSquareGame(random, profile) {
+  const winPts = ri(random, 3, 5);
+  const losePts = -ri(random, 1, 2);
+  const totalGames = ri(random, 5, 8);
+  const aWins = ri(random, Math.ceil(totalGames / 2), totalGames - 1);
+  const aLoses = totalGames - aWins;
+  const bWins = aLoses;
+  const bLoses = aWins;
+
+  const scoreA = aWins * winPts + aLoses * losePts;
+  const scoreB = bWins * winPts + bLoses * losePts;
+  const diff = scoreA - scoreB;
+
+  return {
+    prompt: tx(profile,
+      `두 사람이 가위바위보를 하여 이기면 ${winPts}점을 얻고, 지면 ${Math.abs(losePts)}점을 잃는 게임을 하였다. 비기는 경우 없이 총 ${totalGames}번을 하여 A가 ${aWins}번 이겼을 때, A의 점수와 B의 점수의 차를 구하시오.`,
+      `In a rock-paper-scissors game, a win grants ${winPts} pts and a loss loses ${Math.abs(losePts)} pts. With no ties over ${totalGames} rounds, A won ${aWins} times. Find the score difference between A and B.`),
+    expression: `A: ${aWins}승 ${aLoses}패,  B: ${bWins}승 ${bLoses}패`,
+    answer: String(diff),
+    answerSuffix: tx(profile, '점', 'pts'),
+    explanation: tx(profile,
+      `A는 ${scoreA}점, B는 ${scoreB}점이므로 두 사람의 점수 차는 ${diff}점입니다.`,
+      `A scored ${scoreA}, B scored ${scoreB}, giving a difference of ${diff} pts.`),
+  };
+}
+
+// 10. 유리수의 곱셈과 곱셈의 계산 법칙
+function rpmIrcMultiplicationBasic(random, profile) {
+  const f1 = fracObj(-ri(random, 2, 5), pick(random, [2, 3]));
+  const f2 = fracObj(ri(random, 2, 6), pick(random, [5, 7]));
+  const f3 = fracObj(-ri(random, 3, 7), pick(random, [2, 4]));
+  const prod = fracMul(fracMul(f1, f2), f3);
+  const ans = fracStr(prod.n, prod.d);
+  return {
+    prompt: tx(profile, '다음을 계산하시오.', 'Calculate the product.'),
+    expression: `${parenSignedFrac(f1)} × ${parenSignedFrac(f2)} × ${parenSignedFrac(f3)}`,
+    answer: ans,
+    explanation: tx(profile,
+      `음수가 2개(짝수 개)이므로 부호는 (+)이고, 약분하여 곱하면 ${ans}입니다.`,
+      `Two negative signs yield a positive product: ${ans}.`),
+  };
+}
+
+// 11. 네 수 중 세 수를 뽑아 곱하기
+function rpmIrcPickThreeProduct(random, profile) {
+  const nums = [
+    fracObj(-2, 3),
+    fracObj(7, 4),
+    fracObj(-1, 2),
+    fracObj(-6, 1),
+  ];
+  const prods = [];
+  for (let i = 0; i < 4; i++) {
+    const triple = nums.filter((_, idx) => idx !== i);
+    prods.push(fracMul(fracMul(triple[0], triple[1]), triple[2]));
+  }
+  prods.sort((a, b) => (a.n / a.d) - (b.n / b.d));
+  const minF = prods[0];
+  const maxF = prods[prods.length - 1];
+  const diff = fracSub(maxF, minF);
+  const ans = fracStr(diff.n, diff.d);
+  return {
+    prompt: tx(profile,
+      '네 유리수 -2/3, 7/4, -1/2, -6 중에서 서로 다른 세 수를 뽑아 곱한 값 중 가장 큰 값과 가장 작은 값의 차를 구하시오.',
+      'From the four numbers -2/3, 7/4, -1/2, -6, find the difference between the greatest and least products of three distinct numbers.'),
+    expression: `세 수의 곱의 최댓값 M, 최솟값 m`,
+    answer: ans,
+    explanation: tx(profile,
+      `가장 큰 값은 7이고, 가장 작은 값은 -2이므로 차는 7 - (-2) = ${ans}입니다.`,
+      `Max product is 7, min is -2, difference is 7 - (-2) = ${ans}.`),
+  };
+}
+
+// 12. 거듭제곱의 계산
+function rpmIrcPowersSigns(random, profile) {
+  const a = ri(random, 2, 4);
+  const b = ri(random, 2, 3);
+  const v1 = Math.pow(-a, 2);
+  const v2 = Math.pow(-b, 3);
+  const ans = v1 - v2;
+  return {
+    prompt: tx(profile, '다음을 계산하시오.', 'Evaluate the expression with powers.'),
+    expression: `(-${a})^2 - (-${b})^3`,
+    answer: String(ans),
+    explanation: tx(profile,
+      `(-${a})^2 = ${v1}, (-${b})^3 = ${v2}이므로 ${v1} - (${v2}) = ${ans}입니다.`,
+      `(-${a})^2 = ${v1}, (-${b})^3 = ${v2}, giving ${ans}.`),
+  };
+}
+
+// 13. (-1)^n의 계산
+function rpmIrcNegOnePower(random, profile) {
+  const isOdd = random() < 0.5;
+  const promptKo = `n이 ${isOdd ? '홀수' : '짝수'}일 때, (-1)^n - (-1)^(n+1) + (-1)^(2n) 의 값을 구하시오.`;
+  const promptEn = `Given that n is an ${isOdd ? 'odd' : 'even'} integer, find the value of (-1)^n - (-1)^(n+1) + (-1)^(2n).`;
+  const finalAns = isOdd ? -1 : 3;
+  return {
+    prompt: tx(profile, promptKo, promptEn),
+    expression: `(-1)^n - (-1)^(n+1) + (-1)^(2n)`,
+    answer: String(finalAns),
+    explanation: tx(profile,
+      `n이 ${isOdd ? '홀수' : '짝수'}이므로 대입하여 정리하면 ${finalAns}입니다.`,
+      `Evaluating based on n parity gives ${finalAns}.`),
+  };
+}
+
+// 14. 분배법칙의 활용
+function rpmIrcDistributiveLaw(random, profile) {
+  const common = ri(random, 15, 35) + 0.3;
+  const k1 = ri(random, 12, 35);
+  const k2 = 100 - k1;
+  const ans = Math.round(common * 100 * 10) / 10;
+  return {
+    prompt: tx(profile, '분배법칙을 이용하여 편리하게 다음을 계산하시오.', 'Use the distributive property to evaluate.'),
+    expression: `${common} × ${k1} + ${common} × ${k2}`,
+    answer: String(ans),
+    explanation: tx(profile,
+      `${common} × (${k1} + ${k2}) = ${common} × 100 = ${ans}입니다.`,
+      `${common} × (${k1} + ${k2}) = ${common} × 100 = ${ans}.`),
+  };
+}
+
+// 15. 역수의 정의와 미지수 역수 방정식
+function rpmIrcReciprocalEquation(random, profile) {
+  const a = -15;
+  const b = -4;
+  const ans = b - a;
+  return {
+    prompt: tx(profile,
+      '다음 조건을 모두 만족시키는 두 유리수 a, b에 대하여 b - a의 값을 구하시오.\n(가) -a/9의 역수는 3/5이다.\n(나) 3/b의 역수는 -4/3이다.',
+      'Given rational numbers a, b where the reciprocal of -a/9 is 3/5, and the reciprocal of 3/b is -4/3, find b - a.'),
+    expression: `b - a`,
+    answer: String(ans),
+    explanation: tx(profile,
+      `-a/9의 역수는 -9/a = 3/5이므로 a = -15이고, 3/b의 역수는 b/3 = -4/3이므로 b = -4입니다. 따라서 b - a = ${ans}입니다.`,
+      `Reciprocals give a = -15 and b = -4, so b - a = ${ans}.`),
+  };
+}
+
+// 16. 정수와 유리수의 나눗셈
+function rpmIrcDivisionBasic(random, profile) {
+  const f1 = fracObj(-ri(random, 8, 20), pick(random, [3, 4, 6]));
+  const f2 = fracObj(-ri(random, 2, 7), pick(random, [2, 5]));
+  const quot = fracDiv(f1, f2);
+  const ans = fracStr(quot.n, quot.d);
+  return {
+    prompt: tx(profile, '다음을 계산하시오.', 'Calculate the division.'),
+    expression: `${parenSignedFrac(f1)} ÷ ${parenSignedFrac(f2)}`,
+    answer: ans,
+    explanation: tx(profile,
+      `나눗셈을 역수의 곱셈으로 바꾸어 계산하면 ${ans}입니다.`,
+      `Multiplying by the reciprocal gives ${ans}.`),
+  };
+}
+
+// 17. 곱셈과 나눗셈의 혼합 계산
+function rpmIrcMultDivMixed(random, profile) {
+  const f2 = fracObj(-9, 4);
+  const f3 = fracObj(-2, 3);
+  const sq = fracObj(9, 4);
+  const res = fracMul(fracDiv(sq, f2), f3);
+  const ans = fracStr(res.n, res.d);
+  return {
+    prompt: tx(profile, '다음을 계산하시오.', 'Evaluate the mixed multiplication and division.'),
+    expression: `(-3/2)^2 ÷ (-9/4) × (-2/3)`,
+    answer: ans,
+    explanation: tx(profile,
+      `거듭제곱 계산 후 나눗셈을 곱셈으로 고치면 ${ans}입니다.`,
+      `Evaluating power and converting division gives ${ans}.`),
+  };
+}
+
+// 18. 사칙 혼합 계산
+function rpmIrcFourOperationsOrder(random, profile) {
+  const base = ri(random, 4, 7);
+  const mult = ri(random, 2, 3);
+  const inside = 3;
+  const ans = base - mult * (inside - (4 - (-4)));
+  return {
+    prompt: tx(profile, '계산 순서에 맞추어 다음을 계산하시오.', 'Calculate using order of operations.'),
+    expression: `${base} - ${mult} × [ 3 - { (-2)^2 - 6 ÷ (-3/2) } ]`,
+    answer: String(ans),
+    explanation: tx(profile,
+      `소괄호·거듭제곱 → 중괄호 → 대괄호 순서로 계산하면 ${ans}입니다.`,
+      `Evaluating inside-out following order of operations yields ${ans}.`),
+  };
+}
+
+// 19. □ 안에 알맞은 수 구하기 (2) 곱셈·나눗셈
+function rpmIrcUnknownMultDiv(random, profile) {
+  const fA = fracObj(-3, 4);
+  const fC = fracObj(-2, 3);
+  const fB = fracObj(1, 2);
+  const box = fracDiv(fracMul(fA, fC), fB);
+  const ans = fracStr(box.n, box.d);
+  return {
+    prompt: tx(profile, '다음 □ 안에 알맞은 수를 구하시오.', 'Find the number that fits into □.'),
+    expression: `(-3/4) ÷ □ × (-2/3) = 1/2`,
+    answer: ans,
+    explanation: tx(profile,
+      `(-3/4) × (-2/3) ÷ □ = 1/2에서 □ = ${ans}입니다.`,
+      `Solving for □ gives ${ans}.`),
+  };
+}
+
+// 20. 바르게 계산한 답 구하기
+function rpmIrcCorrectAnswer(random, profile) {
+  const mode = pick(random, ['add-sub', 'mult-div']);
+  if (mode === 'add-sub') {
+    const fErr = fracObj(-3, 5);
+    const fRes = fracObj(3, 10);
+    const X = fracSub(fRes, fErr);
+    const correct = fracSub(X, fErr);
+    const ans = fracStr(correct.n, correct.d);
+    return {
+      prompt: tx(profile,
+        `어떤 유리수에서 ${parenSignedFrac(fErr)}을 빼야 할 것을 잘못하여 더했더니 결과가 ${fracStr(fRes.n, fRes.d)}이 되었다. 바르게 계산한 답을 구하시오.`,
+        `A student mistakenly added ${parenSignedFrac(fErr)} instead of subtracting it, obtaining ${fracStr(fRes.n, fRes.d)}. Find the correct answer.`),
+      expression: `어떤 수 = □`,
+      answer: ans,
+      explanation: tx(profile,
+        `원래 수는 ${fracStr(X.n, X.d)}이므로 바른 답은 ${ans}입니다.`,
+        `Original number is ${fracStr(X.n, X.d)}, giving correct answer ${ans}.`),
+    };
+  }
+  const fErr = fracObj(-9, 7);
+  const fRes = fracObj(10, 3);
+  const X = fracMul(fRes, fErr);
+  const correct = fracMul(X, fErr);
+  const ans = fracStr(correct.n, correct.d);
+  return {
+    prompt: tx(profile,
+      `어떤 유리수에 ${parenSignedFrac(fErr)}를 곱해야 할 것을 잘못하여 나누었더니 결과가 ${fracStr(fRes.n, fRes.d)}이 되었다. 바르게 계산한 답을 구하시오.`,
+      `A student mistakenly divided by ${parenSignedFrac(fErr)} instead of multiplying by it, obtaining ${fracStr(fRes.n, fRes.d)}. Find the correct answer.`),
+      expression: `어떤 수 = □`,
+    answer: ans,
+    explanation: tx(profile,
+      `원래 수는 ${fracStr(X.n, X.d)}이므로 바른 답은 ${ans}입니다.`,
+      `Original number is ${fracStr(X.n, X.d)}, giving correct answer ${ans}.`),
+  };
+}
+
+// 21. 유리수의 부호 결정
+function rpmIrcSignDetermination(random, profile) {
+  const choices = [
+    { value: '1', label: 'a > 0, b > 0, c > 0', labelEn: 'a > 0, b > 0, c > 0', isRight: false },
+    { value: '2', label: 'a > 0, b > 0, c < 0', labelEn: 'a > 0, b > 0, c < 0', isRight: false },
+    { value: '3', label: 'a > 0, b < 0, c > 0', labelEn: 'a > 0, b < 0, c > 0', isRight: false },
+    { value: '4', label: 'a < 0, b > 0, c < 0', labelEn: 'a < 0, b > 0, c < 0', isRight: true },
+    { value: '5', label: 'a < 0, b < 0, c < 0', labelEn: 'a < 0, b < 0, c < 0', isRight: false },
+  ];
+  return {
+    prompt: tx(profile,
+      '세 유리수 a, b, c에 대하여 a - b < 0, b/a < 0, a × c > 0일 때, 다음 중 옳은 것은?',
+      'Given rational numbers a, b, c with a - b < 0, b/a < 0, and a × c > 0, which statement is true?'),
+    expression: `a - b < 0,  b/a < 0,  a × c > 0`,
+    choices,
+    answer: '4',
+    explanation: tx(profile,
+      'b/a < 0에서 a, b 부호가 다르고, a < b이므로 a < 0, b > 0입니다. a × c > 0에서 c < 0이므로 a < 0, b > 0, c < 0입니다.',
+      'Since b/a < 0 and a < b, a < 0 and b > 0. Since ac > 0, c < 0. Thus a < 0, b > 0, c < 0.'),
+  };
+}
+
+// 22. 문자로 주어진 수의 대소 관계
+function rpmIrcVariableMagnitude(random, profile) {
+  const choices = [
+    { value: '1', label: 'a', labelEn: 'a', isRight: false },
+    { value: '2', label: '-a', labelEn: '-a', isRight: false },
+    { value: '3', label: 'a^2', labelEn: 'a^2', isRight: false },
+    { value: '4', label: '-a^2', labelEn: '-a^2', isRight: true },
+    { value: '5', label: '1/a', labelEn: '1/a', isRight: false },
+  ];
+  return {
+    prompt: tx(profile, 'a < -1인 유리수 a에 대하여 다음 중 가장 작은 수는?', 'Given a < -1, which number is the smallest?'),
+    expression: `a < -1`,
+    choices,
+    answer: '4',
+    explanation: tx(profile,
+      'a = -2를 대입하면 -a^2 = -4가 가장 작습니다.',
+      'Testing with a = -2 shows that -a^2 = -4 is the smallest.'),
+  };
+}
+
+// 23. 수직선 선분의 m:n 비례분할 내분점
+function rpmIrcLineSectionRatio(random, profile) {
+  const m = ri(random, 1, 3);
+  const n = ri(random, 1, 3);
+  const fA = fracObj(-1, 4);
+  const fB = fracObj(1, 1);
+  const dist = fracSub(fB, fA);
+  const part = fracMul(dist, fracObj(m, m + n));
+  const fC = fracAdd(fA, part);
+  const ans = fracStr(fC.n, fC.d);
+
+  const diagram = {
+    kind: 'rpm-number-line',
+    min: -1,
+    max: 2,
+    step: 1,
+    points: [
+      { val: fA.n / fA.d, label: `A(${fracStr(fA.n, fA.d)})` },
+      { val: fB.n / fB.d, label: `B(${fracStr(fB.n, fB.d)})` },
+      { val: fC.n / fC.d, label: 'C', highlight: true },
+    ],
+    brackets: [
+      { from: fA.n / fA.d, to: fC.n / fC.d, label: `${m}` },
+      { from: fC.n / fC.d, to: fB.n / fB.d, label: `${n}` },
+    ],
+  };
+
+  return {
+    prompt: tx(profile,
+      `수직선 위의 두 점 A, B를 이은 선분을 ${m} : ${n}으로 나누는 점이 C일 때, 점 C가 나타내는 수를 구하시오.`,
+      `On a number line, point C divides line segment AB into ratio ${m} : ${n}. Find the coordinate of C.`),
+    expression: `A(${fracStr(fA.n, fA.d)}), B(${fracStr(fB.n, fB.d)}), 선분 AB를 ${m}:${n}으로 내분하는 점 C`,
+    answer: ans,
+    diagram,
+    explanation: tx(profile,
+      `점 C의 좌표는 ${fracStr(fA.n, fA.d)} + (${fracStr(dist.n, dist.d)} × ${m}/${m + n}) = ${ans}입니다.`,
+      `Coordinate of C is ${fracStr(fA.n, fA.d)} + (${fracStr(dist.n, dist.d)} × ${m}/${m + n}) = ${ans}.`),
+  };
+}
+
+// 24. 부분분수 분해와 망원급수 계산
+function rpmIrcTelescopingFractions(random, profile) {
+  const start = pick(random, [2, 3, 4, 5]);
+  const len = pick(random, [4, 5, 6]);
+  const end = start + len;
+  const res = fracSub(fracObj(1, start), fracObj(1, end));
+  const ans = fracStr(res.n, res.d);
+  return {
+    prompt: tx(profile,
+      '자연수 n에 대하여 1/(n(n+1)) = 1/n - 1/(n+1) 이 성립함을 이용하여 다음을 계산하시오.',
+      'Using the telescoping identity 1/(n(n+1)) = 1/n - 1/(n+1), evaluate the sum.'),
+    expression: `1/(${start}×${start + 1}) + 1/(${start + 1}×${start + 2}) + ... + 1/(${end - 1}×${end})`,
+    answer: ans,
+    explanation: tx(profile,
+      `중간 항들이 소거되어 1/${start} - 1/${end} = ${ans}입니다.`,
+      `Intermediate terms cancel out leaving 1/${start} - 1/${end} = ${ans}.`),
+  };
+}
+
+// 25. 새로운 연산 기호 약속과 방정식
+function rpmIrcCustomOperator(random, profile) {
+  const ans = '18';
+  return {
+    prompt: tx(profile,
+      '두 정수 a, b에 대하여 [a, b] = (두 수 a, b의 차)로 약속한다. 이때 [[3, 8], [10, a]] = 4가 성립하도록 하는 a의 값 중 가장 큰 수를 x, 가장 작은 수를 y라 할 때, [x, y]의 값을 구하시오.',
+      'Define [a, b] = |a - b|. If [[3, 8], [10, a]] = 4, let x be the max value of a and y be the min. Find [x, y].'),
+    expression: `[a, b] = |a - b|,  [[3, 8], [10, a]] = 4`,
+    answer: ans,
+    explanation: tx(profile,
+      `가장 큰 수 x = 19, 가장 작은 수 y = 1이므로 [x, y] = |19 - 1| = 18입니다.`,
+      `Max is 19 and min is 1, so [x, y] = |19 - 1| = 18.`),
+  };
+}
+
+// 26. 정수와 유리수의 계산 응용 실전 종합
+const rpmIrcServerList = [
+  rpmIrcAdditionLaws,
+  rpmIrcSubtractionBasic,
+  rpmIrcAddSubIntegers,
+  rpmIrcAddSubRationals,
+  rpmIrcOmittedSigns,
+  rpmIrcRelativeDifference,
+  rpmIrcUnknownAddSub,
+  rpmIrcAbsExtremumAddSub,
+  rpmIrcMagicSquareGame,
+  rpmIrcMultiplicationBasic,
+  rpmIrcPickThreeProduct,
+  rpmIrcPowersSigns,
+  rpmIrcNegOnePower,
+  rpmIrcDistributiveLaw,
+  rpmIrcReciprocalEquation,
+  rpmIrcDivisionBasic,
+  rpmIrcMultDivMixed,
+  rpmIrcFourOperationsOrder,
+  rpmIrcUnknownMultDiv,
+  rpmIrcCorrectAnswer,
+  rpmIrcSignDetermination,
+  rpmIrcVariableMagnitude,
+  rpmIrcLineSectionRatio,
+  rpmIrcTelescopingFractions,
+  rpmIrcCustomOperator,
+];
+
+function rpmIrcAllTypesMixed(random, profile) {
+  return pick(random, rpmIrcServerList)(random, profile);
+}
+
+// -------------------------------------------------------------
 // 04: 문자의 사용과 식의 계산 응용
 // -------------------------------------------------------------
 function rpmAlgebraShadedArea(random, profile) {
@@ -1384,6 +2041,39 @@ export const RPM_ADVANCED_ENGINES = {
   'rpmRationalEquidistant': rpmIrMidpointDistance,
   'rpmRationalAbsoluteCount': rpmIrAbsRangeCount,
 
+  // 04 정수와 유리수의 계산 RPM 세부 유형 (RPM 1-1 Pages 54~71)
+  'rpm-irc-addition-laws': rpmIrcAdditionLaws,
+  'rpm-irc-subtraction-basic': rpmIrcSubtractionBasic,
+  'rpm-irc-add-sub-integers': rpmIrcAddSubIntegers,
+  'rpm-irc-add-sub-rationals': rpmIrcAddSubRationals,
+  'rpm-irc-omitted-signs': rpmIrcOmittedSigns,
+  'rpm-irc-relative-difference': rpmIrcRelativeDifference,
+  'rpm-irc-unknown-add-sub': rpmIrcUnknownAddSub,
+  'rpm-irc-abs-extremum-add-sub': rpmIrcAbsExtremumAddSub,
+  'rpm-irc-magic-square-game': rpmIrcMagicSquareGame,
+  'rpm-irc-multiplication-basic': rpmIrcMultiplicationBasic,
+  'rpm-irc-pick-three-product': rpmIrcPickThreeProduct,
+  'rpm-irc-powers-signs': rpmIrcPowersSigns,
+  'rpm-irc-neg-one-power': rpmIrcNegOnePower,
+  'rpm-irc-distributive-law': rpmIrcDistributiveLaw,
+  'rpm-irc-reciprocal-equation': rpmIrcReciprocalEquation,
+  'rpm-irc-division-basic': rpmIrcDivisionBasic,
+  'rpm-irc-mult-div-mixed': rpmIrcMultDivMixed,
+  'rpm-irc-four-operations-order': rpmIrcFourOperationsOrder,
+  'rpm-irc-unknown-mult-div': rpmIrcUnknownMultDiv,
+  'rpm-irc-correct-answer': rpmIrcCorrectAnswer,
+  'rpm-irc-sign-determination': rpmIrcSignDetermination,
+  'rpm-irc-variable-magnitude': rpmIrcVariableMagnitude,
+  'rpm-irc-line-section-ratio': rpmIrcLineSectionRatio,
+  'rpm-irc-telescoping-fractions': rpmIrcTelescopingFractions,
+  'rpm-irc-custom-operator': rpmIrcCustomOperator,
+  'rpm-irc-all-types-mixed': rpmIrcAllTypesMixed,
+
+  // Legacy aliases
+  'rpmOpsDistributiveSmart': rpmIrcDistributiveLaw,
+  'rpmOpsNewOperation': rpmIrcCustomOperator,
+  'rpmOpsTelescoping': rpmIrcTelescopingFractions,
+
   // 03 정수와 유리수 기본 탭 호환
   'positive-negative': rpmIrSignSituation,
   'integer-classification': rpmIrClassifyIntegers,
@@ -1394,13 +2084,15 @@ export const RPM_ADVANCED_ENGINES = {
   'inequality-expression': rpmIrInequalityPhrasing,
   'integer-solutions': rpmIrBetweenIntegersFractions,
   'integer-rational-mixed': rpmIrAllTypesMixed,
-  'rational-addition': rpmRationalLineDivision,
-  'rational-subtraction': rpmRationalLineDivision,
-  'rational-add-subtract': rpmRationalLineDivision,
-  'rational-multiplication': rpmRationalLineDivision,
-  'rational-division': rpmRationalLineDivision,
-  'rational-four-operations': rpmRationalLineDivision,
-  'rational-operations-review': rpmRationalLineDivision,
+
+  // 04 정수와 유리수의 계산 기본 탭 호환
+  'rational-addition': rpmIrcAdditionLaws,
+  'rational-subtraction': rpmIrcSubtractionBasic,
+  'rational-add-subtract': rpmIrcAddSubRationals,
+  'rational-multiplication': rpmIrcMultiplicationBasic,
+  'rational-division': rpmIrcDivisionBasic,
+  'rational-four-operations': rpmIrcFourOperationsOrder,
+  'rational-operations-review': rpmIrcAllTypesMixed,
 
   'notation': rpmAlgebraShadedArea,
   'verbal-expressions': rpmAlgebraShadedArea,

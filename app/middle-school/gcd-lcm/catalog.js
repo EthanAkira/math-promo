@@ -296,9 +296,9 @@ export const RPM_GCD_LCM_APPLIED_UNITS = [
   },
   {
     id: 'rpm-gcd-lcm-all-types-mixed',
-    label: '[응용 실전 종합] RPM 최대공약수와 최소공배수 실전 종합',
-    description: 'RPM 최대공약수와 최소공배수 유형 01~20 및 중단원 마무리·서술형·실력UP 전 유형 실전 모의고사',
-    en: ['[Applied Exam Review] RPM GCD & LCM Comprehensive', 'Full practice exam covering all RPM Types 01 through 20, chapter finish, and challenge problems'],
+    label: '[단원 실전 다지기] 매일 최대공약수와 최소공배수 종합',
+    description: '최대공약수와 최소공배수 핵심 유형 01~20 및 활용·심화 문제를 골고루 풀어보는 단원 실전 다지기',
+    en: ['[Daily Practice Review] Daily GCD & LCM Comprehensive', 'Comprehensive practice set covering core and advanced GCD & LCM problem types'],
     make: rpmGcdLcmAllTypesMixed,
   },
 ];
