@@ -7,6 +7,9 @@ import {
   KOREAN_GRADE_STAGES,
   KOREAN_2022_SUBJECT_STAGES,
   INTERNATIONAL_COURSE_STAGES,
+  JAPAN_STAGES,
+  TAIWAN_STAGES,
+  HONGKONG_STAGES,
   DOMAIN_STAGES,
 } from './curriculumCatalog';
 
@@ -93,6 +96,7 @@ export default function CurriculumExplorer() {
   const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState(() => (language === 'ko' ? 'korea' : 'courses'));
   const [krSubView, setKrSubView] = useState('grade'); // 'grade' | 'subject2022'
+  const [eastAsiaCountry, setEastAsiaCountry] = useState('japan'); // 'japan' | 'taiwan' | 'hongkong'
 
   // If user has not manually changed tab on first load, adjust to language default once
   useEffect(() => {
@@ -120,9 +124,12 @@ export default function CurriculumExplorer() {
       { id: 'korea', label: copy.mainTabs[0], help: copy.mainTabHelp[0] },
       { id: 'courses', label: copy.mainTabs[1], help: copy.mainTabHelp[1] },
       { id: 'domains', label: copy.mainTabs[2], help: copy.mainTabHelp[2] },
+      { id: 'eastasia', label: copy.mainTabs[3], help: copy.mainTabHelp[3] },
     ],
     [copy]
   );
+
+  const EAST_ASIA_STAGES = { japan: JAPAN_STAGES, taiwan: TAIWAN_STAGES, hongkong: HONGKONG_STAGES };
 
   const koreanSchoolGroups = useMemo(
     () => [
@@ -380,6 +387,35 @@ export default function CurriculumExplorer() {
           </div>
         )}
 
+        {/* Tab 4: 동아시아 교육과정 (일본·대만·홍콩) */}
+        {activeTab === 'eastasia' && (
+          <div className="eastasia-curriculum-wrap">
+            <div className="curriculum-subview-bar">
+              <div className="subview-toggle-group country-toggle-group" role="group" aria-label="동아시아 교육과정 국가 선택">
+                {['japan', 'taiwan', 'hongkong'].map((country) => (
+                  <button
+                    type="button"
+                    key={country}
+                    className={`subview-btn ${eastAsiaCountry === country ? 'active' : ''}`}
+                    onClick={() => setEastAsiaCountry(country)}
+                  >
+                    <strong>{copy.eastAsiaCountries[country]}</strong>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="curriculum-notice-banner official">
+              <span className="notice-icon">🌏</span>
+              <p>{copy.notices.eastAsiaNotice}</p>
+            </div>
+
+            <div className="curriculum-stage-grid">
+              {EAST_ASIA_STAGES[eastAsiaCountry].map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
+            </div>
+          </div>
+        )}
+
         <p className="curriculum-note">{copy.notices.bottomNote}</p>
       </div>
 
@@ -626,6 +662,9 @@ export default function CurriculumExplorer() {
             width: 100%;
             display: grid;
             grid-template-columns: 1fr 1fr;
+          }
+          .subview-toggle-group.country-toggle-group {
+            grid-template-columns: repeat(3, 1fr);
           }
           .subview-btn {
             justify-content: center;
