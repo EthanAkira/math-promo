@@ -239,7 +239,7 @@ Object.assign(supplementalMessages.en, {
 });
 supplementalMessages['en-SG'] = { ...supplementalMessages.en, ...supplementalMessages['en-SG'] };
 Object.assign(supplementalMessages.ko, {
-  quickPractice: '빠른 문제 선택', uploadMaterials: '자료 업로드', amcArchive: 'AMC 기출문제', amcArchiveDesc: 'AMC 8·10·12 기출문제를 연도별로 모아 미리보기와 다운로드를 제공합니다.', amc8Level: '중학생 이하 대상', amc10Level: '10학년 이하 대상 · A/B', amc12Level: '12학년 이하 대상 · A/B', restCorner: '쉬어가는 코너', examArchives: '기출문제 아카이브', examArchivesDesc: 'AMC와 대학수학능력시험(수능) 기출문제를 연도별로 모아 미리보기와 다운로드를 제공합니다.', csatArchive: '대학수학능력시험', csatJune: '6월 모의고사', csatJuneDesc: '고3 전국연합학력평가 · 매년 6월 시행', csatSept: '9월 모의고사', csatSeptDesc: '고3 전국연합학력평가 · 매년 9월 시행', csatNov: '대학수학능력시험', csatNovDesc: '매년 11월 시행 · 본수능', navCsat: '수능 기출문제',
+  quickPractice: '빠른 문제 선택', uploadMaterials: '자료 업로드', amcArchive: 'AMC 기출문제', amcArchiveDesc: 'AMC 8·10·12 기출문제를 연도별로 모아 미리보기와 다운로드를 제공합니다.', amc8Level: '중학생 이하 대상', amc10Level: '10학년 이하 대상 · A/B', amc12Level: '12학년 이하 대상 · A/B', restCorner: '쉬어가는 코너', examArchives: '기출문제 아카이브', examArchivesDesc: 'AMC와 대학수학능력시험(수능) 기출문제를 연도별로 모아 미리보기와 다운로드를 제공합니다.', csatArchive: '대학수학능력시험', csatJune: '6월 모의고사', csatJuneDesc: '고3 전국연합학력평가 · 매년 6월 시행', csatSept: '9월 모의고사', csatSeptDesc: '고3 전국연합학력평가 · 매년 9월 시행', csatNov: '대학수학능력시험', csatNovDesc: '매년 11월 시행 · 본수능', navCsat: '대학수학능력시험(수학)',
   descartesEyebrow: '수학과 사유의 철학 · PHILOSOPHY & REASON',
   descartesQuoteLatin: 'Cogito, ergo sum',
   descartesQuoteTranslation: '나는 생각한다, 고로 존재한다',
