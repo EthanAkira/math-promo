@@ -100,6 +100,14 @@ export default function CurriculumExplorer() {
 
   // If user has not manually changed tab on first load, adjust to language default once
   useEffect(() => {
+    // A direct link (e.g. the top-nav "동아시아 교육과정" item) takes priority over both
+    // sessionStorage and the language default, so it reliably lands on the right tab.
+    const requestedTab = new URLSearchParams(window.location.search).get('curriculumTab');
+    if (requestedTab && ['korea', 'courses', 'domains', 'eastasia'].includes(requestedTab)) {
+      setActiveTab(requestedTab);
+      try { window.sessionStorage.setItem('math-curriculum-tab', requestedTab); } catch {}
+      return;
+    }
     const userSelected = window.sessionStorage.getItem('math-curriculum-tab');
     if (userSelected) {
       setActiveTab(userSelected);
