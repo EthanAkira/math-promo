@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
-import { ALGEBRA_UNITS, findAlgebraUnit, localizeAlgebraUnit } from './catalog';
+import { ALGEBRA_UNITS, RPM_ALGEBRA_APPLIED_UNITS, findAlgebraUnit, localizeAlgebraUnit } from './catalog';
 import { findRpmAppliedGenerator } from '../rpmAppliedEngine';
 import RpmDiagram from '../RpmDiagram';
 import CurriculumMappingBar from '../CurriculumMappingBar';
@@ -128,15 +128,19 @@ export default function AlgebraBasicsGenerator() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const initialUnit = findAlgebraUnit(params.get('unit')).id;
-    const initialSeed = (params.get('sheet') || createSeed()).toUpperCase();
     const initialTier = params.get('tier') === 'advanced' ? 'advanced' : 'basic';
+    const tierUnits = initialTier === 'advanced' ? RPM_ALGEBRA_APPLIED_UNITS : ALGEBRA_UNITS;
+    const requestedUnitId = params.get('unit');
+    const matchedUnit = tierUnits.find((u) => u.id === requestedUnitId) || findAlgebraUnit(requestedUnitId);
+    const initialUnit = matchedUnit.id;
+    const initialSeed = (params.get('sheet') || createSeed()).toUpperCase();
     const initialView = params.get('view') === 'answers' ? 'answers' : 'problems';
     setUnitId(initialUnit); setSeed(initialSeed); setTier(initialTier); setView(initialView);
     window.history.replaceState({}, '', buildUrl(initialSeed, initialUnit, initialTier, initialView));
     setReady(true);
   }, []);
 
+  const currentUnits = tier === 'advanced' ? RPM_ALGEBRA_APPLIED_UNITS : ALGEBRA_UNITS;
   const unit = findAlgebraUnit(unitId);
   const basicProblems = useMemo(() => makeBasicProblems(seed, unit), [seed, unit]);
   const appliedProblems = useMemo(() => makeAppliedProblems(seed, unit), [seed, unit]);
@@ -169,8 +173,10 @@ export default function AlgebraBasicsGenerator() {
       if (!user) { window.alert(tr(language, 'advancedAlertNeedLogin')); return; }
       if (advancedSubStatus !== 'active') { window.alert(tr(language, 'advancedAlertNeedSub')); return; }
     }
-    setTier(nextTier); setAnswers({}); setChecked(false);
-    replaceUrl(seed, unitId, nextTier, view);
+    const targetUnits = nextTier === 'advanced' ? RPM_ALGEBRA_APPLIED_UNITS : ALGEBRA_UNITS;
+    const nextUnitId = targetUnits.some((u) => u.id === unitId) ? unitId : targetUnits[0].id;
+    setTier(nextTier); setUnitId(nextUnitId); setAnswers({}); setChecked(false);
+    replaceUrl(seed, nextUnitId, nextTier, view);
   }
 
   function checkAnswers() {
@@ -196,7 +202,7 @@ export default function AlgebraBasicsGenerator() {
       <div>
         <label htmlFor="algebra-unit">{tr(language, 'skill')}</label>
         <select id="algebra-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>
-          {ALGEBRA_UNITS.map((item) => <option key={item.id} value={item.id}>{localizeAlgebraUnit(item, language)}</option>)}
+          {currentUnits.map((item) => <option key={item.id} value={item.id}>{localizeAlgebraUnit(item, language)}</option>)}
         </select>
         <p>{unitDescription}</p>
       </div>

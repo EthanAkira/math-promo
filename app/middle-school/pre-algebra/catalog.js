@@ -1,7 +1,7 @@
 import { PRIME_BASIC_UNITS } from '../prime-factorization/catalog';
 import { GCD_LCM_BASIC_UNITS } from '../gcd-lcm/catalog';
 import { INTEGER_RATIONAL_UNITS } from '../integers-rationals/catalog';
-import { ALGEBRA_UNITS } from '../algebra-basics/catalog';
+import { ALGEBRA_UNITS, RPM_ALGEBRA_APPLIED_UNITS } from '../algebra-basics/catalog';
 import { COORDINATE_UNITS } from '../coordinate-plane/catalog';
 import { PROPORTION_UNITS } from '../proportion/catalog';
 import { SECONDARY_ALGEBRA_UNITS } from './secondaryAlgebraEngine';
@@ -222,7 +222,7 @@ const SOURCE_GROUPS = [
   ['수와 연산', ['pre-algebra', 'kr-middle-1'], PRIME_BASIC_UNITS],
   ['수와 연산', ['pre-algebra', 'kr-middle-1'], GCD_LCM_BASIC_UNITS],
   ['수와 연산', ['pre-algebra', 'kr-middle-1'], INTEGER_RATIONAL_UNITS],
-  ['문자와 식', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], ALGEBRA_UNITS],
+  ['문자와 식', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], [...ALGEBRA_UNITS, ...RPM_ALGEBRA_APPLIED_UNITS]],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], COORDINATE_UNITS],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'algebra-1'], PROPORTION_UNITS],
 ];
@@ -267,6 +267,14 @@ const UNIT_TIERS = {
   'equation-identity': 'intermediate', 'equality-properties': 'intermediate', 'linear-equations': 'intermediate',
   'advanced-linear-equations': 'advanced', 'equation-word-problems': 'intermediate', 'distance-speed-time': 'intermediate',
   'concentration': 'advanced', 'equations-review': 'intermediate',
+  'rpm-alg-notation-signs': 'advanced', 'rpm-alg-verbal-units-cost': 'advanced', 'rpm-alg-verbal-figures': 'advanced',
+  'rpm-alg-verbal-speed-concentration': 'advanced', 'rpm-alg-eval-basic-negative': 'advanced', 'rpm-alg-eval-fraction-reciprocal': 'advanced',
+  'rpm-alg-eval-real-world': 'advanced', 'rpm-alg-poly-terms-degree': 'advanced', 'rpm-alg-linear-identify': 'advanced',
+  'rpm-alg-monomial-mult-div': 'advanced', 'rpm-alg-like-terms': 'advanced', 'rpm-alg-linear-add-sub': 'advanced',
+  'rpm-alg-linear-brackets': 'advanced', 'rpm-alg-fractional-linear': 'advanced', 'rpm-alg-linear-condition-param': 'advanced',
+  'rpm-alg-substitute-expression': 'advanced', 'rpm-alg-unknown-box-poly': 'advanced', 'rpm-alg-correct-poly-calc': 'advanced',
+  'rpm-alg-geometry-shaded-area': 'advanced', 'rpm-alg-neg-power-linear': 'advanced', 'rpm-alg-magic-square-pyramid': 'advanced',
+  'rpm-alg-cost-profit-complex': 'advanced', 'rpm-alg-multi-var-complex-eval': 'advanced', 'rpm-alg-all-types-mixed': 'advanced',
   // coordinate-plane/catalog.js
   'plane-read-point': 'basic', 'plane-find-point': 'basic', 'quadrant-identify': 'basic', 'quadrant-sign': 'basic',
   'symmetric-points': 'intermediate', 'quadrant-transform': 'intermediate', 'ordered-pair-condition': 'intermediate',

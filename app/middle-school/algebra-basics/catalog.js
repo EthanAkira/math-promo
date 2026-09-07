@@ -287,7 +287,7 @@ export const ALGEBRA_UNITS = [
 ];
 
 export function findAlgebraUnit(unitId) {
-  return ALGEBRA_UNITS.find((unit) => unit.id === unitId) || ALGEBRA_UNITS[0];
+  return ALGEBRA_ALL_UNITS.find((unit) => unit.id === unitId) || ALGEBRA_UNITS[0];
 }
 
 export function localizeAlgebraUnit(unit, language, field = 'label') {
@@ -295,3 +295,60 @@ export function localizeAlgebraUnit(unit, language, field = 'label') {
   return localizeRegionalUnit(unit.id, language, unit.en[field === 'label' ? 0 : 1], field);
 }
 import { localizeRegionalUnit } from '../../regionalCatalog';
+import {
+  rpmAlgNotationSigns,
+  rpmAlgVerbalUnitsCost,
+  rpmAlgVerbalFigures,
+  rpmAlgVerbalSpeedConcentration,
+  rpmAlgEvalBasicNegative,
+  rpmAlgEvalFractionReciprocal,
+  rpmAlgEvalRealWorld,
+  rpmAlgPolyTermsDegree,
+  rpmAlgLinearIdentify,
+  rpmAlgMonomialMultDiv,
+  rpmAlgLikeTerms,
+  rpmAlgLinearAddSub,
+  rpmAlgLinearBrackets,
+  rpmAlgFractionalLinear,
+  rpmAlgLinearConditionParam,
+  rpmAlgSubstituteExpression,
+  rpmAlgUnknownBoxPoly,
+  rpmAlgCorrectPolyCalc,
+  rpmAlgGeometryShadedArea,
+  rpmAlgNegPowerLinear,
+  rpmAlgMagicSquarePyramid,
+  rpmAlgCostProfitComplex,
+  rpmAlgMultiVarComplexEval,
+  rpmAlgAllTypesMixed,
+} from '../rpmAppliedEngine';
+
+export const ALGEBRA_BASIC_UNITS = ALGEBRA_UNITS;
+
+export const RPM_ALGEBRA_APPLIED_UNITS = [
+  { id: 'rpm-alg-notation-signs', label: '[문자와 식 유형 01] 곱셈과 나눗셈 기호의 생략과 거듭제곱', description: '곱셈과 나눗셈 기호의 생략 규칙과 거듭제곱 표현 익히기', en: ['Expressions Type 01: Omitting Signs & Powers', 'Practice omitting multiplication and division signs and writing powers'], make: rpmAlgNotationSigns },
+  { id: 'rpm-alg-verbal-units-cost', label: '[문자와 식 유형 02] 문자를 사용한 식 (자연수, 단위, 금액, 할인)', description: '자릿수 표현, 단위 변환, 정가·할인액 문장제 표현', en: ['Expressions Type 02: Real-world Expressions & Cost', 'Expressions for digits, units, pricing, and discounts'], make: rpmAlgVerbalUnitsCost },
+  { id: 'rpm-alg-verbal-figures', label: '[문자와 식 유형 03] 문자를 사용한 식 (도형의 둘레와 넓이)', description: '다각형의 둘레와 넓이 공식을 문자로 표현하기', en: ['Expressions Type 03: Perimeter & Area Expressions', 'Formulas for geometric shapes using algebraic variables'], make: rpmAlgVerbalFigures },
+  { id: 'rpm-alg-verbal-speed-concentration', label: '[문자와 식 유형 04] 문자를 사용한 식 (속력·거리·시간 및 농도)', description: '속력·거리·시간 관계식 및 소금물 농도 공식 표현', en: ['Expressions Type 04: Speed, Distance, Time & Solutions', 'Formulate speed, distance, time, and salt solution concentrations'], make: rpmAlgVerbalSpeedConcentration },
+  { id: 'rpm-alg-eval-basic-negative', label: '[문자와 식 유형 05] 식의 값 구하기 (음수 대입과 거듭제곱 부호)', description: '음수 대입 시 괄호 사용과 거듭제곱의 부호 판별', en: ['Expressions Type 05: Evaluating with Negatives & Powers', 'Evaluate algebraic expressions with negative values and exponents'], make: rpmAlgEvalBasicNegative },
+  { id: 'rpm-alg-eval-fraction-reciprocal', label: '[문자와 식 유형 06] 분수를 분모에 대입하여 식의 값 구하기', description: '분모에 분수가 올 때 나눗셈으로 바꾸어 역수 곱하기', en: ['Expressions Type 06: Evaluating with Reciprocal Fractions', 'Evaluate expressions where fractions are in denominators'], make: rpmAlgEvalFractionReciprocal },
+  { id: 'rpm-alg-eval-real-world', label: '[문자와 식 유형 07] 식의 값의 실생활 활용 (과학 공식 및 물리량)', description: '기온, 소리의 속력, 제동거리 등 과학 공식에 대입하기', en: ['Expressions Type 07: Real-world Science Formula Evaluation', 'Evaluate scientific and physical formulas with given quantities'], make: rpmAlgEvalRealWorld },
+  { id: 'rpm-alg-poly-terms-degree', label: '[문자와 식 유형 08] 다항식의 항, 상수항, 계수와 차수', description: '다항식의 기본 용어 분석 및 차수·계수 종합 판별', en: ['Expressions Type 08: Terms, Coefficients & Degree', 'Identify terms, constants, coefficients, and degree of polynomials'], make: rpmAlgPolyTermsDegree },
+  { id: 'rpm-alg-linear-identify', label: '[문자와 식 유형 09] 일차식의 식별과 분모 문자 함정', description: '일차식인 것 고르기와 분모에 문자가 있는 분수식 함정 구별', en: ['Expressions Type 09: Identifying Linear Expressions', 'Distinguish true linear expressions from non-polynomials'], make: rpmAlgLinearIdentify },
+  { id: 'rpm-alg-monomial-mult-div', label: '[문자와 식 유형 10] 일차식과 수의 곱셈·나눗셈', description: '분배법칙과 역수를 이용한 일차식과 수의 곱셈과 나눗셈', en: ['Expressions Type 10: Linear Expression Multiplication & Division', 'Multiply and divide linear expressions by numbers'], make: rpmAlgMonomialMultDiv },
+  { id: 'rpm-alg-like-terms', label: '[문자와 식 유형 11] 동류항의 판별과 동류항 성립 조건', description: '문자와 차수가 같은 동류항 판별 및 미지수 차수 맞추기', en: ['Expressions Type 11: Like Terms & Degree Conditions', 'Identify like terms and solve for exponents making terms like'], make: rpmAlgLikeTerms },
+  { id: 'rpm-alg-linear-add-sub', label: '[문자와 식 유형 12] 일차식의 덧셈과 뺄셈 (동류항 모으기)', description: '동류항끼리 묶어 ax+b 꼴로 간단히 정리하기', en: ['Expressions Type 12: Adding & Subtracting Linear Expressions', 'Combine like terms into simplified linear form'], make: rpmAlgLinearAddSub },
+  { id: 'rpm-alg-linear-brackets', label: '[문자와 식 유형 13] 괄호가 있는 일차식의 계산 (소/중/대괄호)', description: '소괄호, 중괄호, 대괄호 순서로 분배법칙을 풀어 정리하기', en: ['Expressions Type 13: Linear Expressions with Nested Brackets', 'Expand and simplify expressions with parentheses and brackets'], make: rpmAlgLinearBrackets },
+  { id: 'rpm-alg-fractional-linear', label: '[문자와 식 유형 14] 분수 꼴인 일차식의 덧셈과 뺄셈 (통분 연산)', description: '분모의 최소공배수로 통분하고 분자 괄호 부호 주의하여 계산', en: ['Expressions Type 14: Fractional Linear Expressions', 'Add and subtract fractional linear expressions by finding common denominators'], make: rpmAlgFractionalLinear },
+  { id: 'rpm-alg-linear-condition-param', label: '[문자와 식 유형 15] 일차식이 되도록 하는 미지수 조건', description: '식 정리 후 2차항이 소거되어 일차식이 될 조건 찾기', en: ['Expressions Type 15: Conditions for a Linear Expression', 'Find parameter values that eliminate higher degree terms'], make: rpmAlgLinearConditionParam },
+  { id: 'rpm-alg-substitute-expression', label: '[문자와 식 유형 16] 문자에 일차식을 대입하기', description: 'A, B 대신 주어진 일차식을 괄호로 대입하여 식 정리하기', en: ['Expressions Type 16: Substituting Expressions for Variables', 'Substitute algebraic expressions into other linear forms'], make: rpmAlgSubstituteExpression },
+  { id: 'rpm-alg-unknown-box-poly', label: '[문자와 식 유형 17] □ 안에 알맞은 일차식 구하기', description: '다항식 연산에서 빈칸이나 네모에 들어갈 일차식 역산하기', en: ['Expressions Type 17: Finding the Unknown Box Expression', 'Solve for an unknown algebraic term inside a box'], make: rpmAlgUnknownBoxPoly },
+  { id: 'rpm-alg-correct-poly-calc', label: '[문자와 식 유형 18] 바르게 계산한 일차식 구하기', description: '잘못 계산한 식에서 원래 다항식을 구하고 바르게 계산하기', en: ['Expressions Type 18: Finding the Corrected Expression', 'Deduce original expression from calculation errors and recalculate'], make: rpmAlgCorrectPolyCalc },
+  { id: 'rpm-alg-geometry-shaded-area', label: '[문자와 식 유형 19] 도형에서의 일차식 활용 (둘레와 색칠한 넓이)', description: '직사각형, 사다리꼴 등에서 색칠한 부분의 넓이와 둘레를 일차식으로 나타내기', en: ['Expressions Type 19: Geometric Linear Applications & Shaded Area', 'Calculate shaded area and perimeter using linear algebraic expressions'], make: rpmAlgGeometryShadedArea },
+  { id: 'rpm-alg-neg-power-linear', label: '[문자와 식 유형 20] (-1)^n 거듭제곱이 포함된 일차식의 계산', description: 'n이 짝수 또는 홀수일 때 (-1)^n의 부호를 결정하여 일차식 풀기', en: ['Expressions Type 20: Linear Expressions with Powers of -1', 'Simplify expressions with (-1)^n based on odd/even parity'], make: rpmAlgNegPowerLinear },
+  { id: 'rpm-alg-magic-square-pyramid', label: '[문자와 식 심화 21] 일차식 마방진과 다항식 피라미드 퍼즐', description: '행/열/대각선의 합이 같은 마방진 및 인접 두 식을 더하는 피라미드 퍼즐', en: ['Expressions Advanced 21: Linear Magic Squares & Pyramids', 'Solve algebraic magic squares and polynomial addition pyramids'], make: rpmAlgMagicSquarePyramid },
+  { id: 'rpm-alg-cost-profit-complex', label: '[문자와 식 발전 22] 원가·정가·할인가·이익 복합 문장제', description: '원가, 정가, 할인 판매가, 판매 이익 사이의 관계를 문자로 정밀하게 나타내기', en: ['Expressions Challenge 22: Cost, List Price & Profit Word Problems', 'Advanced algebraic modeling for pricing, markups, and profits'], make: rpmAlgCostProfitComplex },
+  { id: 'rpm-alg-multi-var-complex-eval', label: '[문자와 식 발전 23] 다중 문자 분수식의 고난도 대입 식의 값', description: '문자가 여러 개인 분수식에서 역수 또는 비례식을 변형하여 식의 값 구하기', en: ['Expressions Challenge 23: Multi-Variable Complex Fraction Evaluation', 'Evaluate advanced fractional expressions with reciprocal substitutions'], make: rpmAlgMultiVarComplexEval },
+  { id: 'rpm-alg-all-types-mixed', label: '[단원 실전 다지기] 매일 문자와 식 종합', description: '문자의 사용과 식의 계산 전 유형을 아우르는 매일 실전 종합 모의평가', en: ['Daily Expressions Comprehensive', 'Comprehensive mixed practice covering all expression types'], make: rpmAlgAllTypesMixed },
+];
+
+export const ALGEBRA_ALL_UNITS = [...ALGEBRA_UNITS, ...RPM_ALGEBRA_APPLIED_UNITS];

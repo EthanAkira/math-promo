@@ -1835,21 +1835,470 @@ function rpmIrcAllTypesMixed(random, profile) {
 }
 
 // -------------------------------------------------------------
-// 04: 문자의 사용과 식의 계산 응용
+// CHAPTER 05: 문자의 사용과 식의 계산 응용 (RPM 1-1 Pages 78 ~ 91)
 // -------------------------------------------------------------
-function rpmAlgebraShadedArea(random, profile) {
-  const h = pick(random, [8, 10, 12]);
-  const cutH = pick(random, [3, 4]);
-  const extraBottom = ri(random, 4, 8);
-  const coeffX = h - cutH / 2;
-  const constVal = (h * extraBottom) / 2 - (cutH * extraBottom) / 2;
-  const ans = `${coeffX}x+${constVal}`;
 
+// 1. [문자와 식 유형 01] 곱셈과 나눗셈 기호의 생략과 거듭제곱
+function rpmAlgNotationSigns(random, profile) {
+  const mode = pick(random, ['identify-false', 'div-chain', 'powers-chain']);
+  if (mode === 'div-chain') {
+    const choices = [
+      { value: '1', label: 'a/(bc)', labelEn: 'a/(bc)', isRight: true },
+      { value: '2', label: '(ac)/b', labelEn: '(ac)/b', isRight: false },
+      { value: '3', label: '(ab)/c', labelEn: '(ab)/c', isRight: false },
+      { value: '4', label: 'abc', labelEn: 'abc', isRight: false },
+      { value: '5', label: 'a/(b+c)', labelEn: 'a/(b+c)', isRight: false },
+    ];
+    return {
+      prompt: tx(profile,
+        '다음 중 a ÷ b ÷ c 와 같은 식은?',
+        'Which of the following expressions is equivalent to a ÷ b ÷ c?'),
+      expression: 'a ÷ b ÷ c',
+      choices,
+      answer: '1',
+      explanation: tx(profile,
+        'a ÷ b ÷ c = a × 1/b × 1/c = a/(bc) 입니다.',
+        'a ÷ b ÷ c = a × 1/b × 1/c = a/(bc).'),
+    };
+  }
+  if (mode === 'powers-chain') {
+    const choices = [
+      { value: '1', label: '-x^3/y', labelEn: '-x^3/y', isRight: true },
+      { value: '2', label: 'x^3/y', labelEn: 'x^3/y', isRight: false },
+      { value: '3', label: '-x^2/y', labelEn: '-x^2/y', isRight: false },
+      { value: '4', label: '-3x/y', labelEn: '-3x/y', isRight: false },
+      { value: '5', label: 'y/x^3', labelEn: 'y/x^3', isRight: false },
+    ];
+    return {
+      prompt: tx(profile,
+        '다음 식을 곱셈과 나눗셈 기호를 생략하여 간단히 나타낸 것은?',
+        'Simplify the expression by omitting multiplication and division signs.'),
+      expression: 'x × x × x ÷ y ÷ (-1)',
+      choices,
+      answer: '1',
+      explanation: tx(profile,
+        'x × x × x ÷ y ÷ (-1) = x^3 × 1/y × (-1) = -x^3/y 입니다.',
+        'x × x × x ÷ y ÷ (-1) = -x^3/y.'),
+    };
+  }
+  const choices = [
+    { value: '1', label: 'x × y × (-1) = -xy', labelEn: 'x × y × (-1) = -xy', isRight: false },
+    { value: '2', label: '3 × x × 5 × x × x × y = 15x^3y', labelEn: '3 × x × 5 × x × x × y = 15x^3y', isRight: false },
+    { value: '3', label: '0.1 ÷ a × b = b/(10a)', labelEn: '0.1 ÷ a × b = b/(10a)', isRight: false },
+    { value: '4', label: 'a ÷ (1/b) ÷ (1/c) = a/(bc)', labelEn: 'a ÷ (1/b) ÷ (1/c) = a/(bc)', isRight: true },
+    { value: '5', label: '(a+b) ÷ (-2) × c = -((a+b)c)/2', labelEn: '(a+b) ÷ (-2) × c = -((a+b)c)/2', isRight: false },
+  ];
   return {
     prompt: tx(profile,
-      `윗변이 x, 아랫변이 x + ${extraBottom}, 높이가 ${h}인 사다리꼴에서 높이 ${cutH}인 삼각형을 뺀 색칠한 넓이를 ax + b 꼴로 나타내시오.`,
-      `In a trapezoid of top base x, bottom base x + ${extraBottom}, and height ${h}, find the shaded area after subtracting an inner triangle of height ${cutH}.`),
-    expression: `사다리꼴 넓이 - 삼각형 넓이`,
+      '다음 중 옳지 않은 것은?',
+      'Which of the following statements is incorrect?'),
+    expression: '곱셈·나눗셈 기호의 생략',
+    choices,
+    answer: '4',
+    explanation: tx(profile,
+      'a ÷ (1/b) ÷ (1/c) = a × b × c = abc 이므로 4번이 옳지 않습니다.',
+      'a ÷ (1/b) ÷ (1/c) = a × b × c = abc, so option 4 is incorrect.'),
+  };
+}
+
+// 2. [문자와 식 유형 02] 문자를 사용한 식 (자연수, 단위, 금액, 할인)
+function rpmAlgVerbalUnitsCost(random, profile) {
+  const mode = pick(random, ['digit-num', 'discount', 'time-unit']);
+  if (mode === 'digit-num') {
+    const choices = [
+      { value: '1', label: '10a + b', labelEn: '10a + b', isRight: true },
+      { value: '2', label: 'ab', labelEn: 'ab', isRight: false },
+      { value: '3', label: 'a + 10b', labelEn: 'a + 10b', isRight: false },
+      { value: '4', label: '10(a + b)', labelEn: '10(a + b)', isRight: false },
+      { value: '5', label: 'a + b', labelEn: 'a + b', isRight: false },
+    ];
+    return {
+      prompt: tx(profile,
+        '십의 자리 숫자가 a이고 일의 자리 숫자가 b인 두 자리 자연수를 문자를 사용한 식으로 바르게 나타낸 것은?',
+        'Which algebraic expression correctly represents a two-digit integer with tens digit a and units digit b?'),
+      expression: '십의 자리: a, 일의 자리: b',
+      choices,
+      answer: '1',
+      explanation: tx(profile,
+        '십의 자리 숫자가 a이고 일의 자리 숫자가 b인 두 자리 자연수는 10 × a + b = 10a + b 입니다.',
+        'The value is 10 × a + b = 10a + b.'),
+    };
+  }
+  if (mode === 'time-unit') {
+    const h = ri(random, 2, 5);
+    return {
+      prompt: tx(profile,
+        `${h}시간 m분을 '분' 단위로 나타낸 식을 구하시오.`,
+        `Express ${h} hours and m minutes in terms of minutes.`),
+      expression: `${h}시간 m분`,
+      answer: `${h * 60}+m`,
+      explanation: tx(profile,
+        `1시간은 60분이므로 ${h}시간 m분 = ${h} × 60 + m = ${h * 60} + m (분) 입니다.`,
+        `1 hour = 60 minutes, so ${h} hours m minutes = ${h * 60} + m.`),
+    };
+  }
+  const price = pick(random, [10000, 15000, 20000, 30000]);
+  const disc = ri(random, 1, 4) * 5;
+  const paid = price * (100 - disc) / 100;
+  return {
+    prompt: tx(profile,
+      `정가가 ${price}원인 모자를 ${disc}% 할인하여 구매할 때 지불해야 하는 금액을 구하시오.`,
+      `Find the discounted purchase price of a hat with regular price ${price} won discounted by ${disc}%.`),
+    expression: `${price}원의 ${disc}% 할인 금액`,
+    answer: String(paid),
+    answerSuffix: tx(profile, '원', ' won'),
+    explanation: tx(profile,
+      `지불 금액 = ${price} × (1 - ${disc}/100) = ${paid}원입니다.`,
+      `Discounted price = ${price} × (1 - ${disc}/100) = ${paid} won.`),
+  };
+}
+
+// 3. [문자와 식 유형 03] 문자를 사용한 식 (도형의 둘레와 넓이)
+function rpmAlgVerbalFigures(random, profile) {
+  const mode = pick(random, ['trapezoid', 'rect-perimeter']);
+  if (mode === 'trapezoid') {
+    const h = pick(random, [4, 6, 8, 10]);
+    const coeff = h / 2;
+    return {
+      prompt: tx(profile,
+        `윗변의 길이가 a, 아랫변의 길이가 b, 높이가 ${h}인 사다리꼴의 넓이를 문자를 사용한 식으로 간단히 나타내시오.`,
+        `Write a simplified algebraic expression for the area of a trapezoid with top base a, bottom base b, and height ${h}.`),
+      expression: `윗변: a, 아랫변: b, 높이: ${h}`,
+      answer: coeff === 1 ? 'a+b' : `${coeff}(a+b)`,
+      explanation: tx(profile,
+        `사다리꼴 넓이 = 1/2 × (a + b) × ${h} = ${coeff === 1 ? 'a+b' : `${coeff}(a+b)`} 입니다.`,
+        `Area = 1/2 × (a + b) × ${h} = ${coeff === 1 ? 'a+b' : `${coeff}(a+b)`}.`),
+    };
+  }
+  const w = ri(random, 3, 9);
+  return {
+    prompt: tx(profile,
+      `세로의 길이가 x cm이고 가로의 길이가 세로보다 ${w} cm 더 긴 직사각형의 둘레의 길이를 x를 사용한 식으로 나타내시오.`,
+      `A rectangle has height x cm and width (x + ${w}) cm. Express its perimeter using x.`),
+    expression: `세로: x, 가로: x + ${w}`,
+    answer: `4x+${2 * w}`,
+    answerSuffix: 'cm',
+    explanation: tx(profile,
+      `둘레 = 2 × {x + (x + ${w})} = 2(2x + ${w}) = 4x + ${2 * w} (cm) 입니다.`,
+      `Perimeter = 2(x + x + ${w}) = 4x + ${2 * w} cm.`),
+  };
+}
+
+// 4. [문자와 식 유형 04] 문자를 사용한 식 (속력·거리·시간 및 농도)
+function rpmAlgVerbalSpeedConcentration(random, profile) {
+  const mode = pick(random, ['speed-time', 'salt-water']);
+  if (mode === 'speed-time') {
+    const speed = pick(random, [60, 70, 80, 100]);
+    return {
+      prompt: tx(profile,
+        `시속 ${speed} km로 x시간 동안 달린 거리를 x를 사용한 식으로 나타내시오.`,
+        `Express the distance traveled at ${speed} km/h for x hours.`),
+      expression: `속력: ${speed} km/h, 시간: x시간`,
+      answer: `${speed}x`,
+      answerSuffix: 'km',
+      explanation: tx(profile,
+        `(거리) = (속력) × (시간) = ${speed}x (km) 입니다.`,
+        `Distance = Speed × Time = ${speed}x km.`),
+    };
+  }
+  const conc = ri(random, 5, 15);
+  return {
+    prompt: tx(profile,
+      `${conc}%의 소금물 x g에 녹아 있는 소금의 양을 x를 사용한 식으로 나타내시오.`,
+      `Express the amount of salt dissolved in x g of ${conc}% salt solution.`),
+    expression: `${conc}% 소금물 x g`,
+    answer: fracStr(conc, 100) === '1' ? 'x' : `${fracStr(conc, 100)}x`,
+    answerSuffix: 'g',
+    explanation: tx(profile,
+      `(소금의 양) = (농도/100) × (소금물의 양) = ${conc}/100 × x = ${fracStr(conc, 100)}x (g) 입니다.`,
+      `Salt = (${conc}/100) × x = ${fracStr(conc, 100)}x g.`),
+  };
+}
+
+// 5. [문자와 식 유형 05] 식의 값 구하기 (음수 대입과 거듭제곱 부호)
+function rpmAlgEvalBasicNegative(random, profile) {
+  const x = -ri(random, 2, 4);
+  const y = ri(random, 2, 4);
+  const a = ri(random, 2, 3);
+  const b = ri(random, 2, 4);
+  const val = a * (x * x) - b * y;
+  return {
+    prompt: tx(profile,
+      `x = ${x}, y = ${y}일 때, 다음 식의 값을 구하시오.`,
+      `Evaluate the expression when x = ${x} and y = ${y}.`),
+    expression: `${a}x^2 - ${b}y`,
+    answer: String(val),
+    explanation: tx(profile,
+      `대입하면 ${a} × (${x})^2 - ${b} × (${y}) = ${a} × ${x * x} - ${b * y} = ${val} 입니다.`,
+      `Substituting yields ${a}(${x * x}) - ${b * y} = ${val}.`),
+  };
+}
+
+// 6. [문자와 식 유형 06] 분수를 분모에 대입하여 식의 값 구하기
+function rpmAlgEvalFractionReciprocal(random, profile) {
+  const d1 = pick(random, [2, 3, 4, 5]);
+  const d2 = pick(random, [2, 3, 4]);
+  const c1 = ri(random, 2, 4);
+  const c2 = ri(random, 2, 5);
+  const val = c1 * (-d1) + c2 * d2;
+  return {
+    prompt: tx(profile,
+      `x = -1/${d1}, y = 1/${d2}일 때, 다음 식의 값을 구하시오.`,
+      `Find the value of the expression when x = -1/${d1} and y = 1/${d2}.`),
+    expression: `${c1}/x + ${c2}/y`,
+    answer: String(val),
+    explanation: tx(profile,
+      `${c1}/x = ${c1} ÷ (-1/${d1}) = -${c1 * d1} 이고, ${c2}/y = ${c2} ÷ (1/${d2}) = ${c2 * d2} 이므로 합은 ${val} 입니다.`,
+      `${c1}/x = -${c1 * d1} and ${c2}/y = ${c2 * d2}, giving ${val}.`),
+  };
+}
+
+// 7. [문자와 식 유형 07] 식의 값의 실생활 활용
+function rpmAlgEvalRealWorld(random, profile) {
+  const t = ri(random, 10, 30);
+  const v = Math.round((331 + 0.6 * t) * 10) / 10;
+  return {
+    prompt: tx(profile,
+      `기온이 t ℃일 때, 공기 중에서 소리의 속력은 초속 (331 + 0.6t) m라고 한다. 기온이 ${t} ℃일 때, 소리의 속력을 구하시오.`,
+      `The speed of sound in air at temperature t °C is (331 + 0.6t) m/s. Find the speed of sound when t = ${t} °C.`),
+    expression: `v = 331 + 0.6t,  t = ${t}`,
+    answer: String(v),
+    answerSuffix: 'm/s',
+    explanation: tx(profile,
+      `t = ${t}를 대입하면 331 + 0.6 × ${t} = 331 + ${Math.round(0.6 * t * 10)/10} = ${v} (m/s) 입니다.`,
+      `Substituting t = ${t} gives 331 + 0.6 × ${t} = ${v} m/s.`),
+  };
+}
+
+// 8. [문자와 식 유형 08] 다항식의 항, 상수항, 계수와 차수
+function rpmAlgPolyTermsDegree(random, profile) {
+  const c2 = -ri(random, 2, 5);
+  const c1 = ri(random, 3, 7);
+  const c0 = -ri(random, 2, 8);
+  const choices = [
+    { value: '1', label: `항은 ${c2}x^2, ${c1}x, ${c0}으로 총 3개이다.`, labelEn: `There are 3 terms: ${c2}x^2, ${c1}x, ${c0}.`, isRight: false },
+    { value: '2', label: `x^2의 계수는 ${c2}이다.`, labelEn: `The coefficient of x^2 is ${c2}.`, isRight: false },
+    { value: '3', label: `상수항은 ${Math.abs(c0)}이다.`, labelEn: `The constant term is ${Math.abs(c0)}.`, isRight: true },
+    { value: '4', label: `x의 계수는 ${c1}이다.`, labelEn: `The coefficient of x is ${c1}.`, isRight: false },
+    { value: '5', label: `다항식의 차수는 2이다.`, labelEn: `The degree of the polynomial is 2.`, isRight: false },
+  ];
+  return {
+    prompt: tx(profile,
+      `다항식 ${c2}x^2 + ${c1}x - ${Math.abs(c0)} 에 대한 설명 중 옳지 않은 것은?`,
+      `Which of the following statements about the polynomial ${c2}x^2 + ${c1}x - ${Math.abs(c0)} is incorrect?`),
+    expression: `${c2}x^2 + ${c1}x - ${Math.abs(c0)}`,
+    choices,
+    answer: '3',
+    explanation: tx(profile,
+      `상수항은 부호를 포함한 ${c0}이므로 ${Math.abs(c0)}이라고 한 3번이 옳지 않습니다.`,
+      `The constant term includes the negative sign (${c0}), so statement 3 is incorrect.`),
+  };
+}
+
+// 9. [문자와 식 유형 09] 일차식의 식별과 분모 문자 함정
+function rpmAlgLinearIdentify(random, profile) {
+  const choices = [
+    { value: '1', label: '-5x', labelEn: '-5x', isRight: true },
+    { value: '2', label: '4', labelEn: '4', isRight: false },
+    { value: '3', label: '1/x + 3', labelEn: '1/x + 3', isRight: false },
+    { value: '4', label: 'x^2 + 1', labelEn: 'x^2 + 1', isRight: false },
+    { value: '5', label: '1 + x - x^2', labelEn: '1 + x - x^2', isRight: false },
+  ];
+  return {
+    prompt: tx(profile,
+      '다음 보기 중 일차식인 것은?',
+      'Which of the following is a linear expression?'),
+    expression: '일차식의 판별',
+    choices,
+    answer: '1',
+    explanation: tx(profile,
+      '-5x는 차수가 1인 일차식입니다. 4는 상수항(0차), 1/x+3은 분모에 문자가 있어 다항식이 아니며, x^2+1과 1+x-x^2은 2차식입니다.',
+      '-5x is a linear term of degree 1. 1/x is not a polynomial, 4 is constant (degree 0), others have degree 2.'),
+  };
+}
+
+// 10. [문자와 식 유형 10] 일차식과 수의 곱셈·나눗셈
+function rpmAlgMonomialMultDiv(random, profile) {
+  const a = -ri(random, 2, 5);
+  const b = ri(random, 2, 6);
+  const c = -ri(random, 2, 7);
+  const coeffX = a * b;
+  const constVal = a * c;
+  const sum = coeffX + constVal;
+  return {
+    prompt: tx(profile,
+      `식 ${a}(${b}x - ${Math.abs(c)})를 간단히 하였을 때, x의 계수를 A, 상수항을 B라 하자. A + B의 값을 구하시오.`,
+      `When ${a}(${b}x - ${Math.abs(c)}) is simplified to Ax + B, find A + B.`),
+    expression: `${a}(${b}x - ${Math.abs(c)})`,
+    answer: String(sum),
+    explanation: tx(profile,
+      `분배법칙으로 전개하면 ${coeffX}x + ${constVal} 이므로 A = ${coeffX}, B = ${constVal} 입니다. A + B = ${sum} 입니다.`,
+      `Expanding yields ${coeffX}x + ${constVal}, so A + B = ${sum}.`),
+  };
+}
+
+// 11. [문자와 식 유형 11] 동류항의 판별과 동류항 성립 조건
+function rpmAlgLikeTerms(random, profile) {
+  const a = ri(random, 2, 5);
+  const b = ri(random, 1, 4);
+  const ans = a + b;
+  return {
+    prompt: tx(profile,
+      `두 식 3x^a y^${b} 와 -5x^${a} y^b 가 동류항일 때, a + b의 값을 구하시오.`,
+      `Given that 3x^a y^${b} and -5x^${a} y^b are like terms, find a + b.`),
+    expression: `3x^a y^${b},  -5x^${a} y^b`,
+    answer: String(ans),
+    explanation: tx(profile,
+      `동류항은 문자의 종류와 차수가 각각 같아야 하므로 x의 차수는 ${a}, y의 차수는 ${b}로 일치합니다. 따라서 a + b = ${ans} 입니다.`,
+      `Like terms must have matching variables and degrees, so a + b = ${ans}.`),
+  };
+}
+
+// 12. [문자와 식 유형 12] 일차식의 덧셈과 뺄셈 (동류항 모으기)
+function rpmAlgLinearAddSub(random, profile) {
+  const a = ri(random, 2, 6);
+  const b = -ri(random, 1, 5);
+  const c = ri(random, 3, 7);
+  const d = ri(random, 2, 6);
+  const coeffX = a - c;
+  const constVal = b - d;
+  const ans = `${coeffX}x${constVal >= 0 ? '+' : ''}${constVal}`;
+  return {
+    prompt: tx(profile,
+      '다음을 계산하여 ax + b 꼴로 간단히 나타내시오.',
+      'Simplify the expression in the form ax + b.'),
+    expression: `(${a}x - ${Math.abs(b)}) - (${c}x + ${d})`,
+    answer: ans,
+    explanation: tx(profile,
+      `동류항끼리 모으면 (${a} - ${c})x + (${b} - ${d}) = ${ans} 입니다.`,
+      `Combining like terms gives ${ans}.`),
+  };
+}
+
+// 13. [문자와 식 유형 13] 괄호가 있는 일차식의 계산 (소/중/대괄호)
+function rpmAlgLinearBrackets(random, profile) {
+  const k1 = ri(random, 3, 6);
+  const k2 = ri(random, 2, 4);
+  const coeffX = 7 - 2 * k2;
+  const constVal = -k1 + 2;
+  const ans = `${coeffX}x${constVal >= 0 ? '+' : ''}${constVal}`;
+  return {
+    prompt: tx(profile,
+      '다음 식을 괄호를 풀어 간단히 나타내시오.',
+      'Simplify the expression by expanding parentheses from innermost to outermost.'),
+    expression: `5x - [ ${k1} - 2{ x - (${k2}x - 1) } ]`,
+    answer: ans,
+    explanation: tx(profile,
+      `소괄호 → 중괄호 → 대괄호 순서로 전개하여 정리하면 ${ans} 입니다.`,
+      `Expanding inside-out yields ${ans}.`),
+  };
+}
+
+// 14. [문자와 식 유형 14] 분수 꼴인 일차식의 덧셈과 뺄셈 (통분 연산)
+function rpmAlgFractionalLinear(random, profile) {
+  const a = ri(random, 2, 4);
+  const b = ri(random, 1, 3);
+  const c = ri(random, 2, 3);
+  const d = ri(random, 4, 7);
+  const numX = 4 * a - 3 * c;
+  const numConst = -4 * b + 3 * d;
+  return {
+    prompt: tx(profile,
+      `식 (${a}x - ${b})/3 - (${c}x - ${d})/4 를 간단히 하였을 때, x의 계수를 A, 상수항을 B라 하자. 12(A + B)의 값을 구하시오.`,
+      `Simplify (${a}x - ${b})/3 - (${c}x - ${d})/4 to Ax + B. Find 12(A + B).`),
+    expression: `(${a}x - ${b})/3 - (${c}x - ${d})/4`,
+    answer: String(numX + numConst),
+    explanation: tx(profile,
+      `12로 통분하면 {4(${a}x - ${b}) - 3(${c}x - ${d})}/12 = (${numX}x + ${numConst})/12 입니다. 따라서 12(A + B) = ${numX + numConst} 입니다.`,
+      `Combining over 12 gives (${numX}x + ${numConst})/12, so 12(A + B) = ${numX + numConst}.`),
+  };
+}
+
+// 15. [문자와 식 유형 15] 일차식이 되도록 하는 미지수 조건
+function rpmAlgLinearConditionParam(random, profile) {
+  const p = ri(random, 2, 6);
+  const q = ri(random, 2, 5);
+  return {
+    prompt: tx(profile,
+      `다항식 (${p} - a)x^2 + ${q}x - 7 이 x에 대한 일차식이 되도록 하는 상수 a의 값을 구하시오.`,
+      `Find the value of constant a such that (${p} - a)x^2 + ${q}x - 7 is a linear expression in x.`),
+    expression: `(${p} - a)x^2 + ${q}x - 7`,
+    answer: String(p),
+    explanation: tx(profile,
+      `x에 대한 일차식이 되려면 이차항의 계수가 0이어야 하므로 ${p} - a = 0 에서 a = ${p} 입니다.`,
+      `For the expression to be linear, the quadratic coefficient must be zero: ${p} - a = 0 implies a = ${p}.`),
+  };
+}
+
+// 16. [문자와 식 유형 16] 문자에 일차식을 대입하기
+function rpmAlgSubstituteExpression(random, profile) {
+  return {
+    prompt: tx(profile,
+      'A = 2x - 1, B = -x + 3 일 때, 3A - 2(A - B) 를 x에 관한 식으로 간단히 나타내시오.',
+      'Given A = 2x - 1 and B = -x + 3, simplify 3A - 2(A - B) in terms of x.'),
+    expression: `A = 2x - 1,  B = -x + 3`,
+    answer: '5',
+    explanation: tx(profile,
+      `3A - 2(A - B) = A + 2B 입니다. 대입하면 (2x - 1) + 2(-x + 3) = 2x - 1 - 2x + 6 = 5 입니다.`,
+      `3A - 2(A - B) = A + 2B = (2x - 1) + 2(-x + 3) = 5.`),
+  };
+}
+
+// 17. [문자와 식 유형 17] □ 안에 알맞은 일차식 구하기
+function rpmAlgUnknownBoxPoly(random, profile) {
+  const a = ri(random, 3, 6);
+  const b = -ri(random, 1, 4);
+  const c = ri(random, 1, 3);
+  const d = ri(random, 3, 6);
+  const coeffX = a - c;
+  const constVal = b - d;
+  const ans = `${coeffX}x${constVal >= 0 ? '+' : ''}${constVal}`;
+  return {
+    prompt: tx(profile,
+      '다음 □ 안에 알맞은 식을 구하시오.',
+      'Find the polynomial expression that fits in □.'),
+    expression: `(${a}x - ${Math.abs(b)}) - □ = ${c}x + ${d}`,
+    answer: ans,
+    explanation: tx(profile,
+      `□ = (${a}x - ${Math.abs(b)}) - (${c}x + ${d}) = ${ans} 입니다.`,
+      `□ = (${a}x - ${Math.abs(b)}) - (${c}x + ${d}) = ${ans}.`),
+  };
+}
+
+// 18. [문자와 식 유형 18] 바르게 계산한 일차식 구하기
+function rpmAlgCorrectPolyCalc(random, profile) {
+  const a = ri(random, 2, 4);
+  const b = -ri(random, 1, 4);
+  const c = ri(random, 4, 7);
+  const d = ri(random, 2, 5);
+  const coeffX = c - 2 * a;
+  const constVal = d - 2 * b;
+  const ans = `${coeffX}x${constVal >= 0 ? '+' : ''}${constVal}`;
+  return {
+    prompt: tx(profile,
+      `어떤 식에서 (${a}x - ${Math.abs(b)})를 빼야 할 것을 잘못하여 더했더니 ${c}x + ${d} 가 되었다. 바르게 계산한 식을 구하시오.`,
+      `A student mistakenly added (${a}x - ${Math.abs(b)}) instead of subtracting it, obtaining ${c}x + ${d}. Find the correct result.`),
+    expression: `어떤 식 = □`,
+    answer: ans,
+    explanation: tx(profile,
+      `원래 식은 (${c}x + ${d}) - (${a}x - ${Math.abs(b)}) = ${c - a}x + ${d - b} 이므로, 바르게 계산하면 ${ans} 입니다.`,
+      `The original polynomial is ${c - a}x + ${d - b}, giving correct answer ${ans}.`),
+  };
+}
+
+// 19. [문자와 식 유형 19] 도형에서의 일차식 활용 (둘레와 색칠한 넓이)
+function rpmAlgGeometryShadedArea(random, profile) {
+  const extraBottom = ri(random, 4, 8);
+  const h = pick(random, [8, 10, 12]);
+  const cutH = pick(random, [3, 4]);
+  const coeffX = (h - cutH) / 2 * 2;
+  const constVal = ((h - cutH) * extraBottom) / 2;
+  const ans = `${coeffX}x+${constVal}`;
+  return {
+    prompt: tx(profile,
+      `윗변이 x cm, 아랫변이 (x + ${extraBottom}) cm, 높이가 ${h} cm인 사다리꼴에서 밑변을 공유하고 높이가 ${cutH} cm인 안쪽 삼각형을 잘라낸 색칠한 부분의 넓이를 x를 사용한 식으로 나타내시오.`,
+      `In a trapezoid with top base x, bottom base x + ${extraBottom}, and height ${h}, find the shaded area after removing an inner triangle of height ${cutH}.`),
+    expression: `사다리꼴 넓이 - 안쪽 삼각형 넓이`,
     answer: ans,
     diagram: {
       kind: 'rpm-shaded-shape',
@@ -1860,10 +2309,107 @@ function rpmAlgebraShadedArea(random, profile) {
       cutHeight: cutH,
     },
     explanation: tx(profile,
-      `사다리꼴 넓이 - 삼각형 넓이 = ${ans}입니다.`,
-      `Trapezoid area minus triangle area equals ${ans}.`),
+      `(사다리꼴 넓이) - (삼각형 넓이) = 1/2 × (2x + ${extraBottom}) × ${h} - 1/2 × (x + ${extraBottom}) × ${cutH} = ${ans} (cm^2) 입니다.`,
+      `Area = ${ans} cm^2.`),
   };
 }
+
+// 20. [문자와 식 유형 20] (-1)^n 거듭제곱이 포함된 일차식의 계산
+function rpmAlgNegPowerLinear(random, profile) {
+  const isEven = random() < 0.5;
+  const parityKo = isEven ? '짝수' : '홀수';
+  const parityEn = isEven ? 'an even' : 'an odd';
+  const ans = isEven ? '5x-1' : '-5x+1';
+  return {
+    prompt: tx(profile,
+      `n이 ${parityKo}일 때, (-1)^n (3x - 2) - (-1)^(n+1) (2x + 1) 을 간단히 하시오.`,
+      `Given that n is ${parityEn} integer, simplify (-1)^n (3x - 2) - (-1)^(n+1) (2x + 1).`),
+    expression: `(-1)^n (3x - 2) - (-1)^(n+1) (2x + 1)`,
+    answer: ans,
+    explanation: tx(profile,
+      `n이 ${parityKo}이므로 (-1)^n = ${isEven ? '1' : '-1'}, (-1)^(n+1) = ${isEven ? '-1' : '1'} 입니다. 대입하여 정리하면 ${ans} 입니다.`,
+      `Evaluating powers according to parity yields ${ans}.`),
+  };
+}
+
+// 21. [문자와 식 심화 21] 일차식 마방진과 다항식 피라미드 퍼즐
+function rpmAlgMagicSquarePyramid(random, profile) {
+  const ans = '6x-2';
+  return {
+    prompt: tx(profile,
+      '가로, 세로, 대각선에 놓인 세 식의 합이 모두 같도록 표를 채울 때, 식 A - B를 간단히 하시오.',
+      'In a 3x3 magic square where sums of rows, columns, and diagonals are equal, find the expression A - B.'),
+    expression: '가로 세로 대각선의 합이 같은 마방진',
+    answer: ans,
+    explanation: tx(profile,
+      '가로의 합이 3x - 3이므로 세로와 대각선 합 조건을 풀면 B = -2x, A = 4x - 2 입니다. 따라서 A - B = 4x - 2 - (-2x) = 6x - 2 입니다.',
+      'Row sum is 3x - 3. Solving gives B = -2x and A = 4x - 2, so A - B = 6x - 2.'),
+  };
+}
+
+// 22. [문자와 식 발전 22] 원가·정가·할인가·이익 복합 문장제
+function rpmAlgCostProfitComplex(random, profile) {
+  const mark = 20;
+  const disc = 10;
+  return {
+    prompt: tx(profile,
+      `원가가 a원인 상품에 ${mark}%의 이익을 붙여 정가를 정한 후, 정가에서 ${disc}%를 할인하여 판매할 때, 실제 판매 가격을 a를 사용한 기약분수 식으로 나타내시오.`,
+      `A merchant sets regular price at a ${mark}% markup on cost a, then gives a ${disc}% discount. Express the final selling price using an irreducible fraction with a.`),
+    expression: `원가 a원, 정가: ${mark}% 이익, 판매가: ${disc}% 할인`,
+    answer: '27/25a',
+    explanation: tx(profile,
+      `정가 = a × (1 + 0.2) = 1.2a 이고, 판매 가격 = 1.2a × (1 - 0.1) = 1.08a = 27/25 a (원) 입니다.`,
+      `Regular price = 1.2a, sale price = 1.2a × 0.9 = 1.08a = 27/25 a.`),
+  };
+}
+
+// 23. [문자와 식 발전 23] 다중 문자 분수식의 고난도 대입 식의 값
+function rpmAlgMultiVarComplexEval(random, profile) {
+  return {
+    prompt: tx(profile,
+      'a = 1/2, b = 2/3, c = -3/4 일 때, (bc - 2ac - 3ab)/(abc) 의 값을 구하시오.',
+      'Given a = 1/2, b = 2/3, and c = -3/4, find the value of (bc - 2ac - 3ab)/(abc).'),
+    expression: `(bc - 2ac - 3ab)/(abc)`,
+    answer: '3',
+    explanation: tx(profile,
+      `식을 분리하면 bc/(abc) - 2ac/(abc) - 3ab/(abc) = 1/a - 2/b - 3/c 입니다. 역수를 대입하면 2 - 3 - (-4) = 3 입니다.`,
+      `Splitting terms yields 1/a - 2/b - 3/c = 2 - 3 + 4 = 3.`),
+  };
+}
+
+// 24. [단원 실전 다지기] 매일 문자와 식 종합
+const rpmAlgServerList = [
+  rpmAlgNotationSigns,
+  rpmAlgVerbalUnitsCost,
+  rpmAlgVerbalFigures,
+  rpmAlgVerbalSpeedConcentration,
+  rpmAlgEvalBasicNegative,
+  rpmAlgEvalFractionReciprocal,
+  rpmAlgEvalRealWorld,
+  rpmAlgPolyTermsDegree,
+  rpmAlgLinearIdentify,
+  rpmAlgMonomialMultDiv,
+  rpmAlgLikeTerms,
+  rpmAlgLinearAddSub,
+  rpmAlgLinearBrackets,
+  rpmAlgFractionalLinear,
+  rpmAlgLinearConditionParam,
+  rpmAlgSubstituteExpression,
+  rpmAlgUnknownBoxPoly,
+  rpmAlgCorrectPolyCalc,
+  rpmAlgGeometryShadedArea,
+  rpmAlgNegPowerLinear,
+  rpmAlgMagicSquarePyramid,
+  rpmAlgCostProfitComplex,
+  rpmAlgMultiVarComplexEval,
+];
+
+function rpmAlgAllTypesMixed(random, profile) {
+  return pick(random, rpmAlgServerList)(random, profile);
+}
+
+
+const rpmAlgebraShadedArea = rpmAlgGeometryShadedArea;
 
 // -------------------------------------------------------------
 // 05: 일차방정식과 활용 응용
@@ -2094,13 +2640,40 @@ export const RPM_ADVANCED_ENGINES = {
   'rational-four-operations': rpmIrcFourOperationsOrder,
   'rational-operations-review': rpmIrcAllTypesMixed,
 
-  'notation': rpmAlgebraShadedArea,
-  'verbal-expressions': rpmAlgebraShadedArea,
-  'expression-values': rpmAlgebraShadedArea,
-  'polynomial-basics': rpmAlgebraShadedArea,
-  'monomial-multiply-divide': rpmAlgebraShadedArea,
-  'simplify-linear': rpmAlgebraShadedArea,
-  'expressions-review': rpmAlgebraShadedArea,
+  // 05 문자의 사용과 식의 계산 세부 응용 유형 (RPM 1-1 p.78~91)
+  'rpm-alg-notation-signs': rpmAlgNotationSigns,
+  'rpm-alg-verbal-units-cost': rpmAlgVerbalUnitsCost,
+  'rpm-alg-verbal-figures': rpmAlgVerbalFigures,
+  'rpm-alg-verbal-speed-concentration': rpmAlgVerbalSpeedConcentration,
+  'rpm-alg-eval-basic-negative': rpmAlgEvalBasicNegative,
+  'rpm-alg-eval-fraction-reciprocal': rpmAlgEvalFractionReciprocal,
+  'rpm-alg-eval-real-world': rpmAlgEvalRealWorld,
+  'rpm-alg-poly-terms-degree': rpmAlgPolyTermsDegree,
+  'rpm-alg-linear-identify': rpmAlgLinearIdentify,
+  'rpm-alg-monomial-mult-div': rpmAlgMonomialMultDiv,
+  'rpm-alg-like-terms': rpmAlgLikeTerms,
+  'rpm-alg-linear-add-sub': rpmAlgLinearAddSub,
+  'rpm-alg-linear-brackets': rpmAlgLinearBrackets,
+  'rpm-alg-fractional-linear': rpmAlgFractionalLinear,
+  'rpm-alg-linear-condition-param': rpmAlgLinearConditionParam,
+  'rpm-alg-substitute-expression': rpmAlgSubstituteExpression,
+  'rpm-alg-unknown-box-poly': rpmAlgUnknownBoxPoly,
+  'rpm-alg-correct-poly-calc': rpmAlgCorrectPolyCalc,
+  'rpm-alg-geometry-shaded-area': rpmAlgGeometryShadedArea,
+  'rpm-alg-neg-power-linear': rpmAlgNegPowerLinear,
+  'rpm-alg-magic-square-pyramid': rpmAlgMagicSquarePyramid,
+  'rpm-alg-cost-profit-complex': rpmAlgCostProfitComplex,
+  'rpm-alg-multi-var-complex-eval': rpmAlgMultiVarComplexEval,
+  'rpm-alg-all-types-mixed': rpmAlgAllTypesMixed,
+
+  // 05 문자의 사용과 식의 계산 기본 탭 호환
+  'notation': rpmAlgNotationSigns,
+  'verbal-expressions': rpmAlgVerbalUnitsCost,
+  'expression-values': rpmAlgEvalBasicNegative,
+  'polynomial-basics': rpmAlgPolyTermsDegree,
+  'monomial-multiply-divide': rpmAlgMonomialMultDiv,
+  'simplify-linear': rpmAlgLinearAddSub,
+  'expressions-review': rpmAlgAllTypesMixed,
   'equation-identity': rpmEqExcessDeficit,
   'equality-properties': rpmEqExcessDeficit,
   'linear-equations': rpmEqExcessDeficit,

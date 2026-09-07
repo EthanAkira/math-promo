@@ -2,7 +2,7 @@ import { GRADE_CATALOG } from './elementary/practice/catalog';
 import { PRIME_UNITS } from './middle-school/prime-factorization/catalog';
 import { GCD_LCM_UNITS } from './middle-school/gcd-lcm/catalog';
 import { INTEGER_RATIONAL_UNITS } from './middle-school/integers-rationals/catalog';
-import { ALGEBRA_UNITS } from './middle-school/algebra-basics/catalog';
+import { ALGEBRA_ALL_UNITS as ALGEBRA_UNITS } from './middle-school/algebra-basics/catalog';
 import { COORDINATE_UNITS } from './middle-school/coordinate-plane/catalog';
 import { PROPORTION_UNITS } from './middle-school/proportion/catalog';
 import { PRE_ALGEBRA_PROFILES, finalizeGeneratedProblem, unitsForProfile } from './middle-school/pre-algebra/catalog';
