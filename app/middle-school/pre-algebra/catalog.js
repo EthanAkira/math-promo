@@ -1,5 +1,5 @@
 import { PRIME_BASIC_UNITS } from '../prime-factorization/catalog';
-import { GCD_LCM_UNITS } from '../gcd-lcm/catalog';
+import { GCD_LCM_BASIC_UNITS } from '../gcd-lcm/catalog';
 import { INTEGER_RATIONAL_UNITS } from '../integers-rationals/catalog';
 import { ALGEBRA_UNITS } from '../algebra-basics/catalog';
 import { COORDINATE_UNITS } from '../coordinate-plane/catalog';
@@ -220,7 +220,7 @@ const NEW_UNITS = [
 
 const SOURCE_GROUPS = [
   ['수와 연산', ['pre-algebra', 'kr-middle-1'], PRIME_BASIC_UNITS],
-  ['수와 연산', ['pre-algebra', 'kr-middle-1'], GCD_LCM_UNITS],
+  ['수와 연산', ['pre-algebra', 'kr-middle-1'], GCD_LCM_BASIC_UNITS],
   ['수와 연산', ['pre-algebra', 'kr-middle-1'], INTEGER_RATIONAL_UNITS],
   ['문자와 식', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], ALGEBRA_UNITS],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], COORDINATE_UNITS],

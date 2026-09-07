@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
-import { findGcdLcmUnit, GCD_LCM_UNITS, localizeGcdLcmUnit } from './catalog';
+import { findGcdLcmUnit, GCD_LCM_BASIC_UNITS, RPM_GCD_LCM_APPLIED_UNITS, GCD_LCM_UNITS, localizeGcdLcmUnit } from './catalog';
 import { findRpmAppliedGenerator } from '../rpmAppliedEngine';
 import RpmDiagram from '../RpmDiagram';
 import CurriculumMappingBar from '../CurriculumMappingBar';
@@ -57,7 +57,7 @@ function makeBasicProblems(seed, unit) {
 }
 
 function makeAppliedProblems(seed, unit) {
-  const appliedGenerator = findRpmAppliedGenerator(unit.id);
+  const appliedGenerator = findRpmAppliedGenerator(unit.id) || unit.make;
   if (!appliedGenerator) return makeBasicProblems(seed, unit);
   const random = seededRandom(`${seed}:${unit.id}:applied`);
   const used = new Set();
@@ -118,15 +118,19 @@ export default function GcdLcmGenerator() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const initialUnit = findGcdLcmUnit(params.get('unit')).id;
-    const initialSeed = (params.get('sheet') || createSeed()).toUpperCase();
     const initialTier = params.get('tier') === 'advanced' ? 'advanced' : 'basic';
+    const tierUnits = initialTier === 'advanced' ? RPM_GCD_LCM_APPLIED_UNITS : GCD_LCM_BASIC_UNITS;
+    const requestedUnitId = params.get('unit');
+    const matchedUnit = tierUnits.find((u) => u.id === requestedUnitId) || findGcdLcmUnit(requestedUnitId);
+    const initialUnit = matchedUnit.id;
+    const initialSeed = (params.get('sheet') || createSeed()).toUpperCase();
     const initialView = params.get('view') === 'answers' ? 'answers' : 'problems';
     setUnitId(initialUnit); setSeed(initialSeed); setTier(initialTier); setView(initialView);
     window.history.replaceState({}, '', buildUrl(initialSeed, initialUnit, initialTier, initialView));
     setReady(true);
   }, []);
 
+  const currentUnits = tier === 'advanced' ? RPM_GCD_LCM_APPLIED_UNITS : GCD_LCM_BASIC_UNITS;
   const unit = findGcdLcmUnit(unitId);
   const basicProblems = useMemo(() => makeBasicProblems(seed, unit), [seed, unit]);
   const appliedProblems = useMemo(() => makeAppliedProblems(seed, unit), [seed, unit]);
@@ -159,8 +163,14 @@ export default function GcdLcmGenerator() {
       if (!user) { window.alert(tr(language, 'advancedAlertNeedLogin')); return; }
       if (advancedSubStatus !== 'active') { window.alert(tr(language, 'advancedAlertNeedSub')); return; }
     }
-    setTier(nextTier); setAnswers({}); setChecked(false);
-    replaceUrl(seed, unitId, nextTier, view);
+    const nextUnits = nextTier === 'advanced' ? RPM_GCD_LCM_APPLIED_UNITS : GCD_LCM_BASIC_UNITS;
+    const isCurrentValid = nextUnits.some((u) => u.id === unitId);
+    const nextUnitId = isCurrentValid ? unitId : nextUnits[0].id;
+    setTier(nextTier);
+    setUnitId(nextUnitId);
+    setAnswers({});
+    setChecked(false);
+    replaceUrl(seed, nextUnitId, nextTier, view);
   }
 
   function checkAnswers() {
@@ -186,7 +196,7 @@ export default function GcdLcmGenerator() {
       <div>
         <label htmlFor="gcd-lcm-unit">{tr(language, 'skill')}</label>
         <select id="gcd-lcm-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>
-          {GCD_LCM_UNITS.map((item) => <option key={item.id} value={item.id}>{localizeGcdLcmUnit(item, language)}</option>)}
+          {currentUnits.map((item) => <option key={item.id} value={item.id}>{localizeGcdLcmUnit(item, language)}</option>)}
         </select>
         <p>{unitDescription}</p>
       </div>
@@ -235,27 +245,48 @@ export default function GcdLcmGenerator() {
         {problems.map((item) => {
           const value = answers[item.id] || '';
           const isCorrect = normalizeAnswer(value) === normalizeAnswer(item.answer);
+          const selectedChoice = item.choices?.find((choice) => choice.value === item.answer);
           return <article className="vertical-problem word-problem prime-problem" key={item.id}>
             <span className="problem-number">{item.id}</span>
             <div className="word-calculation">
               <p><MathText value={foreign && item.promptEn ? item.promptEn : item.prompt} /></p>
               {item.diagram ? <RpmDiagram diagram={item.diagram} /> : null}
               {item.expression ? <strong className="word-expression font-mono"><PowerText value={item.expression} /></strong> : null}
-              <div className="word-answer">
-                <span>{tr(language, 'answer')}</span>
-                <span className="inline-answer">
-                  {view === 'answers' ? <strong><PowerText value={item.answer} /></strong> : <>
-                    <input
-                      aria-label={`${tr(language, 'answer')} ${item.id}`}
-                      value={value}
-                      onChange={(event) => changeAnswer(item.id, event.target.value)}
-                      className={checked && value ? (isCorrect ? 'correct' : 'wrong') : ''}
-                    />
-                    <span className="print-answer-space" aria-hidden="true" />
-                  </>}
-                </span>
-                {item.answerSuffix ? <em>{item.answerSuffix}</em> : null}
-              </div>
+              {item.choices ? (
+                <div className="choice-answer">
+                  {view === 'answers' ? (
+                    <strong><MathText value={selectedChoice ? `${selectedChoice.value}. ${foreign && selectedChoice.labelEn ? selectedChoice.labelEn : selectedChoice.label}` : item.answer} /></strong>
+                  ) : (
+                    item.choices.map((choice) => (
+                      <button
+                        type="button"
+                        key={choice.value}
+                        className={`${value === choice.value ? 'selected' : ''} ${checked && value === choice.value ? (isCorrect ? 'correct' : 'wrong') : ''}`}
+                        onClick={() => changeAnswer(item.id, choice.value)}
+                        aria-pressed={value === choice.value}
+                      >
+                        <span>{choice.value}</span><MathText value={foreign && choice.labelEn ? choice.labelEn : choice.label} />
+                      </button>
+                    ))
+                  )}
+                </div>
+              ) : (
+                <div className="word-answer">
+                  <span>{tr(language, 'answer')}</span>
+                  <span className="inline-answer">
+                    {view === 'answers' ? <strong><PowerText value={item.answer} /></strong> : <>
+                      <input
+                        aria-label={`${tr(language, 'answer')} ${item.id}`}
+                        value={value}
+                        onChange={(event) => changeAnswer(item.id, event.target.value)}
+                        className={checked && value ? (isCorrect ? 'correct' : 'wrong') : ''}
+                      />
+                      <span className="print-answer-space" aria-hidden="true" />
+                    </>}
+                  </span>
+                  {item.answerSuffix ? <em>{item.answerSuffix}</em> : null}
+                </div>
+              )}
               {view === 'answers' && item.explanation ? (
                 <p className="geometry-explanation" style={{ fontSize: '11px', marginTop: '6px', color: 'var(--ink-soft)' }}>
                   <b>{language === 'ko' ? '풀이' : 'Solution'}: </b><MathText value={item.explanation} />

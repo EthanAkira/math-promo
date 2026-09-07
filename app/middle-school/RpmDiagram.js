@@ -271,27 +271,158 @@ export default function RpmDiagram({ diagram }) {
     }
   }
 
-  if (diagram.kind === 'rpm-travel-diagram') {
-    const { speedA = 60, speedB = 80, delay = 15 } = diagram;
+  if (diagram.kind === 'rpm-tile-rectangle') {
+    const { w = 180, h = 144, tileSize = 36, unit = 'cm', mode = 'fill' } = diagram;
+    const svgWidth = 240;
+    const svgHeight = 140;
+    const rectX = 40;
+    const rectY = 28;
+    const rectW = 160;
+    const rectH = Math.round(rectW * (h / w));
+    const actualH = Math.min(85, Math.max(45, rectH));
+
+    const cols = Math.min(8, Math.max(2, Math.round(w / tileSize)));
+    const rows = Math.min(6, Math.max(2, Math.round(h / tileSize)));
+    const cellW = rectW / cols;
+    const cellH = actualH / rows;
+
     return (
-      <svg className="generated-geometry" viewBox="0 0 260 90" role="img" aria-label="속력과 거리 경로도">
-        <line x1="25" y1="35" x2="235" y2="35" stroke="var(--ink)" strokeWidth="2" strokeDasharray="4 4" />
-        <circle cx="25" cy="35" r="4" fill="var(--ink)" />
-        <text x="25" y="22" textAnchor="middle" fontSize="11" fontWeight="700" fill="var(--ink)">출발(집)</text>
+      <svg className="generated-geometry" viewBox={`0 0 ${svgWidth} ${svgHeight}`} role="img" aria-label="직사각형 타일/기둥 다이어그램">
+        <rect
+          x={rectX}
+          y={rectY}
+          width={rectW}
+          height={actualH}
+          fill="color-mix(in srgb, #176b87 8%, transparent)"
+          stroke="var(--ink)"
+          strokeWidth="1.8"
+        />
 
-        <circle cx="235" cy="35" r="4" fill="var(--red-pen)" />
-        <text x="235" y="22" textAnchor="middle" fontSize="11" fontWeight="700" fill="var(--red-pen)">만남 지점</text>
+        {mode === 'fill' && (
+          <g stroke="var(--ink-soft)" strokeWidth="0.8" opacity="0.6">
+            {Array.from({ length: cols - 1 }, (_, i) => (
+              <line key={`c-${i}`} x1={rectX + (i + 1) * cellW} y1={rectY} x2={rectX + (i + 1) * cellW} y2={rectY + actualH} />
+            ))}
+            {Array.from({ length: rows - 1 }, (_, j) => (
+              <line key={`r-${j}`} x1={rectX} y1={rectY + (j + 1) * cellH} x2={rectX + rectW} y2={rectY + (j + 1) * cellH} />
+            ))}
+            <rect
+              x={rectX}
+              y={rectY}
+              width={cellW}
+              height={cellH}
+              fill="color-mix(in srgb, var(--red-pen) 25%, transparent)"
+              stroke="var(--red-pen)"
+              strokeWidth="1.6"
+            />
+            <text x={rectX + cellW / 2} y={rectY + cellH / 2 + 3} fontSize="9" textAnchor="middle" fill="var(--red-pen)" fontWeight="700">
+              정사각형
+            </text>
+          </g>
+        )}
 
-        {/* Route A */}
-        <path d="M 25 45 C 90 60, 170 60, 235 45" fill="none" stroke="#176b87" strokeWidth="1.8" />
-        <text x="130" y="74" textAnchor="middle" fontSize="10" fill="#176b87">
-          먼저 출발 (시속 {speedA}km)
+        {mode === 'perimeter' && (
+          <g>
+            {[[rectX, rectY], [rectX + rectW, rectY], [rectX, rectY + actualH], [rectX + rectW, rectY + actualH]].map(([px, py], i) => (
+              <circle key={`corner-${i}`} cx={px} cy={py} r="4.5" fill="var(--red-pen)" />
+            ))}
+            {Array.from({ length: cols - 1 }, (_, i) => {
+              const px = rectX + (i + 1) * cellW;
+              return (
+                <React.Fragment key={`topbot-${i}`}>
+                  <circle cx={px} cy={rectY} r="3" fill="#176b87" />
+                  <circle cx={px} cy={rectY + actualH} r="3" fill="#176b87" />
+                </React.Fragment>
+              );
+            })}
+            {Array.from({ length: rows - 1 }, (_, j) => {
+              const py = rectY + (j + 1) * cellH;
+              return (
+                <React.Fragment key={`side-${j}`}>
+                  <circle cx={rectX} cy={py} r="3" fill="#176b87" />
+                  <circle cx={rectX + rectW} cy={py} r="3" fill="#176b87" />
+                </React.Fragment>
+              );
+            })}
+            <text x={rectX + rectW / 2} y={rectY + actualH / 2 + 3} fontSize="9" textAnchor="middle" fill="var(--red-pen)" fontWeight="700">
+              일정한 간격
+            </text>
+          </g>
+        )}
+
+        <text x={rectX + rectW / 2} y={rectY - 8} textAnchor="middle" fontSize="11" fontWeight="700" fill="var(--ink)">
+          가로 {w}{unit}
         </text>
-
-        {/* Route B */}
-        <text x="130" y="48" textAnchor="middle" fontSize="10" fill="var(--red-pen)">
-          {delay}분 후 출발 (시속 {speedB}km)
+        <text x={rectX - 8} y={rectY + actualH / 2 + 4} textAnchor="end" fontSize="11" fontWeight="700" fill="var(--ink)">
+          세로 {h}{unit}
         </text>
+      </svg>
+    );
+  }
+
+  if (diagram.kind === 'rpm-gears') {
+    const { teethA = 24, teethB = 16 } = diagram;
+    const svgWidth = 240;
+    const svgHeight = 125;
+    const rA = 38;
+    const rB = 26;
+    const cxA = 70;
+    const cyA = 60;
+    const cxB = cxA + rA + rB - 2;
+    const cyB = 60;
+
+    return (
+      <svg className="generated-geometry" viewBox={`0 0 ${svgWidth} ${svgHeight}`} role="img" aria-label="맞물린 톱니바퀴 다이어그램">
+        {/* Gear A */}
+        <circle cx={cxA} cy={cyA} r={rA} fill="color-mix(in srgb, #176b87 14%, transparent)" stroke="#176b87" strokeWidth="2.2" />
+        <circle cx={cxA} cy={cyA} r={rA - 10} fill="none" stroke="#176b87" strokeWidth="1" strokeDasharray="3 3" opacity="0.6" />
+        <circle cx={cxA} cy={cyA} r="5" fill="#176b87" />
+        {Array.from({ length: 12 }, (_, i) => {
+          const angle = (i * 30 * Math.PI) / 180;
+          const tx = cxA + (rA + 2) * Math.cos(angle);
+          const ty = cyA + (rA + 2) * Math.sin(angle);
+          return <circle key={`ta-${i}`} cx={tx} cy={ty} r="2.2" fill="#176b87" />;
+        })}
+        <text x={cxA} y={cyA + 4} textAnchor="middle" fontSize="12" fontWeight="800" fill="#176b87">A</text>
+        <text x={cxA} y={cyA + rA + 15} textAnchor="middle" fontSize="10" fontWeight="700" fill="var(--ink)">톱니 {teethA}개</text>
+
+        {/* Gear B */}
+        <circle cx={cxB} cy={cyB} r={rB} fill="color-mix(in srgb, var(--red-pen) 14%, transparent)" stroke="var(--red-pen)" strokeWidth="2.2" />
+        <circle cx={cxB} cy={cyB} r={rB - 8} fill="none" stroke="var(--red-pen)" strokeWidth="1" strokeDasharray="3 3" opacity="0.6" />
+        <circle cx={cxB} cy={cyB} r="4" fill="var(--red-pen)" />
+        {Array.from({ length: 8 }, (_, i) => {
+          const angle = (i * 45 * Math.PI) / 180;
+          const tx = cxB + (rB + 2) * Math.cos(angle);
+          const ty = cyB + (rB + 2) * Math.sin(angle);
+          return <circle key={`tb-${i}`} cx={tx} cy={ty} r="2" fill="var(--red-pen)" />;
+        })}
+        <text x={cxB} y={cyB + 4} textAnchor="middle" fontSize="12" fontWeight="800" fill="var(--red-pen)">B</text>
+        <text x={cxB} y={cyB + rB + 15} textAnchor="middle" fontSize="10" fontWeight="700" fill="var(--ink)">톱니 {teethB}개</text>
+
+        {/* Mesh indicator */}
+        <circle cx={cxA + rA - 1} cy={60} r="3" fill="#f59e0b" />
+      </svg>
+    );
+  }
+
+  if (diagram.kind === 'rpm-brick-cube') {
+    const { a = 6, b = 8, c = 3, target = '정육면체' } = diagram;
+    return (
+      <svg className="generated-geometry" viewBox="0 0 240 120" role="img" aria-label="직육면체 벽돌과 정육면체">
+        <polygon points="35,62 85,62 85,90 35,90" fill="color-mix(in srgb, #176b87 18%, transparent)" stroke="#176b87" strokeWidth="1.8" />
+        <polygon points="35,62 55,44 105,44 85,62" fill="color-mix(in srgb, #176b87 28%, transparent)" stroke="#176b87" strokeWidth="1.8" />
+        <polygon points="85,62 105,44 105,72 85,90" fill="color-mix(in srgb, #176b87 38%, transparent)" stroke="#176b87" strokeWidth="1.8" />
+        <text x="60" y="102" textAnchor="middle" fontSize="9" fontWeight="700" fill="var(--ink)">가로 {a}cm</text>
+        <text x="28" y="78" textAnchor="end" fontSize="9" fontWeight="700" fill="var(--ink)">높이 {c}cm</text>
+        <text x="102" y="52" textAnchor="start" fontSize="9" fontWeight="700" fill="var(--ink)">세로 {b}cm</text>
+
+        <path d="M 125 66 L 150 66" stroke="var(--ink-soft)" strokeWidth="1.6" strokeDasharray="3 3" />
+        <path d="M 148 62 L 155 66 L 148 70 Z" fill="var(--ink-soft)" />
+
+        <polygon points="168,52 200,52 200,84 168,84" fill="color-mix(in srgb, var(--red-pen) 16%, transparent)" stroke="var(--red-pen)" strokeWidth="1.8" />
+        <polygon points="168,52 182,38 214,38 200,52" fill="color-mix(in srgb, var(--red-pen) 26%, transparent)" stroke="var(--red-pen)" strokeWidth="1.8" />
+        <polygon points="200,52 214,38 214,70 200,84" fill="color-mix(in srgb, var(--red-pen) 36%, transparent)" stroke="var(--red-pen)" strokeWidth="1.8" />
+        <text x="188" y="98" textAnchor="middle" fontSize="9" fontWeight="700" fill="var(--red-pen)">가장 작은 {target}</text>
       </svg>
     );
   }

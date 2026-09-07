@@ -164,7 +164,7 @@ function application(random) {
 
 const mixedGenerators = [commonDivisorsAndGcd, gcdBasic, gcdPrimeForm, coprimeCheck, commonMultiplesAndLcm, lcmBasic, lcmPrimeForm, gcdLcmRelation, application];
 
-export const GCD_LCM_UNITS = [
+export const GCD_LCM_BASIC_UNITS = [
   { id: 'common-divisors-gcd', label: '공약수와 최대공약수', description: '두 수의 공약수와 최대공약수 구하기', en: ['Common divisors & GCF', 'Find common divisors and the greatest common divisor'], make: commonDivisorsAndGcd },
   { id: 'gcd-basic', label: '최대공약수 기본', description: '두세 자연수의 최대공약수 구하기', en: ['GCF basics', 'Find the GCF of two or three numbers'], make: gcdBasic },
   { id: 'gcd-prime-form', label: '최대공약수와 소인수분해', description: '소인수분해된 수들의 최대공약수 구하기', en: ['GCF from prime factors', 'Find the GCF from prime factorizations'], make: gcdPrimeForm },
@@ -177,8 +177,136 @@ export const GCD_LCM_UNITS = [
   { id: 'gcd-lcm-mixed', label: '최대공약수와 최소공배수 종합', description: '공약수·공배수·서로소·관계·활용을 골고루 연습하기', en: ['GCF & LCM review', 'Mixed practice across all skills'], make: (random) => pick(random, mixedGenerators)(random) },
 ];
 
+import {
+  rpmGcdBasicCoprime,
+  rpmGcdCommonDivisorProp,
+  rpmLcmCommonMultipleProp,
+  rpmGcdLcmExponentDeduce,
+  rpmGcdLcmProductRelation,
+  rpmLcmThreeNumbersRatio,
+  rpmGcdWordDistribute,
+  rpmGcdWordTileFence,
+  rpmGcdWordRemainder,
+  rpmLcmWordBrickCube,
+  rpmLcmWordGearTrackCycle,
+  rpmLcmWordRemainderDeficit,
+  rpmGcdLcmFractionMultiplier,
+  rpmGcdLcmAdvancedDeduce,
+  rpmGcdLcmAllTypesMixed,
+} from '../rpmAppliedEngine.js';
+
+export const RPM_GCD_LCM_APPLIED_UNITS = [
+  {
+    id: 'rpm-gcd-coprime',
+    label: '[유형 01·02] 최대공약수와 서로소',
+    description: '소인수분해를 이용한 최대공약수, 서로소 판별, 특정 범위 내 서로소의 개수 및 미지수 구하기',
+    en: ['[Type 01·02] GCF & Coprime Numbers', 'Find GCF from prime factors, determine coprime pairs, count coprimes, and deduce unknowns'],
+    make: rpmGcdBasicCoprime,
+  },
+  {
+    id: 'rpm-gcd-common-divisor-prop',
+    label: '[유형 03] 공약수와 최대공약수의 성질',
+    description: '공약수는 최대공약수의 약수임을 활용, 소인수분해를 이용한 공약수의 개수, 세 수의 최대공약수 추론',
+    en: ['[Type 03] Common Divisor Properties', 'Use GCF divisor properties, count common divisors via prime factorization, and chain 3-number GCF'],
+    make: rpmGcdCommonDivisorProp,
+  },
+  {
+    id: 'rpm-lcm-common-multiple-prop',
+    label: '[유형 04·05] 최소공배수와 공배수의 성질',
+    description: '소인수분해를 이용한 최소공배수, 특정 수 이하의 공배수 개수, 특정 수에 가장 가까운 공배수',
+    en: ['[Type 04·05] LCM & Common Multiples Properties', 'Find LCM from prime factors, count common multiples up to a limit, and find closest multiple'],
+    make: rpmLcmCommonMultipleProp,
+  },
+  {
+    id: 'rpm-gcd-lcm-exponent-deduce',
+    label: '[유형 06] 소인수분해 지수와 최대공약수·최소공배수 역추적',
+    description: '최대공약수와 최소공배수가 주어질 때 소인수 지수 미지수 a, b, c 역추적 및 미지수의 약수 개수',
+    en: ['[Type 06] Prime Exponent Reverse Deduction', 'Reverse deduce prime exponents from given GCF and LCM, and compute divisor counts'],
+    make: rpmGcdLcmExponentDeduce,
+  },
+  {
+    id: 'rpm-gcd-lcm-product-relation',
+    label: '[유형 07] 두 수의 곱과 최대공약수·최소공배수의 관계',
+    description: 'A × B = G × L 공식 활용, 두 수의 곱과 최대공약수가 주어질 때 두 자리 자연수 A + B 역추적',
+    en: ['[Type 07] Product & GCF-LCM Relationship', 'Apply A × B = G × L, and deduce 2-digit natural numbers A + B from product and GCF'],
+    make: rpmGcdLcmProductRelation,
+  },
+  {
+    id: 'rpm-lcm-three-numbers-ratio',
+    label: '[유형 08] 미지수 x를 포함한 세 수의 최소공배수와 비',
+    description: 'ax, bx, cx의 최소공배수로부터 x 및 최대공약수 구하기, 세 수의 비 a:b:c와 최소공배수로 가장 큰 수/합 구하기',
+    en: ['[Type 08] Three Numbers with Unknown x & Ratios', 'Find x and GCF from LCM of ax, bx, cx; find largest number and sum given ratio a:b:c and LCM'],
+    make: rpmLcmThreeNumbersRatio,
+  },
+  {
+    id: 'rpm-gcd-word-distribute',
+    label: '[유형 09] 최대공약수 활용 — 남김없이 똑같이 나누어주기',
+    description: '물품을 가능한 한 많은 사람에게 똑같이 나누어주기, 조 나누기 및 한 조의 인원수 합 a + b',
+    en: ['[Type 09] GCF Word Problems: Equal Distribution', 'Divide items equally among maximal recipients, team division, and team member sum a + b'],
+    make: rpmGcdWordDistribute,
+  },
+  {
+    id: 'rpm-gcd-word-tile-fence',
+    label: '[유형 10·11] 최대공약수 활용 — 직사각형 채우기 및 둘레에 일정한 간격 놓기',
+    description: '직사각형 벽면에 가장 큰 정사각형 타일 붙이기(타일 수 및 변의 길이), 둘레와 네 모퉁이에 기둥 세우기',
+    en: ['[Type 10·11] GCF Word Problems: Tiling & Fence Posts', 'Cover rectangle with largest square tiles, and install fence posts at equal intervals including corners'],
+    make: rpmGcdWordTileFence,
+  },
+  {
+    id: 'rpm-gcd-word-remainder',
+    label: '[유형 12] 최대공약수 활용 — 나누었을 때 나머지가 남거나 부족한 수',
+    description: '나누면 나머지가 남는 수, 부족한 수가 주어질 때 가장 큰 자연수 및 가능한 수 중 최댓값과 최솟값의 합',
+    en: ['[Type 12] GCF Word Problems: Remainders & Deficits', 'Find greatest divisor given remainders/deficits, and find sum of maximum and minimum valid divisors'],
+    make: rpmGcdWordRemainder,
+  },
+  {
+    id: 'rpm-lcm-word-brick-cube',
+    label: '[유형 13] 최소공배수 활용 — 정사각형 타일 붙이기 및 정육면체 벽돌 쌓기',
+    description: '직사각형 타일을 붙여 가장 작은 정사각형 만들기, 직육면체 벽돌을 쌓아 가장 작은 정육면체 만들기',
+    en: ['[Type 13] LCM Word Problems: Tiles to Square & Bricks to Cube', 'Assemble rectangular tiles into smallest square, stack rectangular bricks into smallest cube'],
+    make: rpmLcmWordBrickCube,
+  },
+  {
+    id: 'rpm-lcm-word-gear-track-cycle',
+    label: '[유형 14·15] 최소공배수 활용 — 톱니바퀴 회전 및 주기성(동시 출발)',
+    description: '맞물려 도는 두 개·세 개의 톱니바퀴 회전수, 배차 간격 동시 출발, 네온사인 점등·소등 주기',
+    en: ['[Type 14·15] LCM Word Problems: Meshed Gears & Repeating Cycles', 'Rotations of 2 or 3 meshed gears, simultaneous departure intervals, and neon light cycle periodicity'],
+    make: rpmLcmWordGearTrackCycle,
+  },
+  {
+    id: 'rpm-lcm-word-remainder-deficit',
+    label: '[유형 16] 최소공배수 활용 — 어떤 자연수를 나누었을 때 나머지 조건',
+    description: '어느 수로 나누어도 r이 남는 가장 작은 세 자리 자연수, 나누는 수와 나머지의 차가 일정한 부족 조건의 수',
+    en: ['[Type 16] LCM Word Problems: Divisor Remainder & Deficit Conditions', 'Smallest 3-digit number with constant remainder, and constant deficit numbers (divisor minus remainder)'],
+    make: rpmLcmWordRemainderDeficit,
+  },
+  {
+    id: 'rpm-gcd-lcm-fraction-multiplier',
+    label: '[유형 17] 두 개 이상의 분수를 자연수로 만드는 가장 작은 기약분수',
+    description: '두 분수·세 분수(대분수 포함)에 곱하여 자연수가 되는 가장 작은 기약분수 B/A, 분모가 되는 두 자리 자연수의 개수',
+    en: ['[Type 17] Smallest Fraction Multiplier for Integers', 'Smallest irreducible fraction B/A to multiply fractions (including mixed) into integers; count 2-digit denominators'],
+    make: rpmGcdLcmFractionMultiplier,
+  },
+  {
+    id: 'rpm-gcd-lcm-advanced-deduce',
+    label: '[유형 18·19·20 & 실력UP] 최소공배수 역추적, 합/차 조건, 종합 실력',
+    description: '세 수의 최소공배수가 주어질 때 미지수 후보들의 합, 최대공약수와 최소공배수 및 차 A-B가 주어질 때 A+B, 최댓값과 최솟값의 합',
+    en: ['[Type 18·19·20 & Challenge] Advanced Reverse Deduction & Sum/Diff Conditions', 'Deduce candidates for unknown number from LCM, find A+B given GCF, LCM, and diff A-B, find max+min'],
+    make: rpmGcdLcmAdvancedDeduce,
+  },
+  {
+    id: 'rpm-gcd-lcm-all-types-mixed',
+    label: '[응용 실전 종합] RPM 최대공약수와 최소공배수 실전 종합',
+    description: 'RPM 최대공약수와 최소공배수 유형 01~20 및 중단원 마무리·서술형·실력UP 전 유형 실전 모의고사',
+    en: ['[Applied Exam Review] RPM GCD & LCM Comprehensive', 'Full practice exam covering all RPM Types 01 through 20, chapter finish, and challenge problems'],
+    make: rpmGcdLcmAllTypesMixed,
+  },
+];
+
+export const GCD_LCM_UNITS = [...GCD_LCM_BASIC_UNITS, ...RPM_GCD_LCM_APPLIED_UNITS];
+
 export function findGcdLcmUnit(unitId) {
-  return GCD_LCM_UNITS.find((unit) => unit.id === unitId) || GCD_LCM_UNITS[0];
+  return GCD_LCM_UNITS.find((unit) => unit.id === unitId) || GCD_LCM_BASIC_UNITS[0];
 }
 
 export function localizeGcdLcmUnit(unit, language, field = 'label') {

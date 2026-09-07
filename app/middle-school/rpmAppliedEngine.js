@@ -540,100 +540,706 @@ export function rpmPrimeAllTypesMixed(random) {
 }
 
 // -------------------------------------------------------------
-// CHAPTER 02: 최대공약수와 최소공배수 응용 (GCD & LCM Applied)
+// CHAPTER 02: 최대공약수와 최소공배수 응용 (RPM 1-1 Pages 18 ~ 31)
 // -------------------------------------------------------------
 
-// 1. A * B = G * L 및 두 자리 자연수 A + B 역추적 (RPM p.21 #138, p.31 #209)
-export function rpmGcdLcmReverseProduct(random) {
-  const g = pick(random, [4, 6, 8, 12]);
-  const [aFactor, bFactor] = pick(random, [[3, 5], [4, 7], [3, 8], [5, 7]]);
-  const A = g * aFactor;
-  const B = g * bFactor;
-  const product = A * B;
-  const l = g * aFactor * bFactor;
-  const ans = A + B;
-
-  const promptKo = `두 자리의 자연수 A, B에 대하여 두 수의 곱이 ${product}이고 최대공약수가 ${g}일 때, A + B의 값을 구하시오.`;
-  const promptEn = `Two 2-digit natural numbers A and B have a product of ${product} and a greatest common factor of ${g}. Find the value of A + B.`;
-
-  return {
-    prompt: promptKo,
-    promptEn,
-    expression: `A × B = ${product}, G = ${g}`,
-    answer: String(ans),
-    explanation: `두 수의 곱 = 최대공약수 × 최소공배수이므로 최소공배수 L = ${product} ÷ ${g} = ${l}입니다. A = ${g}a, B = ${g}b (a, b는 서로소)라 하면 ${g} × a × b = ${l}, 즉 a × b = ${aFactor * bFactor}입니다. A, B가 모두 두 자리 자연수이므로 a = ${Math.min(aFactor, bFactor)}, b = ${Math.max(aFactor, bFactor)}일 때 A = ${Math.min(A, B)}, B = ${Math.max(A, B)}입니다. 따라서 A + B = ${ans}입니다.`,
-  };
+function gcdAll(arr) {
+  return arr.reduce((acc, cur) => gcd(acc, cur));
 }
 
-// 2. 두 분수를 모두 자연수로 만드는 가장 작은 기약분수 (RPM p.23 #151)
-export function rpmGcdLcmFractions(random) {
-  const n1 = pick(random, [12, 14, 16, 18]);
-  const d1 = pick(random, [25, 35, 45]);
-  const n2 = pick(random, [8, 10, 20]);
-  const d2 = pick(random, [15, 21, 27]);
-
-  // To make (n1/d1) * (N/D) natural: N must be multiple of d1, d2 (LCM(d1, d2)), D must be divisor of n1, n2 (GCD(n1, n2))
-  const num = lcm(d1, d2);
-  const den = gcd(n1, n2);
-  const g = gcd(num, den);
-  const simpleNum = num / g;
-  const simpleDen = den / g;
-  const ans = simpleDen === 1 ? String(simpleNum) : `${simpleNum}/${simpleDen}`;
-
-  const promptKo = `두 분수 ${n1}/${d1}과 ${n2}/${d2}의 어느 것에 곱하여도 그 결과가 자연수가 되게 하는 가장 작은 기약분수를 구하시오.`;
-  const promptEn = `Find the smallest irreducible fraction that yields a natural number when multiplied by either ${n1}/${d1} or ${n2}/${d2}.`;
-
-  return {
-    prompt: promptKo,
-    promptEn,
-    expression: `${n1}/${d1} × (N/D) = 자연수, ${n2}/${d2} × (N/D) = 자연수`,
-    answer: ans,
-    explanation: `곱하여 자연수가 되려면 분자 N은 분모 ${d1}, ${d2}의 최소공배수이어야 하고, 분모 D는 분자 ${n1}, ${n2}의 최대공약수이어야 합니다. N = LCM(${d1}, ${d2}) = ${num}, D = GCD(${n1}, ${n2}) = ${den}이므로 가장 작은 기약분수는 ${ans}입니다.`,
-  };
+function lcmAll(arr) {
+  return arr.reduce((acc, cur) => lcm(acc, cur));
 }
 
-// 3. 네온사인 점등/신호등 주기 동시 켜짐 (RPM p.31 #205)
-export function rpmLcmNeonCycle(random) {
-  const [onA, offA] = pick(random, [[14, 2], [18, 2], [20, 4]]);
-  const [onB, offB] = pick(random, [[17, 3], [16, 4], [25, 5]]);
-  const periodA = onA + offA;
-  const periodB = onB + offB;
-  const cycleLcm = lcm(periodA, periodB);
-
-  const promptKo = `어느 상가에서 네온사인 A는 ${onA}초 켜져 있다가 ${offA}초 꺼지고, 네온사인 B는 ${onB}초 켜져 있다가 ${offB}초 꺼집니다. 두 네온사인이 동시에 켜진 후, 처음으로 다시 동시에 켜질 때까지 걸리는 시간(초)을 구하시오.`;
-  const promptEn = `Neon light A stays on for ${onA}s and off for ${offA}s. Neon light B stays on for ${onB}s and off for ${offB}s. If both turn on simultaneously, how many seconds later will they next turn on together?`;
-
-  return {
-    prompt: promptKo,
-    promptEn,
-    expression: `A 주기: ${periodA}초, B 주기: ${periodB}초`,
-    answer: String(cycleLcm),
-    answerSuffix: '초',
-    explanation: `네온사인 A가 다시 켜지는 주기는 ${onA} + ${offA} = ${periodA}초이고, B가 다시 켜지는 주기는 ${onB} + ${offB} = ${periodB}초입니다. 따라서 두 네온사인이 다시 동시에 켜지는 주기는 ${periodA}와 ${periodB}의 최소공배수인 ${cycleLcm}초 후입니다.`,
-  };
+function divisorsOf(n) {
+  const res = [];
+  for (let d = 1; d <= n; d += 1) {
+    if (n % d === 0) res.push(d);
+  }
+  return res;
 }
 
-// 4. 나머지가 남는 어떤 수 중 가장 큰 수 (RPM p.29 #194)
-export function rpmGcdRemainder(random) {
-  const g = pick(random, [6, 8, 9, 12, 14]);
-  const q1 = ri(random, 3, 6);
-  const q2 = ri(random, 7, 10);
-  const r1 = ri(random, 2, g - 2);
-  const r2 = ri(random, 1, g - 2);
-  const num1 = g * q1 + r1;
-  const num2 = g * q2 + r2;
-
-  const promptKo = `어떤 자연수로 ${num1}을 나누면 ${r1}이 남고, ${num2}를 나누면 ${r2}가 남는다고 합니다. 이러한 자연수 중에서 가장 큰 수를 구하시오.`;
-  const promptEn = `When divided into ${num1}, a certain natural number leaves a remainder of ${r1}; divided into ${num2}, it leaves a remainder of ${r2}. Find the greatest such natural number.`;
-
-  return {
-    prompt: promptKo,
-    promptEn,
-    expression: `${num1} ÷ N = q₁ ... ${r1}, ${num2} ÷ N = q₂ ... ${r2}`,
-    answer: String(g),
-    explanation: `구하는 수는 ${num1} - ${r1} = ${num1 - r1}과 ${num2} - ${r2} = ${num2 - r2}의 공약수 중 ${Math.max(r1, r2)}보다 큰 수입니다. 가장 큰 수는 두 수의 최대공약수인 ${g}입니다.`,
-  };
+// [유형 01·02] 최대공약수와 서로소 (RPM #109~#115, #181, #184, #185)
+export function rpmGcdBasicCoprime(random) {
+  const variant = pick(random, ['deduceExpSum', 'coprimeCount', 'findCoprimeChoice', 'unknownBox']);
+  if (variant === 'deduceExpSum') {
+    const a = ri(random, 2, 4);
+    const b = ri(random, 2, 4);
+    const ans = a + b;
+    return {
+      prompt: `세 수 2^3 × 3^b × 5^5, 3^4 × 5^a × 11, 2^3 × 3^3 × 5^4의 최대공약수가 3^${b} × 5^${a}일 때, a + b의 값을 구하시오. (단, a, b는 자연수)`,
+      promptEn: `If the greatest common factor of 2^3 × 3^b × 5^5, 3^4 × 5^a × 11, and 2^3 × 3^3 × 5^4 is 3^${b} × 5^${a}, find a + b.`,
+      expression: `G = 3^${b} × 5^${a}`,
+      answer: String(ans),
+      explanation: `세 수의 공통인 소인수는 3과 5입니다. 최대공약수에서 3의 지수는 min(b, 4, 3) = ${b}이므로 b = ${b}이고, 5의 지수는 min(5, a, 4) = ${a}이므로 a = ${a}입니다. 따라서 a + b = ${ans}입니다.`,
+    };
+  } else if (variant === 'coprimeCount') {
+    const target = pick(random, [24, 28, 30, 36, 42]);
+    const minVal = target - ri(random, 8, 12);
+    const maxVal = target + ri(random, 8, 12);
+    let count = 0;
+    const matches = [];
+    for (let x = minVal + 1; x < maxVal; x += 1) {
+      if (gcd(x, target) === 1) {
+        count += 1;
+        matches.push(x);
+      }
+    }
+    return {
+      prompt: `${minVal}보다 크고 ${maxVal}보다 작은 자연수 중에서 ${target}과 서로소인 수의 개수를 구하시오.`,
+      promptEn: `How many natural numbers strictly between ${minVal} and ${maxVal} are coprime to ${target}?`,
+      expression: `${minVal} < x < ${maxVal}, gcd(x, ${target}) = 1`,
+      answer: String(count),
+      answerSuffix: '개',
+      explanation: `${target}과 최대공약수가 1인 수는 [${matches.join(', ')}]으로 모두 ${count}개입니다.`,
+    };
+  } else if (variant === 'findCoprimeChoice') {
+    const coprimePairs = [
+      [12, 29], [15, 28], [16, 27], [21, 40], [25, 36], [14, 33], [35, 48],
+    ];
+    const nonCoprimePairs = [
+      [8, 10], [9, 15], [14, 21], [18, 27], [24, 32], [26, 39], [33, 55],
+    ];
+    const correctPair = pick(random, coprimePairs);
+    const wrongPairs = [];
+    while (wrongPairs.length < 4) {
+      const p = pick(random, nonCoprimePairs);
+      if (!wrongPairs.some(([a, b]) => a === p[0] && b === p[1])) wrongPairs.push(p);
+    }
+    const choices = [
+      { value: '1', label: `${correctPair[0]}, ${correctPair[1]}`, isCorrect: true },
+      { value: '2', label: `${wrongPairs[0][0]}, ${wrongPairs[0][1]}` },
+      { value: '3', label: `${wrongPairs[1][0]}, ${wrongPairs[1][1]}` },
+      { value: '4', label: `${wrongPairs[2][0]}, ${wrongPairs[2][1]}` },
+      { value: '5', label: `${wrongPairs[3][0]}, ${wrongPairs[3][1]}` },
+    ].sort(() => random() - 0.5);
+    const correctIndex = choices.findIndex((c) => c.isCorrect) + 1;
+    return {
+      prompt: `다음 중 두 수가 서로소인 것을 고르시오.`,
+      promptEn: `Which pair of numbers is coprime (greatest common factor is 1)?`,
+      expression: `서로소 판별`,
+      answer: String(correctIndex),
+      choices,
+      explanation: `두 수의 최대공약수가 1일 때 서로소라고 합니다. ${correctPair[0]}과 ${correctPair[1]}의 최대공약수는 1이므로 서로소입니다. 정답은 ${correctIndex}번입니다.`,
+    };
+  } else {
+    const validBoxes = [18, 36, 45, 63, 90];
+    const invalidBoxes = [27, 54, 75, 99, 110];
+    const invalid = pick(random, invalidBoxes);
+    const valids = [];
+    while (valids.length < 4) {
+      const v = pick(random, validBoxes);
+      if (!valids.includes(v)) valids.push(v);
+    }
+    const choices = [
+      { value: '1', label: String(invalid), isTarget: true },
+      { value: '2', label: String(valids[0]) },
+      { value: '3', label: String(valids[1]) },
+      { value: '4', label: String(valids[2]) },
+      { value: '5', label: String(valids[3]) },
+    ].sort(() => random() - 0.5);
+    const ansIdx = choices.findIndex((c) => c.isTarget) + 1;
+    return {
+      prompt: `두 자연수 2^4 × □ 와 2^3 × 3^5 × 11의 최대공약수가 72일 때, 다음 중 □ 안에 들어갈 수 없는 수는?`,
+      promptEn: `If the greatest common factor of 2^4 × □ and 2^3 × 3^5 × 11 is 72, which of the following cannot be □?`,
+      expression: `gcd(2^4 × □, 2^3 × 3^5 × 11) = 72 = 2^3 × 3^2`,
+      answer: String(ansIdx),
+      choices,
+      explanation: `72 = 2^3 × 3^2이므로 □는 3^2을 인수로 가져야 하지만 3^3 이상의 거듭제곱이나 11을 인수로 가질 수 없습니다. ${invalid}은 조건을 만족하지 않으므로 들어갈 수 없습니다. 정답은 ${ansIdx}번(${invalid})입니다.`,
+    };
+  }
 }
+
+// [유형 03] 공약수와 최대공약수의 성질 (RPM #116~#119, #183, #197)
+export function rpmGcdCommonDivisorProp(random) {
+  const variant = pick(random, ['notCommonDivisor', 'countCommonDivisors', 'chainGcd']);
+  if (variant === 'notCommonDivisor') {
+    const G = pick(random, [48, 60, 72, 84, 90]);
+    const divs = divisorsOf(G);
+    const nonDivs = [7, 9, 11, 14, 17, 22, 26, 35, 45, 50].filter((x) => G % x !== 0);
+    const bad = pick(random, nonDivs);
+    const goods = [];
+    while (goods.length < 4) {
+      const d = pick(random, divs);
+      if (!goods.includes(d)) goods.push(d);
+    }
+    const choices = [
+      { value: '1', label: String(bad), isTarget: true },
+      { value: '2', label: String(goods[0]) },
+      { value: '3', label: String(goods[1]) },
+      { value: '4', label: String(goods[2]) },
+      { value: '5', label: String(goods[3]) },
+    ].sort(() => random() - 0.5);
+    const ansIdx = choices.findIndex((c) => c.isTarget) + 1;
+    return {
+      prompt: `두 자연수 A, B의 최대공약수가 ${G}일 때, 다음 중 A와 B의 공약수가 아닌 것은?`,
+      promptEn: `If the greatest common factor of natural numbers A and B is ${G}, which of the following is NOT a common divisor?`,
+      expression: `G = ${G}`,
+      answer: String(ansIdx),
+      choices,
+      explanation: `두 수의 공약수는 최대공약수의 약수입니다. ${G}의 약수가 아닌 수는 ${bad}입니다. 따라서 정답은 ${ansIdx}번입니다.`,
+    };
+  } else if (variant === 'countCommonDivisors') {
+    const [e2, e3] = pick(random, [[2, 1], [3, 2], [2, 2], [3, 1]]);
+    const divCount = (e2 + 1) * (e3 + 1);
+    const exp1 = `2^${e2 + 1} × 3^${e3} × 5`;
+    const exp2 = `2^${e2} × 3^${e3 + 1} × 7`;
+    const exp3 = `2^${e2 + 2} × 3^${e3} × 11`;
+    return {
+      prompt: `세 수 ${exp1}, ${exp2}, ${exp3}의 공약수의 개수를 구하시오.`,
+      promptEn: `Find the number of common divisors of ${exp1}, ${exp2}, and ${exp3}.`,
+      expression: `최대공약수 G = 2^${e2} × 3^${e3}`,
+      answer: String(divCount),
+      answerSuffix: '개',
+      explanation: `세 수의 공통 소인수는 2와 3이며, 최대공약수는 2^${e2} × 3^${e3}입니다. 공약수의 개수는 최대공약수의 약수의 개수와 같으므로 (${e2} + 1) × (${e3} + 1) = ${divCount}개입니다.`,
+    };
+  } else {
+    const g = pick(random, [12, 14, 18, 20, 24]);
+    const k1 = pick(random, [2, 3, 5]);
+    let k2;
+    do k2 = pick(random, [2, 3, 5, 7]); while (k1 === k2 || gcd(k1, k2) !== 1);
+    const d1 = g * k1;
+    const d2 = g * k2;
+    return {
+      prompt: `세 자연수 A, B, C에 대하여 A와 B의 최대공약수는 ${d1}이고, B와 C의 최대공약수는 ${d2}일 때, 세 수 A, B, C의 최대공약수를 구하시오.`,
+      promptEn: `For natural numbers A, B, C, the GCF of A and B is ${d1}, and the GCF of B and C is ${d2}. Find the greatest common factor of A, B, and C.`,
+      expression: `gcd(A, B) = ${d1}, gcd(B, C) = ${d2}`,
+      answer: String(g),
+      explanation: `세 수 A, B, C의 공약수는 (A와 B의 공약수)이면서 (B와 C의 공약수)이어야 하므로, ${d1}과 ${d2}의 공약수입니다. 따라서 세 수의 최대공약수는 ${d1}과 ${d2}의 최대공약수인 ${g}입니다.`,
+    };
+  }
+}
+
+// [유형 04·05] 최소공배수와 공배수의 성질 (RPM #120~#127)
+export function rpmLcmCommonMultipleProp(random) {
+  const variant = pick(random, ['lcmExpSum', 'countLimit', 'closestMultiple']);
+  if (variant === 'lcmExpSum') {
+    const a = ri(random, 4, 6);
+    const b = ri(random, 3, 5);
+    const c = ri(random, 2, 4);
+    const ans = a + b + c;
+    return {
+      prompt: `두 수 2^3 × 3^b × 5 와 2^a × 3^2 × 7^${c}의 최소공배수가 2^${a} × 3^${b} × 5 × 7^c일 때, a + b + c의 값을 구하시오. (단, a, b, c는 자연수)`,
+      promptEn: `If the least common multiple of 2^3 × 3^b × 5 and 2^a × 3^2 × 7^${c} is 2^${a} × 3^${b} × 5 × 7^c, find a + b + c.`,
+      expression: `L = 2^${a} × 3^${b} × 5 × 7^c`,
+      answer: String(ans),
+      explanation: `최소공배수는 각 소인수의 지수 중 크거나 같은 것을 택하므로, a = ${a}, b = ${b}, c = ${c}입니다. 따라서 a + b + c = ${ans}입니다.`,
+    };
+  } else if (variant === 'countLimit') {
+    const L = pick(random, [14, 18, 24, 28, 36]);
+    const M = pick(random, [100, 150, 200, 250, 300]);
+    const ans = Math.floor(M / L);
+    return {
+      prompt: `두 자연수의 최소공배수가 ${L}일 때, 이 두 자연수의 공배수 중 ${M} 이하의 자연수는 모두 몇 개인가?`,
+      promptEn: `If the least common multiple of two natural numbers is ${L}, how many common multiples are less than or equal to ${M}?`,
+      expression: `L = ${L}, M ≤ ${M}`,
+      answer: String(ans),
+      answerSuffix: '개',
+      explanation: `두 수의 공배수는 최소공배수 ${L}의 배수입니다. ${M} 이하의 공배수의 개수는 ${M} ÷ ${L} = ${ans}개입니다.`,
+    };
+  } else {
+    const [n1, n2, n3] = pick(random, [[8, 15, 24], [6, 10, 15], [9, 12, 18], [12, 16, 20]]);
+    const L = lcmAll([n1, n2, n3]);
+    const T = pick(random, [500, 700, 800, 1000]);
+    const k = Math.round(T / L);
+    const ans = k * L;
+    return {
+      prompt: `세 수 ${n1}, ${n2}, ${n3}의 공배수 중 ${T}에 가장 가까운 수를 구하시오.`,
+      promptEn: `Find the common multiple of ${n1}, ${n2}, and ${n3} that is closest to ${T}.`,
+      expression: `세 수의 최소공배수 L = ${L}`,
+      answer: String(ans),
+      explanation: `세 수의 최소공배수는 ${L}이므로, 공배수는 ${L}의 배수입니다. ${T} 부근의 배수는 ${(k - 1) * L}, ${k * L}, ${(k + 1) * L} 등이 있으며, ${T}과의 차이가 가장 작은 수는 ${ans}입니다.`,
+    };
+  }
+}
+
+// [유형 06] 소인수분해 지수와 최대공약수·최소공배수 역추적 (RPM #128~#134, #186)
+export function rpmGcdLcmExponentDeduce(random) {
+  const variant = pick(random, ['twoNumDeduce', 'threeNumLcmSum', 'deduceDivisorsA']);
+  if (variant === 'twoNumDeduce') {
+    const a = ri(random, 3, 5);
+    const b = ri(random, 2, 4);
+    const ans = a + b;
+    return {
+      prompt: `두 수 2^b × 3^2 × 5 와 2^3 × 3^a의 최대공약수가 2^2 × 3^2이고, 최소공배수가 2^3 × 3^${a} × 5일 때, a + b의 값을 구하시오. (단, a, b는 자연수)`,
+      promptEn: `The greatest common factor of 2^b × 3^2 × 5 and 2^3 × 3^a is 2^2 × 3^2, and their least common multiple is 2^3 × 3^${a} × 5. Find a + b.`,
+      expression: `G = 2^2 × 3^2, L = 2^3 × 3^${a} × 5`,
+      answer: String(ans),
+      explanation: `최대공약수에서 2의 지수는 min(b, 3) = 2이므로 b = 2입니다. 최소공배수에서 3의 지수는 max(2, a) = ${a}이므로 a = ${a}입니다. 따라서 a + b = ${ans}입니다.`,
+    };
+  } else if (variant === 'threeNumLcmSum') {
+    const a = 4;
+    const b = 2;
+    const c = 1;
+    const ans = a + b + c;
+    return {
+      prompt: `세 수 2^2 × 3^b, 2^a × 3, 2^3 × 3 × 5^c의 최소공배수가 720일 때, 자연수 a, b, c에 대하여 a + b + c의 값을 구하시오.`,
+      promptEn: `The least common multiple of 2^2 × 3^b, 2^a × 3, and 2^3 × 3 × 5^c is 720. Find a + b + c for natural numbers a, b, c.`,
+      expression: `720 = 2^4 × 3^2 × 5`,
+      answer: String(ans),
+      explanation: `720을 소인수분해하면 2^4 × 3^2 × 5입니다. 최소공배수에서 2의 최고 지수는 4이므로 a = 4, 3의 최고 지수는 2이므로 b = 2, 5의 최고 지수는 1이므로 c = 1입니다. 따라서 a + b + c = 4 + 2 + 1 = ${ans}입니다.`,
+    };
+  } else {
+    const ans = 27;
+    return {
+      prompt: `두 자연수 2^3 × 3 × 5와 A의 최대공약수가 2^2 × 3이고, 최소공배수가 2^3 × 3^2 × 5 × 7^2일 때, 자연수 A의 약수의 개수를 구하시오.`,
+      promptEn: `The GCF of 2^3 × 3 × 5 and A is 2^2 × 3, and their LCM is 2^3 × 3^2 × 5 × 7^2. Find the number of divisors of natural number A.`,
+      expression: `A = 2^2 × 3^2 × 7^2`,
+      answer: String(ans),
+      answerSuffix: '개',
+      explanation: `최대공약수가 2^2 × 3이므로 A는 2^2을 소인수로 가져야 하고 5는 가질 수 없습니다. 또한 최소공배수가 2^3 × 3^2 × 5 × 7^2이므로 A는 3^2과 7^2을 소인수로 가져야 합니다. 따라서 A = 2^2 × 3^2 × 7^2이며, A의 약수의 개수는 (2+1) × (2+1) × (2+1) = ${ans}개입니다.`,
+    };
+  }
+}
+
+// [유형 07] 두 수의 곱과 최대공약수·최소공배수의 관계 (RPM #135~#138, #187, #193, #211)
+export function rpmGcdLcmProductRelation(random) {
+  const variant = pick(random, ['productLcm', 'productGcd', 'twoDigitReverse']);
+  if (variant === 'productLcm') {
+    const G = pick(random, [4, 6, 8, 12, 15]);
+    const L = pick(random, [60, 72, 96, 120, 180]);
+    const P = G * L;
+    return {
+      prompt: `두 자연수의 곱이 ${P}이고 최소공배수가 ${L}일 때, 이 두 수의 최대공약수를 구하시오.`,
+      promptEn: `The product of two natural numbers is ${P} and their LCM is ${L}. Find their greatest common factor.`,
+      expression: `두 수의 곱 = G × L`,
+      answer: String(G),
+      explanation: `(두 수의 곱) = (최대공약수) × (최소공배수)이므로 최대공약수 G = ${P} ÷ ${L} = ${G}입니다.`,
+    };
+  } else if (variant === 'productGcd') {
+    const G = pick(random, [4, 6, 8, 12]);
+    const L = pick(random, [72, 96, 120, 144, 240]);
+    const P = G * L;
+    return {
+      prompt: `두 자연수의 곱이 ${P}이고 최대공약수가 ${G}일 때, 이 두 수의 최소공배수를 구하시오.`,
+      promptEn: `The product of two natural numbers is ${P} and their GCF is ${G}. Find their least common multiple.`,
+      expression: `두 수의 곱 = G × L`,
+      answer: String(L),
+      explanation: `(두 수의 곱) = (최대공약수) × (최소공배수)이므로 최소공배수 L = ${P} ÷ ${G} = ${L}입니다.`,
+    };
+  } else {
+    const [G, a, b] = pick(random, [
+      [6, 3, 5],
+      [6, 3, 7],
+      [8, 2, 3],
+      [12, 2, 3],
+      [12, 2, 5],
+    ]);
+    const A = G * a;
+    const B = G * b;
+    const P = A * B;
+    const ans = A + B;
+    return {
+      prompt: `두 자리의 자연수 A, B (A < B)에 대하여 두 수의 곱이 ${P}이고 최대공약수가 ${G}일 때, A + B의 값을 구하시오.`,
+      promptEn: `For two 2-digit natural numbers A and B (A < B), their product is ${P} and their GCF is ${G}. Find A + B.`,
+      expression: `A × B = ${P}, G = ${G}`,
+      answer: String(ans),
+      explanation: `두 수의 곱 = G × L이므로 L = ${P} ÷ ${G} = ${P / G}입니다. A = ${G}a, B = ${G}b (a, b는 서로소, a < b)라 하면 a × b = ${a * b}입니다. A, B가 모두 두 자리 자연수이므로 a = ${a}, b = ${b}일 때 A = ${A}, B = ${B}입니다. 따라서 A + B = ${ans}입니다.`,
+    };
+  }
+}
+
+// [유형 08] 미지수 x를 포함한 세 수의 최소공배수 (RPM #139~#142, #196, #207)
+export function rpmLcmThreeNumbersRatio(random) {
+  const variant = pick(random, ['unknownX', 'ratioLargest', 'ratioSum']);
+  if (variant === 'unknownX') {
+    const x = ri(random, 4, 12);
+    const L = 12 * x;
+    return {
+      prompt: `세 자연수 3x, 4x, 6x의 최소공배수가 ${L}일 때, 세 자연수의 최대공약수를 구하시오.`,
+      promptEn: `The least common multiple of natural numbers 3x, 4x, and 6x is ${L}. Find their greatest common factor.`,
+      expression: `lcm(3x, 4x, 6x) = 12x = ${L}`,
+      answer: String(x),
+      explanation: `3, 4, 6의 최소공배수는 12이므로 3x, 4x, 6x의 최소공배수는 12x입니다. 12x = ${L}에서 x = ${x}입니다. 3, 4, 6의 최대공약수는 1이므로 세 수의 최대공약수는 1 × x = ${x}입니다.`,
+    };
+  } else if (variant === 'ratioLargest') {
+    const x = ri(random, 5, 12);
+    const L = 24 * x;
+    const largest = 8 * x;
+    return {
+      prompt: `세 자연수의 비가 2 : 3 : 8이고 최소공배수가 ${L}일 때, 세 자연수 중 가장 큰 수를 구하시오.`,
+      promptEn: `The ratio of three natural numbers is 2 : 3 : 8 and their LCM is ${L}. Find the largest of the three numbers.`,
+      expression: `2x, 3x, 8x의 최소공배수 = 24x = ${L}`,
+      answer: String(largest),
+      explanation: `세 자연수를 2x, 3x, 8x라 하면 최소공배수는 24x입니다. 24x = ${L}이므로 x = ${x}입니다. 세 자연수 중 가장 큰 수는 8x = 8 × ${x} = ${largest}입니다.`,
+    };
+  } else {
+    const x = ri(random, 5, 15);
+    const L = 30 * x;
+    const sum = (2 + 5 + 6) * x;
+    return {
+      prompt: `세 자연수의 비가 2 : 5 : 6이고 최소공배수가 ${L}일 때, 세 자연수의 합을 구하시오.`,
+      promptEn: `The ratio of three natural numbers is 2 : 5 : 6 and their LCM is ${L}. Find the sum of the three numbers.`,
+      expression: `2x, 5x, 6x의 최소공배수 = 30x = ${L}`,
+      answer: String(sum),
+      explanation: `세 자연수를 2x, 5x, 6x라 하면 최소공배수는 30x입니다. 30x = ${L}이므로 x = ${x}입니다. 따라서 세 수의 합은 (2 + 5 + 6) × ${x} = 13 × ${x} = ${sum}입니다.`,
+    };
+  }
+}
+
+// [유형 09] 최대공약수 활용 — 남김없이 똑같이 나누어주기 (RPM #143~#145, #204)
+export function rpmGcdWordDistribute(random) {
+  const variant = pick(random, ['pencilsErasers', 'threeFruits', 'groupsSum']);
+  if (variant === 'pencilsErasers') {
+    const g = pick(random, [12, 14, 16, 18, 20]);
+    const q1 = ri(random, 6, 11);
+    const q2 = ri(random, 4, 8);
+    const n1 = g * q1;
+    const n2 = g * q2;
+    return {
+      prompt: `연필 ${n1}자루와 지우개 ${n2}개를 되도록 많은 학생들에게 남김없이 똑같이 나누어 주려고 한다. 나누어 줄 수 있는 학생 수를 구하시오.`,
+      promptEn: `We want to divide ${n1} pencils and ${n2} erasers equally among as many students as possible without leftovers. Find the maximum number of students.`,
+      expression: `gcd(${n1}, ${n2}) = ${g}`,
+      answer: String(g),
+      answerSuffix: '명',
+      explanation: `가능한 한 많은 학생에게 똑같이 나누어 주어야 하므로 학생 수는 ${n1}과 ${n2}의 최대공약수인 ${g}명입니다.`,
+    };
+  } else if (variant === 'threeFruits') {
+    const g = pick(random, [6, 8, 12]);
+    const n1 = g * ri(random, 4, 7);
+    const n2 = g * ri(random, 6, 9);
+    const n3 = g * ri(random, 8, 11);
+    const actualG = gcdAll([n1, n2, n3]);
+    return {
+      prompt: `바나나 ${n1}개, 오렌지 ${n2}개, 사과 ${n3}개를 가능한 한 많은 학생들에게 똑같이 나누어 주려고 한다. 나누어 줄 수 있는 학생 수를 구하시오.`,
+      promptEn: `Divide ${n1} bananas, ${n2} oranges, and ${n3} apples equally among as many students as possible without leftovers. Find the maximum number of students.`,
+      expression: `gcd(${n1}, ${n2}, ${n3}) = ${actualG}`,
+      answer: String(actualG),
+      answerSuffix: '명',
+      explanation: `학생 수는 ${n1}, ${n2}, ${n3}의 최대공약수인 ${actualG}명입니다.`,
+    };
+  } else {
+    const g = pick(random, [6, 8, 9, 12]);
+    const a = ri(random, 3, 6);
+    const b = ri(random, 4, 7);
+    const n1 = g * a;
+    const n2 = g * b;
+    const ans = a + b;
+    return {
+      prompt: `어느 중학교 등산부의 여학생 수는 ${n1}명이고 남학생 수는 ${n2}명이다. 야영을 하기 위하여 여학생 a명과 남학생 b명씩을 한 조로 나누려고 한다. 가능한 한 많은 조로 나누려고 할 때, a + b의 값을 구하시오.`,
+      promptEn: `A hiking club has ${n1} girls and ${n2} boys. They want to form as many teams as possible, each with a girls and b boys. Find a + b.`,
+      expression: `조의 수 = gcd(${n1}, ${n2}) = ${g}`,
+      answer: String(ans),
+      explanation: `가능한 한 많은 조로 나누어야 하므로 조의 수는 ${n1}과 ${n2}의 최대공약수인 ${g}개입니다. 한 조당 여학생은 a = ${n1} ÷ ${g} = ${a}명, 남학생은 b = ${n2} ÷ ${g} = ${b}명이므로 a + b = ${ans}입니다.`,
+    };
+  }
+}
+
+// [유형 10·11] 최대공약수 활용 — 직사각형 채우기 및 둘레에 일정한 간격 놓기 (RPM #146~#151, #206)
+export function rpmGcdWordTileFence(random) {
+  const variant = pick(random, ['tileFill', 'fencePosts']);
+  if (variant === 'tileFill') {
+    const s = pick(random, [12, 16, 20, 24, 36]);
+    const qw = ri(random, 3, 6);
+    const qh = ri(random, 2, 5);
+    const W = s * qw;
+    const H = s * qh;
+    const tileCount = qw * qh;
+    const askSum = random() < 0.5;
+    const ans = askSum ? s + tileCount : tileCount;
+    return {
+      prompt: `가로의 길이가 ${W}cm, 세로의 길이가 ${H}cm인 직사각형 모양의 벽에 같은 크기의 정사각형 모양의 사진을 빈틈없이 붙이려고 한다. 가능한 한 큰 사진을 붙이려고 할 때, 사진의 한 변의 길이를 x cm, 필요한 사진의 수를 y장이라 하자. ${askSum ? 'x + y의 값' : '필요한 사진의 수 y'}를 구하시오.`,
+      promptEn: `A rectangular wall of ${W}cm by ${H}cm is to be covered completely with identical square photos as large as possible. If each photo has side length x cm and y photos are needed, find ${askSum ? 'x + y' : 'the number of photos y'}.`,
+      expression: `사진 한 변 x = gcd(${W}, ${H}) = ${s}cm, y = (${W}/${s}) × (${H}/${s}) = ${tileCount}`,
+      answer: String(ans),
+      diagram: { kind: 'rpm-tile-rectangle', w: W, h: H, tileSize: s, unit: 'cm', mode: 'fill' },
+      explanation: `사진의 한 변의 길이 x는 ${W}와 ${H}의 최대공약수인 ${s}cm입니다. 가로에 ${qw}장, 세로에 ${qh}장이 들어가므로 필요한 사진의 수 y = ${qw} × ${qh} = ${tileCount}장입니다. 따라서 정답은 ${ans}입니다.`,
+    };
+  } else {
+    const g = pick(random, [6, 12, 15, 18]);
+    const qw = ri(random, 5, 9);
+    const qh = ri(random, 3, 6);
+    const W = g * qw;
+    const H = g * qh;
+    const posts = 2 * (qw + qh);
+    return {
+      prompt: `가로의 길이가 ${W}m, 세로의 길이가 ${H}m인 직사각형 모양의 목장의 둘레에 일정한 간격으로 기둥을 세우려고 한다. 네 모퉁이에 반드시 기둥을 세울 때, 필요한 최소한의 기둥의 개수를 구하시오.`,
+      promptEn: `A rectangular ranch of ${W}m by ${H}m is to have fence posts installed along its perimeter at equal intervals, including all 4 corners. Find the minimum number of posts needed.`,
+      expression: `간격 g = gcd(${W}, ${H}) = ${g}m, 둘레 기둥 수 = 2 × (${qw} + ${qh})`,
+      answer: String(posts),
+      answerSuffix: '개',
+      diagram: { kind: 'rpm-tile-rectangle', w: W, h: H, tileSize: g, unit: 'm', mode: 'perimeter' },
+      explanation: `기둥의 개수를 최소로 하려면 기둥 사이의 간격을 최대로 해야 하므로, 간격은 ${W}와 ${H}의 최대공약수인 ${g}m입니다. 가로 한 변에 ${qw}칸, 세로 한 변에 ${qh}칸이 생기므로 둘레의 총 기둥 수는 2 × (${qw} + ${qh}) = ${posts}개입니다.`,
+    };
+  }
+}
+
+// [유형 12] 최대공약수 활용 — 나누었을 때 나머지가 남거나 부족한 수 (RPM #152~#155, #194, #200)
+export function rpmGcdWordRemainder(random) {
+  const variant = pick(random, ['twoRemainders', 'deficitAndRemainder', 'sumMaxMin']);
+  if (variant === 'twoRemainders') {
+    const g = pick(random, [6, 8, 9, 12, 14]);
+    const q1 = ri(random, 4, 7);
+    const q2 = ri(random, 8, 12);
+    const r1 = ri(random, 2, g - 2);
+    const r2 = ri(random, 1, g - 2);
+    const n1 = g * q1 + r1;
+    const n2 = g * q2 + r2;
+    return {
+      prompt: `어떤 자연수로 ${n1}을 나누면 ${r1}이 남고, ${n2}를 나누면 ${r2}가 남는다고 한다. 이러한 자연수 중에서 가장 큰 수를 구하시오.`,
+      promptEn: `When divided into ${n1}, a natural number leaves a remainder of ${r1}; divided into ${n2}, it leaves a remainder of ${r2}. Find the greatest such natural number.`,
+      expression: `gcd(${n1} - ${r1}, ${n2} - ${r2}) = ${g}`,
+      answer: String(g),
+      explanation: `구하는 수는 ${n1} - ${r1} = ${n1 - r1}과 ${n2} - ${r2} = ${n2 - r2}의 공약수 중 ${Math.max(r1, r2)}보다 큰 수입니다. 이 중 가장 큰 수는 두 수의 최대공약수인 ${g}입니다.`,
+    };
+  } else if (variant === 'deficitAndRemainder') {
+    const g = pick(random, [8, 12, 15, 18]);
+    const q1 = ri(random, 4, 6);
+    const q2 = ri(random, 3, 5);
+    const q3 = ri(random, 6, 8);
+    const d = ri(random, 2, Math.min(5, g - 2));
+    const r2 = ri(random, 1, Math.min(4, g - 2));
+    const r3 = ri(random, 1, Math.min(4, g - 2));
+    const n1 = g * q1 - d;
+    const n2 = g * q2 + r2;
+    const n3 = g * q3 + r3;
+    return {
+      prompt: `어떤 자연수로 ${n1}을 나누면 ${d}가 부족하고, ${n2}를 나누면 ${r2}가 남고, ${n3}을 나누면 ${r3}이 남는다. 이러한 자연수 중에서 가장 큰 수를 구하시오.`,
+      promptEn: `When divided into ${n1}, it lacks ${d}; into ${n2}, remainder ${r2}; into ${n3}, remainder ${r3}. Find the greatest such natural number.`,
+      expression: `gcd(${n1 + d}, ${n2 - r2}, ${n3 - r3}) = ${g}`,
+      answer: String(g),
+      explanation: `구하는 수는 ${n1} + ${d} = ${n1 + d}, ${n2} - ${r2} = ${n2 - r2}, ${n3} - ${r3} = ${n3 - r3}의 공약수 중 가장 큰 수이므로 최대공약수인 ${g}입니다.`,
+    };
+  } else {
+    const ans = 30;
+    return {
+      prompt: `어떤 자연수로 77을 나누면 5가 남고, 48을 나누면 나누어떨어진다. 이러한 수 중에서 가장 큰 수와 가장 작은 수의 합을 구하시오.`,
+      promptEn: `When dividing 77, it leaves remainder 5; when dividing 48, it divides evenly. Find the sum of the greatest and smallest such natural numbers.`,
+      expression: `72와 48의 공약수 중 5보다 큰 수`,
+      answer: String(ans),
+      explanation: `구하는 수는 77 - 5 = 72와 48의 공약수 중에서 나머지 5보다 큰 수입니다. 72와 48의 최대공약수는 24이므로, 24의 약수 중 5보다 큰 수는 6, 8, 12, 24입니다. 따라서 가장 큰 수는 24, 가장 작은 수는 6이므로 합은 24 + 6 = ${ans}입니다.`,
+    };
+  }
+}
+
+// [유형 13] 최소공배수 활용 — 정사각형 타일 붙이기 및 정육면체 벽돌 쌓기 (RPM #156~#158, #208)
+export function rpmLcmWordBrickCube(random) {
+  const variant = pick(random, ['rectToSquare', 'brickToCube']);
+  if (variant === 'rectToSquare') {
+    const [a, b] = pick(random, [[12, 15], [15, 20], [18, 24], [16, 20], [14, 21]]);
+    const L = lcm(a, b);
+    const count = (L / a) * (L / b);
+    return {
+      prompt: `가로의 길이가 ${a}cm, 세로의 길이가 ${b}cm인 직사각형 모양의 색종이를 빈틈없이 붙여서 가장 작은 정사각형을 만들려고 한다. 필요한 색종이의 수를 구하시오.`,
+      promptEn: `Rectangular colored papers of ${a}cm by ${b}cm are pasted edge-to-edge without gaps to form the smallest square. Find the number of paper sheets needed.`,
+      expression: `정사각형 한 변 = lcm(${a}, ${b}) = ${L}cm`,
+      answer: String(count),
+      answerSuffix: '장',
+      explanation: `정사각형의 한 변의 길이는 ${a}와 ${b}의 최소공배수인 ${L}cm입니다. 가로에 ${L / a}장, 세로에 ${L / b}장이 필요하므로 필요한 색종이의 수는 ${L / a} × ${L / b} = ${count}장입니다.`,
+    };
+  } else {
+    const [a, b, c] = pick(random, [[6, 8, 3], [6, 18, 4], [24, 30, 18], [12, 15, 10]]);
+    const L = lcmAll([a, b, c]);
+    const count = (L / a) * (L / b) * (L / c);
+    return {
+      prompt: `가로의 길이, 세로의 길이, 높이가 각각 ${a}cm, ${b}cm, ${c}cm인 직육면체 모양의 벽돌을 한 방향으로 빈틈없이 쌓아서 가장 작은 정육면체를 만들려고 한다. 이때 필요한 벽돌의 개수를 구하시오.`,
+      promptEn: `Bricks measuring ${a}cm by ${b}cm by ${c}cm are stacked in the same orientation to build the smallest cube. Find the number of bricks required.`,
+      expression: `정육면체 한 변 = lcm(${a}, ${b}, ${c}) = ${L}cm`,
+      answer: String(count),
+      answerSuffix: '개',
+      diagram: { kind: 'rpm-brick-cube', a, b, c, target: '정육면체' },
+      explanation: `정육면체의 한 변의 길이는 세 변의 길이의 최소공배수인 ${L}cm입니다. 가로에 ${L / a}개, 세로에 ${L / b}개, 높이에 ${L / c}개가 필요하므로 필요한 벽돌의 개수는 (${L / a}) × (${L / b}) × (${L / c}) = ${count}개입니다.`,
+    };
+  }
+}
+
+// [유형 14·15] 최소공배수 활용 — 톱니바퀴 회전 및 주기성(동시 출발) (RPM #159~#165, #201, #203, #205)
+export function rpmLcmWordGearTrackCycle(random) {
+  const variant = pick(random, ['gearRotations', 'threeGears', 'departInterval', 'neonCycle']);
+  if (variant === 'gearRotations') {
+    const [a, b] = pick(random, [[45, 30], [16, 24], [75, 60], [36, 48]]);
+    const L = lcm(a, b);
+    const rotA = L / a;
+    return {
+      prompt: `톱니의 수가 각각 ${a}개, ${b}개인 톱니바퀴 A, B가 서로 맞물려 돌아가고 있다. 두 톱니바퀴가 처음으로 다시 같은 톱니에서 맞물릴 때까지 톱니바퀴 A의 회전수를 구하시오.`,
+      promptEn: `Two intermeshed gears A and B have ${a} and ${b} teeth respectively. How many rotations does Gear A make before they first mesh again at the same teeth?`,
+      expression: `lcm(${a}, ${b}) = ${L}개 톱니`,
+      answer: String(rotA),
+      answerSuffix: '바퀴',
+      diagram: { kind: 'rpm-gears', teethA: a, teethB: b },
+      explanation: `처음으로 다시 같은 톱니에서 맞물리려면 맞물린 톱니의 수가 ${a}와 ${b}의 최소공배수인 ${L}개이어야 합니다. 따라서 톱니바퀴 A의 회전수는 ${L} ÷ ${a} = ${rotA}바퀴입니다.`,
+    };
+  } else if (variant === 'threeGears') {
+    const [a, b, c] = pick(random, [[12, 20, 24], [15, 25, 30], [18, 24, 36]]);
+    const L = lcmAll([a, b, c]);
+    const rotA = L / a;
+    return {
+      prompt: `서로 맞물려 도는 톱니바퀴 A, B, C가 있다. A의 톱니의 수는 ${a}개, B는 ${b}개, C는 ${c}개이다. 세 톱니바퀴가 처음으로 다시 같은 위치에서 맞물리려면 A는 몇 바퀴 회전해야 하는가?`,
+      promptEn: `Three meshed gears A, B, C have ${a}, ${b}, ${c} teeth. How many rotations does gear A make before all three re-align?`,
+      expression: `lcm(${a}, ${b}, ${c}) = ${L}`,
+      answer: String(rotA),
+      answerSuffix: '바퀴',
+      explanation: `맞물린 톱니의 수는 세 수의 최소공배수인 ${L}개입니다. 따라서 A는 ${L} ÷ ${a} = ${rotA}바퀴 회전해야 합니다.`,
+    };
+  } else if (variant === 'departInterval') {
+    const [t1, t2, t3] = pick(random, [[20, 25, 10], [15, 20, 30], [12, 18, 24]]);
+    const L = lcmAll([t1, t2, t3]);
+    return {
+      prompt: `어느 역에서 새마을호 열차는 ${t1}분마다, 무궁화호 열차는 ${t2}분마다, 전철은 ${t3}분마다 출발한다. 오전 6시에 세 열차가 동시에 출발하였을 때, 그 다음에 처음으로 다시 동시에 출발하는 것은 몇 분 후인가?`,
+      promptEn: `Three trains depart every ${t1}, ${t2}, and ${t3} minutes. If they leave simultaneously at 6:00 AM, how many minutes later will they depart together again?`,
+      expression: `lcm(${t1}, ${t2}, ${t3}) = ${L}분`,
+      answer: String(L),
+      answerSuffix: '분 후',
+      explanation: `세 열차가 다시 동시에 출발하는 주기는 ${t1}, ${t2}, ${t3}의 최소공배수인 ${L}분 후입니다.`,
+    };
+  } else {
+    const [onA, offA] = pick(random, [[14, 2], [18, 2], [20, 4]]);
+    const [onB, offB] = pick(random, [[17, 3], [16, 4], [25, 5]]);
+    const pA = onA + offA;
+    const pB = onB + offB;
+    const L = lcm(pA, pB);
+    return {
+      prompt: `어느 상가에서 네온사인 A는 ${onA}초 동안 켜져 있다가 ${offA}초 동안 꺼지고, B는 ${onB}초 동안 켜져 있다가 ${offB}초 동안 꺼진다. 두 네온사인이 동시에 켜진 후, 처음으로 다시 동시에 켜질 때까지 걸리는 시간(초)을 구하시오.`,
+      promptEn: `Neon sign A stays on for ${onA}s and off for ${offA}s; sign B stays on for ${onB}s and off for ${offB}s. If both turn on together, how many seconds until they turn on simultaneously again?`,
+      expression: `A 주기: ${pA}초, B 주기: ${pB}초`,
+      answer: String(L),
+      answerSuffix: '초',
+      explanation: `A의 주기는 ${onA} + ${offA} = ${pA}초이고, B의 주기는 ${onB} + ${offB} = ${pB}초입니다. 따라서 두 네온사인이 다시 동시에 켜지는 주기는 최소공배수인 ${L}초 후입니다.`,
+    };
+  }
+}
+
+// [유형 16] 최소공배수 활용 — 어떤 자연수를 나누었을 때 나머지 조건 (RPM #166~#169, #195, #199)
+export function rpmLcmWordRemainderDeficit(random) {
+  const variant = pick(random, ['sameRemainder', 'constantDeficit']);
+  if (variant === 'sameRemainder') {
+    const [a, b, c] = pick(random, [[4, 8, 10], [3, 5, 8], [6, 9, 15]]);
+    const r = ri(random, 1, 2);
+    const L = lcmAll([a, b, c]);
+    let k = 1;
+    while (k * L + r < 100) k += 1;
+    const ans = k * L + r;
+    return {
+      prompt: `${a}, ${b}, ${c} 중 어느 수로 나누어도 ${r}이 남는 세 자리의 자연수 중에서 가장 작은 수를 구하시오.`,
+      promptEn: `Find the smallest 3-digit natural number that leaves a remainder of ${r} when divided by ${a}, ${b}, or ${c}.`,
+      expression: `lcm(${a}, ${b}, ${c}) × k + ${r}`,
+      answer: String(ans),
+      explanation: `구하는 수를 x라 하면 x - ${r}은 ${a}, ${b}, ${c}의 공배수입니다. 세 수의 최소공배수는 ${L}이므로, 세 자리 자연수 중 가장 작은 수는 ${L} × ${k} + ${r} = ${ans}입니다.`,
+    };
+  } else {
+    const [a, b, c, d] = pick(random, [
+      [5, 6, 7, 3],
+      [5, 8, 10, 3],
+      [6, 8, 12, 1],
+      [4, 6, 9, 2],
+    ]);
+    const L = lcmAll([a, b, c]);
+    const ans = L - d;
+    return {
+      prompt: `어떤 자연수를 ${a}로 나누면 ${a - d}가 남고, ${b}로 나누면 ${b - d}가 남고, ${c}로 나누면 ${c - d}가 남는다고 한다. 이러한 자연수 중에서 가장 작은 수를 구하시오.`,
+      promptEn: `A natural number leaves remainder ${a - d} when divided by ${a}, remainder ${b - d} by ${b}, and remainder ${c - d} by ${c}. Find the smallest such natural number.`,
+      expression: `공통 부족분 ${d}, lcm(${a}, ${b}, ${c}) - ${d}`,
+      answer: String(ans),
+      explanation: `모든 경우 나누는 수와 나머지의 차가 ${d}로 일정하므로, 구하는 수는 ${a}, ${b}, ${c}로 나누었을 때 모두 ${d}가 부족한 수입니다. 따라서 구하는 가장 작은 수는 세 수의 최소공배수에서 ${d}를 뺀 ${L} - ${d} = ${ans}입니다.`,
+    };
+  }
+}
+
+// [유형 17] 두 개 이상의 분수를 자연수로 만드는 가장 작은 기약분수 (RPM #170~#173, #192, #202)
+export function rpmGcdLcmFractionMultiplier(random) {
+  const variant = pick(random, ['twoFractions', 'threeMixedFractions', 'integerFractionsCount']);
+  if (variant === 'twoFractions') {
+    const [n1, d1, n2, d2] = pick(random, [
+      [15, 28, 25, 42],
+      [12, 25, 8, 15],
+      [14, 33, 21, 55],
+      [16, 27, 20, 45],
+    ]);
+    const num = lcm(d1, d2);
+    const den = gcd(n1, n2);
+    const g = gcd(num, den);
+    const sNum = num / g;
+    const sDen = den / g;
+    const ans = sDen === 1 ? String(sNum) : `${sNum}/${sDen}`;
+    return {
+      prompt: `두 분수 ${n1}/${d1}과 ${n2}/${d2}의 어느 것에 곱하여도 그 결과가 자연수가 되게 하는 가장 작은 기약분수를 구하시오.`,
+      promptEn: `Find the smallest irreducible fraction that gives a natural number when multiplied by either ${n1}/${d1} or ${n2}/${d2}.`,
+      expression: `N = lcm(${d1}, ${d2}), D = gcd(${n1}, ${n2})`,
+      answer: ans,
+      explanation: `곱하여 자연수가 되려면 분자는 분모 ${d1}, ${d2}의 최소공배수인 ${num}이어야 하고, 분모는 분자 ${n1}, ${n2}의 최대공약수인 ${den}이어야 합니다. 따라서 가장 작은 기약분수는 ${ans}입니다.`,
+    };
+  } else if (variant === 'threeMixedFractions') {
+    const ans = 143;
+    return {
+      prompt: `세 수 1 5/7, 7 1/5, 3 3/4 의 어느 것에 곱해도 그 결과가 자연수가 되는 분수 중에서 가장 작은 기약분수를 B/A라 할 때, A + B의 값을 구하시오.`,
+      promptEn: `When multiplied by 1 5/7, 7 1/5, or 3 3/4, the result is a natural number. If the smallest irreducible fraction is B/A, find A + B.`,
+      expression: `대분수: 12/7, 36/5, 15/4`,
+      answer: String(ans),
+      explanation: `주어진 대분수를 가분수로 고치면 12/7, 36/5, 15/4 입니다. 곱하여 자연수가 되는 가장 작은 기약분수 B/A는 분자 B가 분모 {7, 5, 4}의 최소공배수인 140이고, 분모 A가 분자 {12, 36, 15}의 최대공약수인 3입니다. 따라서 B/A = 140/3 이므로 A = 3, B = 140 이고 A + B = ${ans}입니다.`,
+    };
+  } else {
+    const g = gcdAll([110, 220, 275]);
+    const twoDigitDivs = divisorsOf(g).filter((x) => x >= 10 && x < 100);
+    return {
+      prompt: `세 수 110/n, 220/n, 275/n 을 모두 자연수가 되게 하는 두 자리 자연수 n의 개수를 구하시오.`,
+      promptEn: `How many 2-digit natural numbers n make 110/n, 220/n, and 275/n all natural numbers?`,
+      expression: `gcd(110, 220, 275) = ${g}`,
+      answer: String(twoDigitDivs.length),
+      answerSuffix: '개',
+      explanation: `n은 110, 220, 275의 공약수이어야 하므로 최대공약수인 ${g}의 약수이어야 합니다. ${g}의 약수 [${divisorsOf(g).join(', ')}] 중 두 자리 자연수는 [${twoDigitDivs.join(', ')}]으로 모두 ${twoDigitDivs.length}개입니다.`,
+    };
+  }
+}
+
+// [유형 18·19·20 & 실력UP] 최소공배수 역추적, 합/차 조건, 종합 실력 (RPM #174~#180, #209, #210, #212)
+export function rpmGcdLcmAdvancedDeduce(random) {
+  const variant = pick(random, ['lcmCandidatesSum', 'gcdLcmDifference', 'extremeValueUnknown']);
+  if (variant === 'lcmCandidatesSum') {
+    const ans = 744;
+    return {
+      prompt: `서로 다른 세 자연수 4, 50, a의 최소공배수가 600일 때, a가 될 수 있는 모든 자연수의 합을 구하시오.`,
+      promptEn: `If the LCM of three distinct natural numbers 4, 50, and a is 600, find the sum of all possible values of a.`,
+      expression: `4 = 2^2, 50 = 2 × 5^2, 600 = 2^3 × 3 × 5^2`,
+      answer: String(ans),
+      explanation: `4와 50의 소인수분해에서 2^3과 3이 없으므로, a는 반드시 2^3 × 3 = 24를 인수로 가져야 합니다. 따라서 a는 24 × 5^0 = 24, 24 × 5^1 = 120, 24 × 5^2 = 600이 될 수 있습니다. 모든 값의 합은 24 + 120 + 600 = ${ans}입니다.`,
+    };
+  } else if (variant === 'gcdLcmDifference') {
+    const ans = 55;
+    return {
+      prompt: `두 자연수 A, B에 대하여 A > B이고 A와 B의 최대공약수가 5, 최소공배수가 120이다. A - B = 25일 때, A + B의 값을 구하시오.`,
+      promptEn: `For natural numbers A > B, GCF is 5 and LCM is 120. If A - B = 25, find A + B.`,
+      expression: `G = 5, L = 120, A - B = 25`,
+      answer: String(ans),
+      explanation: `A = 5a, B = 5b (a > b, a와 b는 서로소)라 하면 5ab = 120 에서 ab = 24입니다. a - b = 25 ÷ 5 = 5이므로 곱이 24이고 차가 5인 서로소 순서쌍은 a = 8, b = 3입니다. 따라서 A = 40, B = 15이므로 A + B = ${ans}입니다.`,
+    };
+  } else {
+    const ans = 54 + 540;
+    return {
+      prompt: `세 자연수 36, N, 90의 최대공약수가 18이고 최소공배수가 540일 때, N의 값 중 가장 큰 수와 가장 작은 수의 합을 구하시오.`,
+      promptEn: `The GCF of 36, N, and 90 is 18, and their LCM is 540. Find the sum of the maximum and minimum possible values of N.`,
+      expression: `36 = 2^2 × 3^2, 90 = 2 × 3^2 × 5, G = 2 × 3^2, L = 2^2 × 3^3 × 5`,
+      answer: String(ans),
+      explanation: `L에 있는 3^3은 36과 90에 없으므로 N이 반드시 3^3을 가져야 합니다. 또한 최대공약수가 18이므로 N은 2 × 3^2의 배수이어야 합니다. 따라서 N = 2^a × 3^3 × 5^b (a는 1 또는 2, b는 0 또는 1)입니다. 가장 작은 N은 2^1 × 3^3 = 54이고, 가장 큰 N은 2^2 × 3^3 × 5^1 = 540입니다. 합은 54 + 540 = ${ans}입니다.`,
+    };
+  }
+}
+
+// [응용 실전 종합] RPM 최대공약수와 최소공배수 실전 종합
+export function rpmGcdLcmAllTypesMixed(random) {
+  const allEngines = [
+    rpmGcdBasicCoprime,
+    rpmGcdCommonDivisorProp,
+    rpmLcmCommonMultipleProp,
+    rpmGcdLcmExponentDeduce,
+    rpmGcdLcmProductRelation,
+    rpmLcmThreeNumbersRatio,
+    rpmGcdWordDistribute,
+    rpmGcdWordTileFence,
+    rpmGcdWordRemainder,
+    rpmLcmWordBrickCube,
+    rpmLcmWordGearTrackCycle,
+    rpmLcmWordRemainderDeficit,
+    rpmGcdLcmFractionMultiplier,
+    rpmGcdLcmAdvancedDeduce,
+  ];
+  return pick(random, allEngines)(random);
+}
+
+// Legacy aliases for backward compatibility
+export const rpmGcdLcmReverseProduct = rpmGcdLcmProductRelation;
+export const rpmGcdLcmFractions = rpmGcdLcmFractionMultiplier;
+export const rpmLcmNeonCycle = rpmLcmWordGearTrackCycle;
+export const rpmGcdRemainder = rpmGcdWordRemainder;
 
 // -------------------------------------------------------------
 // CHAPTER 03: 정수와 유리수 응용 (Integers & Rationals Applied)
@@ -1185,17 +1791,34 @@ export const RPM_APPLIED_GENERATORS = {
   'divisor-count': rpmPrimeDivisorCountReverse,
   'prime-mixed': rpmPrimeAllTypesMixed,
 
-  // 02 최대공약수와 최소공배수
-  'common-divisors-gcd': rpmGcdRemainder,
-  'gcd-basic': rpmGcdRemainder,
-  'gcd-prime-form': rpmGcdLcmReverseProduct,
-  'coprime': rpmGcdLcmReverseProduct,
-  'common-multiples-lcm': rpmGcdLcmFractions,
-  'lcm-basic': rpmLcmNeonCycle,
-  'lcm-prime-form': rpmGcdLcmFractions,
-  'gcd-lcm-relation': rpmGcdLcmReverseProduct,
-  'gcd-lcm-application': rpmLcmNeonCycle,
-  'gcd-lcm-mixed': (r) => pick(r, [rpmGcdLcmReverseProduct, rpmGcdLcmFractions, rpmLcmNeonCycle, rpmGcdRemainder])(r),
+  // 02 최대공약수와 최소공배수 RPM 세부 유형 (RPM 1-1 Pages 18~31)
+  'rpm-gcd-coprime': rpmGcdBasicCoprime,
+  'rpm-gcd-common-divisor-prop': rpmGcdCommonDivisorProp,
+  'rpm-lcm-common-multiple-prop': rpmLcmCommonMultipleProp,
+  'rpm-gcd-lcm-exponent-deduce': rpmGcdLcmExponentDeduce,
+  'rpm-gcd-lcm-product-relation': rpmGcdLcmProductRelation,
+  'rpm-lcm-three-numbers-ratio': rpmLcmThreeNumbersRatio,
+  'rpm-gcd-word-distribute': rpmGcdWordDistribute,
+  'rpm-gcd-word-tile-fence': rpmGcdWordTileFence,
+  'rpm-gcd-word-remainder': rpmGcdWordRemainder,
+  'rpm-lcm-word-brick-cube': rpmLcmWordBrickCube,
+  'rpm-lcm-word-gear-track-cycle': rpmLcmWordGearTrackCycle,
+  'rpm-lcm-word-remainder-deficit': rpmLcmWordRemainderDeficit,
+  'rpm-gcd-lcm-fraction-multiplier': rpmGcdLcmFractionMultiplier,
+  'rpm-gcd-lcm-advanced-deduce': rpmGcdLcmAdvancedDeduce,
+  'rpm-gcd-lcm-all-types-mixed': rpmGcdLcmAllTypesMixed,
+
+  // 02 최대공약수와 최소공배수 기본 탭 호환
+  'common-divisors-gcd': rpmGcdCommonDivisorProp,
+  'gcd-basic': rpmGcdBasicCoprime,
+  'gcd-prime-form': rpmGcdBasicCoprime,
+  'coprime': rpmGcdBasicCoprime,
+  'common-multiples-lcm': rpmLcmCommonMultipleProp,
+  'lcm-basic': rpmLcmCommonMultipleProp,
+  'lcm-prime-form': rpmGcdLcmExponentDeduce,
+  'gcd-lcm-relation': rpmGcdLcmProductRelation,
+  'gcd-lcm-application': rpmGcdWordTileFence,
+  'gcd-lcm-mixed': rpmGcdLcmAllTypesMixed,
 
   // 03 정수와 유리수 & 04 정수와 유리수의 계산
   'positive-negative': rpmRationalAbsoluteCount,
