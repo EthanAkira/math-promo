@@ -172,10 +172,8 @@ export default function AmcUnitBrowser() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // A deep link with ?variant=1 (used by the curriculum-tab "AMC 문제 보기" toggle) should land
-  // directly on a freshly generated, language-matched practice problem — NOT the raw archived past
-  // AMC exam text, which is kept verbatim in its original English regardless of site language and
-  // would otherwise be the first thing a Korean-language visitor sees after clicking through.
+  // A deep link with ?variant=1 (used by the curriculum-tab "AMC 문제 보기" toggle) lands
+  // directly on a freshly generated authentic English AMC competition practice problem.
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
@@ -183,8 +181,8 @@ export default function AmcUnitBrowser() {
     if (!u || params.get('variant') !== '1') return;
     const found = AMC_FINE_SUBJECTS.flatMap((subject) => subject.units).find((unit) => unit.id === u);
     if (!found) return;
-    setGeneratedVariants((prev) => ({ ...prev, [u]: generateAmcVariantProblem(found, language) }));
-  }, [language]);
+    setGeneratedVariants((prev) => ({ ...prev, [u]: generateAmcVariantProblem(found, 'en') }));
+  }, []);
 
   // Auth check
   useEffect(() => {
@@ -224,10 +222,37 @@ export default function AmcUnitBrowser() {
         const apiList = data.problems || [];
         if (apiList.length === 0) return;
 
-        // Merge API problems with static catalog by ID
+        // Merge API problems with static catalog using canonical key to prevent duplicate entries
+        const getProblemKey = (p) => `${p.level || 8}-${p.year}-${(p.variant || '').toLowerCase()}-${Number(p.problemNumber || p.number || 0)}`;
         const mergedMap = new Map();
-        for (const p of staticAmc8Catalog) mergedMap.set(p.id, p);
-        for (const p of apiList) mergedMap.set(p.id, p);
+        for (const p of staticAmc8Catalog) {
+          mergedMap.set(getProblemKey(p), p);
+        }
+        for (const p of apiList) {
+          const key = getProblemKey(p);
+          const existing = mergedMap.get(key);
+          if (!existing) {
+            mergedMap.set(key, p);
+          } else {
+            const bestChoices = (Array.isArray(p.choices) && p.choices.length >= 5)
+              ? p.choices
+              : (Array.isArray(existing.choices) && existing.choices.length >= 5 ? existing.choices : (p.choices || existing.choices || []));
+            const bestQuestion = (p.question && p.question.trim().length > (existing.question || '').trim().length)
+              ? p.question
+              : (existing.question || p.question);
+            const bestExplanation = (p.explanation && p.explanation.trim().length > (existing.explanation || '').trim().length)
+              ? p.explanation
+              : (existing.explanation || p.explanation);
+            mergedMap.set(key, {
+              ...existing,
+              ...p,
+              id: existing.id || p.id,
+              choices: bestChoices,
+              question: bestQuestion,
+              explanation: bestExplanation,
+            });
+          }
+        }
 
         const merged = Array.from(mergedMap.values());
         setProblems(merged);
@@ -366,7 +391,7 @@ export default function AmcUnitBrowser() {
   }
 
   function handleGenerateVariant(openKey, unit) {
-    const variant = generateAmcVariantProblem(unit, language);
+    const variant = generateAmcVariantProblem(unit, 'en');
     setGeneratedVariants((prev) => ({ ...prev, [openKey]: variant }));
   }
 
@@ -392,7 +417,7 @@ export default function AmcUnitBrowser() {
     while (pool.length < coreCount) {
       const unit = eligibleUnits[index % eligibleUnits.length];
       index += 1;
-      pool.push(generateAmcVariantProblem(unit, language));
+      pool.push(generateAmcVariantProblem(unit, 'en'));
     }
     setCoreProblems(shuffleArray(pool));
   }

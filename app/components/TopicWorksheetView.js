@@ -577,6 +577,12 @@ export default function TopicWorksheetView({
                 : `${problem.year || 2024}학년도 수능 · #${problem.problemNumber || problem.number || absoluteNumber}`
             );
 
+            const isAmc = category === 'amc';
+            const effectiveChoices = (problem.choices && problem.choices.length > 0)
+              ? problem.choices
+              : (isAmc ? ['(A)', '(B)', '(C)', '(D)', '(E)'] : []);
+            const problemType = isAmc ? 'multiple_choice' : (effectiveChoices.length > 0 ? 'multiple_choice' : 'subjective');
+
             return (
               <div key={problem.id || `prob-${absoluteNumber}`}>
                 <InteractiveProblemCard
@@ -584,9 +590,9 @@ export default function TopicWorksheetView({
                     ...problem,
                     number: absoluteNumber, // Sequential problem number on the worksheet (01, 02, 03...)
                     points: problem.points || (category === 'amc' ? 1 : 2),
-                    type: problem.choices && problem.choices.length > 0 ? 'multiple_choice' : 'subjective',
+                    type: problemType,
                     question: problem.question,
-                    choices: problem.choices || [],
+                    choices: effectiveChoices,
                     correctAnswer: problem.answer !== undefined ? parseInt(problem.answer, 10) : problem.correctAnswer,
                     explanation: problem.explanation,
                     unit: unit?.label,

@@ -2928,15 +2928,17 @@ export function getGeneratorForUnit(unitId) {
 /**
  * Main function to generate an interactive problem object for InteractiveProblemCard
  */
-export function generateAmcVariantProblem(unit, language = 'ko') {
+export function generateAmcVariantProblem(unit, language = 'en') {
   const unitId = typeof unit === 'string' ? unit : unit.id;
-  const unitLabel = typeof unit === 'string' ? unit : (language === 'en' ? unit.labelEn : unit.label);
+  const unitLabel = typeof unit === 'string' ? unit : (unit.labelEn || unit.label);
   const generator = getGeneratorForUnit(unitId);
-  const result = generator(language);
+  // AMC competition problems are inherently in English.
+  // Generate authentic English competition problem by default.
+  const result = generator('en');
 
   return {
     id: `gen-variant-${unitId}-${Date.now()}-${randInt(100, 999)}`,
-    number: language === 'ko' ? '유사 변형' : 'Variant',
+    number: 'Variant',
     points: 1,
     type: 'multiple_choice',
     question: result.question,

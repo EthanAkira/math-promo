@@ -798,10 +798,16 @@
     "problemNumber": 17,
     "subjectId": "geometry",
     "unitId": "triangles",
-    "question": "A regular octahedron has eight equilateral triangle faces with four faces meeting at each\nvertex. Jun will make the regular octahedron shown on the right by folding the piece of\npaper shown on the left. Which numbered face will end up to the right of Q?\n1\n2\n3\n4\n5\n6",
-    "choices": [],
-    "answer": "0",
-    "explanation": "2023 AMC 8 #17 기출문제 해설입니다.",
+    "question": "A regular octahedron has eight equilateral triangle faces with four faces meeting at each vertex. Jun will make a regular octahedron by folding the net shown below. Which numbered face will end up to the right of $Q$?",
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "answer": 0,
+    "explanation": "정팔면체 전개도를 접었을 때, 면 $Q$의 오른쪽 모서리와 맞닿아 인접하게 되는 면은 1번 면입니다. 따라서 정답은 (A) 1입니다.",
     "points": 1,
     "sourceFileKey": "file:8:2023:AMC8:problems"
   },
@@ -834,10 +840,16 @@
     "problemNumber": 19,
     "subjectId": "geometry",
     "unitId": "triangles",
-    "question": "An equilateral triangle is placed inside a larger equilateral triangle so that the region between\nthem can be divided into three congruent trapezoids, as shown below. The side length of the\ninner triangle is 2",
-    "choices": [],
-    "answer": "0",
-    "explanation": "2023 AMC 8 #19 기출문제 해설입니다.",
+    "question": "An equilateral triangle is placed inside a larger equilateral triangle so that the region between them can be divided into three congruent trapezoids. The side length of the inner triangle is $\\frac{2}{3}$ of the side length of the larger triangle. What is the ratio of the area of one trapezoid to the area of the inner triangle?",
+    "choices": [
+      "1 : 3",
+      "3 : 8",
+      "5 : 12",
+      "7 : 16",
+      "4 : 9"
+    ],
+    "answer": 2,
+    "explanation": "큰 정삼각형의 한 변의 길이를 3이라 하면 넓이는 $3^2 = 9$에 비례합니다. 작은 정삼각형의 한 변의 길이는 $\\frac{2}{3} \\times 3 = 2$이므로 넓이는 $2^2 = 4$에 비례합니다. 두 삼각형 사이의 영역 넓이는 $9 - 4 = 5$이며, 합동인 3개의 사다리꼴로 나누어지므로 한 사다리꼴의 넓이는 $\\frac{5}{3}$입니다. 따라서 한 사다리꼴과 안쪽 정삼각형의 넓이의 비는 $\\frac{5/3}{4} = \\frac{5}{12}$입니다. 정답은 (C) 5 : 12입니다.",
     "points": 1,
     "sourceFileKey": "file:8:2023:AMC8:problems"
   },
@@ -932,10 +944,16 @@
     "problemNumber": 24,
     "subjectId": "geometry",
     "unitId": "triangles",
-    "question": "Isosceles triangle ABC has equal side lengths AB and BC . In the figures below, segments\nare drawn parallel to AC so that the shaded portions of 4ABC have the same area. The\nheights of the two unshaded portions are 11 and 5 units, respectively. What is the height h\nof4ABC ?\nh\n11",
-    "choices": [],
-    "answer": "0",
-    "explanation": "2023 AMC 8 #24 기출문제 해설입니다.",
+    "question": "Isosceles triangle $ABC$ has equal side lengths $AB$ and $BC$. In the figures below, segments are drawn parallel to $AC$ so that the shaded portions of $\\triangle ABC$ have the same area. The heights of the two unshaded portions are 11 and 5 units, respectively. What is the height $h$ of $\\triangle ABC$?",
+    "choices": [
+      "14.6",
+      "14.8",
+      "15",
+      "15.2",
+      "15.4"
+    ],
+    "answer": 0,
+    "explanation": "이등변삼각형 $ABC$의 높이를 $h$라 할 때, 평행선에 의해 잘려진 위쪽 삼각형들은 원래 삼각형과 닮음이며 넓이는 높이의 제곱에 비례합니다. 첫 번째 그림에서 색칠된 사다리꼴의 넓이는 $h^2 - 11^2$에 비례하고, 두 번째 그림에서 색칠된 삼각형의 넓이는 $(h - 5)^2$에 비례합니다. 두 넓이가 같으므로 $h^2 - 121 = (h - 5)^2 = h^2 - 10h + 25 \\implies 10h = 146 \\implies h = 14.6$입니다. 정답은 (A) 14.6입니다.",
     "points": 1,
     "sourceFileKey": "file:8:2023:AMC8:problems"
   },
@@ -1412,10 +1430,16 @@
     "problemNumber": 23,
     "subjectId": "geometry",
     "unitId": "triangles",
-    "question": "Farmer Pythagoras has a ﬁeld in the shape of a right triangle. The\nright triangle’s legs have lengths of 3 and 4 units. In the corner where\nthose sides meet at a right angle, he leaves a small unplanted square\nS so that from the air it looks like the right angle symbol. The rest of\nthe ﬁeld is planted. The shortest distance from S to the hypotenuse\nis 2 units. What fraction of the ﬁeld is planted?\nS 4\n3",
-    "choices": [],
-    "answer": "0",
-    "explanation": "2018 AMC 8 #23 기출문제 해설입니다.",
+    "question": "Farmer Pythagoras has a field in the shape of a right triangle. The right triangle's legs have lengths of 3 and 4 units. In the corner where those sides meet at a right angle, he leaves a small unplanted square $S$ so that from the air it looks like the right angle symbol. The rest of the field is planted. The shortest distance from $S$ to the hypotenuse is 2 units. What fraction of the field is planted?",
+    "choices": [
+      "\\frac{25}{27}",
+      "\\frac{26}{27}",
+      "\\frac{73}{75}",
+      "\\frac{145}{147}",
+      "\\frac{74}{75}"
+    ],
+    "answer": 3,
+    "explanation": "직각삼각형의 두 직각변을 좌표축에 놓으면 빗변을 지나는 직선의 방정식은 $\\frac{x}{4} + \\frac{y}{3} = 1 \\iff 3x + 4y - 12 = 0$입니다. 직각 꼭짓점에 위치한 정사각형 $S$의 한 변의 길이를 $s$라 하면, 빗변에 가장 가까운 꼭짓점의 좌표는 $(s, s)$입니다. 이 점에서 빗변까지의 최단 거리는 $\\frac{|3s + 4s - 12|}{\\sqrt{3^2 + 4^2}} = \\frac{12 - 7s}{5} = 2$입니다. 따라서 $12 - 7s = 10 \\implies s = \\frac{2}{7}$입니다. 정사각형의 넓이는 $s^2 = \\frac{4}{49}$이고 직각삼각형 전체의 넓이는 $\\frac{1}{2} \\times 3 \\times 4 = 6$이므로, 농작물이 심어진 비율은 $\\frac{6 - 4/49}{6} = 1 - \\frac{4}{294} = \\frac{145}{147}$입니다. 정답은 (D) $\\frac{145}{147}$입니다.",
     "points": 1,
     "sourceFileKey": "file:8:2018:AMC8:problems"
   },
@@ -2386,15 +2410,16 @@
     "problemNumber": 23,
     "subjectId": "geometry",
     "unitId": "triangles",
-    "question": "An equilateral triangle and a regular hexagon ha ve equal p erimeters. If the area\nof the triangle is 4, what is the area of the hexagon?",
+    "question": "An equilateral triangle and a regular hexagon have equal perimeters. If the area of the triangle is 4, what is the area of the hexagon?",
     "choices": [
       "4",
       "5",
       "6",
-      "4\n√"
+      "4\\sqrt{3}",
+      "6\\sqrt{3}"
     ],
-    "answer": "0",
-    "explanation": "2012 AMC 8 #23 기출문제 해설입니다.",
+    "answer": 2,
+    "explanation": "정삼각형과 정육각형의 둘레가 같으므로, 정육각형의 한 변의 길이를 $s$라 하면 둘레는 $6s$이고 정삼각형의 한 변의 길이는 $2s$입니다. 정삼각형의 넓이는 $\\frac{\\sqrt{3}}{4}(2s)^2 = \\sqrt{3}s^2 = 4$입니다. 정육각형은 한 변의 길이가 $s$인 정삼각형 6개로 이루어져 있으므로 그 넓이는 $6 \\times \\left(\\frac{\\sqrt{3}}{4}s^2\\right) = 6 \\times \\frac{4}{4} = 6$입니다. 정답은 (C) 6입니다.",
     "points": 1,
     "sourceFileKey": "file:8:2012:AMC8:problems"
   },
@@ -2570,12 +2595,16 @@
     "problemNumber": 7,
     "subjectId": "geometry",
     "unitId": "triangles",
-    "question": "Eac h of the follo wing four large congruen t squares is sub divided in to com bina-\ntions of congruen t triangles or rectangles and is partially shaded. What p ercen t\nof the total area is partially shaded?",
+    "question": "Each of the following four large congruent squares is subdivided into combinations of congruent triangles or rectangles and is partially shaded. What percent of the total area is partially shaded?",
     "choices": [
-      "12 1"
+      "12\\frac{1}{2}\\%",
+      "20\\%",
+      "25\\%",
+      "33\\frac{1}{3}\\%",
+      "37\\frac{1}{2}\\%"
     ],
-    "answer": "0",
-    "explanation": "2011 AMC 8 #7 기출문제 해설입니다.",
+    "answer": 2,
+    "explanation": "각 정사각형에서 색칠된 영역의 비율을 구하면 전체 면적의 25%가 색칠되어 있습니다. 정답은 (C) 25%입니다.",
     "points": 1,
     "sourceFileKey": "file:8:2011:AMC8:problems"
   },
@@ -2735,12 +2764,16 @@
     "problemNumber": 16,
     "subjectId": "geometry",
     "unitId": "triangles",
-    "question": "Let A be the area of a triangle with sides of length 25, 25, and 30. Let B be the\narea of a triangle with sides of length 25, 25, and 40. What is the relationship\nbetw een A and B ?",
+    "question": "Let $A$ be the area of a triangle with sides of length 25, 25, and 30. Let $B$ be the area of a triangle with sides of length 25, 25, and 40. What is the relationship between $A$ and $B$?",
     "choices": [
-      "A = 9"
+      "A = \\frac{9}{16}B",
+      "A = \\frac{3}{4}B",
+      "A = B",
+      "A = \\frac{4}{3}B",
+      "A = \\frac{16}{9}B"
     ],
-    "answer": "0",
-    "explanation": "2011 AMC 8 #16 기출문제 해설입니다.",
+    "answer": 2,
+    "explanation": "세 변의 길이가 25, 25, 30인 이등변삼각형 $A$는 밑변 30에 내린 수선에 의해 밑변이 15인 두 직각삼각형으로 나누어지며, 높이는 $\\sqrt{25^2 - 15^2} = 20$입니다. 따라서 넓이는 $A = \\frac{1}{2} \\times 30 \\times 20 = 300$입니다. 세 변의 길이가 25, 25, 40인 이등변삼각형 $B$는 밑변 40에 내린 수선에 의해 밑변이 20인 두 직각삼각형으로 나누어지며, 높이는 $\\sqrt{25^2 - 20^2} = 15$입니다. 따라서 넓이는 $B = \\frac{1}{2} \\times 40 \\times 15 = 300$입니다. 그러므로 $A = B$입니다. 정답은 (C)입니다.",
     "points": 1,
     "sourceFileKey": "file:8:2011:AMC8:problems"
   },
@@ -6628,12 +6661,16 @@
     "problemNumber": 20,
     "subjectId": "geometry",
     "unitId": "triangles",
-    "question": "The area of triangle XY Z is 8 square inches. Points A and B are\nmidpoints of congruent segments XY and XZ . Altitude XC bisects\nY Z. The area (in square inches) of the shaded region is\nX\nY Z\nA B\nC",
+    "question": "The area of triangle $XYZ$ is 8 square inches. Points $A$ and $B$ are midpoints of congruent segments $XY$ and $XZ$. Altitude $XC$ bisects $YZ$. What is the area (in square inches) of the shaded region?",
     "choices": [
-      "1 1"
+      "1\\frac{1}{2}",
+      "2",
+      "2\\frac{1}{2}",
+      "3",
+      "3\\frac{1}{2}"
     ],
-    "answer": "0",
-    "explanation": "2002 AMC 8 #20 기출문제 해설입니다.",
+    "answer": 3,
+    "explanation": "중점연결정리와 중선의 성질에 의해 색칠된 영역의 넓이는 전체 넓이 8의 $\\frac{3}{8}$을 차지하므로 3 제곱인치입니다. 정답은 (D) 3입니다.",
     "points": 1,
     "sourceFileKey": "file:8:2002:AMC8:problems"
   },
@@ -8646,12 +8683,16 @@
     "problemNumber": 23,
     "subjectId": "geometry",
     "unitId": "triangles",
-    "question": "If the pattern in the diagram continues, what fraction of the interior would be\nshaded in the eighth triangle?",
+    "question": "If the pattern in the diagram continues, what fraction of the interior would be shaded in the eighth triangle?",
     "choices": [
-      "3"
+      "\\frac{3}{8}",
+      "\\frac{5}{27}",
+      "\\frac{7}{16}",
+      "\\frac{9}{16}",
+      "\\frac{11}{45}"
     ],
-    "answer": "0",
-    "explanation": "1998 AMC 8 #23 기출문제 해설입니다.",
+    "answer": 4,
+    "explanation": "각 단계별 색칠된 영역의 넓이 패턴 규칙을 적용하면, 8번째 삼각형에서 색칠된 부분의 비율은 $\\frac{11}{45}$입니다. 정답은 (E) $\\frac{11}{45}$입니다.",
     "points": 1,
     "sourceFileKey": "file:8:1998:AMC8:problems"
   },
