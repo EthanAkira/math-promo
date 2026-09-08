@@ -52,6 +52,7 @@ function renderTopicItem(topic, copy) {
                 {topic.meta.revised2022 && <span className="meta-badge revised">{copy.labels.revised2022}: {topic.meta.revised2022}</span>}
                 {topic.meta.officialType && <span className="meta-badge official">{topic.meta.officialType}</span>}
                 {topic.meta.grade && <span className="meta-badge grade">{copy.labels.targetGrade}: {topic.meta.grade}</span>}
+                {topic.meta.source === 'AMC' && <span className="meta-badge amc-source">AMC · 미국수학경시대회</span>}
               </div>
             )}
           </div>
@@ -683,6 +684,10 @@ export default function CurriculumExplorer() {
         .meta-badge.grade {
           background: #fae8ff;
           color: #86198f;
+        }
+        .meta-badge.amc-source {
+          background: #dbeafe;
+          color: #1d4ed8;
         }
         .action-tag {
           font-size: 11px;
