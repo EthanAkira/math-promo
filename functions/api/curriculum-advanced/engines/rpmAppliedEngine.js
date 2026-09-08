@@ -3103,51 +3103,581 @@ function rpmEqAllTypesMixed(random, profile = 'ko') {
 }
 
 // -------------------------------------------------------------
-// 07: 일차방정식의 활용 응용 (Word Problems)
+// 07: 일차방정식의 활용 응용 (RPM 1-1 p.106~117)
 // -------------------------------------------------------------
-function rpmEqExcessDeficit(random, profile) {
-  const chairs = ri(random, 6, 12);
-  const perChair1 = pick(random, [4, 5, 6]);
-  const leftover = ri(random, 3, 5);
-  const students = perChair1 * chairs + leftover;
-  const perChair2 = perChair1 + 1;
-  const lastChairStudents = students - perChair2 * (chairs - 1);
 
+function rpmAppNumberRelations(random, profile = 'ko') {
+  const mode = pick(random, ['standard', 'mistake']);
+  if (mode === 'standard') {
+    const k = ri(random, 2, 5);
+    const sub = ri(random, 2, 8);
+    const m = ri(random, 1, k - 1);
+    const x = ri(random, 4, 15);
+    const b = k * (x - sub) - m * x;
+    return {
+      prompt: tx(profile,
+        `어떤 수에서 ${sub}를 뺀 후 ${k}배 한 수는 어떤 수의 ${m === 1 ? '' : m}배보다 ${b >= 0 ? `${b}만큼 크다` : `${Math.abs(b)}만큼 작다`}고 한다. 이때 어떤 수를 구하시오.`,
+        `Subtracting ${sub} from a number and multiplying by ${k} gives a result that is ${Math.abs(b)} ${b >= 0 ? 'more' : 'less'} than ${m === 1 ? '' : `${m} times `}the number. Find the number.`
+      ),
+      expression: `${k}(x - ${sub}) = ${m}x ${b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`}`,
+      answer: String(x),
+      explanation: tx(profile,
+        `어떤 수를 x라 하면 ${k}(x - ${sub}) = ${m}x ${b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`} 에서 x = ${x}입니다.`,
+        `Letting the number be x, solving ${k}(x - ${sub}) = ${m}x ${b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`} yields x = ${x}.`
+      ),
+    };
+  }
+
+  const a = ri(random, 3, 6);
+  const b = ri(random, 2, 5);
+  const x = ri(random, 3, 10);
+  const correct = a * x + b;
+  const mistaken = b * x + a;
+  const diff = correct - mistaken;
   return {
     prompt: tx(profile,
-      `긴 의자에 학생들이 앉는데 한 의자에 ${perChair1}명씩 앉으면 ${leftover}명이 남고, ${perChair2}명씩 앉으면 마지막 의자에는 ${lastChairStudents}명이 앉는다고 합니다. 긴 의자의 개수를 구하시오.`,
-      `Students sitting ${perChair1} per bench leave ${leftover} standing. Sitting ${perChair2} per bench leaves the last bench with ${lastChairStudents}. Find the number of benches.`),
-    expression: `${perChair1}x + ${leftover} = ${perChair2}(x - 1) + ${lastChairStudents}`,
-    answer: String(chairs),
-    answerSuffix: '개',
+      `어떤 수의 ${a}배에 ${b}를 더해야 할 것을 잘못하여 어떤 수의 ${b}배에 ${a}를 더했더니 처음 구하려고 했던 수보다 ${diff}만큼 작아졌다. 어떤 수를 구하시오.`,
+      `Instead of adding ${b} to ${a} times a number, adding ${a} to ${b} times the number gave a value ${diff} less than intended. Find the number.`
+    ),
+    expression: `${b}x + ${a} = (${a}x + ${b}) - ${diff}`,
+    answer: String(x),
     explanation: tx(profile,
-      `방정식 ${perChair1}x + ${leftover} = ${perChair2}(x - 1) + ${lastChairStudents}을 풀면 x = ${chairs}입니다.`,
-      `Solving ${perChair1}x + ${leftover} = ${perChair2}(x - 1) + ${lastChairStudents} gives x = ${chairs}.`),
+      `어떤 수를 x라 하면 ${b}x + ${a} = (${a}x + ${b}) - ${diff} 에서 (${a - b})x = ${diff + a - b} 이므로 x = ${x}입니다.`,
+      `Let the number be x. Solving ${b}x + ${a} = (${a}x + ${b}) - ${diff} gives x = ${x}.`
+    ),
   };
 }
 
-function rpmEqCatchupTravel(random, profile) {
-  const speedA = pick(random, [50, 60]);
-  const speedB = pick(random, [70, 80, 90]);
-  const delayMin = pick(random, [15, 20, 30]);
-  const delayHours = delayMin / 60;
-  const speedDiff = speedB - speedA;
-  const catchupHours = (speedA * delayHours) / speedDiff;
-  const totalDist = Math.round(speedB * catchupHours);
+// 2. [방정식 활용 유형 02] 연속하는 수에 대한 문제 (#0835 ~ #0838)
+function rpmAppConsecutiveNumbers(random, profile = 'ko') {
+  const mode = pick(random, ['even-sum', 'odd-sum', 'three-compare']);
+  if (mode === 'even-sum') {
+    const x = ri(random, 6, 25) * 2;
+    const sum = (x - 2) + x + (x + 2);
+    return {
+      prompt: tx(profile,
+        `연속하는 세 짝수의 합이 ${sum}일 때, 이 세 수 중 가장 작은 수를 구하시오.`,
+        `The sum of three consecutive even integers is ${sum}. Find the smallest number.`
+      ),
+      expression: `(x - 2) + x + (x + 2) = ${sum}`,
+      answer: String(x - 2),
+      explanation: tx(profile,
+        `세 짝수를 x-2, x, x+2라 하면 3x = ${sum}에서 가운데 수는 ${x}, 가장 작은 수는 ${x - 2}입니다.`,
+        `Letting the numbers be x-2, x, x+2, 3x = ${sum}, so the smallest is ${x - 2}.`
+      ),
+    };
+  }
+
+  if (mode === 'odd-sum') {
+    const x = ri(random, 5, 25) * 2 + 1;
+    const sum = (x - 2) + x + (x + 2);
+    return {
+      prompt: tx(profile,
+        `연속하는 세 홀수의 합이 ${sum}일 때, 이 세 수 중 가장 큰 수를 구하시오.`,
+        `The sum of three consecutive odd integers is ${sum}. Find the largest number.`
+      ),
+      expression: `(x - 2) + x + (x + 2) = ${sum}`,
+      answer: String(x + 2),
+      explanation: tx(profile,
+        `세 홀수를 x-2, x, x+2라 하면 3x = ${sum}에서 x = ${x}이므로 가장 큰 수는 ${x + 2}입니다.`,
+        `Letting the numbers be x-2, x, x+2, 3x = ${sum} gives x = ${x}, so the largest is ${x + 2}.`
+      ),
+    };
+  }
+
+  const x = ri(random, 6, 20) * 2;
+  const left = x - 2;
+  const right = x + 2;
+  const diff = 3 * right - 2 * (left + x);
+  return {
+    prompt: tx(profile,
+      `연속하는 세 짝수 중에서 가장 큰 수의 3배는 나머지 두 수의 합의 2배보다 ${diff >= 0 ? `${diff}만큼 크다` : `${Math.abs(diff)}만큼 작다`}고 한다. 이때 가운데 수를 구하시오.`,
+      `Among three consecutive even numbers, 3 times the largest is ${Math.abs(diff)} ${diff >= 0 ? 'more' : 'less'} than twice the sum of the other two. Find the middle number.`
+    ),
+    expression: `3(x + 2) = 2(2x - 2) + ${diff}`,
+    answer: String(x),
+    explanation: tx(profile,
+      `3(x + 2) = 2(2x - 2) + ${diff} 에서 x = ${x}입니다.`,
+      `Solving 3(x + 2) = 2(2x - 2) + ${diff} yields x = ${x}.`
+    ),
+  };
+}
+
+// 3. [방정식 활용 유형 03] 자릿수에 대한 문제 (#0839 ~ #0842, #0905)
+function rpmAppDigitValues(random, profile = 'ko') {
+  const tens = ri(random, 1, 8);
+  const diff = ri(random, 1, 9 - tens);
+  const units = tens + diff;
+  const original = 10 * tens + units;
+  const reversed = 10 * units + tens;
+  const revDiff = reversed - original;
+  const sumDigits = tens + units;
 
   return {
     prompt: tx(profile,
-      `한 차는 먼저 출발하여 시속 ${speedA}km로 달렸고 다른 차는 ${delayMin}분 늦게 출발하여 시속 ${speedB}km로 달려서 목적지에 동시에 도착했습니다. 거리(km)를 구하시오.`,
-      `Car A leaves first at ${speedA} km/h. Car B leaves ${delayMin} minutes later at ${speedB} km/h and arrives simultaneously. Find distance (km).`),
-    expression: `${speedA}(t + ${delayMin}/60) = ${speedB}t`,
-    answer: String(totalDist),
+      `각 자리의 숫자의 합이 ${sumDigits}인 두 자리의 자연수가 있다. 이 자연수의 십의 자리의 숫자와 일의 자리의 숫자를 바꾼 수는 처음 수보다 ${revDiff}만큼 크다고 한다. 처음 자연수를 구하시오.`,
+      `In a two-digit number, the sum of digits is ${sumDigits}. Reversing the digits yields a number ${revDiff} greater than the original. Find the original number.`
+    ),
+    expression: `10(${sumDigits} - x) + x = 10x + (${sumDigits} - x) + ${revDiff}`,
+    answer: String(original),
+    explanation: tx(profile,
+      `처음 십의 자리를 x라 하면 바꾼 수는 10(${sumDigits} - x) + x = 10x + (${sumDigits} - x) + ${revDiff} 에서 x = ${tens}이므로 처음 수는 ${original}입니다.`,
+      `Letting the tens digit be x, solving yields x = ${tens}, so the number is ${original}.`
+    ),
+  };
+}
+
+// 4. [방정식 활용 유형 04] 나이에 대한 문제 (#0843 ~ #0844)
+function rpmAppAgeProblems(random, profile = 'ko') {
+  const yearsLater = pick(random, [8, 10, 12, 14, 15]);
+  const sonNow = ri(random, 11, 16);
+  const fatherNow = 2 * (sonNow + yearsLater) - yearsLater;
+  const sumAges = fatherNow + sonNow;
+
+  return {
+    prompt: tx(profile,
+      `현재 아버지와 아들의 나이의 합은 ${sumAges}세이고, ${yearsLater}년 후에는 아버지의 나이가 아들의 나이의 2배가 된다고 한다. 현재 아들의 나이를 구하시오.`,
+      `The sum of a father's and son's current ages is ${sumAges}. In ${yearsLater} years, the father will be twice as old as the son. Find the son's current age.`
+    ),
+    expression: `(${sumAges} - x) + ${yearsLater} = 2(x + ${yearsLater})`,
+    answer: String(sonNow),
+    answerSuffix: tx(profile, '세', ' years old'),
+    explanation: tx(profile,
+      `현재 아들의 나이를 x세라 하면 (${sumAges} - x) + ${yearsLater} = 2(x + ${yearsLater}) 에서 x = ${sonNow}세입니다.`,
+      `Letting son's age be x, (${sumAges} - x) + ${yearsLater} = 2(x + ${yearsLater}) gives x = ${sonNow}.`
+    ),
+  };
+}
+
+// 5. [방정식 활용 유형 05] 예금액과 소지금에 대한 문제 (#0845 ~ #0846, #0906)
+function rpmAppSavingsAllowance(random, profile = 'ko') {
+  const brotherA = 30000;
+  const brotherB = 15000;
+  const monthlyA = 4000;
+  const monthlyB = 1000;
+  const months = 10;
+
+  return {
+    prompt: tx(profile,
+      `현재 형은 통장에 ${brotherA}원, 동생은 통장에 ${brotherB}원이 예금되어 있다. 다음 달부터 매달 형은 ${monthlyA}원씩, 동생은 ${monthlyB}원씩 예금한다면 몇 개월 후에 형의 예금액이 동생의 예금액의 2배가 되는지 구하시오.`,
+      `Currently A has ${brotherA} won and B has ${brotherB} won in savings. If A deposits ${monthlyA} won and B deposits ${monthlyB} won monthly, in how many months will A have twice B's savings?`
+    ),
+    expression: `${brotherA} + ${monthlyA}x = 2(${brotherB} + ${monthlyB}x)`,
+    answer: String(months),
+    answerSuffix: tx(profile, '개월', ' months'),
+    explanation: tx(profile,
+      `${brotherA} + ${monthlyA}x = 2(${brotherB} + ${monthlyB}x) 에서 2000x = 20000 이므로 x = ${months}개월입니다.`,
+      `Solving ${brotherA} + ${monthlyA}x = 2(${brotherB} + ${monthlyB}x) gives x = ${months} months.`
+    ),
+  };
+}
+
+// 6. [방정식 활용 유형 06] 개수의 합이 일정한 문제 (#0847 ~ #0850)
+function rpmAppFixedTotalCount(random, profile = 'ko') {
+  const priceA = pick(random, [600, 700, 800]);
+  const priceB = 500;
+  const totalItems = 10;
+  const countA = ri(random, 3, 7);
+  const countB = totalItems - countA;
+  const totalCost = priceA * countA + priceB * countB;
+  const paid = 7000;
+  const change = paid - totalCost;
+
+  return {
+    prompt: tx(profile,
+      `한 개에 ${priceA}원인 과자와 한 개에 ${priceB}원인 아이스크림을 합하여 모두 ${totalItems}개를 사고 ${paid}원을 내었더니 ${change}원을 거슬러 주었다. 이때 산 과자의 개수를 구하시오.`,
+      `Snacks at ${priceA} won each and ice cream bars at ${priceB} won each were bought for a total of ${totalItems} items. Paying ${paid} won yielded ${change} won change. How many snacks were bought?`
+    ),
+    expression: `${priceA}x + ${priceB}(${totalItems} - x) = ${paid} - ${change}`,
+    answer: String(countA),
+    answerSuffix: tx(profile, '개', ''),
+    explanation: tx(profile,
+      `산 과자의 개수를 x라 하면 ${priceA}x + ${priceB}(${totalItems} - x) = ${totalCost} 에서 x = ${countA}개입니다.`,
+      `Letting the number of snacks be x, ${priceA}x + ${priceB}(${totalItems} - x) = ${totalCost} gives x = ${countA}.`
+    ),
+  };
+}
+
+// 7. [방정식 활용 유형 07] 도형의 둘레와 넓이에 대한 문제 (#0851 ~ #0854)
+function rpmAppGeometryFigures(random, profile = 'ko') {
+  const side = ri(random, 10, 16);
+  const incW = ri(random, 3, 5);
+  const decH = ri(random, 2, 4);
+  const newArea = (side + incW) * (side - decH);
+
+  return {
+    prompt: tx(profile,
+      `한 변의 길이가 ${side}cm인 정사각형에서 가로의 길이를 ${incW}cm 늘이고, 세로의 길이를 x cm 줄여서 직사각형을 만들었더니 넓이가 ${newArea}cm²가 되었다고 한다. 이때 x의 값을 구하시오.`,
+      `A square of side ${side} cm has its width increased by ${incW} cm and its height decreased by x cm, resulting in an area of ${newArea} cm². Find x.`
+    ),
+    expression: `(${side} + ${incW})(${side} - x) = ${newArea}`,
+    answer: String(decH),
+    answerSuffix: 'cm',
+    explanation: tx(profile,
+      `(${side + incW})(${side} - x) = ${newArea} 에서 ${side} - x = ${side - decH} 이므로 x = ${decH}입니다.`,
+      `(${side + incW})(${side} - x) = ${newArea} gives x = ${decH}.`
+    ),
+  };
+}
+
+// 8. [방정식 활용 유형 08] 과부족에 대한 문제 (#0855 ~ #0857)
+function rpmAppExcessDeficitItems(random, profile = 'ko') {
+  const students = ri(random, 8, 18);
+  const give1 = 5;
+  const leftover = ri(random, 2, 5);
+  const totalItems = give1 * students + leftover;
+  const give2 = 6;
+  const deficit = give2 * students - totalItems;
+
+  return {
+    prompt: tx(profile,
+      `학생들에게 귤을 나누어 주는데 한 학생에게 ${give1}개씩 나누어 주면 ${leftover}개가 남고, ${give2}개씩 나누어 주면 ${deficit}개가 부족하다고 한다. 이때 학생 수를 구하시오.`,
+      `Distributing tangerines, giving ${give1} per student leaves ${leftover} remaining, while giving ${give2} per student leaves a deficit of ${deficit}. Find the number of students.`
+    ),
+    expression: `${give1}x + ${leftover} = ${give2}x - ${deficit}`,
+    answer: String(students),
+    answerSuffix: tx(profile, '명', ''),
+    explanation: tx(profile,
+      `${give1}x + ${leftover} = ${give2}x - ${deficit} 에서 x = ${students}명입니다.`,
+      `Solving ${give1}x + ${leftover} = ${give2}x - ${deficit} yields x = ${students}.`
+    ),
+  };
+}
+
+// 9. [방정식 활용 유형 09] 증가, 감소에 대한 문제 (#0858 ~ #0861, #0907)
+function rpmAppPercentChangeStudents(random, profile = 'ko') {
+  const lastBoys = 300;
+  const lastGirls = 200;
+  const lastTotal = 500;
+  const boyRate = 10;
+  const girlRate = 5;
+  const netChange = 20; // 30 - 10 = 20 inc
+  const thisBoys = 330;
+
+  return {
+    prompt: tx(profile,
+      `어느 중학교의 올해 학생 수는 작년에 비하여 남학생은 ${boyRate}% 증가하고, 여학생은 ${girlRate}% 감소하였다. 작년의 전체 학생 수는 ${lastTotal}명이고, 올해는 전체적으로 ${netChange}명이 증가하였다고 한다. 올해의 남학생 수를 구하시오.`,
+      `This year, boys increased by ${boyRate}% and girls decreased by ${girlRate}% from last year's total of ${lastTotal}, yielding an overall increase of ${netChange} students. Find the number of boys this year.`
+    ),
+    expression: `0.10x - 0.05(${lastTotal} - x) = ${netChange}`,
+    answer: String(thisBoys),
+    answerSuffix: tx(profile, '명', ''),
+    explanation: tx(profile,
+      `작년 남학생 수를 x라 하면 0.10x - 0.05(${lastTotal} - x) = ${netChange} 에서 x = ${lastBoys}명입니다. 올해 남학생 수는 ${lastBoys} × 1.10 = ${thisBoys}명입니다.`,
+      `Letting last year's boys be x, 0.10x - 0.05(${lastTotal} - x) = ${netChange} gives x = ${lastBoys}. This year's boys = ${thisBoys}.`
+    ),
+  };
+}
+
+// 10. [방정식 활용 유형 10] 전체의 양에 대한 문제 (#0862 ~ #0864)
+function rpmAppTotalFractionReading(random, profile = 'ko') {
+  const totalPages = 120;
+  return {
+    prompt: tx(profile,
+      `성희가 책 한 권을 읽는데 첫째 날에는 전체의 1/3을, 둘째 날에는 전체의 1/4을 읽고, 셋째 날에는 50쪽을 읽어 다 읽었다고 한다. 이 책의 전체 쪽수를 구하시오.`,
+      `Reading a book over 3 days: 1/3 of the total on day 1, 1/4 on day 2, and the remaining 50 pages on day 3. Find the total number of pages.`
+    ),
+    expression: `(1/3)x + (1/4)x + 50 = x`,
+    answer: String(totalPages),
+    answerSuffix: tx(profile, '쪽', ' pages'),
+    explanation: tx(profile,
+      `(1/3)x + (1/4)x + 50 = x 에서 (5/12)x = 50 이므로 x = 120쪽입니다.`,
+      `Solving (1/3)x + (1/4)x + 50 = x gives x = 120 pages.`
+    ),
+  };
+}
+
+// 11. [방정식 활용 유형 11] 거리·속력·시간 (왕복 및 코스 변화 문제) (#0865 ~ #0868, #0909)
+function rpmAppSpeedRoundtripCourses(random, profile = 'ko') {
+  const dist = 12;
+  return {
+    prompt: tx(profile,
+      `어떤 산을 올라갈 때는 시속 3km로 걷고, 내려올 때는 시속 4km로 걸어서 왕복 총 7시간이 걸렸다. 등산로의 편도 거리를 구하시오.`,
+      `Hiking up a mountain at 3 km/h and descending at 4 km/h took 7 hours round-trip. Find the one-way distance.`
+    ),
+    expression: `x/3 + x/4 = 7`,
+    answer: String(dist),
     answerSuffix: 'km',
-    diagram: { kind: 'rpm-travel-diagram', speedA, speedB, delay: delayMin },
     explanation: tx(profile,
-      `걸린 시간 t = ${catchupHours}시간이며 총 거리는 ${totalDist}km입니다.`,
-      `Time t = ${catchupHours}h, so distance = ${totalDist}km.`),
+      `편도 거리를 x km라 하면 x/3 + x/4 = 7 에서 7x = 84, x = 12km입니다.`,
+      `Letting the distance be x km, x/3 + x/4 = 7 yields x = 12 km.`
+    ),
   };
 }
+
+// 12. [방정식 활용 유형 12] 거리·속력·시간 (시간 차 발생) (#0869 ~ #0871)
+function rpmAppSpeedTimeDifference(random, profile = 'ko') {
+  const dVal = 35;
+  return {
+    prompt: tx(profile,
+      `두 지점 A, B 사이를 자동차로 왕복하는데 시속 60km로 달리는 것은 시속 70km로 달리는 것보다 5분이 더 걸린다고 한다. 두 지점 A, B 사이의 거리를 구하시오.`,
+      `Driving between A and B, traveling at 60 km/h takes 5 minutes longer than at 70 km/h. Find the distance between A and B.`
+    ),
+    expression: `x/60 - x/70 = 5/60`,
+    answer: String(dVal),
+    answerSuffix: 'km',
+    explanation: tx(profile,
+      `거리를 x km라 하면 x/60 - x/70 = 1/12 에서 7x - 6x = 35 이므로 x = 35km입니다.`,
+      `Solving x/60 - x/70 = 5/60 gives x = 35 km.`
+    ),
+  };
+}
+
+// 13. [방정식 활용 유형 13] 거리·속력·시간 (추격 문제) (#0872 ~ #0874)
+function rpmAppSpeedCatchupDelay(random, profile = 'ko') {
+  return {
+    prompt: tx(profile,
+      `동생이 집을 출발한 지 10분 후에 형이 동생을 따라나섰다. 동생은 분속 60m로 걷고 형은 분속 160m로 달린다면, 형이 출발한 지 몇 분 후에 동생을 만나게 되는지 구하시오.`,
+      `A brother starts 10 minutes later at 160 m/min pursuing his sibling walking at 60 m/min. In how many minutes does he catch up?`
+    ),
+    expression: `160x = 60(x + 10)`,
+    answer: '6',
+    answerSuffix: tx(profile, '분', ' minutes'),
+    explanation: tx(profile,
+      `160x = 60(x + 10) 에서 100x = 600 이므로 x = 6분입니다.`,
+      `Solving 160x = 60(x + 10) yields x = 6 minutes.`
+    ),
+  };
+}
+
+// 14. [방정식 활용 유형 14] 거리·속력·시간 (마주보기/트랙) (#0875 ~ #0877, #0910)
+function rpmAppSpeedTracksOpposite(random, profile = 'ko') {
+  return {
+    prompt: tx(profile,
+      `둘레의 길이가 3000m인 호숫가를 A, B 두 사람이 같은 지점에서 동시에 출발하여 서로 반대 방향으로 돌았다. A는 분속 180m, B는 분속 120m로 걸을 때, 두 사람은 출발한 지 몇 분 후에 처음으로 만나게 되는지 구하시오.`,
+      `Walking in opposite directions around a 3,000 m lake, A walks at 180 m/min and B at 120 m/min. In how many minutes do they first meet?`
+    ),
+    expression: `(180 + 120)x = 3000`,
+    answer: '10',
+    answerSuffix: tx(profile, '분', ' minutes'),
+    explanation: tx(profile,
+      `300x = 3000 에서 x = 10분입니다.`,
+      `Solving 300x = 3000 gives x = 10 minutes.`
+    ),
+  };
+}
+
+// 15. [방정식 활용 유형 15] 소금물의 농도 (물 증발/추가) (#0878 ~ #0881, #0911)
+function rpmAppSaltWaterEvaporateAdd(random, profile = 'ko') {
+  return {
+    prompt: tx(profile,
+      `8%의 소금물 250g이 있다. 이 소금물에서 몇 g의 물을 증발시키면 10%의 소금물이 되는지 구하시오.`,
+      `How many grams of water must be evaporated from 250 g of 8% salt solution to obtain a 10% salt solution?`
+    ),
+    expression: `(8/100) × 250 = (10/100)(250 - x)`,
+    answer: '50',
+    answerSuffix: 'g',
+    explanation: tx(profile,
+      `2000 = 10(250 - x) 에서 250 - x = 200 이므로 x = 50g입니다.`,
+      `Solving (8/100) × 250 = (10/100)(250 - x) yields x = 50 g.`
+    ),
+  };
+}
+
+// 16. [방정식 활용 유형 16] 소금물의 농도 (소금 더 넣기) (#0882 ~ #0885, #0912)
+function rpmAppSaltAddSalt(random, profile = 'ko') {
+  return {
+    prompt: tx(profile,
+      `10%의 소금물 240g이 있다. 여기에 소금을 더 넣어 20%의 소금물을 만들려고 할 때, 더 넣어야 하는 소금의 양을 구하시오.`,
+      `How many grams of salt must be added to 240 g of 10% salt solution to obtain a 20% salt solution?`
+    ),
+    expression: `(10/100) × 240 + x = (20/100)(240 + x)`,
+    answer: '30',
+    answerSuffix: 'g',
+    explanation: tx(profile,
+      `2400 + 100x = 4800 + 20x 에서 80x = 2400 이므로 x = 30g입니다.`,
+      `Solving (10/100) × 240 + x = (20/100)(240 + x) gives x = 30 g.`
+    ),
+  };
+}
+
+// 17. [방정식 활용 유형 17] 소금물의 농도 (두 소금물 섞기) (#0886 ~ #0889)
+function rpmAppSaltTwoSolutionsMix(random, profile = 'ko') {
+  return {
+    prompt: tx(profile,
+      `10%의 소금물 100g과 20%의 소금물을 섞어서 12%의 소금물을 만들려고 한다. 20%의 소금물은 몇 g을 섞어야 하는지 구하시오.`,
+      `Mixing 100 g of 10% salt solution with a 20% solution to obtain a 12% solution, how many grams of the 20% solution are required?`
+    ),
+    expression: `(10/100) × 100 + (20/100)x = (12/100)(100 + x)`,
+    answer: '25',
+    answerSuffix: 'g',
+    explanation: tx(profile,
+      `1000 + 20x = 1200 + 12x 에서 8x = 200 이므로 x = 25g입니다.`,
+      `Solving 1000 + 20x = 12(100 + x) gives x = 25 g.`
+    ),
+  };
+}
+
+// 18. [방정식 활용 유형 18] 원가·정가·할인·이익 (#0890 ~ #0893, #0908, #0916)
+function rpmAppCostPriceProfitDiscount(random, profile = 'ko') {
+  return {
+    prompt: tx(profile,
+      `어떤 물건의 원가에 40%의 이익을 붙여서 정가를 정했다가 정가에서 1600원을 할인하여 팔았더니 1400원의 이익이 생겼다. 이 물건의 원가를 구하시오.`,
+      `An item was marked up 40% to set the list price, then sold at a 1,600 won discount, yielding a 1,400 won profit. Find the cost price.`
+    ),
+    expression: `1.40x - 1600 - x = 1400`,
+    answer: '7500',
+    answerSuffix: tx(profile, '원', ' won'),
+    explanation: tx(profile,
+      `0.40x - 1600 = 1400 에서 0.40x = 3000 이므로 원가 x = 7500원입니다.`,
+      `Solving 0.40x - 1600 = 1400 yields x = 7500 won.`
+    ),
+  };
+}
+
+// 19. [방정식 활용 유형 19] 일에 대한 문제 (#0894 ~ #0897, #0914)
+function rpmAppWorkDoneCollaborative(random, profile = 'ko') {
+  return {
+    prompt: tx(profile,
+      `어떤 일을 완성하는 데 A는 8일, B는 16일이 걸린다. 처음에 A가 2일 동안 일한 후에 A와 B가 함께 일하여 일을 완성했다면, 두 사람이 함께 일한 날수를 구하시오.`,
+      `Task takes A 8 days and B 16 days alone. A worked alone for 2 days, then A and B finished together. How many days did they work together?`
+    ),
+    expression: `2/8 + (1/8 + 1/16)x = 1`,
+    answer: '4',
+    answerSuffix: tx(profile, '일', ' days'),
+    explanation: tx(profile,
+      `1/4 + (3/16)x = 1 에서 (3/16)x = 3/4 이므로 x = 4일입니다.`,
+      `Solving 2/8 + (3/16)x = 1 yields x = 4 days.`
+    ),
+  };
+}
+
+// 20. [방정식 활용 유형 20] 긴 의자에 대한 문제 (#0898 ~ #0901, #0913)
+function rpmAppExcessDeficitBenches(random, profile = 'ko') {
+  return {
+    prompt: tx(profile,
+      `긴 의자에 학생들이 앉는데 한 의자에 5명씩 앉으면 4명이 앉지 못하고, 6명씩 앉으면 빈 의자는 없고 마지막 의자에는 3명이 앉는다고 한다. 긴 의자의 개수를 구하시오.`,
+      `Sitting 5 students per bench leaves 4 standing. Sitting 6 per bench leaves no empty benches and 3 students on the last bench. Find the number of benches.`
+    ),
+    expression: `5x + 4 = 6(x - 1) + 3`,
+    answer: '7',
+    answerSuffix: tx(profile, '개', ' benches'),
+    explanation: tx(profile,
+      `5x + 4 = 6x - 3 에서 x = 7개입니다.`,
+      `Solving 5x + 4 = 6(x - 1) + 3 yields x = 7 benches.`
+    ),
+  };
+}
+
+// 21. [방정식 활용 유형 21] 기차 통과 문제 (#0902 ~ #0904)
+function rpmAppTrainBridgeTunnel(random, profile = 'ko') {
+  return {
+    prompt: tx(profile,
+      `일정한 속력으로 달리는 열차가 있다. 이 열차가 길이가 1300m인 터널을 완전히 통과하는 데 40초가 걸리고, 길이가 400m인 다리를 완전히 통과하는 데 15초가 걸린다. 열차의 길이를 구하시오.`,
+      `A train passes a 1,300 m tunnel in 40 s and a 400 m bridge in 15 s at constant speed. Find the train length.`
+    ),
+    expression: `(1300 + x)/40 = (400 + x)/15`,
+    answer: '140',
+    answerSuffix: 'm',
+    explanation: tx(profile,
+      `속력은 (1300 + x)/40 = (400 + x)/15 에서 3(1300 + x) = 8(400 + x), 5x = 700 이므로 x = 140m입니다.`,
+      `Solving (1300 + x)/40 = (400 + x)/15 yields x = 140 m.`
+    ),
+  };
+}
+
+// 22. [방정식 활용 심화 22] 시험 지원자·합격자·불합격자 비율 (#0915)
+function rpmAppAdmissionRatioSystem(random, profile = 'ko') {
+  return {
+    prompt: tx(profile,
+      `어느 학교의 입학시험에서 지원자의 남녀 비는 4 : 3, 합격자의 남녀 비는 5 : 3, 불합격자의 남녀 비는 1 : 1이다. 합격자 수가 160명일 때, 입학 지원자의 총수를 구하시오.`,
+      `Applicant male-female ratio is 4 : 3, admitted ratio is 5 : 3, and rejected ratio is 1 : 1. If 160 were admitted, find the total number of applicants.`
+    ),
+    expression: `(100 + k) : (60 + k) = 4 : 3`,
+    answer: '280',
+    answerSuffix: tx(profile, '명', ''),
+    explanation: tx(profile,
+      `합격 남학생 100명, 여학생 60명. 불합격 남녀 각 k명에서 (100 + k) : (60 + k) = 4 : 3, k = 60. 총 지원자 = 160 + 120 = 280명입니다.`,
+      `Admitted: 100 boys, 60 girls. Rejected: k boys, k girls. (100 + k) : (60 + k) = 4 : 3 gives k = 60. Total applicants = 280.`
+    ),
+  };
+}
+
+// 23. [방정식 활용 심화 23] 소금물 퍼내기/맞교환 (#0917, #0919)
+function rpmAppSaltExchangeReplace(random, profile = 'ko') {
+  return {
+    prompt: tx(profile,
+      `8%의 소금물 300g에서 x g의 소금물을 퍼내고 퍼낸 만큼 물을 부은 후 4%의 소금물 60g을 섞어 6%의 소금물 360g을 만들었다. x의 값을 구하시오.`,
+      `From 300 g of 8% salt solution, x g is replaced with water, then mixed with 60 g of 4% solution to make 360 g of 6% solution. Find x.`
+    ),
+    expression: `0.08(300 - x) + 0.04 × 60 = 0.06 × 360`,
+    answer: '60',
+    answerSuffix: 'g',
+    explanation: tx(profile,
+      `24 - 0.08x + 2.4 = 21.6 에서 0.08x = 4.8 이므로 x = 60g입니다.`,
+      `Solving 0.08(300 - x) + 2.4 = 21.6 gives x = 60 g.`
+    ),
+  };
+}
+
+// 24. [방정식 활용 심화 24] 도중 감속 지연 열차 (#0918)
+function rpmAppSpeedMidwayDelay(random, profile = 'ko') {
+  return {
+    prompt: tx(profile,
+      `42km 떨어진 두 지점 A, B 사이를 시속 60km로 달리는 열차가 도중에 시속 40km로 감속 운행하여 예정 시간보다 8분 늦게 도착하였다. 시속 60km로 달린 거리를 구하시오.`,
+      `A train on a 42 km route scheduled at 60 km/h slows to 40 km/h midway, arriving 8 minutes late. Find the distance traveled at 60 km/h.`
+    ),
+    expression: `x/60 + (42 - x)/40 = 50/60`,
+    answer: '26',
+    answerSuffix: 'km',
+    explanation: tx(profile,
+      `2x + 3(42 - x) = 100 에서 x = 26km입니다.`,
+      `Solving x/60 + (42 - x)/40 = 50/60 yields x = 26 km.`
+    ),
+  };
+}
+
+// 25. [방정식 활용 발전 25] 시계 각도 시각 (#0920)
+function rpmAppClockHandsAngle(random, profile = 'ko') {
+  return {
+    prompt: tx(profile,
+      `9시와 10시 사이에서 시계의 시침과 분침이 서로 반대 방향으로 일직선을 이루는 시각을 구하시오.`,
+      `Between 9 and 10 o'clock, at what time are the clock hands in opposite directions along a straight line?`
+    ),
+    expression: `(270 + 0.5x) - 6x = 180`,
+    answer: `9시 16과 4/11분`,
+    explanation: tx(profile,
+      `5.5x = 90 에서 11x = 180, x = 180/11 = 16과 4/11분입니다.`,
+      `Solving 5.5x = 90 gives x = 180/11 = 16 and 4/11 minutes.`
+    ),
+  };
+}
+
+// 26. [단원 실전 다지기] 매일 일차방정식 활용 종합
+function rpmAppAllTypesMixed(random, profile = 'ko') {
+  const generators = [
+    rpmAppNumberRelations,
+    rpmAppConsecutiveNumbers,
+    rpmAppDigitValues,
+    rpmAppAgeProblems,
+    rpmAppSavingsAllowance,
+    rpmAppFixedTotalCount,
+    rpmAppGeometryFigures,
+    rpmAppExcessDeficitItems,
+    rpmAppPercentChangeStudents,
+    rpmAppTotalFractionReading,
+    rpmAppSpeedRoundtripCourses,
+    rpmAppSpeedTimeDifference,
+    rpmAppSpeedCatchupDelay,
+    rpmAppSpeedTracksOpposite,
+    rpmAppSaltWaterEvaporateAdd,
+    rpmAppSaltAddSalt,
+    rpmAppSaltTwoSolutionsMix,
+    rpmAppCostPriceProfitDiscount,
+    rpmAppWorkDoneCollaborative,
+    rpmAppExcessDeficitBenches,
+    rpmAppTrainBridgeTunnel,
+    rpmAppAdmissionRatioSystem,
+    rpmAppSaltExchangeReplace,
+    rpmAppSpeedMidwayDelay,
+    rpmAppClockHandsAngle,
+  ];
+  return pick(random, generators)(random, profile);
+}
+
+// Legacy aliases
+const rpmEqExcessDeficit = rpmAppExcessDeficitBenches;
+const rpmEqCatchupTravel = rpmAppSpeedCatchupDelay;
 
 // -------------------------------------------------------------
 // 06: 좌표평면과 그래프 응용
@@ -3393,10 +3923,39 @@ export const RPM_ADVANCED_ENGINES = {
   'equality-properties': rpmEqPropertiesEquality,
   'linear-equations': rpmEqBracketsExpand,
   'advanced-linear-equations': rpmEqMixedDecimalFraction,
-  'equation-word-problems': rpmEqExcessDeficit,
-  'distance-speed-time': rpmEqCatchupTravel,
-  'concentration': rpmEqExcessDeficit,
-  'equations-review': (r, p) => pick(r, [rpmAlgebraShadedArea, rpmEqExcessDeficit, rpmEqCatchupTravel])(r, p),
+  // 07 일차방정식의 활용 세부 응용 유형 (RPM 1-1 p.106~117)
+  'rpm-app-number-relations': rpmAppNumberRelations,
+  'rpm-app-consecutive-numbers': rpmAppConsecutiveNumbers,
+  'rpm-app-digit-values': rpmAppDigitValues,
+  'rpm-app-age-problems': rpmAppAgeProblems,
+  'rpm-app-savings-allowance': rpmAppSavingsAllowance,
+  'rpm-app-fixed-total-count': rpmAppFixedTotalCount,
+  'rpm-app-geometry-figures': rpmAppGeometryFigures,
+  'rpm-app-excess-deficit-items': rpmAppExcessDeficitItems,
+  'rpm-app-percent-change-students': rpmAppPercentChangeStudents,
+  'rpm-app-total-fraction-reading': rpmAppTotalFractionReading,
+  'rpm-app-speed-roundtrip-courses': rpmAppSpeedRoundtripCourses,
+  'rpm-app-speed-time-difference': rpmAppSpeedTimeDifference,
+  'rpm-app-speed-catchup-delay': rpmAppSpeedCatchupDelay,
+  'rpm-app-speed-tracks-opposite': rpmAppSpeedTracksOpposite,
+  'rpm-app-salt-water-evaporate-add': rpmAppSaltWaterEvaporateAdd,
+  'rpm-app-salt-add-salt': rpmAppSaltAddSalt,
+  'rpm-app-salt-two-solutions-mix': rpmAppSaltTwoSolutionsMix,
+  'rpm-app-cost-price-profit-discount': rpmAppCostPriceProfitDiscount,
+  'rpm-app-work-done-collaborative': rpmAppWorkDoneCollaborative,
+  'rpm-app-excess-deficit-benches': rpmAppExcessDeficitBenches,
+  'rpm-app-train-bridge-tunnel': rpmAppTrainBridgeTunnel,
+  'rpm-app-admission-ratio-system': rpmAppAdmissionRatioSystem,
+  'rpm-app-salt-exchange-replace': rpmAppSaltExchangeReplace,
+  'rpm-app-speed-midway-delay': rpmAppSpeedMidwayDelay,
+  'rpm-app-clock-hands-angle': rpmAppClockHandsAngle,
+  'rpm-app-all-types-mixed': rpmAppAllTypesMixed,
+
+  // 07 일차방정식의 활용 기본 탭 호환
+  'equation-word-problems': rpmAppFixedTotalCount,
+  'distance-speed-time': rpmAppSpeedCatchupDelay,
+  'concentration': rpmAppSaltTwoSolutionsMix,
+  'equations-review': rpmAppAllTypesMixed,
 
   'ordered-pair-condition': rpmCoordTriangleArea,
   'plane-read-point': rpmCoordTriangleArea,

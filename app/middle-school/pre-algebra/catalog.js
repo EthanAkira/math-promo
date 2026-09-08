@@ -283,6 +283,16 @@ const UNIT_TIERS = {
   'rpm-eq-proportion-cross-mult': 'advanced', 'rpm-eq-root-given-param': 'advanced', 'rpm-eq-two-eqs-same-root': 'advanced',
   'rpm-eq-special-roots': 'advanced', 'rpm-eq-root-integer-natural': 'advanced', 'rpm-eq-root-ratio-multiple': 'advanced',
   'rpm-eq-mistaken-coef': 'advanced', 'rpm-eq-common-root-systems': 'advanced', 'rpm-eq-all-types-mixed': 'advanced',
+  // 07 일차방정식의 활용 세부 응용 유형 (RPM 1-1 p.106~117)
+  'rpm-app-number-relations': 'advanced', 'rpm-app-consecutive-numbers': 'advanced', 'rpm-app-digit-values': 'advanced',
+  'rpm-app-age-problems': 'advanced', 'rpm-app-savings-allowance': 'advanced', 'rpm-app-fixed-total-count': 'advanced',
+  'rpm-app-geometry-figures': 'advanced', 'rpm-app-excess-deficit-items': 'advanced', 'rpm-app-percent-change-students': 'advanced',
+  'rpm-app-total-fraction-reading': 'advanced', 'rpm-app-speed-roundtrip-courses': 'advanced', 'rpm-app-speed-time-difference': 'advanced',
+  'rpm-app-speed-catchup-delay': 'advanced', 'rpm-app-speed-tracks-opposite': 'advanced', 'rpm-app-salt-water-evaporate-add': 'advanced',
+  'rpm-app-salt-add-salt': 'advanced', 'rpm-app-salt-two-solutions-mix': 'advanced', 'rpm-app-cost-price-profit-discount': 'advanced',
+  'rpm-app-work-done-collaborative': 'advanced', 'rpm-app-excess-deficit-benches': 'advanced', 'rpm-app-train-bridge-tunnel': 'advanced',
+  'rpm-app-admission-ratio-system': 'advanced', 'rpm-app-salt-exchange-replace': 'advanced', 'rpm-app-speed-midway-delay': 'advanced',
+  'rpm-app-clock-hands-angle': 'advanced', 'rpm-app-all-types-mixed': 'advanced',
   // coordinate-plane/catalog.js
   'plane-read-point': 'basic', 'plane-find-point': 'basic', 'quadrant-identify': 'basic', 'quadrant-sign': 'basic',
   'symmetric-points': 'intermediate', 'quadrant-transform': 'intermediate', 'ordered-pair-condition': 'intermediate',

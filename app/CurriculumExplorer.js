@@ -10,6 +10,9 @@ import {
   JAPAN_STAGES,
   TAIWAN_STAGES,
   HONGKONG_STAGES,
+  SINGAPORE_STAGES,
+  MALAYSIA_STAGES,
+  VIETNAM_STAGES,
   DOMAIN_STAGES,
 } from './curriculumCatalog';
 
@@ -96,7 +99,7 @@ export default function CurriculumExplorer() {
   const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState(() => (language === 'ko' ? 'korea' : 'courses'));
   const [krSubView, setKrSubView] = useState('grade'); // 'grade' | 'subject2022'
-  const [eastAsiaCountry, setEastAsiaCountry] = useState('japan'); // 'japan' | 'taiwan' | 'hongkong'
+  const [eastAsiaCountry, setEastAsiaCountry] = useState('japan'); // 'japan' | 'taiwan' | 'hongkong' | 'singapore' | 'malaysia' | 'vietnam'
 
   // If user has not manually changed tab on first load, adjust to language default once
   useEffect(() => {
@@ -137,7 +140,10 @@ export default function CurriculumExplorer() {
     [copy]
   );
 
-  const EAST_ASIA_STAGES = { japan: JAPAN_STAGES, taiwan: TAIWAN_STAGES, hongkong: HONGKONG_STAGES };
+  const EAST_ASIA_STAGES = {
+    japan: JAPAN_STAGES, taiwan: TAIWAN_STAGES, hongkong: HONGKONG_STAGES,
+    singapore: SINGAPORE_STAGES, malaysia: MALAYSIA_STAGES, vietnam: VIETNAM_STAGES,
+  };
 
   const koreanSchoolGroups = useMemo(
     () => [
@@ -400,7 +406,7 @@ export default function CurriculumExplorer() {
           <div className="eastasia-curriculum-wrap">
             <div className="curriculum-subview-bar">
               <div className="subview-toggle-group country-toggle-group" role="group" aria-label="동아시아 교육과정 국가 선택">
-                {['japan', 'taiwan', 'hongkong'].map((country) => (
+                {['japan', 'taiwan', 'hongkong', 'singapore', 'malaysia', 'vietnam'].map((country) => (
                   <button
                     type="button"
                     key={country}
@@ -438,6 +444,7 @@ export default function CurriculumExplorer() {
         }
         .subview-toggle-group {
           display: inline-flex;
+          flex-wrap: wrap;
           gap: 6px;
           background: var(--paper);
           padding: 4px;
