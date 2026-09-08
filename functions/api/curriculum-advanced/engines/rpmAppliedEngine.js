@@ -14332,6 +14332,835 @@ export function rpmG8SpecialQuadsAdvancedSkillUp(random) {
 }
 
 
+
+// =============================================================
+// [중2-2] 05 닮음, 06 평행선과 선분비, 07 무게중심, 08 피타고라스 정리
+// =============================================================
+// CHAPTER 05: 도형의 닮음 (RPM 2-2 Pages 70 ~ 79)
+// CHAPTER 06: 평행선과 선분의 길이의 비 (RPM 2-2 Pages 82 ~ 89)
+// CHAPTER 07: 삼각형의 무게중심 (RPM 2-2 Pages 92 ~ 99)
+// CHAPTER 08: 피타고라스 정리 (RPM 2-2 Pages 104 ~ 111)
+
+// Note: helper functions ri, pick, gcd, shuffle, makeChoices are already declared in engine files.
+// For local testing in this file, we define local helpers if not in module environment.
+
+function localShuffle(random, arr) {
+  const res = [...arr];
+  for (let i = res.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [res[i], res[j]] = [res[j], res[i]];
+  }
+  return res;
+}
+
+function localMakeChoices(random, correctVal, offsetGen, formatKo = (v) => `${v}`, formatEn = (v) => `${v}`) {
+  const set = new Set([correctVal]);
+  let tries = 0;
+  while (set.size < 5 && tries < 60) {
+    tries++;
+    const cand = offsetGen(correctVal, random);
+    if (cand !== correctVal && cand > 0) set.add(cand);
+  }
+  let arr = Array.from(set);
+  while (arr.length < 5) {
+    arr.push(correctVal + arr.length * 2);
+  }
+  arr = localShuffle(random, arr);
+  const correctIdx = arr.indexOf(correctVal) + 1;
+  return {
+    kind: 'choice',
+    choicesKo: arr.map(formatKo),
+    choicesEn: arr.map(formatEn),
+    answer: String(correctIdx)
+  };
+}
+
+// local helpers already provided by engine
+
+// ----------------------------------------------------
+// CHAPTER 05: 도형의 닮음 (Similarity)
+// ----------------------------------------------------
+
+// 1. [도형의 닮음 01] 닮은 도형의 성질과 닮음비
+export function rpmG8SimilarityConceptRatio(random) {
+  const pairs = [[2, 3], [3, 4], [3, 5], [4, 5], [2, 5]];
+  const [m, n] = pairs[Math.floor(random() * pairs.length)];
+  const k = Math.floor(random() * 4) + 3; // multiplier
+  const sideA = m * k;
+  const sideB = n * k;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, sideB, (v, r) => v + [-6, -4, -2, 2, 4, 6][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `두 닮은 삼각형 △ABC 와 △DEF의 닮음비가 ${m} : ${n} 이다. 변 AB = ${sideA} cm 일 때, 대응변 DE의 길이는?`,
+    promptEn: `Similar triangles △ABC and △DEF have a similarity ratio of ${m} : ${n}. If AB = ${sideA} cm, find the corresponding side DE.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `닮음비가 ${m} : ${n} 이므로 대응변의 길이의 비도 ${m} : ${n} 입니다. ${m} : ${n} = ${sideA} : DE 에서 DE = (${sideA} × ${n}) / ${m} = ${sideB} cm 입니다.`,
+    explanationEn: `Corresponding sides are in ratio ${m} : ${n}: ${m} : ${n} = ${sideA} : DE => DE = ${sideB} cm.`
+  };
+}
+
+// 2. [도형의 닮음 02] 입체도형에서의 닮음비
+export function rpmG8SimilaritySolidFigures(random) {
+  const r1 = Math.floor(random() * 3) + 2; // 2 ~ 4
+  const r2 = r1 + Math.floor(random() * 3) + 1; // 3 ~ 6
+  const h1 = r1 * (Math.floor(random() * 3) + 3);
+  const h2 = (h1 / r1) * r2;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, h2, (v, r) => v + [-6, -4, -2, 2, 4, 6][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `닮은 두 원뿔 A, B의 밑면의 반지름의 길이가 각각 ${r1} cm, ${r2} cm 이다. 원뿔 A의 높이가 ${h1} cm 일 때, 원뿔 B의 높이는?`,
+    promptEn: `Two similar cones A and B have base radii ${r1} cm and ${r2} cm respectively. If the height of cone A is ${h1} cm, find the height of cone B.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `두 입체도형의 닮음비는 대응하는 모서리(또는 반지름)의 길이의 비와 같으므로 ${r1} : ${r2} 입니다. 높이의 비도 같으므로 ${r1} : ${r2} = ${h1} : h_B 에서 h_B = (${h1} × ${r2}) / ${r1} = ${h2} cm 입니다.`,
+    explanationEn: `Similarity ratio is ${r1} : ${r2}. Height ratio is ${r1} : ${r2} = ${h1} : h_B => h_B = ${h2} cm.`
+  };
+}
+
+// 3. [도형의 닮음 03] 삼각형의 닮음 조건 판별
+export function rpmG8TriangleSimilarityCond(random) {
+  const cases = [
+    {
+      descKo: '세 쌍의 대응변의 길이의 비가 같을 때',
+      descEn: 'three pairs of corresponding sides are proportional',
+      cond: 'SSS 닮음',
+      condEn: 'SSS Similarity'
+    },
+    {
+      descKo: '두 쌍의 대응변의 길이의 비가 같고, 그 끼인각의 크기가 같을 때',
+      descEn: 'two pairs of sides are proportional and included angles are equal',
+      cond: 'SAS 닮음',
+      condEn: 'SAS Similarity'
+    },
+    {
+      descKo: '두 쌍의 대응각의 크기가 각각 같을 때',
+      descEn: 'two pairs of corresponding angles are equal',
+      cond: 'AA 닮음',
+      condEn: 'AA Similarity'
+    }
+  ];
+  const item = cases[Math.floor(random() * cases.length)];
+  const allConds = ['SSS 닮음', 'SAS 닮음', 'AA 닮음', 'ASA 닮음', 'RHS 닮음'];
+  const allCondsEn = ['SSS Similarity', 'SAS Similarity', 'AA Similarity', 'ASA Similarity', 'RHS Similarity'];
+  const correctIdx = allConds.indexOf(item.cond) + 1;
+  return {
+    prompt: `두 삼각형에서 ${item.descKo} 두 삼각형은 항상 닮음이다. 이때의 닮음 조건은?`,
+    promptEn: `When ${item.descEn} in two triangles, they are similar. Which similarity condition is this?`,
+    kind: 'choice',
+    choicesKo: allConds,
+    choicesEn: allCondsEn,
+    answer: String(correctIdx),
+    explanation: `두 삼각형에서 ${item.descKo} 성립하는 닮음 조건은 [${item.cond}]입니다.`,
+    explanationEn: `The similarity condition is [${item.condEn}].`
+  };
+}
+
+// 4. [도형의 닮음 04] AA 닮음을 이용한 선분의 길이
+export function rpmG8AaSimilarityFindLength(random) {
+  // In △ABC, point D on AB, E on AC such that ∠ADE = ∠C.
+  // Then △ADE ~ △ACB (AA similarity with common angle A).
+  // AD / AC = AE / AB => AE = AD * AB / AC
+  const ad = Math.floor(random() * 4) + 3; // 3 ~ 6
+  const db = Math.floor(random() * 4) + 2; // 2 ~ 5
+  const ab = ad + db;
+  const ae = Math.floor(random() * 3) + 2; // 2 ~ 4
+  const ec = Math.floor((ad * ab) / ae) - ae;
+  const ac = ae + ec;
+  // If not integer or reasonable, let's fix numbers:
+  // AD = 4, AB = 10 (DB = 6). AE = 5, AC = 8 (EC = 3).
+  // AD/AC = 4/8 = 1/2. AE/AB = 5/10 = 1/2.
+  const k1 = 2;
+  const fixedAD = 4;
+  const fixedAE = 5;
+  const mult = Math.floor(random() * 3) + 2; // 2, 3, 4
+  const AD = fixedAD * mult;
+  const AE = fixedAE * mult;
+  const AC = AD * k1;
+  const AB = AE * k1;
+  const EC = AC - AE;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, EC, (v, r) => v + [-4, -3, -2, 2, 3, 4][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `삼각형 ABC의 두 변 AB, AC 위의 점 D, E에 대하여 ∠ADE = ∠C 이다. AD = ${AD} cm, AE = ${AE} cm, AB = ${AB} cm 일 때, 선분 EC의 길이는?`,
+    promptEn: `In △ABC, points D and E on AB and AC satisfy ∠ADE = ∠C. If AD = ${AD} cm, AE = ${AE} cm, and AB = ${AB} cm, find EC.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `∠A는 공통이고 ∠ADE = ∠C 이므로 △ADE ∽ △ACB (AA 닮음)입니다. 대응변의 길이의 비에 의해 AD : AC = AE : AB 이므로 ${AD} : AC = ${AE} : ${AB} 에서 AC = (${AD} × ${AB}) / ${AE} = ${AC} cm 입니다. 따라서 EC = AC - AE = ${AC} - ${AE} = ${EC} cm 입니다.`,
+    explanationEn: `△ADE ∽ △ACB by AA similarity. AD : AC = AE : AB => AC = ${AC} cm. Thus EC = AC - AE = ${EC} cm.`
+  };
+}
+
+// 5. [도형의 닮음 05] 직각삼각형의 수선 공식 (소 공식)
+export function rpmG8RightTriangleAltitudeProp(random) {
+  // In right triangle ABC with ∠A = 90°, AH ⊥ BC.
+  // AH^2 = BH * CH.
+  // Let BH = 4, CH = 9 => AH = 6.
+  // Let BH = 2, CH = 8 => AH = 4.
+  // Let BH = 3, CH = 12 => AH = 6.
+  // Let BH = 9, CH = 16 => AH = 12.
+  const pairs = [[2, 8, 4], [3, 12, 6], [4, 9, 6], [4, 16, 8], [9, 16, 12]];
+  const [bh, ch, ah] = pairs[Math.floor(random() * pairs.length)];
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, ah, (v, r) => v + [-4, -3, -2, 2, 3, 4][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `∠A = 90° 인 직각삼각형 ABC의 꼭짓점 A에서 빗변 BC에 내린 수선의 발을 H라 하자. BH = ${bh} cm, CH = ${ch} cm 일 때, 선분 AH의 길이는?`,
+    promptEn: `In right triangle ABC with ∠A = 90°, altitude AH is dropped to hypotenuse BC. If BH = ${bh} cm and CH = ${ch} cm, find AH.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `직각삼각형의 닮음 성질에 의해 AH² = BH × CH 이 성립합니다. AH² = ${bh} × ${ch} = ${bh * ch} 이므로 AH = ${ah} cm 입니다.`,
+    explanationEn: `By geometric mean theorem in a right triangle, AH² = BH × CH = ${bh * ch} => AH = ${ah} cm.`
+  };
+}
+
+// 6. [도형의 닮음 06] 닮음비와 넓이의 비, 부피의 비
+export function rpmG8SimilarityAreaVolumeRatio(random) {
+  const mode = random() < 0.5 ? 'area' : 'volume';
+  const pairs = [[1, 2], [2, 3], [3, 4], [3, 5], [1, 3]];
+  const [m, n] = pairs[Math.floor(random() * pairs.length)];
+  if (mode === 'area') {
+    const k = Math.floor(random() * 3) + 2;
+    const areaA = m * m * k;
+    const areaB = n * n * k;
+    const { choicesKo, choicesEn, answer } = localMakeChoices(random, areaB, (v, r) => v + [-12, -8, -6, 6, 8, 12][Math.floor(r() * 6)], (v) => `${v} cm²`, (v) => `${v} cm²`);
+    return {
+      prompt: `닮음비가 ${m} : ${n} 인 두 닮은 도형 A, B에서 도형 A의 넓이가 ${areaA} cm² 일 때, 도형 B의 넓이는?`,
+      promptEn: `Two similar figures A and B have a similarity ratio of ${m} : ${n}. If the area of A is ${areaA} cm², find the area of B.`,
+      kind: 'choice',
+      choicesKo,
+      choicesEn,
+      answer,
+      explanation: `닮은 두 평면도형의 넓이의 비는 닮음비의 제곱의 비와 같으므로 넓이의 비는 ${m}² : ${n}² = ${m * m} : ${n * n} 입니다. 따라서 도형 B의 넓이는 ${areaA} × (${n * n} / ${m * m}) = ${areaB} cm² 입니다.`,
+      explanationEn: `Area ratio is ${m}² : ${n}² = ${m * m} : ${n * n}. Area(B) = ${areaA} × (${n * n} / ${m * m}) = ${areaB} cm².`
+    };
+  } else {
+    const k = Math.floor(random() * 2) + 2;
+    const volA = m * m * m * k;
+    const volB = n * n * n * k;
+    const { choicesKo, choicesEn, answer } = localMakeChoices(random, volB, (v, r) => v + [-16, -12, -8, 8, 12, 16][Math.floor(r() * 6)], (v) => `${v} cm³`, (v) => `${v} cm³`);
+    return {
+      prompt: `닮음비가 ${m} : ${n} 인 두 닮은 입체도형 A, B에서 입체도형 A의 부피가 ${volA} cm³ 일 때, 입체도형 B의 부피는?`,
+      promptEn: `Two similar solids A and B have a similarity ratio of ${m} : ${n}. If the volume of A is ${volA} cm³, find the volume of B.`,
+      kind: 'choice',
+      choicesKo,
+      choicesEn,
+      answer,
+      explanation: `닮은 두 입체도형의 부피의 비는 닮음비의 세제곱의 비와 같으므로 부피의 비는 ${m}³ : ${n}³ = ${m * m * m} : ${n * n * n} 입니다. 따라서 입체도형 B의 부피는 ${volA} × (${n * n * n} / ${m * m * m}) = ${volB} cm³ 입니다.`,
+      explanationEn: `Volume ratio is ${m}³ : ${n}³ = ${m * m * m} : ${n * n * n}. Volume(B) = ${volA} × (${n * n * n} / ${m * m * m}) = ${volB} cm³.`
+    };
+  }
+}
+
+// 7. [도형의 닮음 07] 닮음의 실생활 활용 (축척과 그림자)
+export function rpmG8SimilarityShadowTree(random) {
+  const stickH = 1.5; // stick height 1.5 m
+  const stickS = 2.0; // stick shadow 2.0 m
+  const treeS = (Math.floor(random() * 6) + 4) * 2; // tree shadow: 8, 10, 12, 14, 16, 18 m
+  const treeH = (stickH / stickS) * treeS;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, treeH, (v, r) => v + [-3, -2, -1, 1, 2, 3][Math.floor(r() * 6)], (v) => `${v} m`, (v) => `${v} m`);
+  return {
+    prompt: `키가 1.5 m인 막대의 그림자 길이가 2 m일 때, 같은 시각에 지면에 수직으로 서 있는 나무의 그림자 길이가 ${treeS} m이었다. 이 나무의 높이는?`,
+    promptEn: `A 1.5 m vertical stick casts a 2 m shadow. At the same time, a vertical tree casts a ${treeS} m shadow. Find the height of the tree.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `햇빛에 의해 생기는 직각삼각형은 서로 닮음이므로 (막대 높이) : (막대 그림자) = (나무 높이) : (나무 그림자) 입니다. 1.5 : 2 = (나무 높이) : ${treeS} 에서 나무의 높이는 (1.5 × ${treeS}) / 2 = ${treeH} m 입니다.`,
+    explanationEn: `By similar triangles, 1.5 : 2 = (tree height) : ${treeS} => tree height = ${treeH} m.`
+  };
+}
+
+// 8. [도형의 닮음 08] 도형의 닮음 전 유형 실전 종합
+export function rpmG8SimilarityAllTypesMixed(random) {
+  const pool = [rpmG8SimilarityConceptRatio, rpmG8SimilaritySolidFigures, rpmG8AaSimilarityFindLength, rpmG8RightTriangleAltitudeProp, rpmG8SimilarityAreaVolumeRatio, rpmG8SimilarityShadowTree];
+  const fn = pool[Math.floor(random() * pool.length)];
+  const res = fn(random);
+  return {
+    ...res,
+    prompt: `[도형의 닮음 실전 종합] ${res.prompt}`,
+    promptEn: `[Similarity Mixed Practice] ${res.promptEn}`
+  };
+}
+
+// 9. [도형의 닮음 09] 도형의 닮음 실력 UP (p.148~149)
+export function rpmG8SimilarityAdvancedSkillUp(random) {
+  // Melting a large lead sphere into small spheres of radius 1/k.
+  // Number of small spheres = k^3.
+  // Ratio of total surface area of all small spheres to large sphere = k !
+  const k = Math.floor(random() * 3) + 2; // 2, 3, 4
+  const count = k * k * k;
+  const ratio = k;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, ratio, (v, r) => v + [-2, -1, 1, 2, 3][Math.floor(r() * 5)], (v) => `${v}배`, (v) => `${v} times`);
+  return {
+    prompt: `반지름의 길이가 R인 큰 쇠구슬 1개를 녹여서 반지름의 길이가 (1/${k})R 인 작은 쇠구슬 ${count}개를 만들었다. 만들어진 모든 작은 쇠구슬의 겉넓이의 합은 처음 큰 쇠구슬의 겉넓이의 몇 배인가?`,
+    promptEn: `A lead sphere of radius R is melted into ${count} small spheres each with radius (1/${k})R. How many times larger is the total surface area of all small spheres compared to the original sphere?`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `작은 쇠구슬과 큰 쇠구슬의 닮음비는 1 : ${k} 이므로 한 개의 겉넓이의 비는 1 : ${k * k} 입니다. 작은 쇠구슬 1개의 겉넓이는 큰 구슬의 1/${k * k} 배입니다. 작은 쇠구슬이 총 ${count}개 있으므로 겉넓이의 총합은 ${count} × (1/${k * k}) = ${ratio}배가 됩니다.`,
+    explanationEn: `Surface area of one small sphere is (1/${k})² = 1/${k * k} of the large sphere. With ${count} small spheres, the total surface area is ${count} × (1/${k * k}) = ${ratio} times the original.`
+  };
+}
+
+// ----------------------------------------------------
+// CHAPTER 06: 평행선과 선분의 길이의 비
+// ----------------------------------------------------
+
+// 10. [평행선과 선분비 01] 삼각형에서 평행선과 선분의 길이의 비
+export function rpmG8ParallelSegmentRatio(random) {
+  // In △ABC, DE // BC. AD = a, DB = b, AE = c, EC = d.
+  // a / (a + b) = c / (c + d) = DE / BC.
+  // AD = 6, DB = 4 => AB = 10. DE = x, BC = 15 => x = 9.
+  const a = Math.floor(random() * 4) + 3; // 3 ~ 6
+  const b = Math.floor(random() * 3) + 2; // 2 ~ 4
+  const ab = a + b;
+  const mult = Math.floor(random() * 3) + 2; // 2, 3, 4
+  const bc = ab * mult;
+  const de = a * mult;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, de, (v, r) => v + [-4, -3, -2, 2, 3, 4][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `삼각형 ABC에서 변 AB, AC 위의 점 D, E에 대하여 DE ∥ BC 이다. AD = ${a} cm, DB = ${b} cm, BC = ${bc} cm 일 때, 선분 DE의 길이는?`,
+    promptEn: `In △ABC, DE ∥ BC with D on AB and E on AC. If AD = ${a} cm, DB = ${b} cm, and BC = ${bc} cm, find DE.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `DE ∥ BC 이므로 △ADE ∽ △ABC 입니다. 닮음비는 AD : AB = ${a} : (${a} + ${b}) = ${a} : ${ab} 입니다. 따라서 DE : BC = ${a} : ${ab} 이므로 DE = (${bc} × ${a}) / ${ab} = ${de} cm 입니다.`,
+    explanationEn: `△ADE ∽ △ABC by parallel lines. AD : AB = DE : BC => ${a} : ${ab} = DE : ${bc} => DE = ${de} cm.`
+  };
+}
+
+// 11. [평행선과 선분비 02] 평행선이 될 조건 판별
+export function rpmG8ParallelSegmentRatioConverse(random) {
+  return {
+    prompt: `삼각형 ABC에서 변 AB 위의 점 D, 변 AC 위의 점 E에 대하여 선분 DE와 변 BC가 평행(DE ∥ BC)이 되는 조건으로 옳은 것은?`,
+    promptEn: `In △ABC, points D and E lie on AB and AC. Which condition guarantees that DE ∥ BC?`,
+    kind: 'choice',
+    choicesKo: [
+      'AD : DB = AE : EC',
+      'AD : AB = EC : AC',
+      'AD : AE = DB : BC',
+      'DB : AB = AE : EC',
+      'AD : DE = AB : BC'
+    ],
+    choicesEn: [
+      'AD : DB = AE : EC',
+      'AD : AB = EC : AC',
+      'AD : AE = DB : BC',
+      'DB : AB = AE : EC',
+      'AD : DE = AB : BC'
+    ],
+    answer: '1',
+    explanation: `삼각형에서 선분이 평행할 조건은 AD : DB = AE : EC 또는 AD : AB = AE : AC 입니다.`,
+    explanationEn: `The parallel condition is AD : DB = AE : EC (or AD : AB = AE : AC).`
+  };
+}
+
+// 12. [평행선과 선분비 03] 삼각형의 내각의 이등분선의 정리
+export function rpmG8TriangleInteriorBisector(random) {
+  // In △ABC, AD is angle bisector of A. AB : AC = BD : CD.
+  // AB = 10, AC = 6 => 5 : 3. If BC = 16 => BD = 10, CD = 6.
+  const pairs = [[5, 3], [4, 3], [3, 2], [5, 4], [7, 5]];
+  const [m, n] = pairs[Math.floor(random() * pairs.length)];
+  const k = Math.floor(random() * 3) + 2;
+  const ab = m * k;
+  const ac = n * k;
+  const totalRatio = m + n;
+  const scale = Math.floor(random() * 2) + 2;
+  const bc = totalRatio * scale;
+  const bd = m * scale;
+  const cd = n * scale;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, bd, (v, r) => v + [-4, -3, -2, 2, 3, 4][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `삼각형 ABC에서 ∠A의 이등분선이 변 BC와 점 D에서 만난다. AB = ${ab} cm, AC = ${ac} cm, BC = ${bc} cm 일 때, 선분 BD의 길이는?`,
+    promptEn: `In △ABC, the bisector of ∠A meets BC at D. If AB = ${ab} cm, AC = ${ac} cm, and BC = ${bc} cm, find BD.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `삼각형의 내각의 이등분선의 성질에 의해 AB : AC = BD : CD 가 성립합니다. AB : AC = ${ab} : ${ac} = ${m} : ${n} 이므로 BD = BC × (${m} / ${m + n}) = ${bc} × (${m} / ${totalRatio}) = ${bd} cm 입니다.`,
+    explanationEn: `By angle bisector theorem, AB : AC = BD : CD = ${m} : ${n}. Thus BD = ${bc} × (${m} / ${totalRatio}) = ${bd} cm.`
+  };
+}
+
+// 13. [평행선과 선분비 04] 삼각형의 외각의 이등분선의 정리
+export function rpmG8TriangleExteriorBisector(random) {
+  // In △ABC, AD is exterior angle bisector of A, meeting line BC at D.
+  // AB : AC = BD : CD. (BD = BC + CD)
+  // Let AB = 8, AC = 6 => 4 : 3.
+  // BD : CD = 4 : 3 => (BC + CD) : CD = 4 : 3 => 3(BC + CD) = 4CD => 3BC = CD.
+  // If BC = 4 cm => CD = 12 cm.
+  const pairs = [[3, 2], [4, 3], [5, 3], [5, 4]];
+  const [m, n] = pairs[Math.floor(random() * pairs.length)];
+  const diff = m - n; // e.g. 1 or 2
+  const k = Math.floor(random() * 3) + 2;
+  const ab = m * k;
+  const ac = n * k;
+  const bc = diff * (Math.floor(random() * 3) + 3);
+  const cd = (n * bc) / diff;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, cd, (v, r) => v + [-6, -4, -2, 2, 4, 6][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `삼각형 ABC에서 꼭짓점 A에서의 외각의 이등분선이 변 BC의 연장선과 점 D에서 만난다. AB = ${ab} cm, AC = ${ac} cm, BC = ${bc} cm 일 때, 선분 CD의 길이는?`,
+    promptEn: `In △ABC, the exterior bisector of ∠A meets extension of BC at D. If AB = ${ab} cm, AC = ${ac} cm, and BC = ${bc} cm, find CD.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `외각의 이등분선의 성질에 의해 AB : AC = BD : CD 가 성립합니다. ${ab} : ${ac} = ${m} : ${n} 이고 BD = BC + CD 이므로 (${bc} + CD) : CD = ${m} : ${n} => ${m}CD = ${n}(${bc} + CD) => ${diff}CD = ${n * bc} => CD = ${cd} cm 입니다.`,
+    explanationEn: `By exterior angle bisector theorem, AB : AC = BD : CD => (${bc} + CD) : CD = ${m} : ${n} => CD = ${cd} cm.`
+  };
+}
+
+// 14. [평행선과 선분비 05] 평행선 사이의 선분의 길이의 비
+export function rpmG8ParallelLinesTransversal(random) {
+  // Three parallel lines l // m // n cut by two transversals.
+  // a / b = c / d.
+  const a = Math.floor(random() * 4) + 4; // 4 ~ 7
+  const b = Math.floor(random() * 4) + 6; // 6 ~ 9
+  const mult = Math.floor(random() * 3) + 2;
+  const c = a * mult;
+  const d = b * mult;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, d, (v, r) => v + [-4, -3, -2, 2, 3, 4][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `세 직선 l, m, n이 서로 평행할 때, 두 횡단선에 의해 잘린 선분의 길이가 각각 ${a} cm, ${b} cm 및 ${c} cm, x cm 이다. x의 값은?`,
+    promptEn: `Three parallel lines l ∥ m ∥ n are cut by two transversals into segments of ${a} cm, ${b} cm and ${c} cm, x cm. Find x.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `평행선 사이의 선분의 길이의 비는 같으므로 ${a} : ${b} = ${c} : x 가 성립합니다. 따라서 x = (${b} × ${c}) / ${a} = ${d} cm 입니다.`,
+    explanationEn: `Parallel lines cut transversals proportionally: ${a} : ${b} = ${c} : x => x = ${d} cm.`
+  };
+}
+
+// 15. [평행선과 선분비 06] 사다리꼴에서 평행선과 선분의 길이
+export function rpmG8TrapezoidParallelMiddleSegment(random) {
+  // In trapezoid ABCD (AD // BC), EF // AD // BC. AE : EB = m : n.
+  // Formula: EF = (m * BC + n * AD) / (m + n).
+  const ad = Math.floor(random() * 4) + 4; // 4 ~ 7
+  const bc = ad + Math.floor(random() * 4) * 3 + 6; // ad + 6, 9, 12, 15
+  const m = 1;
+  const n = 2;
+  const ef = Math.round((m * bc + n * ad) / (m + n));
+  const exactAD = 3 * ef - bc; // ensure integer if needed, or pick clean numbers:
+  // AD = 6, BC = 15, m = 1, n = 2 => EF = (15 + 12)/3 = 9.
+  const cleanTriples = [
+    [6, 15, 1, 2, 9],
+    [4, 16, 1, 3, 7],
+    [5, 20, 2, 3, 11],
+    [8, 18, 1, 1, 13]
+  ];
+  const [top, bot, r1, r2, mid] = cleanTriples[Math.floor(random() * cleanTriples.length)];
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, mid, (v, r) => v + [-4, -3, -2, 2, 3, 4][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `AD ∥ BC 인 사다리꼴 ABCD에서 선분 EF가 두 변과 평행하고 AE : EB = ${r1} : ${r2} 이다. AD = ${top} cm, BC = ${bot} cm 일 때, 선분 EF의 길이는?`,
+    promptEn: `In trapezoid ABCD (AD ∥ BC), EF ∥ AD ∥ BC and AE : EB = ${r1} : ${r2}. If AD = ${top} cm and BC = ${bot} cm, find EF.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `대각선 BD를 그어 EF와의 교점을 G라 하면, △ABD에서 EG = ${top} × (${r2} / ${r1 + r2}) 이고 △DBC에서 GF = ${bot} × (${r1} / ${r1 + r2}) 입니다. 따라서 EF = EG + GF = ${mid} cm 입니다.`,
+    explanationEn: `Using diagonal partition, EF = (${r1} × BC + ${r2} × AD) / (${r1} + ${r2}) = ${mid} cm.`
+  };
+}
+
+// 16. [평행선과 선분비 07] 평행선과 선분비 전 유형 종합
+export function rpmG8ParallelSegmentsAllMixed(random) {
+  const pool = [rpmG8ParallelSegmentRatio, rpmG8TriangleInteriorBisector, rpmG8TriangleExteriorBisector, rpmG8ParallelLinesTransversal, rpmG8TrapezoidParallelMiddleSegment];
+  const fn = pool[Math.floor(random() * pool.length)];
+  const res = fn(random);
+  return {
+    ...res,
+    prompt: `[평행선과 선분비 실전 종합] ${res.prompt}`,
+    promptEn: `[Parallel Segments Ratio Mixed Practice] ${res.promptEn}`
+  };
+}
+
+// 17. [평행선과 선분비 08] 평행선과 선분비 실력 UP (p.150~151)
+export function rpmG8ParallelSegmentsSkillUp(random) {
+  // In △ABC, D on BC such that BD : DC = 2 : 1. E is midpoint of AD.
+  // Line BE meets AC at F. Find AF : FC.
+  // Standard theorem: draw parallel from D to BE meeting AC at G.
+  // DG // BF. In △ADG, E is midpoint => F is midpoint of AG => AF = FG.
+  // In △CBF, D divides BC as 2:1 => CG : GF = CD : DB = 1 : 2 => GF = 2 CG.
+  // So AF = FG = 2 CG => AF : FC = 2 : 1 (or AF = (2/3)AC).
+  // If AC = 15 cm, find AF = 10 cm, FC = 5 cm.
+  const ac = (Math.floor(random() * 4) + 3) * 3; // 9, 12, 15, 18 cm
+  const af = (ac / 3) * 2;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, af, (v, r) => v + [-4, -3, -2, 2, 3, 4][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `삼각형 ABC에서 점 D는 변 BC 위의 점이고 BD : DC = 2 : 1 이다. 선분 AD의 중점을 E라 하고 직선 BE가 변 AC와 만나는 점을 F라 하자. AC = ${ac} cm 일 때, 선분 AF의 길이는?`,
+    promptEn: `In △ABC, point D on BC satisfies BD : DC = 2 : 1. E is the midpoint of AD. Line BE meets AC at F. If AC = ${ac} cm, find AF.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `점 D에서 BF에 평행한 선분을 그어 AC와 만나는 점을 G라 하면, △ADG에서 AF = FG 이고, △CBF에서 FG : GC = BD : DC = 2 : 1 입니다. 따라서 AF : FG : GC = 2 : 2 : 1 이므로 AF = AC × (2 / 3) = ${ac} × (2 / 3) = ${af} cm 입니다.`,
+    explanationEn: `Drawing DG ∥ BF, AF : FG : GC = 2 : 2 : 1. Thus AF = (2/3)AC = ${af} cm.`
+  };
+}
+
+// ----------------------------------------------------
+// CHAPTER 07: 삼각형의 무게중심 (Centroid)
+// ----------------------------------------------------
+
+// 18. [무게중심 01] 삼각형의 두 변의 중점 연결 정리
+export function rpmG8MidpointConnectorTheorem(random) {
+  const bc = (Math.floor(random() * 8) + 6) * 2; // even: 12 ~ 26
+  const mn = bc / 2;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, mn, (v, r) => v + [-4, -2, -1, 1, 2, 4][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `삼각형 ABC에서 두 변 AB, AC의 중점을 각각 M, N이라 하자. BC = ${bc} cm 일 때, 선분 MN의 길이는?`,
+    promptEn: `In △ABC, M and N are midpoints of AB and AC. If BC = ${bc} cm, find MN.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `삼각형의 중점 연결 정리에 의해 두 변의 중점을 연결한 선분 MN은 밑변 BC와 평행하고 그 길이는 밑변의 절반입니다: MN = (1/2) × BC = (1/2) × ${bc} = ${mn} cm 입니다.`,
+    explanationEn: `By Midpoint Theorem, MN = (1/2)BC = ${mn} cm.`
+  };
+}
+
+// 19. [무게중심 02] 사다리꼴의 두 변의 중점 연결 선분
+export function rpmG8TrapezoidMidpointConnector(random) {
+  const ad = (Math.floor(random() * 5) + 3) * 2; // 6, 8, 10, 12, 14
+  const diff = (Math.floor(random() * 4) + 2) * 2; // 4, 6, 8
+  const bc = ad + diff;
+  const mn = (ad + bc) / 2;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, mn, (v, r) => v + [-4, -2, -1, 1, 2, 4][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `AD ∥ BC 인 사다리꼴 ABCD에서 두 변 AB, CD의 중점을 각각 M, N이라 하자. AD = ${ad} cm, BC = ${bc} cm 일 때, 선분 MN의 길이는?`,
+    promptEn: `In trapezoid ABCD (AD ∥ BC), M and N are midpoints of AB and CD. If AD = ${ad} cm and BC = ${bc} cm, find MN.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `사다리꼴의 중점 연결 정리에 의해 MN = (AD + BC) / 2 = (${ad} + ${bc}) / 2 = ${mn} cm 입니다.`,
+    explanationEn: `In a trapezoid, the midline MN = (AD + BC) / 2 = ${mn} cm.`
+  };
+}
+
+// 20. [무게중심 03] 삼각형의 무게중심과 중선의 2:1 분할
+export function rpmG8CentroidMedianRatio(random) {
+  // Point G is centroid of △ABC. AG : GD = 2 : 1.
+  const gd = Math.floor(random() * 6) + 3; // 3 ~ 8
+  const ag = 2 * gd;
+  const ad = 3 * gd;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, ag, (v, r) => v + [-4, -3, -2, 2, 3, 4][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `점 G가 삼각형 ABC의 무게중심이고 선분 AD가 중선이다. GD = ${gd} cm 일 때, 선분 AG의 길이는?`,
+    promptEn: `Point G is the centroid of △ABC and AD is a median. If GD = ${gd} cm, find AG.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `삼각형의 무게중심은 각 중선의 길이를 꼭짓점으로부터 2 : 1 로 나눕니다. 따라서 AG = 2 × GD = 2 × ${gd} = ${ag} cm 입니다.`,
+    explanationEn: `The centroid divides each median in a 2 : 1 ratio from the vertex. AG = 2(GD) = ${ag} cm.`
+  };
+}
+
+// 21. [무게중심 04] 무게중심과 삼각형의 넓이 분할 (6등분)
+export function rpmG8CentroidAreaSixDivisions(random) {
+  const subArea = Math.floor(random() * 8) + 4; // 4 ~ 11
+  const totalArea = 6 * subArea;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, totalArea, (v, r) => v + [-12, -8, -6, 6, 8, 12][Math.floor(r() * 6)], (v) => `${v} cm²`, (v) => `${v} cm²`);
+  return {
+    prompt: `점 G가 삼각형 ABC의 무게중심이고 세 중선에 의해 나뉘는 한 작은 삼각형의 넓이가 ${subArea} cm² 일 때, 삼각형 ABC의 전체 넓이는?`,
+    promptEn: `Point G is the centroid of △ABC. If the area of one of the 6 triangles formed by the three medians is ${subArea} cm², find the total area of △ABC.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `삼각형의 세 중선은 삼각형 전체의 넓이를 넓이가 서로 같은 6개의 삼각형으로 나눕니다. 따라서 전체 넓이는 6 × ${subArea} = ${totalArea} cm² 입니다.`,
+    explanationEn: `The three medians divide the triangle into 6 equal-area triangles. Total area = 6 × ${subArea} = ${totalArea} cm².`
+  };
+}
+
+// 22. [무게중심 05] 평행사변형에서 대각선과 무게중심의 응용
+export function rpmG8ParallelogramCentroidApplication(random) {
+  // In parallelogram ABCD, M is midpoint of BC, N is midpoint of CD.
+  // Then lines AM, AN divide diagonal BD into 3 equal segments BP = PQ = QD.
+  // Also, Area of △APQ = (1/6) Area(ABCD), etc.
+  const totalArea = (Math.floor(random() * 6) + 4) * 6; // multiple of 6: 24 ~ 54
+  const areaAPQ = totalArea / 6;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, areaAPQ, (v, r) => v + [-4, -3, -2, 2, 3, 4][Math.floor(r() * 6)], (v) => `${v} cm²`, (v) => `${v} cm²`);
+  return {
+    prompt: `넓이가 ${totalArea} cm² 인 평행사변형 ABCD에서 변 BC, CD의 중점을 각각 M, N이라 하고 대각선 BD와 만나는 점을 P, Q라 하자. 삼각형 APQ의 넓이는?`,
+    promptEn: `Parallelogram ABCD has area ${totalArea} cm². M and N are midpoints of BC and CD, and AM, AN meet BD at P and Q. Find Area(△APQ).`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `대각선 BD는 3등분되므로 BP = PQ = QD = (1/3)BD 입니다. 대각선 AC에 의해 나뉜 △ABC에서 P는 무게중심이므로 전체 넓이의 1/6 에 해당합니다: Area(△APQ) = (1/6) × ${totalArea} = ${areaAPQ} cm² 입니다.`,
+    explanationEn: `Using centroid properties, Area(△APQ) = (1/6)Area(ABCD) = ${areaAPQ} cm².`
+  };
+}
+
+// 23. [무게중심 06] 삼각형의 무게중심 전 유형 종합
+export function rpmG8CentroidAllTypesMixed(random) {
+  const pool = [rpmG8MidpointConnectorTheorem, rpmG8TrapezoidMidpointConnector, rpmG8CentroidMedianRatio, rpmG8CentroidAreaSixDivisions, rpmG8ParallelogramCentroidApplication];
+  const fn = pool[Math.floor(random() * pool.length)];
+  const res = fn(random);
+  return {
+    ...res,
+    prompt: `[무게중심 실전 종합] ${res.prompt}`,
+    promptEn: `[Centroid Mixed Practice] ${res.promptEn}`
+  };
+}
+
+// 24. [무게중심 07] 삼각형의 무게중심 실력 UP (p.152~153)
+export function rpmG8CentroidAdvancedSkillUp(random) {
+  // G is centroid of △ABC, G' is centroid of △GBC.
+  // Area of △ABC = S => Area of △GBC = S/3.
+  // Area of △GG'C = (1/3) Area(△GBC) = S/9.
+  const sub = Math.floor(random() * 5) + 3; // 3 ~ 7 cm²
+  const total = sub * 9;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, total, (v, r) => v + [-18, -12, -9, 9, 12, 18][Math.floor(r() * 6)], (v) => `${v} cm²`, (v) => `${v} cm²`);
+  return {
+    prompt: `점 G는 삼각형 ABC의 무게중심이고, 점 G\'은 삼각형 GBC의 무게중심이다. 삼각형 GG\'C의 넓이가 ${sub} cm² 일 때, 삼각형 ABC의 전체 넓이는?`,
+    promptEn: `G is the centroid of △ABC, and G\' is the centroid of △GBC. If Area(△GG\'C) = ${sub} cm², find Area(△ABC).`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `1) 점 G\'이 △GBC의 무게중심이므로 △GG\'C = (1/3) × △GBC 입니다. 따라서 △GBC = 3 × ${sub} = ${sub * 3} cm² 입니다.\n2) 점 G가 △ABC의 무게중심이므로 △GBC = (1/3) × △ABC 입니다. 따라서 전체 넓이는 △ABC = 3 × ${sub * 3} = 9 × ${sub} = ${total} cm² 입니다.`,
+    explanationEn: `Area(△GBC) = 3 × ${sub} = ${sub * 3} cm². Area(△ABC) = 3 × Area(△GBC) = ${total} cm².`
+  };
+}
+
+// ----------------------------------------------------
+// CHAPTER 08: 피타고라스 정리 (Pythagorean Theorem)
+// ----------------------------------------------------
+
+// 25. [피타고라스 01] 피타고라스 정리로 직각삼각형 변의 길이 구하기
+export function rpmG8PythagoreanTheoremBasic(random) {
+  const triples = [
+    [3, 4, 5],
+    [6, 8, 10],
+    [5, 12, 13],
+    [8, 15, 17],
+    [9, 12, 15],
+    [7, 24, 25]
+  ];
+  const [a, b, c] = triples[Math.floor(random() * triples.length)];
+  const askC = random() < 0.5;
+  if (askC) {
+    const { choicesKo, choicesEn, answer } = localMakeChoices(random, c, (v, r) => v + [-3, -2, -1, 1, 2, 3][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+    return {
+      prompt: `∠C = 90° 인 직각삼각형 ABC에서 두 변의 길이가 a = ${a} cm, b = ${b} cm 일 때, 빗변 c의 길이는?`,
+      promptEn: `In right triangle ABC with ∠C = 90°, legs are a = ${a} cm and b = ${b} cm. Find hypotenuse c.`,
+      kind: 'choice',
+      choicesKo,
+      choicesEn,
+      answer,
+      explanation: `피타고라스 정리에 의해 c² = a² + b² = ${a}² + ${b}² = ${a * a} + ${b * b} = ${c * c} 입니다. 따라서 c = ${c} cm 입니다.`,
+      explanationEn: `c² = a² + b² = ${a * a} + ${b * b} = ${c * c} => c = ${c} cm.`
+    };
+  } else {
+    const { choicesKo, choicesEn, answer } = localMakeChoices(random, a, (v, r) => v + [-3, -2, -1, 1, 2, 3][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+    return {
+      prompt: `∠C = 90° 인 직각삼각형 ABC에서 빗변 c = ${c} cm 이고 한 변 b = ${b} cm 일 때, 다른 한 변 a의 길이는?`,
+      promptEn: `In right triangle ABC with hypotenuse c = ${c} cm and leg b = ${b} cm, find leg a.`,
+      kind: 'choice',
+      choicesKo,
+      choicesEn,
+      answer,
+      explanation: `피타고라스 정리에 의해 a² = c² - b² = ${c}² - ${b}² = ${c * c} - ${b * b} = ${a * a} 입니다. 따라서 a = ${a} cm 입니다.`,
+      explanationEn: `a² = c² - b² = ${c * c} - ${b * b} = ${a * a} => a = ${a} cm.`
+    };
+  }
+}
+
+// 26. [피타고라스 02] 유클리드 증명과 세 정사각형의 넓이 관계
+export function rpmG8PythagoreanProofEuclid(random) {
+  // S1 + S2 = S3
+  const s1 = (Math.floor(random() * 5) + 3) ** 2; // 9, 16, 25, 36, 49
+  const s2 = (Math.floor(random() * 5) + 4) ** 2; // 16, 25, 36, 49, 64
+  const s3 = s1 + s2;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, s3, (v, r) => v + [-12, -8, -6, 6, 8, 12][Math.floor(r() * 6)], (v) => `${v} cm²`, (v) => `${v} cm²`);
+  return {
+    prompt: `직각삼각형의 세 변을 각각 한 변으로 하는 세 정사각형의 넓이를 P, Q, R이라 하자. 직각을 낀 두 변에 붙은 두 정사각형의 넓이가 각각 ${s1} cm², ${s2} cm² 일 때, 빗변에 붙은 정사각형의 넓이 R은?`,
+    promptEn: `Three squares are constructed on the sides of a right triangle with areas P, Q, and R. If the two squares on the legs have areas ${s1} cm² and ${s2} cm², find the area R of the square on the hypotenuse.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `피타고라스 정리에 의해 빗변에 붙은 정사각형의 넓이는 나머지 두 정사각형의 넓이의 합과 같습니다: R = P + Q = ${s1} + ${s2} = ${s3} cm² 입니다.`,
+    explanationEn: `By Euclidean proof, R = P + Q = ${s1} + ${s2} = ${s3} cm².`
+  };
+}
+
+// 27. [피타고라스 03] 직각삼각형이 되는 조건 판별
+export function rpmG8PythagoreanRightCondition(random) {
+  const validTriples = [
+    [3, 4, 5],
+    [5, 12, 13],
+    [6, 8, 10],
+    [8, 15, 17],
+    [7, 24, 25]
+  ];
+  const invalidTriples = [
+    [3, 5, 7],
+    [4, 5, 6],
+    [5, 7, 9],
+    [6, 7, 8]
+  ];
+  const target = validTriples[Math.floor(random() * validTriples.length)];
+  const distractors = shuffle(random, invalidTriples).slice(0, 4);
+  const options = shuffle(random, [
+    { ko: target.join(', '), isRight: true },
+    ...distractors.map(d => ({ ko: d.join(', '), isRight: false }))
+  ]);
+  const correctIdx = options.findIndex(o => o.isRight) + 1;
+  return {
+    prompt: `다음 보기 중 세 변의 길이가 주어졌을 때 직각삼각형인 것은?`,
+    promptEn: `Which of the following sets of side lengths forms a right triangle?`,
+    kind: 'choice',
+    choicesKo: options.map(o => o.ko),
+    choicesEn: options.map(o => o.ko),
+    answer: String(correctIdx),
+    explanation: `${target[0]}² + ${target[1]}² = ${target[0]**2 + target[1]**2} = ${target[2]}² = ${target[2]**2} 이 성립하므로 피타고라스 정리에 의해 직각삼각형입니다.`,
+    explanationEn: `${target[0]}² + ${target[1]}² = ${target[2]}² holds, satisfying the converse of the Pythagorean Theorem.`
+  };
+}
+
+// 28. [피타고라스 04] 예각·직각·둔각삼각형의 판별
+export function rpmG8PythagoreanAcuteObtuse(random) {
+  const cases = [
+    { a: 4, b: 5, c: 6, typeKo: '예각삼각형', typeEn: 'Acute triangle', reason: '6² = 36 < 4² + 5² = 41' },
+    { a: 5, b: 6, c: 7, typeKo: '예각삼각형', typeEn: 'Acute triangle', reason: '7² = 49 < 5² + 6² = 61' },
+    { a: 3, b: 5, c: 7, typeKo: '둔각삼각형', typeEn: 'Obtuse triangle', reason: '7² = 49 > 3² + 5² = 34' },
+    { a: 4, b: 7, c: 9, typeKo: '둔각삼각형', typeEn: 'Obtuse triangle', reason: '9² = 81 > 4² + 7² = 65' },
+    { a: 5, b: 12, c: 13, typeKo: '직각삼각형', typeEn: 'Right triangle', reason: '13² = 169 = 5² + 12² = 169' }
+  ];
+  const item = cases[Math.floor(random() * cases.length)];
+  const allTypes = ['예각삼각형', '직각삼각형', '둔각삼각형', '정삼각형', '만들어지지 않는다'];
+  const allTypesEn = ['Acute triangle', 'Right triangle', 'Obtuse triangle', 'Equilateral triangle', 'Cannot form a triangle'];
+  const correctIdx = allTypes.indexOf(item.typeKo) + 1;
+  return {
+    prompt: `세 변의 길이가 각각 ${item.a} cm, ${item.b} cm, ${item.c} cm 인 삼각형은 어떤 삼각형인가?`,
+    promptEn: `A triangle has side lengths ${item.a} cm, ${item.b} cm, and ${item.c} cm. What type of triangle is it?`,
+    kind: 'choice',
+    choicesKo: allTypes,
+    choicesEn: allTypesEn,
+    answer: String(correctIdx),
+    explanation: `가장 긴 변 ${item.c}에 대하여 ${item.reason} 이므로 [${item.typeKo}]입니다.`,
+    explanationEn: `For longest side ${item.c}, ${item.reason}, so it is an ${item.typeEn}.`
+  };
+}
+
+// 29. [피타고라스 05] 직각삼각형 내부 선분의 성질 (DE² + BC² = BE² + CD²)
+export function rpmG8PythagoreanRightTriProperties(random) {
+  // In right triangle ABC with ∠A = 90°, D on AB, E on AC.
+  // DE^2 + BC^2 = BE^2 + CD^2.
+  // Let DE = 3, BC = 7 => DE^2 + BC^2 = 9 + 49 = 58.
+  // Let BE = 5 => BE^2 = 25 => CD^2 = 58 - 25 = 33 => CD = sqrt(33).
+  // Or ask for DE^2 + BC^2 given BE and CD:
+  const be = Math.floor(random() * 4) + 4; // 4 ~ 7
+  const cd = Math.floor(random() * 4) + 5; // 5 ~ 8
+  const sumSq = be * be + cd * cd;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, sumSq, (v, r) => v + [-12, -8, -6, 6, 8, 12][Math.floor(r() * 6)]);
+  return {
+    prompt: `∠A = 90° 인 직각삼각형 ABC의 두 변 AB, AC 위의 점을 각각 D, E라 하자. BE = ${be} cm, CD = ${cd} cm 일 때, DE² + BC² 의 값은?`,
+    promptEn: `In right triangle ABC with ∠A = 90°, points D and E lie on AB and AC. If BE = ${be} cm and CD = ${cd} cm, find the value of DE² + BC².`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `직각삼각형에서 DE² + BC² = BE² + CD² 이 성립하므로 DE² + BC² = ${be}² + ${cd}² = ${be * be} + ${cd * cd} = ${sumSq} 입니다.`,
+    explanationEn: `DE² + BC² = BE² + CD² = ${be}² + ${cd}² = ${sumSq}.`
+  };
+}
+
+// 30. [피타고라스 06] 두 대각선이 직교하는 사각형의 성질 (AB² + CD² = AD² + BC²)
+export function rpmG8PythagoreanOrthogonalQuad(random) {
+  const ab = Math.floor(random() * 3) + 3; // 3 ~ 5
+  const cd = Math.floor(random() * 3) + 6; // 6 ~ 8
+  const ad = Math.floor(random() * 3) + 4; // 4 ~ 6
+  const sumSq = ab * ab + cd * cd;
+  const bcSq = sumSq - ad * ad;
+  // Ensure bcSq > 0
+  const validBCSq = bcSq > 0 ? bcSq : 25;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, validBCSq, (v, r) => v + [-8, -6, -4, 4, 6, 8][Math.floor(r() * 6)]);
+  return {
+    prompt: `두 대각선이 서로 수직으로 만나는 사각형 ABCD에서 AB = ${ab} cm, CD = ${cd} cm, AD = ${ad} cm 일 때, 변 BC의 길이의 제곱 BC² 의 값은?`,
+    promptEn: `In quadrilateral ABCD with perpendicular diagonals, AB = ${ab} cm, CD = ${cd} cm, and AD = ${ad} cm. Find BC².`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `대각선이 직교하는 사각형에서는 마주 보는 대변의 길이의 제곱의 합이 서로 같습니다: AB² + CD² = AD² + BC². 따라서 ${ab}² + ${cd}² = ${ad}² + BC² => ${ab * ab} + ${cd * cd} = ${ad * ad} + BC² => BC² = ${validBCSq} 입니다.`,
+    explanationEn: `Opposite side squared sums are equal: AB² + CD² = AD² + BC² => BC² = ${validBCSq}.`
+  };
+}
+
+// 31. [피타고라스 07] 히포크라테스의 초승달 넓이
+export function rpmG8PythagoreanSemicircleHippocrates(random) {
+  // Area of the two crescents = Area of the right triangle!
+  const a = (Math.floor(random() * 4) + 3) * 2; // 6, 8, 10, 12
+  const b = (Math.floor(random() * 4) + 4) * 2; // 8, 10, 12, 14
+  const area = (a * b) / 2;
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, area, (v, r) => v + [-12, -8, -6, 6, 8, 12][Math.floor(r() * 6)], (v) => `${v} cm²`, (v) => `${v} cm²`);
+  return {
+    prompt: `∠C = 90° 이고 두 변의 길이가 a = ${a} cm, b = ${b} cm 인 직각삼각형 ABC의 세 변을 지름으로 하는 반원을 그렸을 때 생기는 두 초승달 모양의 색칠한 부분의 넓이의 합은?`,
+    promptEn: `Semicircles are drawn on the three sides of a right triangle with legs ${a} cm and ${b} cm. Find the total area of the two crescent shapes (Hippocrates crescents).`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `히포크라테스의 원리에 의해 두 초승달 모양의 넓이의 합은 직각삼각형 ABC의 넓이와 같습니다: 넓이 = (1/2) × ${a} × ${b} = ${area} cm² 입니다.`,
+    explanationEn: `By Hippocrates theorem, the area of the two crescents equals the area of the right triangle: (1/2) × ${a} × ${b} = ${area} cm².`
+  };
+}
+
+// 32. [피타고라스 08] 피타고라스 정리 전 유형 실전 종합
+export function rpmG8PythagoreanAllTypesMixed(random) {
+  const pool = [rpmG8PythagoreanTheoremBasic, rpmG8PythagoreanProofEuclid, rpmG8PythagoreanRightCondition, rpmG8PythagoreanAcuteObtuse, rpmG8PythagoreanRightTriProperties, rpmG8PythagoreanSemicircleHippocrates];
+  const fn = pool[Math.floor(random() * pool.length)];
+  const res = fn(random);
+  return {
+    ...res,
+    prompt: `[피타고라스 정리 실전 종합] ${res.prompt}`,
+    promptEn: `[Pythagorean Theorem Mixed Practice] ${res.promptEn}`
+  };
+}
+
+// 33. [피타고라스 09] 피타고라스 정리 실력 UP (p.154)
+export function rpmG8PythagoreanAdvancedSkillUp(random) {
+  // Right triangle folding along AD such that AC lands on BC:
+  // Leg AC = 6, AB = 10 => BC = 8.
+  // Triangle ACD is folded along AD to AE D on hypotenuse AB.
+  // Then AE = AC = 6, EB = 10 - 6 = 4.
+  // In right triangle DEB: DE = CD = x. DB = 8 - x.
+  // x^2 + 4^2 = (8 - x)^2 => x^2 + 16 = 64 - 16x + x^2 => 16x = 48 => x = 3!
+  // Area of △ABD = (1/2) * AB * DE = (1/2) * 10 * 3 = 15 cm² !
+  const triples = [
+    [6, 8, 10, 3, 15],
+    [9, 12, 15, 4.5, 33.75] // let's stick to integer triples
+  ];
+  // Triple 6, 8, 10 with folding: DE = 3, area = 15.
+  // What about 12, 16, 20? DE = 6, area = 60!
+  const scales = [[6, 8, 10, 3, 15], [12, 16, 20, 6, 60]];
+  const [ac, bc, ab, de, areaABD] = scales[Math.floor(random() * scales.length)];
+  const { choicesKo, choicesEn, answer } = localMakeChoices(random, areaABD, (v, r) => v + [-10, -6, -4, 4, 6, 10][Math.floor(r() * 6)], (v) => `${v} cm²`, (v) => `${v} cm²`);
+  return {
+    prompt: `∠C = 90° 인 직각삼각형 ABC에서 AC = ${ac} cm, BC = ${bc} cm, AB = ${ab} cm 이다. 꼭짓점 C가 빗변 AB 위의 점 E에 겹치도록 선분 AD를 접는 선으로 하여 접었을 때, 삼각형 ABD의 넓이는?`,
+    promptEn: `In right triangle ABC with ∠C = 90°, AC = ${ac} cm, BC = ${bc} cm, and AB = ${ab} cm. The paper is folded along AD so that vertex C lands on point E on AB. Find Area(△ABD).`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `접은 성질에 의해 AE = AC = ${ac} cm 이므로 EB = AB - AE = ${ab} - ${ac} = ${ab - ac} cm 입니다. 또한 DE ⊥ AB 이고 DE = CD = x 라 하면 직각삼각형 DEB에서 x² + ${ab - ac}² = (${bc} - x)² 이 성립하여 x = ${de} cm 입니다. 따라서 △ABD = (1/2) × AB × DE = (1/2) × ${ab} × ${de} = ${areaABD} cm² 입니다.`,
+    explanationEn: `By folding, AE = AC = ${ac} cm, EB = ${ab - ac} cm. In right △DEB, DE = ${de} cm. Area(△ABD) = (1/2) × ${ab} × ${de} = ${areaABD} cm².`
+  };
+}
+
+
 export const RPM_ADVANCED_ENGINES = {
   // 01 소인수분해 RPM 세부 유형 (RPM 1-1 Pages 10~15)
   'rpm-prime-prop-closest': rpmPrimePropClosest,
@@ -15058,6 +15887,55 @@ export const RPM_ADVANCED_ENGINES = {
   'rpm-g8-trapezoid-diagonal-areas': rpmG8TrapezoidDiagonalAreas,
   'rpm-g8-special-quads-all-types-mixed': rpmG8SpecialQuadsAllTypesMixed,
   'rpm-g8-special-quads-advanced-skill-up': rpmG8SpecialQuadsAdvancedSkillUp,
+  // -------------------------------------------------------------
+  // [중2-2] 05 도형의 닮음 세부 응용 유형 (RPM 2-2 p.70~79)
+  // -------------------------------------------------------------
+  'rpm-g8-similarity-concept-ratio': rpmG8SimilarityConceptRatio,
+  'rpm-g8-similarity-solid-figures': rpmG8SimilaritySolidFigures,
+  'rpm-g8-triangle-similarity-cond': rpmG8TriangleSimilarityCond,
+  'rpm-g8-aa-similarity-find-length': rpmG8AaSimilarityFindLength,
+  'rpm-g8-right-triangle-altitude-prop': rpmG8RightTriangleAltitudeProp,
+  'rpm-g8-similarity-area-volume-ratio': rpmG8SimilarityAreaVolumeRatio,
+  'rpm-g8-similarity-shadow-tree': rpmG8SimilarityShadowTree,
+  'rpm-g8-similarity-all-types-mixed': rpmG8SimilarityAllTypesMixed,
+  'rpm-g8-similarity-advanced-skill-up': rpmG8SimilarityAdvancedSkillUp,
+
+  // -------------------------------------------------------------
+  // [중2-2] 06 평행선과 선분의 길이의 비 세부 응용 유형 (RPM 2-2 p.82~89)
+  // -------------------------------------------------------------
+  'rpm-g8-parallel-segment-ratio': rpmG8ParallelSegmentRatio,
+  'rpm-g8-parallel-segment-ratio-converse': rpmG8ParallelSegmentRatioConverse,
+  'rpm-g8-triangle-interior-bisector': rpmG8TriangleInteriorBisector,
+  'rpm-g8-triangle-exterior-bisector': rpmG8TriangleExteriorBisector,
+  'rpm-g8-parallel-lines-transversal': rpmG8ParallelLinesTransversal,
+  'rpm-g8-trapezoid-parallel-middle-segment': rpmG8TrapezoidParallelMiddleSegment,
+  'rpm-g8-parallel-segments-all-mixed': rpmG8ParallelSegmentsAllMixed,
+  'rpm-g8-parallel-segments-skill-up': rpmG8ParallelSegmentsSkillUp,
+
+  // -------------------------------------------------------------
+  // [중2-2] 07 삼각형의 무게중심 세부 응용 유형 (RPM 2-2 p.92~99)
+  // -------------------------------------------------------------
+  'rpm-g8-midpoint-connector-theorem': rpmG8MidpointConnectorTheorem,
+  'rpm-g8-trapezoid-midpoint-connector': rpmG8TrapezoidMidpointConnector,
+  'rpm-g8-centroid-median-ratio': rpmG8CentroidMedianRatio,
+  'rpm-g8-centroid-area-six-divisions': rpmG8CentroidAreaSixDivisions,
+  'rpm-g8-parallelogram-centroid-application': rpmG8ParallelogramCentroidApplication,
+  'rpm-g8-centroid-all-types-mixed': rpmG8CentroidAllTypesMixed,
+  'rpm-g8-centroid-advanced-skill-up': rpmG8CentroidAdvancedSkillUp,
+
+  // -------------------------------------------------------------
+  // [중2-2] 08 피타고라스 정리 세부 응용 유형 (RPM 2-2 p.104~111)
+  // -------------------------------------------------------------
+  'rpm-g8-pythagorean-theorem-basic': rpmG8PythagoreanTheoremBasic,
+  'rpm-g8-pythagorean-proof-euclid': rpmG8PythagoreanProofEuclid,
+  'rpm-g8-pythagorean-right-condition': rpmG8PythagoreanRightCondition,
+  'rpm-g8-pythagorean-acute-obtuse': rpmG8PythagoreanAcuteObtuse,
+  'rpm-g8-pythagorean-right-tri-properties': rpmG8PythagoreanRightTriProperties,
+  'rpm-g8-pythagorean-orthogonal-quad': rpmG8PythagoreanOrthogonalQuad,
+  'rpm-g8-pythagorean-semicircle-hippocrates': rpmG8PythagoreanSemicircleHippocrates,
+  'rpm-g8-pythagorean-all-types-mixed': rpmG8PythagoreanAllTypesMixed,
+  'rpm-g8-pythagorean-advanced-skill-up': rpmG8PythagoreanAdvancedSkillUp,
+
 
 
 

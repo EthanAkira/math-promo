@@ -201,6 +201,40 @@ import {
   rpmG8TrapezoidDiagonalAreas,
   rpmG8SpecialQuadsAllTypesMixed,
   rpmG8SpecialQuadsAdvancedSkillUp,
+  // Middle School 2-2 Chapter 05 to 08
+  rpmG8SimilarityConceptRatio,
+  rpmG8SimilaritySolidFigures,
+  rpmG8TriangleSimilarityCond,
+  rpmG8AaSimilarityFindLength,
+  rpmG8RightTriangleAltitudeProp,
+  rpmG8SimilarityAreaVolumeRatio,
+  rpmG8SimilarityShadowTree,
+  rpmG8SimilarityAllTypesMixed,
+  rpmG8SimilarityAdvancedSkillUp,
+  rpmG8ParallelSegmentRatio,
+  rpmG8ParallelSegmentRatioConverse,
+  rpmG8TriangleInteriorBisector,
+  rpmG8TriangleExteriorBisector,
+  rpmG8ParallelLinesTransversal,
+  rpmG8TrapezoidParallelMiddleSegment,
+  rpmG8ParallelSegmentsAllMixed,
+  rpmG8ParallelSegmentsSkillUp,
+  rpmG8MidpointConnectorTheorem,
+  rpmG8TrapezoidMidpointConnector,
+  rpmG8CentroidMedianRatio,
+  rpmG8CentroidAreaSixDivisions,
+  rpmG8ParallelogramCentroidApplication,
+  rpmG8CentroidAllTypesMixed,
+  rpmG8CentroidAdvancedSkillUp,
+  rpmG8PythagoreanTheoremBasic,
+  rpmG8PythagoreanProofEuclid,
+  rpmG8PythagoreanRightCondition,
+  rpmG8PythagoreanAcuteObtuse,
+  rpmG8PythagoreanRightTriProperties,
+  rpmG8PythagoreanOrthogonalQuad,
+  rpmG8PythagoreanSemicircleHippocrates,
+  rpmG8PythagoreanAllTypesMixed,
+  rpmG8PythagoreanAdvancedSkillUp,
 } from '../rpmAppliedEngine';
 
 
@@ -638,6 +672,52 @@ export const RPM_SPECIAL_QUADS_APPLIED_UNITS = [
   { id: 'rpm-g8-special-quads-advanced-skill-up', label: '[단원 최고수준] 여러 가지 사각형 실력 UP', description: '정사각형 대각선 교점을 중심으로 회전하는 합동 정사각형의 불변 겹침 넓이 (RPM p.146~147)', en: ['Special Quadrilaterals Advanced Challenge', 'Top challenge: invariant 1/4 area overlap of rotating congruent square centered at diagonal intersection'], make: (random) => rpmG8SpecialQuadsAdvancedSkillUp(random) },
 ];
 
+export const RPM_SIMILARITY_APPLIED_UNITS = [
+  { id: 'rpm-g8-similarity-concept-ratio', label: '[도형의 닮음 01] 닮은 도형의 성질과 닮음비', description: '닮은 평면도형에서 대응변의 길이의 비로부터 미지의 변의 길이 계산', en: ['Similarity Type 01: Similarity Ratio & Corresponding Sides', 'Calculate unknown side lengths from similarity ratios of corresponding sides'], make: (random) => rpmG8SimilarityConceptRatio(random) },
+  { id: 'rpm-g8-similarity-solid-figures', label: '[도형의 닮음 02] 입체도형에서의 닮음비와 높이', description: '닮은 원뿔, 각기둥 등 입체도형의 모서리(또는 밑면 반지름) 비로부터 높이 구하기', en: ['Similarity Type 02: Solid Figures Similarity Ratio', 'Compute solid figure heights from base radius or edge similarity ratios'], make: (random) => rpmG8SimilaritySolidFigures(random) },
+  { id: 'rpm-g8-triangle-similarity-cond', label: '[도형의 닮음 03] 삼각형의 닮음 조건 판별 (SSS, SAS, AA)', description: '세 변의 비, 두 변의 비와 끼인각, 두 각의 크기 일치 조건 정확히 판별하기', en: ['Similarity Type 03: Triangle Similarity Conditions', 'Classify triangle similarity conditions (SSS, SAS, AA similarity)'], make: (random) => rpmG8TriangleSimilarityCond(random) },
+  { id: 'rpm-g8-aa-similarity-find-length', label: '[도형의 닮음 04] AA 닮음을 이용한 선분의 길이', description: '공통각과 한 내각이 같음을 이용하여 닮은 삼각형을 찾고 선분의 길이 구하기', en: ['Similarity Type 04: AA Similarity & Segment Lengths', 'Solve for unknown segment lengths using AA triangle similarity with shared angle'], make: (random) => rpmG8AaSimilarityFindLength(random) },
+  { id: 'rpm-g8-right-triangle-altitude-prop', label: '[도형의 닮음 05] 직각삼각형의 수선 공식 (소 공식)', description: '빗변에 내린 수선에서 닮음에 의해 성립하는 기하평균 공식 AH² = BH × CH 적용', en: ['Similarity Type 05: Right Triangle Altitude Geometric Mean', 'Apply geometric mean theorem AH² = BH × CH in right triangles with altitude to hypotenuse'], make: (random) => rpmG8RightTriangleAltitudeProp(random) },
+  { id: 'rpm-g8-similarity-area-volume-ratio', label: '[도형의 닮음 06] 닮음비와 넓이비, 부피비의 관계', description: '닮음비 m:n 에 대하여 넓이비 m²:n², 부피비 m³:n³ 적용하여 넓이 및 부피 구하기', en: ['Similarity Type 06: Area & Volume Ratios', 'Apply squared ratio m²:n² for areas and cubic ratio m³:n³ for volumes of similar figures'], make: (random) => rpmG8SimilarityAreaVolumeRatio(random) },
+  { id: 'rpm-g8-similarity-shadow-tree', label: '[도형의 닮음 07] 닮음의 실생활 활용 (막대와 나무 그림자)', description: '햇빛의 입사각이 같음을 이용한 직각삼각형의 닮음으로 나무의 실제 높이 계산', en: ['Similarity Type 07: Real-Life Shadow Height Measurement', 'Calculate tree heights using shadow length proportions and similar right triangles'], make: (random) => rpmG8SimilarityShadowTree(random) },
+  { id: 'rpm-g8-similarity-all-types-mixed', label: '[단원 실전 다지기] 도형의 닮음 전 유형 실전 종합', description: '닮음비, 닮음 조건, 직각삼각형 수선, 넓이/부피비, 축척 등 전 유형 실전 종합', en: ['Similarity Comprehensive Practice', 'Mixed applied practice across all similarity, condition, altitude, and ratio types'], make: (random) => rpmG8SimilarityAllTypesMixed(random) },
+  { id: 'rpm-g8-similarity-advanced-skill-up', label: '[단원 최고수준] 도형의 닮음 실력 UP', description: '큰 구를 녹여 작은 구들로 만들었을 때 총 겉넓이의 변화 배수 추론 (RPM p.148~149)', en: ['Similarity Advanced Challenge', 'High-level challenge: surface area multiplication ratio when sphere is melted into k³ smaller spheres'], make: (random) => rpmG8SimilarityAdvancedSkillUp(random) },
+];
+
+export const RPM_PARALLEL_SEGMENTS_APPLIED_UNITS = [
+  { id: 'rpm-g8-parallel-segment-ratio', label: '[평행선과 선분비 01] 삼각형에서 평행선과 선분의 길이의 비', description: 'DE ∥ BC 일 때 AD : AB = AE : AC = DE : BC 를 이용한 선분의 길이 계산', en: ['Parallel Segments Type 01: Triangle Parallel Line Ratio', 'Calculate segment lengths using parallel line proportionality in triangles'], make: (random) => rpmG8ParallelSegmentRatio(random) },
+  { id: 'rpm-g8-parallel-segment-ratio-converse', label: '[평행선과 선분비 02] 평행선이 될 조건 판별', description: '선분의 길이의 비 AD : DB = AE : EC 가 성립함을 확인하여 평행선 판별하기', en: ['Parallel Segments Type 02: Parallel Line Condition Converse', 'Determine whether lines are parallel based on proportional segment ratios'], make: (random) => rpmG8ParallelSegmentRatioConverse(random) },
+  { id: 'rpm-g8-triangle-interior-bisector', label: '[평행선과 선분비 03] 삼각형의 내각의 이등분선의 정리', description: '내각의 이등분선에 의해 밑변이 양 변의 길이의 비로 내분됨을 이용한 선분 계산', en: ['Parallel Segments Type 03: Interior Angle Bisector Theorem', 'Apply interior angle bisector theorem AB : AC = BD : CD to compute base segments'], make: (random) => rpmG8TriangleInteriorBisector(random) },
+  { id: 'rpm-g8-triangle-exterior-bisector', label: '[평행선과 선분비 04] 삼각형의 외각의 이등분선의 정리', description: '외각의 이등분선에 의한 선분의 비 AB : AC = BD : CD 를 이용한 연장선 길이 계산', en: ['Parallel Segments Type 04: Exterior Angle Bisector Theorem', 'Apply exterior angle bisector theorem AB : AC = BD : CD to find extended segments'], make: (random) => rpmG8TriangleExteriorBisector(random) },
+  { id: 'rpm-g8-parallel-lines-transversal', label: '[평행선과 선분비 05] 평행선 사이의 선분의 길이의 비', description: '세 평행선 사이를 지나는 두 직선에서 잘린 선분의 비례식 계산', en: ['Parallel Segments Type 05: Three Parallel Lines Transversals', 'Compute segment lengths across three parallel lines cut by transversals'], make: (random) => rpmG8ParallelLinesTransversal(random) },
+  { id: 'rpm-g8-trapezoid-parallel-middle-segment', label: '[평행선과 선분비 06] 사다리꼴에서 평행선과 선분의 길이', description: '사다리꼴의 윗변과 아랫변에 평행한 중간 선분의 길이를 비례식 또는 대각선으로 계산', en: ['Parallel Segments Type 06: Trapezoid Parallel Middle Segment', 'Determine parallel line segment length inside trapezoid using proportional division'], make: (random) => rpmG8TrapezoidParallelMiddleSegment(random) },
+  { id: 'rpm-g8-parallel-segments-all-mixed', label: '[단원 실전 다지기] 평행선과 선분의 길이의 비 전 유형 종합', description: '삼각형 평행선, 내각/외각 이등분선, 평행선 사이의 비, 사다리꼴 전 유형 종합', en: ['Parallel Segments Comprehensive Practice', 'Mixed practice across all parallel segment ratios, angle bisectors, and trapezoids'], make: (random) => rpmG8ParallelSegmentsAllMixed(random) },
+  { id: 'rpm-g8-parallel-segments-skill-up', label: '[단원 최고수준] 평행선과 선분비 실력 UP', description: '중점과 밑변 비례 분할점에서 평행 보조선을 그어 교점 선분비 추론 (RPM p.150~151)', en: ['Parallel Segments Advanced Challenge', 'Advanced challenge: auxiliary parallel lines through midpoint and base ratio partition points'], make: (random) => rpmG8ParallelSegmentsSkillUp(random) },
+];
+
+export const RPM_CENTROID_APPLIED_UNITS = [
+  { id: 'rpm-g8-midpoint-connector-theorem', label: '[무게중심 01] 삼각형의 두 변의 중점 연결 정리', description: '두 변의 중점을 연결한 선분이 밑변과 평행하고 밑변의 절반임을 이용한 계산', en: ['Centroid Type 01: Midpoint Connector Theorem', 'Apply midpoint theorem where midline is parallel to and half the length of the base'], make: (random) => rpmG8MidpointConnectorTheorem(random) },
+  { id: 'rpm-g8-trapezoid-midpoint-connector', label: '[무게중심 02] 사다리꼴의 두 변의 중점 연결 선분', description: '사다리꼴의 두 옆변의 중점을 연결한 선분의 길이 (AD + BC) / 2 계산', en: ['Centroid Type 02: Trapezoid Midline Theorem', 'Calculate trapezoid midline length using average of parallel bases: (AD + BC) / 2'], make: (random) => rpmG8TrapezoidMidpointConnector(random) },
+  { id: 'rpm-g8-centroid-median-ratio', label: '[무게중심 03] 삼각형의 무게중심과 중선의 2:1 분할', description: '무게중심이 중선을 꼭짓점으로부터 2 : 1 로 내분하는 성질을 이용한 선분 길이 계산', en: ['Centroid Type 03: Median 2 to 1 Division Ratio', 'Calculate median segment lengths using 2:1 ratio from vertex to midpoint'], make: (random) => rpmG8CentroidMedianRatio(random) },
+  { id: 'rpm-g8-centroid-area-six-divisions', label: '[무게중심 04] 무게중심과 삼각형의 넓이 분할 (6등분)', description: '세 중선에 의해 삼각형의 넓이가 6개의 동일한 넓이로 분할됨을 이용한 넓이 계산', en: ['Centroid Type 04: Six Equal Area Triangles Division', 'Solve area problems using the 6 equal-area triangles formed by the three medians'], make: (random) => rpmG8CentroidAreaSixDivisions(random) },
+  { id: 'rpm-g8-parallelogram-centroid-application', label: '[무게중심 05] 평행사변형에서 대각선과 무게중심의 응용', description: '평행사변형의 대각선 3등분선 교점이 두 삼각형의 무게중심임을 활용한 넓이 계산', en: ['Centroid Type 05: Parallelogram Centroid Diagonal Trisection', 'Apply centroid properties on parallelogram diagonals to find triangle areas'], make: (random) => rpmG8ParallelogramCentroidApplication(random) },
+  { id: 'rpm-g8-centroid-all-types-mixed', label: '[단원 실전 다지기] 삼각형의 무게중심 전 유형 종합', description: '중점 연결 정리, 사다리꼴 중점선, 2:1 분할, 6등분 넓이, 평행사변형 응용 전 유형 종합', en: ['Centroid Comprehensive Practice', 'Mixed practice across midpoint theorems, 2:1 median ratio, and area divisions'], make: (random) => rpmG8CentroidAllTypesMixed(random) },
+  { id: 'rpm-g8-centroid-advanced-skill-up', label: '[단원 최고수준] 삼각형의 무게중심 실력 UP', description: "삼각형의 무게중심 G와 부분삼각형의 무게중심 G'의 이중 무게중심 넓이 (RPM p.152~153)", en: ["Centroid Advanced Challenge", "Top challenge: nested dual centroids (G of ABC and G' of GBC) area calculation"], make: (random) => rpmG8CentroidAdvancedSkillUp(random) },
+];
+
+export const RPM_PYTHAGOREAN_APPLIED_UNITS = [
+  { id: 'rpm-g8-pythagorean-theorem-basic', label: '[피타고라스 01] 직각삼각형의 변의 길이 구하기', description: '피타고라스 정리 a² + b² = c² 를 적용하여 빗변 또는 다른 한 변의 길이 계산', en: ['Pythagorean Type 01: Side Length via a² + b² = c²', 'Calculate hypotenuse or leg lengths using the Pythagorean theorem'], make: (random) => rpmG8PythagoreanTheoremBasic(random) },
+  { id: 'rpm-g8-pythagorean-proof-euclid', label: '[피타고라스 02] 유클리드 증명과 정사각형의 넓이', description: '직각을 낀 두 변의 정사각형 넓이의 합이 빗변의 정사각형 넓이와 같음을 활용', en: ['Pythagorean Type 02: Euclidean Proof & Square Areas', 'Apply equivalence between sum of leg squares and hypotenuse square in Euclid proof'], make: (random) => rpmG8PythagoreanProofEuclid(random) },
+  { id: 'rpm-g8-pythagorean-right-condition', label: '[피타고라스 03] 직각삼각형이 되는 조건 판별', description: '주어진 세 변의 길이에서 피타고라스 정리가 성립하는 직각삼각형 판별하기', en: ['Pythagorean Type 03: Right Triangle Identification', 'Identify right triangles by checking if a² + b² = c² holds for given sides'], make: (random) => rpmG8PythagoreanRightCondition(random) },
+  { id: 'rpm-g8-pythagorean-acute-obtuse', label: '[피타고라스 04] 예각·직각·둔각삼각형의 판별', description: '가장 긴 변 c에 대하여 c² 과 a² + b² 의 대소 비교로 삼각형의 종류 판별', en: ['Pythagorean Type 04: Acute, Right & Obtuse Triangles', 'Classify triangles as acute, right, or obtuse using c² vs a² + b² inequality'], make: (random) => rpmG8PythagoreanAcuteObtuse(random) },
+  { id: 'rpm-g8-pythagorean-right-tri-properties', label: '[피타고라스 05] 직각삼각형 내부 선분의 성질', description: '직각삼각형 내부의 선분에 대하여 DE² + BC² = BE² + CD² 공식 적용하기', en: ['Pythagorean Type 05: Internal Cross-Segment Sum Property', 'Apply DE² + BC² = BE² + CD² in right triangles with points on legs'], make: (random) => rpmG8PythagoreanRightTriProperties(random) },
+  { id: 'rpm-g8-pythagorean-orthogonal-quad', label: '[피타고라스 06] 대각선이 직교하는 사각형의 성질', description: '두 대각선이 직교할 때 마주 보는 대변의 제곱합 AB² + CD² = AD² + BC² 계산', en: ['Pythagorean Type 06: Orthogonal Diagonals Quadrilateral', 'Apply opposite side squared equality AB² + CD² = AD² + BC² for orthogonal diagonals'], make: (random) => rpmG8PythagoreanOrthogonalQuad(random) },
+  { id: 'rpm-g8-pythagorean-semicircle-hippocrates', label: '[피타고라스 07] 히포크라테스의 초승달 넓이', description: '직각삼각형의 세 변을 지름으로 하는 반원에 의해 생기는 두 초승달 넓이의 합 계산', en: ['Pythagorean Type 07: Hippocrates Crescents Area', 'Calculate the area of Hippocrates crescents equal to the right triangle area'], make: (random) => rpmG8PythagoreanSemicircleHippocrates(random) },
+  { id: 'rpm-g8-pythagorean-all-types-mixed', label: '[단원 실전 다지기] 피타고라스 정리 전 유형 종합', description: '변의 길이, 유클리드 넓이, 판별 조건, 직교 사각형, 히포크라테스 초승달 전 유형 종합', en: ['Pythagorean Comprehensive Practice', 'Mixed applied practice across all Pythagorean side, area, proof, and figure types'], make: (random) => rpmG8PythagoreanAllTypesMixed(random) },
+  { id: 'rpm-g8-pythagorean-advanced-skill-up', label: '[단원 최고수준] 피타고라스 정리 실력 UP', description: '직각삼각형을 접었을 때 빗변에 내린 수선과 피타고라스 방정식을 이용한 넓이 (RPM p.154)', en: ['Pythagorean Advanced Challenge', 'Top challenge: right triangle folding along hypotenuse and quadratic Pythagorean solving'], make: (random) => rpmG8PythagoreanAdvancedSkillUp(random) },
+];
+
+
 
 
 
@@ -660,6 +740,10 @@ const SOURCE_GROUPS = [
   ['삼각형의 외심과 내심', ['pre-algebra', 'kr-middle-2'], RPM_CIRCUM_INCENTER_APPLIED_UNITS],
   ['평행사변형', ['pre-algebra', 'kr-middle-2'], RPM_PARALLELOGRAM_APPLIED_UNITS],
   ['여러 가지 사각형', ['pre-algebra', 'kr-middle-2'], RPM_SPECIAL_QUADS_APPLIED_UNITS],
+  ['도형의 닮음', ['pre-algebra', 'kr-middle-2'], RPM_SIMILARITY_APPLIED_UNITS],
+  ['평행선과 선분의 길이의 비', ['pre-algebra', 'kr-middle-2'], RPM_PARALLEL_SEGMENTS_APPLIED_UNITS],
+  ['삼각형의 무게중심', ['pre-algebra', 'kr-middle-2'], RPM_CENTROID_APPLIED_UNITS],
+  ['피타고라스 정리', ['pre-algebra', 'kr-middle-2'], RPM_PYTHAGOREAN_APPLIED_UNITS],
   ['문자와 식', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], [...ALGEBRA_UNITS, ...RPM_ALGEBRA_APPLIED_UNITS]],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], COORDINATE_UNITS],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'algebra-1'], PROPORTION_UNITS],
@@ -907,6 +991,47 @@ const UNIT_TIERS = {
   'rpm-g8-trapezoid-diagonal-areas': 'intermediate',
   'rpm-g8-special-quads-all-types-mixed': 'advanced',
   'rpm-g8-special-quads-advanced-skill-up': 'advanced',
+
+  // RPM 2-2 Chapter 05 도형의 닮음
+  'rpm-g8-similarity-concept-ratio': 'basic',
+  'rpm-g8-similarity-solid-figures': 'basic',
+  'rpm-g8-triangle-similarity-cond': 'basic',
+  'rpm-g8-aa-similarity-find-length': 'basic',
+  'rpm-g8-right-triangle-altitude-prop': 'intermediate',
+  'rpm-g8-similarity-area-volume-ratio': 'intermediate',
+  'rpm-g8-similarity-shadow-tree': 'intermediate',
+  'rpm-g8-similarity-all-types-mixed': 'advanced',
+  'rpm-g8-similarity-advanced-skill-up': 'advanced',
+
+  // RPM 2-2 Chapter 06 평행선과 선분의 길이의 비
+  'rpm-g8-parallel-segment-ratio': 'basic',
+  'rpm-g8-parallel-segment-ratio-converse': 'basic',
+  'rpm-g8-triangle-interior-bisector': 'basic',
+  'rpm-g8-triangle-exterior-bisector': 'intermediate',
+  'rpm-g8-parallel-lines-transversal': 'intermediate',
+  'rpm-g8-trapezoid-parallel-middle-segment': 'intermediate',
+  'rpm-g8-parallel-segments-all-mixed': 'advanced',
+  'rpm-g8-parallel-segments-skill-up': 'advanced',
+
+  // RPM 2-2 Chapter 07 삼각형의 무게중심
+  'rpm-g8-midpoint-connector-theorem': 'basic',
+  'rpm-g8-trapezoid-midpoint-connector': 'basic',
+  'rpm-g8-centroid-median-ratio': 'basic',
+  'rpm-g8-centroid-area-six-divisions': 'intermediate',
+  'rpm-g8-parallelogram-centroid-application': 'intermediate',
+  'rpm-g8-centroid-all-types-mixed': 'advanced',
+  'rpm-g8-centroid-advanced-skill-up': 'advanced',
+
+  // RPM 2-2 Chapter 08 피타고라스 정리
+  'rpm-g8-pythagorean-theorem-basic': 'basic',
+  'rpm-g8-pythagorean-proof-euclid': 'basic',
+  'rpm-g8-pythagorean-right-condition': 'basic',
+  'rpm-g8-pythagorean-acute-obtuse': 'basic',
+  'rpm-g8-pythagorean-right-tri-properties': 'intermediate',
+  'rpm-g8-pythagorean-orthogonal-quad': 'intermediate',
+  'rpm-g8-pythagorean-semicircle-hippocrates': 'intermediate',
+  'rpm-g8-pythagorean-all-types-mixed': 'advanced',
+  'rpm-g8-pythagorean-advanced-skill-up': 'advanced',
 
 
 

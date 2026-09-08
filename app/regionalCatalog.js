@@ -459,6 +459,55 @@ const zhHK = {
   'rpm-g8-special-quads-all-types-mixed': '特殊四邊形全題型實戰綜合複習',
   'rpm-g8-special-quads-advanced-skill-up': '特殊四邊形最高難度實力UP進階題（RPM p.146~147）',
 
+  // -------------------------------------------------------------
+  // RPM [중2-2] 05 도형의 닮음 (圖形相似)
+  // -------------------------------------------------------------
+  'rpm-g8-similarity-concept-ratio': '相似圖形性質與相似比及對應邊求法',
+  'rpm-g8-similarity-solid-figures': '立體圖形之相似比與高度計算（圓錐、角柱）',
+  'rpm-g8-triangle-similarity-cond': '三角形相似條件判定（SSS、SAS、AA相似）',
+  'rpm-g8-aa-similarity-find-length': 'AA相似性質與公共角對應線段長度求法',
+  'rpm-g8-right-triangle-altitude-prop': '直角三角形斜邊高相似幾何平均公式（AH² = BH × CH）',
+  'rpm-g8-similarity-area-volume-ratio': '相似比與面積比（平方比）、體積比（立方比）關係',
+  'rpm-g8-similarity-shadow-tree': '相似生活實際應用：利用影子長度測量樹木高度',
+  'rpm-g8-similarity-all-types-mixed': '圖形相似全題型實戰綜合複習',
+  'rpm-g8-similarity-advanced-skill-up': '圖形相似最高難度實力UP進階題（RPM p.148~149）',
+
+  // -------------------------------------------------------------
+  // RPM [중2-2] 06 평행선과 선분의 길이의 비 (平行線與線段比)
+  // -------------------------------------------------------------
+  'rpm-g8-parallel-segment-ratio': '三角形內部平行線分線段成比例定理',
+  'rpm-g8-parallel-segment-ratio-converse': '平行線分線段比例定理之逆定理（平行條件判定）',
+  'rpm-g8-triangle-interior-bisector': '三角形內角平分線分底邊成比例定理（AB:AC = BD:CD）',
+  'rpm-g8-triangle-exterior-bisector': '三角形外角平分線外分底邊成比例定理',
+  'rpm-g8-parallel-lines-transversal': '多條平行線截兩直線截線段成比例計算',
+  'rpm-g8-trapezoid-parallel-middle-segment': '梯形平行截線線段長度計算（比例分割）',
+  'rpm-g8-parallel-segments-all-mixed': '平行線與線段比全題型實戰綜合複習',
+  'rpm-g8-parallel-segments-skill-up': '平行線與線段比最高難度實力UP進階題（RPM p.150~151）',
+
+  // -------------------------------------------------------------
+  // RPM [중2-2] 07 삼각형의 무게중심 (三角形的重心)
+  // -------------------------------------------------------------
+  'rpm-g8-midpoint-connector-theorem': '三角形兩邊中點連線定理（平行且長度為底邊一半）',
+  'rpm-g8-trapezoid-midpoint-connector': '梯形兩腰中點連線長度公式（兩底和之一半）',
+  'rpm-g8-centroid-median-ratio': '三角形重心性質：中線自頂點 2:1 分割線段計算',
+  'rpm-g8-centroid-area-six-divisions': '三角形三中線分割六個等面積三角形性質',
+  'rpm-g8-parallelogram-centroid-application': '平行四邊形對角線三等分點與雙重心面積應用',
+  'rpm-g8-centroid-all-types-mixed': '三角形重心全題型實戰綜合複習',
+  'rpm-g8-centroid-advanced-skill-up': '三角形重心最高難度實力UP進階題（雙重重心，RPM p.152~153）',
+
+  // -------------------------------------------------------------
+  // RPM [중2-2] 08 피타고라스 정리 (畢氏定理 / 勾股定理)
+  // -------------------------------------------------------------
+  'rpm-g8-pythagorean-theorem-basic': '畢氏定理 a² + b² = c² 求直角三角形邊長',
+  'rpm-g8-pythagorean-proof-euclid': '歐幾里得畢氏定理幾何證明與三正方形面積關係',
+  'rpm-g8-pythagorean-right-condition': '直角三角形判定條件（常見畢氏三元數組檢驗）',
+  'rpm-g8-pythagorean-acute-obtuse': '三角形邊長關係與銳角、直角、鈍角三角形判定',
+  'rpm-g8-pythagorean-right-tri-properties': '直角三角形內部交叉線段平方和性質（DE² + BC² = BE² + CD²）',
+  'rpm-g8-pythagorean-orthogonal-quad': '對角線互相垂直四邊形對邊平方和相等性質',
+  'rpm-g8-pythagorean-semicircle-hippocrates': '希波克拉底新月形面積定理（兩月形面積和等於直角三角形）',
+  'rpm-g8-pythagorean-all-types-mixed': '畢氏定理全題型實戰綜合複習',
+  'rpm-g8-pythagorean-advanced-skill-up': '畢氏定理最高難度實力UP進階題（摺紙與畢氏方程，RPM p.154）',
+
 
 
 
