@@ -1,6 +1,6 @@
 import { PRIME_BASIC_UNITS } from '../prime-factorization/catalog';
 import { GCD_LCM_BASIC_UNITS } from '../gcd-lcm/catalog';
-import { INTEGER_RATIONAL_UNITS } from '../integers-rationals/catalog';
+import { INTEGER_RATIONAL_UNITS, RPM_RATIONAL_DECIMALS_APPLIED_UNITS } from '../integers-rationals/catalog';
 import { ALGEBRA_UNITS, RPM_ALGEBRA_APPLIED_UNITS } from '../algebra-basics/catalog';
 import { COORDINATE_UNITS } from '../coordinate-plane/catalog';
 import { PROPORTION_UNITS } from '../proportion/catalog';
@@ -222,6 +222,7 @@ const SOURCE_GROUPS = [
   ['수와 연산', ['pre-algebra', 'kr-middle-1'], PRIME_BASIC_UNITS],
   ['수와 연산', ['pre-algebra', 'kr-middle-1'], GCD_LCM_BASIC_UNITS],
   ['수와 연산', ['pre-algebra', 'kr-middle-1'], INTEGER_RATIONAL_UNITS],
+  ['유리수와 순환소수', ['pre-algebra', 'kr-middle-2'], RPM_RATIONAL_DECIMALS_APPLIED_UNITS],
   ['문자와 식', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], [...ALGEBRA_UNITS, ...RPM_ALGEBRA_APPLIED_UNITS]],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], COORDINATE_UNITS],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'algebra-1'], PROPORTION_UNITS],
@@ -234,6 +235,28 @@ const IMPORTED_UNITS = SOURCE_GROUPS.flatMap(([category, profiles, units]) => un
 // engines to derive this from — hand-judged from each unit's own scope/grade level, keyed by id
 // so it applies across every source file without touching each one individually.
 const UNIT_TIERS = {
+  // integers-rationals RPM 2-1 Chapter 01 유리수와 순환소수
+  'rpm-rat-dec-powers-of-ten': 'basic',
+  'rpm-rat-dec-terminating-condition': 'basic',
+  'rpm-rat-dec-multiply-terminating-single': 'intermediate',
+  'rpm-rat-dec-multiply-terminating-both': 'intermediate',
+  'rpm-rat-dec-denominator-variable': 'intermediate',
+  'rpm-rat-dec-terminating-irreducible': 'intermediate',
+  'rpm-rat-dec-period-notation': 'basic',
+  'rpm-rat-dec-nth-digit': 'intermediate',
+  'rpm-rat-dec-repeating-only': 'intermediate',
+  'rpm-rat-dec-fraction-equation': 'basic',
+  'rpm-rat-dec-fraction-formula': 'basic',
+  'rpm-rat-dec-repeating-to-terminating': 'intermediate',
+  'rpm-rat-dec-faulty-observation': 'intermediate',
+  'rpm-rat-dec-repeating-inequality': 'intermediate',
+  'rpm-rat-dec-arithmetic-operations': 'intermediate',
+  'rpm-rat-dec-number-system-tf': 'basic',
+  'rpm-rat-dec-between-fractions': 'intermediate',
+  'rpm-rat-dec-mistake-equation': 'intermediate',
+  'rpm-rat-dec-all-mixed': 'advanced',
+  'rpm-rat-dec-advanced-skill-up': 'advanced',
+
   // prime-factorization/catalog.js
   'prime-composite': 'basic', 'prime-factorization': 'basic', 'power-form': 'basic', 'powers': 'basic',
   'all-divisors': 'basic', 'divisor-count': 'intermediate', 'prime-mixed': 'intermediate',

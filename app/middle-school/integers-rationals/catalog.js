@@ -607,9 +607,34 @@ export const RPM_INTEGER_RATIONAL_CALC_APPLIED_UNITS = [
   },
 ];
 
+
+export const RPM_RATIONAL_DECIMALS_APPLIED_UNITS = [
+  { id: 'rpm-rat-dec-powers-of-ten', label: '[유리수와 순환소수 01] 10의 거듭제곱을 이용한 유한소수 변형', description: '분모의 2와 5의 지수를 맞추어 10^n 꼴로 변형하여 유한소수로 나타내기', en: ['Rational Decimals Type 01: Terminating via Powers of 10', 'Convert fractions to terminating decimals using 10^n denominator forms'], make: (random) => rpmRatDecPowersOfTen(random) },
+  { id: 'rpm-rat-dec-terminating-condition', label: '[유리수와 순환소수 02] 유한소수로 나타낼 수 있는 분수 판별', description: '기약분수의 분모의 소인수가 2 또는 5뿐인지 판별하여 유한소수 찾기', en: ['Rational Decimals Type 02: Identifying Terminating Fractions', 'Check if irreducible denominator has only 2 or 5 as prime factors'], make: (random) => rpmRatDecTerminatingCondition(random) },
+  { id: 'rpm-rat-dec-multiply-terminating-single', label: '[유리수와 순환소수 03] 분수에 자연수를 곱하여 유한소수 만들기', description: '분모의 2와 5 이외의 소인수를 약분하여 유한소수가 되도록 하는 x 구하기', en: ['Rational Decimals Type 03: Multiplying x to Make Terminating', 'Find factor x to cancel non-(2,5) prime factors in the denominator'], make: (random) => rpmRatDecMultiplyToTerminatingSingle(random) },
+  { id: 'rpm-rat-dec-multiply-terminating-both', label: '[유리수와 순환소수 04] 두 분수 모두 유한소수가 되게 하는 자연수', description: '두 분모의 2, 5 이외의 소인수들의 최소공배수를 구하여 공통 x 구하기', en: ['Rational Decimals Type 04: Multiplying x for Two Fractions', 'Find common multiple of non-(2,5) factors for two fractions simultaneously'], make: (random) => rpmRatDecMultiplyToTerminatingBoth(random) },
+  { id: 'rpm-rat-dec-denominator-variable', label: '[유리수와 순환소수 05] 분모에 미지수가 있는 분수의 유한소수 조건', description: '분모의 미지수 x가 가질 수 있는 소인수 조건(2, 5 또는 분자와 약분) 판별', en: ['Rational Decimals Type 05: Denominator Variable for Terminating Decimals', 'Analyze allowable prime factors for denominator variable x'], make: (random) => rpmRatDecDenominatorVariable(random) },
+  { id: 'rpm-rat-dec-terminating-irreducible', label: '[유리수와 순환소수 06] 유한소수 조건과 기약분수 약분', description: '유한소수 조건에서 미지수를 구하고 기약분수로 나타내어 미지수 역산', en: ['Rational Decimals Type 06: Terminating Condition & Irreducible Reduction', 'Find variables from terminating conditions and simplified fraction equality'], make: (random) => rpmRatDecTerminatingAndIrreducible(random) },
+  { id: 'rpm-rat-dec-period-notation', label: '[유리수와 순환소수 07] 순환마디와 순환소수의 점 찍기 표현', description: '소수점 아래 반복되는 순환마디 파악 및 양 끝 점 표기법 판별', en: ['Rational Decimals Type 07: Repeating Periods & Dot Notation', 'Identify repeating period and correct dot placement for repeating decimals'], make: (random) => rpmRatDecPeriodAndNotation(random) },
+  { id: 'rpm-rat-dec-nth-digit', label: '[유리수와 순환소수 08] 순환소수의 소수점 아래 n번째 자리 숫자', description: '순환마디 주기를 이용하여 소수점 아래 50번째, 100번째 등의 숫자 추적', en: ['Rational Decimals Type 08: n-th Decimal Digit of Repeating Decimals', 'Compute n-th decimal digit using period length and modular arithmetic'], make: (random) => rpmRatDecNthDigitOfRepeating(random) },
+  { id: 'rpm-rat-dec-repeating-only', label: '[유리수와 순환소수 09] 순환소수(무한소수)로만 나타내어지는 분수', description: '기약분수의 분모에 2와 5 이외의 소인수가 반드시 남도록 하는 조건', en: ['Rational Decimals Type 09: Fractions Expressible Only as Repeating Decimals', 'Determine conditions ensuring non-(2,5) prime factors remain in denominator'], make: (random) => rpmRatDecRepeatingOnlyCondition(random) },
+  { id: 'rpm-rat-dec-fraction-equation', label: '[유리수와 순환소수 10] 10의 거듭제곱의 차를 이용한 분수화', description: '10^n x - 10^m x 꼴을 이용하여 소수 부분을 소거하고 분수로 나타내기', en: ['Rational Decimals Type 10: Converting to Fraction via 10^n x - 10^m x', 'Select most convenient 10^n x - 10^m x equations to cancel repeating tails'], make: (random) => rpmRatDecFractionEquationMethod(random) },
+  { id: 'rpm-rat-dec-fraction-formula', label: '[유리수와 순환소수 11] 공식을 이용한 순환소수의 기약분수화', description: '분모 9와 0의 개수 및 분자 전체-비순환 뺄셈 공식을 이용한 기약분수 변환', en: ['Rational Decimals Type 11: Fraction Conversion Formula', 'Convert repeating decimals to simplified fractions using 9-and-0 denominator rules'], make: (random) => rpmRatDecFractionFormulaMethod(random) },
+  { id: 'rpm-rat-dec-repeating-to-terminating', label: '[유리수와 순환소수 12] 순환소수에 수를 곱하여 유한소수 만들기', description: '순환소수를 기약분수로 고친 후 분모 소인수를 분석하여 곱할 자연수 찾기', en: ['Rational Decimals Type 12: Multiplying to Make Repeating Decimal Terminate', 'Convert repeating decimal to fraction and find natural number to make it terminating'], make: (random) => rpmRatDecRepeatingToTerminating(random) },
+  { id: 'rpm-rat-dec-faulty-observation', label: '[유리수와 순환소수 13] 잘못 보고 소수로 나타낸 문제 (분모·분자 역산)', description: '분모를 잘못 본 경우의 올바른 분자와, 분자를 잘못 본 경우의 올바른 분모 결합', en: ['Rational Decimals Type 13: Reconstructing Fractions from Faulty Observations', 'Reconstruct true irreducible fraction from two students misreading numerator/denominator'], make: (random) => rpmRatDecFaultyObservation(random) },
+  { id: 'rpm-rat-dec-repeating-inequality', label: '[유리수와 순환소수 14] 순환소수를 포함한 부등식', description: '순환소수를 분수로 고쳐 통분한 후 범위를 만족하는 자연수의 개수·최댓값 구하기', en: ['Rational Decimals Type 14: Inequalities Involving Repeating Decimals', 'Solve linear inequalities containing repeating decimals by converting to fractions'], make: (random) => rpmRatDecRepeatingInequality(random) },
+  { id: 'rpm-rat-dec-arithmetic-operations', label: '[유리수와 순환소수 15] 순환소수를 포함한 식의 사칙계산', description: '순환소수를 기약분수로 고쳐 덧셈, 뺄셈, 곱셈, 나눗셈 계산 수행', en: ['Rational Decimals Type 15: Arithmetic Operations with Repeating Decimals', 'Evaluate sums, differences, products, and unit factors of repeating decimals'], make: (random) => rpmRatDecArithmeticOperations(random) },
+  { id: 'rpm-rat-dec-number-system-tf', label: '[유리수와 순환소수 16] 유리수와 소수의 분류 및 정오 판별', description: '유한소수, 순환소수, 비순환 무한소수(무리수), 유리수의 관계 개념 참/거짓 판별', en: ['Rational Decimals Type 16: Classification of Rationals & Decimals (True/False)', 'True/False conceptual properties of terminating, repeating, and non-repeating decimals'], make: (random) => rpmRatDecNumberSystemTrueFalse(random) },
+  { id: 'rpm-rat-dec-between-fractions', label: '[유리수와 순환소수 17] 두 분수 사이에 있는 유한소수의 개수', description: '특정 분모를 가진 분수 중 주어진 두 분수 사이에서 유한소수가 되는 개수', en: ['Rational Decimals Type 17: Counting Terminating Fractions Between Two Bounds', 'Count terminating fractions with a specified denominator between two given bounds'], make: (random) => rpmRatDecBetweenFractionsTerminating(random) },
+  { id: 'rpm-rat-dec-mistake-equation', label: '[유리수와 순환소수 18] 순환소수 오차 방정식 및 자릿수 식', description: '순환소수 대신 유한소수를 곱해 생긴 오차로부터 원래 자연수 역산', en: ['Rational Decimals Type 18: Decimal Error Equations & Digit Equations', 'Solve for original number from product discrepancy between repeating and finite decimals'], make: (random) => rpmRatDecMistakeEquationApplication(random) },
+  { id: 'rpm-rat-dec-all-mixed', label: '[유리수와 순환소수 단원 종합] 유리수와 순환소수 전 유형 실전 혼합', description: '유리수와 순환소수 18개 핵심 유형 무작위 실전 출제 세트 (RPM p.21~22)', en: ['Rational Decimals Comprehensive: All 18 Types Mixed', 'Randomized practice set covering all 18 rational numbers and repeating decimal types'], make: (random) => rpmRatDecAllTypesMixed(random) },
+  { id: 'rpm-rat-dec-advanced-skill-up', label: '[유리수와 순환소수 실력 UP] 최고난도 심화 실전 문제', description: '연속 분수열 유한소수 조건, 자릿수 규칙 결합 및 고난도 심화 (RPM p.23)', en: ['Rational Decimals Advanced: High-Level Skill UP', 'Challenging high-level problems on rational numbers, repeating decimals, and digit series'], make: (random) => rpmRatDecAdvancedSkillUp(random) },
+];
+
 export const RPM_INTEGER_RATIONAL_APPLIED_UNITS = [
   ...RPM_INTEGER_RATIONAL_CONCEPT_APPLIED_UNITS,
   ...RPM_INTEGER_RATIONAL_CALC_APPLIED_UNITS,
+  ...RPM_RATIONAL_DECIMALS_APPLIED_UNITS,
 ];
 
 export const INTEGER_RATIONAL_UNITS = [...INTEGER_RATIONAL_BASIC_UNITS, ...RPM_INTEGER_RATIONAL_APPLIED_UNITS];
@@ -665,5 +690,25 @@ import {
   rpmIrcTelescopingFractions,
   rpmIrcCustomOperator,
   rpmIrcAllTypesMixed,
-} from '../rpmAppliedEngine';
-import { localizeRegionalUnit } from '../../regionalCatalog';
+  rpmRatDecPowersOfTen,
+  rpmRatDecTerminatingCondition,
+  rpmRatDecMultiplyToTerminatingSingle,
+  rpmRatDecMultiplyToTerminatingBoth,
+  rpmRatDecDenominatorVariable,
+  rpmRatDecTerminatingAndIrreducible,
+  rpmRatDecPeriodAndNotation,
+  rpmRatDecNthDigitOfRepeating,
+  rpmRatDecRepeatingOnlyCondition,
+  rpmRatDecFractionEquationMethod,
+  rpmRatDecFractionFormulaMethod,
+  rpmRatDecRepeatingToTerminating,
+  rpmRatDecFaultyObservation,
+  rpmRatDecRepeatingInequality,
+  rpmRatDecArithmeticOperations,
+  rpmRatDecNumberSystemTrueFalse,
+  rpmRatDecBetweenFractionsTerminating,
+  rpmRatDecMistakeEquationApplication,
+  rpmRatDecAllTypesMixed,
+  rpmRatDecAdvancedSkillUp,
+} from '../rpmAppliedEngine.js';
+import { localizeRegionalUnit } from '../../regionalCatalog.js';

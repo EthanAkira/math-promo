@@ -195,6 +195,31 @@ const zhHK = {
   // -------------------------------------------------------------
   'rpm-grade7-semester-two-final-exam': '中學七年級下學期全範圍最終實戰總括模擬測驗（幾何與統計全單元）',
 
+  // -------------------------------------------------------------
+  // RPM [중2-1] 01 유리수와 순환소수 (有理數與循環小數)
+  // -------------------------------------------------------------
+  'rpm-rat-dec-powers-of-ten': '利用10之乘方將分數化為有限小數',
+  'rpm-rat-dec-terminating-condition': '可化為有限小數之分數判別',
+  'rpm-rat-dec-multiply-terminating-single': '分數乘以自然數化為有限小數',
+  'rpm-rat-dec-multiply-terminating-both': '使兩分數皆化為有限小數之公倍數求值',
+  'rpm-rat-dec-denominator-variable': '分母含未知數之分數有限小數條件',
+  'rpm-rat-dec-terminating-irreducible': '有限小數條件與最簡分數約分逆推',
+  'rpm-rat-dec-period-notation': '循環節與循環小數點標記法',
+  'rpm-rat-dec-nth-digit': '循環小數小數點後第n位數字求值',
+  'rpm-rat-dec-repeating-only': '僅能化為循環小數之分數條件判別',
+  'rpm-rat-dec-fraction-equation': '利用10之乘方差化循環小數為分數（10ⁿx-10ᵐx）',
+  'rpm-rat-dec-fraction-formula': '利用公式化循環小數為最簡分數',
+  'rpm-rat-dec-repeating-to-terminating': '循環小數乘以自然數化為有限小數',
+  'rpm-rat-dec-faulty-observation': '看錯分子或分母之循環小數還原問題',
+  'rpm-rat-dec-repeating-inequality': '含循環小數之一次不等式求自然數解',
+  'rpm-rat-dec-arithmetic-operations': '含循環小數之四則運算與單位分解',
+  'rpm-rat-dec-number-system-tf': '有理數與小數分類真偽判別（是非題）',
+  'rpm-rat-dec-between-fractions': '兩分數之間有限小數個數計算',
+  'rpm-rat-dec-mistake-equation': '誤乘有限小數誤差方程式與數字式',
+  'rpm-rat-dec-all-mixed': '有理數與循環小數單元全類型實戰綜合複習',
+  'rpm-rat-dec-advanced-skill-up': '有理數與循環小數最高難度實力UP進階題',
+
+
 
 
 

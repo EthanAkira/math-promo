@@ -10281,6 +10281,709 @@ export function rpmGrade7SemesterTwoFinalExam(random) {
 }
 
 
+// =============================================================
+// RPM Middle School 2-1 (중학수학 2-1)
+// Chapter 01: 유리수와 순환소수 (Rational Numbers & Repeating Decimals)
+// Pages 12 ~ 23 (Problems #0056 ~ #0136)
+// =============================================================
+
+
+
+// [유형 01] 10의 거듭제곱을 이용하여 분수를 유한소수로 나타내기 (RPM #0056~#0058, #0117)
+export function rpmRatDecPowersOfTen(random) {
+  const pairs = [
+    { num: 3, p2: 3, p5: 1, name: '3/40' },
+    { num: 7, p2: 1, p5: 2, name: '7/50' },
+    { num: 9, p2: 3, p5: 0, name: '9/8' },
+    { num: 11, p2: 0, p5: 3, name: '11/125' },
+    { num: 13, p2: 2, p5: 1, name: '13/20' },
+    { num: 27, p2: 2, p5: 3, name: '27/500' },
+    { num: 21, p2: 3, p5: 2, name: '21/200' },
+    { num: 17, p2: 4, p5: 1, name: '17/80' },
+  ];
+  const item = pick(random, pairs);
+  const m = item.p2;
+  const k = item.p5;
+  const n = Math.max(m, k);
+  const mult2 = n - m;
+  const mult5 = n - k;
+  const multVal = (2 ** mult2) * (5 ** mult5);
+  const finalNum = item.num * multVal;
+  const denom = 10 ** n;
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    return {
+      prompt: `다음은 분수 \\frac{${item.num}}{${item.name.split('/')[1]}}을 유한소수로 나타내는 과정이다. 이때 a + n의 값을 구하시오.\n\n\\frac{${item.num}}{${item.name.split('/')[1]}} = \\frac{${item.num}}{2^{${m}} \\times 5^{${k}}} = \\frac{${item.num} \\times ${multVal > 1 ? multVal : 1}}{2^{${n}} \\times 5^{${n}}} = \\frac{a}{10^n}`,
+      promptEn: `Given the process to convert \\frac{${item.num}}{${item.name.split('/')[1]}} into a terminating decimal: \\frac{${item.num}}{${item.name.split('/')[1]}} = \\frac{a}{10^n}, find the value of a + n.`,
+      expression: `${finalNum} + ${n}`,
+      answer: String(finalNum + n),
+      explanation: `분모의 2와 5의 지수를 맞추기 위해 분모와 분자에 ${multVal}을 곱하면 분모는 10^${n}이 되고, 분자는 a = ${item.num} \\times ${multVal} = ${finalNum}입니다. 따라서 a + n = ${finalNum} + ${n} = ${finalNum + n}입니다.`,
+    };
+  } else {
+    return {
+      prompt: `분수 \\frac{${item.num}}{${item.name.split('/')[1]}}을 10의 거듭제곱을 분모로 하는 분수 \\frac{A}{10^n} 꼴로 고쳐서 유한소수로 나타낼 때, 자연수 A, n에 대하여 A + n의 최솟값을 구하시오.`,
+      promptEn: `When converting \\frac{${item.num}}{${item.name.split('/')[1]}} into the form \\frac{A}{10^n} with the smallest positive integer n, find the minimum value of A + n.`,
+      expression: `A + n = ${finalNum} + ${n}`,
+      answer: String(finalNum + n),
+      explanation: `분모 ${item.name.split('/')[1]} = 2^${m} \\times 5^${k}의 2와 5의 지수를 같게 만드는 가장 작은 지수는 n = ${n}입니다. 분자 A = ${item.num} \\times ${multVal} = ${finalNum}이므로 A + n = ${finalNum + n}입니다.`,
+    };
+  }
+}
+
+// [유형 02] 유한소수로 나타낼 수 있는 분수 판별 (RPM #0059~#0062, #0118)
+export function rpmRatDecTerminatingCondition(random) {
+  const fractions = [
+    { text: '\\frac{7}{25}', term: true, expl: '25 = 5^2 (분모 소인수 5뿐)' },
+    { text: '\\frac{9}{40}', term: true, expl: '40 = 2^3 \\times 5 (분모 소인수 2, 5뿐)' },
+    { text: '\\frac{21}{140}', term: true, expl: '21/140 = 3/20 = 3/(2^2 \\times 5) (유한소수)' },
+    { text: '\\frac{27}{250}', term: true, expl: '250 = 2 \\times 5^3 (분모 소인수 2, 5뿐)' },
+    { text: '\\frac{42}{2^2 \\times 3 \\times 7}', term: true, expl: '42/(4 \\times 21) = 42/84 = 1/2 (유한소수)' },
+    { text: '\\frac{11}{24}', term: false, expl: '24 = 2^3 \\times 3 (소인수 3이 남음)' },
+    { text: '\\frac{13}{75}', term: false, expl: '75 = 3 \\times 5^2 (소인수 3이 남음)' },
+    { text: '\\frac{14}{105}', term: false, expl: '14/105 = 2/15 = 2/(3 \\times 5) (소인수 3이 남음)' },
+    { text: '\\frac{15}{2^2 \\times 5 \\times 7}', term: false, expl: '15/(20 \\times 7) = 3/(4 \\times 7) (소인수 7이 남음)' },
+    { text: '\\frac{19}{60}', term: false, expl: '60 = 2^2 \\times 3 \\times 5 (소인수 3이 남음)' },
+  ];
+
+  // Pick 5 distinct fractions
+  const shuffled = [...fractions].sort(() => random() - 0.5).slice(0, 5);
+  const termCount = shuffled.filter(f => f.term).length;
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    return {
+      prompt: `다음 보기의 분수 중 유한소수로 나타낼 수 있는 것의 개수를 구하시오.\n\n[보기] ${shuffled.map(f => f.text).join(', ')}`,
+      promptEn: `How many of the following fractions can be represented as terminating decimals?\n[List] ${shuffled.map(f => f.text).join(', ')}`,
+      expression: `${termCount}`,
+      answer: String(termCount),
+      explanation: `기약분수로 나타내었을 때 분모의 소인수가 2 또는 5뿐인 것만 유한소수가 됩니다.\n` +
+        shuffled.map(f => `- ${f.text}: ${f.term ? '유한소수' : '무한(순환)소수'} (${f.expl})`).join('\n') +
+        `\n따라서 유한소수로 나타낼 수 있는 분수는 모두 ${termCount}개입니다.`,
+    };
+  } else {
+    // Choice question: which one can be terminating?
+    const termOne = pick(random, fractions.filter(f => f.term));
+    const nonTerms = fractions.filter(f => !f.term).sort(() => random() - 0.5).slice(0, 3);
+    const options = [termOne, ...nonTerms].sort(() => random() - 0.5);
+    const correctIdx = options.findIndex(o => o === termOne) + 1;
+    return {
+      prompt: `다음 분수 중 유한소수로 나타낼 수 있는 것을 고르시오.`,
+      promptEn: `Which of the following fractions can be represented as a terminating decimal?`,
+      expression: `\\text{정답 번호: } ${correctIdx}`,
+      answer: String(correctIdx),
+      choices: options.map((opt, i) => ({
+        value: String(i + 1),
+        label: opt.text,
+        labelEn: opt.text,
+      })),
+      explanation: `${termOne.text}은(는) ${termOne.expl}이므로 유한소수입니다. 정답은 ${correctIdx}번입니다.`,
+    };
+  }
+}
+
+// [유형 03] a/b * x가 유한소수가 되도록 하는 x의 값 (RPM #0063~#0065, #0125)
+export function rpmRatDecMultiplyToTerminatingSingle(random) {
+  const problems = [
+    { a: 7, b: 120, k: 3, bFact: '2^3 \\times 3 \\times 5' },
+    { a: 11, b: 350, k: 7, bFact: '2 \\times 5^2 \\times 7' },
+    { a: 13, b: 180, k: 9, bFact: '2^2 \\times 3^2 \\times 5' },
+    { a: 9, b: 84, k: 7, bFact: '2^2 \\times 3 \\times 7', redA: 3, redB: 28, redBFact: '2^2 \\times 7' },
+    { a: 5, b: 132, k: 33, bFact: '2^2 \\times 3 \\times 11' },
+    { a: 21, b: 280, k: 1, redA: 3, redB: 40 }, // already terminating
+    { a: 3, b: 220, k: 11, bFact: '2^2 \\times 5 \\times 11' },
+    { a: 17, b: 150, k: 3, bFact: '2 \\times 3 \\times 5^2' },
+  ].filter(p => p.k > 1);
+
+  const prob = pick(random, problems);
+  const mode = ri(random, 1, 2);
+
+  if (mode === 1) {
+    return {
+      prompt: `분수 \\frac{${prob.a}}{${prob.b}}에 자연수 x를 곱하여 소수로 나타내면 유한소수가 된다고 한다. x의 값이 될 수 있는 가장 작은 자연수를 구하시오.`,
+      promptEn: `When the fraction \\frac{${prob.a}}{${prob.b}} is multiplied by a natural number x, it becomes a terminating decimal. Find the smallest natural number x.`,
+      expression: `${prob.k}`,
+      answer: String(prob.k),
+      explanation: `\\frac{${prob.a}}{${prob.b}}를 기약분수로 나타내어 분모를 소인수분해하면 2와 5 이외의 소인수의 곱이 ${prob.k}입니다. 따라서 유한소수가 되기 위해 x는 ${prob.k}의 배수이어야 하므로, 가장 작은 자연수 x는 ${prob.k}입니다.`,
+    };
+  } else {
+    // Number of 2-digit natural numbers
+    const count2Digit = Math.floor(99 / prob.k) - Math.floor(9 / prob.k);
+    return {
+      prompt: `분수 \\frac{${prob.a}}{${prob.b}}에 자연수 x를 곱하여 소수로 나타내면 유한소수가 된다고 한다. x의 값이 될 수 있는 두 자리 자연수의 개수를 구하시오.`,
+      promptEn: `When \\frac{${prob.a}}{${prob.b}} is multiplied by a natural number x, it becomes a terminating decimal. How many two-digit natural numbers x satisfy this?`,
+      expression: `${count2Digit}`,
+      answer: String(count2Digit),
+      explanation: `\\frac{${prob.a}}{${prob.b}}를 기약분수로 나타내어 분모의 2와 5 이외의 소인수를 찾으면 ${prob.k}입니다. 따라서 x는 ${prob.k}의 배수이어야 합니다. 두 자리 자연수 중 ${prob.k}의 배수의 개수는 99 이하의 배수 개수(${Math.floor(99 / prob.k)})에서 9 이하의 배수 개수(${Math.floor(9 / prob.k)})를 뺀 ${count2Digit}개입니다.`,
+    };
+  }
+}
+
+// [유형 04] 두 분수에 각각 x를 곱하여 모두 유한소수가 되도록 하기 (RPM #0066~#0068, #0131)
+export function rpmRatDecMultiplyToTerminatingBoth(random) {
+  const configs = [
+    { a1: 7, b1: 180, k1: 9, a2: 5, b2: 84, k2: 21, lcmK: 63 },
+    { a1: 3, b1: 140, k1: 7, a2: 11, b2: 150, k2: 3, lcmK: 21 },
+    { a1: 5, b1: 72, k1: 9, a2: 7, b2: 110, k2: 11, lcmK: 99 },
+    { a1: 9, b1: 280, k1: 7, a2: 13, b2: 120, k2: 3, lcmK: 21 },
+    { a1: 1, b1: 45, k1: 9, a2: 3, b2: 70, k2: 7, lcmK: 63 },
+  ];
+  const cfg = pick(random, configs);
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    return {
+      prompt: `두 분수 \\frac{${cfg.a1}}{${cfg.b1}}과 \\frac{${cfg.a2}}{${cfg.b2}}에 각각 어떤 자연수 x를 곱하면 두 분수 모두 유한소수로 나타내어진다고 한다. 이러한 x의 값 중 가장 작은 자연수를 구하시오.`,
+      promptEn: `When both \\frac{${cfg.a1}}{${cfg.b1}} and \\frac{${cfg.a2}}{${cfg.b2}} are multiplied by a natural number x, both become terminating decimals. Find the smallest such natural number x.`,
+      expression: `${cfg.lcmK}`,
+      answer: String(cfg.lcmK),
+      explanation: `\\frac{${cfg.a1}}{${cfg.b1}}이 유한소수가 되려면 x는 ${cfg.k1}의 배수이어야 하고, \\frac{${cfg.a2}}{${cfg.b2}}가 유한소수가 되려면 x는 ${cfg.k2}의 배수이어야 합니다. 두 조건을 모두 만족하려면 x는 ${cfg.k1}과 ${cfg.k2}의 공배수, 즉 최소공배수인 ${cfg.lcmK}의 배수이어야 하므로 가장 작은 자연수 x는 ${cfg.lcmK}입니다.`,
+    };
+  } else {
+    // Count of 2-digit or 3-digit
+    const count2Digit = Math.floor(99 / cfg.lcmK) - Math.floor(9 / cfg.lcmK);
+    return {
+      prompt: `두 분수 \\frac{${cfg.a1}}{${cfg.b1}}과 \\frac{${cfg.a2}}{${cfg.b2}}에 각각 자연수 x를 곱하면 두 분수 모두 유한소수가 된다. x의 값이 될 수 있는 두 자리 자연수의 개수를 구하시오.`,
+      promptEn: `When both \\frac{${cfg.a1}}{${cfg.b1}} and \\frac{${cfg.a2}}{${cfg.b2}} are multiplied by x, both become terminating decimals. How many two-digit natural numbers x exist?`,
+      expression: `${count2Digit}`,
+      answer: String(count2Digit),
+      explanation: `x는 두 분모의 2, 5 이외의 소인수의 최소공배수인 ${cfg.lcmK}의 배수이어야 합니다. 두 자리 자연수 중 ${cfg.lcmK}의 배수는 ${count2Digit}개입니다.`,
+    };
+  }
+}
+
+// [유형 05] 분모에 미지수가 있는 분수가 유한소수가 되도록 하기 (RPM #0069~#0072, #0119)
+export function rpmRatDecDenominatorVariable(random) {
+  // Fraction 21 / (2^2 * 5 * x)
+  // 21 = 3 * 7. So x can contain 2, 5, and at most one factor of 3 and at most one factor of 7.
+  const candValid = [3, 6, 7, 12, 14, 15, 20, 21, 28, 35];
+  const candInvalid = [9, 11, 13, 18, 22, 27, 33, 42, 44, 49];
+
+  const good = pick(random, candValid);
+  const bads = candInvalid.sort(() => random() - 0.5).slice(0, 3);
+  const othersGood = candValid.filter(c => c !== good).sort(() => random() - 0.5).slice(0, 3);
+
+  // Question: Which of the following cannot be x?
+  const badOne = pick(random, candInvalid);
+  const options = [badOne, ...othersGood].sort(() => random() - 0.5);
+  const correctIdx = options.indexOf(badOne) + 1;
+
+  return {
+    prompt: `분수 \\frac{21}{2^2 \\times 5 \\times x}를 소수로 나타내면 유한소수가 될 때, 다음 중 x의 값이 될 수 없는 것은?`,
+    promptEn: `When the fraction \\frac{21}{2^2 \\times 5 \\times x} is represented as a decimal, it is a terminating decimal. Which of the following CANNOT be the value of x?`,
+    expression: `\\text{정답 번호: } ${correctIdx}`,
+    answer: String(correctIdx),
+    choices: options.map((opt, i) => ({
+      value: String(i + 1),
+      label: String(opt),
+      labelEn: String(opt),
+    })),
+    explanation: `분자 21 = 3 \\times 7이므로, 분모에 있는 x는 소인수 2, 5 외에 분자와 약분될 수 있는 3 또는 7을 최대 1개까지만 가질 수 있습니다. 보기 중 ${badOne}은(는) 소인수분해 시 2와 5를 제외하고 분자와 약분되지 않는 소인수가 남으므로 x의 값이 될 수 없습니다. 정답은 ${correctIdx}번입니다.`,
+  };
+}
+
+// [유형 06] 유한소수가 되도록 하는 미지수 조건과 기약분수 약분 (RPM #0073~#0075, #0120)
+export function rpmRatDecTerminatingAndIrreducible(random) {
+  // Fraction a / 280 = a / (2^3 * 5 * 7)
+  // For it to be terminating, a must be a multiple of 7.
+  // Irreducible is b / y.
+  // Let a = 7 * k. 20 < a < 45 => k in {3, 4, 5, 6} => a in {21, 28, 35, 42}
+  // Irreducible: a/280 = 7k/280 = k/40.
+  // Let's specify that irreducible fraction has numerator b = 1 => k = 1 (not in range)
+  // Or b = 3 => k = 3 => a = 21. a/280 = 21/280 = 3/40. y = 40.
+  const a = 21;
+  const b = 3;
+  const y = 40;
+  const ans = y - a; // 40 - 21 = 19
+
+  return {
+    prompt: `분수 \\frac{a}{280}를 소수로 나타내면 유한소수가 되고, 기약분수로 나타내면 \\frac{3}{b}가 된다. 20 < a < 30인 자연수 a에 대하여 b - a의 값을 구하시오.`,
+    promptEn: `The fraction \\frac{a}{280} represents a terminating decimal and simplifies to \\frac{3}{b}. Given 20 < a < 30, find the value of b - a.`,
+    expression: `${y} - ${a}`,
+    answer: String(ans),
+    explanation: `280 = 2^3 \\times 5 \\times 7이므로 유한소수가 되려면 a는 7의 배수이어야 합니다. 20 < a < 30 범위에서 7의 배수는 a = 21뿐입니다. \\frac{21}{280} = \\frac{3}{40}이므로 b = 40입니다. 따라서 b - a = 40 - 21 = ${ans}입니다.`,
+  };
+}
+
+// [유형 07] 순환마디와 순환소수의 표현 (RPM #0076~#0079, #0121)
+export function rpmRatDecPeriodAndNotation(random) {
+  const cases = [
+    { raw: '2.828282…', period: '82', notation: '2.\\dot{8}\\dot{2}', wrongNote: '2.8\\dot{2}', wrongPer: '28' },
+    { raw: '0.3757575…', period: '75', notation: '0.3\\dot{7}\\dot{5}', wrongNote: '0.\\dot{3}7\\dot{5}', wrongPer: '375' },
+    { raw: '1.212121…', period: '21', notation: '1.\\dot{2}\\dot{1}', wrongNote: '1.2\\dot{1}', wrongPer: '12' },
+    { raw: '3.412412…', period: '412', notation: '3.\\dot{4}1\\dot{2}', wrongNote: '3.\\dot{4}\\dot{1}\\dot{2}', wrongPer: '124' },
+    { raw: '0.1234234…', period: '234', notation: '0.1\\dot{2}3\\dot{4}', wrongNote: '0.1\\dot{2}\\dot{3}\\dot{4}', wrongPer: '1234' },
+  ];
+  const target = pick(random, cases);
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    return {
+      prompt: `순환소수 ${target.raw}의 순환마디를 구하시오.`,
+      promptEn: `Find the repeating period of the repeating decimal ${target.raw}.`,
+      expression: `${target.period}`,
+      answer: target.period,
+      explanation: `${target.raw}에서 소수점 아래 일정하게 반복되는 숫자의 배열은 ${target.period}이므로 순환마디는 ${target.period}입니다.`,
+    };
+  } else {
+    // Notation choice
+    const choices = [
+      { value: '1', label: target.notation, labelEn: target.notation },
+      { value: '2', label: target.wrongNote, labelEn: target.wrongNote },
+      { value: '3', label: `${target.raw.slice(0, 4)}…`, labelEn: `${target.raw.slice(0, 4)}…` },
+      { value: '4', label: `\\dot{${target.period}}`, labelEn: `\\dot{${target.period}}` },
+    ];
+    return {
+      prompt: `순환소수 ${target.raw}를 점을 찍어 바르게 나타낸 것을 고르시오.`,
+      promptEn: `Choose the correct repeating decimal notation with dots for ${target.raw}.`,
+      expression: `\\text{정답: } ${target.notation}`,
+      answer: '1',
+      choices,
+      explanation: `순환소수는 순환마디의 양 끝 숫자 위에 점을 찍어 나타내므로 올바른 표현은 ${target.notation}입니다.`,
+    };
+  }
+}
+
+// [유형 08] 순환소수의 소수점 아래 n번째 자리의 숫자 구하기 (RPM #0080~#0083, #0122, #0134)
+export function rpmRatDecNthDigitOfRepeating(random) {
+  const problems = [
+    { num: 5, den: 7, digits: [7, 1, 4, 2, 8, 5], nonRep: [], name: '5/7' },
+    { num: 3, den: 11, digits: [2, 7], nonRep: [], name: '3/11' },
+    { num: 7, den: 22, digits: [1, 8], nonRep: [3], name: '7/22' }, // 0.31818...
+    { num: 5, den: 6, digits: [3], nonRep: [8], name: '5/6' }, // 0.8333...
+    { num: 11, den: 30, digits: [6], nonRep: [3], name: '11/30' }, // 0.3666...
+    { num: 17, den: 14, digits: [2, 1, 4, 2, 8, 5], nonRep: [], name: '17/14' },
+    { num: 1, den: 7, digits: [1, 4, 2, 8, 5, 7], nonRep: [], name: '1/7' },
+    { num: 25, den: 37, digits: [6, 7, 5], nonRep: [], name: '25/37' }, // 0.675675...
+  ];
+  const p = pick(random, problems.filter(pr => pr.digits.length >= 2));
+  const n = ri(random, 40, 100);
+
+  const nonRepLen = p.nonRep.length;
+  const repLen = p.digits.length;
+  let ansDigit;
+  if (n <= nonRepLen) {
+    ansDigit = p.nonRep[n - 1];
+  } else {
+    const idx = (n - nonRepLen - 1) % repLen;
+    ansDigit = p.digits[idx];
+  }
+
+  return {
+    prompt: `분수 \\frac{${p.num}}{${p.den}}을 소수로 나타낼 때, 소수점 아래 ${n}번째 자리의 숫자를 구하시오.`,
+    promptEn: `When the fraction \\frac{${p.num}}{${p.den}} is expressed as a decimal, find the ${n}-th digit after the decimal point.`,
+    expression: `${ansDigit}`,
+    answer: String(ansDigit),
+    explanation: `\\frac{${p.num}}{${p.den}} = 0.${p.nonRep.join('')}\\dot{${p.digits[0]}}${p.digits.length > 2 ? p.digits.slice(1, -1).join('') : ''}\\dot{${p.digits[p.digits.length - 1]}}입니다. ${nonRepLen > 0 ? `순환하지 않는 자리가 ${nonRepLen}개이고, ` : ''}순환마디의 길이가 ${repLen}이므로, (${n} - ${nonRepLen}) ÷ ${repLen}의 나머지는 ${(n - nonRepLen) % repLen}입니다. 따라서 소수점 아래 ${n}번째 자리의 숫자는 ${ansDigit}입니다.`,
+  };
+}
+
+// [유형 09] 순환소수(무한소수)로만 나타내어지는 분수 및 미지수 (RPM #0084~#0086)
+export function rpmRatDecRepeatingOnlyCondition(random) {
+  // Fraction x / (2^2 * 3 * 5) = x / 60
+  // To be repeating decimal ONLY, x CANNOT be a multiple of 3.
+  const bads = [3, 6, 9, 12, 15, 18, 21, 24]; // multiples of 3 -> terminating!
+  const goods = [4, 5, 7, 8, 10, 11, 13, 14]; // non-multiples of 3 -> repeating!
+
+  const notTerminatingX = pick(random, bads); // this value makes it terminating, so it CANNOT be x
+  const validXList = goods.sort(() => random() - 0.5).slice(0, 3);
+  const options = [notTerminatingX, ...validXList].sort(() => random() - 0.5);
+  const correctIdx = options.indexOf(notTerminatingX) + 1;
+
+  return {
+    prompt: `분수 \\frac{x}{2^2 \\times 3 \\times 5}를 소수로 나타내면 순환소수로만 나타낼 수 있을 때, 다음 중 x의 값이 될 수 없는 것은?`,
+    promptEn: `When \\frac{x}{2^2 \\times 3 \\times 5} is represented as a decimal, it can only be a repeating decimal. Which of the following CANNOT be the value of x?`,
+    expression: `\\text{정답 번호: } ${correctIdx}`,
+    answer: String(correctIdx),
+    choices: options.map((opt, i) => ({
+      value: String(i + 1),
+      label: String(opt),
+      labelEn: String(opt),
+    })),
+    explanation: `분수가 순환소수로만 나타내어지려면 기약분수의 분모에 2와 5 이외의 소인수인 3이 반드시 남아 있어야 합니다. 만약 x가 3의 배수이면 3이 약분되어 유한소수가 되어버리므로 x는 3의 배수가 될 수 없습니다. 보기 중 ${notTerminatingX}은(는) 3의 배수이므로 x의 값이 될 수 없습니다. 정답은 ${correctIdx}번입니다.`,
+  };
+}
+
+// [유형 10] 순환소수를 분수로 나타내기 (1) — 10^n x - 10^m x (RPM #0087~#0089, #0123, #0124)
+export function rpmRatDecFractionEquationMethod(random) {
+  const problems = [
+    { text: '1.5\\dot{3}\\dot{7}', n: 1000, m: 10, nonRep: 1, rep: 2 },
+    { text: '0.74\\dot{2}', n: 1000, m: 100, nonRep: 2, rep: 1 },
+    { text: '0.\\dot{2}\\dot{7}', n: 100, m: 1, nonRep: 0, rep: 2 },
+    { text: '2.\\dot{3}1\\dot{5}', n: 1000, m: 1, nonRep: 0, rep: 3 },
+    { text: '0.1\\dot{2}3\\dot{4}', n: 10000, m: 10, nonRep: 1, rep: 3 },
+    { text: '0.2\\dot{7}\\dot{6}', n: 1000, m: 10, nonRep: 1, rep: 2 },
+  ];
+  const p = pick(random, problems);
+  const correctEq = p.m === 1 ? `${p.n}x - x` : `${p.n}x - ${p.m}x`;
+
+  const wrong1 = `${p.n}x - ${p.m * 10}x`;
+  const wrong2 = `${p.n / 10}x - ${p.m}x`;
+  const wrong3 = `${p.n}x - x`;
+
+  const choicesList = [
+    correctEq,
+    wrong1 !== correctEq ? wrong1 : '100x - 10x',
+    wrong2 !== correctEq ? wrong2 : '1000x - 100x',
+    wrong3 !== correctEq ? wrong3 : '10000x - x',
+  ].sort(() => random() - 0.5);
+
+  const correctIdx = choicesList.indexOf(correctEq) + 1;
+
+  return {
+    prompt: `순환소수 x = ${p.text}을(를) 분수로 나타내려고 할 때, 다음 중 가장 편리한 식은?`,
+    promptEn: `When converting the repeating decimal x = ${p.text} into a fraction, which of the following equations is the most convenient?`,
+    expression: correctEq,
+    answer: String(correctIdx),
+    choices: choicesList.map((c, i) => ({
+      value: String(i + 1),
+      label: c,
+      labelEn: c,
+    })),
+    explanation: `x = ${p.text}에서 소수점 아래 순환마디의 끝까지 이동시키려면 양변에 ${p.n}을 곱하고, 순환마디의 시작 바로 앞까지 이동시키려면 양변에 ${p.m === 1 ? '1' : p.m}을 곱해야 소수점 아래 부분이 같아져 소거됩니다. 따라서 가장 편리한 식은 ${correctEq}입니다.`,
+  };
+}
+
+// [유형 11] 순환소수를 분수로 나타내기 (2) — 공식 활용 및 기약분수 (RPM #0090~#0093, #0132)
+export function rpmRatDecFractionFormulaMethod(random) {
+  const problems = [
+    { dec: '0.\\dot{4}', num: 4, den: 9 },
+    { dec: '0.\\dot{2}\\dot{7}', num: 27, den: 99, redNum: 3, redDen: 11 },
+    { dec: '0.1\\dot{6}', num: 15, den: 90, redNum: 1, redDen: 6 },
+    { dec: '1.\\dot{2}', num: 11, den: 9, redNum: 11, redDen: 9 },
+    { dec: '0.2\\dot{4}\\dot{5}', num: 243, den: 990, redNum: 27, redDen: 110 },
+    { dec: '2.0\\dot{6}', num: 186, den: 90, redNum: 31, redDen: 15 },
+    { dec: '0.0\\dot{6}', num: 6, den: 90, redNum: 1, redDen: 15 },
+  ];
+  const p = pick(random, problems);
+  const rNum = p.redNum || p.num;
+  const rDen = p.redDen || p.den;
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    return {
+      prompt: `순환소수 ${p.dec}을(를) 기약분수 \\frac{a}{b}로 나타낼 때, a + b의 값을 구하시오.`,
+      promptEn: `When the repeating decimal ${p.dec} is expressed as an irreducible fraction \\frac{a}{b}, find the value of a + b.`,
+      expression: `${rNum} + ${rDen}`,
+      answer: String(rNum + rDen),
+      explanation: `${p.dec}을(를) 분수로 나타내면 \\frac{${p.num}}{${p.den}}이며, 기약분수로 약분하면 \\frac{${rNum}}{${rDen}}입니다. 따라서 a + b = ${rNum} + ${rDen} = ${rNum + rDen}입니다.`,
+    };
+  } else {
+    return {
+      prompt: `다음 순환소수를 기약분수로 나타내시오: ${p.dec}`,
+      promptEn: `Express the following repeating decimal as an irreducible fraction: ${p.dec}`,
+      expression: `\\frac{${rNum}}{${rDen}}`,
+      answer: `${rNum}/${rDen}`,
+      explanation: `${p.dec} = \\frac{${p.num}}{${p.den}} = \\frac{${rNum}}{${rDen}}입니다.`,
+    };
+  }
+}
+
+// [유형 12] 순환소수에 자연수를 곱하여 유한소수 만들기 (RPM #0094~#0097)
+export function rpmRatDecRepeatingToTerminating(random) {
+  const problems = [
+    { dec: '1.9\\dot{3}', num: 174, den: 90, rNum: 29, rDen: 15, k: 3 }, // 15 = 3 * 5 => k = 3
+    { dec: '0.12\\dot{6}', num: 114, den: 900, rNum: 19, rDen: 150, k: 3 }, // 150 = 2 * 3 * 5^2 => k = 3
+    { dec: '1.\\dot{5}', num: 14, den: 9, rNum: 14, rDen: 9, k: 9 }, // 9 = 3^2 => k = 9
+    { dec: '0.29\\dot{6}', num: 267, den: 900, rNum: 89, rDen: 300, k: 3 }, // 300 = 2^2 * 3 * 5^2 => k = 3
+    { dec: '0.5\\dot{3}', num: 48, den: 90, rNum: 8, rDen: 15, k: 3 },
+    { dec: '0.8\\dot{3}', num: 75, den: 90, rNum: 5, rDen: 6, k: 3 },
+  ];
+  const p = pick(random, problems);
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    return {
+      prompt: `순환소수 ${p.dec}에 어떤 자연수 x를 곱하면 유한소수가 된다고 한다. x의 값이 될 수 있는 가장 작은 자연수를 구하시오.`,
+      promptEn: `When the repeating decimal ${p.dec} is multiplied by a natural number x, it becomes a terminating decimal. Find the smallest natural number x.`,
+      expression: `${p.k}`,
+      answer: String(p.k),
+      explanation: `순환소수 ${p.dec}을(를) 기약분수로 나타내면 \\frac{${p.rNum}}{${p.rDen}}입니다. 분모 ${p.rDen}을(를) 소인수분해하면 2와 5 이외의 소인수가 ${p.k}이므로, 유한소수가 되기 위해 곱해야 하는 가장 작은 자연수는 ${p.k}입니다.`,
+    };
+  } else {
+    const min2Digit = Math.ceil(10 / p.k) * p.k;
+    return {
+      prompt: `순환소수 ${p.dec}에 어떤 자연수 x를 곱하여 유한소수가 되도록 할 때, x의 값이 될 수 있는 가장 작은 두 자리 자연수를 구하시오.`,
+      promptEn: `When ${p.dec} is multiplied by x, it becomes terminating. Find the smallest two-digit natural number x.`,
+      expression: `${min2Digit}`,
+      answer: String(min2Digit),
+      explanation: `순환소수 ${p.dec} = \\frac{${p.rNum}}{${p.rDen}}의 분모에서 2와 5 이외의 소인수는 ${p.k}이므로 x는 ${p.k}의 배수이어야 합니다. 따라서 가장 작은 두 자리 자연수 x는 ${min2Digit}입니다.`,
+    };
+  }
+}
+
+// [유형 13] 분모 또는 분자를 잘못 보고 소수로 나타낸 문제 (RPM #0098~#0100)
+export function rpmRatDecFaultyObservation(random) {
+  // Student A mistakenly read the denominator => numerator is correct.
+  // Student B mistakenly read the numerator => denominator is correct.
+  const cases = [
+    {
+      decA: '0.2\\dot{8}', numA: 26, denA: 90, rNumA: 13, rDenA: 45, // num = 13
+      decB: '0.\\dot{6}', numB: 6, denB: 9, rNumB: 2, rDenB: 3, // den = 3 => gcd(13, 3) = 1 => 13/3 = 4.333...
+      correctFrac: '13/3',
+      correctDec: '4.\\dot{3}',
+    },
+    {
+      decA: '0.5\\dot{8}', numA: 53, denA: 90, rNumA: 53, rDenA: 90, // num = 53
+      decB: '0.\\dot{8}\\dot{2}', numB: 82, denB: 99, rNumB: 82, rDenB: 99, // den = 99 => 53/99 = 0.5353...
+      correctFrac: '53/99',
+      correctDec: '0.\\dot{5}\\dot{3}',
+    },
+    {
+      decA: '1.\\dot{1}', numA: 10, denA: 9, rNumA: 10, rDenA: 9, // num = 10
+      decB: '1.1\\dot{3}', numB: 102, denB: 90, rNumB: 17, rDenB: 15, // den = 15 => 10/15 = 2/3 (reduce!) => 2/3 = 0.666...
+      correctFrac: '2/3',
+      correctDec: '0.\\dot{6}',
+    },
+  ];
+  const c = pick(random, cases);
+
+  return {
+    prompt: `어떤 기약분수를 순환소수로 나타내는데 갑은 분모를 잘못 보아 ${c.decA}(으)로 나타내었고, 을은 분자를 잘못 보아 ${c.decB}(으)로 나타내었다. 처음의 기약분수를 순환소수로 바르게 나타내시오.`,
+    promptEn: `When converting an irreducible fraction to a repeating decimal, Student A misread the denominator and got ${c.decA}, while Student B misread the numerator and got ${c.decB}. Express the original irreducible fraction as a repeating decimal.`,
+    expression: c.correctDec,
+    answer: c.correctDec,
+    explanation: `갑은 분모를 잘못 보았으므로 분자는 제대로 보았습니다. ${c.decA} = \\frac{${c.rNumA}}{${c.rDenA}}에서 분자는 ${c.rNumA}입니다.\n을은 분자를 잘못 보았으므로 분모는 제대로 보았습니다. ${c.decB} = \\frac{${c.rNumB}}{${c.rDenB}}에서 분모는 ${c.rDenB}입니다.\n따라서 처음 기약분수는 \\frac{${c.correctFrac.split('/')[0]}}{${c.correctFrac.split('/')[1]}}이며, 이를 순환소수로 나타내면 ${c.correctDec}입니다.`,
+  };
+}
+
+// [유형 14] 순환소수를 포함한 부등식 (RPM #0101~#0103, #0126)
+export function rpmRatDecRepeatingInequality(random) {
+  // 1/3 < 0.\dot{a} < 2/3 => 1/3 < a/9 < 2/3 => 3 < a < 6 => a in {4, 5}
+  const configs = [
+    { left: '\\frac{1}{3}', right: '\\frac{2}{3}', lVal: 3, rVal: 6, vals: [4, 5] },
+    { left: '\\frac{2}{9}', right: '\\frac{7}{9}', lVal: 2, rVal: 7, vals: [3, 4, 5, 6] },
+    { left: '\\frac{1}{4}', right: '\\frac{5}{6}', lVal: 2.25, rVal: 7.5, vals: [3, 4, 5, 6, 7] },
+    { left: '\\frac{1}{2}', right: '\\frac{8}{9}', lVal: 4.5, rVal: 8, vals: [5, 6, 7] },
+  ];
+  const cfg = pick(random, configs);
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // Number of single digit natural numbers
+    return {
+      prompt: `부등식 ${cfg.left} < 0.\\dot{a} < ${cfg.right}를 만족하는 한 자리 자연수 a의 개수를 구하시오.`,
+      promptEn: `Find the number of single-digit natural numbers a satisfying ${cfg.left} < 0.\\dot{a} < ${cfg.right}.`,
+      expression: `${cfg.vals.length}`,
+      answer: String(cfg.vals.length),
+      explanation: `0.\\dot{a} = \\frac{a}{9}이므로 주어진 부등식은 ${cfg.left} < \\frac{a}{9} < ${cfg.right}입니다. 각 변에 9를 곱하면 ${cfg.lVal} < a < ${cfg.rVal}이므로 만족하는 한 자리 자연수 a는 ${cfg.vals.join(', ')}의 ${cfg.vals.length}개입니다.`,
+    };
+  } else {
+    // Maximum value
+    const maxVal = Math.max(...cfg.vals);
+    return {
+      prompt: `부등식 ${cfg.left} < 0.\\dot{a} < ${cfg.right}를 만족하는 한 자리 자연수 a의 값 중 가장 큰 수를 구하시오.`,
+      promptEn: `Find the maximum single-digit natural number a satisfying ${cfg.left} < 0.\\dot{a} < ${cfg.right}.`,
+      expression: `${maxVal}`,
+      answer: String(maxVal),
+      explanation: `0.\\dot{a} = \\frac{a}{9}이므로 ${cfg.lVal} < a < ${cfg.rVal}입니다. 이를 만족하는 가장 큰 한 자리 자연수는 ${maxVal}입니다.`,
+    };
+  }
+}
+
+// [유형 15] 순환소수를 포함한 식의 기본 계산 (RPM #0104~#0107, #0127, #0128)
+export function rpmRatDecArithmeticOperations(random) {
+  const mode = ri(random, 1, 3);
+  if (mode === 1) {
+    // 7.\dot{8} + 3.\dot{4} = 71/9 + 31/9 = 102/9 = 34/3
+    const a1 = ri(random, 2, 7);
+    const b1 = ri(random, 1, 8);
+    const a2 = ri(random, 1, 4);
+    const b2 = ri(random, 1, 8);
+    const num = (9 * a1 + b1) + (9 * a2 + b2);
+    const den = 9;
+    const g = gcd(num, den);
+    const rNum = num / g;
+    const rDen = den / g;
+
+    return {
+      prompt: `${a1}.\\dot{${b1}} + ${a2}.\\dot{${b2}}를 계산한 값을 기약분수 \\frac{a}{b}로 나타낼 때, a + b의 값을 구하시오.`,
+      promptEn: `When calculating ${a1}.\\dot{${b1}} + ${a2}.\\dot{${b2}} as an irreducible fraction \\frac{a}{b}, find the value of a + b.`,
+      expression: `${rNum} + ${rDen}`,
+      answer: String(rNum + rDen),
+      explanation: `${a1}.\\dot{${b1}} = \\frac{${9 * a1 + b1}}{9}, ${a2}.\\dot{${b2}} = \\frac{${9 * a2 + b2}}{9}이므로 합은 \\frac{${num}}{9} = \\frac{${rNum}}{${rDen}}입니다. 따라서 a + b = ${rNum} + ${rDen} = ${rNum + rDen}입니다.`,
+    };
+  } else if (mode === 2) {
+    // 0.\dot{5}2\dot{3} = 523 * [ ]
+    return {
+      prompt: `0.\\dot{5}2\\dot{3} = 523 \\times \\square 에서 \\square 안에 알맞은 순환소수를 고르시오.`,
+      promptEn: `Find the value of \\square in the equation 0.\\dot{5}2\\dot{3} = 523 \\times \\square.`,
+      expression: `0.\\dot{0}0\\dot{1}`,
+      answer: '1',
+      choices: [
+        { value: '1', label: '0.\\dot{0}0\\dot{1}', labelEn: '0.\\dot{0}0\\dot{1}' },
+        { value: '2', label: '0.001', labelEn: '0.001' },
+        { value: '3', label: '0.00\\dot{1}', labelEn: '0.00\\dot{1}' },
+        { value: '4', label: '0.\\dot{1}', labelEn: '0.\\dot{1}' },
+      ],
+      explanation: `0.\\dot{5}2\\dot{3} = \\frac{523}{999} = 523 \\times \\frac{1}{999} = 523 \\times 0.\\dot{0}0\\dot{1}입니다. 따라서 정답은 1번입니다.`,
+    };
+  } else {
+    // 2.0\dot{6} * m/n = 0.0\dot{4} => 31/15 * m/n = 4/90 = 2/45 => m/n = (2/45) / (31/15) = 2/93
+    return {
+      prompt: `서로소인 두 자연수 m, n에 대하여 2.0\\dot{6} \\times \\frac{m}{n} = 0.0\\dot{4}일 때, m + n의 값을 구하시오.`,
+      promptEn: `Given coprime natural numbers m and n such that 2.0\\dot{6} \\times \\frac{m}{n} = 0.0\\dot{4}, find m + n.`,
+      expression: `2 + 93`,
+      answer: '95',
+      explanation: `2.0\\dot{6} = \\frac{186}{90} = \\frac{31}{15}이고, 0.0\\dot{4} = \\frac{4}{90} = \\frac{2}{45}입니다.\n\\frac{31}{15} \\times \\frac{m}{n} = \\frac{2}{45} \\implies \\frac{m}{n} = \\frac{2}{45} \\times \\frac{15}{31} = \\frac{2}{93}입니다. m = 2, n = 93이므로 m + n = 95입니다.`,
+    };
+  }
+}
+
+// [유형 16] 유리수와 소수의 관계 정오 판별 (RPM #0108~#0110, #0129)
+export function rpmRatDecNumberSystemTrueFalse(random) {
+  const statements = [
+    { q: '모든 순환소수는 유리수이다.', qEn: 'All repeating decimals are rational numbers.', ans: true, expl: '순환소수는 모두 분수 a/b (b!=0) 꼴로 나타낼 수 있으므로 유리수입니다.' },
+    { q: '정수가 아닌 유리수는 유한소수 또는 순환소수로 나타낼 수 있다.', qEn: 'Non-integer rationals can be expressed as terminating or repeating decimals.', ans: true, expl: '기약분수를 소수로 고치면 유한소수 또는 순환소수 중 하나가 됩니다.' },
+    { q: '모든 무한소수는 유리수이다.', qEn: 'All infinite decimals are rational numbers.', ans: false, expl: '순환하지 않는 무한소수(원주율 pi 등)는 분수로 나타낼 수 없으므로 유리수가 아닙니다.' },
+    { q: '기약분수 중 분모의 소인수가 2 또는 5뿐이면 유한소수이다.', qEn: 'An irreducible fraction with prime factors of denominator only 2 or 5 is a terminating decimal.', ans: true, expl: '분모를 10의 거듭제곱으로 고칠 수 있으므로 항상 유한소수입니다.' },
+    { q: '유한소수로 나타낼 수 없는 기약분수는 모두 순환소수로 나타내어진다.', qEn: 'All irreducible fractions that cannot be terminating decimals are repeating decimals.', ans: true, expl: '분수를 나눗셈하면 나머지가 유한하여 반드시 일정한 주기를 갖고 순환합니다.' },
+    { q: '순환소수 중에는 유리수가 아닌 수도 있다.', qEn: 'Some repeating decimals are not rational numbers.', ans: false, expl: '모든 순환소수는 10^n x - 10^m x 공식으로 분수화되므로 예외 없이 모두 유리수입니다.' },
+  ];
+  const target = pick(random, statements);
+
+  return {
+    prompt: `다음 설명의 참(O)/거짓(X)을 판별하시오: "${target.q}"`,
+    promptEn: `Determine True (O) or False (X): "${target.qEn}"`,
+    expression: target.q,
+    answer: target.ans ? '1' : '2',
+    choices: [
+      { value: '1', label: '참 (O)', labelEn: 'True' },
+      { value: '2', label: '거짓 (X)', labelEn: 'False' },
+    ],
+    explanation: target.expl,
+  };
+}
+
+// [유형 17] 두 분수 사이에 있는 유한소수의 개수 (RPM #0111~#0113)
+export function rpmRatDecBetweenFractionsTerminating(random) {
+  // Between 1/5 and 4/5 with denominator 35?
+  // Let's use: Between 1/6 and 5/6 with denominator 30.
+  // 1/6 = 5/30, 5/6 = 25/30.
+  // Denominator 30 = 2 * 3 * 5.
+  // For x/30 to be terminating, x must be a multiple of 3.
+  // Multiples of 3 strictly between 5 and 25: 6, 9, 12, 15, 18, 21, 24 => 7 values!
+  const configs = [
+    { lNum: 1, lDen: 6, rNum: 5, rDen: 6, M: 30, k: 3, low: 5, high: 25, count: 7, list: [6, 9, 12, 15, 18, 21, 24] },
+    { lNum: 1, lDen: 7, rNum: 4, rDen: 7, M: 35, k: 7, low: 5, high: 20, count: 2, list: [7, 14] },
+    { lNum: 1, lDen: 4, rNum: 3, rDen: 4, M: 28, k: 7, low: 7, high: 21, count: 1, list: [14] },
+    { lNum: 2, lDen: 7, rNum: 5, rDen: 7, M: 56, k: 7, low: 16, high: 40, count: 3, list: [21, 28, 35] },
+  ];
+  const cfg = pick(random, configs);
+
+  return {
+    prompt: `두 분수 \\frac{${cfg.lNum}}{${cfg.lDen}}과 \\frac{${cfg.rNum}}{${cfg.rDen}} 사이의 분수 중에서 분모가 ${cfg.M}이고 유한소수로 나타낼 수 있는 분수의 개수를 구하시오. (단, 분자는 자연수이다.)`,
+    promptEn: `How many fractions with denominator ${cfg.M} strictly between \\frac{${cfg.lNum}}{${cfg.lDen}} and \\frac{${cfg.rNum}}{${cfg.rDen}} can be represented as terminating decimals?`,
+    expression: `${cfg.count}`,
+    answer: String(cfg.count),
+    explanation: `분모를 ${cfg.M}(으)로 통분하면 \\frac{${cfg.low}}{${cfg.M}} < \\frac{x}{${cfg.M}} < \\frac{${cfg.high}}{${cfg.M}}입니다. 분모 ${cfg.M}의 2, 5 이외의 소인수는 ${cfg.k}이므로 유한소수가 되려면 분자 x는 ${cfg.k}의 배수이어야 합니다. ${cfg.low} < x < ${cfg.high} 범위의 ${cfg.k}의 배수는 ${cfg.list.join(', ')}의 ${cfg.count}개입니다.`,
+  };
+}
+
+// [유형 18] 순환소수 오차 방정식 및 자릿수 식 (RPM #0114~#0116)
+export function rpmRatDecMistakeEquationApplication(random) {
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // Multiplier error: N * 4.\dot{3} vs N * 4.3
+    // 4.\dot{3} - 4.3 = 39/9 - 43/10 = 13/3 - 43/10 = 1/30
+    // Diff is 0.6 = 6/10 = 3/5.
+    // N * 1/30 = 3/5 => N = (3/5) * 30 = 18!
+    const multiplierChoices = [
+      { rep: '4.\\dot{3}', dec: '4.3', diffFrac: 1 / 30, n: 18, diffNum: 0.6 },
+      { rep: '2.\\dot{3}', dec: '2.3', diffFrac: 1 / 30, n: 12, diffNum: 0.4 },
+      { rep: '1.\\dot{6}', dec: '1.6', diffFrac: 1 / 15, n: 9, diffNum: 0.6 },
+      { rep: '3.\\dot{6}', dec: '3.6', diffFrac: 1 / 15, n: 15, diffNum: 1.0 },
+    ];
+    const mc = pick(random, multiplierChoices);
+
+    return {
+      prompt: `어떤 자연수에 ${mc.rep}을(를) 곱해야 할 것을 잘못하여 ${mc.dec}을(를) 곱하였더니 그 결과가 정답보다 ${mc.diffNum}만큼 작아졌다. 이때 어떤 자연수를 구하시오.`,
+      promptEn: `When a natural number was supposed to be multiplied by ${mc.rep}, it was mistakenly multiplied by ${mc.dec}, yielding a result ${mc.diffNum} smaller than the correct answer. Find the natural number.`,
+      expression: `${mc.n}`,
+      answer: String(mc.n),
+      explanation: `어떤 자연수를 N이라 하면, N \\times ${mc.rep} - N \\times ${mc.dec} = ${mc.diffNum}입니다.\n${mc.rep} - ${mc.dec} = \\frac{1}{30}이고, ${mc.diffNum} = \\frac{${Math.round(mc.diffNum * 10)}}{10}이므로\nN \\times \\frac{1}{30} = \\frac{${Math.round(mc.diffNum * 10)}}{10} \\implies N = ${mc.n}입니다.`,
+    };
+  } else {
+    // 0.a\dot{b} + 0.b\dot{a} = 0.\dot{7} => a + b = 7
+    const sums = [5, 7, 8];
+    const S = pick(random, sums);
+    return {
+      prompt: `한 자리 자연수 a, b (a > b)에 대하여 0.a\\dot{b} + 0.b\\dot{a} = 0.\\dot{${S}}일 때, a + b의 값을 구하시오.`,
+      promptEn: `For single-digit natural numbers a and b with a > b, if 0.a\\dot{b} + 0.b\\dot{a} = 0.\\dot{${S}}, find a + b.`,
+      expression: `${S}`,
+      answer: String(S),
+      explanation: `0.a\\dot{b} = \\frac{10a + b - a}{90} = \\frac{9a + b}{90}, 0.b\\dot{a} = \\frac{9b + a}{90}입니다.\n두 식의 합은 \\frac{(9a + b) + (9b + a)}{90} = \\frac{10(a + b)}{90} = \\frac{a + b}{9}입니다.\n우변은 0.\\dot{${S}} = \\frac{${S}}{9}이므로 \\frac{a + b}{9} = \\frac{${S}}{9} \\implies a + b = ${S}입니다.`,
+    };
+  }
+}
+
+// [단원 종합] 유리수와 순환소수 전 유형 실전 혼합 (RPM #0117~#0130)
+export function rpmRatDecAllTypesMixed(random) {
+  const generators = [
+    rpmRatDecPowersOfTen,
+    rpmRatDecTerminatingCondition,
+    rpmRatDecMultiplyToTerminatingSingle,
+    rpmRatDecMultiplyToTerminatingBoth,
+    rpmRatDecDenominatorVariable,
+    rpmRatDecTerminatingAndIrreducible,
+    rpmRatDecPeriodAndNotation,
+    rpmRatDecNthDigitOfRepeating,
+    rpmRatDecRepeatingOnlyCondition,
+    rpmRatDecFractionEquationMethod,
+    rpmRatDecFractionFormulaMethod,
+    rpmRatDecRepeatingToTerminating,
+    rpmRatDecFaultyObservation,
+    rpmRatDecRepeatingInequality,
+    rpmRatDecArithmeticOperations,
+    rpmRatDecNumberSystemTrueFalse,
+    rpmRatDecBetweenFractionsTerminating,
+    rpmRatDecMistakeEquationApplication,
+  ];
+  return pick(random, generators)(random);
+}
+
+// [최고수준 실력 UP] 유리수와 순환소수 최고난도 심화 (RPM #0131~#0136)
+export function rpmRatDecAdvancedSkillUp(random) {
+  const mode = ri(random, 1, 3);
+  if (mode === 1) {
+    // Multi-condition: 120 < N < 200, N is multiple of 6, N / 420 terminates.
+    // 420 = 2^2 * 3 * 5 * 7 => N must be multiple of 21.
+    // N is multiple of 6 (2*3) and 21 (3*7) => N is multiple of lcm(6, 21) = 42.
+    // 120 < 42k < 200 => k = 3 (126), k = 4 (168).
+    // Sum or count.
+    return {
+      prompt: `세 자리 자연수 N에 대하여 \\frac{N}{420}을 소수로 나타내면 유한소수가 되고, N은 6의 배수이다. 100 < N < 200을 만족하는 자연수 N의 개수를 구하시오.`,
+      promptEn: `For a 3-digit natural number N, \\frac{N}{420} is a terminating decimal and N is a multiple of 6. How many such N exist in 100 < N < 200?`,
+      expression: `2`,
+      answer: '2',
+      explanation: `420 = 2^2 \\times 3 \\times 5 \\times 7이므로 유한소수가 되려면 N은 3 \\times 7 = 21의 배수이어야 합니다.\n또한 N은 6의 배수이어야 하므로 N은 6과 21의 최소공배수인 42의 배수입니다.\n100 < N < 200 범위의 42의 배수는 42 \\times 3 = 126, 42 \\times 4 = 168의 2개입니다.`,
+    };
+  } else if (mode === 2) {
+    // 1/2 * 3^2 * 5 * 7 * x that terminates
+    // x is between 1 and 100
+    return {
+      prompt: `두 분수 \\frac{5}{72}와 \\frac{11}{140}에 어떤 자연수 x를 곱하면 두 분수 모두 유한소수가 된다고 한다. x의 값이 될 수 있는 가장 작은 세 자리 자연수를 구하시오.`,
+      promptEn: `When both \\frac{5}{72} and \\frac{11}{140} are multiplied by x, both become terminating decimals. Find the smallest 3-digit natural number x.`,
+      expression: `126`,
+      answer: '126',
+      explanation: `72 = 2^3 \\times 3^2이므로 x는 9의 배수이어야 하고, 140 = 2^2 \\times 5 \\times 7이므로 x는 7의 배수이어야 합니다.\n따라서 x는 9와 7의 최소공배수인 63의 배수입니다. 가장 작은 세 자리 자연수는 63 \\times 2 = 126입니다.`,
+    };
+  } else {
+    // Period digit combination: 1/7 = 0.142857...
+    // 31st digit + 50th digit
+    // 31 % 6 = 1 => 1
+    // 50 % 6 = 2 => 4
+    // 0.xy + 0.yx = 0.14 + 0.41 = 0.55
+    return {
+      prompt: `분수 \\frac{1}{7}을 소수로 나타낼 때, 소수점 아래 31번째 자리의 숫자를 x, 소수점 아래 50번째 자리의 숫자를 y라 하자. 이때 0.x + 0.y의 값을 기약분수로 나타내시오.`,
+      promptEn: `When \\frac{1}{7} is expressed as a decimal, let x be the 31st digit and y be the 50th digit after the decimal point. Express 0.x + 0.y as an irreducible fraction.`,
+      expression: `\\frac{1}{2}`,
+      answer: '1/2',
+      explanation: `\\frac{1}{7} = 0.\\dot{1}4285\\dot{7}로 순환마디의 길이는 6입니다.\n31 ÷ 6 = 5 ... 1이므로 x = 1입니다.\n50 ÷ 6 = 8 ... 2이므로 y = 4입니다.\n따라서 0.x + 0.y = 0.1 + 0.4 = 0.5 = \\frac{1}{2}입니다.`,
+    };
+  }
+}
+
 export const RPM_APPLIED_GENERATORS = {
   // 01 소인수분해 RPM 세부 유형 (RPM 1-1 Pages 10~15)
   'rpm-prime-prop-closest': rpmPrimePropClosest,
@@ -10739,6 +11442,30 @@ export const RPM_APPLIED_GENERATORS = {
   // 중 1-2 전 범위 최종 실전 총괄 모의고사 (RPM 1-2 p.160~175)
   // -------------------------------------------------------------
   'rpm-grade7-semester-two-final-exam': rpmGrade7SemesterTwoFinalExam,
+
+  // -------------------------------------------------------------
+  // [중2-1] 01 유리수와 순환소수 세부 응용 유형 (RPM 2-1 p.12~23)
+  // -------------------------------------------------------------
+  'rpm-rat-dec-powers-of-ten': rpmRatDecPowersOfTen,
+  'rpm-rat-dec-terminating-condition': rpmRatDecTerminatingCondition,
+  'rpm-rat-dec-multiply-terminating-single': rpmRatDecMultiplyToTerminatingSingle,
+  'rpm-rat-dec-multiply-terminating-both': rpmRatDecMultiplyToTerminatingBoth,
+  'rpm-rat-dec-denominator-variable': rpmRatDecDenominatorVariable,
+  'rpm-rat-dec-terminating-irreducible': rpmRatDecTerminatingAndIrreducible,
+  'rpm-rat-dec-period-notation': rpmRatDecPeriodAndNotation,
+  'rpm-rat-dec-nth-digit': rpmRatDecNthDigitOfRepeating,
+  'rpm-rat-dec-repeating-only': rpmRatDecRepeatingOnlyCondition,
+  'rpm-rat-dec-fraction-equation': rpmRatDecFractionEquationMethod,
+  'rpm-rat-dec-fraction-formula': rpmRatDecFractionFormulaMethod,
+  'rpm-rat-dec-repeating-to-terminating': rpmRatDecRepeatingToTerminating,
+  'rpm-rat-dec-faulty-observation': rpmRatDecFaultyObservation,
+  'rpm-rat-dec-repeating-inequality': rpmRatDecRepeatingInequality,
+  'rpm-rat-dec-arithmetic-operations': rpmRatDecArithmeticOperations,
+  'rpm-rat-dec-number-system-tf': rpmRatDecNumberSystemTrueFalse,
+  'rpm-rat-dec-between-fractions': rpmRatDecBetweenFractionsTerminating,
+  'rpm-rat-dec-mistake-equation': rpmRatDecMistakeEquationApplication,
+  'rpm-rat-dec-all-mixed': rpmRatDecAllTypesMixed,
+  'rpm-rat-dec-advanced-skill-up': rpmRatDecAdvancedSkillUp,
 'rpm-geo-semester-one-mock-exam': rpmGeoSemesterOneMockExam,
 };
 

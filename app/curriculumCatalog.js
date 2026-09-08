@@ -967,6 +967,7 @@ const KOREAN_GRADE_STAGE_SEEDS = [
     topics: [
       { label: '중2 대수·확률 통합 생성기', href: '/middle-school/pre-algebra?profile=kr-middle-2', ready: true, availability: 'ready' },
       { label: '유리수와 순환소수', href: '/middle-school/integers-rationals?unit=decimal-classification', ready: true, availability: 'ready' },
+      { label: '유리수와 순환소수 세부 응용 (RPM 2-1 01)', href: '/middle-school/integers-rationals?unit=rpm-rat-dec-all-mixed', ready: true, availability: 'ready' },
       { label: '식의 계산 (지수법칙·단항식·다항식·대입)', href: '/middle-school/pre-algebra?profile=kr-middle-2&unit=polynomial-operations-2', ready: true, availability: 'ready' },
       { label: '일차부등식', href: '/middle-school/pre-algebra?profile=kr-middle-2&unit=linear-inequalities-2', ready: true, availability: 'ready' },
       { label: '연립일차방정식', href: '/middle-school/pre-algebra?profile=kr-middle-2&unit=systems-linear', ready: true, availability: 'ready' },
@@ -1955,6 +1956,7 @@ const DOMAIN_STAGE_SEEDS = [
       { label: '소수와 소인수분해', href: '/middle-school/prime-factorization', ready: true, availability: 'ready' },
       { label: '최대공약수와 최소공배수', href: '/middle-school/gcd-lcm', ready: true, availability: 'ready' },
       { label: '정수와 유리수의 사칙계산', href: '/middle-school/integers-rationals', ready: true, availability: 'ready' },
+      { label: '중2 유리수와 순환소수 세부 응용 (RPM 2-1)', href: '/middle-school/integers-rationals?unit=rpm-rat-dec-all-mixed', ready: true, availability: 'ready' },
       { label: '제곱근과 실수', href: '/middle-school/pre-algebra?profile=kr-middle-3&unit=radicals-real-numbers', ready: true, availability: 'ready' },
       { label: '복소수와 이차방정식', href: '/middle-school/pre-algebra?profile=algebra-2&unit=complex-numbers', ready: true, availability: 'ready' },
     ],
