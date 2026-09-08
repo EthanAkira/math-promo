@@ -1,4 +1,4 @@
-import { profileText } from './geometryProfiles';
+import { profileText } from './geometryProfiles.js';
 
 function randomInt(random, min, max) { return Math.floor(random() * (max - min + 1)) + min; }
 function pick(random, values) { return values[randomInt(random, 0, values.length - 1)]; }

@@ -5,7 +5,7 @@
 // problems reproduced. Unlike every other basic-figures unit these are true/false or
 // multiple-choice classification problems (no numeric answer, no diagram) — closest in shape
 // to catalog.js's `termsOx` unit, which this reuses the choices-based pattern from.
-import { profileText } from './geometryProfiles';
+import { profileText } from './geometryProfiles.js';
 
 const ri = (random, min, max) => Math.floor(random() * (max - min + 1)) + min;
 const pick = (random, values) => values[ri(random, 0, values.length - 1)];

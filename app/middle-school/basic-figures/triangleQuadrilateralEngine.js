@@ -1,7 +1,7 @@
 // 중2-2 "삼각형과 사각형의 성질" (이등변삼각형 / 삼각형의 외심과 내심 / 평행사변형 / 여러 가지 사각형).
 // 참고: 중학수학 2-2 RPM 01~04장 — 구조와 풀이 방식만 추출했고, 교재 원문·이미지·출판사명은
 // 코드나 문제에 그대로 노출하지 않는다 (PRD_2022개정_수학교육과정_카테고리 §2.4/§9 정책과 동일).
-import { profileText } from './geometryProfiles';
+import { profileText } from './geometryProfiles.js';
 
 const ri = (random, min, max) => Math.floor(random() * (max - min + 1)) + min;
 const pick = (random, values) => values[ri(random, 0, values.length - 1)];

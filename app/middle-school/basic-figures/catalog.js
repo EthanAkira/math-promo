@@ -44,6 +44,38 @@ import {
   rpmCongSquareOverlapArea,
   rpmCongAllTypesMixed,
   rpmGeoSemesterOneMockExam,
+  rpmPolyConceptInteriorExterior,
+  rpmPolyDiagonalCountFormula,
+  rpmPolyFindPolygonFromDiagonals,
+  rpmPolyTriangleAngleSumRatio,
+  rpmPolyTriangleExteriorAngleProp,
+  rpmPolyBoomerangConcaveAngle,
+  rpmPolyIncenterAngleBisector,
+  rpmPolyExteriorInteriorBisector,
+  rpmPolyInteriorAngleSumFormula,
+  rpmPolyExteriorAngleSumConst,
+  rpmPolyRegularInteriorExterior,
+  rpmPolyRegularRatioAngle,
+  rpmPolyRegularDiagonalAngle,
+  rpmPolyTwoPolygonsSharedSide,
+  rpmPolyStarPolygonAngleSum,
+  rpmPolyPaperFoldParallelAngle,
+  rpmPolyAllTypesMixed,
+  rpmCircleSectorConceptTerms,
+  rpmCircleCentralAngleArcProp,
+  rpmCircleParallelChordArc,
+  rpmCircleCentralAngleAreaProp,
+  rpmCircleChordNotProportional,
+  rpmCircleCircumferenceAndArea,
+  rpmSectorArcLengthAndArea,
+  rpmSectorAreaFromArcRadius,
+  rpmShadedRegionPerimeter,
+  rpmShadedRegionAreaDiff,
+  rpmFigureRotationSweptArea,
+  rpmTetheredAnimalPastureArea,
+  rpmRollingCircleTrackArea,
+  rpmCircleSectorAllTypesMixed,
+  rpmPlaneFiguresSemesterMockExam,
 } from '../rpmAppliedEngine.js';
 import { CORE_GEOMETRY_UNITS } from './geometryProblemEngine.js';
 import { ADVANCED_GEOMETRY_UNITS } from './advancedGeometryEngine.js';
@@ -622,6 +654,10 @@ export const UNIT_CATEGORY_LABELS = {
   'rpm-position-relations-applied': { label: '[RPM 세부응용] 02 위치 관계', labelEn: '[Applied] 02 Position Relations' },
   'rpm-construction-congruence-applied': { label: '[RPM 세부응용] 03 작도와 합동', labelEn: '[Applied] 03 Constructions & Congruence' },
   'rpm-geo-mock': { label: '[총괄평가] 중학 1-2 기하 실전 모의고사', labelEn: '[Mock Exam] Grade 7-2 Geometry Comprehensive' },
+  'rpm-polygons-applied': { label: '[RPM 세부응용] 04 다각형', labelEn: '[Applied] 04 Polygons' },
+  'rpm-circles-sectors-applied': { label: '[RPM 세부응용] 05 원과 부채꼴', labelEn: '[Applied] 05 Circles & Sectors' },
+  'rpm-plane-mock': { label: '[총괄평가] 중학 1-2 평면도형 종합 모의고사', labelEn: '[Mock Exam] Grade 7-2 Plane Figures Comprehensive' },
+
   'basic-figures-intro': { label: '기본 도형 (점·선·면·각)', labelEn: 'Basic Figures (Points, Lines & Angles)' },
   'core-geometry': { label: '평면도형 기초', labelEn: 'Core Plane Geometry' },
   'middle-geometry-basics': { label: '다각형·원·입체도형', labelEn: 'Polygons, Circles & Solids' },
@@ -700,6 +736,48 @@ export const RPM_GEO_MOCK_UNITS = [
   { id: 'rpm-geo-semester-one-mock-exam', label: '[1학기 총괄평가] 매일 중학 1-2 1학기 기하 전 범위 실전 모의고사 (기본도형~합동)', description: '기본도형, 위치관계, 작도와 합동 3개 단원 총 20문항 실전 모의고사', en: ['Grade 7-2 Semester 1 Geometry Comprehensive Mock Exam', 'Comprehensive 20-problem mock exam across Basic Figures, Position Relations, and Congruence'], make: rpmGeoSemesterOneMockExam },
 ];
 
+export const RPM_POLYGONS_APPLIED_UNITS = [
+  { id: 'rpm-poly-concept-interior-exterior', label: '[다각형 응용 01] 다각형과 정다각형의 성질', description: '다각형의 내각과 외각의 관계(합=180°) 및 정다각형의 정의 판별', en: ['Polygons Type 01: Polygon & Regular Polygon Definitions', 'Relationship between interior and exterior angles (sum=180°) and regular polygon criteria'], make: rpmPolyConceptInteriorExterior },
+  { id: 'rpm-poly-diagonal-count-formula', label: '[다각형 응용 02] 다각형의 대각선의 개수 공식', description: '한 꼭짓점에서 그을 수 있는 대각선(n-3) 및 총 대각선 수(n(n-3)/2)와 악수 활용', en: ['Polygons Type 02: Number of Diagonals Formula', 'Diagonals from one vertex (n-3), total diagonals n(n-3)/2, and handshake problem'], make: rpmPolyDiagonalCountFormula },
+  { id: 'rpm-poly-find-polygon-from-diagonals', label: '[다각형 응용 03] 대각선의 개수로 다각형 역추적', description: '대각선의 총수가 주어질 때 다각형의 변의 개수 및 내각의 합 계산', en: ['Polygons Type 03: Identifying Polygon from Diagonal Count', 'Determine number of sides and interior angle sum from total diagonal count'], make: rpmPolyFindPolygonFromDiagonals },
+  { id: 'rpm-poly-triangle-angle-sum-ratio', label: '[다각형 응용 04] 삼각형 내각의 합과 각의 비례배분', description: '삼각형 세 내각의 합(180°)과 비례배분 및 외각의 비를 이용한 각의 크기', en: ['Polygons Type 04: Triangle Angle Sum & Ratio Distribution', 'Triangle interior angle sum 180°, ratio division, and exterior angle ratios'], make: rpmPolyTriangleAngleSumRatio },
+  { id: 'rpm-poly-triangle-exterior-angle-prop', label: '[다각형 응용 05] 삼각형 내각과 외각의 성질', description: '한 외각은 이웃하지 않는 두 내각의 합 및 이등변삼각형 연쇄 사다리 각도', en: ['Polygons Type 05: Triangle Exterior Angle Theorem', 'One exterior angle equals sum of two remote interior angles and zigzag isosceles chains'], make: rpmPolyTriangleExteriorAngleProp },
+  { id: 'rpm-poly-boomerang-concave-angle', label: '[다각형 응용 06] 오목다각형(부메랑 모양)의 각', description: '오목사각형 부메랑 공식 x = a + b + c 를 이용한 꺾인 각도 구하기', en: ['Polygons Type 06: Concave Quadrilateral Boomerang Angle', 'Calculate reflex corner angle using the boomerang formula x = a + b + c'], make: rpmPolyBoomerangConcaveAngle },
+  { id: 'rpm-poly-incenter-angle-bisector', label: '[다각형 응용 07] 삼각형 두 내각의 이등분선의 교각', description: '삼각형의 두 내각의 이등분선의 교각 BIC = 90° + (1/2)A 계산', en: ['Polygons Type 07: Angle Between Two Interior Angle Bisectors', 'Compute angle at incenter BIC = 90° + (1/2)A'], make: rpmPolyIncenterAngleBisector },
+  { id: 'rpm-poly-exterior-interior-bisector', label: '[다각형 응용 08] 내각과 외각의 이등분선의 교각', description: '한 내각의 이등분선과 한 외각의 이등분선의 교각 D = (1/2)A 계산', en: ['Polygons Type 08: Angle Between Interior & Exterior Bisectors', 'Angle between interior bisector and exterior bisector D = (1/2)A'], make: rpmPolyExteriorInteriorBisector },
+  { id: 'rpm-poly-interior-angle-sum-formula', label: '[다각형 응용 09] 다각형의 내각의 크기의 합 공식', description: '180° × (n - 2) 공식을 이용한 n각형 내각의 합 및 미지수 각도 계산', en: ['Polygons Type 09: Polygon Interior Angle Sum Formula', 'Sum of interior angles 180° × (n - 2) and solving for missing angles'], make: rpmPolyInteriorAngleSumFormula },
+  { id: 'rpm-poly-exterior-angle-sum-const', label: '[다각형 응용 10] 다각형의 외각의 크기의 합', description: '모든 다각형의 외각의 크기의 합은 항상 360°임을 이용한 미지각 계산', en: ['Polygons Type 10: Sum of Exterior Angles of a Polygon', 'Using the fact that sum of exterior angles is always 360° to find missing angles'], make: rpmPolyExteriorAngleSumConst },
+  { id: 'rpm-poly-regular-interior-exterior', label: '[다각형 응용 11] 정다각형의 한 내각과 한 외각의 크기', description: '정n각형의 한 내각과 외각의 크기 공식 및 다각형의 변의 개수 역추적', en: ['Polygons Type 11: Regular Polygon Interior & Exterior Angles', 'Compute individual interior and exterior angles and identify regular polygon'], make: rpmPolyRegularInteriorExterior },
+  { id: 'rpm-poly-regular-ratio-angle', label: '[다각형 응용 12] 정다각형 한 내각과 한 외각의 비', description: '내각:외각의 비가 주어졌을 때 정다각형 이름 및 총 대각선 수 구하기', en: ['Polygons Type 12: Ratio of Interior to Exterior Angle', 'Determine regular polygon type and diagonal count from interior:exterior ratio'], make: rpmPolyRegularRatioAngle },
+  { id: 'rpm-poly-regular-diagonal-angle', label: '[다각형 응용 13] 정다각형의 대각선과 각의 크기', description: '정오각형 및 정육각형 내부 대각선이 이루는 교각 및 이등변삼각형 각도', en: ['Polygons Type 13: Angles Formed by Diagonals in Regular Polygons', 'Calculate intersection angles of diagonals in regular pentagons and hexagons'], make: rpmPolyRegularDiagonalAngle },
+  { id: 'rpm-poly-two-polygons-shared-side', label: '[다각형 응용 14] 변을 공유하는 두 정다각형의 결합각', description: '정다각형들이 한 변에서 맞닿아 있을 때 사이 각 및 이등변삼각형 꼭지각 계산', en: ['Polygons Type 14: Combined Angles of Touching Regular Polygons', 'Angles between two regular polygons sharing a common edge'], make: rpmPolyTwoPolygonsSharedSide },
+  { id: 'rpm-poly-star-polygon-angle-sum', label: '[다각형 응용 15] 별 모양 다각형 꼭짓점의 각의 합', description: '외각 성질과 맞꼭지각을 이용한 5각별(180°) 및 6각별(360°) 꼭짓점 각의 총합', en: ['Polygons Type 15: Star Polygon Vertex Angle Sum', 'Sum of vertex angles in 5-pointed (180°) and 6-pointed (360°) star polygons'], make: rpmPolyStarPolygonAngleSum },
+  { id: 'rpm-poly-paper-fold-parallel-angle', label: '[다각형 응용 16] 평행선 종이 테이프 접기와 다각형 (실력UP)', description: '직사각형 종이 테이프를 접었을 때 접은 각과 엇각으로 생기는 이등변삼각형 각도', en: ['Polygons Type 16: Folded Paper Strip Angles with Parallel Lines', 'Calculate folded and alternate interior angles forming isosceles triangles'], make: rpmPolyPaperFoldParallelAngle },
+  { id: 'rpm-poly-all-mixed', label: '[다각형 종합] 다각형 전 유형 실전 혼합 모의고사', description: '다각형 단원 16개 세부 핵심 유형에서 무작위 출제되는 실전 대비 세트', en: ['Polygons Comprehensive: All 16 Types Mixed', 'Randomized practice set covering all 16 polygon applied problem types'], make: rpmPolyAllTypesMixed },
+];
+
+export const RPM_CIRCLES_SECTORS_APPLIED_UNITS = [
+  { id: 'rpm-circle-sector-concept-terms', label: '[원과 부채꼴 응용 01] 원과 부채꼴의 기본 개념과 용어', description: '호, 현, 활꼴, 중심각의 정의 및 반원의 성질 정오 판별', en: ['Circles & Sectors Type 01: Basic Concepts & Terminology', 'Definitions of arc, chord, segment, central angle, and semicircle properties'], make: rpmCircleSectorConceptTerms },
+  { id: 'rpm-circle-central-angle-arc-prop', label: '[원과 부채꼴 응용 02] 중심각의 크기와 호의 길이의 정비례', description: '호의 길이는 중심각의 크기에 정비례함을 이용한 비례식 및 비례배분', en: ['Circles & Sectors Type 02: Central Angle & Arc Length Proportionality', 'Direct proportionality between central angle and arc length; ratio distribution'], make: rpmCircleCentralAngleArcProp },
+  { id: 'rpm-circle-parallel-chord-arc', label: '[원과 부채꼴 응용 03] 평행선과 보조선을 이용한 호의 길이', description: '원 안의 평행선 엇각과 이등변삼각형 반지름 성질을 이용한 호의 길이 계산', en: ['Circles & Sectors Type 03: Parallel Chords & Arc Length', 'Find arc lengths using parallel line alternate interior angles and radii isosceles triangles'], make: rpmCircleParallelChordArc },
+  { id: 'rpm-circle-central-angle-area-prop', label: '[원과 부채꼴 응용 04] 중심각의 크기와 부채꼴 넓이의 정비례', description: '부채꼴의 넓이는 중심각에 정비례함을 이용한 넓이 계산 및 원의 넓이 역추적', en: ['Circles & Sectors Type 04: Central Angle & Sector Area Proportionality', 'Direct proportionality between central angle and sector area; total circle area'], make: rpmCircleCentralAngleAreaProp },
+  { id: 'rpm-circle-chord-not-proportional', label: '[원과 부채꼴 응용 05] 중심각과 현의 길이의 관계', description: '현의 길이와 삼각형 넓이는 중심각에 정비례하지 않음 판별 및 이해', en: ['Circles & Sectors Type 05: Central Angle vs Chord Length', 'Chords and triangle areas are NOT directly proportional to the central angle'], make: rpmCircleChordNotProportional },
+  { id: 'rpm-circle-circumference-and-area', label: '[원과 부채꼴 응용 06] 원의 둘레의 길이와 넓이 공식', description: 'l = 2πr 과 S = πr² 공식을 이용한 원의 둘레와 넓이 계산', en: ['Circles & Sectors Type 06: Circle Circumference & Area Formulas', 'Calculate circle circumference (2πr) and area (πr²)'], make: rpmCircleCircumferenceAndArea },
+  { id: 'rpm-sector-arc-length-and-area', label: '[원과 부채꼴 응용 07] 부채꼴의 호의 길이와 넓이 공식', description: '반지름과 중심각으로부터 부채꼴의 호의 길이와 넓이 계산', en: ['Circles & Sectors Type 07: Sector Arc Length & Area Formulas', 'Calculate arc length 2πr(x/360) and sector area πr²(x/360)'], make: rpmSectorArcLengthAndArea },
+  { id: 'rpm-sector-area-from-arc-radius', label: '[원과 부채꼴 응용 08] 호의 길이와 반지름으로 넓이 구하기', description: 'S = (1/2)rl 공식을 활용한 부채꼴 넓이 및 반지름 역추적', en: ['Circles & Sectors Type 08: Sector Area from Arc Length & Radius', 'Use S = (1/2)rl to find area or backtrack radius and central angle'], make: rpmSectorAreaFromArcRadius },
+  { id: 'rpm-shaded-region-perimeter', label: '[원과 부채꼴 응용 09] 색칠한 부분의 둘레의 길이', description: '반원 접합 및 부채꼴 고리 모양 둘레의 길이(곡선 호 + 직선 선분) 계산', en: ['Circles & Sectors Type 09: Perimeter of Shaded Geometric Regions', 'Perimeter of composite shapes combining arcs and straight boundaries'], make: rpmShadedRegionPerimeter },
+  { id: 'rpm-shaded-region-area-diff', label: '[원과 부채꼴 응용 10] 색칠한 부분의 넓이 (나뭇잎/활꼴)', description: '정사각형 안 겹쳐진 사분원의 나뭇잎 모양 및 활꼴 넓이(부채꼴-삼각형) 계산', en: ['Circles & Sectors Type 10: Area of Shaded Regions (Leaf & Segment)', 'Area of overlapping quarter-circles in square and circular segments'], make: rpmShadedRegionAreaDiff },
+  { id: 'rpm-figure-rotation-swept-area', label: '[원과 부채꼴 응용 11] 도형의 이동 및 회전으로 생기는 영역', description: '히포크라테스의 초승달 및 선분/도형 회전 궤적이 지나간 자리의 넓이', en: ['Circles & Sectors Type 11: Area Swept by Rotating / Translating Figures', 'Hippocrates crescents and swept areas of rotated line segments'], make: rpmFigureRotationSweptArea },
+  { id: 'rpm-tethered-animal-pasture-area', label: '[원과 부채꼴 응용 12] 묶인 가축의 풀 뜯는 영역의 넓이', description: '직사각형 우리 모퉁이에 묶인 가축의 모퉁이 회전 부채꼴 최대 영역 계산', en: ['Circles & Sectors Type 12: Tethered Animal Grazing Area', 'Calculate multi-sector grazing areas of animals tethered to rectangular fences'], make: rpmTetheredAnimalPastureArea },
+  { id: 'rpm-rolling-circle-track-area', label: '[원과 부채꼴 응용 13] 다각형 둘레를 굴러가는 원의 자취', description: '다각형 둘레를 구르는 원의 중심 이동 거리 및 지나간 자리의 넓이 계산', en: ['Circles & Sectors Type 13: Locus of a Rolling Circle Around Polygons', 'Distance traveled by center and area swept by circle rolling around polygons'], make: rpmRollingCircleTrackArea },
+  { id: 'rpm-circle-sector-all-mixed', label: '[원과 부채꼴 종합] 원과 부채꼴 전 유형 실전 혼합 모의고사', description: '원과 부채꼴 단원 13개 세부 핵심 유형에서 무작위 출제되는 실전 대비 세트', en: ['Circles & Sectors Comprehensive: All 13 Types Mixed', 'Randomized practice set covering all 13 circle and sector applied problem types'], make: rpmCircleSectorAllTypesMixed },
+];
+
+export const RPM_PLANE_FIGURES_MOCK_UNITS = [
+  { id: 'rpm-plane-figures-semester-mock-exam', label: '[평면도형 총괄평가] 중1-2 평면도형 종합 실전 모의고사', description: '다각형과 원과 부채꼴 전 범위를 망라한 중단원 및 실력UP 총괄 모의고사', en: ['Grade 7-2 Plane Figures Comprehensive Mock Exam', 'Comprehensive mock exam covering all topics in Polygons, Circles, and Sectors'], make: rpmPlaneFiguresSemesterMockExam },
+];
+
+
 
 export const BASIC_FIGURE_UNITS = withDifficultyTier([
   { id: 'terms-ox', label: '점·선·면 정오 판별', description: '점·선·면의 성질, 직선/반직선/선분의 표현, 입체도형의 면·꼭짓점·모서리 판별하기', en: ['Points, Lines & Planes (True/False)', 'Check statements about points, lines, planes, and solid shapes'], make: termsOx },
@@ -722,6 +800,9 @@ export const BASIC_FIGURE_UNITS = withDifficultyTier([
   ...RPM_POSITION_RELATIONS_APPLIED_UNITS,
   ...RPM_CONSTRUCTION_CONGRUENCE_APPLIED_UNITS,
   ...RPM_GEO_MOCK_UNITS,
+  ...RPM_POLYGONS_APPLIED_UNITS,
+  ...RPM_CIRCLES_SECTORS_APPLIED_UNITS,
+  ...RPM_PLANE_FIGURES_MOCK_UNITS,
 ]);
 
 export function findBasicFigureUnit(unitId) {

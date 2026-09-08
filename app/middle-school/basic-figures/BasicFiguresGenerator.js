@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
 import { findBasicFigureUnit, localizeBasicFigureUnit, BASIC_FIGURE_UNITS } from './catalog';
 import GeometryDiagram from './GeometryDiagram';
-import { findGeometryProfile, GEOMETRY_PROFILES } from './geometryProfiles';
+import { findGeometryProfile, GEOMETRY_PROFILES } from './geometryProfiles.js';
 import MathText from '../../components/MathText';
 import { useLanguage } from '../../language';
 import { useAuth } from '../../auth';

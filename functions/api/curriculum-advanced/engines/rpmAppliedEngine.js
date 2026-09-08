@@ -6250,6 +6250,1223 @@ export function rpmGeoSemesterOneMockExam(random) {
 }
 
 
+
+// =============================================================
+// CHAPTER 04: 다각형 응용 (RPM 1-2 Pages 66 ~ 81)
+// =============================================================
+
+
+// [유형 01] 다각형과 정다각형의 정의, 내각과 외각 (RPM #434~#438, #535)
+export function rpmPolyConceptInteriorExterior(random) {
+  const polygonNames = [
+    { n: 3, kor: '정삼각형', eng: 'equilateral triangle' },
+    { n: 4, kor: '정사각형', eng: 'square' },
+    { n: 5, kor: '정오각형', eng: 'regular pentagon' },
+    { n: 6, kor: '정육각형', eng: 'regular hexagon' },
+    { n: 8, kor: '정팔각형', eng: 'regular octagon' },
+    { n: 10, kor: '정십각형', eng: 'regular decagon' },
+    { n: 12, kor: '정십이각형', eng: 'regular dodecagon' },
+  ];
+  const poly = pick(random, polygonNames);
+  const ext = 360 / poly.n;
+  const intAngle = 180 - ext;
+
+  const mode = ri(random, 1, 3);
+  if (mode === 1) {
+    // 한 꼭짓점에서 내각과 외각의 합은 180°
+    const givenExt = ext;
+    return {
+      prompt: `어떤 다각형의 한 꼭짓점에서 외각의 크기가 ${givenExt}°일 때, 이 꼭짓점에서의 내각의 크기를 구하시오. (단, 단위 °는 생략하고 숫자만 입력)`,
+      promptEn: `At a vertex of a polygon, the exterior angle measures ${givenExt}°. Find the measure of the interior angle at this vertex.`,
+      expression: `180 - ${givenExt}`,
+      answer: String(intAngle),
+      explanation: `다각형의 한 꼭짓점에서 내각의 크기와 외각의 크기의 합은 항상 180°입니다. 따라서 내각의 크기는 180° - ${givenExt}° = ${intAngle}°입니다.`,
+    };
+  } else if (mode === 2) {
+    // 정다각형의 정의 참/거짓 또는 객관식
+    const statements = [
+      {
+        text: '모든 변의 길이가 같은 다각형은 항상 정다각형이다.',
+        textEn: 'A polygon with all sides equal is always a regular polygon.',
+        isCorrect: false,
+        expl: '마름모는 네 변의 길이가 모두 같지만 네 내각의 크기가 모두 같지 않으므로 정다각형이 아닙니다. 정다각형이 되려면 모든 변의 길이가 같고 모든 내각의 크기도 같아야 합니다.',
+      },
+      {
+        text: '모든 내각의 크기가 같은 다각형은 항상 정다각형이다.',
+        textEn: 'A polygon with all interior angles equal is always a regular polygon.',
+        isCorrect: false,
+        expl: '직사각형은 네 내각의 크기가 모두 같지만(90°) 이웃하는 두 변의 길이가 다를 수 있으므로 정다각형이 아닙니다.',
+      },
+      {
+        text: '모든 변의 길이가 같고 모든 내각의 크기가 같은 다각형을 정다각형이라 한다.',
+        textEn: 'A polygon whose sides are all equal and interior angles are all equal is called a regular polygon.',
+        isCorrect: true,
+        expl: '정다각형의 정의는 변의 길이가 모두 같고 내각의 크기도 모두 같은 다각형입니다.',
+      },
+      {
+        text: '다각형의 한 꼭짓점에서 내각과 외각의 크기의 합은 180°이다.',
+        textEn: 'At any vertex of a polygon, the sum of the interior angle and exterior angle is 180°.',
+        isCorrect: true,
+        expl: '내각과 외각은 한 평각(180°)을 이루므로 그 합은 항상 180°입니다.',
+      },
+    ];
+    const item = pick(random, statements);
+    return {
+      prompt: `다각형에 대한 다음 설명의 참/거짓을 판별하시오: "${item.text}"`,
+      promptEn: `Determine True or False: "${item.textEn}"`,
+      expression: item.text,
+      answer: item.isCorrect ? '1' : '2',
+      choices: [
+        { value: '1', label: '참 (O)', labelEn: 'True' },
+        { value: '2', label: '거짓 (X)', labelEn: 'False' },
+      ],
+      explanation: item.expl,
+    };
+  } else {
+    // 내각의 크기가 주어졌을 때 외각의 크기
+    const interior = ri(random, 60, 160);
+    const exterior = 180 - interior;
+    return {
+      prompt: `다각형의 한 꼭짓점에서 내각의 크기가 ${interior}°일 때, 이 꼭짓점에서의 외각의 크기를 구하시오.`,
+      promptEn: `The interior angle at a vertex of a polygon is ${interior}°. Find the exterior angle at this vertex.`,
+      expression: `180 - ${interior}`,
+      answer: String(exterior),
+      explanation: `내각의 크기 + 외각의 크기 = 180°이므로, 외각의 크기 = 180° - ${interior}° = ${exterior}°입니다.`,
+    };
+  }
+}
+
+// [유형 02] 다각형의 대각선의 개수 공식 (RPM #439~#447)
+// 한 꼭짓점에서 그을 수 있는 대각선: n - 3
+// 그로 인해 생기는 삼각형의 개수: n - 2
+// 총 대각선의 개수: n(n - 3) / 2
+export function rpmPolyDiagonalCountFormula(random) {
+  const n = ri(random, 5, 15);
+  const oneVertexDiag = n - 3;
+  const triangles = n - 2;
+  const totalDiag = (n * (n - 3)) / 2;
+
+  const mode = ri(random, 1, 3);
+  if (mode === 1) {
+    // 총 대각선의 개수 구하기
+    return {
+      prompt: `${n}각형의 대각선의 총 개수를 구하시오.`,
+      promptEn: `Find the total number of diagonals in a polygon with ${n} sides (${n}-gon).`,
+      expression: `\\frac{${n}(${n} - 3)}{2}`,
+      answer: String(totalDiag),
+      explanation: `n각형의 총 대각선 개수 공식은 n(n - 3) / 2 입니다. 따라서 ${n}각형의 총 대각선 개수는 ${n} × (${n} - 3) / 2 = ${n} × ${n - 3} / 2 = ${totalDiag}개입니다.`,
+    };
+  } else if (mode === 2) {
+    // 한 꼭짓점에서 그을 수 있는 대각선 개수 a와 생기는 삼각형 개수 b의 합
+    const sumAB = oneVertexDiag + triangles;
+    return {
+      prompt: `${n}각형의 한 꼭짓점에서 그을 수 있는 대각선의 개수를 a, 이 대각선들에 의해 나누어지는 삼각형의 개수를 b라 할 때, a + b의 값을 구하시오.`,
+      promptEn: `In an ${n}-gon, let a be the number of diagonals from one vertex, and b be the number of triangles formed. Find a + b.`,
+      expression: `(${n} - 3) + (${n} - 2)`,
+      answer: String(sumAB),
+      explanation: `n각형의 한 꼭짓점에서 그을 수 있는 대각선의 개수 a = n - 3 = ${n} - 3 = ${oneVertexDiag}개, 나누어지는 삼각형의 개수 b = n - 2 = ${n} - 2 = ${triangles}개입니다. 따라서 a + b = ${oneVertexDiag} + ${triangles} = ${sumAB}입니다.`,
+    };
+  } else {
+    // 활용: n명이 서로 악수하거나, n개 팀이 리그전을 치를 때의 총 경기/악수 수
+    // 악수 = n각형의 변의 개수 + 대각선의 개수 = n(n-1)/2
+    const totalHandshakes = (n * (n - 1)) / 2;
+    return {
+      prompt: `${n}명의 사람이 모여서 서로 빠짐없이 한 번씩 악수를 하려고 한다. 악수를 하는 총 횟수를 구하시오.`,
+      promptEn: `${n} people meet and shake hands with each other exactly once. Find the total number of handshakes.`,
+      expression: `\\frac{${n}(${n} - 1)}{2}`,
+      answer: String(totalHandshakes),
+      explanation: `n명의 사람이 서로 한 번씩 악수하는 총 횟수는 n(n - 1) / 2 입니다. (${n}각형의 변의 개수 ${n} + 대각선의 개수 ${totalDiag} = ${totalHandshakes}). 따라서 ${n} × ${n - 1} / 2 = ${totalHandshakes}회입니다.`,
+    };
+  }
+}
+
+// [유형 03] 대각선의 개수가 주어졌을 때 다각형 구하기 (RPM #448~#455)
+export function rpmPolyFindPolygonFromDiagonals(random) {
+  // n = 5, 6, 7, 8, 9, 10, 11, 12, 14, 15
+  const nList = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  const n = pick(random, nList);
+  const totalDiag = (n * (n - 3)) / 2;
+
+  const mode = ri(random, 1, 3);
+  if (mode === 1) {
+    return {
+      prompt: `대각선의 총 개수가 ${totalDiag}개인 다각형의 변의 개수를 구하시오.`,
+      promptEn: `Find the number of sides of a polygon that has ${totalDiag} diagonals in total.`,
+      expression: `\\frac{n(n - 3)}{2} = ${totalDiag}`,
+      answer: String(n),
+      explanation: `n각형의 대각선의 총 개수는 n(n - 3) / 2 이므로, n(n - 3) / 2 = ${totalDiag}, n(n - 3) = ${totalDiag * 2}입니다. 연속하는 두 수 또는 차가 3인 곱을 찾으면 ${n} × ${n - 3} = ${n * (n - 3)}이므로 n = ${n}입니다. 따라서 변의 개수는 ${n}개입니다.`,
+    };
+  } else if (mode === 2) {
+    // 대각선 개수가 주어질 때 한 꼭짓점에서 그을 수 있는 대각선의 개수
+    const ans = n - 3;
+    return {
+      prompt: `대각선의 총 개수가 ${totalDiag}개인 다각형의 한 꼭짓점에서 그을 수 있는 대각선의 개수를 구하시오.`,
+      promptEn: `A polygon has ${totalDiag} diagonals in total. How many diagonals can be drawn from one vertex?`,
+      expression: `n - 3`,
+      answer: String(ans),
+      explanation: `n(n - 3) / 2 = ${totalDiag}에서 n(n - 3) = ${totalDiag * 2}이므로 n = ${n}입니다. 따라서 한 꼭짓점에서 그을 수 있는 대각선의 개수는 n - 3 = ${n} - 3 = ${ans}개입니다.`,
+    };
+  } else {
+    // 대각선 개수가 주어질 때 내각의 크기의 합
+    const interiorSum = 180 * (n - 2);
+    return {
+      prompt: `대각선의 총 개수가 ${totalDiag}개인 다각형의 내각의 크기의 합을 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `Find the sum of interior angles of a polygon having ${totalDiag} diagonals.`,
+      expression: `180^\\circ \\times (${n} - 2)`,
+      answer: String(interiorSum),
+      explanation: `n(n - 3) / 2 = ${totalDiag}에서 n = ${n} (${n}각형)입니다. n각형의 내각의 크기의 합은 180° × (n - 2) = 180° × (${n} - 2) = 180° × ${n - 2} = ${interiorSum}°입니다.`,
+    };
+  }
+}
+
+// [유형 04] 삼각형의 세 내각의 크기의 합과 비례배분 (RPM #456~#462)
+export function rpmPolyTriangleAngleSumRatio(random) {
+  const mode = ri(random, 1, 3);
+  if (mode === 1) {
+    // 세 내각의 비가 a : b : c 일 때 가장 큰 각 구하기
+    const ratios = [
+      [1, 2, 3],
+      [2, 3, 4],
+      [3, 4, 5],
+      [1, 3, 5],
+      [2, 3, 5],
+      [3, 3, 4],
+      [2, 5, 5],
+      [1, 4, 7],
+    ];
+    const [a, b, c] = pick(random, ratios);
+    const sum = a + b + c;
+    const maxPart = Math.max(a, b, c);
+    const maxAngle = (180 * maxPart) / sum;
+    return {
+      prompt: `삼각형의 세 내각의 크기의 비가 ${a} : ${b} : ${c}일 때, 가장 큰 내각의 크기를 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `The interior angles of a triangle are in the ratio ${a} : ${b} : ${c}. Find the measure of the largest interior angle.`,
+      expression: `180^\\circ \\times \\frac{${maxPart}}{${sum}}`,
+      answer: String(maxAngle),
+      explanation: `삼각형의 세 내각의 크기의 합은 180°입니다. 비례배분에 의해 가장 큰 각은 180° × ${maxPart} / (${a} + ${b} + ${c}) = 180° × ${maxPart} / ${sum} = ${maxAngle}°입니다.`,
+    };
+  } else if (mode === 2) {
+    // 방정식 형태: 세 각이 x, 2x+10, 3x-10 등
+    // (ax + p) + (bx + q) + (cx + r) = 180
+    // Simplify: x, 2x + k, x + m => sum of x is 4x, etc.
+    const xVal = ri(random, 15, 35);
+    const p = ri(random, 5, 20);
+    const angle1 = xVal;
+    const angle2 = 2 * xVal + p;
+    const angle3 = 180 - (angle1 + angle2);
+    if (angle3 <= 10) {
+      // fallback safe values
+      return {
+        prompt: `삼각형의 세 내각의 크기가 각각 x°, (2x + 10)°, (x + 50)°일 때, x의 값을 구하시오.`,
+        promptEn: `The interior angles of a triangle are x°, (2x + 10)°, and (x + 50)°. Find the value of x.`,
+        expression: `x + (2x + 10) + (x + 50) = 180`,
+        answer: '30',
+        explanation: `세 내각의 크기의 합은 180°이므로 x + (2x + 10) + (x + 50) = 180, 4x + 60 = 180, 4x = 120, x = 30입니다.`,
+      };
+    }
+    return {
+      prompt: `삼각형의 세 내각의 크기가 각각 x°, (2x + ${p})°, ${angle3}°일 때, x의 값을 구하시오.`,
+      promptEn: `The angles of a triangle are x°, (2x + ${p})°, and ${angle3}°. Find x.`,
+      expression: `x + (2x + ${p}) + ${angle3} = 180`,
+      answer: String(xVal),
+      explanation: `삼각형의 세 내각의 합은 180°이므로 x + (2x + ${p}) + ${angle3} = 180, 3x + ${p + angle3} = 180, 3x = ${180 - (p + angle3)}, x = ${xVal}입니다.`,
+    };
+  } else {
+    // 세 외각의 크기의 비가 a : b : c 일 때 가장 작은 내각 구하기
+    const ratios = [
+      [2, 3, 4],
+      [3, 4, 5],
+      [2, 3, 5],
+    ];
+    const [a, b, c] = pick(random, ratios);
+    const sum = a + b + c;
+    const ext1 = (360 * a) / sum;
+    const ext2 = (360 * b) / sum;
+    const ext3 = (360 * c) / sum;
+    // 가장 큰 외각에 대응하는 내각이 가장 작다: 180 - max(ext)
+    const maxExt = Math.max(ext1, ext2, ext3);
+    const minInterior = 180 - maxExt;
+    return {
+      prompt: `삼각형의 세 외각의 크기의 비가 ${a} : ${b} : ${c}일 때, 이 삼각형의 세 내각 중 가장 작은 내각의 크기를 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `The three exterior angles of a triangle are in the ratio ${a} : ${b} : ${c}. Find the measure of the smallest interior angle.`,
+      expression: `180^\\circ - \\left(360^\\circ \\times \\frac{${Math.max(a, b, c)}}{${sum}}\\right)`,
+      answer: String(minInterior),
+      explanation: `삼각형의 세 외각의 합은 360°입니다. 외각의 크기는 각각 ${ext1}°, ${ext2}°, ${ext3}°입니다. 내각은 180° - (외각)이므로, 가장 큰 외각(${maxExt}°)에 이웃한 내각이 가장 작습니다. 따라서 가장 작은 내각의 크기는 180° - ${maxExt}° = ${minInterior}°입니다.`,
+    };
+  }
+}
+
+// [유형 05] 삼각형의 내각과 외각의 성질 (RPM #463~#470)
+// 한 외각은 이웃하지 않는 두 내각의 크기의 합과 같다: ∠ACD = ∠A + ∠B
+// 이등변삼각형이 연속으로 이어지는 뿔 모양 각도 추적
+export function rpmPolyTriangleExteriorAngleProp(random) {
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 기본 외각 성질: ∠A = a, ∠B = b, ∠ACD = a + b
+    const angleA = ri(random, 35, 75);
+    const angleB = ri(random, 25, 65);
+    const extC = angleA + angleB;
+    return {
+      prompt: `삼각형 ABC에서 변 BC의 연장선 위에 점 D가 있다. ∠A = ${angleA}°, ∠B = ${angleB}°일 때, 외각 ∠ACD의 크기를 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `In triangle ABC, D is on the extension of BC. If ∠A = ${angleA}° and ∠B = ${angleB}°, find the exterior angle ∠ACD.`,
+      expression: `${angleA} + ${angleB}`,
+      answer: String(extC),
+      explanation: `삼각형의 한 외각의 크기는 그와 이웃하지 않는 두 내각의 크기의 합과 같습니다. 따라서 ∠ACD = ∠A + ∠B = ${angleA}° + ${angleB}° = ${extC}°입니다.`,
+    };
+  } else {
+    // 이등변삼각형 연쇄 사다리: AB = BC = CD = DE
+    // ∠A = x, ∠BCA = x, ∠CBD = 2x, ∠CDB = 2x, ∠ECD = 3x, etc.
+    const x = ri(random, 18, 28);
+    const steps = 3; // ∠ECD = 3x or 4x
+    const finalAngle = steps * x;
+    return {
+      prompt: `오른쪽 그림과 같이 선분 AB = BC = CD인 지그재그 이등변삼각형 구조에서 ∠A = ${x}°일 때, 외각 ∠DCE의 크기를 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `In a zigzag chain of isosceles triangles where AB = BC = CD and ∠A = ${x}°, find the measure of exterior angle ∠DCE.`,
+      expression: `3 \\times ${x}^\\circ`,
+      answer: String(finalAngle),
+      explanation: `1) △ABC는 이등변삼각형이므로 ∠ACB = ∠A = ${x}°입니다.\n2) ∠CBD는 △ABC의 외각이므로 ∠CBD = ${x}° + ${x}° = ${2 * x}°입니다.\n3) △BCD는 이등변삼각형이므로 ∠BDC = ∠CBD = ${2 * x}°입니다.\n4) ∠DCE는 △ACD의 한 외각이므로 ∠DCE = ∠A + ∠ADC = ${x}° + ${2 * x}° = ${3 * x}° = ${finalAngle}°입니다.`,
+    };
+  }
+}
+
+// [유형 06] 삼각형의 내각과 외각의 성질의 활용 (부메랑/오목다각형 모형) (RPM #471~#477)
+// ∠x = a + b + c
+export function rpmPolyBoomerangConcaveAngle(random) {
+  const a = ri(random, 25, 45);
+  const b = ri(random, 20, 40);
+  const c = ri(random, 30, 50);
+  const x = a + b + c;
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // x 구하기
+    return {
+      prompt: `오목사각형(부메랑 모양) ABCD에서 ∠A = ${a}°, ∠B = ${b}°, ∠C = ${c}°일 때, 안쪽으로 꺾인 각 ∠ADC(x)의 크기를 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `In a boomerang concave quadrilateral ABCD, ∠A = ${a}°, ∠B = ${b}°, and ∠C = ${c}°. Find the reflex interior corner angle x (∠ADC).`,
+      expression: `${a} + ${b} + ${c}`,
+      answer: String(x),
+      explanation: `보조선 BD를 그어 연장하면 두 삼각형의 외각의 성질에 의해 오목한 각 x = ∠A + ∠B + ∠C 입니다. 따라서 x = ${a}° + ${b}° + ${c}° = ${x}°입니다.`,
+    };
+  } else {
+    // x가 주어지고 한 각을 미지수로 놓는 경우
+    return {
+      prompt: `오목사각형 ABCD에서 안쪽 꺾인 각의 크기가 ${x}°이고, 세 뾰족한 각 중 두 각이 각각 ${a}°, ${b}°일 때, 나머지 한 뾰족한 각의 크기를 구하시오.`,
+      promptEn: `In a concave quadrilateral, the reflex angle is ${x}°, and two of the sharp angles are ${a}° and ${b}°. Find the third sharp angle.`,
+      expression: `${x} - (${a} + ${b})`,
+      answer: String(c),
+      explanation: `오목다각형의 성질에 의해 세 뾰족한 각의 합은 꺾인 각과 같습니다. 즉, ${a}° + ${b}° + (나머지 각) = ${x}°이므로, 나머지 각 = ${x}° - (${a}° + ${b}°) = ${c}°입니다.`,
+    };
+  }
+}
+
+// [유형 07] 삼각형의 두 내각의 이등분선의 교각 (RPM #478~#483)
+// ∠BIC = 90° + (1/2)∠A
+export function rpmPolyIncenterAngleBisector(random) {
+  const angleA = ri(random, 20, 55) * 2; // 짝수로 설정 (40 ~ 110)
+  const angleBIC = 90 + angleA / 2;
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // ∠A가 주어졌을 때 ∠BIC 구하기
+    return {
+      prompt: `삼각형 ABC에서 ∠B의 이등분선과 ∠C의 이등분선이 만나는 점을 I라 하자. ∠A = ${angleA}°일 때, ∠BIC의 크기를 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `In triangle ABC, the bisectors of ∠B and ∠C intersect at point I. If ∠A = ${angleA}°, find ∠BIC.`,
+      expression: `90^\\circ + \\frac{1}{2} \\times ${angleA}^\\circ`,
+      answer: String(angleBIC),
+      explanation: `∠B + ∠C = 180° - ∠A = 180° - ${angleA}° = ${180 - angleA}°입니다. 두 내각의 이등분선에 의해 ∠IBC + ∠ICB = (∠B + ∠C) / 2 = ${90 - angleA / 2}°입니다. 따라서 △IBC에서 ∠BIC = 180° - (∠IBC + ∠ICB) = 90° + (1/2)∠A = 90° + ${angleA / 2}° = ${angleBIC}°입니다.`,
+    };
+  } else {
+    // ∠BIC가 주어졌을 때 ∠A 구하기
+    return {
+      prompt: `삼각형 ABC에서 두 내각 ∠B, ∠C의 이등분선의 교점을 I라 할 때, ∠BIC = ${angleBIC}°이다. ∠A의 크기를 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `In triangle ABC, the bisectors of ∠B and ∠C meet at I. If ∠BIC = ${angleBIC}°, find ∠A.`,
+      expression: `2 \\times (${angleBIC}^\\circ - 90^\\circ)`,
+      answer: String(angleA),
+      explanation: `공식 ∠BIC = 90° + (1/2)∠A 에 대입하면 ${angleBIC}° = 90° + (1/2)∠A 입니다. (1/2)∠A = ${angleBIC - 90}°이므로, ∠A = 2 × ${angleBIC - 90}° = ${angleA}°입니다.`,
+    };
+  }
+}
+
+// [유형 08] 한 내각의 이등분선과 한 외각의 이등분선의 교각 (RPM #484~#489)
+// ∠D = (1/2)∠A
+export function rpmPolyExteriorInteriorBisector(random) {
+  const angleA = ri(random, 18, 50) * 2; // 36 ~ 100 짝수
+  const angleD = angleA / 2;
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    return {
+      prompt: `삼각형 ABC에서 내각 ∠B의 이등분선과 외각 ∠ACD의 이등분선이 만나는 점을 D라 하자. ∠A = ${angleA}°일 때, ∠D의 크기를 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `In triangle ABC, the internal bisector of ∠B and the external bisector of ∠C intersect at D. If ∠A = ${angleA}°, find ∠D.`,
+      expression: `\\frac{1}{2} \\times ${angleA}^\\circ`,
+      answer: String(angleD),
+      explanation: `외각의 성질에 의해 2∠(외각반) = ∠A + 2∠(내각반) 입니다. 양변을 2로 나누면 ∠(외각반) = (1/2)∠A + ∠(내각반) 이고, △BCD에서 외각 ∠(외각반) = ∠D + ∠(내각반) 이므로 ∠D = (1/2)∠A 입니다. 따라서 ∠D = ${angleA}° / 2 = ${angleD}°입니다.`,
+    };
+  } else {
+    return {
+      prompt: `삼각형 ABC에서 내각 ∠B의 이등분선과 외각의 이등분선의 교점 D에 대하여 ∠D = ${angleD}°일 때, ∠A의 크기를 구하시오.`,
+      promptEn: `In triangle ABC, bisectors of inner ∠B and outer ∠C meet at D. If ∠D = ${angleD}°, find ∠A.`,
+      expression: `2 \\times ${angleD}^\\circ`,
+      answer: String(angleA),
+      explanation: `한 내각의 이등분선과 한 외각의 이등분선의 교각 ∠D는 (1/2)∠A와 같습니다. 따라서 ∠A = 2 × ∠D = 2 × ${angleD}° = ${angleA}°입니다.`,
+    };
+  }
+}
+
+// [유형 09] 다각형의 내각의 크기의 합 공식 (RPM #490~#497)
+// S = 180° × (n - 2)
+export function rpmPolyInteriorAngleSumFormula(random) {
+  const n = ri(random, 5, 12);
+  const sum = 180 * (n - 2);
+
+  const mode = ri(random, 1, 3);
+  if (mode === 1) {
+    // n각형 내각의 합
+    return {
+      prompt: `${n}각형의 내각의 크기의 합을 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `Find the sum of the interior angles of an ${n}-gon.`,
+      expression: `180^\\circ \\times (${n} - 2)`,
+      answer: String(sum),
+      explanation: `n각형의 내각의 크기의 합 공식은 180° × (n - 2) 입니다. 따라서 ${n}각형의 내각의 합은 180° × (${n} - 2) = 180° × ${n - 2} = ${sum}°입니다.`,
+    };
+  } else if (mode === 2) {
+    // 합이 주어질 때 n각형 구하기
+    return {
+      prompt: `내각의 크기의 합이 ${sum}°인 다각형의 꼭짓점의 개수를 구하시오.`,
+      promptEn: `A polygon has an interior angle sum of ${sum}°. Find its number of vertices.`,
+      expression: `\\frac{${sum}}{180} + 2`,
+      answer: String(n),
+      explanation: `180° × (n - 2) = ${sum}°이므로 n - 2 = ${sum} / 180 = ${n - 2}입니다. 따라서 n = ${n}이므로 꼭짓점의 개수는 ${n}개입니다.`,
+    };
+  } else {
+    // 다각형에서 n - 1개의 각이 주어지고 나머지 한 각 x 구하기 (오각형 등)
+    // 5각형 내각합 = 540
+    const angles = [100, 110, 120, 80];
+    const targetAngle = 540 - angles.reduce((a, b) => a + b, 0); // 130
+    const offset = ri(random, -10, 10);
+    const a1 = 100 + offset;
+    const a2 = 110 - offset;
+    const a3 = 120 + offset;
+    const a4 = 85;
+    const ansX = 540 - (a1 + a2 + a3 + a4);
+    return {
+      prompt: `오각형의 다섯 내각 중 네 내각의 크기가 각각 ${a1}°, ${a2}°, ${a3}°, ${a4}°일 때, 나머지 한 내각의 크기를 구하시오.`,
+      promptEn: `In a pentagon, four interior angles measure ${a1}°, ${a2}°, ${a3}°, and ${a4}°. Find the fifth interior angle.`,
+      expression: `540 - (${a1} + ${a2} + ${a3} + ${a4})`,
+      answer: String(ansX),
+      explanation: `오각형의 내각의 크기의 합은 180° × (5 - 2) = 540°입니다. 따라서 나머지 한 내각 = 540° - (${a1}° + ${a2}° + ${a3}° + ${a4}°) = 540° - ${a1 + a2 + a3 + a4}° = ${ansX}°입니다.`,
+    };
+  }
+}
+
+// [유형 10] 다각형의 외각의 크기의 합 (RPM #498~#505)
+// 모든 다각형의 외각의 크기의 합은 항상 360°이다.
+export function rpmPolyExteriorAngleSumConst(random) {
+  const n = ri(random, 5, 8);
+  // 외각 n개 중 n-1개 생성
+  const exts = [];
+  let remaining = 360;
+  for (let i = 0; i < n - 1; i++) {
+    const val = ri(random, 30, Math.min(80, Math.floor(remaining / (n - i))));
+    exts.push(val);
+    remaining -= val;
+  }
+  const lastExt = remaining;
+
+  return {
+    prompt: `${n}각형의 외각 중 ${n - 1}개의 크기가 각각 ${exts.map((e) => e + '°').join(', ')}일 때, 나머지 한 외각의 크기를 구하시오. (단, 단위 °는 생략)`,
+    promptEn: `In an ${n}-gon, ${n - 1} of its exterior angles measure ${exts.join('°, ')}°. Find the remaining exterior angle.`,
+    expression: `360 - (${exts.join(' + ')})`,
+    answer: String(lastExt),
+    explanation: `모든 다각형의 외각의 크기의 합은 항상 360°입니다. 따라서 나머지 한 외각의 크기는 360° - (${exts.join('° + ')}°) = 360° - ${360 - lastExt}° = ${lastExt}°입니다.`,
+  };
+}
+
+// [유형 11] 정다각형의 한 내각과 한 외각의 크기 (RPM #506~#511)
+// 한 외각 = 360 / n, 한 내각 = 180 - (360 / n)
+export function rpmPolyRegularInteriorExterior(random) {
+  const regularPolys = [
+    { n: 5, name: '정오각형', int: 108, ext: 72 },
+    { n: 6, name: '정육각형', int: 120, ext: 60 },
+    { n: 8, name: '정팔각형', int: 135, ext: 45 },
+    { n: 9, name: '정구각형', int: 140, ext: 40 },
+    { n: 10, name: '정십각형', int: 144, ext: 36 },
+    { n: 12, name: '정십이각형', int: 150, ext: 30 },
+    { n: 15, name: '정십오각형', int: 156, ext: 24 },
+    { n: 18, name: '정십팔각형', int: 160, ext: 20 },
+    { n: 20, name: '정이십각형', int: 162, ext: 18 },
+  ];
+  const target = pick(random, regularPolys);
+
+  const mode = ri(random, 1, 3);
+  if (mode === 1) {
+    // 한 내각의 크기 구하기
+    return {
+      prompt: `${target.name}의 한 내각의 크기를 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `Find the measure of one interior angle of a regular ${target.n}-gon.`,
+      expression: `\\frac{180^\\circ \\times (${target.n} - 2)}{${target.n}}`,
+      answer: String(target.int),
+      explanation: `정${target.n}각형의 한 외각의 크기는 360° / ${target.n} = ${target.ext}°이므로, 한 내각의 크기는 180° - ${target.ext}° = ${target.int}°입니다. (또는 180° × (${target.n} - 2) / ${target.n} = ${target.int}°)`,
+    };
+  } else if (mode === 2) {
+    // 한 내각의 크기가 주어졌을 때 정다각형의 변의 개수
+    return {
+      prompt: `한 내각의 크기가 ${target.int}°인 정다각형의 변의 개수를 구하시오.`,
+      promptEn: `A regular polygon has an interior angle of ${target.int}°. Find its number of sides.`,
+      expression: `\\frac{360^\\circ}{180^\\circ - ${target.int}^\\circ}`,
+      answer: String(target.n),
+      explanation: `한 내각의 크기가 ${target.int}°이면 한 외각의 크기는 180° - ${target.int}° = ${target.ext}°입니다. 모든 다각형의 외각의 합은 360°이므로, 변의 개수 n = 360° / ${target.ext}° = ${target.n}개입니다.`,
+    };
+  } else {
+    // 한 외각의 크기가 주어졌을 때 정다각형의 대각선의 총 개수
+    const totalDiag = (target.n * (target.n - 3)) / 2;
+    return {
+      prompt: `한 외각의 크기가 ${target.ext}°인 정다각형의 대각선의 총 개수를 구하시오.`,
+      promptEn: `A regular polygon has an exterior angle of ${target.ext}°. Find its total number of diagonals.`,
+      expression: `\\frac{n(n - 3)}{2}`,
+      answer: String(totalDiag),
+      explanation: `한 외각이 ${target.ext}°이므로 변의 개수 n = 360° / ${target.ext}° = ${target.n} (${target.name})입니다. 대각선의 총 개수는 ${target.n} × (${target.n} - 3) / 2 = ${totalDiag}개입니다.`,
+    };
+  }
+}
+
+// [유형 12] 정다각형의 한 내각과 한 외각의 크기의 비 (RPM #512~#515)
+// 내각 : 외각 = a : b => 한 외각 = 180 * b / (a + b) => n = 360 / 외각
+export function rpmPolyRegularRatioAngle(random) {
+  const polyList = [
+    { n: 5, int: 108, ext: 72, a: 3, b: 2 }, // 108:72 = 3:2
+    { n: 6, int: 120, ext: 60, a: 2, b: 1 }, // 120:60 = 2:1
+    { n: 8, int: 135, ext: 45, a: 3, b: 1 }, // 135:45 = 3:1
+    { n: 9, int: 140, ext: 40, a: 7, b: 2 }, // 140:40 = 7:2
+    { n: 10, int: 144, ext: 36, a: 4, b: 1 }, // 144:36 = 4:1
+    { n: 12, int: 150, ext: 30, a: 5, b: 1 }, // 150:30 = 5:1
+    { n: 18, int: 160, ext: 20, a: 8, b: 1 }, // 160:20 = 8:1
+  ];
+  const target = pick(random, polyList);
+  const totalDiag = (target.n * (target.n - 3)) / 2;
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    return {
+      prompt: `한 내각의 크기와 한 외각의 크기의 비가 ${target.a} : ${target.b}인 정다각형의 이름을 구하시오. (예: 정오각형, 정육각형 등)`,
+      promptEn: `A regular polygon has the ratio of an interior angle to an exterior angle as ${target.a} : ${target.b}. What is the name of this polygon?`,
+      expression: `\\text{외각} = 180^\\circ \\times \\frac{${target.b}}{${target.a} + ${target.b}} = ${target.ext}^\\circ`,
+      answer: `정${['', '', '', '삼', '사', '오', '육', '칠', '팔', '구', '십', '십일', '십이', '십삼', '십사', '십오', '십육', '십칠', '십팔'][target.n]}각형`,
+      explanation: `한 꼭짓점에서 내각과 외각의 합은 180°입니다. 한 외각의 크기는 180° × ${target.b} / (${target.a} + ${target.b}) = ${target.ext}°입니다. 따라서 변의 개수는 360° / ${target.ext}° = ${target.n}개이므로, 이 정다각형은 정${['', '', '', '삼', '사', '오', '육', '칠', '팔', '구', '십', '십일', '십이', '십삼', '십사', '십오', '십육', '십칠', '십팔'][target.n]}각형입니다.`,
+    };
+  } else {
+    return {
+      prompt: `한 내각의 크기와 한 외각의 크기의 비가 ${target.a} : ${target.b}인 정다각형의 대각선의 총 개수를 구하시오.`,
+      promptEn: `The ratio of an interior angle to an exterior angle in a regular polygon is ${target.a} : ${target.b}. Find the total number of diagonals.`,
+      expression: `\\frac{${target.n}(${target.n} - 3)}{2}`,
+      answer: String(totalDiag),
+      explanation: `한 외각 = 180° × ${target.b} / (${target.a} + ${target.b}) = ${target.ext}°입니다. 변의 개수 n = 360° / ${target.ext}° = ${target.n}입니다. 따라서 대각선의 총 개수는 ${target.n} × (${target.n} - 3) / 2 = ${totalDiag}개입니다.`,
+    };
+  }
+}
+
+// [유형 13] 정다각형의 대각선과 각의 크기 (RPM #516~#519)
+// 정오각형 대각선 교각, 정육각형 대각선 각도 등
+export function rpmPolyRegularDiagonalAngle(random) {
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 정오각형 ABCDE에서 두 대각선 AC와 BD의 교점을 P라 할 때, ∠APB 구하기
+    // 정오각형 한 내각 = 108°
+    // △ABC는 AB=BC 이등변이므로 ∠BAC = ∠BCA = (180-108)/2 = 36°
+    // 마찬가지로 ∠CBD = ∠CDB = 36°
+    // △PBC에서 ∠APB는 외각: ∠PBC + ∠PCB = 36° + 36° = 72° (또는 180 - 72 = 108)
+    return {
+      prompt: `정오각형 ABCDE에서 두 대각선 AC와 BD의 교점을 P라 할 때, 교각 ∠APB의 크기를 구하시오. (단, 0° < ∠APB < 90°, 단위 °는 생략)`,
+      promptEn: `In regular pentagon ABCDE, diagonals AC and BD intersect at P. Find the acute angle ∠APB.`,
+      expression: `180^\\circ - 108^\\circ`,
+      answer: '72',
+      explanation: `1) 정오각형의 한 내각의 크기는 108°입니다.\n2) △ABC에서 AB = BC이므로 이등변삼각형이며, ∠BAC = ∠BCA = (180° - 108°) / 2 = 36°입니다.\n3) 마찬가지로 △BCD에서 ∠CBD = 36°입니다.\n4) △PBC에서 외각의 성질에 의해 ∠APB = ∠PBC + ∠PCB = 36° + 36° = 72°입니다.`,
+    };
+  } else {
+    // 정육각형 ABCDEF에서 대각선 AC와 BF의 교점 또는 ∠BAC
+    // 정육각형 한 내각 = 120°, △ABC에서 ∠BAC = (180-120)/2 = 30°
+    return {
+      prompt: `정육각형 ABCDEF에서 대각선 AC를 그었을 때, ∠BAC의 크기를 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `In regular hexagon ABCDEF, diagonal AC is drawn. Find ∠BAC.`,
+      expression: `\\frac{180^\\circ - 120^\\circ}{2}`,
+      answer: '30',
+      explanation: `정육각형의 한 내각의 크기는 120°입니다. 정육각형의 변의 길이는 모두 같으므로 △ABC는 AB = BC인 이등변삼각형입니다. 따라서 ∠BAC = (180° - 120°) / 2 = 30°입니다.`,
+    };
+  }
+}
+
+// [유형 14] 변의 길이가 같은 두 정다각형이 한 변에서 만날 때의 각 (RPM #520~#523)
+// 정오각형 + 정삼각형, 정오각형 + 정사각형, 정사각형 + 정삼각형
+export function rpmPolyTwoPolygonsSharedSide(random) {
+  const pairs = [
+    {
+      p1: '정오각형',
+      p2: '정삼각형',
+      deg1: 108,
+      deg2: 60,
+      comb: 108 + 60, // 168
+      rem: 360 - (108 + 60), // 192 or angle between them
+      innerIso: (180 - (108 - 60)) / 2, // 정오각형 내부 정삼각형: 108 - 60 = 48 => (180-48)/2 = 66
+    },
+    {
+      p1: '정오각형',
+      p2: '정사각형',
+      deg1: 108,
+      deg2: 90,
+      innerDiff: 108 - 90, // 18 => (180 - 18) / 2 = 81
+    },
+    {
+      p1: '정사각형',
+      p2: '정삼각형',
+      deg1: 90,
+      deg2: 60,
+      innerDiff: 90 - 60, // 30 => (180 - 30) / 2 = 75
+    },
+  ];
+
+  const target = pick(random, pairs);
+  if (target.p2 === '정삼각형' && target.p1 === '정사각형') {
+    // 정사각형 ABCD 내부에 점 P를 잡아 정삼각형 PBC를 만들었을 때, ∠APD 구하기
+    // ∠ABP = 90 - 60 = 30°, BA = BP 이므로 이등변삼각형, ∠BAP = (180 - 30)/2 = 75°
+    // ∠DAP = 90 - 75 = 15° => △APD는 AP = DP인 이등변, ∠APD = 180 - 2*15 = 150°
+    return {
+      prompt: `정사각형 ABCD의 내부에 한 변 BC를 공유하는 정삼각형 PBC를 그렸다. ∠APD의 크기를 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `Inside square ABCD, an equilateral triangle PBC sharing side BC is drawn. Find ∠APD.`,
+      expression: `180^\\circ - 2 \\times (90^\\circ - 75^\\circ)`,
+      answer: '150',
+      explanation: `1) 정사각형의 한 내각은 90°, 정삼각형의 한 내각은 60°입니다.\n2) ∠ABP = 90° - 60° = 30°입니다.\n3) AB = BC = BP이므로 △ABP는 이등변삼각형입니다. 따라서 ∠BAP = (180° - 30°) / 2 = 75°입니다.\n4) ∠DAP = 90° - 75° = 15°이고, 대칭에 의해 ∠ADP = 15°입니다.\n5) 따라서 △APD에서 ∠APD = 180° - (15° + 15°) = 150°입니다.`,
+    };
+  } else {
+    // 정사각형 ABCD 외부에 정삼각형 CDE를 붙였을 때 ∠ADE 등
+    // 90 + 60 = 150 => 이등변 (180 - 150) / 2 = 15°
+    return {
+      prompt: `한 변의 길이가 같은 정사각형 ABCD와 정삼각형 CDE를 변 CD가 맞닿도록 외부에 이어 붙였다. 선분 AE를 그었을 때, ∠DAE의 크기를 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `A square ABCD and an equilateral triangle CDE of equal side length are attached along side CD. Find ∠DAE.`,
+      expression: `\\frac{180^\\circ - (90^\\circ + 60^\\circ)}{2}`,
+      answer: '15',
+      explanation: `1) ∠ADE = ∠ADC + ∠CDE = 90° + 60° = 150°입니다.\n2) AD = CD = DE이므로 △ADE는 AD = DE인 이등변삼각형입니다.\n3) 따라서 ∠DAE = (180° - 150°) / 2 = 15°입니다.`,
+    };
+  }
+}
+
+// [유형 15] 다각형의 꼭짓점 각의 합 (별 모양 다각형 / 맞꼭지각 보조선) (RPM #524~#526)
+// 5각별 ∠A + ∠B + ∠C + ∠D + ∠E = 180°
+export function rpmPolyStarPolygonAngleSum(random) {
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 5각별에서 4개 각이 주어졌을 때 나머지 한 각 구하기
+    const angles = [35, 40, 30, 45];
+    const offset = ri(random, -5, 5);
+    const a = 35 + offset;
+    const b = 40 - offset;
+    const c = 30 + offset;
+    const d = 45 - offset;
+    const ansE = 180 - (a + b + c + d);
+    return {
+      prompt: `오각별(star polygon) 모양에서 다섯 꼭짓점의 각 중 네 각의 크기가 각각 ∠A = ${a}°, ∠B = ${b}°, ∠C = ${c}°, ∠D = ${d}°일 때, ∠E의 크기를 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `In a 5-pointed star, four vertex angles measure ${a}°, ${b}°, ${c}°, and ${d}°. Find the fifth vertex angle ∠E.`,
+      expression: `180 - (${a} + ${b} + ${c} + ${d})`,
+      answer: String(ansE),
+      explanation: `삼각형의 외각의 성질을 이용해 두 각씩 모으면 다섯 꼭짓점의 각의 합은 항상 한 삼각형의 내각의 합과 같으므로 ∠A + ∠B + ∠C + ∠D + ∠E = 180°입니다. 따라서 ∠E = 180° - (${a}° + ${b}° + ${c}° + ${d}°) = ${ansE}°입니다.`,
+    };
+  } else {
+    // 6각별 (두 삼각형 겹침) 꼭짓점 각의 합: 180 + 180 = 360°
+    return {
+      prompt: `오른쪽 그림과 같이 두 삼각형이 겹쳐진 육각별 모양에서 여섯 꼭짓점의 각 ∠A + ∠B + ∠C + ∠D + ∠E + ∠F의 크기의 합을 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `In a 6-pointed star formed by two overlapping triangles, find the sum of the six vertex angles ∠A + ∠B + ∠C + ∠D + ∠E + ∠F.`,
+      expression: `180^\\circ \\times 2`,
+      answer: '360',
+      explanation: `육각별의 여섯 꼭짓점은 두 개의 독립된 삼각형 △ACE와 △BDF의 꼭짓점들로 이루어져 있습니다. 각 삼각형의 내각의 합은 180°이므로, 여섯 각의 총합은 180° + 180° = 360°입니다.`,
+    };
+  }
+}
+
+// [유형 16] 평행선 종이 테이프 접기와 다각형 융합 (실력 UP) (RPM #527~#534, #547~#550)
+export function rpmPolyPaperFoldParallelAngle(random) {
+  // 폭이 일정한 직사각형 종이를 접었을 때:
+  // 접은 각 = 원래 각, 평행선의 엇각
+  const foldAngle = ri(random, 50, 75);
+  const vertexAngle = 180 - 2 * foldAngle;
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 접은 각 x가 주어졌을 때 생기는 삼각형의 꼭지각
+    return {
+      prompt: `직사각형 모양의 종이테이프를 오른쪽 그림과 같이 접었을 때, 접힌 각의 크기가 ${foldAngle}°이다. 이때 겹쳐진 삼각형의 꼭지각 x의 크기를 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `A rectangular paper strip is folded with a crease angle of ${foldAngle}°. Find the apex angle x of the resulting overlapping triangle.`,
+      expression: `180 - 2 \\times ${foldAngle}`,
+      answer: String(vertexAngle),
+      explanation: `종이를 접었으므로 접은 각의 크기는 서로 같아 ${foldAngle}°이고, 평행선의 엇각의 크기도 같으므로 겹쳐진 삼각형은 두 밑각이 각각 ${foldAngle}°인 이등변삼각형이 됩니다. 따라서 꼭지각 x = 180° - (${foldAngle}° × 2) = ${vertexAngle}°입니다.`,
+    };
+  } else {
+    // 꼭지각이 주어졌을 때 접은 각 x 구하기
+    return {
+      prompt: `직사각형 종이테이프를 접어 만든 이등변삼각형의 꼭지각이 ${vertexAngle}°일 때, 접은 각 x의 크기를 구하시오.`,
+      promptEn: `A folded rectangular paper tape forms an isosceles triangle with apex angle ${vertexAngle}°. Find the crease angle x.`,
+      expression: `\\frac{180 - ${vertexAngle}}{2}`,
+      answer: String(foldAngle),
+      explanation: `접은 각과 엇각의 성질에 의해 겹쳐진 부분은 두 밑각의 크기가 x로 같은 이등변삼각형입니다. 따라서 2x + ${vertexAngle}° = 180°이므로 2x = ${180 - vertexAngle}°, x = ${foldAngle}°입니다.`,
+    };
+  }
+}
+
+// [단원 종합] 다각형 전 유형 혼합
+export function rpmPolyAllTypesMixed(random) {
+  const generators = [
+    rpmPolyConceptInteriorExterior,
+    rpmPolyDiagonalCountFormula,
+    rpmPolyFindPolygonFromDiagonals,
+    rpmPolyTriangleAngleSumRatio,
+    rpmPolyTriangleExteriorAngleProp,
+    rpmPolyBoomerangConcaveAngle,
+    rpmPolyIncenterAngleBisector,
+    rpmPolyExteriorInteriorBisector,
+    rpmPolyInteriorAngleSumFormula,
+    rpmPolyExteriorAngleSumConst,
+    rpmPolyRegularInteriorExterior,
+    rpmPolyRegularRatioAngle,
+    rpmPolyRegularDiagonalAngle,
+    rpmPolyTwoPolygonsSharedSide,
+    rpmPolyStarPolygonAngleSum,
+    rpmPolyPaperFoldParallelAngle,
+  ];
+  return pick(random, generators)(random);
+}
+
+// =============================================================
+// CHAPTER 05: 원과 부채꼴 응용 (RPM 1-2 Pages 86 ~ 98)
+// =============================================================
+
+
+// [유형 01] 원과 부채꼴의 기본 개념과 용어 (RPM #590~#596, #665)
+// 호, 현, 할선, 활꼴, 중심각, 반원 특징
+export function rpmCircleSectorConceptTerms(random) {
+  const statements = [
+    {
+      text: '한 원에서 부채꼴과 활꼴이 같아지는 경우 부채꼴의 중심각의 크기는 180°(반원)이다.',
+      textEn: 'When a sector and a circular segment become identical, the central angle is 180° (semicircle).',
+      isCorrect: true,
+      expl: '반원은 중심각이 180°인 부채꼴이면서 호와 지름으로 이루어진 활꼴이기도 하므로 부채꼴과 활꼴이 일치합니다.',
+    },
+    {
+      text: '부채꼴의 반지름의 길이와 현의 길이가 같을 때, 이 부채꼴의 중심각의 크기는 60°이다.',
+      textEn: 'When the chord length equals the radius of a sector, its central angle is 60°.',
+      isCorrect: true,
+      expl: '두 반지름과 현의 길이가 모두 같으면 정삼각형이 되므로 중심각의 크기는 60°입니다.',
+    },
+    {
+      text: '원 위의 두 점을 이은 선분을 현이라 하고, 가장 긴 현은 그 원의 지름이다.',
+      textEn: 'The segment connecting two points on a circle is a chord, and the longest chord is the diameter.',
+      isCorrect: true,
+      expl: '원의 중심을 지나는 현이 원에서 가장 긴 현이며 이것이 바로 지름입니다.',
+    },
+    {
+      text: '원 위의 두 점을 양 끝으로 하는 원의 일부분을 활꼴이라 한다.',
+      textEn: 'The portion of a circle between two points is called a segment.',
+      isCorrect: false,
+      expl: '원 위의 두 점을 양 끝점으로 하는 원의 일부분은 "호(arc)"라고 합니다. 호와 현으로 이루어진 도형이 "활꼴"입니다.',
+    },
+    {
+      text: '중심각의 크기가 2배가 되면 현의 길이도 2배가 된다.',
+      textEn: 'When the central angle doubles, the length of the chord also doubles.',
+      isCorrect: false,
+      expl: '현의 길이는 중심각의 크기에 정비례하지 않습니다. 중심각이 2배가 되면 현의 길이는 2배보다 작습니다.',
+    },
+  ];
+  const target = pick(random, statements);
+  return {
+    prompt: `원과 부채꼴에 대한 다음 설명의 참/거짓을 판별하시오: "${target.text}"`,
+    promptEn: `Determine True or False: "${target.textEn}"`,
+    expression: target.text,
+    answer: target.isCorrect ? '1' : '2',
+    choices: [
+      { value: '1', label: '참 (O)', labelEn: 'True' },
+      { value: '2', label: '거짓 (X)', labelEn: 'False' },
+    ],
+    explanation: target.expl,
+  };
+}
+
+// [유형 02] 중심각의 크기와 호의 길이의 정비례 관계 (RPM #597~#602, #666)
+// 호의 길이는 중심각의 크기에 정비례한다.
+export function rpmCircleCentralAngleArcProp(random) {
+  const mode = ri(random, 1, 3);
+  if (mode === 1) {
+    // 각 x와 y의 비례 관계: 각도1 : 각도2 = 호1 : 호2
+    const theta1 = pick(random, [30, 40, 45, 60, 75]);
+    const factor = ri(random, 2, 4);
+    const theta2 = theta1 * factor;
+    const arc1 = ri(random, 3, 8);
+    const arc2 = arc1 * factor;
+    return {
+      prompt: `한 원에서 중심각의 크기가 ${theta1}°인 부채꼴의 호의 길이가 ${arc1}cm이다. 같은 원에서 중심각의 크기가 ${theta2}°인 부채꼴의 호의 길이를 구하시오. (단, 단위 cm는 생략)`,
+      promptEn: `In a circle, a central angle of ${theta1}° subtends an arc of length ${arc1} cm. Find the arc length for a central angle of ${theta2}°.`,
+      expression: `\\frac{${theta2}}{${theta1}} \\times ${arc1}`,
+      answer: String(arc2),
+      explanation: `한 원에서 부채꼴의 호의 길이는 중심각의 크기에 정비례합니다. 중심각이 ${theta1}°에서 ${theta2}°로 ${factor}배가 되었으므로 호의 길이도 ${arc1} × ${factor} = ${arc2}cm가 됩니다.`,
+    };
+  } else if (mode === 2) {
+    // 호의 길이의 비가 a : b : c 일 때 가장 큰 중심각 구하기 (원 전체 둘레 분할)
+    const ratios = [
+      [2, 3, 4],
+      [1, 2, 3],
+      [3, 4, 5],
+      [2, 3, 5],
+      [1, 3, 5],
+    ];
+    const [a, b, c] = pick(random, ratios);
+    const sum = a + b + c;
+    const maxPart = Math.max(a, b, c);
+    const centralAngle = (360 * maxPart) / sum;
+    return {
+      prompt: `원 O의 둘레 위의 세 점 A, B, C에 의해 생기는 세 호 AB, BC, CA의 길이의 비가 ${a} : ${b} : ${c}일 때, 가장 큰 중심각의 크기를 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `Three points A, B, C divide a circle into arcs AB, BC, CA in the ratio ${a} : ${b} : ${c}. Find the measure of the largest central angle.`,
+      expression: `360^\\circ \\times \\frac{${maxPart}}{${sum}}`,
+      answer: String(centralAngle),
+      explanation: `원 전체의 중심각은 360°이고, 호의 길이는 중심각에 정비례하므로 비례배분을 이용합니다. 가장 큰 중심각 = 360° × ${maxPart} / (${a} + ${b} + ${c}) = 360° × ${maxPart} / ${sum} = ${centralAngle}°입니다.`,
+    };
+  } else {
+    // 호의 길이가 주어졌을 때 미지각 x 구하기
+    const theta = ri(random, 25, 70);
+    const mult = ri(random, 2, 3);
+    const arc = ri(random, 4, 10);
+    const totalArc = arc * mult;
+    const targetTheta = theta * mult;
+    return {
+      prompt: `한 원에서 호 AB의 길이가 ${arc}cm일 때 중심각의 크기는 ${theta}°이다. 같은 원에서 호 CD의 길이가 ${totalArc}cm일 때, 호 CD에 대한 중심각 x의 크기를 구하시오.`,
+      promptEn: `In a circle, arc AB of length ${arc} cm has a central angle of ${theta}°. Find the central angle x for an arc CD of length ${totalArc} cm.`,
+      expression: `\\frac{${totalArc}}{${arc}} \\times ${theta}`,
+      answer: String(targetTheta),
+      explanation: `호의 길이는 중심각의 크기에 정비례하므로, x = ${theta}° × (${totalArc} / ${arc}) = ${theta}° × ${mult} = ${targetTheta}°입니다.`,
+    };
+  }
+}
+
+// [유형 03] 평행선과 보조선을 이용한 호의 길이 구하기 (RPM #603~#604)
+// AB // CD, OA = OC = OB (이등변삼각형 밑각과 엇각/동위각)
+export function rpmCircleParallelChordArc(random) {
+  // 원 O에서 현 AB와 지름 CD(또는 다른 현)가 평행할 때
+  // ∠OAB = theta => OA = OB 이므로 ∠OBA = theta
+  // 평행선 엇각/동위각에 의해 중심각 ∠AOC = theta, etc.
+  const theta = ri(random, 20, 45);
+  const arcAC = ri(random, 4, 12);
+  // If central angle for AC is theta, and arcAC is given, find arc for central angle 180 - 2*theta
+  const centerAngleAOB = 180 - 2 * theta;
+  const arcAB = Math.round((arcAC * centerAngleAOB) / theta);
+
+  return {
+    prompt: `오른쪽 그림과 같이 원 O에서 지름 CD와 현 AB가 평행하다. OA = OB이고 ∠OAB = ${theta}°이다. 호 AC의 길이가 ${arcAC}cm일 때, 호 AB의 길이를 구하시오. (단, 단위 cm는 생략)`,
+    promptEn: `In circle O, diameter CD is parallel to chord AB. OA = OB and ∠OAB = ${theta}°. If arc AC has length ${arcAC} cm, find the length of arc AB.`,
+    expression: `${arcAC} \\times \\frac{180 - 2 \\times ${theta}}{${theta}}`,
+    answer: String(arcAB),
+    explanation: `1) △OAB는 OA = OB(반지름)인 이등변삼각형이므로 ∠OBA = ∠OAB = ${theta}°입니다.\n2) ∠AOB = 180° - 2 × ${theta}° = ${centerAngleAOB}°입니다.\n3) AB // CD이므로 엇각에 의해 ∠AOC = ∠OAB = ${theta}°입니다.\n4) 호의 길이는 중심각에 정비례하므로 (호 AB) = (호 AC) × (${centerAngleAOB}° / ${theta}°) = ${arcAC} × ${centerAngleAOB / theta} = ${arcAB}cm입니다.`,
+  };
+}
+
+// [유형 04] 중심각의 크기와 부채꼴의 넓이의 정비례 관계 (RPM #605~#607)
+export function rpmCircleCentralAngleAreaProp(random) {
+  const theta1 = pick(random, [30, 40, 45, 60]);
+  const factor = ri(random, 2, 4);
+  const theta2 = theta1 * factor;
+  const area1 = ri(random, 4, 15);
+  const area2 = area1 * factor;
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    return {
+      prompt: `한 원에서 중심각의 크기가 ${theta1}°인 부채꼴의 넓이가 ${area1}cm²이다. 중심각의 크기가 ${theta2}°인 부채꼴의 넓이를 구하시오. (단, 단위 cm²는 생략)`,
+      promptEn: `In a circle, a sector with central angle ${theta1}° has area ${area1} cm². Find the area of a sector with central angle ${theta2}°.`,
+      expression: `\\frac{${theta2}}{${theta1}} \\times ${area1}`,
+      answer: String(area2),
+      explanation: `부채꼴의 넓이는 중심각의 크기에 정비례합니다. 중심각이 ${theta1}°에서 ${theta2}°로 ${factor}배가 되었으므로 넓이도 ${area1} × ${factor} = ${area2}cm²입니다.`,
+    };
+  } else {
+    // 부채꼴 넓이로 원 전체의 넓이 구하기
+    const wholeArea = (area1 * 360) / theta1;
+    return {
+      prompt: `원 O에서 중심각의 크기가 ${theta1}°인 부채꼴의 넓이가 ${area1}cm²일 때, 원 O 전체의 넓이를 구하시오.`,
+      promptEn: `In circle O, the area of a sector with central angle ${theta1}° is ${area1} cm². Find the area of the entire circle.`,
+      expression: `\\frac{360}{${theta1}} \\times ${area1}`,
+      answer: String(wholeArea),
+      explanation: `원 전체의 중심각은 360°입니다. 따라서 원의 넓이는 부채꼴의 넓이의 360 / ${theta1} = ${360 / theta1}배이므로 ${area1} × ${360 / theta1} = ${wholeArea}cm²입니다.`,
+    };
+  }
+}
+
+// [유형 05] 중심각의 크기와 현의 길이 관계 (RPM #608~#612)
+// 중심각이 같으면 현의 길이도 같지만, 현의 길이는 중심각에 정비례하지 않는다.
+export function rpmCircleChordNotProportional(random) {
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 참 거짓 판별
+    const items = [
+      {
+        q: '한 원에서 중심각의 크기가 같으면 현의 길이도 같다.',
+        qEn: 'In a circle, chords subtending equal central angles have equal lengths.',
+        ans: true,
+        expl: '합동인 삼각형이 만들어지므로 중심각의 크기가 같으면 현의 길이도 같습니다.',
+      },
+      {
+        q: '한 원에서 중심각의 크기가 2배가 되면 현의 길이도 2배가 된다.',
+        qEn: 'If a central angle doubles, the chord length also doubles.',
+        ans: false,
+        expl: '삼각형의 두 변의 길이의 합은 다른 한 변의 길이보다 크므로, 중심각이 2배가 되어도 현의 길이는 2배보다 작습니다. 따라서 현의 길이는 중심각에 정비례하지 않습니다.',
+      },
+      {
+        q: '한 원에서 중심각의 크기에 정비례하는 것은 호의 길이와 부채꼴의 넓이이다.',
+        qEn: 'In a circle, arc length and sector area are directly proportional to the central angle.',
+        ans: true,
+        expl: '호의 길이와 부채꼴의 넓이는 중심각에 정비례하지만, 현의 길이와 삼각형의 넓이는 정비례하지 않습니다.',
+      },
+      {
+        q: '한 원에서 길이가 같은 현에 대한 중심각의 크기는 서로 같다.',
+        qEn: 'In a circle, chords of equal length subtend equal central angles.',
+        ans: true,
+        expl: 'SSS 삼각형 합동에 의해 현의 길이가 같으면 중심각의 크기도 같습니다.',
+      },
+    ];
+    const target = pick(random, items);
+    return {
+      prompt: `원과 중심각의 성질에 대한 다음 설명의 참/거짓을 판별하시오: "${target.q}"`,
+      promptEn: `Determine True or False: "${target.qEn}"`,
+      expression: target.q,
+      answer: target.ans ? '1' : '2',
+      choices: [
+        { value: '1', label: '참 (O)', labelEn: 'True' },
+        { value: '2', label: '거짓 (X)', labelEn: 'False' },
+      ],
+      explanation: target.expl,
+    };
+  } else {
+    // 객관식: 다음 중 중심각의 크기에 정비례하지 않는 것을 모두 고른 것은?
+    return {
+      prompt: `한 원에서 중심각의 크기에 정비례하지 않는 것을 다음 보기에서 고르시오: ㉠ 호의 길이  ㉡ 부채꼴의 넓이  ㉢ 현의 길이  ㉣ 삼각형의 넓이`,
+      promptEn: `Which of the following are NOT directly proportional to the central angle? (a) arc length, (b) sector area, (c) chord length, (d) triangle area`,
+      expression: `\\text{정비례하지 않는 것: 현의 길이, 삼각형의 넓이}`,
+      answer: '3',
+      choices: [
+        { value: '1', label: '㉠, ㉡', labelEn: '(a), (b)' },
+        { value: '2', label: '㉠, ㉢', labelEn: '(a), (c)' },
+        { value: '3', label: '㉢, ㉣', labelEn: '(c), (d)' },
+        { value: '4', label: '㉡, ㉣', labelEn: '(b), (d)' },
+      ],
+      explanation: `한 원에서 호의 길이와 부채꼴의 넓이는 중심각의 크기에 정비례하지만, 현의 길이와 삼각형의 넓이는 중심각의 크기에 정비례하지 않습니다. 따라서 정답은 ㉢, ㉣입니다.`,
+    };
+  }
+}
+
+// [유형 06] 원의 둘레의 길이와 넓이 (RPM #613~#620)
+// l = 2πr, S = πr²
+export function rpmCircleCircumferenceAndArea(random) {
+  const r = ri(random, 3, 15);
+  const lCoeff = 2 * r;
+  const sCoeff = r * r;
+
+  const mode = ri(random, 1, 3);
+  if (mode === 1) {
+    // 반지름이 주어졌을 때 넓이의 π 계수 k 구하기
+    return {
+      prompt: `반지름의 길이가 ${r}cm인 원의 넓이가 kπ cm²일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `The area of a circle with radius ${r} cm is kπ cm². Find the value of k.`,
+      expression: `\\pi \\times ${r}^2`,
+      answer: String(sCoeff),
+      explanation: `원의 넓이 공식은 S = πr² 입니다. 반지름이 ${r}cm이므로 S = π × ${r}² = ${sCoeff}π cm²입니다. 따라서 k = ${sCoeff}입니다.`,
+    };
+  } else if (mode === 2) {
+    // 둘레가 주어졌을 때 원의 넓이의 π 계수 k 구하기
+    return {
+      prompt: `둘레의 길이가 ${lCoeff}π cm인 원의 넓이가 kπ cm²일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `A circle has circumference ${lCoeff}π cm. If its area is kπ cm², find k.`,
+      expression: `\\pi \\times \\left(\\frac{${lCoeff}}{2}\\right)^2`,
+      answer: String(sCoeff),
+      explanation: `원의 둘레는 2πr = ${lCoeff}π 이므로 반지름 r = ${r}cm입니다. 따라서 원의 넓이는 S = πr² = π × ${r}² = ${sCoeff}π cm²이므로 k = ${sCoeff}입니다.`,
+    };
+  } else {
+    // 지름이 주어졌을 때 둘레의 길이 l = kπ 에서 k 구하기
+    const d = 2 * r;
+    return {
+      prompt: `지름의 길이가 ${d}cm인 원의 둘레의 길이가 kπ cm일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `The diameter of a circle is ${d} cm. If its circumference is kπ cm, find k.`,
+      expression: `2\\pi r = \\pi d`,
+      answer: String(d),
+      explanation: `원의 둘레 l = 2πr = π × (지름) = ${d}π cm입니다. 따라서 k = ${d}입니다.`,
+    };
+  }
+}
+
+// [유형 07] 부채꼴의 호의 길이와 넓이 (기본 공식) (RPM #621~#628)
+// l = 2πr × (x / 360), S = πr² × (x / 360)
+export function rpmSectorArcLengthAndArea(random) {
+  const rList = [4, 6, 8, 9, 10, 12];
+  const r = pick(random, rList);
+  const thetas = [30, 45, 60, 90, 120, 135, 150];
+  // Filter theta such that (2 * r * theta) % 360 === 0
+  const validThetas = thetas.filter((t) => (2 * r * t) % 360 === 0);
+  const theta = pick(random, validThetas.length ? validThetas : [60]);
+
+  const arcCoeff = (2 * r * theta) / 360;
+  const areaCoeff = (r * r * theta) / 360;
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 호의 길이 kπ 구하기
+    return {
+      prompt: `반지름의 길이가 ${r}cm이고 중심각의 크기가 ${theta}°인 부채꼴의 호의 길이가 kπ cm일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `A sector has radius ${r} cm and central angle ${theta}°. If its arc length is kπ cm, find k.`,
+      expression: `2 \\times ${r} \\times \\frac{${theta}}{360}`,
+      answer: String(arcCoeff),
+      explanation: `부채꼴의 호의 길이 l = 2πr × (x / 360) = 2π × ${r} × (${theta} / 360) = ${arcCoeff}π cm입니다. 따라서 k = ${arcCoeff}입니다.`,
+    };
+  } else {
+    // 부채꼴 넓이 kπ 구하기
+    return {
+      prompt: `반지름의 길이가 ${r}cm이고 중심각의 크기가 ${theta}°인 부채꼴의 넓이가 kπ cm²일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `A sector has radius ${r} cm and central angle ${theta}°. If its area is kπ cm², find k.`,
+      expression: `${r}^2 \\times \\frac{${theta}}{360}`,
+      answer: String(areaCoeff),
+      explanation: `부채꼴의 넓이 S = πr² × (x / 360) = π × ${r}² × (${theta} / 360) = ${areaCoeff}π cm²입니다. 따라서 k = ${areaCoeff}입니다.`,
+    };
+  }
+}
+
+// [유형 08] 호의 길이와 넓이의 관계 (S = 1/2 * r * l) (RPM #629~#636)
+export function rpmSectorAreaFromArcRadius(random) {
+  const r = ri(random, 4, 14);
+  const arcCoeff = ri(random, 2, 8) * 2; // 짝수로 설정
+  const areaCoeff = (r * arcCoeff) / 2;
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // r과 l이 주어질 때 넓이 S = (1/2) * r * l
+    return {
+      prompt: `반지름의 길이가 ${r}cm이고 호의 길이가 ${arcCoeff}π cm인 부채꼴의 넓이가 kπ cm²일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `A sector has radius ${r} cm and arc length ${arcCoeff}π cm. If its area is kπ cm², find k.`,
+      expression: `\\frac{1}{2} \\times ${r} \\times ${arcCoeff}`,
+      answer: String(areaCoeff),
+      explanation: `호의 길이 l과 반지름 r이 주어졌을 때 부채꼴의 넓이는 S = (1/2)rl 입니다. 따라서 S = (1/2) × ${r} × ${arcCoeff}π = ${areaCoeff}π cm²이므로 k = ${areaCoeff}입니다.`,
+    };
+  } else {
+    // l과 S가 주어졌을 때 반지름 r 구하기
+    return {
+      prompt: `호의 길이가 ${arcCoeff}π cm이고 넓이가 ${areaCoeff}π cm²인 부채꼴의 반지름의 길이를 구하시오. (단, 단위 cm는 생략)`,
+      promptEn: `A sector has arc length ${arcCoeff}π cm and area ${areaCoeff}π cm². Find its radius.`,
+      expression: `\\frac{2 \\times ${areaCoeff}}{${arcCoeff}}`,
+      answer: String(r),
+      explanation: `S = (1/2)rl 에서 ${areaCoeff}π = (1/2) × r × ${arcCoeff}π 이므로 r = (2 × ${areaCoeff}) / ${arcCoeff} = ${r}cm입니다.`,
+    };
+  }
+}
+
+// [유형 09] 색칠한 부분의 둘레의 길이 (RPM #637~#644)
+// 도넛 고리, 사분원과 직각삼각형 결합, 반원 2개 접합 등
+export function rpmShadedRegionPerimeter(random) {
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 지름이 2r인 반원 안에 지름이 각각 r인 작은 반원 2개가 들어있는 모양
+    // 둘레 = 큰 반원 호(πr) + 작은 반원 호 2개(2 * π(r/2) = πr) = 2πr
+    const r = ri(random, 4, 12); // 큰 반원의 반지름 r
+    const totalCircumPi = 2 * r;
+    return {
+      prompt: `지름이 ${2 * r}cm인 반원 내부의 지름 위에 두 작은 반원이 접해 있다. 색칠한 부분의 둘레의 길이가 kπ cm일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `Inside a semicircle of diameter ${2 * r} cm, two smaller semicircles are drawn on the diameter. If the perimeter of the shaded region is kπ cm, find k.`,
+      expression: `\\pi \\times ${r} + 2 \\times \\left(\\pi \\times \\frac{${r}}{2}\\right)`,
+      answer: String(totalCircumPi),
+      explanation: `큰 반원의 호의 길이는 (2π × ${r}) / 2 = ${r}π cm이고, 작은 반원 2개의 호의 길이의 합은 2 × (2π × ${r / 2} / 2) = ${r}π cm입니다. 따라서 색칠한 부분의 둘레는 ${r}π + ${r}π = ${totalCircumPi}π cm이므로 k = ${totalCircumPi}입니다.`,
+    };
+  } else {
+    // 중심각이 theta이고 안쪽 반지름 r1, 바깥 반지름 r2인 부채꼴 고리의 둘레
+    // 둘레 = 큰 호 + 작은 호 + 2 * (r2 - r1)
+    // kπ + c 형태에서 k 구하기
+    const r1 = 6;
+    const r2 = 12;
+    const theta = 60; // 60/360 = 1/6
+    const arcBig = (2 * r2 * theta) / 360; // 4
+    const arcSmall = (2 * r1 * theta) / 360; // 2
+    const totalArc = arcBig + arcSmall; // 6
+    const straight = 2 * (r2 - r1); // 12
+    return {
+      prompt: `반지름의 길이가 각각 6cm, 12cm이고 중심각의 크기가 60°인 두 부채꼴로 둘러싸인 고리 모양(부채꼴 모양)의 둘레가 (aπ + b)cm일 때, a + b의 값을 구하시오.`,
+      promptEn: `An annular sector has inner radius 6 cm, outer radius 12 cm, and central angle 60°. If its perimeter is (aπ + b) cm, find a + b.`,
+      expression: `(${arcBig} + ${arcSmall}) + 2 \\times (12 - 6)`,
+      answer: String(totalArc + straight),
+      explanation: `1) 큰 호의 길이는 2π × 12 × (60 / 360) = 4π cm입니다.\n2) 작은 호의 길이는 2π × 6 × (60 / 360) = 2π cm입니다.\n3) 직선 부분의 길이는 2 × (12 - 6) = 12 cm입니다.\n4) 따라서 둘레는 (4π + 2π + 12) = (6π + 12)cm이므로 a = 6, b = 12, a + b = 18입니다.`,
+    };
+  }
+}
+
+// [유형 10] 색칠한 부분의 넓이 (정사각형 안 나뭇잎 모양, 활꼴) (RPM #645~#651)
+export function rpmShadedRegionAreaDiff(random) {
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 한 변이 a인 정사각형 안에 사분원 2개가 겹쳐 생기는 나뭇잎(잎사귀) 모양의 넓이
+    // 넓이 = 2 * (사분원) - 정사각형 = 2 * (1/4 * π * a²) - a² = (1/2 * π - 1) * a²
+    // (kπ - m) cm² 형태에서 k와 m
+    const aList = [4, 6, 8, 10, 12];
+    const a = pick(random, aList);
+    const k = (a * a) / 2;
+    const m = a * a;
+    return {
+      prompt: `한 변의 길이가 ${a}cm인 정사각형 ABCD의 두 꼭짓점 B, D를 중심으로 하는 두 사분원이 겹쳐서 생긴 나뭇잎 모양의 넓이가 (kπ - ${m})cm²일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `Inside a square of side ${a} cm, two quarter-circles centered at opposite vertices overlap into a leaf shape of area (kπ - ${m}) cm². Find k.`,
+      expression: `2 \\times \\left(\\frac{1}{4} \\pi \\times ${a}^2\\right) - ${a}^2`,
+      answer: String(k),
+      explanation: `나뭇잎 모양의 넓이는 두 사분원의 넓이의 합에서 정사각형의 넓이를 뺀 것과 같습니다. (사분원 2개 넓이) = 2 × (1/4 × π × ${a}²) = ${k}π cm²이고, 정사각형의 넓이는 ${a}² = ${m}cm²입니다. 따라서 넓이는 (${k}π - ${m})cm²이므로 k = ${k}입니다.`,
+    };
+  } else {
+    // 반지름이 r이고 중심각이 90°인 부채꼴에서 활꼴의 넓이
+    // 활꼴 = 부채꼴 - 직각이등변삼각형 = (1/4 * π * r²) - (1/2 * r²)
+    const rList = [4, 6, 8, 10];
+    const r = pick(random, rList);
+    const k = (r * r) / 4;
+    const triArea = (r * r) / 2;
+    return {
+      prompt: `반지름의 길이가 ${r}cm이고 중심각의 크기가 90°인 부채꼴에서 현으로 나뉜 활꼴의 넓이가 (kπ - ${triArea})cm²일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `In a 90° sector with radius ${r} cm, the area of the circular segment is (kπ - ${triArea}) cm². Find k.`,
+      expression: `\\frac{1}{4} \\pi \\times ${r}^2 - \\frac{1}{2} \\times ${r}^2`,
+      answer: String(k),
+      explanation: `활꼴의 넓이 = (부채꼴의 넓이) - (직각이등변삼각형의 넓이) = (1/4 × π × ${r}²) - (1/2 × ${r} × ${r}) = (${k}π - ${triArea})cm²입니다. 따라서 k = ${k}입니다.`,
+    };
+  }
+}
+
+// [유형 11] 도형의 이동 및 회전으로 생기는 영역의 넓이 (RPM #652~#657, #674)
+// 직각삼각형의 회전, 히포크라테스의 초승달, 잘라서 붙이기
+export function rpmFigureRotationSweptArea(random) {
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 히포크라테스의 초승달(원과 직각삼각형): 두 초승달 넓이의 합 = 직각삼각형의 넓이
+    // 피타고라스 정리에 의해 두 반원의 넓이의 합 = 빗변 반원의 넓이
+    // 따라서 색칠한 초승달 모양의 두 부분의 넓이의 합 = 직각삼각형 넓이
+    const a = ri(random, 3, 8) * 2;
+    const b = ri(random, 3, 8) * 2;
+    const triArea = (a * b) / 2;
+    return {
+      prompt: `직각을 낀 두 변의 길이가 각각 ${a}cm, ${b}cm인 직각삼각형의 각 변을 지름으로 하는 세 반원을 그렸을 때 생기는 히포크라테스의 초승달(두 귀 모양)의 넓이를 구하시오. (단, 단위 cm²는 생략)`,
+      promptEn: `In a right triangle with legs ${a} cm and ${b} cm, semicircles are constructed on each side. Find the sum of the areas of the two shaded crescents (Hippocrates' lune).`,
+      expression: `\\frac{1}{2} \\times ${a} \\times ${b}`,
+      answer: String(triArea),
+      explanation: `히포크라테스의 원리에 의해 두 직각변을 지름으로 하는 반원의 넓이의 합은 빗변을 지름으로 하는 반원의 넓이와 같습니다. 따라서 두 초승달 모양 부분의 넓이의 합은 직각삼각형의 넓이와 정확히 같습니다. S = (1/2) × ${a} × ${b} = ${triArea}cm²입니다.`,
+    };
+  } else {
+    // 직각삼각형 ABC(∠B=90°)를 점 C를 중심으로 회전시켰을 때 빗변이 지나간 자리의 넓이
+    // = 중심각 theta인 큰 부채꼴 - 작은 부채꼴 = ...
+    // 또는 부채꼴 이동으로 상쇄되어 부채꼴 넓이와 같아지는 유형
+    const r = ri(random, 4, 10);
+    const theta = 60; // 60도 회전
+    const k = (r * r * theta) / 360;
+    return {
+      prompt: `길이가 ${r}cm인 선분을 한 끝점을 중심으로 60°만큼 회전시켰을 때, 이 선분이 지나간 자리의 넓이가 kπ cm²이다. 상수 k의 값을 구하시오.`,
+      promptEn: `A segment of length ${r} cm is rotated by 60° around one endpoint. If the area swept by the segment is kπ cm², find k.`,
+      expression: `\\pi \\times ${r}^2 \\times \\frac{60}{360}`,
+      answer: String(k),
+      explanation: `선분이 한 점을 중심으로 회전할 때 지나간 자리는 반지름이 ${r}cm이고 중심각이 60°인 부채꼴이 됩니다. 따라서 넓이는 π × ${r}² × (60 / 360) = ${k}π cm²이므로 k = ${k}입니다.`,
+    };
+  }
+}
+
+// [유형 12] 끈으로 묶인 가축의 풀 뜯는 영역 및 도형 굴리기 궤적 (RPM #658~#664)
+export function rpmTetheredAnimalPastureArea(random) {
+  // 직사각형 울타리(가로 a, 세로 b)의 한 꼭짓점에 끈의 길이 L로 묶인 염소
+  // a = 6, b = 4, L = 8
+  // 3/4 큰 원(반지름 L) + 모퉁이를 돌아서 생기는 1/4 원(반지름 L - a) + 1/4 원(반지름 L - b)
+  const a = 6;
+  const b = 4;
+  const L = 8;
+  const mainPart = (3 / 4) * (L * L); // (3/4) * 64 = 48
+  const corner1 = (1 / 4) * Math.pow(L - a, 2); // (1/4) * 2^2 = 1
+  const corner2 = (1 / 4) * Math.pow(L - b, 2); // (1/4) * 4^2 = 4
+  const totalCoeff = mainPart + corner1 + corner2; // 48 + 1 + 4 = 53
+
+  return {
+    prompt: `가로의 길이가 ${a}m, 세로의 길이가 ${b}m인 직사각형 모양의 우리(외벽)의 한 모퉁이 꼭짓점에 길이가 ${L}m인 끈으로 양이 묶여 있다. 양이 우리 밖에서 풀을 뜯을 수 있는 최대 영역의 넓이가 kπ m²일 때, 상수 k의 값을 구하시오.`,
+    promptEn: `A sheep is tethered to an outer corner of a rectangular barn measuring ${a}m by ${b}m with a rope of length ${L}m. If the maximum grazing area outside the barn is kπ m², find k.`,
+    expression: `\\frac{3}{4} \\times ${L}^2 + \\frac{1}{4} \\times (${L} - ${a})^2 + \\frac{1}{4} \\times (${L} - ${b})^2`,
+    answer: String(totalCoeff),
+    explanation: `1) 우리의 한 모퉁이 밖에서 반지름이 ${L}m이고 중심각이 270°(3/4)인 부채꼴: (3/4) × π × ${L}² = ${mainPart}π m²\n2) 가로 변(${a}m)을 돌아가면 남은 끈의 길이는 ${L - a}m이므로, 반지름 ${L - a}m, 중심각 90°(1/4)인 부채꼴: (1/4) × π × ${L - a}² = ${corner1}π m²\n3) 세로 변(${b}m)을 돌아가면 남은 끈의 길이는 ${L - b}m이므로, 반지름 ${L - b}m, 중심각 90°(1/4)인 부채꼴: (1/4) × π × ${L - b}² = ${corner2}π m²\n4) 따라서 총 넓이는 (${mainPart} + ${corner1} + ${corner2})π = ${totalCoeff}π m²이므로 k = ${totalCoeff}입니다.`,
+  };
+}
+
+// [유형 13] 다각형 둘레를 굴러가는 원의 중심 궤적 거리 및 지나간 자리의 넓이 (RPM #682~#683)
+export function rpmRollingCircleTrackArea(random) {
+  // 한 변이 a인 정삼각형 또는 정사각형의 둘레를 따라 반지름 r인 원이 한 바퀴 굴러감
+  // 1) 원의 중심이 움직인 거리 = 다각형의 둘레 + 원의 둘레(2πr)
+  // 2) 원이 지나간 자리의 넓이 = (다각형의 둘레 × 2r) + 원 1개의 넓이(π × (2r)² 또는 모퉁이 부채꼴들의 합)
+  const isTriangle = random() < 0.5;
+  const sides = isTriangle ? 3 : 4;
+  const polyName = isTriangle ? '정삼각형' : '정사각형';
+  const sideLen = isTriangle ? 12 : 10;
+  const polyPerimeter = sides * sideLen;
+  const r = ri(random, 1, 3); // 원의 반지름
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 원의 중심이 움직인 거리 = 다각형 둘레 + 2πr
+    const straightDist = polyPerimeter;
+    const curvedDistPi = 2 * r;
+    return {
+      prompt: `한 변의 길이가 ${sideLen}cm인 ${polyName}의 둘레를 따라 반지름의 길이가 ${r}cm인 원이 미끄러지지 않고 한 바퀴 돌았다. 원의 중심이 움직인 거리가 (${straightDist} + kπ)cm일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `A circle of radius ${r} cm rolls once around a regular polygon (${polyName}) of side length ${sideLen} cm without slipping. If the distance traveled by its center is (${straightDist} + kπ) cm, find k.`,
+      expression: `2 \\times ${r}`,
+      answer: String(curvedDistPi),
+      explanation: `원의 중심은 각 변과 평행하게 움직이므로 직선 부분의 거리는 ${polyName}의 둘레 ${polyPerimeter}cm이고, 각 꼭짓점을 돌 때 생기는 호들을 모으면 반지름이 ${r}cm인 원 1개의 원주와 같습니다. 따라서 모퉁이 곡선 거리는 2π × ${r} = ${curvedDistPi}π cm이므로 k = ${curvedDistPi}입니다.`,
+    };
+  } else {
+    // 원이 지나간 자리의 넓이 = 직사각형들(둘레 × 2r) + 원 1개(π × (2r)²)
+    const rectArea = polyPerimeter * (2 * r);
+    const cornerAreaPi = Math.pow(2 * r, 2);
+    return {
+      prompt: `한 변의 길이가 ${sideLen}cm인 ${polyName}의 둘레를 따라 반지름의 길이가 ${r}cm인 원이 한 바퀴 돌았을 때, 원이 지나간 자리의 넓이가 (${rectArea} + kπ)cm²이다. 상수 k의 값을 구하시오.`,
+      promptEn: `A circle of radius ${r} cm rolls around a ${polyName} of side ${sideLen} cm. If the area swept by the circle is (${rectArea} + kπ) cm², find k.`,
+      expression: `(2 \\times ${r})^2`,
+      answer: String(cornerAreaPi),
+      explanation: `원이 지나간 자리는 폭이 지름(2r = ${2 * r}cm)인 직사각형 ${sides}개와 모퉁이에서 생기는 부채꼴들로 나누어집니다. 모퉁이 부채꼴들을 합치면 반지름이 지름과 같은 ${2 * r}cm인 원 1개가 되므로 모퉁이 넓이는 π × (${2 * r})² = ${cornerAreaPi}π cm²입니다. 따라서 k = ${cornerAreaPi}입니다.`,
+    };
+  }
+}
+
+// [단원 종합] 원과 부채꼴 전 유형 혼합
+export function rpmCircleSectorAllTypesMixed(random) {
+  const generators = [
+    rpmCircleSectorConceptTerms,
+    rpmCircleCentralAngleArcProp,
+    rpmCircleParallelChordArc,
+    rpmCircleCentralAngleAreaProp,
+    rpmCircleChordNotProportional,
+    rpmCircleCircumferenceAndArea,
+    rpmSectorArcLengthAndArea,
+    rpmSectorAreaFromArcRadius,
+    rpmShadedRegionPerimeter,
+    rpmShadedRegionAreaDiff,
+    rpmFigureRotationSweptArea,
+    rpmTetheredAnimalPastureArea,
+    rpmRollingCircleTrackArea,
+  ];
+  return pick(random, generators)(random);
+}
+
+// [1학기/2학기 평면도형 총괄 평가] 중1-2 평면도형 실전 총괄 모의고사
+export function rpmPlaneFiguresSemesterMockExam(random) {
+  // Polygons + Circles and Sectors comprehensive pool
+  // Import or mix both chapters
+  const allMixed = [
+    rpmCircleSectorConceptTerms,
+    rpmCircleCentralAngleArcProp,
+    rpmCircleParallelChordArc,
+    rpmCircleCentralAngleAreaProp,
+    rpmCircleChordNotProportional,
+    rpmCircleCircumferenceAndArea,
+    rpmSectorArcLengthAndArea,
+    rpmSectorAreaFromArcRadius,
+    rpmShadedRegionPerimeter,
+    rpmShadedRegionAreaDiff,
+    rpmFigureRotationSweptArea,
+    rpmTetheredAnimalPastureArea,
+    rpmRollingCircleTrackArea,
+  ];
+  return pick(random, allMixed)(random);
+}
+
+
 export const RPM_ADVANCED_ENGINES = {
   // 01 소인수분해 RPM 세부 유형 (RPM 1-1 Pages 10~15)
   'rpm-prime-prop-closest': rpmPrimePropClosest,
@@ -6600,5 +7817,49 @@ export const RPM_ADVANCED_ENGINES = {
   // -------------------------------------------------------------
   // 중학 1-2 1학기 기하 전 범위 총괄 모의고사
   // -------------------------------------------------------------
-  'rpm-geo-semester-one-mock-exam': rpmGeoSemesterOneMockExam,
+  
+  // -------------------------------------------------------------
+  // 04 다각형 세부 응용 유형 (RPM 1-2 p.66~81)
+  // -------------------------------------------------------------
+  'rpm-poly-concept-interior-exterior': rpmPolyConceptInteriorExterior,
+  'rpm-poly-diagonal-count-formula': rpmPolyDiagonalCountFormula,
+  'rpm-poly-find-polygon-from-diagonals': rpmPolyFindPolygonFromDiagonals,
+  'rpm-poly-triangle-angle-sum-ratio': rpmPolyTriangleAngleSumRatio,
+  'rpm-poly-triangle-exterior-angle-prop': rpmPolyTriangleExteriorAngleProp,
+  'rpm-poly-boomerang-concave-angle': rpmPolyBoomerangConcaveAngle,
+  'rpm-poly-incenter-angle-bisector': rpmPolyIncenterAngleBisector,
+  'rpm-poly-exterior-interior-bisector': rpmPolyExteriorInteriorBisector,
+  'rpm-poly-interior-angle-sum-formula': rpmPolyInteriorAngleSumFormula,
+  'rpm-poly-exterior-angle-sum-const': rpmPolyExteriorAngleSumConst,
+  'rpm-poly-regular-interior-exterior': rpmPolyRegularInteriorExterior,
+  'rpm-poly-regular-ratio-angle': rpmPolyRegularRatioAngle,
+  'rpm-poly-regular-diagonal-angle': rpmPolyRegularDiagonalAngle,
+  'rpm-poly-two-polygons-shared-side': rpmPolyTwoPolygonsSharedSide,
+  'rpm-poly-star-polygon-angle-sum': rpmPolyStarPolygonAngleSum,
+  'rpm-poly-paper-fold-parallel-angle': rpmPolyPaperFoldParallelAngle,
+  'rpm-poly-all-mixed': rpmPolyAllTypesMixed,
+
+  // -------------------------------------------------------------
+  // 05 원과 부채꼴 세부 응용 유형 (RPM 1-2 p.86~98)
+  // -------------------------------------------------------------
+  'rpm-circle-sector-concept-terms': rpmCircleSectorConceptTerms,
+  'rpm-circle-central-angle-arc-prop': rpmCircleCentralAngleArcProp,
+  'rpm-circle-parallel-chord-arc': rpmCircleParallelChordArc,
+  'rpm-circle-central-angle-area-prop': rpmCircleCentralAngleAreaProp,
+  'rpm-circle-chord-not-proportional': rpmCircleChordNotProportional,
+  'rpm-circle-circumference-and-area': rpmCircleCircumferenceAndArea,
+  'rpm-sector-arc-length-and-area': rpmSectorArcLengthAndArea,
+  'rpm-sector-area-from-arc-radius': rpmSectorAreaFromArcRadius,
+  'rpm-shaded-region-perimeter': rpmShadedRegionPerimeter,
+  'rpm-shaded-region-area-diff': rpmShadedRegionAreaDiff,
+  'rpm-figure-rotation-swept-area': rpmFigureRotationSweptArea,
+  'rpm-tethered-animal-pasture-area': rpmTetheredAnimalPastureArea,
+  'rpm-rolling-circle-track-area': rpmRollingCircleTrackArea,
+  'rpm-circle-sector-all-mixed': rpmCircleSectorAllTypesMixed,
+
+  // -------------------------------------------------------------
+  // 중 1-2 평면도형 종합 실전 총괄 모의고사
+  // -------------------------------------------------------------
+  'rpm-plane-figures-semester-mock-exam': rpmPlaneFiguresSemesterMockExam,
+'rpm-geo-semester-one-mock-exam': rpmGeoSemesterOneMockExam,
 };

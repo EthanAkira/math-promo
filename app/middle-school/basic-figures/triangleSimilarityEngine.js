@@ -5,7 +5,7 @@
 // pythagoreanTheorem(기본 x 구하기·직사각형 대각선·간단한 직각삼각형 판별)은 이미 커버되어 있으므로
 // 겹치지 않는 부분(닮음 조건 판별, 직각삼각형의 닮음, 입체도형의 닮음비, 평행선과 선분의 비,
 // 삼각형의 무게중심, 심화 피타고라스 활용)만 새로 만든다.
-import { profileText } from './geometryProfiles';
+import { profileText } from './geometryProfiles.js';
 
 const ri = (random, min, max) => Math.floor(random() * (max - min + 1)) + min;
 const pick = (random, values) => values[ri(random, 0, values.length - 1)];

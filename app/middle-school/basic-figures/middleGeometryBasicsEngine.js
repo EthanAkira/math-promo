@@ -1,4 +1,4 @@
-import { profileText } from './geometryProfiles';
+import { profileText } from './geometryProfiles.js';
 
 const ri = (random, min, max) => Math.floor(random() * (max - min + 1)) + min;
 const pick = (random, values) => values[ri(random, 0, values.length - 1)];

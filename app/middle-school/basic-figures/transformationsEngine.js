@@ -3,7 +3,7 @@
 // technique only, no source text/problems reproduced. This is standard international-school
 // (Common Core / IB / AP) Geometry content that the site's basic-figures generator system
 // did not previously cover at all — see project memory for why it was picked as the gap to fill.
-import { profileText } from './geometryProfiles';
+import { profileText } from './geometryProfiles.js';
 
 const ri = (random, min, max) => Math.floor(random() * (max - min + 1)) + min;
 const pick = (random, values) => values[ri(random, 0, values.length - 1)];
