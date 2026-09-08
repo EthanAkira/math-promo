@@ -2889,6 +2889,299 @@ export const GENERATORS = {
 
     return { question, choices, correctIdx, explanation };
   },
+
+  // -----------------------------------------------------------------------
+  // GCD & LCM (The Essential Guide to Competition Math: Number Theory
+  // Topic 2: Least Common Multiple and Greatest Common Divisor)
+  // -----------------------------------------------------------------------
+  'gcd-lcm': (lang) => {
+    const variant = pickRandom(['product-relation', 'euclidean-steps', 'lcm-word-problem', 'gcd-word-problem']);
+    const coprimePairs = [[2, 3], [3, 4], [2, 5], [3, 5], [4, 5], [2, 7], [3, 7], [4, 7], [5, 6]];
+
+    if (variant === 'product-relation') {
+      const g = pickRandom([2, 3, 4, 5, 6]);
+      const [m, n] = pickRandom(coprimePairs);
+      const a = g * m;
+      const b = g * n;
+      const ans = g * m * n;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return a * b;
+        if (i === 2) return g;
+        if (i === 3) return ans + g;
+        return Math.max(1, ans - g * (i - 3));
+      });
+
+      const question = lang === 'ko'
+        ? `두 자연수 $${a}$와 $${b}$의 최대공약수가 $${g}$일 때, 두 수의 최소공배수를 구하세요.`
+        : `Two positive integers $${a}$ and $${b}$ have greatest common divisor $${g}$. Find their least common multiple.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Competition Math: Number Theory Topic 2.1 최대공약수와 최소공배수의 관계]**\n\n두 자연수 $a, b$에 대해 항상 $\\gcd(a,b)\\times\\text{lcm}(a,b) = a\\times b$가 성립합니다.\n\n$$\\text{lcm}(${a}, ${b}) = \\frac{${a}\\times ${b}}{${g}} = \\frac{${a * b}}{${g}} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Competition Math: Number Theory Topic 2.1 GCD-LCM Product Relation]**\n\nFor any two positive integers $a, b$: $\\gcd(a,b)\\times\\text{lcm}(a,b) = a\\times b$.\n\n$$\\text{lcm}(${a}, ${b}) = \\frac{${a}\\times ${b}}{${g}} = \\frac{${a * b}}{${g}} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'euclidean-steps') {
+      const g = pickRandom([2, 3, 4, 5, 6, 7]);
+      const [m, n] = pickRandom(coprimePairs);
+      const a = g * n;
+      const b = g * m;
+
+      const steps = [];
+      let x = a;
+      let y = b;
+      while (y !== 0) {
+        const q = Math.floor(x / y);
+        const r = x % y;
+        steps.push({ x, y, q, r });
+        x = y;
+        y = r;
+      }
+      const ans = x;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return b;
+        if (i === 2) return ans * 2;
+        if (i === 3) return ans + 1;
+        return Math.max(1, ans - i + 3);
+      });
+
+      const stepsText = steps.map((s) => `$${s.x} = ${s.y}\\times ${s.q} + ${s.r}$`).join('\n\n');
+
+      const question = lang === 'ko'
+        ? `유클리드 호제법을 이용하여 두 자연수 $${a}$와 $${b}$의 최대공약수를 구하세요.`
+        : `Use the Euclidean algorithm to find the greatest common divisor of $${a}$ and $${b}$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Competition Math: Number Theory Topic 2.2 유클리드 호제법]**\n\n나머지가 $0$이 될 때까지 나눗셈을 반복합니다:\n\n${stepsText}\n\n나머지가 $0$이 되기 직전의 나눗수가 최대공약수이므로, $\\gcd(${a}, ${b}) = ${ans}$ 입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Competition Math: Number Theory Topic 2.2 Euclidean Algorithm]**\n\nRepeatedly divide until the remainder is $0$:\n\n${stepsText}\n\nThe last nonzero remainder (the final divisor) is the GCD: $\\gcd(${a}, ${b}) = ${ans}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'lcm-word-problem') {
+      const m = randInt(4, 12);
+      let n = randInt(4, 12);
+      while (n === m) n = randInt(4, 12);
+      const g = gcd(m, n);
+      const ans = lcm(m, n);
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return m * n;
+        if (i === 2) return Math.max(m, n);
+        if (i === 3) return ans + g;
+        return Math.max(1, ans - g * (i - 3));
+      });
+
+      const question = lang === 'ko'
+        ? `두 신호등이 $t=0$에 동시에 깜빡였습니다. 첫 번째 신호등은 $${m}$초마다, 두 번째 신호등은 $${n}$초마다 깜빡입니다. 두 신호등이 다시 동시에 깜빡이는 것은 몇 초 후입니까?`
+        : `Two traffic lights blink together at $t=0$. The first blinks every $${m}$ seconds and the second every $${n}$ seconds. After how many seconds will they blink together again?`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Competition Math: Number Theory Topic 2.3 최소공배수의 활용]**\n\n두 사건이 다시 동시에 일어나려면 경과 시간이 두 주기의 공배수여야 하므로, 답은 $${m}$과 $${n}$의 최소공배수입니다.\n\n$$\\gcd(${m},${n}) = ${g}, \\quad \\text{lcm}(${m},${n}) = \\frac{${m}\\times ${n}}{${g}} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans}초)** 입니다.`
+        : `**[The Essential Guide to Competition Math: Number Theory Topic 2.3 LCM Applications]**\n\nBoth events recur together only after a time that is a common multiple of both periods, so the answer is $\\text{lcm}(${m},${n})$.\n\n$$\\gcd(${m},${n}) = ${g}, \\quad \\text{lcm}(${m},${n}) = \\frac{${m}\\times ${n}}{${g}} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans} seconds)**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // gcd-word-problem
+    const amounts = [18, 24, 30, 36, 42, 48, 54];
+    const p = pickRandom(amounts);
+    let q = pickRandom(amounts);
+    while (q === p) q = pickRandom(amounts);
+    const ans = gcd(p, q);
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return Math.min(p, q);
+      if (i === 2) return ans * 2;
+      if (i === 3) return ans + 3;
+      return Math.max(1, ans - i + 3);
+    });
+
+    const question = lang === 'ko'
+      ? `튤립 구근 $${p}$개와 수선화 구근 $${q}$개를 각각 남김없이 똑같은 개수씩 나누어 최대한 많은 선물 바구니를 만들려고 합니다. 만들 수 있는 선물 바구니는 최대 몇 개입니까?`
+      : `A florist has $${p}$ tulip bulbs and $${q}$ daffodil bulbs and wants to make identical gift bags, splitting each type evenly with none left over. What is the greatest number of gift bags that can be made?`;
+
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Competition Math: Number Theory Topic 2.4 최대공약수의 활용]**\n\n두 종류의 구근을 남김없이 똑같이 나누는 최대 바구니 수는 두 수의 최대공약수입니다.\n\n$$\\gcd(${p}, ${q}) = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans}개)** 입니다.`
+      : `**[The Essential Guide to Competition Math: Number Theory Topic 2.4 GCD Applications]**\n\nThe greatest number of identical bags that split both quantities evenly is the GCD of the two quantities.\n\n$$\\gcd(${p}, ${q}) = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // DIVISORS & MULTIPLES (The Essential Guide to Competition Math: Number
+  // Theory Topic 3: Counting Divisors and More Arithmetic)
+  // -----------------------------------------------------------------------
+  'divisors-multiples': (lang) => {
+    const variant = pickRandom(['divisor-count', 'divisor-sum', 'perfect-square-divisors']);
+
+    if (variant === 'divisor-count') {
+      const primePairs = [[2, 3], [2, 5], [2, 7], [3, 5], [3, 7], [2, 11], [3, 11], [5, 7]];
+      const [p, q] = pickRandom(primePairs);
+      const a = randInt(1, 4);
+      const b = randInt(1, 3);
+      const ans = (a + 1) * (b + 1);
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return a * b;
+        if (i === 2) return a + b;
+        if (i === 3) return ans + 1;
+        return Math.max(1, ans - i + 3);
+      });
+
+      const question = lang === 'ko'
+        ? `자연수 $N = ${p}^{${a}} \\times ${q}^{${b}}$ 의 양의 약수의 개수를 구하세요.`
+        : `How many positive divisors does $N = ${p}^{${a}} \\times ${q}^{${b}}$ have?`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Competition Math: Number Theory Topic 3.1 약수의 개수 공식]**\n\n$N = p^a \\times q^b$ 꼴로 소인수분해되면, 양의 약수의 개수는 $(a+1)(b+1)$입니다.\n\n$$(${a}+1)(${b}+1) = ${a + 1}\\times ${b + 1} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans}개)** 입니다.`
+        : `**[The Essential Guide to Competition Math: Number Theory Topic 3.1 Divisor Counting Formula]**\n\nIf $N = p^a \\times q^b$ in prime factorization, the number of positive divisors is $(a+1)(b+1)$.\n\n$$(${a}+1)(${b}+1) = ${a + 1}\\times ${b + 1} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'divisor-sum') {
+      const p = pickRandom([2, 3, 5]);
+      const a = randInt(2, 4);
+      let ans = 0;
+      for (let k = 0; k <= a; k += 1) ans += p ** k;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return p ** a;
+        if (i === 2) return ans + p;
+        if (i === 3) return Math.max(1, ans - p);
+        return ans + (i - 3) * 2;
+      });
+
+      const sumTerms = Array.from({ length: a + 1 }, (_, k) => `${p}^{${k}}`).join(' + ');
+
+      const question = lang === 'ko'
+        ? `$N = ${p}^{${a}}$ 의 모든 양의 약수의 합을 구하세요.`
+        : `Find the sum of all positive divisors of $N = ${p}^{${a}}$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Competition Math: Number Theory Topic 3.1 약수의 합 공식]**\n\n$N = ${p}^{${a}}$ 의 양의 약수는 $${p}^0, ${p}^1, \\dots, ${p}^{${a}}$ 이므로, 약수의 합은\n\n$$${sumTerms} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Competition Math: Number Theory Topic 3.1 Sum of Divisors Formula]**\n\nThe positive divisors of $N = ${p}^{${a}}$ are $${p}^0, ${p}^1, \\dots, ${p}^{${a}}$, so their sum is\n\n$$${sumTerms} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // perfect-square-divisors: odd divisor count <=> perfect square
+    const base = randInt(4, 15);
+    const square = base * base;
+
+    const { choices, correctIdx } = buildChoices(square, (i) => {
+      const offsets = [1, -1, 2, -2, 3, -3, 4, 5];
+      return Math.max(2, square + offsets[(i - 1) % offsets.length]);
+    });
+
+    const question = lang === 'ko'
+      ? `다음 정수 중에서 양의 약수의 개수가 홀수인 것은 무엇입니까?`
+      : `Which of the following integers has an odd number of positive divisors?`;
+
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Competition Math: Number Theory Topic 3.1 약수 개수의 홀짝성]**\n\n어떤 자연수의 양의 약수는 보통 $d$와 $N/d$의 쌍으로 짝지어지는데, 완전제곱수는 $\\sqrt{N}$이 자기 자신과 짝지어져 하나 남기 때문에 약수의 개수가 홀수인 것은 완전제곱수일 때뿐입니다.\n\n$${square} = ${base}^2$ 은 완전제곱수이므로 약수의 개수가 홀수입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${square})** 입니다.`
+      : `**[The Essential Guide to Competition Math: Number Theory Topic 3.1 Parity of Divisor Count]**\n\nDivisors normally pair up as $d$ and $N/d$, except a perfect square's $\\sqrt{N}$ pairs with itself, leaving one unpaired divisor — so a positive integer has an odd number of divisors if and only if it is a perfect square.\n\n$${square} = ${base}^2$ is a perfect square, so it has an odd number of divisors.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${square})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // MODULAR ARITHMETIC (The Essential Guide to Competition Math: Number
+  // Theory Topic 5: Modular Arithmetic — Fermat's Little Theorem)
+  // -----------------------------------------------------------------------
+  'modular-arithmetic': (lang) => {
+    const variant = pickRandom(['fermat-little-theorem', 'modular-product-remainder', 'linear-congruence']);
+
+    const modPow = (base, exp, mod) => {
+      let result = 1 % mod;
+      let b = ((base % mod) + mod) % mod;
+      for (let e = 0; e < exp; e += 1) result = (result * b) % mod;
+      return result;
+    };
+
+    if (variant === 'fermat-little-theorem') {
+      const p = pickRandom([5, 7, 11, 13, 17, 19]);
+      const a = randInt(2, p - 1);
+      const k = randInt(3, 8);
+      const r = randInt(1, p - 2);
+      const N = k * (p - 1) + r;
+      const ans = modPow(a, r, p);
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return r;
+        if (i === 2) return (ans + 1) % p;
+        if (i === 3) return Math.max(0, ans - 1);
+        return (ans + i) % p;
+      });
+
+      const question = lang === 'ko'
+        ? `$${a}^{${N}}$ 을 소수 $${p}$로 나눈 나머지를 구하세요.`
+        : `Find the remainder when $${a}^{${N}}$ is divided by the prime $${p}$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Competition Math: Number Theory Topic 5.2 페르마의 소정리]**\n\n$p=${p}$가 소수이고 $\\gcd(${a},${p})=1$이므로 페르마의 소정리에 의해 $${a}^{${p - 1}} \\equiv 1 \\pmod{${p}}$입니다.\n\n$${N} = ${p - 1}\\times ${k} + ${r}$ 이므로\n\n$$${a}^{${N}} = \\left(${a}^{${p - 1}}\\right)^{${k}} \\times ${a}^{${r}} \\equiv 1^{${k}} \\times ${a}^{${r}} \\equiv ${ans} \\pmod{${p}}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Competition Math: Number Theory Topic 5.2 Fermat's Little Theorem]**\n\nSince $p=${p}$ is prime and $\\gcd(${a},${p})=1$, Fermat's Little Theorem gives $${a}^{${p - 1}} \\equiv 1 \\pmod{${p}}$.\n\nSince $${N} = ${p - 1}\\times ${k} + ${r}$,\n\n$$${a}^{${N}} = \\left(${a}^{${p - 1}}\\right)^{${k}} \\times ${a}^{${r}} \\equiv 1^{${k}} \\times ${a}^{${r}} \\equiv ${ans} \\pmod{${p}}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'modular-product-remainder') {
+      const m = pickRandom([6, 7, 8, 9, 11, 12]);
+      const factorCount = 3;
+      const bases = Array.from({ length: factorCount }, () => randInt(20, 90));
+      const remainders = bases.map((x) => x % m);
+      let ans = 1;
+      remainders.forEach((r) => { ans = (ans * r) % m; });
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return remainders[0];
+        if (i === 2) return (ans + 1) % m;
+        if (i === 3) return Math.max(0, ans - 1);
+        return (ans + i) % m;
+      });
+
+      const productText = bases.join(' \\times ');
+      const remainderText = remainders.map((r, idx) => `${bases[idx]} \\equiv ${r}`).join(', \\;');
+
+      const question = lang === 'ko'
+        ? `$${productText}$ 을 $${m}$으로 나눈 나머지를 구하세요.`
+        : `Find the remainder when $${productText}$ is divided by $${m}$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Competition Math: Number Theory Topic 5.1 모듈러 연산의 곱셈 성질]**\n\n합동식은 곱셈에 대해 닫혀 있으므로, 각 인수를 $${m}$으로 나눈 나머지로 바꾸어 곱해도 전체 나머지는 같습니다.\n\n$$${remainderText} \\pmod{${m}}$$\n\n$$${remainders.join(' \\times ')} \\equiv ${ans} \\pmod{${m}}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Competition Math: Number Theory Topic 5.1 Multiplicative Property of Congruences]**\n\nCongruence is preserved under multiplication, so each factor can be replaced by its remainder mod $${m}$ before multiplying.\n\n$$${remainderText} \\pmod{${m}}$$\n\n$$${remainders.join(' \\times ')} \\equiv ${ans} \\pmod{${m}}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // linear-congruence: solve a*x ≡ b (mod m) for smallest non-negative x
+    const m = pickRandom([5, 7, 9, 11, 13]);
+    const aChoices = Array.from({ length: m - 1 }, (_, idx) => idx + 1).filter((v) => gcd(v, m) === 1);
+    const a = pickRandom(aChoices);
+    const x0 = randInt(0, m - 1);
+    const b = (a * x0) % m;
+
+    const { choices, correctIdx } = buildChoices(x0, (i) => {
+      if (i === 1) return b;
+      if (i === 2) return (x0 + 1) % m;
+      if (i === 3) return Math.max(0, x0 - 1);
+      return (x0 + i) % m;
+    });
+
+    const question = lang === 'ko'
+      ? `합동식 $${a}x \\equiv ${b} \\pmod{${m}}$ 을 만족하는 가장 작은 음이 아닌 정수 $x$를 구하세요.`
+      : `Find the smallest non-negative integer $x$ satisfying $${a}x \\equiv ${b} \\pmod{${m}}$.`;
+
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Competition Math: Number Theory Topic 5.1 일차합동식]**\n\n$x=0,1,\\dots,${m - 1}$ 을 차례로 대입하면 $${a}\\times ${x0} = ${a * x0} \\equiv ${b} \\pmod{${m}}$ 이 성립하는 가장 작은 값은 $x=${x0}$ 입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${x0})** 입니다.`
+      : `**[The Essential Guide to Competition Math: Number Theory Topic 5.1 Linear Congruences]**\n\nChecking $x=0,1,\\dots,${m - 1}$, the smallest value satisfying $${a}\\times ${x0} = ${a * x0} \\equiv ${b} \\pmod{${m}}$ is $x=${x0}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${x0})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
 };
 
 /**

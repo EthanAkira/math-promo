@@ -158,6 +158,12 @@ export const AMC_FINE_SUBJECTS = [
         intlCourse: { id: 'intl-pre-algebra', label: 'Pre-Algebra', labelKo: '진법과 자릿수 체계', href: '/curriculum#intl-pre-algebra' },
         domain: { id: 'domain-numbers', label: 'Number & Operations', labelKo: '수와 연산', href: '/curriculum#domain-numbers' },
       },
+      {
+        id: 'modular-arithmetic', label: '모듈러 연산과 페르마의 소정리', labelEn: 'Modular Arithmetic & Fermat’s Little Theorem', desc: '합동식의 곱셈 성질, 페르마의 소정리를 이용한 나머지 계산, 일차합동식',
+        tier: 'advanced',
+        intlCourse: { id: 'intl-precalculus', label: 'Precalculus', labelKo: '모듈러 연산 (Modular Arithmetic)', href: '/curriculum#intl-precalculus' },
+        domain: { id: 'domain-numbers', label: 'Number & Operations', labelKo: '수와 연산', href: '/curriculum#domain-numbers' },
+      },
     ],
   },
   {
