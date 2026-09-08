@@ -151,6 +151,33 @@ import {
   rpmLineEqnAllTypesMixed,
   rpmLineEqnAdvancedSkillUp,
   rpmGrade8SemesterOneFinalExam,
+  // Middle School 2-2 Chapter 01 & 02
+  rpmG8IsoTriAngles,
+  rpmG8IsoTriAngleBisector,
+  rpmG8IsoTriChainAngles,
+  rpmG8IsoTriConditionSides,
+  rpmG8RightTriCongruence,
+  rpmG8RhaCongruenceApps,
+  rpmG8RhsCongruenceApps,
+  rpmG8AngleBisectorProp,
+  rpmG8PaperFoldingTriangle,
+  rpmG8IsoTriUpChallenge,
+  rpmG8IsoTriAllTypesMixed,
+  rpmG8IsoTriAdvancedSkillUp,
+  rpmG8CircumcenterProperties,
+  rpmG8RightTriCircumcenter,
+  rpmG8CircumcenterAnglesSum,
+  rpmG8CircumcenterCentralAngle,
+  rpmG8IncenterProperties,
+  rpmG8IncenterAnglesSum,
+  rpmG8IncenterCentralAngle,
+  rpmG8IncenterParallelLine,
+  rpmG8IncenterAreaRadius,
+  rpmG8IncenterTangentSegments,
+  rpmG8CircumIncenterCombined,
+  rpmG8RightTriBothCircles,
+  rpmG8CirclesAllTypesMixed,
+  rpmG8CirclesAdvancedSkillUp,
 } from '../rpmAppliedEngine';
 
 
@@ -528,6 +555,39 @@ export const RPM_GRADE8_FINAL_MOCK_UNITS = [
   { id: 'rpm-grade8-semester-one-final-exam', label: '[중2-1 최종총괄] 중학 2-1 전 범위 최종 실전 총괄 모의고사', description: '유리수와 순환소수, 식의 계산, 일차부등식, 연립일차방정식, 일차함수와 그래프 전 범위 총괄 평가 (RPM p.152~167)', en: ['Grade 8-1 Comprehensive Final Examination', 'Ultimate comprehensive mock exam covering all chapters of Grade 8 Semester 1 (Rational Decimals, Monomials, Polynomials, Inequalities, Linear Systems, Linear Functions)'], make: (random) => rpmGrade8SemesterOneFinalExam(random) },
 ];
 
+export const RPM_ISOSCELES_TRIANGLES_APPLIED_UNITS = [
+  { id: 'rpm-g8-iso-tri-angles', label: '[이등변삼각형 01] 이등변삼각형의 밑각 및 꼭지각의 크기', description: '꼭지각이 주어질 때 밑각, 밑각이 주어질 때 꼭지각의 크기 계산', en: ['Isosceles Triangles Type 01: Base & Vertex Angles', 'Compute base angles from vertex angle, or vertex angle from base angle in isosceles triangles'], make: (random) => rpmG8IsoTriAngles(random) },
+  { id: 'rpm-g8-iso-tri-angle-bisector', label: '[이등변삼각형 02] 꼭지각의 이등분선과 밑변의 수직이등분', description: '꼭지각의 이등분선이 밑변을 수직이등분하는 성질을 이용한 선분 길이와 각도', en: ['Isosceles Triangles Type 02: Vertex Angle Bisector Properties', 'Apply perpendicular bisector properties of vertex angle to compute segment lengths and angles'], make: (random) => rpmG8IsoTriAngleBisector(random) },
+  { id: 'rpm-g8-iso-tri-chain-angles', label: '[이등변삼각형 03] 이등변삼각형이 연속된 도형의 각도 추적', description: '외각의 성질을 이용하여 2x, 3x 등으로 연속 확장되는 각의 크기 계산', en: ['Isosceles Triangles Type 03: Sequential Angle Tracking', 'Track chained angles using exterior angle theorem across connected equal-length segments'], make: (random) => rpmG8IsoTriChainAngles(random) },
+  { id: 'rpm-g8-iso-tri-condition-sides', label: '[이등변삼각형 04] 두 내각의 크기가 같은 이등변삼각형', description: '두 밑각이 같음을 확인하고 두 변의 길이가 같음을 이용하여 둘레 및 변의 길이 구하기', en: ['Isosceles Triangles Type 04: Two Equal Angles Condition', 'Identify equal side lengths from equal interior angles and solve for side lengths and perimeter'], make: (random) => rpmG8IsoTriConditionSides(random) },
+  { id: 'rpm-g8-right-tri-congruence', label: '[직각삼각형 05] 직각삼각형의 합동 조건 판별', description: '빗변과 한 예각(RHA) 및 빗변과 한 변(RHS)의 합동 조건 정확히 판별하기', en: ['Right Triangles Type 05: Congruence Criteria (RHA & RHS)', 'Classify right triangle congruence based on hypotenuse-acute angle (RHA) and hypotenuse-leg (RHS)'], make: (random) => rpmG8RightTriCongruence(random) },
+  { id: 'rpm-g8-rha-congruence-apps', label: '[직각삼각형 06] RHA 합동의 응용 (직각이등변삼각형 수선)', description: '직각이등변삼각형의 꼭짓점을 지나는 직선에 내린 수선으로 생기는 RHA 합동 선분 계산', en: ['Right Triangles Type 06: RHA Congruence Applications', 'Calculate segment lengths from perpendiculars dropped from right isosceles triangle vertices'], make: (random) => rpmG8RhaCongruenceApps(random) },
+  { id: 'rpm-g8-rhs-congruence-apps', label: '[직각삼각형 07] RHS 합동의 응용', description: '직각삼각형 빗변 위의 점과 수선의 발을 활용한 RHS 합동 선분 길이 구하기', en: ['Right Triangles Type 07: RHS Congruence Applications', 'Solve for segment lengths using RHS triangle congruence formed by perpendiculars to hypotenuse'], make: (random) => rpmG8RhsCongruenceApps(random) },
+  { id: 'rpm-g8-angle-bisector-prop', label: '[각의 이등분선 08] 각의 이등분선의 성질과 넓이', description: '각의 이등분선 위의 점에서 두 변에 이르는 거리가 같음을 이용한 분할 삼각형 넓이', en: ['Angle Bisectors Type 08: Distance Equidistance & Triangle Area', 'Use equidistant distance property from angle bisector to sides to compute sub-triangle areas'], make: (random) => rpmG8AngleBisectorProp(random) },
+  { id: 'rpm-g8-paper-folding-triangle', label: '[종이 접기 09] 직사각형 종이 접기와 이등변삼각형', description: '접은 각과 엇각의 성질을 이용하여 접힌 부분의 이등변삼각형 각도 구하기', en: ['Paper Folding Type 09: Rectangular Strip Folding', 'Determine angles of overlapping isosceles triangle formed by folding a constant-width paper strip'], make: (random) => rpmG8PaperFoldingTriangle(random) },
+  { id: 'rpm-g8-iso-tri-up-challenge', label: '[유형 UP 10] 이등변삼각형 심화 응용 (외각 연쇄 추적)', description: '4단계 이상 연속되는 선분 길이 일치 조건에서의 외각 연쇄 배수 추론', en: ['Isosceles Triangles Type 10 (UP): Multi-Step Exterior Angle Chain', 'Deduce multi-step sequential exterior angle multiples across extended equilateral chains'], make: (random) => rpmG8IsoTriUpChallenge(random) },
+  { id: 'rpm-g8-iso-tri-all-types-mixed', label: '[단원 실전 다지기] 이등변삼각형과 직각삼각형 전 유형 종합', description: '밑각, 수직이등분, 직각삼각형 RHA/RHS 합동, 각의 이등분선, 종이 접기 전 유형 실전 종합', en: ['Isosceles & Right Triangles Comprehensive Practice', 'Mixed applied exam practice covering all angle, congruence, bisector, and folding problem types'], make: (random) => rpmG8IsoTriAllTypesMixed(random) },
+  { id: 'rpm-g8-iso-tri-advanced-skill-up', label: '[단원 최고수준] 이등변삼각형 실력 UP', description: '이등변삼각형 밑변 위의 대칭점과 꼭지각 분할 각도 고난도 추적 (RPM p.140~141)', en: ['Isosceles Triangles Advanced Challenge', 'High-level challenge problems: symmetrical point reflections and vertex angle division proofs'], make: (random) => rpmG8IsoTriAdvancedSkillUp(random) },
+];
+
+export const RPM_CIRCUM_INCENTER_APPLIED_UNITS = [
+  { id: 'rpm-g8-circumcenter-properties', label: '[외심 01] 외심의 뜻과 성질 (외접원 반지름과 둘레)', description: '외심에서 세 꼭짓점에 이르는 거리가 같음을 이용한 외접원 반지름 및 둘레 계산', en: ['Circumcenter Type 01: Circumradius & Vertex Distances', 'Apply equal distance property from circumcenter to all vertices to find circumradius and perimeter'], make: (random) => rpmG8CircumcenterProperties(random) },
+  { id: 'rpm-g8-right-tri-circumcenter', label: '[외심 02] 직각삼각형의 외심 (빗변의 중점)', description: '직각삼각형의 외심이 빗변의 중점임을 이용하여 외접원 반지름 및 빗변 중점 선분 구하기', en: ['Circumcenter Type 02: Right Triangle Hypotenuse Midpoint', 'Utilize the midpoint of the hypotenuse as the circumcenter to find circumradius and median lengths'], make: (random) => rpmG8RightTriCircumcenter(random) },
+  { id: 'rpm-g8-circumcenter-angles-sum', label: '[외심 03] 외심과 각의 크기 합 (x + y + z = 90°)', description: '외심에서 세 꼭짓점을 잇는 선분이 이루는 세 각의 합이 90°임을 이용한 미지의 각 계산', en: ['Circumcenter Type 03: Three Central Rays Angle Sum', 'Solve for unknown angles using x + y + z = 90° from circumcenter rays to vertices'], make: (random) => rpmG8CircumcenterAnglesSum(random) },
+  { id: 'rpm-g8-circumcenter-central-angle', label: '[외심 04] 외심의 중심각 성질 (∠BOC = 2∠A)', description: '외심의 중심각이 꼭지각의 2배임을 이용하여 각의 크기 구하기', en: ['Circumcenter Type 04: Central Angle Double Relationship', 'Compute angle sizes using ∠BOC = 2∠A at the circumcenter'], make: (random) => rpmG8CircumcenterCentralAngle(random) },
+  { id: 'rpm-g8-incenter-properties', label: '[내심 05] 내심의 뜻과 성질 (세 변에 이르는 거리)', description: '내심에서 세 변에 이르는 거리가 내접원의 반지름으로 같음을 이용한 선분의 길이', en: ['Incenter Type 05: Side Distances & Inradius', 'Apply equidistant property from incenter to all three triangle sides (inradius)'], make: (random) => rpmG8IncenterProperties(random) },
+  { id: 'rpm-g8-incenter-angles-sum', label: '[내심 06] 내심과 각의 크기 합 (x + y + z = 90°)', description: '내심이 세 내각의 이등분선 교점임을 이용하여 x + y + z = 90° 로 각도 구하기', en: ['Incenter Type 06: Half-Angle Sum Relationship', 'Calculate missing angles using half-angle bisector sum x + y + z = 90° at incenter'], make: (random) => rpmG8IncenterAnglesSum(random) },
+  { id: 'rpm-g8-incenter-central-angle', label: '[내심 07] 내심의 중심각 성질 (∠BIC = 90° + ∠A/2)', description: '내심 공식 ∠BIC = 90° + (1/2)∠A 를 적용하여 내심 각도 또는 꼭지각 구하기', en: ['Incenter Type 07: Incenter Central Angle Formula', 'Apply ∠BIC = 90° + (1/2)∠A to determine vertex or incenter central angle measures'], make: (random) => rpmG8IncenterCentralAngle(random) },
+  { id: 'rpm-g8-incenter-parallel-line', label: '[내심 08] 삼각형의 내심과 평행선 (둘레 공식)', description: '내심을 지나는 밑변 평행선에 의해 생기는 이등변삼각형과 상단 삼각형 둘레(AB + AC)', en: ['Incenter Type 08: Parallel Line Through Incenter', 'Solve perimeter of upper triangle (AB + AC) formed by parallel line through incenter'], make: (random) => rpmG8IncenterParallelLine(random) },
+  { id: 'rpm-g8-incenter-area-radius', label: '[내심 09] 삼각형의 넓이와 내접원의 반지름', description: '삼각형의 넓이 공식 S = (1/2)r(a + b + c) 를 적용하여 넓이, 둘레, 내접원 반지름 구하기', en: ['Incenter Type 09: Triangle Area via Inradius Formula', 'Apply S = (1/2)r(a + b + c) to compute triangle area, perimeter, or inradius'], make: (random) => rpmG8IncenterAreaRadius(random) },
+  { id: 'rpm-g8-incenter-tangent-segments', label: '[내심 10] 내접원의 접선의 길이', description: '세 꼭짓점에서 내접원에 그은 접선의 길이가 같음을 이용하여 변 분할 선분 계산', en: ['Incenter Type 10: Incircle Tangent Segment Lengths', 'Solve for side partition segments using equality of pairs of tangent segments from vertices'], make: (random) => rpmG8IncenterTangentSegments(random) },
+  { id: 'rpm-g8-circum-incenter-combined', label: '[외심·내심 11] 외심과 내심의 종합 (각도 계산)', description: '한 삼각형에서 외심 O와 내심 I가 동시에 주어졌을 때 두 각의 차 및 ∠OBI 각도 계산', en: ['Circum & Incenter Type 11: Combined Dual-Center Angles', 'Compute angle differences and combined angles (e.g. ∠OBI) when both O and I are given'], make: (random) => rpmG8CircumIncenterCombined(random) },
+  { id: 'rpm-g8-right-tri-both-circles', label: '[외심·내심 12] 직각삼각형의 외접원과 내접원', description: '피타고라스 정리를 만족하는 직각삼각형의 외접원 반지름 R과 내접원 반지름 r의 합/차', en: ['Circum & Incenter Type 12: Right Triangle Inradius & Circumradius', 'Calculate sum and difference of circumradius R and inradius r for right triangles'], make: (random) => rpmG8RightTriBothCircles(random) },
+  { id: 'rpm-g8-circles-all-types-mixed', label: '[단원 실전 다지기] 삼각형의 외심과 내심 전 유형 종합', description: '외심/내심 성질, 각도 공식, 평행선 둘레, 넓이-반지름 공식, 접선 길이 전 유형 종합', en: ['Circumcenter & Incenter Comprehensive Practice', 'Mixed applied problem bank across all circumcenter, incenter, area, and tangent types'], make: (random) => rpmG8CirclesAllTypesMixed(random) },
+  { id: 'rpm-g8-circles-advanced-skill-up', label: '[단원 최고수준] 외심과 내심 실력 UP', description: '외심과 꼭짓점에서 내린 수선 사이의 각도 및 최고난도 외심·내심 융합 문제 (RPM p.142~143)', en: ['Circumcenter & Incenter Advanced Challenge', 'Top-tier challenge: angle between circumradius and altitude (∠OAH = |∠B - ∠C|) and synthesis proofs'], make: (random) => rpmG8CirclesAdvancedSkillUp(random) },
+];
+
+
 
 
 const SOURCE_GROUPS = [
@@ -544,6 +604,8 @@ const SOURCE_GROUPS = [
   ['일차함수와 그래프', ['pre-algebra', 'kr-middle-2', 'algebra-1'], RPM_LINEAR_FUNCTIONS_APPLIED_UNITS],
   ['일차함수와 일차방정식', ['pre-algebra', 'kr-middle-2', 'algebra-1'], RPM_LINEAR_EQUATIONS_GRAPHS_APPLIED_UNITS],
   ['중2-1 총괄 모의고사', ['pre-algebra', 'kr-middle-2'], RPM_GRADE8_FINAL_MOCK_UNITS],
+  ['이등변삼각형', ['pre-algebra', 'kr-middle-2'], RPM_ISOSCELES_TRIANGLES_APPLIED_UNITS],
+  ['삼각형의 외심과 내심', ['pre-algebra', 'kr-middle-2'], RPM_CIRCUM_INCENTER_APPLIED_UNITS],
   ['문자와 식', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], [...ALGEBRA_UNITS, ...RPM_ALGEBRA_APPLIED_UNITS]],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], COORDINATE_UNITS],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'algebra-1'], PROPORTION_UNITS],
@@ -735,6 +797,36 @@ const UNIT_TIERS = {
 
   // RPM 2-1 최종총괄 모의고사 (p.152~167)
   'rpm-grade8-semester-one-final-exam': 'advanced',
+
+  // RPM 2-2 Chapter 01 이등변삼각형
+  'rpm-g8-iso-tri-angles': 'basic',
+  'rpm-g8-iso-tri-angle-bisector': 'basic',
+  'rpm-g8-iso-tri-chain-angles': 'basic',
+  'rpm-g8-iso-tri-condition-sides': 'basic',
+  'rpm-g8-right-tri-congruence': 'basic',
+  'rpm-g8-rha-congruence-apps': 'intermediate',
+  'rpm-g8-rhs-congruence-apps': 'intermediate',
+  'rpm-g8-angle-bisector-prop': 'intermediate',
+  'rpm-g8-paper-folding-triangle': 'intermediate',
+  'rpm-g8-iso-tri-up-challenge': 'intermediate',
+  'rpm-g8-iso-tri-all-types-mixed': 'advanced',
+  'rpm-g8-iso-tri-advanced-skill-up': 'advanced',
+
+  // RPM 2-2 Chapter 02 삼각형의 외심과 내심
+  'rpm-g8-circumcenter-properties': 'basic',
+  'rpm-g8-right-tri-circumcenter': 'basic',
+  'rpm-g8-circumcenter-angles-sum': 'basic',
+  'rpm-g8-circumcenter-central-angle': 'basic',
+  'rpm-g8-incenter-properties': 'basic',
+  'rpm-g8-incenter-angles-sum': 'basic',
+  'rpm-g8-incenter-central-angle': 'basic',
+  'rpm-g8-incenter-parallel-line': 'intermediate',
+  'rpm-g8-incenter-area-radius': 'intermediate',
+  'rpm-g8-incenter-tangent-segments': 'intermediate',
+  'rpm-g8-circum-incenter-combined': 'intermediate',
+  'rpm-g8-right-tri-both-circles': 'intermediate',
+  'rpm-g8-circles-all-types-mixed': 'advanced',
+  'rpm-g8-circles-advanced-skill-up': 'advanced',
 
 
 

@@ -14470,6 +14470,578 @@ export function rpmGrade8SemesterOneFinalExam(random) {
   }
 }
 
+
+// =============================================================
+// [중2-2] 01 이등변삼각형 & 02 외심과 내심
+// =============================================================
+// RPM Middle School 2-2 Applied Problem Generators
+// CHAPTER 01: 이등변삼각형 (RPM 2-2 Pages 10 ~ 21)
+// CHAPTER 02: 삼각형의 외심과 내심 (RPM 2-2 Pages 26 ~ 35)
+// Fully compliant with app/middle-school/rpmAppliedEngine.js and curriculumValidation.js
+
+function shuffle(random, arr) {
+  const res = [...arr];
+  for (let i = res.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [res[i], res[j]] = [res[j], res[i]];
+  }
+  return res;
+}
+
+function makeChoices(random, correctVal, offsetGen, formatKo = (v) => `${v}`, formatEn = (v) => `${v}`) {
+  const set = new Set([correctVal]);
+  let tries = 0;
+  while (set.size < 5 && tries < 60) {
+    tries++;
+    const cand = offsetGen(correctVal, random);
+    if (cand !== correctVal && cand > 0) set.add(cand);
+  }
+  let arr = Array.from(set);
+  while (arr.length < 5) {
+    arr.push(correctVal + arr.length * 2);
+  }
+  arr = shuffle(random, arr);
+  const correctIdx = arr.indexOf(correctVal) + 1;
+  return {
+    kind: 'choice',
+    choicesKo: arr.map(formatKo),
+    choicesEn: arr.map(formatEn),
+    answer: String(correctIdx)
+  };
+}
+
+// ----------------------------------------------------
+// CHAPTER 01: 이등변삼각형
+// ----------------------------------------------------
+
+// 1. [이등변삼각형 01] 이등변삼각형의 밑각 및 꼭지각의 크기 구하기
+export function rpmG8IsoTriAngles(random) {
+  const isVertexGiven = random() < 0.5;
+  if (isVertexGiven) {
+    const angleA = (Math.floor(random() * 45) + 16) * 2; // 32° ~ 120°
+    const baseAngle = (180 - angleA) / 2;
+    const { choicesKo, choicesEn, answer } = makeChoices(random, baseAngle, (v, r) => v + [-10, -5, -4, -2, 2, 4, 5, 10][Math.floor(r() * 8)], (v) => `${v}°`, (v) => `${v}°`);
+    return {
+      prompt: `이등변삼각형 ABC에서 AB = AC 이고 꼭지각 ∠A = ${angleA}° 일 때, 밑각 ∠B의 크기는?`,
+      promptEn: `In isosceles triangle ABC with AB = AC and vertex angle ∠A = ${angleA}°, find the base angle ∠B.`,
+      kind: 'choice',
+      choicesKo,
+      choicesEn,
+      answer,
+      explanation: `이등변삼각형의 두 밑각의 크기는 서로 같으므로 ∠B = ∠C = (180° - ∠A) / 2 = (180° - ${angleA}°) / 2 = ${baseAngle}° 입니다.`,
+      explanationEn: `Base angles of an isosceles triangle are equal: ∠B = (180° - ${angleA}°) / 2 = ${baseAngle}°.`
+    };
+  } else {
+    const baseAngle = Math.floor(random() * 51) + 25; // 25° ~ 75°
+    const angleA = 180 - 2 * baseAngle;
+    const { choicesKo, choicesEn, answer } = makeChoices(random, angleA, (v, r) => v + [-15, -10, -5, 5, 10, 15][Math.floor(r() * 6)], (v) => `${v}°`, (v) => `${v}°`);
+    return {
+      prompt: `이등변삼각형 ABC에서 AB = AC 이고 밑각 ∠B = ${baseAngle}° 일 때, 꼭지각 ∠A의 크기는?`,
+      promptEn: `In isosceles triangle ABC with AB = AC and base angle ∠B = ${baseAngle}°, find the vertex angle ∠A.`,
+      kind: 'choice',
+      choicesKo,
+      choicesEn,
+      answer,
+      explanation: `이등변삼각형의 두 밑각의 크기는 같으므로 ∠B = ∠C = ${baseAngle}° 입니다. 삼각형 내각의 합은 180° 이므로 꼭지각 ∠A = 180° - 2 × ${baseAngle}° = ${angleA}° 입니다.`,
+      explanationEn: `The two base angles are equal: ∠B = ∠C = ${baseAngle}°. Thus ∠A = 180° - 2(${baseAngle}°) = ${angleA}°.`
+    };
+  }
+}
+
+// 2. [이등변삼각형 02] 꼭지각의 이등분선과 밑변의 수직이등분
+export function rpmG8IsoTriAngleBisector(random) {
+  const halfBC = Math.floor(random() * 10) + 3;
+  const totalBC = 2 * halfBC;
+  const angleA = (Math.floor(random() * 31) + 20) * 2;
+  const halfA = angleA / 2;
+  const baseAngle = 90 - halfA;
+  const mode = random() < 0.5 ? 'length' : 'angle';
+  
+  if (mode === 'length') {
+    const { choicesKo, choicesEn, answer } = makeChoices(random, totalBC, (v, r) => v + [-4, -2, -1, 1, 2, 4][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+    return {
+      prompt: `이등변삼각형 ABC (AB = AC) 에서 꼭지각 ∠A의 이등분선이 밑변 BC와 점 D에서 만난다. BD = ${halfBC} cm 일 때, 밑변 BC의 길이는?`,
+      promptEn: `In isosceles triangle ABC (AB = AC), the angle bisector of ∠A meets BC at D. If BD = ${halfBC} cm, find the length of BC.`,
+      kind: 'choice',
+      choicesKo,
+      choicesEn,
+      answer,
+      explanation: `이등변삼각형의 꼭지각의 이등분선은 밑변을 수직이등분하므로 BD = CD = ${halfBC} cm 입니다. 따라서 BC = 2 × ${halfBC} = ${totalBC} cm 입니다.`,
+      explanationEn: `The angle bisector of the vertex angle perpendicular bisects the base. Thus BC = 2 × BD = ${totalBC} cm.`
+    };
+  } else {
+    const { choicesKo, choicesEn, answer } = makeChoices(random, baseAngle, (v, r) => v + [-8, -4, -2, 2, 4, 8][Math.floor(r() * 6)], (v) => `${v}°`, (v) => `${v}°`);
+    return {
+      prompt: `이등변삼각형 ABC (AB = AC) 에서 꼭지각 ∠A의 이등분선이 밑변 BC와 점 D에서 수직으로 만난다. ∠BAD = ${halfA}° 일 때, 밑각 ∠B의 크기는?`,
+      promptEn: `In isosceles triangle ABC (AB = AC), the angle bisector AD meets BC perpendicularly at D. If ∠BAD = ${halfA}°, find ∠B.`,
+      kind: 'choice',
+      choicesKo,
+      choicesEn,
+      answer,
+      explanation: `AD ⊥ BC 이므로 직각삼각형 ABD에서 ∠B = 90° - ∠BAD = 90° - ${halfA}° = ${baseAngle}° 입니다.`,
+      explanationEn: `Since AD ⊥ BC, triangle ABD is right-angled: ∠B = 90° - ∠BAD = 90° - ${halfA}° = ${baseAngle}°.`
+    };
+  }
+}
+
+// 3. [이등변삼각형 03] 이등변삼각형이 연속된 도형에서 각의 크기 추적
+export function rpmG8IsoTriChainAngles(random) {
+  const angleA = Math.floor(random() * 27) + 18; // 18° ~ 44°
+  const angleBDC = 2 * angleA;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, angleBDC, (v, r) => v + [-6, -4, -2, 2, 4, 6][Math.floor(r() * 6)], (v) => `${v}°`, (v) => `${v}°`);
+  return {
+    prompt: `삼각형 ABC에서 변 AC 위의 점 D에 대하여 AD = BD = BC 이고 꼭지각 ∠A = ${angleA}° 일 때, ∠BDC의 크기는?`,
+    promptEn: `In triangle ABC, point D lies on AC such that AD = BD = BC. If ∠A = ${angleA}°, find the measure of ∠BDC.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `△ABD에서 AD = BD 이므로 ∠ABD = ∠A = ${angleA}° 입니다. 외각의 성질에 의해 ∠BDC = ∠A + ∠ABD = ${angleA}° + ${angleA}° = ${angleBDC}° 입니다.`,
+    explanationEn: `In △ABD, AD = BD implies ∠ABD = ∠A = ${angleA}°. By exterior angle theorem, ∠BDC = ∠A + ∠ABD = ${angleBDC}°.`
+  };
+}
+
+// 4. [이등변삼각형 04] 두 내각의 크기가 같은 이등변삼각형
+export function rpmG8IsoTriConditionSides(random) {
+  const side = Math.floor(random() * 13) + 6; // 6 ~ 18
+  const diff = Math.floor(random() * 5) + 2;
+  const base = side - diff > 3 ? side - diff : side + diff;
+  const perimeter = 2 * side + base;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, side, (v, r) => v + [-3, -2, -1, 1, 2, 3][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `삼각형 ABC에서 ∠B = ∠C 이고 밑변 BC = ${base} cm 이다. 삼각형 ABC의 둘레의 길이가 ${perimeter} cm 일 때, 변 AB의 길이는?`,
+    promptEn: `In triangle ABC, ∠B = ∠C and base BC = ${base} cm. If the perimeter is ${perimeter} cm, find the length of AB.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `두 내각의 크기가 같은 삼각형은 이등변삼각형이므로 AB = AC 입니다. 둘레가 ${perimeter} cm 이므로 2AB + ${base} = ${perimeter} 에서 2AB = ${perimeter - base}, 즉 AB = ${side} cm 입니다.`,
+    explanationEn: `Equal base angles mean AB = AC. The perimeter is 2AB + ${base} = ${perimeter} => AB = ${side} cm.`
+  };
+}
+
+// 5. [직각삼각형 05] 직각삼각형의 합동 조건 판별
+export function rpmG8RightTriCongruence(random) {
+  const cases = [
+    {
+      descKo: '빗변의 길이와 한 예각의 크기가 각각 같을 때',
+      descEn: 'the hypotenuse and one acute angle are equal',
+      correct: 'RHA 합동',
+      correctEn: 'RHA Congruence',
+      distractorsKo: ['RHS 합동', 'SAS 합동', 'ASA 합동', 'SSS 합동'],
+      distractorsEn: ['RHS Congruence', 'SAS Congruence', 'ASA Congruence', 'SSS Congruence']
+    },
+    {
+      descKo: '빗변의 길이와 다른 한 변의 길이가 각각 같을 때',
+      descEn: 'the hypotenuse and another side are equal',
+      correct: 'RHS 합동',
+      correctEn: 'RHS Congruence',
+      distractorsKo: ['RHA 합동', 'SAS 합동', 'ASA 합동', 'SSS 합동'],
+      distractorsEn: ['RHA Congruence', 'SAS Congruence', 'ASA Congruence', 'SSS Congruence']
+    },
+    {
+      descKo: '직각을 낀 두 변의 길이가 각각 같을 때',
+      descEn: 'the two legs forming the right angle are equal',
+      correct: 'SAS 합동',
+      correctEn: 'SAS Congruence',
+      distractorsKo: ['RHA 합동', 'RHS 합동', 'ASA 합동', 'SSS 합동'],
+      distractorsEn: ['RHA Congruence', 'RHS Congruence', 'ASA Congruence', 'SSS Congruence']
+    }
+  ];
+  const item = cases[Math.floor(random() * cases.length)];
+  const combined = [
+    { ko: item.correct, en: item.correctEn, isRight: true },
+    ...item.distractorsKo.map((d, i) => ({ ko: d, en: item.distractorsEn[i], isRight: false }))
+  ].slice(0, 5);
+  const shuffled = shuffle(random, combined);
+  const correctIdx = shuffled.findIndex(c => c.isRight) + 1;
+  return {
+    prompt: `두 직각삼각형에서 ${item.descKo} 두 직각삼각형은 항상 합동이다. 이때 적용되는 직각삼각형의 합동 조건은?`,
+    promptEn: `Two right triangles are congruent when ${item.descEn}. Which congruence condition applies?`,
+    kind: 'choice',
+    choicesKo: shuffled.map(c => c.ko),
+    choicesEn: shuffled.map(c => c.en),
+    answer: String(correctIdx),
+    explanation: `두 직각삼각형에서 ${item.descKo} 적용되는 합동 조건은 [${item.correct}]입니다.`,
+    explanationEn: `When ${item.descEn} in two right triangles, the congruence criterion is [${item.correctEn}].`
+  };
+}
+
+// 6. [직각삼각형 06] RHA 합동의 응용 (직각이등변삼각형 수선의 발)
+export function rpmG8RhaCongruenceApps(random) {
+  const a = Math.floor(random() * 7) + 4; // 4 ~ 10
+  const b = Math.floor(random() * (a - 2)) + 2; // 2 ~ a-1
+  const de = a + b;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, de, (v, r) => v + [-3, -2, -1, 1, 2, 3][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `∠A = 90° 인 직각이등변삼각형 ABC의 꼭짓점 A를 지나는 직선에 두 꼭짓점 B, C에서 내린 수선의 발을 각각 D, E라 하자. BD = ${a} cm, CE = ${b} cm 일 때, 선분 DE의 길이는?`,
+    promptEn: `In right isosceles triangle ABC (∠A = 90°), perpendiculars from B and C to a line through A meet the line at D and E. If BD = ${a} cm and CE = ${b} cm, find DE.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `△ABD와 △CAE에서 ∠ADB = ∠CEA = 90°, AB = CA (빗변), ∠ABD = 90° - ∠BAD = ∠CAE 이므로 △ABD ≡ △CAE (RHA 합동)입니다. 따라서 AD = CE = ${b} cm, AE = BD = ${a} cm 이므로 DE = AD + AE = ${b} + ${a} = ${de} cm 입니다.`,
+    explanationEn: `△ABD ≡ △CAE by RHA congruence. Thus AD = CE = ${b} cm, AE = BD = ${a} cm, so DE = ${b} + ${a} = ${de} cm.`
+  };
+}
+
+// 7. [직각삼각형 07] RHS 합동의 응용
+export function rpmG8RhsCongruenceApps(random) {
+  const ce = Math.floor(random() * 6) + 3; // 3 ~ 8
+  const { choicesKo, choicesEn, answer } = makeChoices(random, ce, (v, r) => v + [-3, -2, -1, 1, 2, 3][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `∠C = 90° 인 직각삼각형 ABC에서 빗변 AB 위의 점 D에 대하여 AC = AD 이다. 점 D를 지나고 AB에 수직인 직선이 BC와 만나는 점을 E라 할 때, CE = ${ce} cm 이면 선분 DE의 길이는?`,
+    promptEn: `In right triangle ABC with ∠C = 90°, point D on AB satisfies AC = AD. The perpendicular to AB at D meets BC at E. If CE = ${ce} cm, find DE.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `선분 AE를 그으면 △ACE와 △ADE에서 ∠C = ∠ADE = 90°, 빗변 AE 공통, AC = AD 이므로 △ACE ≡ △ADE (RHS 합동)입니다. 따라서 DE = CE = ${ce} cm 입니다.`,
+    explanationEn: `Connecting AE, △ACE ≡ △ADE by RHS congruence (shared hypotenuse AE, AC = AD). Thus DE = CE = ${ce} cm.`
+  };
+}
+
+// 8. [각의 이등분선 08] 각의 이등분선의 성질과 삼각형의 넓이
+export function rpmG8AngleBisectorProp(random) {
+  let c = Math.floor(random() * 15) + 10;
+  const d = Math.floor(random() * 6) + 3;
+  if ((c * d) % 2 !== 0) c += 1;
+  const area = (c * d) / 2;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, area, (v, r) => v + [-12, -8, -6, 6, 8, 12][Math.floor(r() * 6)], (v) => `${v} cm²`, (v) => `${v} cm²`);
+  return {
+    prompt: `∠C = 90° 인 직각삼각형 ABC에서 ∠A의 이등분선이 변 BC와 점 D에서 만난다. AB = ${c} cm, CD = ${d} cm 일 때, 삼각형 ABD의 넓이는?`,
+    promptEn: `In right triangle ABC with ∠C = 90°, the bisector of ∠A meets BC at D. If AB = ${c} cm and CD = ${d} cm, find the area of △ABD.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `각의 이등분선 위의 점 D에서 두 변 AC, AB에 이르는 거리는 같으므로 점 D에서 AB에 내린 수선의 길이는 CD = ${d} cm 입니다. 따라서 △ABD의 넓이는 (1/2) × ${c} × ${d} = ${area} cm² 입니다.`,
+    explanationEn: `The distance from D to AB equals CD = ${d} cm by angle bisector property. Area(△ABD) = (1/2) × ${c} × ${d} = ${area} cm².`
+  };
+}
+
+// 9. [종이 접기 09] 직사각형 종이 접기와 이등변삼각형
+export function rpmG8PaperFoldingTriangle(random) {
+  const foldAngle = Math.floor(random() * 26) + 50; // 50° ~ 75°
+  const apexAngle = 180 - 2 * foldAngle;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, apexAngle, (v, r) => v + [-10, -6, -4, 4, 6, 10][Math.floor(r() * 6)], (v) => `${v}°`, (v) => `${v}°`);
+  return {
+    prompt: `폭이 일정한 직사각형 종이테이프를 접었을 때 생기는 삼각형에서 접은 각의 크기가 ${foldAngle}° 이다. 겹쳐진 이등변삼각형의 꼭지각의 크기는?`,
+    promptEn: `When a rectangular strip of constant width is folded, the fold angle is ${foldAngle}°. Find the apex angle of the overlapping isosceles triangle.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `접은 각과 엇각의 성질에 의해 겹쳐진 삼각형은 밑각이 각각 ${foldAngle}° 인 이등변삼각형이 됩니다. 따라서 꼭지각의 크기는 180° - 2 × ${foldAngle}° = ${apexAngle}° 입니다.`,
+    explanationEn: `Folded angle and alternate interior angle mean base angles are ${foldAngle}°. Apex angle = 180° - 2(${foldAngle}°) = ${apexAngle}°.`
+  };
+}
+
+// 10. [유형 UP 10] 이등변삼각형 심화 응용 (외각 연쇄 추적)
+export function rpmG8IsoTriUpChallenge(random) {
+  const a = Math.floor(random() * 10) + 15; // 15° ~ 24°
+  const ext = 4 * a;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, a, (v, r) => v + [-4, -3, -2, 2, 3, 4][Math.floor(r() * 6)], (v) => `${v}°`, (v) => `${v}°`);
+  return {
+    prompt: `연속된 선분의 길이가 AB = BC = CD = DE 로 같고 가장 바깥쪽 외각의 크기가 ${ext}° 일 때, 꼭지각 ∠A의 크기는?`,
+    promptEn: `Line segments AB = BC = CD = DE are connected sequentially. If the outermost exterior angle is ${ext}°, find ∠A.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `∠A = x 라 하면 이등변삼각형의 밑각과 외각 성질에 의해 각 단계의 외각은 2x, 3x, 4x 가 됩니다. 따라서 4x = ${ext}° 에서 x = ${a}° 입니다.`,
+    explanationEn: `Let ∠A = x. The successive exterior angles are 2x, 3x, 4x. Setting 4x = ${ext}° gives x = ${a}°.`
+  };
+}
+
+// 11. [단원 실전 다지기] 이등변삼각형과 직각삼각형 전 유형 실전 종합
+export function rpmG8IsoTriAllTypesMixed(random) {
+  const pool = [rpmG8IsoTriAngles, rpmG8IsoTriAngleBisector, rpmG8RhaCongruenceApps, rpmG8AngleBisectorProp, rpmG8PaperFoldingTriangle];
+  const fn = pool[Math.floor(random() * pool.length)];
+  const res = fn(random);
+  return {
+    ...res,
+    prompt: `[이등변삼각형 실전 종합] ${res.prompt}`,
+    promptEn: `[Isosceles Triangle Mixed Practice] ${res.promptEn}`
+  };
+}
+
+// 12. [단원 최고수준] 이등변삼각형 실력 UP (p.140~141 최고난도 문항)
+export function rpmG8IsoTriAdvancedSkillUp(random) {
+  const angleA = (Math.floor(random() * 16) + 40) * 2; // 80° ~ 110°
+  const baseAngle = (180 - angleA) / 2;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, baseAngle, (v, r) => v + [-8, -5, -3, 3, 5, 8][Math.floor(r() * 6)], (v) => `${v}°`, (v) => `${v}°`);
+  return {
+    prompt: `이등변삼각형 ABC (AB = AC) 에서 꼭지각 ∠A = ${angleA}° 이다. 밑변 BC 위에 두 점 D, E를 BA = BD, CA = CE 가 되도록 잡을 때, ∠DAE의 크기는?`,
+    promptEn: `In isosceles triangle ABC (AB = AC), vertex angle ∠A = ${angleA}°. Points D and E on BC satisfy BA = BD and CA = CE. Find ∠DAE.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `밑각 ∠B = ∠C = (180° - ${angleA}°) / 2 = ${baseAngle}° 입니다. BA = BD 에서 ∠BAD = (180° - ${baseAngle}°) / 2 이고, CA = CE 에서 ∠CAE = (180° - ${baseAngle}°) / 2 입니다. 따라서 ∠DAE = ∠BAD + ∠CAE - ∠BAC = (180° - ${baseAngle}°) - ${angleA}° = ${baseAngle}° 입니다.`,
+    explanationEn: `Base angle ∠B = ∠C = ${baseAngle}°. Summing angle BAD and CAE and subtracting angle BAC yields ∠DAE = ${baseAngle}°.`
+  };
+}
+
+// ----------------------------------------------------
+// CHAPTER 02: 삼각형의 외심과 내심
+// ----------------------------------------------------
+
+// 13. [외심 01] 외심의 뜻과 성질 (외접원 반지름과 둘레)
+export function rpmG8CircumcenterProperties(random) {
+  const r = Math.floor(random() * 11) + 5; // 5 ~ 15
+  const bc = Math.floor(random() * (2 * r - 7)) + 6;
+  const perimeter = 2 * r + bc;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, perimeter, (v, r2) => v + [-6, -4, -2, 2, 4, 6][Math.floor(r2() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `점 O가 삼각형 ABC의 외심이고 OA = ${r} cm, 밑변 BC = ${bc} cm 일 때, 삼각형 OBC의 둘레의 길이는?`,
+    promptEn: `Point O is the circumcenter of △ABC. If OA = ${r} cm and BC = ${bc} cm, find the perimeter of △OBC.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `외심에서 세 꼭짓점에 이르는 거리는 외접원의 반지름으로 같으므로 OB = OC = OA = ${r} cm 입니다. 따라서 △OBC의 둘레는 OB + OC + BC = ${r} + ${r} + ${bc} = ${perimeter} cm 입니다.`,
+    explanationEn: `Circumcenter O is equidistant to all vertices: OB = OC = OA = ${r} cm. Perimeter of △OBC = ${r} + ${r} + ${bc} = ${perimeter} cm.`
+  };
+}
+
+// 14. [외심 02] 직각삼각형의 외심 (빗변의 중점)
+export function rpmG8RightTriCircumcenter(random) {
+  const r = Math.floor(random() * 12) + 4; // 4 ~ 15
+  const hypotenuse = 2 * r;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, r, (v, r2) => v + [-3, -2, -1, 1, 2, 3][Math.floor(r2() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `∠B = 90° 인 직각삼각형 ABC에서 빗변 AC = ${hypotenuse} cm 일 때, 삼각형 ABC의 외접원의 반지름의 길이는?`,
+    promptEn: `In right triangle ABC with ∠B = 90° and hypotenuse AC = ${hypotenuse} cm, find the radius of its circumcircle.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `직각삼각형의 외심은 빗변의 중점에 위치하므로 외접원의 반지름의 길이는 빗변의 길이의 절반인 ${hypotenuse} / 2 = ${r} cm 입니다.`,
+    explanationEn: `The circumcenter of a right triangle is the midpoint of the hypotenuse. Radius = ${hypotenuse} / 2 = ${r} cm.`
+  };
+}
+
+// 15. [외심 03] 외심과 각의 크기 합 (x + y + z = 90°)
+export function rpmG8CircumcenterAnglesSum(random) {
+  const x = Math.floor(random() * 21) + 20; // 20 ~ 40
+  const y = Math.floor(random() * (60 - x)) + 20;
+  const z = 90 - (x + y);
+  const { choicesKo, choicesEn, answer } = makeChoices(random, z, (v, r2) => v + [-6, -4, -2, 2, 4, 6][Math.floor(r2() * 6)], (v) => `${v}°`, (v) => `${v}°`);
+  return {
+    prompt: `점 O가 삼각형 ABC의 외심일 때, ∠OAB = ${x}°, ∠OBC = ${y}° 이다. 이때 ∠OCA의 크기는?`,
+    promptEn: `Point O is the circumcenter of △ABC. If ∠OAB = ${x}° and ∠OBC = ${y}°, find ∠OCA.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `외심 O에서 세 꼭짓점을 연결할 때 ∠OAB + ∠OBC + ∠OCA = 90° 가 성립합니다. 따라서 ∠OCA = 90° - (${x}° + ${y}°) = ${z}° 입니다.`,
+    explanationEn: `For circumcenter O, ∠OAB + ∠OBC + ∠OCA = 90°. Thus ∠OCA = 90° - (${x}° + ${y}°) = ${z}°.`
+  };
+}
+
+// 16. [외심 04] 외심의 중심각 성질 (∠BOC = 2∠A)
+export function rpmG8CircumcenterCentralAngle(random) {
+  const angleA = Math.floor(random() * 41) + 35; // 35° ~ 75°
+  const angleBOC = 2 * angleA;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, angleBOC, (v, r) => v + [-12, -8, -6, 6, 8, 12][Math.floor(r() * 6)], (v) => `${v}°`, (v) => `${v}°`);
+  return {
+    prompt: `점 O가 삼각형 ABC의 외심일 때, ∠A = ${angleA}° 이다. 이때 중심각 ∠BOC의 크기는?`,
+    promptEn: `Point O is the circumcenter of △ABC. If ∠A = ${angleA}°, find ∠BOC.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `삼각형의 외심에서 밑변을 바라보는 중심각의 크기는 꼭지각의 2배이므로 ∠BOC = 2∠A = 2 × ${angleA}° = ${angleBOC}° 입니다.`,
+    explanationEn: `The central angle at circumcenter is twice the inscribed angle: ∠BOC = 2∠A = 2(${angleA}°) = ${angleBOC}°.`
+  };
+}
+
+// 17. [내심 05] 내심의 뜻과 성질 (세 변에 이르는 거리)
+export function rpmG8IncenterProperties(random) {
+  const r = Math.floor(random() * 7) + 2; // 2 ~ 8
+  const { choicesKo, choicesEn, answer } = makeChoices(random, r, (v, r2) => v + [-2, -1, 1, 2, 3][Math.floor(r2() * 5)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `점 I가 삼각형 ABC의 내심이고 점 I에서 변 AB에 내린 수선의 길이가 ${r} cm 일 때, 점 I에서 변 BC에 내린 수선의 길이는?`,
+    promptEn: `Point I is the incenter of △ABC. If the perpendicular distance from I to AB is ${r} cm, find the distance from I to BC.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `삼각형의 내심에서 세 변에 이르는 거리는 내접원의 반지름으로 모두 같으므로 점 I에서 변 BC에 내린 수선의 길이는 ${r} cm 입니다.`,
+    explanationEn: `The incenter is equidistant to all three sides (inradius). The distance to BC is ${r} cm.`
+  };
+}
+
+// 18. [내심 06] 내심과 각의 크기 합 (x + y + z = 90°)
+export function rpmG8IncenterAnglesSum(random) {
+  const x = Math.floor(random() * 21) + 18; // 18 ~ 38
+  const y = Math.floor(random() * (62 - x)) + 18;
+  const z = 90 - (x + y);
+  const { choicesKo, choicesEn, answer } = makeChoices(random, z, (v, r) => v + [-6, -4, -2, 2, 4, 6][Math.floor(r() * 6)], (v) => `${v}°`, (v) => `${v}°`);
+  return {
+    prompt: `점 I가 삼각형 ABC의 내심일 때, ∠IAB = ${x}°, ∠IBC = ${y}° 이다. 이때 ∠ICA의 크기는?`,
+    promptEn: `Point I is the incenter of △ABC. If ∠IAB = ${x}° and ∠IBC = ${y}°, find ∠ICA.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `내심 I는 세 내각의 이등분선의 교점이므로 ∠IAB + ∠IBC + ∠ICA = (1/2)(∠A + ∠B + ∠C) = 90° 입니다. 따라서 ∠ICA = 90° - (${x}° + ${y}°) = ${z}° 입니다.`,
+    explanationEn: `Since I is formed by angle bisectors, ∠IAB + ∠IBC + ∠ICA = 90°. Thus ∠ICA = 90° - (${x}° + ${y}°) = ${z}°.`
+  };
+}
+
+// 19. [내심 07] 내심의 중심각 성질 (∠BIC = 90° + (1/2)∠A)
+export function rpmG8IncenterCentralAngle(random) {
+  const halfA = Math.floor(random() * 27) + 18; // 18 ~ 44
+  const angleA = 2 * halfA;
+  const angleBIC = 90 + halfA;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, angleBIC, (v, r) => v + [-6, -4, -2, 2, 4, 6][Math.floor(r() * 6)], (v) => `${v}°`, (v) => `${v}°`);
+  return {
+    prompt: `점 I가 삼각형 ABC의 내심일 때, 꼭지각 ∠A = ${angleA}° 이다. 이때 ∠BIC의 크기는?`,
+    promptEn: `Point I is the incenter of △ABC. If vertex angle ∠A = ${angleA}°, find ∠BIC.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `내심 공식에 의해 ∠BIC = 90° + (1/2)∠A = 90° + ${halfA}° = ${angleBIC}° 입니다.`,
+    explanationEn: `By incenter formula, ∠BIC = 90° + (1/2)∠A = 90° + ${halfA}° = ${angleBIC}°.`
+  };
+}
+
+// 20. [내심 08] 삼각형의 내심과 평행선 (둘레 공식 △ADE = AB + AC)
+export function rpmG8IncenterParallelLine(random) {
+  const ab = Math.floor(random() * 9) + 8; // 8 ~ 16
+  const ac = Math.floor(random() * 9) + 7; // 7 ~ 15
+  const perimeterADE = ab + ac;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, perimeterADE, (v, r) => v + [-4, -2, -1, 1, 2, 4][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `점 I가 삼각형 ABC의 내심이다. 점 I를 지나고 변 BC에 평행한 직선이 두 변 AB, AC와 만나는 점을 각각 D, E라 하자. AB = ${ab} cm, AC = ${ac} cm 일 때, 삼각형 ADE의 둘레의 길이는?`,
+    promptEn: `Point I is the incenter of △ABC. A line through I parallel to BC meets AB and AC at D and E. If AB = ${ab} cm and AC = ${ac} cm, find the perimeter of △ADE.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `DE ∥ BC 이고 점 I가 내심이므로 접은 각과 엇각에 의해 DI = DB, EI = EC 입니다. 따라서 △ADE의 둘레는 AD + DE + EA = AB + AC = ${ab} + ${ac} = ${perimeterADE} cm 입니다.`,
+    explanationEn: `Since DE ∥ BC and I is incenter, DI = DB and EI = EC. Perimeter of △ADE = AB + AC = ${ab} + ${ac} = ${perimeterADE} cm.`
+  };
+}
+
+// 21. [내심 09] 삼각형의 넓이와 내접원의 반지름 (S = (1/2)r(a + b + c))
+export function rpmG8IncenterAreaRadius(random) {
+  const r = Math.floor(random() * 5) + 2; // 2 ~ 6
+  const perimeter = (Math.floor(random() * 19) + 12) * 2; // 24 ~ 60
+  const area = (r * perimeter) / 2;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, area, (v, r2) => v + [-12, -8, -6, 6, 8, 12][Math.floor(r2() * 6)], (v) => `${v} cm²`, (v) => `${v} cm²`);
+  return {
+    prompt: `둘레의 길이가 ${perimeter} cm 인 삼각형 ABC의 내접원의 반지름의 길이가 ${r} cm 일 때, 삼각형 ABC의 넓이는?`,
+    promptEn: `The perimeter of △ABC is ${perimeter} cm and the inradius is ${r} cm. Find the area of △ABC.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `삼각형의 넓이 S = (1/2)r(둘레) = (1/2) × ${r} × ${perimeter} = ${area} cm² 입니다.`,
+    explanationEn: `Area S = (1/2)r(perimeter) = (1/2) × ${r} × ${perimeter} = ${area} cm².`
+  };
+}
+
+// 22. [내심 10] 내접원의 접선의 길이
+export function rpmG8IncenterTangentSegments(random) {
+  const x = Math.floor(random() * 7) + 3; // AD = AF = x
+  const y = Math.floor(random() * 7) + 3; // BD = BE = y
+  const z = Math.floor(random() * 7) + 3; // CE = CF = z
+  const c = x + y; // AB
+  const a = y + z; // BC
+  const b = z + x; // CA
+  const { choicesKo, choicesEn, answer } = makeChoices(random, x, (v, r) => v + [-3, -2, -1, 1, 2, 3][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `삼각형 ABC의 내접원이 세 변 AB, BC, CA와 만나는 접점을 각각 D, E, F라 하자. AB = ${c} cm, BC = ${a} cm, CA = ${b} cm 일 때, 선분 AD의 길이는?`,
+    promptEn: `The incircle of △ABC touches AB, BC, and CA at D, E, and F respectively. If AB = ${c} cm, BC = ${a} cm, CA = ${b} cm, find AD.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `꼭짓점에서 그은 접선의 길이는 같으므로 AD = AF = x, BD = BE = y, CE = CF = z 라 하면 x + y = ${c}, y + z = ${a}, z + x = ${b} 입니다. 둘레의 절반은 ${(a + b + c) / 2} cm 이므로 x = ${(a + b + c) / 2} - (y + z) = ${(a + b + c) / 2} - ${a} = ${x} cm 입니다.`,
+    explanationEn: `By tangent properties, x + y = ${c}, y + z = ${a}, z + x = ${b}. Semi-perimeter is ${(a + b + c) / 2}. Thus x = ${(a + b + c) / 2} - ${a} = ${x} cm.`
+  };
+}
+
+// 23. [외심·내심 11] 외심과 내심의 종합 (각도 계산)
+export function rpmG8CircumIncenterCombined(random) {
+  const angleA = (Math.floor(random() * 21) + 25) * 2; // 50° ~ 90°
+  const boc = 2 * angleA;
+  const bic = 90 + angleA / 2;
+  const val = Math.abs(boc - bic);
+  const { choicesKo, choicesEn, answer } = makeChoices(random, val, (v, r) => v + [-8, -5, -3, 3, 5, 8][Math.floor(r() * 6)], (v) => `${v}°`, (v) => `${v}°`);
+  return {
+    prompt: `점 O와 점 I는 각각 삼각형 ABC의 외심과 내심이다. 꼭지각 ∠A = ${angleA}° 일 때, |∠BOC - ∠BIC| 의 값은?`,
+    promptEn: `Points O and I are the circumcenter and incenter of △ABC. If ∠A = ${angleA}°, find |∠BOC - ∠BIC|.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `외심에서 중심각 ∠BOC = 2∠A = ${boc}° 이고, 내심에서 중심각 ∠BIC = 90° + (1/2)∠A = ${bic}° 입니다. 따라서 두 각의 차의 절댓값은 |${boc}° - ${bic}°| = ${val}° 입니다.`,
+    explanationEn: `Circumcenter: ∠BOC = 2∠A = ${boc}°. Incenter: ∠BIC = 90° + (1/2)∠A = ${bic}°. Difference = |${boc}° - ${bic}°| = ${val}°.`
+  };
+}
+
+// 24. [외심·내심 12] 직각삼각형의 외접원과 내접원
+export function rpmG8RightTriBothCircles(random) {
+  const triples = [
+    [6, 8, 10],
+    [8, 15, 17],
+    [9, 12, 15],
+    [5, 12, 13]
+  ];
+  const [a, b, c] = triples[Math.floor(random() * triples.length)];
+  const R = c / 2;
+  const r = (a + b - c) / 2;
+  const sum = R + r;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, sum, (v, r2) => v + [-3, -2, -1, 1, 2, 3][Math.floor(r2() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `세 변의 길이가 각각 ${a} cm, ${b} cm, ${c} cm 인 직각삼각형에 대하여 외접원의 반지름의 길이를 R, 내접원의 반지름의 길이를 r이라 할 때, R + r의 값은?`,
+    promptEn: `A right triangle has sides ${a} cm, ${b} cm, and ${c} cm. If R is the circumradius and r is the inradius, find R + r.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `직각삼각형의 외심은 빗변의 중점이므로 R = ${c} / 2 = ${R} cm 이고, 내접원의 반지름 r = (${a} + ${b} - ${c}) / 2 = ${r} cm 입니다. 따라서 R + r = ${R} + ${r} = ${sum} cm 입니다.`,
+    explanationEn: `Circumradius R = ${c} / 2 = ${R} cm. Inradius r = (${a} + ${b} - ${c}) / 2 = ${r} cm. Sum R + r = ${sum} cm.`
+  };
+}
+
+// 25. [단원 실전 다지기] 삼각형의 외심과 내심 전 유형 실전 종합
+export function rpmG8CirclesAllTypesMixed(random) {
+  const pool = [rpmG8CircumcenterProperties, rpmG8RightTriCircumcenter, rpmG8CircumcenterCentralAngle, rpmG8IncenterCentralAngle, rpmG8IncenterParallelLine, rpmG8IncenterAreaRadius, rpmG8IncenterTangentSegments];
+  const fn = pool[Math.floor(random() * pool.length)];
+  const res = fn(random);
+  return {
+    ...res,
+    prompt: `[외심과 내심 실전 종합] ${res.prompt}`,
+    promptEn: `[Circumcenter & Incenter Mixed Practice] ${res.promptEn}`
+  };
+}
+
+// 26. [단원 최고수준] 외심과 내심 실력 UP (p.142~143 최고난도 문항)
+export function rpmG8CirclesAdvancedSkillUp(random) {
+  const angleB = Math.floor(random() * 26) + 50; // 50° ~ 75°
+  const diff = Math.floor(random() * 19) + 12; // 12° ~ 30°
+  const angleC = angleB - diff;
+  const angleOAH = diff;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, angleOAH, (v, r) => v + [-6, -4, -2, 2, 4, 6][Math.floor(r() * 6)], (v) => `${v}°`, (v) => `${v}°`);
+  return {
+    prompt: `삼각형 ABC에서 점 O는 외심이고, 점 A에서 변 BC에 내린 수선의 발을 H라 하자. ∠B = ${angleB}°, ∠C = ${angleC}° 일 때, ∠OAH의 크기는?`,
+    promptEn: `In △ABC, O is the circumcenter and AH ⊥ BC with H on BC. If ∠B = ${angleB}° and ∠C = ${angleC}°, find ∠OAH.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `△ABH에서 ∠BAH = 90° - ∠B = 90° - ${angleB}° 이고, 외심 O에서 이등변삼각형 △OAB에 의해 ∠OAB = 90° - ∠C = 90° - ${angleC}° 입니다. 따라서 ∠OAH = ∠OAB - ∠BAH = (90° - ${angleC}°) - (90° - ${angleB}°) = ∠B - ∠C = ${angleB}° - ${angleC}° = ${angleOAH}° 입니다.`,
+    explanationEn: `In right △ABH, ∠BAH = 90° - ∠B. For circumcenter O, ∠OAB = 90° - ∠C. Thus ∠OAH = ∠B - ∠C = ${angleOAH}°.`
+  };
+}
+
+
 export const RPM_APPLIED_GENERATORS = {
   // 01 소인수분해 RPM 세부 유형 (RPM 1-1 Pages 10~15)
   'rpm-prime-prop-closest': rpmPrimePropClosest,
@@ -15125,6 +15697,40 @@ export const RPM_APPLIED_GENERATORS = {
   // [중2-1 최종총괄] 중학 2-1 전 범위 최종 실전 총괄 모의고사 (RPM p.152~167)
   // -------------------------------------------------------------
   'rpm-grade8-semester-one-final-exam': rpmGrade8SemesterOneFinalExam,
+  // -------------------------------------------------------------
+  // [중2-2] 01 이등변삼각형 세부 응용 유형 (RPM 2-2 p.10~21)
+  // -------------------------------------------------------------
+  'rpm-g8-iso-tri-angles': rpmG8IsoTriAngles,
+  'rpm-g8-iso-tri-angle-bisector': rpmG8IsoTriAngleBisector,
+  'rpm-g8-iso-tri-chain-angles': rpmG8IsoTriChainAngles,
+  'rpm-g8-iso-tri-condition-sides': rpmG8IsoTriConditionSides,
+  'rpm-g8-right-tri-congruence': rpmG8RightTriCongruence,
+  'rpm-g8-rha-congruence-apps': rpmG8RhaCongruenceApps,
+  'rpm-g8-rhs-congruence-apps': rpmG8RhsCongruenceApps,
+  'rpm-g8-angle-bisector-prop': rpmG8AngleBisectorProp,
+  'rpm-g8-paper-folding-triangle': rpmG8PaperFoldingTriangle,
+  'rpm-g8-iso-tri-up-challenge': rpmG8IsoTriUpChallenge,
+  'rpm-g8-iso-tri-all-types-mixed': rpmG8IsoTriAllTypesMixed,
+  'rpm-g8-iso-tri-advanced-skill-up': rpmG8IsoTriAdvancedSkillUp,
+
+  // -------------------------------------------------------------
+  // [중2-2] 02 삼각형의 외심과 내심 세부 응용 유형 (RPM 2-2 p.26~35)
+  // -------------------------------------------------------------
+  'rpm-g8-circumcenter-properties': rpmG8CircumcenterProperties,
+  'rpm-g8-right-tri-circumcenter': rpmG8RightTriCircumcenter,
+  'rpm-g8-circumcenter-angles-sum': rpmG8CircumcenterAnglesSum,
+  'rpm-g8-circumcenter-central-angle': rpmG8CircumcenterCentralAngle,
+  'rpm-g8-incenter-properties': rpmG8IncenterProperties,
+  'rpm-g8-incenter-angles-sum': rpmG8IncenterAnglesSum,
+  'rpm-g8-incenter-central-angle': rpmG8IncenterCentralAngle,
+  'rpm-g8-incenter-parallel-line': rpmG8IncenterParallelLine,
+  'rpm-g8-incenter-area-radius': rpmG8IncenterAreaRadius,
+  'rpm-g8-incenter-tangent-segments': rpmG8IncenterTangentSegments,
+  'rpm-g8-circum-incenter-combined': rpmG8CircumIncenterCombined,
+  'rpm-g8-right-tri-both-circles': rpmG8RightTriBothCircles,
+  'rpm-g8-circles-all-types-mixed': rpmG8CirclesAllTypesMixed,
+  'rpm-g8-circles-advanced-skill-up': rpmG8CirclesAdvancedSkillUp,
+
 
 
 

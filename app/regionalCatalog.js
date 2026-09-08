@@ -395,6 +395,40 @@ const zhHK = {
   // -------------------------------------------------------------
   'rpm-grade8-semester-one-final-exam': '中學八年級上學期全範圍最終實戰總括模擬測驗（有理數、式之運算、不等式、聯立方程、一次函數全單元）',
 
+  // -------------------------------------------------------------
+  // RPM [중2-2] 01 이등변삼각형 (等腰三角形)
+  // -------------------------------------------------------------
+  'rpm-g8-iso-tri-angles': '等腰三角形底角與頂角求法',
+  'rpm-g8-iso-tri-angle-bisector': '頂角平分線與底邊垂直平分線性質',
+  'rpm-g8-iso-tri-chain-angles': '連續等腰三角形角度追蹤',
+  'rpm-g8-iso-tri-condition-sides': '兩內角相等判定等腰三角形邊長與周長',
+  'rpm-g8-right-tri-congruence': '直角三角形全等條件判定（RHA與RHS全等）',
+  'rpm-g8-rha-congruence-apps': 'RHA全等應用：直角等腰三角形垂線與線段長度',
+  'rpm-g8-rhs-congruence-apps': 'RHS全等應用：斜邊垂線所生全等線段',
+  'rpm-g8-angle-bisector-prop': '角平分線性質：到兩邊等距離與分割三角形面積',
+  'rpm-g8-paper-folding-triangle': '矩形紙條摺疊之摺角、內錯角與等腰三角形',
+  'rpm-g8-iso-tri-up-challenge': '連續等長線段外角鏈推導（進階題型UP）',
+  'rpm-g8-iso-tri-all-types-mixed': '等腰三角形與直角三角形全題型實戰綜合複習',
+  'rpm-g8-iso-tri-advanced-skill-up': '等腰三角形最高難度實力UP進階題',
+
+  // -------------------------------------------------------------
+  // RPM [중2-2] 02 삼각형의 외심과 내심 (三角形的外心與內心)
+  // -------------------------------------------------------------
+  'rpm-g8-circumcenter-properties': '三角形外心性質：到三頂點等距與外接圓半徑',
+  'rpm-g8-right-tri-circumcenter': '直角三角形外心：斜邊中點與外接圓半徑',
+  'rpm-g8-circumcenter-angles-sum': '外心與三頂點連線角和關係（x + y + z = 90°）',
+  'rpm-g8-circumcenter-central-angle': '外心圓心角與圓周角關係（∠BOC = 2∠A）',
+  'rpm-g8-incenter-properties': '三角形內心性質：到三邊等距離與內切圓半徑',
+  'rpm-g8-incenter-angles-sum': '內心角平分線半角和關係（x + y + z = 90°）',
+  'rpm-g8-incenter-central-angle': '內心圓心角公式（∠BIC = 90° + ∠A/2）',
+  'rpm-g8-incenter-parallel-line': '通過內心之底邊平行線所生三角形周長（AB + AC）',
+  'rpm-g8-incenter-area-radius': '面積與內切圓半徑公式 S = (1/2)r(a + b + c)',
+  'rpm-g8-incenter-tangent-segments': '三角形頂點至內切圓切線長度性質',
+  'rpm-g8-circum-incenter-combined': '外心與內心雙心角度綜合計算與差值求值',
+  'rpm-g8-right-tri-both-circles': '直角三角形外接圓與內切圓半徑求法與差和計算',
+  'rpm-g8-circles-all-types-mixed': '三角形外心與內心全題型實戰綜合複習',
+  'rpm-g8-circles-advanced-skill-up': '三角形外心與內心最高難度實力UP進階題',
+
 
 
 
