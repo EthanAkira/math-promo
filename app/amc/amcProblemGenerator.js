@@ -3182,6 +3182,116 @@ export const GENERATORS = {
 
     return { question, choices, correctIdx, explanation };
   },
+
+  // -----------------------------------------------------------------------
+  // POLYNOMIAL ZEROS & RATIONAL ROOT THEOREM (The Essential Guide to
+  // Algebra 2 Topic 5: Polynomials and Polynomial Function / Topic 6:
+  // Application of Polynomials)
+  // -----------------------------------------------------------------------
+  'polynomial-zeros': (lang) => {
+    const variant = pickRandom(['rational-root-largest', 'polynomial-from-zeros', 'factor-theorem-check']);
+    const fmtLinear = (c) => (c === 0 ? 'x' : c > 0 ? `x - ${c}` : `x + ${Math.abs(c)}`);
+    const formatCubic = (b2, b1, b0) => {
+      const terms = ['x^3'];
+      if (b2 !== 0) terms.push(`${b2 > 0 ? '+' : '-'} ${Math.abs(b2) === 1 ? '' : Math.abs(b2)}x^2`);
+      if (b1 !== 0) terms.push(`${b1 > 0 ? '+' : '-'} ${Math.abs(b1) === 1 ? '' : Math.abs(b1)}x`);
+      if (b0 !== 0) terms.push(`${b0 > 0 ? '+' : '-'} ${Math.abs(b0)}`);
+      return terms.join(' ');
+    };
+
+    if (variant === 'rational-root-largest') {
+      const pool = [-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6];
+      const shuffled = [...pool].sort(() => Math.random() - 0.5);
+      const [r1, r2, r3] = shuffled.slice(0, 3);
+      const b2 = -(r1 + r2 + r3);
+      const b1 = r1 * r2 + r1 * r3 + r2 * r3;
+      const b0 = -(r1 * r2 * r3);
+      const ans = Math.max(r1, r2, r3);
+      const roots = [r1, r2, r3];
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        const sorted = [...roots].sort((a, c) => a - c);
+        if (i === 1) return sorted[0];
+        if (i === 2) return sorted[1];
+        if (i === 3) return ans + 1;
+        return ans - i + 3;
+      });
+
+      const polyStr = formatCubic(b2, b1, b0);
+      const divisors = Array.from({ length: Math.abs(b0) || 1 }, (_, k) => k + 1).filter((d) => b0 % d === 0);
+      const candidateList = divisors.flatMap((d) => [d, -d]).sort((a, c) => a - c).join(', ');
+
+      const question = lang === 'ko'
+        ? `방정식 $${polyStr} = 0$ 의 가장 큰 유리근을 구하세요.`
+        : `Find the largest rational root of $${polyStr} = 0$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 6.5 유리근 정리]**\n\n최고차항의 계수가 $1$이므로 유리근 정리에 의해 가능한 유리근은 상수항 $${b0}$의 약수: $${candidateList}$ 뿐입니다.\n\n직접 대입하여 확인하면 $x = ${r1}, ${r2}, ${r3}$ 이 실제 근이므로, 가장 큰 유리근은 $${ans}$ 입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 6.5 Rational Root Theorem]**\n\nSince the leading coefficient is $1$, the Rational Root Theorem restricts possible rational roots to divisors of the constant term $${b0}$: $${candidateList}$.\n\nTesting these candidates confirms $x = ${r1}, ${r2}, ${r3}$ are the actual roots, so the largest rational root is $${ans}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'polynomial-from-zeros') {
+      const nonzero = [-4, -3, -2, -1, 1, 2, 3, 4];
+      const z1 = pickRandom(nonzero);
+      let z2 = pickRandom(nonzero);
+      while (z2 === z1) z2 = pickRandom(nonzero);
+      const a = pickRandom([1, 2, 3]);
+      const ans = -a * z1 * z1 * z2;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return a * z1 * z1 * z2;
+        if (i === 2) return -z1 * z1 * z2;
+        if (i === 3) return ans + a;
+        return ans - a * (i - 3);
+      });
+
+      const question = lang === 'ko'
+        ? `다항식 함수 $f(x)$가 $x = ${z1}$ (중복도 2), $x = ${z2}$ 를 근으로 갖고 최고차항의 계수가 $${a}$일 때, $f(x)$를 전개한 표준형에서 상수항을 구하세요.`
+        : `A polynomial function $f(x)$ has zeros $x = ${z1}$ (with multiplicity 2) and $x = ${z2}$, with leading coefficient $${a}$. Find the constant term when $f(x)$ is written in standard form.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 5.7 주어진 근으로 다항식 구성]**\n\n근이 주어지면 $f(x) = ${a}(x-(${z1}))^2(x-(${z2}))$ 로 쓸 수 있습니다.\n\n상수항은 $x=0$ 을 대입한 값이므로\n\n$$f(0) = ${a}(-${z1})^2(-${z2}) = ${a}\\times ${z1 * z1}\\times (${-z2}) = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 5.7 Constructing a Polynomial from Given Zeros]**\n\nGiven the zeros, $f(x) = ${a}(x-(${z1}))^2(x-(${z2}))$.\n\nThe constant term equals $f(0)$:\n\n$$f(0) = ${a}(-${z1})^2(-${z2}) = ${a}\\times ${z1 * z1}\\times (${-z2}) = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // factor-theorem-check
+    const cPool = [-4, -3, -2, -1, 1, 2, 3, 4];
+    const c = pickRandom(cPool);
+    const b = randInt(-2, 2);
+    let e = randInt(3, 6);
+    while (b * b - 4 * e >= 0) e += 1;
+
+    const b2 = b - c;
+    const b1 = e - b * c;
+    const b0 = -e * c;
+    const polyEval = (x) => x ** 3 + b2 * (x ** 2) + b1 * x + b0;
+
+    const distractorPool = cPool.filter((k) => k !== c && polyEval(k) !== 0);
+    const shuffledDistractors = [...distractorPool].sort(() => Math.random() - 0.5).slice(0, 4);
+    const optionValues = [c, ...shuffledDistractors];
+    for (let i = optionValues.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [optionValues[i], optionValues[j]] = [optionValues[j], optionValues[i]];
+    }
+    const choices = optionValues.map((v) => fmtLinear(v));
+    const correctIdx = optionValues.indexOf(c);
+
+    const polyStr = formatCubic(b2, b1, b0);
+
+    const question = lang === 'ko'
+      ? `인수정리를 이용하여 $f(x) = ${polyStr}$ 의 인수를 다음 중에서 고르세요.`
+      : `Use the Factor Theorem to determine which of the following is a factor of $f(x) = ${polyStr}$.`;
+
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 2 Topic 6.3 인수정리]**\n\n인수정리에 의해 $f(k) = 0$ 이면 $(x-k)$ 는 $f(x)$의 인수입니다.\n\n$f(${c}) = ${polyEval(c)} = 0$ 이므로 $${fmtLinear(c)}$ 는 $f(x)$의 인수입니다. (다른 선택지는 대입해도 $0$이 되지 않습니다.)\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${fmtLinear(c)})** 입니다.`
+      : `**[The Essential Guide to Algebra 2 Topic 6.3 The Factor Theorem]**\n\nBy the Factor Theorem, if $f(k) = 0$ then $(x-k)$ is a factor of $f(x)$.\n\n$f(${c}) = ${polyEval(c)} = 0$, so $${fmtLinear(c)}$ is a factor of $f(x)$. (The other choices do not give $0$ when substituted.)\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${fmtLinear(c)})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
 };
 
 /**

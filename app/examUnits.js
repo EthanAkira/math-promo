@@ -403,6 +403,12 @@ export const AMC_FINE_SUBJECTS = [
         domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
       },
       {
+        id: 'polynomial-zeros', label: '다항식의 근과 유리근 정리', labelEn: 'Polynomial Zeros & Rational Root Theorem', desc: '유리근 정리, 인수정리, 주어진 근으로 다항식 구성',
+        tier: 'advanced',
+        intlCourse: { id: 'intl-algebra-2', label: 'Algebra 2', labelKo: '다항식의 근과 유리근 정리', href: '/curriculum#intl-algebra-2' },
+        domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
+      },
+      {
         id: 'rational-functions', label: '유리함수', labelEn: 'Rational Functions', desc: '점근선, 유리방정식 풀이',
         tier: 'advanced',
         intlCourse: { id: 'intl-algebra-2', label: 'Algebra 2', labelKo: '유리함수 (Rational Functions)', href: '/curriculum#intl-algebra-2' },
