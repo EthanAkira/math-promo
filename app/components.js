@@ -39,6 +39,8 @@ export function SiteHeader() {
           <a href="/contact" className="nav-item">{tr(language, 'navContact')}</a>
           <a href="/games.html" className="nav-item">{tr(language, 'restCorner')}</a>
           <a href="/?curriculumTab=eastasia#curriculum-title" className="nav-item">{tr(language, 'navEastAsia')}</a>
+          <a href="/?curriculumTab=southeastasia#curriculum-title" className="nav-item">{tr(language, 'navSoutheastAsia')}</a>
+          <a href="/?curriculumTab=southasia#curriculum-title" className="nav-item">{tr(language, 'navSouthAsia')}</a>
           {user ? <a href="/dashboard" className="nav-item">{tr(language, 'authMyStats')}</a> : null}
         </nav>
 
