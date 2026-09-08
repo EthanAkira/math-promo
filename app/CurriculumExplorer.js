@@ -39,20 +39,30 @@ function topicAvailabilityLabel(topic, copy) {
 // Shared by both Korean sub-views (기존 학년별 분류 and 2022 개정 과목별 분류) — the two only differ
 // in which meta badges a topic happens to carry (legacy/revised2022/officialType vs legacy/grade),
 // and by International Courses/수학 영역별, which never set meta at all.
-function renderTopicItem(topic, copy) {
+//
+// A topic can optionally carry `amc: { href }` — a matching AMC(미국수학경시대회) unit covering the
+// same concept. Rather than listing it as a separate row (confusing — user explicitly rejected that:
+// "같은 단원 안에 토글로"), the toggle below swaps THIS topic's own link/badge in place between the
+// regular practice generator and the AMC unit, so the topic stays a single row either way.
+function TopicItem({ topic, copy }) {
+  const [showAmc, setShowAmc] = useState(false);
+  const hasAmc = Boolean(topic.amc);
+  const amcActive = hasAmc && showAmc;
+  const activeHref = amcActive ? topic.amc.href : topic.href;
+
   return (
-    <div key={topic.catalogId || topic.label} className="curriculum-topic-item">
+    <div className="curriculum-topic-item">
       {topic.ready ? (
-        <a href={topic.href} className="topic-link">
+        <a href={activeHref} className="topic-link">
           <div className="topic-link-main">
             <span className="topic-name">{topic.label}</span>
-            {topic.meta && (
+            {(topic.meta || amcActive) && (
               <div className="topic-meta-badges">
-                {topic.meta.legacy && <span className="meta-badge legacy">{copy.labels.legacyName}: {topic.meta.legacy}</span>}
-                {topic.meta.revised2022 && <span className="meta-badge revised">{copy.labels.revised2022}: {topic.meta.revised2022}</span>}
-                {topic.meta.officialType && <span className="meta-badge official">{topic.meta.officialType}</span>}
-                {topic.meta.grade && <span className="meta-badge grade">{copy.labels.targetGrade}: {topic.meta.grade}</span>}
-                {topic.meta.source === 'AMC' && <span className="meta-badge amc-source">AMC · 미국수학경시대회</span>}
+                {topic.meta?.legacy && <span className="meta-badge legacy">{copy.labels.legacyName}: {topic.meta.legacy}</span>}
+                {topic.meta?.revised2022 && <span className="meta-badge revised">{copy.labels.revised2022}: {topic.meta.revised2022}</span>}
+                {topic.meta?.officialType && <span className="meta-badge official">{topic.meta.officialType}</span>}
+                {topic.meta?.grade && <span className="meta-badge grade">{copy.labels.targetGrade}: {topic.meta.grade}</span>}
+                {amcActive && <span className="meta-badge amc-source">AMC · 미국수학경시대회</span>}
               </div>
             )}
           </div>
@@ -70,6 +80,17 @@ function renderTopicItem(topic, copy) {
           </div>
           <small className="planned-tag">{copy.badges.planned}</small>
         </div>
+      )}
+      {hasAmc && (
+        <button
+          type="button"
+          className={`amc-toggle-btn${amcActive ? ' on' : ''}`}
+          onClick={() => setShowAmc((value) => !value)}
+          aria-pressed={amcActive}
+        >
+          <span className="amc-toggle-dot" />
+          AMC 문제 {amcActive ? '끄기' : '보기'}
+        </button>
       )}
     </div>
   );
@@ -92,7 +113,7 @@ function renderStage(stage, copy, { openByDefault = false, extraClassName = '' }
           <span>ℹ️</span> {stage.notice}
         </div>
       )}
-      <div className="curriculum-topic-list">{stage.topics.map((topic) => renderTopicItem(topic, copy))}</div>
+      <div className="curriculum-topic-list">{stage.topics.map((topic) => <TopicItem key={topic.catalogId || topic.label} topic={topic} copy={copy} />)}</div>
     </details>
   );
 }
@@ -688,6 +709,40 @@ export default function CurriculumExplorer() {
         .meta-badge.amc-source {
           background: #dbeafe;
           color: #1d4ed8;
+        }
+        .amc-toggle-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          align-self: flex-start;
+          margin: 4px 10px 8px;
+          padding: 4px 10px 4px 8px;
+          border: 1px solid #bfdbfe;
+          border-radius: 999px;
+          background: #eff6ff;
+          color: #1d4ed8;
+          font-size: 11px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: background 0.15s ease, border-color 0.15s ease;
+        }
+        .amc-toggle-btn:hover {
+          background: #dbeafe;
+        }
+        .amc-toggle-btn.on {
+          background: #1d4ed8;
+          border-color: #1d4ed8;
+          color: #fff;
+        }
+        .amc-toggle-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: currentColor;
+          opacity: 0.55;
+        }
+        .amc-toggle-btn.on .amc-toggle-dot {
+          opacity: 1;
         }
         .action-tag {
           font-size: 11px;
