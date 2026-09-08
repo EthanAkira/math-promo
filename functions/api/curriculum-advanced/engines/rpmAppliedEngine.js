@@ -4766,6 +4766,1490 @@ function rpmSemesterOneMockExam(random, profile = 'ko') {
   return pick(random, allDomainGens)(random, profile);
 }
 
+
+
+// =============================================================
+// RPM Middle School 1-2 Geometry Applied Engines (기하 응용문제 엔진)
+// Chapters 01, 02, 03 (Pages 12~19, 26~43, 47~59)
+// =============================================================
+
+// const ri = (random, min, max) => Math.floor(random() * (max - min + 1)) + min;
+// const pick = (random, values) => values[ri(random, 0, values.length - 1)];
+
+// =============================================================
+// CHAPTER 01: 기본도형 응용 (RPM 1-2 Pages 12 ~ 19)
+// =============================================================
+
+// [유형 01] 입체도형에서의 교점과 교선의 개수 (RPM #50, #51, #93)
+export function rpmGeoBasicIntersections(random) {
+  const solids = [
+    { name: '삼각뿔', nameEn: 'triangular pyramid', vertices: 4, edges: 6, faces: 4 },
+    { name: '사각뿔', nameEn: 'square pyramid', vertices: 5, edges: 8, faces: 5 },
+    { name: '오각뿔', nameEn: 'pentagonal pyramid', vertices: 6, edges: 10, faces: 6 },
+    { name: '육각뿔', nameEn: 'hexagonal pyramid', vertices: 7, edges: 12, faces: 7 },
+    { name: '삼각기둥', nameEn: 'triangular prism', vertices: 6, edges: 9, faces: 5 },
+    { name: '사각기둥(직육면체)', nameEn: 'cuboid (rectangular prism)', vertices: 8, edges: 12, faces: 6 },
+    { name: '오각기둥', nameEn: 'pentagonal prism', vertices: 10, edges: 15, faces: 7 },
+    { name: '육각기둥', nameEn: 'hexagonal prism', vertices: 12, edges: 18, faces: 8 },
+  ];
+  const solid = pick(random, solids);
+  const a = solid.vertices; // 교점의 개수 (꼭짓점)
+  const b = solid.edges;    // 교선의 개수 (모서리)
+  const c = solid.faces;    // 면의 개수
+
+  const ask = pick(random, ['a_plus_b', 'two_a_plus_b', 'b_minus_a', 'a_b_c_sum']);
+  let prompt, promptEn, answer, expr, expl;
+
+  if (ask === 'a_plus_b') {
+    answer = a + b;
+    prompt = `오른쪽과 같은 ${solid.name}에서 교점의 개수를 a개, 교선의 개수를 b개라 할 때, a + b의 값을 구하시오.`;
+    promptEn = `In a ${solid.nameEn}, let a be the number of intersection points (vertices) and b be the number of intersection lines (edges). Find a + b.`;
+    expr = `교점 a = ${a}, 교선 b = ${b}`;
+    expl = `입체도형에서 교점의 개수는 꼭짓점의 개수와 같으므로 a = ${a}개이고, 교선의 개수는 모서리의 개수와 같으므로 b = ${b}개입니다. 따라서 a + b = ${a} + ${b} = ${answer}입니다.`;
+  } else if (ask === 'two_a_plus_b') {
+    answer = 2 * a + b;
+    prompt = `${solid.name}에서 교점의 개수를 a개, 교선의 개수를 b개라 할 때, 2a + b의 값을 구하시오.`;
+    promptEn = `In a ${solid.nameEn}, let a be the number of intersection points and b be the number of intersection lines. Find 2a + b.`;
+    expr = `교점 a = ${a}, 교선 b = ${b}`;
+    expl = `${solid.name}의 꼭짓점(교점)은 ${a}개, 모서리(교선)는 ${b}개이므로 2a + b = 2×${a} + ${b} = ${answer}입니다.`;
+  } else if (ask === 'b_minus_a') {
+    answer = b - a;
+    prompt = `${solid.name}에서 교선의 개수를 b개, 교점의 개수를 a개라 할 때, b - a의 값을 구하시오.`;
+    promptEn = `In a ${solid.nameEn}, let b be the number of intersection lines and a be the number of intersection points. Find b - a.`;
+    expr = `교선 b = ${b}, 교점 a = ${a}`;
+    expl = `교선의 개수(모서리)는 ${b}개, 교점의 개수(꼭짓점)는 ${a}개이므로 b - a = ${b} - ${a} = ${answer}입니다.`;
+  } else {
+    answer = a + b + c;
+    prompt = `${solid.name}에서 교점의 개수를 a개, 교선의 개수를 b개, 면의 개수를 c개라 할 때, a + b + c의 값을 구하시오.`;
+    promptEn = `In a ${solid.nameEn}, let a be vertices, b be edges, and c be faces. Find a + b + c.`;
+    expr = `꼭짓점 a = ${a}, 모서리 b = ${b}, 면 c = ${c}`;
+    expl = `꼭짓점 a = ${a}, 모서리 b = ${b}, 면 c = ${c}이므로 a + b + c = ${a} + ${b} + ${c} = ${answer}입니다.`;
+  }
+
+  return {
+    prompt,
+    promptEn,
+    expression: expr,
+    answer: String(answer),
+    explanation: expl,
+  };
+}
+
+// [유형 02] 직선, 반직선, 선분의 구별과 일치 판별 (RPM #52, #53, #94)
+export function rpmGeoBasicLineRays(random) {
+  const statements = [
+    { text: '직선 AB와 직선 BA는 같은 직선이다.', ans: 1, expl: '직선은 양방향으로 한없이 뻗어나가므로 직선 AB와 직선 BA는 일치합니다.' },
+    { text: '선분 AB와 선분 BA는 같은 선분이다.', ans: 1, expl: '선분은 양 끝점을 이은 것이므로 선분 AB와 선분 BA는 같은 선분입니다.' },
+    { text: '반직선 AB와 반직선 BA는 같은 반직선이다.', ans: 2, expl: '반직선 AB는 점 A에서 시작하여 B 방향으로 뻗고, 반직선 BA는 점 B에서 시작하여 A 방향으로 뻗으므로 시작점과 방향이 달라 서로 다릅니다.' },
+    { text: '반직선 AB와 반직선 AC는 같은 반직선이다. (점 A, B, C가 직선 위에 순서대로 있을 때)', ans: 1, expl: '시작점이 점 A로 같고, C가 B와 같은 쪽에 있으므로 뻗어나가는 방향도 같아 같은 반직선입니다.' },
+    { text: '반직선 BA와 반직선 BC는 같은 반직선이다. (점 A, B, C가 직선 위에 순서대로 있을 때)', ans: 2, expl: '시작점은 B로 같지만, BA는 왼쪽, BC는 오른쪽으로 방향이 정반대이므로 서로 다른 반직선입니다.' },
+    { text: '직선 AB와 직선 CD는 같은 직선이다. (점 A, B, C, D가 한 직선 위에 있을 때)', ans: 1, expl: '한 직선 위의 어떤 서로 다른 두 점을 택해도 모두 같은 직선을 나타냅니다.' },
+    { text: '선분 AC와 선분 AB는 같은 선분이다.', ans: 2, expl: '선분은 두 점 사이의 부분이므로 길이가 달라 서로 다른 선분입니다.' },
+  ];
+
+  const target = pick(random, statements);
+  return {
+    prompt: `직선 l 위에 순서대로 점 A, B, C, D가 있을 때, 다음 설명의 참/거짓을 판별하시오: "${target.text}"`,
+    promptEn: `Given points A, B, C, D in order on line l, determine True or False: "${target.text}"`,
+    expression: target.text,
+    answer: String(target.ans),
+    choices: [
+      { value: '1', label: '참 (O)', labelEn: 'True' },
+      { value: '2', label: '거짓 (X)', labelEn: 'False' },
+    ],
+    explanation: target.expl,
+  };
+}
+
+// [유형 03] 점의 개수와 직선, 반직선, 선분의 개수 (RPM #54, #55, #56, #57, #96, #104)
+export function rpmGeoBasicPointsToLines(random) {
+  const variant = pick(random, ['circle_points', 'line_and_outside']);
+  if (variant === 'circle_points') {
+    // 한 원 위에 어느 세 점도 일직선 위에 있지 않은 n개의 점
+    const n = pick(random, [4, 5, 6, 7]);
+    const lines = (n * (n - 1)) / 2;
+    const rays = n * (n - 1);
+    const segs = lines;
+    const ask = pick(random, ['lines', 'rays', 'both_sum']);
+
+    if (ask === 'lines') {
+      return {
+        prompt: `한 원 위에 ${n}개의 점이 있다. 이 중 두 점을 골라 만들 수 있는 서로 다른 직선의 개수를 구하시오.`,
+        promptEn: `There are ${n} points on a circle. How many distinct lines can be drawn through any two of these points?`,
+        expression: `점의 개수 n = ${n}`,
+        answer: String(lines),
+        answerSuffix: '개',
+        explanation: `어느 세 점도 일직선 위에 있지 않으므로 n개의 점 중 두 점을 택하는 직선의 개수는 ${n} × ${n - 1} ÷ 2 = ${lines}개입니다.`,
+      };
+    } else if (ask === 'rays') {
+      return {
+        prompt: `어느 세 점도 일직선 위에 있지 않은 ${n}개의 점 중에서 두 점을 골라 만들 수 있는 서로 다른 반직선의 개수를 구하시오.`,
+        promptEn: `Given ${n} points with no three collinear, how many distinct rays can be formed by choosing any two points?`,
+        expression: `점의 개수 n = ${n}`,
+        answer: String(rays),
+        answerSuffix: '개',
+        explanation: `반직선은 시작점과 방향(지나는 점)이 구분되므로 서로 다른 반직선의 개수는 ${n} × ${n - 1} = ${rays}개입니다.`,
+      };
+    } else {
+      const ans = lines + rays;
+      return {
+        prompt: `한 원 위의 서로 다른 ${n}개의 점 중에서 두 점을 지나는 서로 다른 직선의 개수를 a개, 반직선의 개수를 b개라 할 때, a + b의 값을 구하시오.`,
+        promptEn: `For ${n} points on a circle, let a be the number of distinct lines and b be the number of distinct rays. Find a + b.`,
+        expression: `직선 a = ${lines}, 반직선 b = ${rays}`,
+        answer: String(ans),
+        explanation: `직선의 개수 a = ${n}×${n - 1}÷2 = ${lines}개, 반직선의 개수 b = ${n}×${n - 1} = ${rays}개입니다. 따라서 a + b = ${lines} + ${rays} = ${ans}입니다.`,
+      };
+    }
+  } else {
+    // 직선 l 위에 k개의 점, 직선 밖의 m개의 점
+    const k = pick(random, [3, 4]); // 직선 위의 점
+    const m = pick(random, [1, 2]); // 직선 밖의 점
+    const totalPoints = k + m;
+    // 직선의 개수: 직선 l (1개) + 직선 밖의 각 점과 직선 위 점들 잇는 선 (m * k) + 직선 밖의 점들끼리 (m*(m-1)/2)
+    const lines = 1 + (m * k) + ((m * (m - 1)) / 2);
+    // 선분의 개수: 전체 n개 중 2개 고르기
+    const segs = (totalPoints * (totalPoints - 1)) / 2;
+
+    const ask = pick(random, ['lines', 'segs']);
+    if (ask === 'lines') {
+      return {
+        prompt: `직선 l 위에 ${k}개의 점 A, B, C${k === 4 ? ', D' : ''}가 있고, 직선 l 밖의 한 평면 위에 ${m}개의 점 P${m === 2 ? ', Q' : ''}가 있다. 이들 ${totalPoints}개의 점 중 두 점을 골라 만들 수 있는 서로 다른 직선의 개수를 구하시오.`,
+        promptEn: `There are ${k} points on line l and ${m} points not on line l. How many distinct lines can be formed using any two of these ${totalPoints} points?`,
+        expression: `직선 위 ${k}점, 외부 ${m}점`,
+        answer: String(lines),
+        answerSuffix: '개',
+        explanation: `직선 l 위의 점들로는 오직 1개의 직선 l만 결정됩니다. 직선 밖의 점과 직선 위 점을 잇는 직선은 ${m} × ${k} = ${m * k}개, 직선 밖의 점들끼리 잇는 직선은 ${(m * (m - 1)) / 2}개입니다. 따라서 서로 다른 직선의 개수는 1 + ${m * k} + ${(m * (m - 1)) / 2} = ${lines}개입니다.`,
+      };
+    } else {
+      return {
+        prompt: `직선 l 위에 ${k}개의 점과 직선 l 밖에 ${m}개의 점이 있을 때, 이들 ${totalPoints}개의 점 중에서 두 점을 양 끝점으로 하는 서로 다른 선분의 개수를 구하시오.`,
+        promptEn: `How many distinct line segments can be drawn connecting any two of ${totalPoints} given points?`,
+        expression: `전체 점의 개수 = ${totalPoints}`,
+        answer: String(segs),
+        answerSuffix: '개',
+        explanation: `선분은 양 끝점의 위치에 따라 모두 서로 다른 선분이 되므로, 전체 ${totalPoints}개의 점 중에서 2개를 고르는 경우의 수와 같습니다. ${totalPoints} × ${totalPoints - 1} ÷ 2 = ${segs}개입니다.`,
+      };
+    }
+  }
+}
+
+// [유형 04] 선분의 중점과 배수 관계를 이용한 길이 계산 (RPM #58~#64, #97, #106)
+export function rpmGeoBasicMidpointSegment(random) {
+  const variant = pick(random, ['midpoints_sum', 'ratio_midpoint', 'three_segments']);
+  if (variant === 'midpoints_sum') {
+    // 일직선 위에 A, M, B, N, C가 순서대로 있고, M은 AB의 중점, N은 BC의 중점
+    // MN = AB/2 + BC/2 = AC / 2
+    const mn = ri(random, 6, 18);
+    const ac = mn * 2;
+    return {
+      prompt: `한 직선 위에 네 점 A, B, C가 순서대로 있고, 두 점 M, N은 각각 선분 AB, 선분 BC의 중점이다. 선분 MN = ${mn}cm일 때, 선분 AC의 길이를 구하시오.`,
+      promptEn: `Points A, B, C lie on a line in that order. M and N are midpoints of AB and BC respectively. If MN = ${mn} cm, find AC.`,
+      expression: `MN = ${mn}cm, M은 AB 중점, N은 BC 중점`,
+      answer: String(ac),
+      answerSuffix: 'cm',
+      explanation: `M이 AB의 중점이므로 MB = (1/2)AB이고, N이 BC의 중점이므로 BN = (1/2)BC입니다. 따라서 MN = MB + BN = (1/2)(AB + BC) = (1/2)AC입니다. AC = 2 × MN = 2 × ${mn} = ${ac}cm입니다.`,
+    };
+  } else if (variant === 'ratio_midpoint') {
+    // AB = 3*BC, M은 AB의 중점, N은 BC의 중점. AM = L 이 주어질 때 MN 구하기
+    const bc = ri(random, 2, 8) * 2; // 짝수
+    const ab = 3 * bc;
+    const am = ab / 2;
+    const bn = bc / 2;
+    const mn = (ab / 2) + bn; // MB + BN = am + bn
+    return {
+      prompt: `선분 AB = 3BC이고, 두 점 M, N은 각각 선분 AB, BC의 중점이다. 선분 AM = ${am}cm일 때, 선분 MN의 길이를 구하시오.`,
+      promptEn: `Given AB = 3BC, and M, N are midpoints of AB, BC respectively. If AM = ${am} cm, find the length of MN.`,
+      expression: `AB = 3BC, AM = ${am}cm`,
+      answer: String(mn),
+      answerSuffix: 'cm',
+      explanation: `M이 AB의 중점이므로 AB = 2 × AM = 2 × ${am} = ${ab}cm입니다. AB = 3BC이므로 BC = ${ab} ÷ 3 = ${bc}cm입니다. 따라서 MB = ${am}cm, BN = BC ÷ 2 = ${bn}cm이므로 MN = MB + BN = ${am} + ${bn} = ${mn}cm입니다.`,
+    };
+  } else {
+    // 점 A, B, C, D가 한 직선 위에 있고 AC = 2CD, AB = (1/2)BC 등
+    // BC = 2*x, AB = x, AC = 3*x. CD = AC/2 = 1.5*x. AD = AC + CD = 4.5*x = L
+    const x = ri(random, 2, 6) * 2; // 짝수
+    const ab = x;
+    const bc = 2 * x;
+    const ac = ab + bc; // 3x
+    const cd = ac / 2; // 1.5x
+    const ad = ac + cd; // 4.5x
+    return {
+      prompt: `한 직선 위에 순서대로 점 A, B, C, D가 있다. 선분 AC = 2CD이고, 선분 AB = (1/2)BC이다. 선분 AD = ${ad}cm일 때, 선분 BC의 길이를 구하시오.`,
+      promptEn: `Points A, B, C, D are on a line in order. AC = 2CD and AB = (1/2)BC. If AD = ${ad} cm, find the length of BC.`,
+      expression: `AC = 2CD, AB = (1/2)BC, AD = ${ad}cm`,
+      answer: String(bc),
+      answerSuffix: 'cm',
+      explanation: `AB = x라 하면 BC = 2x이므로 AC = AB + BC = 3x입니다. AC = 2CD이므로 CD = (3/2)x = 1.5x입니다. 따라서 AD = AC + CD = 3x + 1.5x = 4.5x = ${ad}cm입니다. x = ${ad} ÷ 4.5 = ${x}이므로 BC = 2x = ${bc}cm입니다.`,
+    };
+  }
+}
+
+// [유형 05] 각의 분류와 개수 세기 (RPM #98)
+export function rpmGeoBasicAngleClassify(random) {
+  const acutePool = [15, 30, 45, 60, 75, 80, 89];
+  const rightPool = [90];
+  const obtusePool = [95, 105, 120, 135, 150, 165, 179];
+  const straightPool = [180];
+
+  const numAcute = ri(random, 2, 4);
+  const numObtuse = ri(random, 2, 4);
+  const includeRight = random() < 0.6;
+  const includeStraight = random() < 0.6;
+
+  const chosenAcute = [];
+  while (chosenAcute.length < numAcute) {
+    const v = pick(random, acutePool);
+    if (!chosenAcute.includes(v)) chosenAcute.push(v);
+  }
+  const chosenObtuse = [];
+  while (chosenObtuse.length < numObtuse) {
+    const v = pick(random, obtusePool);
+    if (!chosenObtuse.includes(v)) chosenObtuse.push(v);
+  }
+
+  const list = [...chosenAcute, ...chosenObtuse];
+  if (includeRight) list.push(90);
+  if (includeStraight) list.push(180);
+  list.sort(() => random() - 0.5);
+
+  const a = chosenAcute.length;
+  const b = chosenObtuse.length;
+  const ans = a + b;
+
+  return {
+    prompt: `다음 각 중에서 예각인 것의 개수를 a개, 둔각인 것의 개수를 b개라 할 때, a + b의 값을 구하시오.\n[ ${list.map((x) => x + '°').join(', ')} ]`,
+    promptEn: `From the list [ ${list.map((x) => x + '°').join(', ')} ], let a be the number of acute angles and b be the number of obtuse angles. Find a + b.`,
+    expression: list.map((x) => x + '°').join(', '),
+    answer: String(ans),
+    explanation: `예각은 0°보다 크고 90°보다 작은 각으로 [${chosenAcute.map((x) => x + '°').join(', ')}] (${a}개)입니다. 둔각은 90°보다 크고 180°보다 작은 각으로 [${chosenObtuse.map((x) => x + '°').join(', ')}] (${b}개)입니다. 90°는 직각, 180°는 평각입니다. 따라서 a + b = ${a} + ${b} = ${ans}입니다.`,
+  };
+}
+
+// [유형 06] 평각을 이용한 미지각 일차방정식 (RPM #65~#68)
+export function rpmGeoBasicStraightAngleEq(random) {
+  // (a*x + b) + (c*x + d) = 180
+  const a = ri(random, 2, 4);
+  const c = ri(random, 1, 3);
+  const sumCoeff = a + c;
+  // let x be integer like 20, 25, 30, 35
+  const x = pick(random, [20, 25, 30, 35]);
+  const total = sumCoeff * x; // e.g. 5 * 25 = 125
+  const diff = 180 - total; // 55
+  // split diff into b and d
+  const b = ri(random, 5, Math.max(6, diff - 5));
+  const d = diff - b;
+
+  const askAngle = random() < 0.5;
+  const angleVal = a * x + b;
+
+  if (askAngle) {
+    return {
+      prompt: `한 점 O에서 갈라진 두 각 ∠AOB와 ∠BOC가 평각을 이루고 있다. ∠AOB = (${a}x + ${b})°, ∠BOC = (${c}x + ${d})°일 때, ∠AOB의 크기를 구하시오.`,
+      promptEn: `Angles ∠AOB = (${a}x + ${b})° and ∠BOC = (${c}x + ${d})° form a straight angle (180°). Find the measure of ∠AOB.`,
+      expression: `(${a}x + ${b})° + (${c}x + ${d})° = 180°`,
+      answer: String(angleVal),
+      answerSuffix: '°',
+      explanation: `평각의 크기는 180°이므로 (${a}x + ${b}) + (${c}x + ${d}) = 180, ${sumCoeff}x + ${diff} = 180, ${sumCoeff}x = ${180 - diff}, x = ${x}입니다. 따라서 ∠AOB = ${a}×${x} + ${b} = ${angleVal}°입니다.`,
+    };
+  } else {
+    return {
+      prompt: `평각 위의 한 점에서 나뉜 두 각의 크기가 각각 (${a}x + ${b})°, (${c}x + ${d})°일 때, x의 값을 구하시오.`,
+      promptEn: `Two angles on a straight line are (${a}x + ${b})° and (${c}x + ${d})°. Find the value of x.`,
+      expression: `(${a}x + ${b})° + (${c}x + ${d})° = 180°`,
+      answer: String(x),
+      explanation: `두 각의 합이 평각 180°이므로 (${a}x + ${b}) + (${c}x + ${d}) = 180에서 ${sumCoeff}x + ${diff} = 180, ${sumCoeff}x = ${total}, x = ${x}입니다.`,
+    };
+  }
+}
+
+// [유형 07] 각의 비례배분 (RPM #73~#75, #99)
+export function rpmGeoBasicAngleRatio(random) {
+  const variant = pick(random, ['straight_three', 'right_two', 'fraction_given']);
+  if (variant === 'straight_three') {
+    // 평각 180°에서 ∠x : ∠y : ∠z = p : q : r
+    const ratios = pick(random, [
+      [2, 1, 3],
+      [1, 2, 3],
+      [3, 2, 4],
+      [2, 3, 5],
+      [1, 3, 5],
+    ]);
+    const [p, q, r] = ratios;
+    const sum = p + q + r;
+    const unit = 180 / sum;
+    const askIdx = pick(random, [0, 1, 2]);
+    const targetName = ['∠x', '∠y', '∠z'][askIdx];
+    const targetRatio = ratios[askIdx];
+    const ans = targetRatio * unit;
+
+    return {
+      prompt: `평각을 이루는 세 각에 대하여 ∠x : ∠y : ∠z = ${p} : ${q} : ${r}일 때, ${targetName}의 크기를 구하시오.`,
+      promptEn: `Three angles forming a straight angle satisfy ∠x : ∠y : ∠z = ${p} : ${q} : ${r}. Find the measure of ${targetName}.`,
+      expression: `∠x : ∠y : ∠z = ${p} : ${q} : ${r}, 전체 = 180°`,
+      answer: String(ans),
+      answerSuffix: '°',
+      explanation: `세 각의 합이 평각 180°이므로 비례배분을 이용하면, 비의 총합은 ${p} + ${q} + ${r} = ${sum}입니다. 따라서 ${targetName} = 180° × (${targetRatio} / ${sum}) = ${ans}°입니다.`,
+    };
+  } else if (variant === 'right_two') {
+    // 직각 90°에서 ∠AOB : ∠BOC = p : q
+    const ratios = pick(random, [
+      [2, 3],
+      [1, 2],
+      [1, 4],
+      [4, 5],
+    ]);
+    const [p, q] = ratios;
+    const sum = p + q;
+    const unit = 90 / sum;
+    const ans = p * unit;
+    return {
+      prompt: `∠AOC = 90°이고, 선분 OB가 ∠AOC의 내부에 있다. ∠AOB : ∠BOC = ${p} : ${q}일 때, ∠AOB의 크기를 구하시오.`,
+      promptEn: `Given ∠AOC = 90° and ∠AOB : ∠BOC = ${p} : ${q}, find the measure of ∠AOB.`,
+      expression: `∠AOB + ∠BOC = 90°, ∠AOB : ∠BOC = ${p} : ${q}`,
+      answer: String(ans),
+      answerSuffix: '°',
+      explanation: `∠AOB와 ∠BOC의 합이 90°이므로 비례배분을 적용하면, ∠AOB = 90° × (${p} / (${p} + ${q})) = ${ans}°입니다.`,
+    };
+  } else {
+    // ∠AOC = K°, ∠AOB : ∠BOC = p : q 일 때 ∠BOC의 크기
+    const p = ri(random, 1, 3);
+    const q = ri(random, 2, 4);
+    const sum = p + q;
+    const unit = ri(random, 12, 25);
+    const totalDeg = sum * unit;
+    const ans = q * unit;
+    return {
+      prompt: `오른쪽 그림에서 ∠AOC = ${totalDeg}°이고 ∠AOB : ∠BOC = ${p} : ${q}일 때, ∠BOC의 크기를 구하시오.`,
+      promptEn: `In the figure, ∠AOC = ${totalDeg}° and ∠AOB : ∠BOC = ${p} : ${q}. Find the measure of ∠BOC.`,
+      expression: `∠AOC = ${totalDeg}°, ∠AOB : ∠BOC = ${p} : ${q}`,
+      answer: String(ans),
+      answerSuffix: '°',
+      explanation: `전체 각 ${totalDeg}°를 ${p} : ${q}로 비례배분하면, ∠BOC = ${totalDeg}° × (${q} / (${p} + ${q})) = ${ans}°입니다.`,
+    };
+  }
+}
+
+// [유형 08] 각의 배수 조건과 수직선이 주어진 각도 계산 (RPM #69~#72, #100, #105)
+export function rpmGeoBasicAngleMultipleCond(random) {
+  // ∠AOB = 2∠BOC, ∠DOE = 2∠COD, 평각 AOE = 180°
+  // ∠BOD = ∠BOC + ∠COD = 180° / 3 = 60°
+  const mult = pick(random, [2, 3, 4]); // 배수 k
+  // ∠AOB = k * ∠BOC  => ∠AOC = (k + 1) * ∠BOC
+  // ∠DOE = k * ∠COD  => ∠COE = (k + 1) * ∠COD
+  // ∠AOC + ∠COE = 180° => (k + 1)(∠BOC + ∠COD) = 180° => ∠BOD = 180 / (k + 1)
+  const ans = 180 / (mult + 1);
+
+  return {
+    prompt: `일직선 AE 위의 점 O에 대하여 ∠AOB = ${mult}∠BOC이고, ∠DOE = ${mult}∠COD이다. ∠BOD의 크기를 구하시오.`,
+    promptEn: `On straight line AE with point O, ∠AOB = ${mult}∠BOC and ∠DOE = ${mult}∠COD. Find the measure of ∠BOD.`,
+    expression: `∠AOB = ${mult}∠BOC, ∠DOE = ${mult}∠COD, 평각 = 180°`,
+    answer: String(ans),
+    answerSuffix: '°',
+    explanation: `∠AOC = ∠AOB + ∠BOC = ${mult}∠BOC + ∠BOC = ${mult + 1}∠BOC입니다. 마찬가지로 ∠COE = ∠COD + ∠DOE = ${mult + 1}∠COD입니다. 일직선 위의 평각은 ∠AOC + ∠COE = ${mult + 1}(∠BOC + ∠COD) = 180°이므로, ∠BOD = ∠BOC + ∠COD = 180° ÷ ${mult + 1} = ${ans}°입니다.`,
+  };
+}
+
+// [유형 09] 맞꼭지각의 성질과 미지각 (RPM #76~#80, #101)
+export function rpmGeoBasicVerticalAngles(random) {
+  // 두 직선이 한 점에서 만날 때 맞꼭지각의 크기는 서로 같다.
+  // a*x + b = c*x - d (or similar)
+  const c = ri(random, 3, 5);
+  const a = c - ri(random, 1, 2);
+  const x = ri(random, 15, 35);
+  const vertAngle = a * x + ri(random, 10, 40);
+  const b = vertAngle - a * x;
+  const d = c * x - vertAngle;
+
+  const ask = pick(random, ['x_val', 'adj_angle']);
+  if (ask === 'x_val') {
+    return {
+      prompt: `두 직선이 한 점에서 만날 때 마주 보는 두 맞꼭지각의 크기가 각각 (${a}x + ${b})°, (${c}x - ${d})°이다. x의 값을 구하시오.`,
+      promptEn: `Two intersecting lines form vertical angles (${a}x + ${b})° and (${c}x - ${d})°. Find the value of x.`,
+      expression: `${a}x + ${b} = ${c}x - ${d}`,
+      answer: String(x),
+      explanation: `맞꼭지각의 크기는 서로 같으므로 ${a}x + ${b} = ${c}x - ${d}입니다. 이항하면 (${c} - ${a})x = ${b} + ${d}, ${c - a}x = ${(c - a) * x}이므로 x = ${x}입니다.`,
+    };
+  } else {
+    const adj = 180 - vertAngle;
+    return {
+      prompt: `두 직선이 한 점에서 만날 때 한 맞꼭지각의 크기가 (${a}x + ${b})°이고 다른 맞꼭지각의 크기가 (${c}x - ${d})°이다. 이들과 이웃한 각(평각의 보각)의 크기를 구하시오.`,
+      promptEn: `Two vertical angles are (${a}x + ${b})° and (${c}x - ${d})°. Find the measure of an angle adjacent to them.`,
+      expression: `맞꼭지각 = ${vertAngle}°, 이웃한 각 = 180° - ${vertAngle}°`,
+      answer: String(adj),
+      answerSuffix: '°',
+      explanation: `맞꼭지각의 크기가 같으므로 ${a}x + ${b} = ${c}x - ${d}에서 x = ${x}입니다. 따라서 맞꼭지각의 크기는 ${a}×${x} + ${b} = ${vertAngle}°입니다. 한 직선 위에서 이웃한 두 각의 합은 180°이므로 이웃한 각의 크기는 180° - ${vertAngle}° = ${adj}°입니다.`,
+    };
+  }
+}
+
+// [유형 10] 한 점에서 만나는 n개 직선의 맞꼭지각의 쌍의 개수 (RPM #81, #82)
+export function rpmGeoBasicVerticalAnglePairs(random) {
+  const n = pick(random, [3, 4, 5, 6, 7]);
+  const pairs = n * (n - 1);
+
+  return {
+    prompt: `한 평면 위에서 서로 다른 ${n}개의 직선이 한 점 O에서 만날 때 생기는 맞꼭지각은 모두 몇 쌍인지 구하시오. (단, 평각은 제외)`,
+    promptEn: `When ${n} distinct lines intersect at a single point O, how many pairs of vertical angles are formed?`,
+    expression: `직선의 개수 n = ${n}`,
+    answer: String(pairs),
+    answerSuffix: '쌍',
+    explanation: `서로 다른 n개의 직선 중 2개의 직선을 택할 때마다 맞꼭지각이 2쌍씩 생깁니다. n개의 직선 중 2개를 택하는 방법의 수는 n(n - 1) / 2이고, 각 선택마다 2쌍이 생기므로 전체 맞꼭지각의 쌍의 개수는 n(n - 1) / 2 × 2 = n(n - 1)쌍입니다. 따라서 ${n} × (${n} - 1) = ${pairs}쌍입니다.`,
+  };
+}
+
+// [유형 11] 수직과 수선, 점과 직선 사이의 거리 (RPM #83~#85, #103)
+export function rpmGeoBasicPerpendicularDist(random) {
+  // 직사각형 ABCD에서 가로 w, 세로 h
+  const w = ri(random, 6, 14);
+  const h = ri(random, 4, 10);
+  const ask = pick(random, ['dist_A_to_BC', 'dist_A_to_CD', 'sum_distances']);
+
+  if (ask === 'dist_A_to_BC') {
+    return {
+      prompt: `직사각형 ABCD에서 AB = ${h}cm, BC = ${w}cm일 때, 꼭짓점 A와 변 BC 사이의 거리를 구하시오.`,
+      promptEn: `In rectangle ABCD with AB = ${h} cm and BC = ${w} cm, find the distance from vertex A to side BC.`,
+      expression: `AB = ${h}cm (수선의 길이)`,
+      answer: String(h),
+      answerSuffix: 'cm',
+      explanation: `점과 직선 사이의 거리는 그 점에서 직선에 내린 수선의 길이입니다. 직사각형에서 AB ⊥ BC이므로 점 A에서 변 BC에 내린 수선의 발은 점 B이며, 그 거리는 선분 AB의 길이인 ${h}cm입니다.`,
+    };
+  } else if (ask === 'dist_A_to_CD') {
+    return {
+      prompt: `직사각형 ABCD에서 AB = ${h}cm, BC = ${w}cm일 때, 꼭짓점 A와 변 CD 사이의 거리를 구하시오.`,
+      promptEn: `In rectangle ABCD with AB = ${h} cm and BC = ${w} cm, find the distance from vertex A to side CD.`,
+      expression: `AD = BC = ${w}cm (수선의 길이)`,
+      answer: String(w),
+      answerSuffix: 'cm',
+      explanation: `점 A에서 변 CD에 내린 수선의 발은 점 D이고, 직사각형의 대변의 길이는 같으므로 선분 AD = BC = ${w}cm입니다. 따라서 거리는 ${w}cm입니다.`,
+    };
+  } else {
+    const ans = h + w;
+    return {
+      prompt: `직사각형 ABCD에서 AB = ${h}cm, BC = ${w}cm이다. 점 A와 변 BC 사이의 거리를 a cm, 점 B와 변 CD 사이의 거리를 b cm라 할 때, a + b의 값을 구하시오.`,
+      promptEn: `In rectangle ABCD with AB = ${h} cm, BC = ${w} cm, let a be distance from A to BC, and b from B to CD. Find a + b.`,
+      expression: `a = ${h}, b = ${w}`,
+      answer: String(ans),
+      answerSuffix: 'cm',
+      explanation: `점 A와 BC 사이의 거리는 AB = ${h}cm이고, 점 B와 CD 사이의 거리는 BC = ${w}cm입니다. 따라서 a + b = ${h} + ${w} = ${ans}cm입니다.`,
+    };
+  }
+}
+
+// [유형 12 (유형 UP)] 복합 교차 직선에서의 맞꼭지각과 평각 계산 (RPM #86~#88, #102)
+export function rpmGeoBasicVerticalMultiLines(random) {
+  // 세 직선이 한 점에서 만남. 세 각 a, b, c가 일직선 한쪽에 있고 맞은편에 맞꼭지각 배치
+  // ∠a : ∠b = p : q, 수직 조건 또는 직각 포함
+  const p = ri(random, 2, 4);
+  const q = ri(random, 1, 3);
+  const x = ri(random, 15, 25);
+  const angA = p * x;
+  const angB = q * x;
+  const angC = 180 - (angA + angB);
+
+  return {
+    prompt: `세 직선이 한 점 O에서 만난다. 일직선의 한쪽에서 ∠a : ∠b = ${p} : ${q}이고, 이들과 이웃한 각 ∠c = ${angC}°일 때, ∠a의 크기를 구하시오.`,
+    promptEn: `Three lines cross at O. Along one straight angle, ∠a : ∠b = ${p} : ${q} and the remaining angle is ∠c = ${angC}°. Find ∠a.`,
+    expression: `∠a + ∠b + ${angC}° = 180°, ∠a : ∠b = ${p} : ${q}`,
+    answer: String(angA),
+    answerSuffix: '°',
+    explanation: `평각 180°에서 ∠c = ${angC}°를 빼면 ∠a + ∠b = 180° - ${angC}° = ${180 - angC}°입니다. 이를 ${p} : ${q}로 비례배분하면 ∠a = ${180 - angC}° × (${p} / (${p} + ${q})) = ${angA}°입니다.`,
+  };
+}
+
+// [유형 13 (유형 UP)] 시계의 시침과 분침이 이루는 각의 크기 (RPM #89~#91, #107)
+export function rpmGeoBasicClockAngle(random) {
+  const times = [
+    { h: 3, m: 30 },
+    { h: 5, m: 10 },
+    { h: 9, m: 30 },
+    { h: 2, m: 20 },
+    { h: 4, m: 40 },
+    { h: 7, m: 20 },
+    { h: 8, m: 10 },
+  ];
+  const t = pick(random, times);
+  const { h, m } = t;
+
+  // 시침의 위치: 30 * h + 0.5 * m
+  // 분침의 위치: 6 * m
+  const hourDeg = 30 * h + 0.5 * m;
+  const minDeg = 6 * m;
+  let diff = Math.abs(hourDeg - minDeg);
+  if (diff > 180) diff = 360 - diff;
+
+  return {
+    prompt: `시계가 ${h}시 ${m}분을 가리킬 때, 시침과 분침이 이루는 각 중에서 작은 쪽의 각의 크기를 구하시오.`,
+    promptEn: `At ${h}:${m < 10 ? '0' + m : m}, find the smaller angle formed between the hour hand and the minute hand of a clock.`,
+    expression: `시침 = ${30 * h} + ${0.5 * m} = ${hourDeg}°, 분침 = ${6 * m}°`,
+    answer: String(diff),
+    answerSuffix: '°',
+    explanation: `시침은 1시간에 30°, 1분에 0.5°씩 움직이므로 12시 기준으로 ${h}시 ${m}분의 시침의 위치는 30° × ${h} + 0.5° × ${m} = ${hourDeg}°입니다. 분침은 1분에 6°씩 움직이므로 ${m}분의 위치는 6° × ${m} = ${minDeg}°입니다. 두 바늘이 이루는 각은 |${hourDeg}° - ${minDeg}°| = ${Math.abs(hourDeg - minDeg)}°이며, ${Math.abs(hourDeg - minDeg) > 180 ? `작은 쪽의 각은 360° - ${Math.abs(hourDeg - minDeg)}° = ${diff}°입니다.` : `따라서 정답은 ${diff}°입니다.`}`,
+  };
+}
+
+// [01 단원 실전 다지기] 기본도형 전 유형 종합
+export function rpmGeoBasicAllTypesMixed(random) {
+  const fns = [
+    rpmGeoBasicIntersections,
+    rpmGeoBasicLineRays,
+    rpmGeoBasicPointsToLines,
+    rpmGeoBasicMidpointSegment,
+    rpmGeoBasicAngleClassify,
+    rpmGeoBasicStraightAngleEq,
+    rpmGeoBasicAngleRatio,
+    rpmGeoBasicAngleMultipleCond,
+    rpmGeoBasicVerticalAngles,
+    rpmGeoBasicVerticalAnglePairs,
+    rpmGeoBasicPerpendicularDist,
+    rpmGeoBasicVerticalMultiLines,
+    rpmGeoBasicClockAngle,
+  ];
+  return pick(random, fns)(random);
+}
+
+
+// =============================================================
+// CHAPTER 02: 위치 관계 응용 (RPM 1-2 Pages 26 ~ 43)
+// =============================================================
+
+
+// [유형 01] 점과 직선, 점과 평면의 위치 관계 (RPM #163~#165, #246)
+export function rpmPosPointLinePlane(random) {
+  const statements = [
+    { text: '직선 l 위의 점 P는 "점 P는 직선 l 위에 있다" 또는 "직선 l은 점 P를 지난다"고 한다.', ans: 1, expl: '점이 직선 위에 있는 것은 직선이 그 점을 지나는 것과 같은 표현입니다.' },
+    { text: '한 평면 위의 서로 다른 두 점을 지나는 직선은 그 평면에 포함된다.', ans: 1, expl: '평면 위의 두 점을 지나는 직선은 평면 전체에 완전히 놓이게 됩니다.' },
+    { text: '점 A가 평면 P 위에 있지 않을 때, 점 A는 평면 P 밖의 공간에 존재한다.', ans: 1, expl: '평면 위에 있지 않은 점은 그 평면 외부에 위치합니다.' },
+    { text: '직선 l 밖에 있는 점 P를 지나면서 직선 l과 만나는 직선은 오직 하나뿐이다.', ans: 2, expl: '점 P와 직선 l 위의 서로 다른 점들을 잇는 직선은 무수히 많이 그을 수 있습니다.' },
+    { text: '평면에서 한 점을 지나는 직선은 무수히 많다.', ans: 1, expl: '한 점을 지나는 직선은 무수히 많이 존재합니다.' },
+  ];
+  const target = pick(random, statements);
+  return {
+    prompt: `점, 직선, 평면의 위치 관계에 대한 다음 설명의 참/거짓을 판별하시오: "${target.text}"`,
+    promptEn: `Determine True or False: "${target.text}"`,
+    expression: target.text,
+    answer: String(target.ans),
+    choices: [
+      { value: '1', label: '참 (O)', labelEn: 'True' },
+      { value: '2', label: '거짓 (X)', labelEn: 'False' },
+    ],
+    explanation: target.expl,
+  };
+}
+
+// [유형 02] 평면에서 두 직선의 위치 관계 (RPM #166~#168, #248)
+export function rpmPosPlaneTwoLines(random) {
+  const polygon = pick(random, [
+    { name: '정육각형 ABCDEF', sides: 6, diagLines: 9 },
+    { name: '정팔각형 ABCDEFGH', sides: 8, diagLines: 20 },
+    { name: '정오각형 ABCDE', sides: 5, diagLines: 5 },
+  ]);
+  // 정다각형의 변 AB를 연장한 직선과 만나는 변의 직선 개수, 평행한 직선 개수
+  // 정육각형: 변 AB와 평행한 변은 DE (1개). 나머지 변들을 연장한 직선 중 일치하는 것 제외, 한 점에서 만나는 변은 4개.
+  // 정팔각형: 변 AB와 평행한 변은 EF (1개). 나머지 변들 6개는 한 점에서 만남.
+  const parallelCount = 1;
+  const meetCount = polygon.sides - 2; // 자기 자신(1)과 평행(1) 제외한 나머지 변들
+
+  const ask = pick(random, ['meet', 'parallel', 'both']);
+  if (ask === 'meet') {
+    return {
+      prompt: `${polygon.name}에서 변 AB를 포함하는 직선과 한 점에서 만나는 변을 포함하는 직선의 개수를 구하시오.`,
+      promptEn: `In regular polygon ${polygon.name}, how many lines containing its sides intersect the line containing side AB at a single point?`,
+      expression: `${polygon.name}, 변 AB와 교차하는 직선`,
+      answer: String(meetCount),
+      answerSuffix: '개',
+      explanation: `평면에서 두 직선의 위치 관계는 '한 점에서 만난다', '평행하다', '일치한다'의 세 가지입니다. 자기 자신을 제외한 ${polygon.sides - 1}개의 변 중 대변 1개는 평행하고, 나머지 ${meetCount}개의 변을 포함하는 직선은 직선 AB와 한 점에서 만납니다.`,
+    };
+  } else if (ask === 'parallel') {
+    return {
+      prompt: `${polygon.name}에서 변 AB를 포함하는 직선과 평행한 변을 포함하는 직선의 개수를 구하시오.`,
+      promptEn: `In regular polygon ${polygon.name}, how many lines containing its sides are parallel to line AB?`,
+      expression: `${polygon.name}, 변 AB와 평행한 직선`,
+      answer: String(parallelCount),
+      answerSuffix: '개',
+      explanation: `${polygon.name}에서 변 AB와 마주 보는 평행한 대변은 1개뿐입니다.`,
+    };
+  } else {
+    const ans = meetCount + parallelCount;
+    return {
+      prompt: `${polygon.name}에서 변 AB를 포함하는 직선과 한 점에서 만나는 직선의 개수를 a개, 평행한 직선의 개수를 b개라 할 때, a + b의 값을 구하시오.`,
+      promptEn: `In regular polygon ${polygon.name}, let a be lines intersecting line AB at one point, and b be parallel lines. Find a + b.`,
+      expression: `a = ${meetCount}, b = ${parallelCount}`,
+      answer: String(ans),
+      explanation: `직선 AB와 한 점에서 만나는 변의 직선은 a = ${meetCount}개이고, 평행한 변의 직선은 b = ${parallelCount}개입니다. 따라서 a + b = ${meetCount} + ${parallelCount} = ${ans}개입니다.`,
+    };
+  }
+}
+
+// [유형 03] 입체도형에서 꼬인 위치에 있는 모서리의 개수 (RPM #175~#182, #250, #252, #271)
+export function rpmPosSolidSkewEdges(random) {
+  // 공간에서 두 직선이 만나지도 않고 평행하지도 않은 위치 관계 = 꼬인 위치 (한 평면 위에 있지 않음)
+  const solids = [
+    {
+      name: '삼각기둥',
+      totalEdges: 9,
+      targetEdge: '모서리 AD (옆면 세로 모서리)',
+      // 밑면 ABC (3), 상면 DEF (3), 기둥 AD, BE, CF (3)
+      // AD와 만나는 모서리: A에서 만남(AB, AC), D에서 만남(DE, DF) -> 4개
+      // AD와 평행한 모서리: BE, CF -> 2개
+      // 자기 자신: 1개
+      // 꼬인 위치: BC, EF -> 2개
+      skewCount: 2,
+      expl: '모서리 AD와 만나는 모서리(AB, AC, DE, DF: 4개)와 평행한 모서리(BE, CF: 2개) 및 자기 자신을 제외하면, 꼬인 위치에 있는 모서리는 BC, EF의 2개입니다.',
+    },
+    {
+      name: '직육면체',
+      totalEdges: 12,
+      targetEdge: '모서리 AB (윗면 가로 모서리)',
+      // 만나는 모서리: A(AD, AE), B(BC, BF) -> 4개
+      // 평행한 모서리: CD, EF, GH -> 3개
+      // 자기 자신: 1개
+      // 꼬인 위치: 12 - 4 - 3 - 1 = 4개 (DH, CG, FG, EH)
+      skewCount: 4,
+      expl: '모서리 AB와 만나는 모서리는 4개, 평행한 모서리는 3개이므로 전체 12개 모서리 중 꼬인 위치에 있는 모서리는 12 - 4 - 3 - 1 = 4개(DH, CG, FG, EH)입니다.',
+    },
+    {
+      name: '정사면체(삼각뿔)',
+      totalEdges: 6,
+      targetEdge: '모서리 AB',
+      // 꼭짓점 A, B, C, D
+      // AB와 만나는 모서리: AC, AD, BC, BD -> 4개
+      // 평행한 모서리: 0개
+      // 꼬인 위치: CD -> 1개
+      skewCount: 1,
+      expl: '정사면체의 6개 모서리 중 모서리 AB와 만나는 모서리는 4개이고 평행한 모서리는 없으므로, 마주 보는 모서리 CD 1개만이 꼬인 위치에 있습니다.',
+    },
+    {
+      name: '오각기둥',
+      totalEdges: 15,
+      targetEdge: '밑면의 한 모서리 AB',
+      // 윗면 밑면 각 5개 모서리, 기둥 5개
+      // AB와 만나는 모서리: A(AE, AA'), B(BC, BB') -> 4개
+      // AB와 평행한 모서리: 윗면 대변 없거나(오각형), 맞은편 상면 A'B' -> 1개
+      // 꼬인 위치 모서리: 15 - 4 - 1 - 1 = 9개 또는 4개 기둥 + 윗면 모서리들
+      // 오각기둥에서 밑면 모서리 AB와 꼬인 위치:
+      // 옆면 기둥 중 AA', BB' 만남, 나머지 CC', DD', EE' 3개는 꼬임
+      // 윗면 모서리 중 A'B'는 평행, B'C', E'A'는 연장 시 평행 평면 내 비평행(꼬임), C'D', D'E'도 꼬임 -> 윗면 4개 꼬임
+      // 밑면 모서리 중 CD, DE는 한 평면 위에서 연장 시 만남
+      // 총 꼬인 위치 = 3(기둥) + 4(윗면) = 7개
+      skewCount: 4,
+      targetEdgeAlt: '옆면 세로 모서리 AA\'',
+      // AA'와 꼬인 위치: 밑면 BC, CD, DE (3개) + 윗면 B'C', C'D', D'E' (3개) = 6개
+      skewCountAlt: 6,
+    },
+  ];
+
+  const solid = pick(random, solids.slice(0, 3)); // 직육면체, 삼각기둥, 정사면체
+  return {
+    prompt: `오른쪽과 같은 ${solid.name}에서 ${solid.targetEdge}와 꼬인 위치에 있는 모서리의 개수를 구하시오.`,
+    promptEn: `In a ${solid.name}, find the number of edges skew to ${solid.targetEdge}.`,
+    expression: `${solid.name}, ${solid.targetEdge}`,
+    answer: String(solid.skewCount),
+    answerSuffix: '개',
+    explanation: solid.expl,
+  };
+}
+
+// [유형 04] 입체도형에서 모서리와 면, 면과 면의 위치 관계 (RPM #189~#194, #255, #256)
+export function rpmPosSolidEdgePlaneRelations(random) {
+  // 직육면체에서:
+  // 면과 수직인 모서리 개수: 4개
+  // 면과 평행한 모서리 개수: 4개
+  // 면과 수직인 면 개수: 4개
+  // 면과 평행한 면 개수: 1개
+  const questions = [
+    {
+      q: '직육면체에서 한 밑면과 수직인 모서리는 모두 몇 개인지 구하시오.',
+      qEn: 'In a rectangular cuboid, how many edges are perpendicular to a given base face?',
+      ans: 4,
+      expl: '한 밑면의 네 꼭짓점에서 세로 방향으로 뻗은 4개의 옆면 모서리가 밑면과 수직입니다.',
+    },
+    {
+      q: '직육면체에서 한 밑면과 평행한 모서리는 모두 몇 개인지 구하시오.',
+      qEn: 'In a rectangular cuboid, how many edges are parallel to a given base face?',
+      ans: 4,
+      expl: '마주 보는 평행한 윗면의 네 모서리(4개)가 밑면과 평행합니다.',
+    },
+    {
+      q: '직육면체에서 한 면과 수직인 면은 모두 몇 개인지 구하시오.',
+      qEn: 'In a rectangular cuboid, how many faces are perpendicular to a given face?',
+      ans: 4,
+      expl: '한 면을 둘러싸고 있는 4개의 옆면이 모두 그 면과 수직입니다.',
+    },
+    {
+      q: '삼각기둥에서 밑면과 수직인 옆면의 개수를 a개, 밑면과 평행한 면의 개수를 b개라 할 때, a + b의 값을 구하시오.',
+      qEn: 'In a triangular prism, let a be the number of lateral faces perpendicular to the base, and b be faces parallel to the base. Find a + b.',
+      ans: 4, // 3 + 1
+      expl: '삼각기둥의 3개의 옆면은 밑면과 수직이므로 a = 3개이고, 마주 보는 다른 밑면 1개가 평행하므로 b = 1개입니다. 따라서 a + b = 3 + 1 = 4입니다.',
+    },
+  ];
+
+  const target = pick(random, questions);
+  return {
+    prompt: target.q,
+    promptEn: target.qEn,
+    expression: `입체도형 면과 모서리의 위치 관계`,
+    answer: String(target.ans),
+    explanation: target.expl,
+  };
+}
+
+// [유형 05] 전개도를 접어 만든 입체도형에서의 위치 관계 (RPM #253, #254, #275)
+export function rpmPosSolidNetRelations(random) {
+  // 정육면체 전개도를 접었을 때:
+  // 마주 보는 면(평행한 면) 쌍, 만나는 모서리
+  const scenarios = [
+    {
+      prompt: '정육면체의 전개도를 접어 입체도형을 만들었을 때, 서로 마주 보는 면(평행한 면)은 모두 몇 쌍인지 구하시오.',
+      promptEn: 'When folding a cube net, how many pairs of opposite (parallel) faces are there?',
+      ans: '3',
+      expl: '정육면체의 6개의 면은 2개씩 짝을 지어 서로 마주 보므로 평행한 면은 총 3쌍입니다.',
+    },
+    {
+      prompt: '정육면체의 전개도에서 한 면과 이웃하여 수직을 이루는 면은 모두 몇 개인지 구하시오.',
+      promptEn: 'In a cube folded from a net, how many faces are perpendicular to a chosen face?',
+      ans: '4',
+      expl: '정육면체의 한 면에 대하여 마주 보는 1개의 평행한 면을 제외한 나머지 4개의 면은 모두 수직을 이룹니다.',
+    },
+  ];
+  const target = pick(random, scenarios);
+  return {
+    prompt: target.prompt,
+    promptEn: target.promptEn,
+    expression: '정육면체 전개도 접기',
+    answer: target.ans,
+    answerSuffix: '쌍',
+    explanation: target.expl,
+  };
+}
+
+// [유형 06] 동위각과 엇각의 위치 및 크기 판별 (RPM #208~#213, #258)
+export function rpmPosCorrespondingAlternate(random) {
+  // 두 직선 l, m이 다른 한 직선 n과 만날 때 생기는 8개 각
+  const anglePairs = [
+    { type: '동위각', desc: '같은 위치에 있는 각', example: '∠a와 ∠e, ∠b와 ∠f, ∠c와 ∠g, ∠d와 ∠h' },
+    { type: '엇각', desc: '두 직선 사이에서 엇갈린 위치에 있는 각', example: '∠b와 ∠h, ∠c와 ∠e' },
+  ];
+  const target = pick(random, anglePairs);
+
+  const baseAngle = ri(random, 55, 80); // e.g. 70°
+  const isAlt = target.type === '엇각';
+
+  return {
+    prompt: `두 직선 l, m이 다른 한 직선 n과 만나 각 ∠a, ∠b, ∠c, ∠d와 ∠e, ∠f, ∠g, ∠h가 생겼다. 두 직선 l, m이 평행하고 한 각의 크기가 ${baseAngle}°일 때, 이 각의 ${target.type}의 크기를 구하시오.`,
+    promptEn: `Lines l and m are parallel, cut by transversal n. If one angle measures ${baseAngle}°, find the measure of its ${isAlt ? 'alternate interior angle' : 'corresponding angle'}.`,
+    expression: `l // m, 주어진 각 = ${baseAngle}°, 구하는 각 = ${target.type}`,
+    answer: String(baseAngle),
+    answerSuffix: '°',
+    explanation: `두 직선이 평행할 때, 동위각의 크기는 서로 같고 엇각의 크기도 서로 같습니다. 따라서 ${target.type}의 크기는 주어진 각과 같은 ${baseAngle}°입니다.`,
+  };
+}
+
+// [유형 07] 평행선에서의 미지각 계산 (l // m) (RPM #214~#220, #259, #260)
+export function rpmPosParallelAngleSolve(random) {
+  // l // m 일 때 동위각이나 엇각을 이용한 일차방정식
+  // (a*x + b)° = (c*x - d)° (동위각/엇각 같음)
+  const a = ri(random, 2, 4);
+  const c = a + ri(random, 1, 2); // c > a
+  const x = ri(random, 15, 30);
+  const ang = c * x - ri(random, 10, 30);
+  const d = c * x - ang;
+  const b = ang - a * x;
+
+  return {
+    prompt: `두 직선 l과 m이 평행할 때, 동위각(또는 엇각)의 크기가 각각 (${a}x + ${b})°, (${c}x - ${d})°이다. x의 값을 구하시오.`,
+    promptEn: `Given l // m, corresponding (or alternate) angles measure (${a}x + ${b})° and (${c}x - ${d})°. Find x.`,
+    expression: `${a}x + ${b} = ${c}x - ${d}`,
+    answer: String(x),
+    explanation: `l // m일 때 동위각과 엇각의 크기는 서로 같으므로 ${a}x + ${b} = ${c}x - ${d}입니다. 정리하면 (${c} - ${a})x = ${b} + ${d}에서 x = ${x}입니다.`,
+  };
+}
+
+// [유형 08] 두 직선이 평행하기 위한 조건 판별 (RPM #221~#223, #261)
+export function rpmPosParallelCondition(random) {
+  const isParallel = random() < 0.5;
+  const ang1 = ri(random, 60, 85);
+  const ang2 = isParallel ? ang1 : ang1 + pick(random, [-10, -5, 5, 10]);
+
+  return {
+    prompt: `두 직선 l, m이 다른 한 직선 n과 만나 생기는 두 엇각의 크기가 각각 ${ang1}°, ${ang2}°이다. 두 직선 l과 m은 서로 평행한지 판별하시오.`,
+    promptEn: `Two alternate interior angles formed by lines l and m with transversal n measure ${ang1}° and ${ang2}°. Are lines l and m parallel?`,
+    expression: `엇각 1 = ${ang1}°, 엇각 2 = ${ang2}°`,
+    answer: isParallel ? '1' : '2',
+    choices: [
+      { value: '1', label: '평행하다 (l // m)', labelEn: 'Parallel' },
+      { value: '2', label: '평행하지 않다', labelEn: 'Not parallel' },
+    ],
+    explanation: `두 직선이 한 직선과 만날 때, 엇각(또는 동위각)의 크기가 같으면 두 직선은 평행합니다. 여기서는 엇각의 크기가 각각 ${ang1}°, ${ang2}°이므로 ${isParallel ? '크기가 같아 두 직선은 평행합니다.' : '크기가 서로 다르므로 두 직선은 평행하지 않습니다.'}`,
+  };
+}
+
+// [유형 09] 평행선 사이에 꺾인 점이 1개 있는 경우 (보조선 긋기) (RPM #224~#226, #264)
+export function rpmPosParallelBentLineSingle(random) {
+  // l // m 사이에 꺾인 점 P가 있고, 위쪽 각 a°, 아래쪽 각 b°
+  // 꺾인 각 ∠P = a + b (꺾인 점 P를 지나며 l, m에 평행한 보조선을 그음)
+  const a = ri(random, 25, 55);
+  const b = ri(random, 30, 60);
+  const x = a + b;
+
+  return {
+    prompt: `두 직선 l과 m이 평행하다. 직선 l과 이루는 위쪽 각이 ${a}°이고 직선 m과 이루는 아래쪽 각이 ${b}°일 때, 그 사이에 꺾인 각 ∠x의 크기를 구하시오.`,
+    promptEn: `Lines l // m. A line bends at vertex P between them, making angle ${a}° with l and ${b}° with m. Find the measure of bend angle ∠x.`,
+    expression: `l // m, ∠x = ${a}° + ${b}°`,
+    answer: String(x),
+    answerSuffix: '°',
+    explanation: `꺾인 점을 지나면서 두 직선 l, m에 평행한 보조선을 그으면, 엇각의 성질에 의해 꺾인 각은 위쪽 엇각 ${a}°와 아래쪽 엇각 ${b}°의 합과 같습니다. 따라서 ∠x = ${a}° + ${b}° = ${x}°입니다.`,
+  };
+}
+
+// [유형 10] 평행선 사이에 꺾인 점이 2개 이상 있는 경우 (지그재그 각) (RPM #227~#232, #266)
+export function rpmPosParallelBentLineMulti(random) {
+  // l // m, 왼쪽으로 꺾인 각들의 합 = 오른쪽으로 꺾인 각들의 합
+  // 왼쪽 각: a, b  / 오른쪽 각: x, c
+  // a + b = x + c => x = a + b - c
+  const a = ri(random, 35, 60);
+  const b = ri(random, 40, 65);
+  const c = ri(random, 20, Math.min(a, b) + 10);
+  const x = a + b - c;
+
+  return {
+    prompt: `두 직선 l과 m이 평행할 때, 지그재그 꺾인 선에서 왼쪽을 향하는 두 각의 크기가 각각 ${a}°, ${b}°이고, 오른쪽을 향하는 한 각의 크기가 ${c}°이다. 다른 오른쪽 각 ∠x의 크기를 구하시오.`,
+    promptEn: `Given l // m with a zigzag line, the two left-facing angles are ${a}° and ${b}°, and one right-facing angle is ${c}°. Find the other right-facing angle ∠x.`,
+    expression: `왼쪽 각의 합(${a}° + ${b}°) = 오른쪽 각의 합(${c}° + ∠x)`,
+    answer: String(x),
+    answerSuffix: '°',
+    explanation: `평행선 사이의 꺾인 선에서 각 꺾인 점마다 평행선을 그으면 '왼쪽을 향하는 각들의 합 = 오른쪽을 향하는 각들의 합'이 성립합니다. 따라서 ${a}° + ${b}° = ${c}° + ∠x이므로 ∠x = ${a} + ${b} - ${c} = ${x}°입니다.`,
+  };
+}
+
+// [유형 11] 평행선과 삼각형/정다각형이 결합된 각 (RPM #273, #277)
+export function rpmPosParallelWithPolygon(random) {
+  // l // m 사이에 정삼각형 ABC가 놓여 있을 때
+  // 정삼각형의 한 내각은 60°
+  // 꼭짓점 A가 l 위에 있고, l과 이루는 한쪽 각이 a°일 때 다른 쪽 각 x° 구하기
+  // 또는 정삼각형 꼭짓점이 꺾인 점에 위치: 엇각 두 개의 합 = 60°
+  const a = ri(random, 15, 45);
+  const x = 60 - a;
+
+  return {
+    prompt: `두 직선 l과 m이 평행하고, 그 사이에 정삼각형 ABC의 꼭짓점 A가 놓여 있다. 꼭짓점 A를 지나면서 직선 l과 이루는 한 엇각이 ${a}°일 때, 직선 m 방향과 이루는 다른 엇각 ∠x의 크기를 구하시오.`,
+    promptEn: `Given l // m, a vertex of equilateral triangle ABC is between them. If one alternate angle is ${a}°, find ∠x so that the interior angle is 60°.`,
+    expression: `정삼각형 한 내각 = 60°, ${a}° + ∠x = 60°`,
+    answer: String(x),
+    answerSuffix: '°',
+    explanation: `정삼각형의 한 내각의 크기는 60°입니다. 꼭짓점 A를 지나며 l, m에 평행한 보조선을 그으면 엇각의 합이 정삼각형의 내각 60°가 되므로 ${a}° + ∠x = 60°입니다. 따라서 ∠x = 60° - ${a}° = ${x}°입니다.`,
+  };
+}
+
+// [유형 12] 평행선과 각의 이등분선 (RPM #233~#235, #268)
+export function rpmPosParallelAngleBisector(random) {
+  // l // m, ∠BAC의 이등분선과 ∠ABC의 이등분선이 만나는 각
+  // 두 내각의 합이 180°인 동측내각의 이등분선 교각은 90°
+  // 또는 ∠CAB = 2*a, 이등분선 각 a.
+  const angleA = ri(random, 50, 80); // e.g. 70°
+  const halfA = angleA / 2;
+  const angleB = 180 - angleA; // 동측내각의 합 = 180°
+  const halfB = angleB / 2;
+  // 교각 = 180 - (halfA + halfB) = 180 - 90 = 90°
+  return {
+    prompt: `두 평행선 l, m 사이에 선분 AB가 있고, 두 점 A, B에서 평행선 안쪽으로 생기는 동측내각의 이등분선들이 점 C에서 만난다. ∠ACB의 크기를 구하시오.`,
+    promptEn: `Lines l // m. The angle bisectors of the consecutive interior angles at A and B intersect at C. Find the measure of ∠ACB.`,
+    expression: `동측내각의 합 = 180°, 이등분선의 합 = 90°`,
+    answer: '90',
+    answerSuffix: '°',
+    explanation: `두 평행선 사이에서 동측내각의 합은 180°입니다. 각의 이등분선들이 이루는 두 각의 크기의 합은 180° ÷ 2 = 90°가 됩니다. 삼각형 ABC의 세 내각의 합은 180°이므로 ∠ACB = 180° - 90° = 90°입니다.`,
+  };
+}
+
+// [유형 13] 종이 테이프를 접었을 때 생기는 각 (RPM #236~#239, #269, #270)
+export function rpmPosPaperFoldAngles(random) {
+  // 직사각형 모양의 종이 테이프를 접었을 때:
+  // 접은 각 = 원래 각 (같음), 평행선 엇각 = 접은 각
+  // 따라서 접힌 부분의 삼각형은 항상 이등변삼각형!
+  // 접은 각 x°, 엇각 x° => 꼭지각 = 180 - 2x 또는 접은 각이 주어지고 밑각/꼭지각 구하기
+  const x = ri(random, 50, 75); // 밑각 x
+  const apex = 180 - 2 * x;    // 꼭지각
+
+  const ask = pick(random, ['apex', 'fold_angle']);
+  if (ask === 'apex') {
+    return {
+      prompt: `폭이 일정한 직사각형 모양의 종이 테이프를 접었더니 접은 각의 크기가 ${x}°이었다. 이때 접힌 부분에 생기는 이등변삼각형의 꼭지각 ∠y의 크기를 구하시오.`,
+      promptEn: `A rectangular strip of paper is folded such that the fold angle is ${x}°. Find the apex angle ∠y of the resulting isosceles triangle.`,
+      expression: `접은 각 = 엇각 = ${x}°, 꼭지각 = 180° - 2×${x}°`,
+      answer: String(apex),
+      answerSuffix: '°',
+      explanation: `종이를 접었을 때 접은 각의 크기는 원래 각과 같으므로 ${x}°이고, 테이프의 양 변이 평행하므로 엇각의 크기도 ${x}°로 같습니다. 따라서 접힌 부분의 삼각형은 밑각이 각각 ${x}°인 이등변삼각형이 되므로 꼭지각 ∠y = 180° - (2 × ${x}°) = ${apex}°입니다.`,
+    };
+  } else {
+    return {
+      prompt: `폭이 일정한 종이 테이프를 접었을 때, 접혀서 생긴 이등변삼각형의 한 꼭지각의 크기가 ${apex}°이다. 접은 각 ∠x의 크기를 구하시오.`,
+      promptEn: `A paper tape is folded, producing an isosceles triangle with an apex angle of ${apex}°. Find the fold angle ∠x.`,
+      expression: `꼭지각 = ${apex}°, 2×∠x + ${apex}° = 180°`,
+      answer: String(x),
+      answerSuffix: '°',
+      explanation: `접은 각과 엇각의 크기가 같으므로 접힌 삼각형의 두 밑각은 모두 ∠x입니다. 세 내각의 합은 180°이므로 2∠x + ${apex}° = 180°, 2∠x = ${180 - apex}°, ∠x = ${x}°입니다.`,
+    };
+  }
+}
+
+// [유형 14] 두 쌍의 평행선이 교차할 때의 각 (RPM #243, #244, #277)
+export function rpmPosParallelTwoPairs(random) {
+  // l // m 이고 p // q 일 때
+  const given = ri(random, 65, 115);
+  const supp = 180 - given;
+
+  return {
+    prompt: `두 직선 l, m이 평행하고(l // m), 다른 두 직선 p, q도 서로 평행하다(p // q). 네 직선이 교차하여 생긴 한 각의 크기가 ${given}°일 때, 이와 이웃하는 둔각(또는 예각) ∠x의 크기를 구하시오.`,
+    promptEn: `Lines l // m and p // q. If one intersection angle measures ${given}°, find the supplementary angle ∠x.`,
+    expression: `l // m, p // q, 평행선 각도 성질`,
+    answer: String(supp),
+    answerSuffix: '°',
+    explanation: `두 쌍의 평행선이 교차할 때 생기는 각들은 동위각과 엇각의 성질에 의해 모두 ${given}°이거나 그 보각인 180° - ${given}° = ${supp}° 중 하나입니다. 따라서 이웃하는 각의 크기는 ${supp}°입니다.`,
+  };
+}
+
+// [유형 15 (유형 UP)] 공간에서 위치 관계 참/거짓 명제 판별 (RPM #240~#242, #276)
+export function rpmPosSpaceLogicStatements(random) {
+  const statements = [
+    { text: '한 직선에 평행한 서로 다른 두 직선은 평행하다. (l // m, l // n => m // n)', ans: 1, expl: '평행선 공리에 의해 한 직선에 평행한 두 직선은 항상 서로 평행합니다.' },
+    { text: '한 평면에 수직인 서로 다른 두 직선은 평행하다. (l ⊥ P, m ⊥ P => l // m)', ans: 1, expl: '한 평면에 동시에 수직인 두 직선은 공간에서 항상 평행합니다.' },
+    { text: '한 직선에 수직인 서로 다른 두 직선은 항상 평행하다.', ans: 2, expl: '공간에서 한 직선에 수직인 두 직선은 평행할 수도 있지만, 한 점에서 만날 수도 있고 꼬인 위치에 있을 수도 있습니다.' },
+    { text: '한 평면에 평행한 서로 다른 두 직선은 항상 평행하다.', ans: 2, expl: '한 평면에 평행한 두 직선은 서로 평행할 수도 있고, 만날 수도 있으며, 꼬인 위치에 있을 수도 있습니다.' },
+    { text: '한 평면에 수직인 서로 다른 두 평면은 항상 평행하다.', ans: 2, expl: '직육면체의 인접한 두 옆면은 모두 밑면에 수직이지만 서로 수직으로 만납니다.' },
+    { text: '한 평면에 평행한 서로 다른 두 평면은 평행하다. (P // Q, Q // R => P // R)', ans: 1, expl: '한 평면에 평행한 두 평면은 공간에서 항상 서로 평행합니다.' },
+  ];
+  const target = pick(random, statements);
+  return {
+    prompt: `공간에서 직선과 평면의 위치 관계에 대한 다음 설명의 참/거짓을 판별하시오: "${target.text}"`,
+    promptEn: `In 3D space, determine True or False: "${target.text}"`,
+    expression: target.text,
+    answer: String(target.ans),
+    choices: [
+      { value: '1', label: '참 (O)', labelEn: 'True' },
+      { value: '2', label: '거짓 (X)', labelEn: 'False' },
+    ],
+    explanation: target.expl,
+  };
+}
+
+// [02 단원 실전 다지기] 위치 관계 전 유형 종합
+export function rpmPosAllTypesMixed(random) {
+  const fns = [
+    rpmPosPointLinePlane,
+    rpmPosPlaneTwoLines,
+    rpmPosSolidSkewEdges,
+    rpmPosSolidEdgePlaneRelations,
+    rpmPosSolidNetRelations,
+    rpmPosCorrespondingAlternate,
+    rpmPosParallelAngleSolve,
+    rpmPosParallelCondition,
+    rpmPosParallelBentLineSingle,
+    rpmPosParallelBentLineMulti,
+    rpmPosParallelWithPolygon,
+    rpmPosParallelAngleBisector,
+    rpmPosPaperFoldAngles,
+    rpmPosParallelTwoPairs,
+    rpmPosSpaceLogicStatements,
+  ];
+  return pick(random, fns)(random);
+}
+
+
+// =============================================================
+// CHAPTER 03: 작도와 합동 응용 (RPM 1-2 Pages 47 ~ 59)
+// =============================================================
+
+
+// [유형 01] 작도의 도구와 길이가 같은 선분의 작도 (RPM #309, #310, #357, #358)
+export function rpmCongConstructSegment(random) {
+  const toolsQuestions = [
+    { text: '눈금 없는 자는 두 점을 잇는 선분을 그리거나 선분을 연장할 때 사용한다.', ans: 1, expl: '눈금 없는 자는 길이를 재는 것이 아니라 선을 긋거나 연장하는 데만 사용합니다.' },
+    { text: '컴퍼스는 원을 그리거나 선분의 길이를 재어서 다른 직선 위로 옮길 때 사용한다.', ans: 1, expl: '컴퍼스는 원을 그리는 용도 외에도 선분의 길이를 그대로 옮겨 작도할 때 사용합니다.' },
+    { text: '각의 크기를 잴 때에는 각도기를 사용하여 작도한다.', ans: 2, expl: '도형의 작도에서는 눈금 없는 자와 컴퍼스만을 사용하며, 각도기나 눈금 있는 자는 사용하지 않습니다.' },
+    { text: '선분의 길이를 비교할 때에는 눈금 없는 자를 사용한다.', ans: 2, expl: '선분의 길이를 비교하거나 옮길 때에는 컴퍼스를 사용합니다.' },
+  ];
+  const target = pick(random, toolsQuestions);
+  return {
+    prompt: `작도 도구(눈금 없는 자와 컴퍼스)에 대한 다음 설명의 참/거짓을 판별하시오: "${target.text}"`,
+    promptEn: `In geometric compass-and-straightedge construction, determine True or False: "${target.text}"`,
+    expression: target.text,
+    answer: String(target.ans),
+    choices: [
+      { value: '1', label: '참 (O)', labelEn: 'True' },
+      { value: '2', label: '거짓 (X)', labelEn: 'False' },
+    ],
+    explanation: target.expl,
+  };
+}
+
+// [유형 02] 크기가 같은 각의 작도와 평행선 작도 (RPM #311~#314, #359, #360)
+export function rpmCongConstructAngleParallel(random) {
+  const questions = [
+    {
+      q: '크기가 같은 각을 작도할 때, 각 XOY의 꼭짓점 O를 중심으로 원을 그려 두 변과 만나는 점을 A, B라 하고, 점 P를 중심으로 같은 반지름의 원을 그려 반직선과 만나는 점을 C, D라 하였다. 다음 중 길이가 항상 같은 선분이 아닌 것은?',
+      qEn: 'When constructing a congruent angle, which segment pair does not necessarily have the same length?',
+      choices: [
+        { label: 'OA = OB', isAns: false },
+        { label: 'PC = PD', isAns: false },
+        { label: 'AB = CD', isAns: false },
+        { label: 'OA = AB', isAns: true },
+      ],
+      expl: '반지름이 같은 원을 그렸으므로 OA = OB = PC = PD이고, 컴퍼스로 폭을 쟀으므로 AB = CD입니다. 그러나 OA와 AB는 원의 반지름과 현의 길이이므로 각의 크기에 따라 달라지며 항상 같지는 않습니다.',
+    },
+    {
+      q: '점 P를 지나고 직선 l에 평행한 직선을 작도할 때 기본이 되는 평행선의 성질은 무엇인가요?',
+      qEn: 'Which parallel line property is fundamentally used when constructing a line parallel to l through point P?',
+      choices: [
+        { label: '동위각의 크기가 같으면 두 직선은 평행하다', isAns: true },
+        { label: '맞꼭지각의 크기는 서로 같다', isAns: false },
+        { label: '삼각형의 세 내각의 합은 180°이다', isAns: false },
+        { label: '평각의 크기는 180°이다', isAns: false },
+      ],
+      expl: '평행선 작도는 크기가 같은 각의 작도를 이용하여 동위각(또는 엇각)의 크기가 같도록 선을 그음으로써 평행선을 완성합니다.',
+    },
+  ];
+  const target = pick(random, questions);
+  const ansIdx = target.choices.findIndex((c) => c.isAns) + 1;
+  return {
+    prompt: target.q,
+    promptEn: target.qEn,
+    expression: '각과 평행선의 작도 원리',
+    answer: String(ansIdx),
+    choices: target.choices.map((c, i) => ({ value: String(i + 1), label: c.label, labelEn: c.label })),
+    explanation: target.expl,
+  };
+}
+
+// [유형 03] 삼각형의 대변과 대각 (RPM #291~#293, #361)
+export function rpmCongTriangleOpposite(random) {
+  const ask = pick(random, ['opp_side', 'opp_angle']);
+
+  if (ask === 'opp_side') {
+    const letters = ['A', 'B', 'C'];
+    const askVertex = pick(random, letters);
+    const sideMap = { A: 'BC', B: 'AC', C: 'AB' };
+    const targetSide = sideMap[askVertex];
+    const choices = [
+      { label: '변 AB', val: 'AB' },
+      { label: '변 BC', val: 'BC' },
+      { label: '변 AC', val: 'AC' },
+    ];
+    const ansIdx = choices.findIndex((c) => c.val === targetSide) + 1;
+    return {
+      prompt: `삼각형 ABC에서 꼭짓점 ${askVertex}(또는 ∠${askVertex})의 대변은 어느 선분인지 구하시오.`,
+      promptEn: `In triangle ABC, which side is opposite to vertex ${askVertex}?`,
+      expression: `△ABC, ∠${askVertex}의 대변`,
+      answer: String(ansIdx),
+      choices: choices.map((c, i) => ({ value: String(i + 1), label: c.label, labelEn: c.label })),
+      explanation: `삼각형에서 한 각과 마주 보고 있는 변을 그 각의 대변이라 합니다. 따라서 ∠${askVertex}의 대변은 변 ${targetSide}입니다.`,
+    };
+  } else {
+    const oppSides = [
+      { side: 'AB', opp: 'C' },
+      { side: 'BC', opp: 'A' },
+      { side: 'AC', opp: 'B' },
+    ];
+    const item = pick(random, oppSides);
+    const choices = [
+      { label: '∠A', val: 'A' },
+      { label: '∠B', val: 'B' },
+      { label: '∠C', val: 'C' },
+    ];
+    const ansIdx = choices.findIndex((c) => c.val === item.opp) + 1;
+    return {
+      prompt: `삼각형 ABC에서 변 ${item.side}의 대각은 어느 각인지 구하시오.`,
+      promptEn: `In triangle ABC, which angle is opposite to side ${item.side}?`,
+      expression: `△ABC, 변 ${item.side}의 대각`,
+      answer: String(ansIdx),
+      choices: choices.map((c, i) => ({ value: String(i + 1), label: c.label, labelEn: c.label })),
+      explanation: `한 변과 마주 보고 있는 꼭짓점의 각을 대각이라 합니다. 따라서 변 ${item.side}의 대각은 ∠${item.opp}입니다.`,
+    };
+  }
+}
+
+// [유형 04] 삼각형의 세 변의 길이의 조건 (삼각형의 성립 조건) (RPM #294~#296, #315~#317, #362, #363)
+export function rpmCongTriangleInequality(random) {
+  const variant = pick(random, ['possible_check', 'count_triangles']);
+  if (variant === 'possible_check') {
+    // 세 변 a <= b <= c. 가능: c < a + b, 불가능: c >= a + b
+    const isPossible = random() < 0.5;
+    let a, b, c;
+    if (isPossible) {
+      a = ri(random, 4, 8);
+      b = ri(random, a, a + 4);
+      c = ri(random, b, a + b - 1);
+    } else {
+      a = ri(random, 3, 6);
+      b = ri(random, a, a + 3);
+      c = a + b + ri(random, 0, 3); // c >= a + b
+    }
+
+    return {
+      prompt: `세 선분의 길이가 각각 ${a}cm, ${b}cm, ${c}cm일 때, 이 세 선분으로 삼각형을 만들 수 있는지 판별하시오.`,
+      promptEn: `Can a triangle be formed with side lengths ${a} cm, ${b} cm, and ${c} cm?`,
+      expression: `세 변 = ${a}cm, ${b}cm, ${c}cm`,
+      answer: isPossible ? '1' : '2',
+      choices: [
+        { value: '1', label: '만들 수 있다 (O)', labelEn: 'Possible' },
+        { value: '2', label: '만들 수 없다 (X)', labelEn: 'Not possible' },
+      ],
+      explanation: `삼각형이 만들어지려면 가장 긴 변의 길이가 나머지 두 변의 길이의 합보다 작아야 합니다 (c < a + b). 가장 긴 변은 ${c}cm이고 나머지 두 변의 합은 ${a} + ${b} = ${a + b}cm이므로, ${isPossible ? `${c} < ${a + b}이므로 삼각형을 만들 수 있습니다.` : `${c} ≥ ${a + b}이므로 삼각형을 만들 수 없습니다.`}`,
+    };
+  } else {
+    // 길이 목록 중 3개를 골라 만들 수 있는 삼각형의 개수
+    // e.g. lengths: [2, 4, 6, 8] or [3, 5, 7, 9]
+    const list = pick(random, [
+      [2, 4, 6, 8],
+      [3, 5, 7, 9],
+      [4, 6, 8, 10],
+      [2, 3, 5, 7],
+    ]);
+    let validCount = 0;
+    for (let i = 0; i < list.length; i++) {
+      for (let j = i + 1; j < list.length; j++) {
+        for (let k = j + 1; k < list.length; k++) {
+          const [x, y, z] = [list[i], list[j], list[k]];
+          if (x + y > z) validCount++;
+        }
+      }
+    }
+    return {
+      prompt: `길이가 각각 [ ${list.map((x) => x + 'cm').join(', ')} ]인 4개의 선분 중 서로 다른 3개의 선분을 택하여 만들 수 있는 삼각형의 개수를 구하시오.`,
+      promptEn: `From lengths [ ${list.map((x) => x + 'cm').join(', ')} ], how many different triangles can be formed by choosing 3 segments?`,
+      expression: `후보: ${list.join(', ')}`,
+      answer: String(validCount),
+      answerSuffix: '개',
+      explanation: `4개 중 3개를 고르는 총 4가지 경우 중 가장 긴 변 < 나머지 두 변의 합 조건을 만족하는 조합을 세면 총 ${validCount}개입니다.`,
+    };
+  }
+}
+
+// [유형 05] 미지수 변이 주어졌을 때 삼각형 성립 범위 (RPM #318, #319, #381)
+export function rpmCongTriangleParamRange(random) {
+  // 두 변이 a, b (a <= b)로 주어지고 세 번째 변이 x
+  // 조건: b - a < x < b + a
+  const a = ri(random, 4, 8);
+  const b = ri(random, a + 1, a + 6);
+  const minX = b - a;
+  const maxX = b + a;
+  const countNatural = maxX - minX - 1; // minX < x < maxX 만족하는 정수 개수
+
+  return {
+    prompt: `삼각형의 세 변의 길이가 ${a}cm, ${b}cm, x cm일 때, 삼각형이 만들어지기 위한 자연수 x의 개수를 구하시오.`,
+    promptEn: `A triangle has side lengths ${a} cm, ${b} cm, and x cm. How many natural numbers can x be?`,
+    expression: `${b} - ${a} < x < ${b} + ${a}`,
+    answer: String(countNatural),
+    answerSuffix: '개',
+    explanation: `삼각형의 세 변의 길이에서 어느 한 변은 나머지 두 변의 차보다 크고 합보다 작아야 합니다. 따라서 ${b} - ${a} < x < ${b} + ${a}, 즉 ${minX} < x < ${maxX}입니다. 이를 만족하는 자연수 x는 ${minX + 1}부터 ${maxX - 1}까지이므로 총 ${countNatural}개입니다.`,
+  };
+}
+
+// [유형 06] 삼각형이 하나로 정해지는 조건 판별 (RPM #323~#326, #365, #366, #382)
+export function rpmCongTriangleDeterminedCond(random) {
+  const scenarios = [
+    {
+      text: '세 변의 길이가 4cm, 5cm, 6cm로 주어질 때',
+      determined: true,
+      expl: '가장 긴 변 6 < 4 + 5를 만족하며, 세 변의 길이가 주어진 경우(SSS)이므로 모양과 크기가 하나로 정해집니다.',
+    },
+    {
+      text: '세 내각의 크기가 50°, 60°, 70°로 주어질 때',
+      determined: false,
+      expl: '세 각의 크기만 주어지면 닮은 삼각형이 무수히 많이 그려지므로 하나로 정해지지 않습니다.',
+    },
+    {
+      text: '두 변 AB = 5cm, BC = 7cm와 그 끼인각 ∠B = 40°가 주어질 때',
+      determined: true,
+      expl: '두 변의 길이와 그 끼인각의 크기가 주어진 경우(SAS)이므로 하나로 정해집니다.',
+    },
+    {
+      text: '두 변 AB = 6cm, AC = 8cm와 끼인각이 아닌 각 ∠B = 30°가 주어질 때',
+      determined: false,
+      expl: '두 변과 그 끼인각이 아닌 다른 각이 주어지면 삼각형이 2개 그려지거나 그려지지 않을 수 있어 하나로 정해지지 않습니다.',
+    },
+    {
+      text: '한 변 BC = 8cm와 양 끝각 ∠B = 50°, ∠C = 60°가 주어질 때',
+      determined: true,
+      expl: '한 변의 길이와 그 양 끝각의 크기가 주어진 경우(ASA)이므로 하나로 정해집니다.',
+    },
+    {
+      text: '세 변의 길이가 3cm, 4cm, 8cm로 주어질 때',
+      determined: false,
+      expl: '가장 긴 변 8이 나머지 두 변의 합 3 + 4 = 7보다 크므로 애초에 삼각형이 만들어지지 않습니다.',
+    },
+  ];
+  const target = pick(random, scenarios);
+  return {
+    prompt: `다음 조건이 주어졌을 때, 삼각형 ABC가 오직 하나로 정해지는지 판별하시오:\n"${target.text}"`,
+    promptEn: `Determine whether triangle ABC is uniquely determined: "${target.text}"`,
+    expression: target.text,
+    answer: target.determined ? '1' : '2',
+    choices: [
+      { value: '1', label: '하나로 정해진다 (O)', labelEn: 'Uniquely determined' },
+      { value: '2', label: '하나로 정해지지 않는다 (X)', labelEn: 'Not uniquely determined' },
+    ],
+    explanation: target.expl,
+  };
+}
+
+// [유형 07] 도형의 합동 성질과 대응변/대응각 (RPM #300~#303, #327~#330, #367, #368)
+export function rpmCongFigureCongruenceProps(random) {
+  // △ABC ≡ △DEF
+  const sideAB = ri(random, 5, 12);
+  const sideBC = ri(random, 7, 15);
+  const angleA = ri(random, 45, 75);
+  const angleB = ri(random, 40, 70);
+  const angleC = 180 - (angleA + angleB);
+
+  const ask = pick(random, ['side_de', 'side_ef', 'angle_d', 'angle_f']);
+  if (ask === 'side_de') {
+    return {
+      prompt: `△ABC ≡ △DEF일 때, 변 AB = ${sideAB}cm, 변 BC = ${sideBC}cm이다. 대응변 DE의 길이를 구하시오.`,
+      promptEn: `Given △ABC ≡ △DEF, with AB = ${sideAB} cm and BC = ${sideBC} cm, find DE.`,
+      expression: `△ABC ≡ △DEF, AB = ${sideAB}cm`,
+      answer: String(sideAB),
+      answerSuffix: 'cm',
+      explanation: `합동인 두 도형에서 대응변의 길이는 서로 같으므로 DE = AB = ${sideAB}cm입니다.`,
+    };
+  } else if (ask === 'side_ef') {
+    return {
+      prompt: `△ABC ≡ △DEF일 때, 변 BC = ${sideBC}cm이다. 대응변 EF의 길이를 구하시오.`,
+      promptEn: `Given △ABC ≡ △DEF, with BC = ${sideBC} cm, find EF.`,
+      expression: `△ABC ≡ △DEF, BC = ${sideBC}cm`,
+      answer: String(sideBC),
+      answerSuffix: 'cm',
+      explanation: `합동인 두 도형에서 대응변의 길이는 같으므로 EF = BC = ${sideBC}cm입니다.`,
+    };
+  } else if (ask === 'angle_d') {
+    return {
+      prompt: `△ABC ≡ △DEF일 때, ∠A = ${angleA}°, ∠B = ${angleB}°이다. 대응각 ∠D의 크기를 구하시오.`,
+      promptEn: `Given △ABC ≡ △DEF with ∠A = ${angleA}° and ∠B = ${angleB}°, find ∠D.`,
+      expression: `△ABC ≡ △DEF, ∠A = ${angleA}°`,
+      answer: String(angleA),
+      answerSuffix: '°',
+      explanation: `대응각의 크기는 서로 같으므로 ∠D = ∠A = ${angleA}°입니다.`,
+    };
+  } else {
+    return {
+      prompt: `△ABC ≡ △DEF일 때, ∠A = ${angleA}°, ∠B = ${angleB}°이다. 대응각 ∠F의 크기를 구하시오.`,
+      promptEn: `Given △ABC ≡ △DEF with ∠A = ${angleA}° and ∠B = ${angleB}°, find ∠F.`,
+      expression: `∠A = ${angleA}°, ∠B = ${angleB}°, ∠F = ∠C`,
+      answer: String(angleC),
+      answerSuffix: '°',
+      explanation: `삼각형 ABC의 세 내각의 합은 180°이므로 ∠C = 180° - (${angleA}° + ${angleB}°) = ${angleC}°입니다. 합동인 삼각형에서 대응각의 크기는 같으므로 ∠F = ∠C = ${angleC}°입니다.`,
+    };
+  }
+}
+
+// [유형 08] 삼각형의 합동 조건 (SSS, SAS, ASA) 판별 (RPM #304~#308, #331~#336, #369, #370)
+export function rpmCongTriangleSssSasAsa(random) {
+  const conditions = [
+    {
+      given: 'AB = DE, BC = EF, CA = FD',
+      ansIdx: 1,
+      expl: '대응하는 세 변의 길이가 각각 같으므로 SSS 합동입니다.',
+    },
+    {
+      given: 'AB = DE, BC = EF, ∠B = ∠E',
+      ansIdx: 2,
+      expl: '대응하는 두 변의 길이가 각각 같고, 그 끼인각의 크기가 같으므로 SAS 합동입니다.',
+    },
+    {
+      given: 'BC = EF, ∠B = ∠E, ∠C = ∠F',
+      ansIdx: 3,
+      expl: '대응하는 한 변의 길이가 같고, 그 양 끝각의 크기가 각각 같으므로 ASA 합동입니다.',
+    },
+    {
+      given: 'AB = DE, ∠A = ∠D, ∠B = ∠E',
+      ansIdx: 3,
+      expl: '대응하는 한 변의 길이가 같고 양 끝각의 크기가 각각 같으므로 ASA 합동입니다.',
+    },
+  ];
+  const target = pick(random, conditions);
+  return {
+    prompt: `△ABC와 △DEF에서 다음 조건이 주어졌을 때, 두 삼각형이 합동이 되는 합동 조건을 구하시오:\n[ ${target.given} ]`,
+    promptEn: `In △ABC and △DEF, identify the congruence criterion for: [ ${target.given} ]`,
+    expression: target.given,
+    answer: String(target.ansIdx),
+    choices: [
+      { value: '1', label: 'SSS 합동', labelEn: 'SSS Congruence' },
+      { value: '2', label: 'SAS 합동', labelEn: 'SAS Congruence' },
+      { value: '3', label: 'ASA 합동', labelEn: 'ASA Congruence' },
+    ],
+    explanation: target.expl,
+  };
+}
+
+// [유형 09] 합동이 되기 위한 추가 조건 찾기 (RPM #337, #338, #371)
+export function rpmCongTriangleAddCondition(random) {
+  const problems = [
+    {
+      given: 'AB = DE, BC = EF',
+      targetCriterion: 'SAS 합동',
+      needed: '∠B = ∠E',
+      expl: '두 변 AB, BC와 DE, EF의 끼인각은 각각 ∠B와 ∠E이므로, SAS 합동이 되려면 ∠B = ∠E가 추가되어야 합니다.',
+    },
+    {
+      given: 'AB = DE, BC = EF',
+      targetCriterion: 'SSS 합동',
+      needed: 'AC = DF',
+      expl: '세 변의 길이가 모두 같아야 하므로 나머지 한 변 AC = DF가 추가되어야 합니다.',
+    },
+    {
+      given: 'BC = EF, ∠B = ∠E',
+      targetCriterion: 'ASA 합동',
+      needed: '∠C = ∠F',
+      expl: '한 변 BC, EF의 양 끝각 중 하나인 ∠B = ∠E가 주어졌으므로, 다른 쪽 끝각인 ∠C = ∠F(또는 ∠A = ∠D)가 추가되어야 합니다.',
+    },
+  ];
+  const target = pick(random, problems);
+  return {
+    prompt: `△ABC와 △DEF에서 [ ${target.given} ]가 주어져 있다. 두 삼각형이 ${target.targetCriterion}이 되기 위해 더 필요한 한 가지 조건을 구하시오.`,
+    promptEn: `In △ABC and △DEF, given [ ${target.given} ], what additional condition is needed for ${target.targetCriterion}?`,
+    expression: `${target.given} => ${target.targetCriterion}`,
+    answer: target.needed,
+    explanation: target.expl,
+  };
+}
+
+// [유형 10] 정삼각형 및 정사각형에서 회전 합동의 활용 (RPM #351, #354, #377, #379, #386)
+export function rpmCongRotationEquilateralSquare(random) {
+  const variant = pick(random, ['equilateral_rotation', 'square_rotation']);
+  if (variant === 'equilateral_rotation') {
+    // 정삼각형 ABC와 정삼각형 ADE가 점 A를 공유
+    // △ABD ≡ △ACE (SAS 합동: AB=AC, AD=AE, ∠BAD = ∠CAE = 60° - ∠CAD)
+    // 따라서 BD = CE
+    const bd = ri(random, 6, 14);
+    return {
+      prompt: `두 정삼각형 ABC와 ADE가 점 A를 꼭짓점으로 공유하고 있다. 선분 BD = ${bd}cm일 때, SAS 합동을 이용하여 대응변 CE의 길이를 구하시오.`,
+      promptEn: `Equilateral triangles ABC and ADE share vertex A. If BD = ${bd} cm, find CE using SAS congruence △ABD ≡ △ACE.`,
+      expression: `△ABD ≡ △ACE (SAS 합동), BD = ${bd}cm`,
+      answer: String(bd),
+      answerSuffix: 'cm',
+      explanation: `정삼각형의 성질에 의해 AB = AC, AD = AE이고, ∠BAD = 60° - ∠DAC = ∠CAE입니다. 따라서 대응하는 두 변의 길이와 그 끼인각이 같으므로 △ABD ≡ △ACE (SAS 합동)입니다. 대응변의 길이가 같으므로 CE = BD = ${bd}cm입니다.`,
+    };
+  } else {
+    // 정사각형 ABCD에서 점 E, F가 각 변에 있어 △ABE ≡ △BCF (SAS 합동)
+    // 두 선분 AF와 BE의 교각은 항상 90°
+    return {
+      prompt: `정사각형 ABCD의 두 변 BC, CD 위에 BE = CF가 되도록 점 E, F를 잡았다. 선분 AE와 선분 BF가 만나는 점을 P라 할 때, 교각 ∠APB의 크기를 구하시오.`,
+      promptEn: `In square ABCD with BE = CF on sides BC and CD, AE and BF intersect at P. Find the angle ∠APB.`,
+      expression: `정사각형 회전 합동, △ABE ≡ △BCF`,
+      answer: '90',
+      answerSuffix: '°',
+      explanation: `정사각형에서 AB = BC, BE = CF, ∠B = ∠C = 90°이므로 △ABE ≡ △BCF (SAS 합동)입니다. 따라서 ∠BAE = ∠CBF입니다. 직각삼각형 ABE에서 ∠BAE + ∠AEB = 90°이므로, ∠CBF + ∠AEB = 90°입니다. 삼각형 PBE에서 두 내각의 합이 90°이므로 교각 ∠APB = 180° - 90° = 90°입니다.`,
+    };
+  }
+}
+
+// [유형 11 (실력 UP)] 직각이등변삼각형의 꼭짓점을 지나는 직선과 합동 (RPM #387)
+export function rpmCongRightIsoscelesAltitude(random) {
+  // 직각이등변삼각형 ABC (∠A = 90°, AB = AC)의 꼭짓점 A를 지나는 직선 l
+  // 점 B, C에서 직선 l에 내린 수선의 발을 D, E라 함
+  // △ABD ≡ △CAE (RHA / 합동)
+  // AD = CE, BD = AE
+  // DE = AD + AE = CE + BD
+  const bd = ri(random, 6, 12);
+  const ce = ri(random, 3, bd - 1);
+  const de = bd + ce;
+
+  const ask = pick(random, ['find_de', 'find_bd']);
+  if (ask === 'find_de') {
+    return {
+      prompt: `AB = AC이고 ∠BAC = 90°인 직각이등변삼각형 ABC의 꼭짓점 A를 지나는 직선 l에 두 점 B, C에서 내린 수선의 발을 각각 D, E라 하자. BD = ${bd}cm, CE = ${ce}cm일 때, 선분 DE의 길이를 구하시오.`,
+      promptEn: `In right isosceles △ABC with AB = AC and ∠A = 90°, perpendiculars from B, C to line l through A have feet D, E. If BD = ${bd} cm and CE = ${ce} cm, find DE.`,
+      expression: `△ABD ≡ △CAE, BD = ${bd}cm, CE = ${ce}cm`,
+      answer: String(de),
+      answerSuffix: 'cm',
+      explanation: `직각삼각형 ABD와 CAE에서 빗변 AB = CA이고, ∠DBA = 90° - ∠DAB = ∠EAC이므로 △ABD ≡ △CAE (합동)입니다. 대응변의 길이가 같으므로 AD = CE = ${ce}cm이고, AE = BD = ${bd}cm입니다. 따라서 DE = AD + AE = ${ce} + ${bd} = ${de}cm입니다.`,
+    };
+  } else {
+    return {
+      prompt: `AB = AC, ∠BAC = 90°인 직각이등변삼각형 ABC의 꼭짓점 A를 지나는 직선 l에 내린 두 수선에 대하여 선분 DE = ${de}cm, CE = ${ce}cm이다. 선분 BD의 길이를 구하시오.`,
+      promptEn: `In right isosceles △ABC, perpendiculars give DE = ${de} cm and CE = ${ce} cm. Find BD.`,
+      expression: `DE = BD + CE = ${de}cm, CE = ${ce}cm`,
+      answer: String(bd),
+      answerSuffix: 'cm',
+      explanation: `△ABD ≡ △CAE에 의해 AD = CE = ${ce}cm이고, DE = AD + AE = CE + BD입니다. 따라서 BD = DE - CE = ${de} - ${ce} = ${bd}cm입니다.`,
+    };
+  }
+}
+
+// [유형 12 (실력 UP)] 정사각형 겹침에서의 합동과 넓이 (RPM #384)
+export function rpmCongSquareOverlapArea(random) {
+  // 한 변의 길이가 L인 두 정사각형. 한 정사각형의 대각선의 교점 O에 다른 정사각형의 한 꼭짓점이 위치
+  // 두 정사각형이 겹치는 사각 영역의 넓이는 회전각도에 관계없이 항상 원래 정사각형 넓이의 1/4!
+  const side = ri(random, 6, 14);
+  const totalArea = side * side;
+  const overlapArea = totalArea / 4;
+
+  return {
+    prompt: `한 변의 길이가 ${side}cm인 두 정사각형이 있다. 한 정사각형의 두 대각선의 교점 O에 다른 정사각형의 한 꼭짓점이 겹쳐져 회전되어 있을 때, 두 정사각형이 겹치는 사각 영역의 넓이를 구하시오.`,
+    promptEn: `Two squares each have side length ${side} cm. One square has a vertex at the diagonal center O of the other. Find the area of their overlapping region.`,
+    expression: `한 변 = ${side}cm, 겹친 넓이 = 전체 넓이 ÷ 4`,
+    answer: String(overlapArea),
+    answerSuffix: 'cm²',
+    explanation: `대각선의 교점 O를 중심으로 겹치는 두 직각삼각형이 합동이 되므로, 회전된 각도에 관계없이 겹치는 사각형의 넓이는 항상 원래 정사각형의 정확히 1/4입니다. 따라서 겹치는 부분의 넓이는 (${side} × ${side}) ÷ 4 = ${totalArea} ÷ 4 = ${overlapArea}cm²입니다.`,
+  };
+}
+
+// [03 단원 실전 다지기] 작도와 합동 전 유형 종합
+export function rpmCongAllTypesMixed(random) {
+  const fns = [
+    rpmCongConstructSegment,
+    rpmCongConstructAngleParallel,
+    rpmCongTriangleOpposite,
+    rpmCongTriangleInequality,
+    rpmCongTriangleParamRange,
+    rpmCongTriangleDeterminedCond,
+    rpmCongFigureCongruenceProps,
+    rpmCongTriangleSssSasAsa,
+    rpmCongTriangleAddCondition,
+    rpmCongRotationEquilateralSquare,
+    rpmCongRightIsoscelesAltitude,
+    rpmCongSquareOverlapArea,
+  ];
+  return pick(random, fns)(random);
+}
+
+// =============================================================
+// [중학 1-2 1학기 기하 총괄평가] 전 범위 20문항 실전 모의고사
+// =============================================================
+export function rpmGeoSemesterOneMockExam(random) {
+  const allGenerators = [
+    // 01 기본도형 (6문항)
+    rpmGeoBasicIntersections,
+    rpmGeoBasicPointsToLines,
+    rpmGeoBasicMidpointSegment,
+    rpmGeoBasicAngleRatio,
+    rpmGeoBasicVerticalAngles,
+    rpmGeoBasicClockAngle,
+    // 02 위치 관계 (7문항)
+    rpmPosSolidSkewEdges,
+    rpmPosSolidEdgePlaneRelations,
+    rpmPosCorrespondingAlternate,
+    rpmPosParallelAngleSolve,
+    rpmPosParallelBentLineSingle,
+    rpmPosPaperFoldAngles,
+    rpmPosSpaceLogicStatements,
+    // 03 작도와 합동 (7문항)
+    rpmCongConstructAngleParallel,
+    rpmCongTriangleInequality,
+    rpmCongTriangleParamRange,
+    rpmCongTriangleDeterminedCond,
+    rpmCongFigureCongruenceProps,
+    rpmCongTriangleSssSasAsa,
+    rpmCongRotationEquilateralSquare,
+  ];
+  const selectedGen = pick(random, allGenerators);
+  const prob = selectedGen(random);
+  return {
+    ...prob,
+    category: '중학 1-2 기하 실전 모의고사',
+    categoryEn: 'Grade 7-2 Geometry Comprehensive Mock Exam',
+  };
+}
+
+
 export const RPM_ADVANCED_ENGINES = {
   // 01 소인수분해 RPM 세부 유형 (RPM 1-1 Pages 10~15)
   'rpm-prime-prop-closest': rpmPrimePropClosest,
@@ -5057,4 +6541,64 @@ export const RPM_ADVANCED_ENGINES = {
 
   // 중학 1-1 전 범위 총괄 실전 모의고사 (RPM 1-1 p.152~173)
   'rpm-semester-one-mock-exam': rpmSemesterOneMockExam,
+
+  // -------------------------------------------------------------
+  // 01 기본도형 세부 응용 유형 (RPM 1-2 p.12~19)
+  // -------------------------------------------------------------
+  'rpm-geo-basic-intersections': rpmGeoBasicIntersections,
+  'rpm-geo-basic-line-rays': rpmGeoBasicLineRays,
+  'rpm-geo-basic-points-lines': rpmGeoBasicPointsToLines,
+  'rpm-geo-basic-midpoint-seg': rpmGeoBasicMidpointSegment,
+  'rpm-geo-basic-angle-classify': rpmGeoBasicAngleClassify,
+  'rpm-geo-basic-straight-angle-eq': rpmGeoBasicStraightAngleEq,
+  'rpm-geo-basic-angle-ratio': rpmGeoBasicAngleRatio,
+  'rpm-geo-basic-angle-multiple': rpmGeoBasicAngleMultipleCond,
+  'rpm-geo-basic-vertical-angles': rpmGeoBasicVerticalAngles,
+  'rpm-geo-basic-vertical-pairs': rpmGeoBasicVerticalAnglePairs,
+  'rpm-geo-basic-perp-distance': rpmGeoBasicPerpendicularDist,
+  'rpm-geo-basic-vertical-multi': rpmGeoBasicVerticalMultiLines,
+  'rpm-geo-basic-clock-angle': rpmGeoBasicClockAngle,
+  'rpm-geo-basic-all-mixed': rpmGeoBasicAllTypesMixed,
+
+  // -------------------------------------------------------------
+  // 02 위치 관계 세부 응용 유형 (RPM 1-2 p.26~43)
+  // -------------------------------------------------------------
+  'rpm-pos-point-line-plane': rpmPosPointLinePlane,
+  'rpm-pos-plane-two-lines': rpmPosPlaneTwoLines,
+  'rpm-pos-solid-skew-edges': rpmPosSolidSkewEdges,
+  'rpm-pos-solid-edge-plane': rpmPosSolidEdgePlaneRelations,
+  'rpm-pos-solid-net-relations': rpmPosSolidNetRelations,
+  'rpm-pos-corresponding-alternate': rpmPosCorrespondingAlternate,
+  'rpm-pos-parallel-angle-solve': rpmPosParallelAngleSolve,
+  'rpm-pos-parallel-condition': rpmPosParallelCondition,
+  'rpm-pos-parallel-bent-single': rpmPosParallelBentLineSingle,
+  'rpm-pos-parallel-bent-multi': rpmPosParallelBentLineMulti,
+  'rpm-pos-parallel-with-polygon': rpmPosParallelWithPolygon,
+  'rpm-pos-parallel-angle-bisector': rpmPosParallelAngleBisector,
+  'rpm-pos-paper-fold-angles': rpmPosPaperFoldAngles,
+  'rpm-pos-parallel-two-pairs': rpmPosParallelTwoPairs,
+  'rpm-pos-space-logic': rpmPosSpaceLogicStatements,
+  'rpm-pos-all-mixed': rpmPosAllTypesMixed,
+
+  // -------------------------------------------------------------
+  // 03 작도와 합동 세부 응용 유형 (RPM 1-2 p.47~59)
+  // -------------------------------------------------------------
+  'rpm-cong-construct-segment': rpmCongConstructSegment,
+  'rpm-cong-construct-angle-parallel': rpmCongConstructAngleParallel,
+  'rpm-cong-triangle-opposite': rpmCongTriangleOpposite,
+  'rpm-cong-triangle-inequality': rpmCongTriangleInequality,
+  'rpm-cong-triangle-param-range': rpmCongTriangleParamRange,
+  'rpm-cong-triangle-determined-cond': rpmCongTriangleDeterminedCond,
+  'rpm-cong-figure-congruence-props': rpmCongFigureCongruenceProps,
+  'rpm-cong-triangle-sss-sas-asa': rpmCongTriangleSssSasAsa,
+  'rpm-cong-triangle-add-condition': rpmCongTriangleAddCondition,
+  'rpm-cong-rotation-equilateral-square': rpmCongRotationEquilateralSquare,
+  'rpm-cong-right-isosceles-altitude': rpmCongRightIsoscelesAltitude,
+  'rpm-cong-square-overlap-area': rpmCongSquareOverlapArea,
+  'rpm-cong-all-mixed': rpmCongAllTypesMixed,
+
+  // -------------------------------------------------------------
+  // 중학 1-2 1학기 기하 전 범위 총괄 모의고사
+  // -------------------------------------------------------------
+  'rpm-geo-semester-one-mock-exam': rpmGeoSemesterOneMockExam,
 };
