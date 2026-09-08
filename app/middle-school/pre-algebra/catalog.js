@@ -178,6 +178,29 @@ import {
   rpmG8RightTriBothCircles,
   rpmG8CirclesAllTypesMixed,
   rpmG8CirclesAdvancedSkillUp,
+  // Middle School 2-2 Chapter 03 & 04
+  rpmG8ParallelogramSides,
+  rpmG8ParallelogramAngles,
+  rpmG8ParallelogramDiagonals,
+  rpmG8ParallelogramAngleBisector,
+  rpmG8ParallelogramConditionIdentify,
+  rpmG8ParallelogramInsideFigure,
+  rpmG8ParallelogramAreaDiagonals,
+  rpmG8ParallelogramAreaPointP,
+  rpmG8ParallelogramMovingPoints,
+  rpmG8ParallelogramAllTypesMixed,
+  rpmG8ParallelogramAdvancedSkillUp,
+  rpmG8RectangleProperties,
+  rpmG8RhombusProperties,
+  rpmG8SquareProperties,
+  rpmG8IsoscelesTrapezoid,
+  rpmG8SpecialQuadConditions,
+  rpmG8MidpointQuadrilaterals,
+  rpmG8ParallelLineTriangleArea,
+  rpmG8TriangleBaseRatioArea,
+  rpmG8TrapezoidDiagonalAreas,
+  rpmG8SpecialQuadsAllTypesMixed,
+  rpmG8SpecialQuadsAdvancedSkillUp,
 } from '../rpmAppliedEngine';
 
 
@@ -587,6 +610,35 @@ export const RPM_CIRCUM_INCENTER_APPLIED_UNITS = [
   { id: 'rpm-g8-circles-advanced-skill-up', label: '[단원 최고수준] 외심과 내심 실력 UP', description: '외심과 꼭짓점에서 내린 수선 사이의 각도 및 최고난도 외심·내심 융합 문제 (RPM p.142~143)', en: ['Circumcenter & Incenter Advanced Challenge', 'Top-tier challenge: angle between circumradius and altitude (∠OAH = |∠B - ∠C|) and synthesis proofs'], make: (random) => rpmG8CirclesAdvancedSkillUp(random) },
 ];
 
+export const RPM_PARALLELOGRAM_APPLIED_UNITS = [
+  { id: 'rpm-g8-parallelogram-sides', label: '[평행사변형 01] 두 쌍의 대변의 길이의 성질', description: '두 쌍의 대변의 길이가 각각 같음을 이용한 미지수 및 둘레의 길이 계산', en: ['Parallelogram Type 01: Opposite Sides Equality', 'Solve for unknown parameters and perimeter using equal opposite sides of a parallelogram'], make: (random) => rpmG8ParallelogramSides(random) },
+  { id: 'rpm-g8-parallelogram-angles', label: '[평행사변형 02] 대각 및 이웃한 두 내각의 크기', description: '이웃한 두 내각의 합이 180°임을 이용하여 주어진 각의 비로부터 각도 구하기', en: ['Parallelogram Type 02: Consecutive & Opposite Angles', 'Compute angle measures using consecutive angles sum to 180° in a parallelogram'], make: (random) => rpmG8ParallelogramAngles(random) },
+  { id: 'rpm-g8-parallelogram-diagonals', label: '[평행사변형 03] 두 대각선이 서로를 이등분하는 성질', description: '두 대각선의 교점에서 분할된 선분의 길이로부터 대각선의 길이의 합 구하기', en: ['Parallelogram Type 03: Diagonal Bisection Property', 'Calculate diagonal lengths and their sum using diagonal mutual bisection property'], make: (random) => rpmG8ParallelogramDiagonals(random) },
+  { id: 'rpm-g8-parallelogram-angle-bisector', label: '[평행사변형 04] 각의 이등분선과 이등변삼각형', description: '각의 이등분선과 엇각으로 생기는 이등변삼각형을 이용하여 변의 길이 구하기', en: ['Parallelogram Type 04: Angle Bisector & Isosceles Triangle', 'Find segment lengths using isosceles triangles formed by angle bisectors and alternate angles'], make: (random) => rpmG8ParallelogramAngleBisector(random) },
+  { id: 'rpm-g8-parallelogram-condition-identify', label: '[평행사변형 05] 평행사변형이 되는 5가지 조건 판별', description: '주어진 사각형의 변, 각, 대각선 조건 중 평행사변형이 되는 조건 정확히 판별하기', en: ['Parallelogram Type 05: Five Parallelogram Conditions', 'Identify valid and invalid conditions for a quadrilateral to be a parallelogram'], make: (random) => rpmG8ParallelogramConditionIdentify(random) },
+  { id: 'rpm-g8-parallelogram-inside-figure', label: '[평행사변형 06] 평행사변형 내부 사각형의 판별', description: '대각선 위의 점이나 각의 이등분선에 의해 내부에 만들어지는 사각형 성질 파악', en: ['Parallelogram Type 06: Interior Quadrilateral Classification', 'Determine the classification of inner quadrilaterals constructed inside a parallelogram'], make: (random) => rpmG8ParallelogramInsideFigure(random) },
+  { id: 'rpm-g8-parallelogram-area-diagonals', label: '[평행사변형 07] 두 대각선에 의한 넓이의 4등분', description: '두 대각선에 의해 나뉘는 4개의 삼각형의 넓이가 모두 같음을 이용한 넓이 계산', en: ['Parallelogram Type 07: Diagonal Quarter Area Division', 'Apply equal area property of the 4 triangles divided by both diagonals in a parallelogram'], make: (random) => rpmG8ParallelogramAreaDiagonals(random) },
+  { id: 'rpm-g8-parallelogram-area-point-p', label: '[평행사변형 08] 내부의 점 P와 마주 보는 삼각형 넓이 합', description: '내부의 점 P에 대하여 마주 보는 두 삼각형의 넓이의 합이 전체의 절반임을 활용', en: ['Parallelogram Type 08: Interior Point P Opposing Triangle Areas', 'Use Area(PAB) + Area(PCD) = (1/2)Area(ABCD) to find missing triangle areas'], make: (random) => rpmG8ParallelogramAreaPointP(random) },
+  { id: 'rpm-g8-parallelogram-moving-points', label: '[평행사변형 09] 동점 P, Q의 이동과 평행사변형 완성 (UP)', description: '두 꼭짓점에서 서로 다른 속력으로 움직이는 점에 의해 평행사변형이 되는 시간 계산', en: ['Parallelogram Type 09 (UP): Moving Points Parallelogram Time', 'Calculate the elapsed time for moving points along sides to form a new parallelogram'], make: (random) => rpmG8ParallelogramMovingPoints(random) },
+  { id: 'rpm-g8-parallelogram-all-types-mixed', label: '[단원 실전 다지기] 평행사변형 전 유형 실전 종합', description: '변, 각, 대각선, 조건 판별, 넓이 분할, 동점 이동 등 평행사변형 전 유형 종합', en: ['Parallelogram Comprehensive Practice', 'Mixed applied problems across all parallelogram side, angle, condition, and area types'], make: (random) => rpmG8ParallelogramAllTypesMixed(random) },
+  { id: 'rpm-g8-parallelogram-advanced-skill-up', label: '[단원 최고수준] 평행사변형 실력 UP', description: '변의 중점과 대각선 3등분선 교점 성질을 활용한 최고난도 선분 길이 추론 (RPM p.144~145)', en: ['Parallelogram Advanced Challenge', 'Advanced challenge: diagonal trisection proofs via midpoints and centroid properties'], make: (random) => rpmG8ParallelogramAdvancedSkillUp(random) },
+];
+
+export const RPM_SPECIAL_QUADS_APPLIED_UNITS = [
+  { id: 'rpm-g8-rectangle-properties', label: '[직사각형 01] 직사각형의 성질 (대각선 길이와 이등분)', description: '직사각형의 두 대각선의 길이가 서로 같고 이등분됨을 이용한 대각선 길이 계산', en: ['Rectangle Type 01: Equal Diagonal Bisection Property', 'Apply equal diagonal length and bisection properties to calculate rectangle diagonals'], make: (random) => rpmG8RectangleProperties(random) },
+  { id: 'rpm-g8-rhombus-properties', label: '[마름모 02] 마름모의 성질과 두 대각선 넓이 공식', description: '마름모의 두 대각선이 서로를 수직이등분함을 이용한 대각선 곱 마름모 넓이 계산', en: ['Rhombus Type 02: Perpendicular Diagonals Area Formula', 'Compute rhombus area using (1/2) * d1 * d2 from perpendicular diagonal bisection'], make: (random) => rpmG8RhombusProperties(random) },
+  { id: 'rpm-g8-square-properties', label: '[정사각형 03] 정사각형의 대각선과 넓이', description: '정사각형의 대각선 길이로부터 마름모 넓이 공식을 적용하여 넓이 구하기', en: ['Square Type 03: Diagonal Length & Area', 'Determine square area from diagonal length using perpendicular bisector properties'], make: (random) => rpmG8SquareProperties(random) },
+  { id: 'rpm-g8-isosceles-trapezoid', label: '[등변사다리꼴 04] 등변사다리꼴의 밑각과 꼭지각의 성질', description: '밑변의 양 끝각이 같고 평행선 사이의 내각 합이 180°임을 이용한 각도 계산', en: ['Isosceles Trapezoid Type 04: Base & Consecutive Angles', 'Calculate angle measures using equal base angles and consecutive angle sum of 180°'], make: (random) => rpmG8IsoscelesTrapezoid(random) },
+  { id: 'rpm-g8-special-quad-conditions', label: '[사각형의 관계 05] 특별한 사각형이 되는 조건 판별', description: '평행사변형이 직사각형/마름모가 되는 조건, 직사각형/마름모가 정사각형이 되는 조건', en: ['Special Quadrilaterals Type 05: Transition Conditions', 'Determine criteria for parallelogram to become rectangle/rhombus and to square'], make: (random) => rpmG8SpecialQuadConditions(random) },
+  { id: 'rpm-g8-midpoint-quadrilaterals', label: '[중점 사각형 06] 각 변의 중점을 연결하여 만든 사각형', description: '임의 사각형, 직사각형, 마름모, 정사각형, 등변사다리꼴의 중점 연결 사각형 판별', en: ['Special Quadrilaterals Type 06: Midpoint-Connected Quadrilaterals', 'Classify quadrilaterals formed by joining midpoints of various base quadrilaterals'], make: (random) => rpmG8MidpointQuadrilaterals(random) },
+  { id: 'rpm-g8-parallel-line-triangle-area', label: '[평행선과 넓이 07] 밑변 공유 삼각형과 분할 넓이', description: '평행선 사이의 밑변을 공유하는 두 삼각형의 넓이가 같음을 이용한 부분 삼각형 넓이', en: ['Parallel Lines & Area Type 07: Shared Base Triangles', 'Solve area problems using equal area of triangles with same base between parallel lines'], make: (random) => rpmG8ParallelLineTriangleArea(random) },
+  { id: 'rpm-g8-triangle-base-ratio-area', label: '[높이가 같은 삼각형 08] 밑변의 길이의 비와 넓이의 비', description: '높이가 같은 삼각형에서 밑변의 길이의 비가 넓이의 비와 같음을 이용한 넓이 분할', en: ['Triangles with Same Height Type 08: Base Ratio Equals Area Ratio', 'Calculate sub-triangle areas using base length ratio proportionality for equal-height triangles'], make: (random) => rpmG8TriangleBaseRatioArea(random) },
+  { id: 'rpm-g8-trapezoid-diagonal-areas', label: '[사다리꼴과 넓이 09] 대각선 분할 삼각형 넓이 종합', description: '사다리꼴의 대각선 교점에 의해 생기는 4개 삼각형의 밑변비와 넓이의 종합 계산', en: ['Trapezoid & Area Type 09: Four Divided Triangles Area Synthesis', 'Synthesize all 4 sub-triangle areas created by diagonal intersection in a trapezoid'], make: (random) => rpmG8TrapezoidDiagonalAreas(random) },
+  { id: 'rpm-g8-special-quads-all-types-mixed', label: '[단원 실전 다지기] 여러 가지 사각형 전 유형 종합', description: '직사각형, 마름모, 정사각형, 등변사다리꼴, 중점 사각형, 평행선과 넓이 전 유형 종합', en: ['Special Quadrilaterals Comprehensive Practice', 'Mixed exam practice across all special quadrilaterals and parallel area properties'], make: (random) => rpmG8SpecialQuadsAllTypesMixed(random) },
+  { id: 'rpm-g8-special-quads-advanced-skill-up', label: '[단원 최고수준] 여러 가지 사각형 실력 UP', description: '정사각형 대각선 교점을 중심으로 회전하는 합동 정사각형의 불변 겹침 넓이 (RPM p.146~147)', en: ['Special Quadrilaterals Advanced Challenge', 'Top challenge: invariant 1/4 area overlap of rotating congruent square centered at diagonal intersection'], make: (random) => rpmG8SpecialQuadsAdvancedSkillUp(random) },
+];
+
+
 
 
 
@@ -606,6 +658,8 @@ const SOURCE_GROUPS = [
   ['중2-1 총괄 모의고사', ['pre-algebra', 'kr-middle-2'], RPM_GRADE8_FINAL_MOCK_UNITS],
   ['이등변삼각형', ['pre-algebra', 'kr-middle-2'], RPM_ISOSCELES_TRIANGLES_APPLIED_UNITS],
   ['삼각형의 외심과 내심', ['pre-algebra', 'kr-middle-2'], RPM_CIRCUM_INCENTER_APPLIED_UNITS],
+  ['평행사변형', ['pre-algebra', 'kr-middle-2'], RPM_PARALLELOGRAM_APPLIED_UNITS],
+  ['여러 가지 사각형', ['pre-algebra', 'kr-middle-2'], RPM_SPECIAL_QUADS_APPLIED_UNITS],
   ['문자와 식', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], [...ALGEBRA_UNITS, ...RPM_ALGEBRA_APPLIED_UNITS]],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], COORDINATE_UNITS],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'algebra-1'], PROPORTION_UNITS],
@@ -827,6 +881,32 @@ const UNIT_TIERS = {
   'rpm-g8-right-tri-both-circles': 'intermediate',
   'rpm-g8-circles-all-types-mixed': 'advanced',
   'rpm-g8-circles-advanced-skill-up': 'advanced',
+
+  // RPM 2-2 Chapter 03 평행사변형
+  'rpm-g8-parallelogram-sides': 'basic',
+  'rpm-g8-parallelogram-angles': 'basic',
+  'rpm-g8-parallelogram-diagonals': 'basic',
+  'rpm-g8-parallelogram-angle-bisector': 'basic',
+  'rpm-g8-parallelogram-condition-identify': 'basic',
+  'rpm-g8-parallelogram-inside-figure': 'intermediate',
+  'rpm-g8-parallelogram-area-diagonals': 'intermediate',
+  'rpm-g8-parallelogram-area-point-p': 'intermediate',
+  'rpm-g8-parallelogram-moving-points': 'intermediate',
+  'rpm-g8-parallelogram-all-types-mixed': 'advanced',
+  'rpm-g8-parallelogram-advanced-skill-up': 'advanced',
+
+  // RPM 2-2 Chapter 04 여러 가지 사각형
+  'rpm-g8-rectangle-properties': 'basic',
+  'rpm-g8-rhombus-properties': 'basic',
+  'rpm-g8-square-properties': 'basic',
+  'rpm-g8-isosceles-trapezoid': 'basic',
+  'rpm-g8-special-quad-conditions': 'basic',
+  'rpm-g8-midpoint-quadrilaterals': 'intermediate',
+  'rpm-g8-parallel-line-triangle-area': 'intermediate',
+  'rpm-g8-triangle-base-ratio-area': 'intermediate',
+  'rpm-g8-trapezoid-diagonal-areas': 'intermediate',
+  'rpm-g8-special-quads-all-types-mixed': 'advanced',
+  'rpm-g8-special-quads-advanced-skill-up': 'advanced',
 
 
 

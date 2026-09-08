@@ -429,6 +429,36 @@ const zhHK = {
   'rpm-g8-circles-all-types-mixed': '三角形外心與內心全題型實戰綜合複習',
   'rpm-g8-circles-advanced-skill-up': '三角形外心與內心最高難度實力UP進階題',
 
+  // -------------------------------------------------------------
+  // RPM [중2-2] 03 평행사변형 (平行四邊形)
+  // -------------------------------------------------------------
+  'rpm-g8-parallelogram-sides': '平行四邊形對邊等長性質與周長計算',
+  'rpm-g8-parallelogram-angles': '平行四邊形對角相等與鄰角互補（180°）性質',
+  'rpm-g8-parallelogram-diagonals': '平行四邊形對角線互相平分性質與長度求和',
+  'rpm-g8-parallelogram-angle-bisector': '平行四邊形角平分線與內錯角所生等腰三角形',
+  'rpm-g8-parallelogram-condition-identify': '判定平行四邊形之五大充分條件判別',
+  'rpm-g8-parallelogram-inside-figure': '平行四邊形內部特殊連線所生四邊形判別',
+  'rpm-g8-parallelogram-area-diagonals': '平行四邊形兩對角線四等分面積性質',
+  'rpm-g8-parallelogram-area-point-p': '平行四邊形內部點P相對兩三角形面積和為一半',
+  'rpm-g8-parallelogram-moving-points': '邊上兩動點P、Q運動構成平行四邊形時間計算',
+  'rpm-g8-parallelogram-all-types-mixed': '平行四邊形全題型實戰綜合複習',
+  'rpm-g8-parallelogram-advanced-skill-up': '平行四邊形最高難度實力UP進階題（RPM p.144~145）',
+
+  // -------------------------------------------------------------
+  // RPM [중2-2] 04 여러 가지 사각형 (特殊四邊形與面積)
+  // -------------------------------------------------------------
+  'rpm-g8-rectangle-properties': '矩形性質：四內角皆為直角與對角線等長平分',
+  'rpm-g8-rhombus-properties': '菱形性質：四邊等長與對角線互相垂直平分面積',
+  'rpm-g8-square-properties': '正方形性質：兼具矩形菱形性質與對角線求面積',
+  'rpm-g8-isosceles-trapezoid': '等腰梯形性質：底角相等、腰長相等與對角線等長',
+  'rpm-g8-special-quad-conditions': '平行四邊形轉化為矩形、菱形、正方形條件判定',
+  'rpm-g8-midpoint-quadrilaterals': '連接各類四邊形各邊中點所構成之四邊形分類',
+  'rpm-g8-parallel-line-triangle-area': '同底等高平行線間三角形面積相等性質',
+  'rpm-g8-triangle-base-ratio-area': '等高三角形面積比等於底邊長度比',
+  'rpm-g8-trapezoid-diagonal-areas': '梯形對角線交點分割四三角形面積綜合計算',
+  'rpm-g8-special-quads-all-types-mixed': '特殊四邊形全題型實戰綜合複習',
+  'rpm-g8-special-quads-advanced-skill-up': '特殊四邊形最高難度實力UP進階題（RPM p.146~147）',
+
 
 
 

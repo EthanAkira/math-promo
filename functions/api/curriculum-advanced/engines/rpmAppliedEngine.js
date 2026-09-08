@@ -13820,6 +13820,518 @@ export function rpmG8CirclesAdvancedSkillUp(random) {
 }
 
 
+
+// =============================================================
+// [중2-2] 03 평행사변형 & 04 여러 가지 사각형
+// =============================================================
+// RPM Middle School 2-2 Applied Problem Generators
+// CHAPTER 03: 평행사변형 (RPM 2-2 Pages 38 ~ 47)
+// CHAPTER 04: 여러 가지 사각형 (RPM 2-2 Pages 52 ~ 65)
+
+// ----------------------------------------------------
+// CHAPTER 03: 평행사변형 (Parallelogram)
+// ----------------------------------------------------
+
+// 1. [평행사변형 01] 대변의 길이의 성질 (두 쌍의 대변의 길이는 각각 같다)
+export function rpmG8ParallelogramSides(random) {
+  // AB = CD, AD = BC
+  // 2x + 1 = x + 5 => x = 4 => AB = 9
+  // 3y - 2 = y + 6 => 2y = 8 => y = 4 => AD = 10
+  const x = Math.floor(random() * 6) + 2; // 2 ~ 7
+  const y = Math.floor(random() * 6) + 2;
+  const ab = 2 * x + 3;
+  const cd = x + (x + 3);
+  const bc = 3 * y - 1;
+  const ad = y + (2 * y - 1);
+  const perimeter = 2 * (ab + bc);
+  const { choicesKo, choicesEn, answer } = makeChoices(random, perimeter, (v, r) => v + [-8, -4, -2, 2, 4, 8][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `평행사변형 ABCD에서 AB = 2x + 3, CD = x + ${x + 3}, BC = 3y - 1, AD = y + ${2 * y - 1} 일 때, 평행사변형 ABCD의 둘레의 길이는?`,
+    promptEn: `In parallelogram ABCD, AB = 2x + 3, CD = x + ${x + 3}, BC = 3y - 1, and AD = y + ${2 * y - 1}. Find the perimeter of ABCD.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `평행사변형의 두 쌍의 대변의 길이는 같으므로 AB = CD 에서 2x + 3 = x + ${x + 3} 이므로 x = ${x} 이고, AB = CD = ${ab} cm 입니다. 또한 BC = AD 에서 3y - 1 = y + ${2 * y - 1} 이므로 y = ${y} 이고, BC = AD = ${bc} cm 입니다. 따라서 둘레의 길이는 2 × (${ab} + ${bc}) = ${perimeter} cm 입니다.`,
+    explanationEn: `Opposite sides are equal: AB = CD => x = ${x} and AB = ${ab} cm; BC = AD => y = ${y} and BC = ${bc} cm. Perimeter = 2(${ab} + ${bc}) = ${perimeter} cm.`
+  };
+}
+
+// 2. [평행사변형 02] 대각의 크기의 성질 (이웃한 두 내각의 합은 180°)
+export function rpmG8ParallelogramAngles(random) {
+  // ∠A + ∠B = 180°, ∠A : ∠B = m : n
+  const pairs = [[2, 1], [3, 2], [3, 1], [4, 1], [5, 1], [5, 4], [7, 2]];
+  const [m, n] = pairs[Math.floor(random() * pairs.length)];
+  const unit = 180 / (m + n);
+  const angleA = m * unit;
+  const angleB = n * unit;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, angleA, (v, r) => v + [-15, -10, -5, 5, 10, 15][Math.floor(r() * 6)], (v) => `${v}°`, (v) => `${v}°`);
+  return {
+    prompt: `평행사변형 ABCD에서 이웃하는 두 내각의 크기의 비가 ∠A : ∠B = ${m} : ${n} 일 때, ∠A의 크기는?`,
+    promptEn: `In parallelogram ABCD, the ratio of adjacent angles is ∠A : ∠B = ${m} : ${n}. Find ∠A.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `평행사변형에서 이웃하는 두 내각의 크기의 합은 180° 이므로 ∠A + ∠B = 180° 입니다. 따라서 ∠A = 180° × (${m} / ${m + n}) = ${angleA}° 입니다.`,
+    explanationEn: `Adjacent angles in a parallelogram add up to 180°: ∠A + ∠B = 180°. Thus ∠A = 180° × (${m} / ${m + n}) = ${angleA}°.`
+  };
+}
+
+// 3. [평행사변형 03] 대각선의 성질 (두 대각선은 서로 다른 것을 이등분한다)
+export function rpmG8ParallelogramDiagonals(random) {
+  const oa = Math.floor(random() * 6) + 4; // 4 ~ 9
+  const ob = Math.floor(random() * 6) + 5; // 5 ~ 10
+  const ac = 2 * oa;
+  const bd = 2 * ob;
+  const sumDiag = ac + bd;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, sumDiag, (v, r) => v + [-6, -4, -2, 2, 4, 6][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `평행사변형 ABCD의 두 대각선의 교점을 O라 하자. OA = ${oa} cm, OB = ${ob} cm 일 때, 두 대각선의 길이의 합 AC + BD 는?`,
+    promptEn: `In parallelogram ABCD, the diagonals intersect at O. If OA = ${oa} cm and OB = ${ob} cm, find AC + BD.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `평행사변형의 두 대각선은 서로 다른 것을 이등분하므로 AC = 2 × OA = ${ac} cm, BD = 2 × OB = ${bd} cm 입니다. 따라서 AC + BD = ${ac} + ${bd} = ${sumDiag} cm 입니다.`,
+    explanationEn: `Diagonals bisect each other: AC = 2(OA) = ${ac} cm, BD = 2(OB) = ${bd} cm. AC + BD = ${sumDiag} cm.`
+  };
+}
+
+// 4. [평행사변형 04] 평행사변형과 각의 이등분선 (이등변삼각형 생성)
+export function rpmG8ParallelogramAngleBisector(random) {
+  // Angle bisector of A meets BC at E.
+  // ∠BAE = ∠DAE = (1/2)∠A. By alt angle, ∠BEA = ∠DAE = ∠BAE => △ABE is isosceles with AB = BE!
+  // AB = a, AD = BC = b (b > a). EC = BC - BE = b - a.
+  const a = Math.floor(random() * 6) + 5; // 5 ~ 10
+  const diff = Math.floor(random() * 5) + 3; // 3 ~ 7
+  const b = a + diff; // 8 ~ 17
+  const ec = diff;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, ec, (v, r) => v + [-3, -2, -1, 1, 2, 3][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `평행사변형 ABCD에서 ∠A의 이등분선이 변 BC와 점 E에서 만난다. AB = ${a} cm, AD = ${b} cm 일 때, 선분 EC의 길이는?`,
+    promptEn: `In parallelogram ABCD, the bisector of ∠A meets BC at E. If AB = ${a} cm and AD = ${b} cm, find EC.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `AD ∥ BC 이므로 엇각의 성질에 의해 ∠BEA = ∠DAE = ∠BAE 입니다. 따라서 △ABE는 AB = BE 인 이등변삼각형이므로 BE = AB = ${a} cm 입니다. BC = AD = ${b} cm 이므로 EC = BC - BE = ${b} - ${a} = ${ec} cm 입니다.`,
+    explanationEn: `Alternate angles show ∠BEA = ∠BAE, making △ABE isosceles: BE = AB = ${a} cm. Since BC = AD = ${b} cm, EC = ${b} - ${a} = ${ec} cm.`
+  };
+}
+
+// 5. [평행사변형 05] 평행사변형이 되는 조건 판별
+export function rpmG8ParallelogramConditionIdentify(random) {
+  const validConditions = [
+    { ko: '두 쌍의 대변이 각각 평행하다.', en: 'Two pairs of opposite sides are parallel.' },
+    { ko: '두 쌍의 대변의 길이가 각각 같다.', en: 'Two pairs of opposite sides are equal in length.' },
+    { ko: '두 쌍의 대각의 크기가 각각 같다.', en: 'Two pairs of opposite angles are equal.' },
+    { ko: '두 대각선이 서로 다른 것을 이등분한다.', en: 'The diagonals bisect each other.' },
+    { ko: '한 쌍의 대변이 평행하고 그 길이가 같다.', en: 'One pair of opposite sides is parallel and equal in length.' }
+  ];
+  const invalidConditions = [
+    { ko: '한 쌍의 대변이 평행하고 다른 한 쌍의 대변의 길이가 같다.', en: 'One pair of opposite sides is parallel and the other pair is equal in length (could be isosceles trapezoid).' },
+    { ko: '두 대각선의 길이가 서로 같다.', en: 'The diagonals are equal in length (could be isosceles trapezoid).' },
+    { ko: '이웃하는 두 내각의 크기가 같다.', en: 'Adjacent interior angles are equal (could be general trapezoid).' },
+    { ko: '두 대각선이 서로 수직으로 만난다.', en: 'The diagonals are perpendicular (could be kite).' }
+  ];
+  const targetInvalid = invalidConditions[Math.floor(random() * invalidConditions.length)];
+  const poolValid = shuffle(random, validConditions).slice(0, 4);
+  const options = shuffle(random, [
+    { ko: targetInvalid.ko, en: targetInvalid.en, isRight: true },
+    ...poolValid.map(v => ({ ko: v.ko, en: v.en, isRight: false }))
+  ]);
+  const correctIdx = options.findIndex(o => o.isRight) + 1;
+  return {
+    prompt: `다음 보기 중 사각형 ABCD가 항상 평행사변형이 되는 조건이 아닌 것은?`,
+    promptEn: `Which of the following conditions does NOT guarantee that quadrilateral ABCD is a parallelogram?`,
+    kind: 'choice',
+    choicesKo: options.map(o => o.ko),
+    choicesEn: options.map(o => o.en),
+    answer: String(correctIdx),
+    explanation: `[${targetInvalid.ko}]은 평행사변형이 되는 5가지 조건에 해당하지 않으며, 등변사다리꼴이나 연꼴 등의 반례가 존재할 수 있습니다.`,
+    explanationEn: `[${targetInvalid.en}] does not guarantee a parallelogram (e.g. an isosceles trapezoid or kite satisfies this without being a parallelogram).`
+  };
+}
+
+// 6. [평행사변형 06] 평행사변형이 되는 조건의 응용 (내부 사각형)
+export function rpmG8ParallelogramInsideFigure(random) {
+  // In parallelogram ABCD, points E, F on AC such that AE = CF.
+  // Then quadrilateral EBFD is a parallelogram because its diagonals bisect each other!
+  const modes = [
+    {
+      name: '대각선 위의 점',
+      descKo: '대각선 AC 위에 AE = CF 가 되도록 두 점 E, F를 잡을 때',
+      descEn: 'Points E and F lie on diagonal AC such that AE = CF',
+      reasonKo: '두 대각선이 서로 다른 것을 이등분하므로',
+      reasonEn: 'its diagonals bisect each other'
+    },
+    {
+      name: '각의 이등분선 교점',
+      descKo: '두 쌍의 대각의 이등분선으로 둘러싸인 사각형',
+      descEn: 'The quadrilateral enclosed by the bisectors of opposite angles',
+      reasonKo: '두 쌍의 대각의 크기가 각각 같으므로',
+      reasonEn: 'opposite angles are equal'
+    }
+  ];
+  const m = modes[Math.floor(random() * modes.length)];
+  return {
+    prompt: `평행사변형 ABCD에서 ${m.descKo} 만들어지는 사각형은 어떤 사각형인가?`,
+    promptEn: `In parallelogram ABCD, ${m.descEn}. What kind of quadrilateral is formed?`,
+    kind: 'choice',
+    choicesKo: ['평행사변형', '직사각형', '마름모', '정사각형', '등변사다리꼴'],
+    choicesEn: ['Parallelogram', 'Rectangle', 'Rhombus', 'Square', 'Isosceles Trapezoid'],
+    answer: '1',
+    explanation: `평행사변형 ABCD에서 ${m.descKo} 만들어지는 사각형은 [${m.reasonKo}] 평행사변형입니다.`,
+    explanationEn: `The quadrilateral formed is a Parallelogram because ${m.reasonEn}.`
+  };
+}
+
+// 7. [평행사변형 07] 평행사변형과 넓이 (1) - 대각선에 의한 4분할
+export function rpmG8ParallelogramAreaDiagonals(random) {
+  const totalArea = Math.floor(random() * 15) * 4 + 24; // multiple of 4: 24 ~ 80
+  const subArea = totalArea / 4;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, subArea, (v, r) => v + [-6, -4, -2, 2, 4, 6][Math.floor(r() * 6)], (v) => `${v} cm²`, (v) => `${v} cm²`);
+  return {
+    prompt: `넓이가 ${totalArea} cm² 인 평행사변형 ABCD에서 두 대각선의 교점을 O라 할 때, 삼각형 ABO의 넓이는?`,
+    promptEn: `In parallelogram ABCD with area ${totalArea} cm², the diagonals intersect at O. Find the area of △ABO.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `평행사변형의 두 대각선은 평행사변형의 넓이를 넓이가 같은 4개의 삼각형으로 나눕니다. 따라서 △ABO = (1/4) × □ABCD = (1/4) × ${totalArea} = ${subArea} cm² 입니다.`,
+    explanationEn: `The two diagonals divide the parallelogram into four triangles of equal area: Area(△ABO) = (1/4) × ${totalArea} = ${subArea} cm².`
+  };
+}
+
+// 8. [평행사변형 08] 평행사변형과 넓이 (2) - 내부의 점 P
+export function rpmG8ParallelogramAreaPointP(random) {
+  // △PAB + △PCD = △PDA + △PBC = (1/2)□ABCD
+  const totalArea = (Math.floor(random() * 16) + 15) * 2; // even: 30 ~ 60
+  const halfArea = totalArea / 2;
+  const areaPAB = Math.floor(random() * (halfArea - 10)) + 4;
+  const areaPCD = halfArea - areaPAB;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, areaPCD, (v, r) => v + [-5, -3, -2, 2, 3, 5][Math.floor(r() * 6)], (v) => `${v} cm²`, (v) => `${v} cm²`);
+  return {
+    prompt: `넓이가 ${totalArea} cm² 인 평행사변형 ABCD 내부의 한 점 P에 대하여 삼각형 PAB의 넓이가 ${areaPAB} cm² 일 때, 삼각형 PCD의 넓이는?`,
+    promptEn: `In parallelogram ABCD with area ${totalArea} cm², P is an interior point. If Area(△PAB) = ${areaPAB} cm², find Area(△PCD).`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `평행사변형 내부의 점 P에 대하여 마주 보는 두 삼각형의 넓이의 합은 평행사변형 넓이의 절반입니다: △PAB + △PCD = (1/2) × □ABCD = ${halfArea} cm². 따라서 △PCD = ${halfArea} - ${areaPAB} = ${areaPCD} cm² 입니다.`,
+    explanationEn: `For any interior point P, Area(△PAB) + Area(△PCD) = (1/2)Area(ABCD) = ${halfArea} cm². Thus Area(△PCD) = ${halfArea} - ${areaPAB} = ${areaPCD} cm².`
+  };
+}
+
+// 9. [평행사변형 09] 평행사변형과 동점 P, Q의 이동 (유형 UP)
+export function rpmG8ParallelogramMovingPoints(random) {
+  // Point P starts from A along AD at speed p cm/s.
+  // Point Q starts from C along CB at speed q cm/s.
+  // Quad AQCP is parallelogram when AP = CQ => p * t = q * t => usually P starts from A, Q from B at different speeds!
+  // P starts from A towards D at v1 cm/s (AP = v1 * t)
+  // Q starts from C towards B at v2 cm/s (CQ = v2 * t)
+  // When is AQCP a parallelogram? AP = CQ => v1 * t = v2 * t is only t=0 if v1 != v2.
+  // So standard RPM problem:
+  // AD = BC = L cm. P starts from A towards D at 2 cm/s. Q starts from B towards C at 3 cm/s.
+  // Then BQ = 3t, so QC = L - 3t. For AQCP to be parallelogram, AP = QC => 2t = L - 3t => 5t = L => t = L / 5 !
+  const t = Math.floor(random() * 5) + 3; // 3 ~ 7 seconds
+  const v1 = 2;
+  const v2 = 3;
+  const L = (v1 + v2) * t;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, t, (v, r) => v + [-3, -2, -1, 1, 2, 3][Math.floor(r() * 6)], (v) => `${v}초 후`, (v) => `${v} seconds`);
+  return {
+    prompt: `AD = BC = ${L} cm 인 평행사변형 ABCD에서 점 P는 꼭짓점 A를 출발하여 변 AD 위를 매초 2 cm의 속력으로 점 D까지 이동하고, 점 Q는 동시에 꼭짓점 B를 출발하여 변 BC 위를 매초 3 cm의 속력으로 점 C까지 이동한다. 사각형 APCQ가 평행사변형이 되는 것은 출발한 지 몇 초 후인가?`,
+    promptEn: `In parallelogram ABCD with AD = BC = ${L} cm, point P moves from A to D along AD at 2 cm/s, and point Q moves from B to C along BC at 3 cm/s. After how many seconds is APCQ a parallelogram?`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `t초 후 AP = 2t cm 이고, BQ = 3t cm 이므로 QC = BC - BQ = ${L} - 3t cm 입니다. 사각형 APCQ에서 AP ∥ QC 이므로 AP = QC 일 때 평행사변형이 됩니다: 2t = ${L} - 3t => 5t = ${L} => t = ${t}초 후입니다.`,
+    explanationEn: `After t seconds, AP = 2t and QC = ${L} - 3t. Since AP ∥ QC, APCQ is a parallelogram when AP = QC: 2t = ${L} - 3t => 5t = ${L} => t = ${t} seconds.`
+  };
+}
+
+// 10. [평행사변형 10] 평행사변형 전 유형 실전 종합
+export function rpmG8ParallelogramAllTypesMixed(random) {
+  const pool = [rpmG8ParallelogramSides, rpmG8ParallelogramAngles, rpmG8ParallelogramDiagonals, rpmG8ParallelogramAngleBisector, rpmG8ParallelogramAreaDiagonals, rpmG8ParallelogramAreaPointP];
+  const fn = pool[Math.floor(random() * pool.length)];
+  const res = fn(random);
+  return {
+    ...res,
+    prompt: `[평행사변형 실전 종합] ${res.prompt}`,
+    promptEn: `[Parallelogram Mixed Practice] ${res.promptEn}`
+  };
+}
+
+// 11. [평행사변형 11] 평행사변형 실력 UP (최고난도 문항)
+export function rpmG8ParallelogramAdvancedSkillUp(random) {
+  // In parallelogram ABCD, M is midpoint of BC, N is midpoint of CD.
+  // Lines AM and AN intersect BD at P and Q.
+  // Then BP = PQ = QD = (1/3)BD!
+  // If BD = 3k cm, find PQ (= k).
+  const k = Math.floor(random() * 6) + 4; // 4 ~ 9
+  const bd = 3 * k;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, k, (v, r) => v + [-3, -2, -1, 1, 2, 3][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `평행사변형 ABCD에서 변 BC의 중점을 M, 변 CD의 중점을 N이라 하자. 대각선 BD가 선분 AM, AN과 만나는 점을 각각 P, Q라 할 때, 대각선 BD = ${bd} cm 이면 선분 PQ의 길이는?`,
+    promptEn: `In parallelogram ABCD, M and N are midpoints of BC and CD. Diagonal BD intersects AM and AN at P and Q. If BD = ${bd} cm, find the length of PQ.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `대각선 AC를 그으면 점 P는 △ABC의 무게중심이고 점 Q는 △ACD의 무게중심이 되므로, 대각선 BD는 세 선분 BP, PQ, QD로 3등분됩니다: BP = PQ = QD = (1/3) × BD = (1/3) × ${bd} = ${k} cm 입니다.`,
+    explanationEn: `Connecting AC, P is the centroid of △ABC and Q is the centroid of △ACD. Thus BP = PQ = QD = (1/3)BD = ${k} cm.`
+  };
+}
+
+// ----------------------------------------------------
+// CHAPTER 04: 여러 가지 사각형 (Special Quadrilaterals)
+// ----------------------------------------------------
+
+// 12. [직사각형 01] 직사각형의 뜻과 성질 (두 대각선의 길이는 같고 이등분)
+export function rpmG8RectangleProperties(random) {
+  // AC = BD, OA = OB = OC = OD
+  const oa = Math.floor(random() * 6) + 5; // 5 ~ 10
+  const bd = 2 * oa;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, bd, (v, r) => v + [-4, -2, -1, 1, 2, 4][Math.floor(r() * 6)], (v) => `${v} cm`, (v) => `${v} cm`);
+  return {
+    prompt: `직사각형 ABCD에서 두 대각선의 교점을 O라 하자. OA = ${oa} cm 일 때, 대각선 BD의 길이는?`,
+    promptEn: `In rectangle ABCD, the diagonals intersect at O. If OA = ${oa} cm, find the length of diagonal BD.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `직사각형의 두 대각선의 길이는 서로 같고 서로 다른 것을 이등분하므로 OA = OB = OC = OD = ${oa} cm 입니다. 따라서 BD = 2 × ${oa} = ${bd} cm 입니다.`,
+    explanationEn: `In a rectangle, diagonals are equal and bisect each other: BD = AC = 2(OA) = ${bd} cm.`
+  };
+}
+
+// 13. [마름모 02] 마름모의 뜻과 성질 (두 대각선은 수직이등분)
+export function rpmG8RhombusProperties(random) {
+  // Rhombus diagonals are perpendicular bisectors
+  const halfAC = Math.floor(random() * 5) + 3; // 3 ~ 7
+  const halfBD = Math.floor(random() * 5) + 4; // 4 ~ 8
+  const ac = 2 * halfAC;
+  const bd = 2 * halfBD;
+  const area = (ac * bd) / 2;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, area, (v, r) => v + [-8, -6, -4, 4, 6, 8][Math.floor(r() * 6)], (v) => `${v} cm²`, (v) => `${v} cm²`);
+  return {
+    prompt: `마름모 ABCD의 두 대각선의 길이가 각각 AC = ${ac} cm, BD = ${bd} cm 일 때, 마름모 ABCD의 넓이는?`,
+    promptEn: `In rhombus ABCD, the diagonals have lengths AC = ${ac} cm and BD = ${bd} cm. Find its area.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `마름모의 두 대각선은 서로 수직이등분하므로 마름모의 넓이는 (1/2) × (한 대각선) × (다른 대각선) = (1/2) × ${ac} × ${bd} = ${area} cm² 입니다.`,
+    explanationEn: `Diagonals of a rhombus are perpendicular: Area = (1/2) × AC × BD = (1/2) × ${ac} × ${bd} = ${area} cm².`
+  };
+}
+
+// 14. [정사각형 03] 정사각형의 뜻과 성질
+export function rpmG8SquareProperties(random) {
+  // Diagonal AC = d cm => area = d^2 / 2
+  const d = Math.floor(random() * 6) * 2 + 6; // even: 6, 8, 10, 12, 14, 16
+  const area = (d * d) / 2;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, area, (v, r) => v + [-12, -8, -6, 6, 8, 12][Math.floor(r() * 6)], (v) => `${v} cm²`, (v) => `${v} cm²`);
+  return {
+    prompt: `대각선의 길이가 ${d} cm 인 정사각형 ABCD의 넓이는?`,
+    promptEn: `Find the area of square ABCD whose diagonal is ${d} cm.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `정사각형은 마름모의 성질을 모두 가지므로 두 대각선은 길이가 같고 서로 수직이등분합니다. 따라서 넓이는 (1/2) × ${d} × ${d} = ${area} cm² 입니다.`,
+    explanationEn: `A square is a rhombus: Area = (1/2) × d₁ × d₂ = (1/2) × ${d}² = ${area} cm².`
+  };
+}
+
+// 15. [등변사다리꼴 04] 등변사다리꼴의 성질 (밑각 같음, 대각선 길이 같음)
+export function rpmG8IsoscelesTrapezoid(random) {
+  // AD // BC, AB = CD. Base angles ∠B = ∠C = bAngle.
+  // Upper angles ∠A = ∠D = 180 - bAngle.
+  const bAngle = Math.floor(random() * 21) + 50; // 50° ~ 70°
+  const aAngle = 180 - bAngle;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, aAngle, (v, r) => v + [-10, -6, -4, 4, 6, 10][Math.floor(r() * 6)], (v) => `${v}°`, (v) => `${v}°`);
+  return {
+    prompt: `AD ∥ BC 인 등변사다리꼴 ABCD에서 밑각 ∠B = ${bAngle}° 일 때, 꼭지각 ∠A의 크기는?`,
+    promptEn: `In isosceles trapezoid ABCD with AD ∥ BC, base angle ∠B = ${bAngle}°. Find ∠A.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `등변사다리꼴에서 AD ∥ BC 이므로 이웃하는 두 내각의 합 ∠A + ∠B = 180° 입니다. 따라서 ∠A = 180° - ${bAngle}° = ${aAngle}° 입니다.`,
+    explanationEn: `Since AD ∥ BC, interior consecutive angles add up to 180°: ∠A = 180° - ${bAngle}° = ${aAngle}°.`
+  };
+}
+
+// 16. [사각형의 관계 05] 평행사변형이 특별한 사각형이 되는 조건
+export function rpmG8SpecialQuadConditions(random) {
+  const questions = [
+    {
+      from: '평행사변형',
+      to: '직사각형',
+      condKo: '한 내각이 90° 이거나 두 대각선의 길이가 같다.',
+      condEn: 'one interior angle is 90° or diagonals are equal',
+      distractorsKo: ['두 대각선이 수직으로 만난다.', '이웃하는 두 변의 길이가 같다.', '네 변의 길이가 모두 같다.', '한 쌍의 대변이 평행하다.']
+    },
+    {
+      from: '평행사변형',
+      to: '마름모',
+      condKo: '이웃하는 두 변의 길이가 같거나 두 대각선이 직교한다.',
+      condEn: 'adjacent sides are equal or diagonals are perpendicular',
+      distractorsKo: ['한 내각이 직각이다.', '두 대각선의 길이가 같다.', '두 대각선이 서로를 이등분한다.', '두 쌍의 대변이 각각 평행하다.']
+    },
+    {
+      from: '직사각형',
+      to: '정사각형',
+      condKo: '이웃하는 두 변의 길이가 같거나 두 대각선이 직교한다.',
+      condEn: 'adjacent sides are equal or diagonals are perpendicular',
+      distractorsKo: ['네 내각이 모두 직각이다.', '두 대각선의 길이가 같다.', '두 쌍의 대변이 평행하다.', '두 대각선이 서로 다른 것을 이등분한다.']
+    }
+  ];
+  const q = questions[Math.floor(random() * questions.length)];
+  const options = shuffle(random, [
+    { ko: q.condKo, en: q.condEn, isRight: true },
+    ...q.distractorsKo.map(d => ({ ko: d, en: d, isRight: false }))
+  ]);
+  const correctIdx = options.findIndex(o => o.isRight) + 1;
+  return {
+    prompt: `${q.from}이(가) ${q.to}이(가) 되기 위한 올바른 조건은?`,
+    promptEn: `What is the condition for a ${q.from} to become a ${q.to}?`,
+    kind: 'choice',
+    choicesKo: options.map(o => o.ko),
+    choicesEn: options.map(o => o.en),
+    answer: String(correctIdx),
+    explanation: `${q.from}이(가) ${q.to}이(가) 되려면 [${q.condKo}] 조건을 만족해야 합니다.`,
+    explanationEn: `For a ${q.from} to be a ${q.to}, it must satisfy: [${q.condEn}].`
+  };
+}
+
+// 17. [중점 사각형 06] 사각형의 각 변의 중점을 연결하여 만든 사각형
+export function rpmG8MidpointQuadrilaterals(random) {
+  const mappings = [
+    { origKo: '평행사변형', origEn: 'Parallelogram', resultKo: '평행사변형', resultEn: 'Parallelogram' },
+    { origKo: '직사각형', origEn: 'Rectangle', resultKo: '마름모', resultEn: 'Rhombus' },
+    { origKo: '마름모', origEn: 'Rhombus', resultKo: '직사각형', resultEn: 'Rectangle' },
+    { origKo: '정사각형', origEn: 'Square', resultKo: '정사각형', resultEn: 'Square' },
+    { origKo: '등변사다리꼴', origEn: 'Isosceles Trapezoid', resultKo: '마름모', resultEn: 'Rhombus' }
+  ];
+  const item = mappings[Math.floor(random() * mappings.length)];
+  const candidates = ['평행사변형', '직사각형', '마름모', '정사각형', '사다리꼴'];
+  const candidatesEn = ['Parallelogram', 'Rectangle', 'Rhombus', 'Square', 'Trapezoid'];
+  const options = candidates.map((c, i) => ({ ko: c, en: candidatesEn[i] }));
+  const correctIdx = candidates.indexOf(item.resultKo) + 1;
+  return {
+    prompt: `[${item.origKo}]의 각 변의 중점을 순서대로 연결하여 만든 사각형은 항상 어떤 사각형인가?`,
+    promptEn: `What quadrilateral is always formed by connecting the midpoints of the sides of a [${item.origEn}]?`,
+    kind: 'choice',
+    choicesKo: options.map(o => o.ko),
+    choicesEn: options.map(o => o.en),
+    answer: String(correctIdx),
+    explanation: `${item.origKo}의 네 변의 중점을 연결하면 [${item.resultKo}]이(가) 됩니다.`,
+    explanationEn: `Connecting the midpoints of a ${item.origEn} always produces a ${item.resultEn}.`
+  };
+}
+
+// 18. [평행선과 넓이 07] 밑변이 같고 평행선 사이의 높이가 같은 삼각형의 넓이
+export function rpmG8ParallelLineTriangleArea(random) {
+  // Line l // m. Triangle ABC and DBC share base BC on line m.
+  // Then Area(ABC) = Area(DBC). Area(ABO) = Area(DCO).
+  const totalArea = Math.floor(random() * 16) + 20; // 20 ~ 35
+  const sharedOBC = Math.floor(random() * 10) + 8; // 8 ~ 17
+  const sideABO = totalArea - sharedOBC;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, sideABO, (v, r) => v + [-4, -3, -2, 2, 3, 4][Math.floor(r() * 6)], (v) => `${v} cm²`, (v) => `${v} cm²`);
+  return {
+    prompt: `AD ∥ BC 인 사다리꼴 ABCD에서 두 대각선의 교점을 O라 하자. 삼각형 ABC의 넓이가 ${totalArea} cm² 이고 삼각형 OBC의 넓이가 ${sharedOBC} cm² 일 때, 삼각형 ABO의 넓이는?`,
+    promptEn: `In trapezoid ABCD (AD ∥ BC), diagonals intersect at O. If Area(△ABC) = ${totalArea} cm² and Area(△OBC) = ${sharedOBC} cm², find Area(△ABO).`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `AD ∥ BC 이므로 밑변 BC를 공유하는 두 삼각형의 넓이는 같습니다: △ABC = △DBC = ${totalArea} cm². 따라서 △ABO = △ABC - △OBC = ${totalArea} - ${sharedOBC} = ${sideABO} cm² 입니다. (또한 △DCO의 넓이도 ${sideABO} cm² 입니다.)`,
+    explanationEn: `Since AD ∥ BC, Area(△ABC) = Area(△DBC). Thus Area(△ABO) = Area(△ABC) - Area(△OBC) = ${totalArea} - ${sharedOBC} = ${sideABO} cm².`
+  };
+}
+
+// 19. [높이가 같은 삼각형 08] 밑변의 길이의 비와 넓이의 비
+export function rpmG8TriangleBaseRatioArea(random) {
+  // In triangle ABC, point D divides BC such that BD : DC = m : n.
+  const pairs = [[2, 1], [3, 1], [3, 2], [4, 1], [4, 3], [5, 2]];
+  const [m, n] = pairs[Math.floor(random() * pairs.length)];
+  const unit = Math.floor(random() * 6) + 4; // 4 ~ 9
+  const areaABD = m * unit;
+  const areaADC = n * unit;
+  const areaTotal = (m + n) * unit;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, areaADC, (v, r) => v + [-6, -4, -2, 2, 4, 6][Math.floor(r() * 6)], (v) => `${v} cm²`, (v) => `${v} cm²`);
+  return {
+    prompt: `삼각형 ABC의 변 BC 위의 점 D에 대하여 BD : DC = ${m} : ${n} 이다. 삼각형 ABD의 넓이가 ${areaABD} cm² 일 때, 삼각형 ADC의 넓이는?`,
+    promptEn: `In △ABC, point D on BC satisfies BD : DC = ${m} : ${n}. If Area(△ABD) = ${areaABD} cm², find Area(△ADC).`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `높이가 같은 두 삼각형의 넓이의 비는 밑변의 길이의 비와 같으므로 △ABD : △ADC = BD : DC = ${m} : ${n} 입니다. 따라서 △ADC = ${areaABD} × (${n} / ${m}) = ${areaADC} cm² 입니다.`,
+    explanationEn: `Triangles with the same height have areas proportional to bases: Area(△ADC) = ${areaABD} × (${n} / ${m}) = ${areaADC} cm².`
+  };
+}
+
+// 20. [사다리꼴과 넓이 09] 사다리꼴의 대각선 분할 삼각형 넓이 종합
+export function rpmG8TrapezoidDiagonalAreas(random) {
+  // In trapezoid ABCD with AD // BC, OA : OC = 1 : k
+  // Then Area(OAD) = a, Area(OAB) = Area(OCD) = k*a, Area(OBC) = k^2*a
+  const k = Math.floor(random() * 3) + 2; // 2, 3, 4
+  const a = Math.floor(random() * 3) + 2; // 2, 3, 4
+  const areaOAD = a;
+  const areaOAB = k * a;
+  const areaOBC = k * k * a;
+  const areaTotal = areaOAD + 2 * areaOAB + areaOBC;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, areaTotal, (v, r) => v + [-8, -6, -4, 4, 6, 8][Math.floor(r() * 6)], (v) => `${v} cm²`, (v) => `${v} cm²`);
+  return {
+    prompt: `AD ∥ BC 인 사다리꼴 ABCD에서 두 대각선의 교점을 O라 하자. OA : OC = 1 : ${k} 이고 삼각형 OAD의 넓이가 ${areaOAD} cm² 일 때, 사다리꼴 ABCD의 전체 넓이는?`,
+    promptEn: `In trapezoid ABCD (AD ∥ BC), diagonals meet at O. If OA : OC = 1 : ${k} and Area(△OAD) = ${areaOAD} cm², find the total area of ABCD.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `1) △OAB : △OAD = OB : OD = OC : OA = ${k} : 1 이므로 △OAB = ${k} × ${areaOAD} = ${areaOAB} cm² 입니다.\n2) 평행선에 의해 △OCD = △OAB = ${areaOAB} cm² 입니다.\n3) △OBC : △OAB = OC : OA = ${k} : 1 이므로 △OBC = ${k} × ${areaOAB} = ${areaOBC} cm² 입니다.\n따라서 사다리꼴 ABCD의 넓이는 ${areaOAD} + ${areaOAB} + ${areaOAB} + ${areaOBC} = ${areaTotal} cm² 입니다.`,
+    explanationEn: `Using base ratios, Area(△OAB) = Area(△OCD) = ${areaOAB} cm², Area(△OBC) = ${areaOBC} cm². Total area = ${areaTotal} cm².`
+  };
+}
+
+// 21. [여러 가지 사각형 10] 여러 가지 사각형 전 유형 실전 종합
+export function rpmG8SpecialQuadsAllTypesMixed(random) {
+  const pool = [rpmG8RectangleProperties, rpmG8RhombusProperties, rpmG8SquareProperties, rpmG8IsoscelesTrapezoid, rpmG8MidpointQuadrilaterals, rpmG8ParallelLineTriangleArea, rpmG8TriangleBaseRatioArea];
+  const fn = pool[Math.floor(random() * pool.length)];
+  const res = fn(random);
+  return {
+    ...res,
+    prompt: `[여러 가지 사각형 실전 종합] ${res.prompt}`,
+    promptEn: `[Special Quadrilaterals Mixed Practice] ${res.promptEn}`
+  };
+}
+
+// 22. [여러 가지 사각형 11] 여러 가지 사각형 실력 UP (최고난도 문항)
+export function rpmG8SpecialQuadsAdvancedSkillUp(random) {
+  // Two congruent squares ABCD and OEFG where O is the center of ABCD.
+  // The overlapping area of the two squares is ALWAYS (1/4) of the area of square ABCD!
+  const side = (Math.floor(random() * 5) + 3) * 2; // 6, 8, 10, 12, 14
+  const areaSquare = side * side;
+  const overlapArea = areaSquare / 4;
+  const { choicesKo, choicesEn, answer } = makeChoices(random, overlapArea, (v, r) => v + [-8, -6, -4, 4, 6, 8][Math.floor(r() * 6)], (v) => `${v} cm²`, (v) => `${v} cm²`);
+  return {
+    prompt: `한 변의 길이가 ${side} cm 인 정사각형 ABCD의 두 대각선의 교점을 O라 하자. 점 O를 한 꼭짓점으로 하는 합동인 정사각형 OEFG가 오른쪽 그림과 같이 회전하여 겹쳐져 있을 때, 두 정사각형이 겹치는 부분의 넓이는?`,
+    promptEn: `Square ABCD has side length ${side} cm and center O. Another congruent square OEFG has one vertex at O and rotates over ABCD. Find the area of overlap between the two squares.`,
+    kind: 'choice',
+    choicesKo,
+    choicesEn,
+    answer,
+    explanation: `합동인 두 직각삼각형의 회전에 의해 겹치는 부분의 넓이는 정사각형 회전 각도와 무관하게 항상 정사각형 ABCD 전체 넓이의 1/4 로 일정합니다. 따라서 겹치는 넓이는 (1/4) × (${side} × ${side}) = (1/4) × ${areaSquare} = ${overlapArea} cm² 입니다.`,
+    explanationEn: `By rotational symmetry, the overlapping area is always invariant and equal to 1/4 of the square's total area: (1/4) × ${side}² = ${overlapArea} cm².`
+  };
+}
+
+
 export const RPM_ADVANCED_ENGINES = {
   // 01 소인수분해 RPM 세부 유형 (RPM 1-1 Pages 10~15)
   'rpm-prime-prop-closest': rpmPrimePropClosest,
@@ -14517,6 +15029,36 @@ export const RPM_ADVANCED_ENGINES = {
   'rpm-g8-right-tri-both-circles': rpmG8RightTriBothCircles,
   'rpm-g8-circles-all-types-mixed': rpmG8CirclesAllTypesMixed,
   'rpm-g8-circles-advanced-skill-up': rpmG8CirclesAdvancedSkillUp,
+  // -------------------------------------------------------------
+  // [중2-2] 03 평행사변형 세부 응용 유형 (RPM 2-2 p.38~47)
+  // -------------------------------------------------------------
+  'rpm-g8-parallelogram-sides': rpmG8ParallelogramSides,
+  'rpm-g8-parallelogram-angles': rpmG8ParallelogramAngles,
+  'rpm-g8-parallelogram-diagonals': rpmG8ParallelogramDiagonals,
+  'rpm-g8-parallelogram-angle-bisector': rpmG8ParallelogramAngleBisector,
+  'rpm-g8-parallelogram-condition-identify': rpmG8ParallelogramConditionIdentify,
+  'rpm-g8-parallelogram-inside-figure': rpmG8ParallelogramInsideFigure,
+  'rpm-g8-parallelogram-area-diagonals': rpmG8ParallelogramAreaDiagonals,
+  'rpm-g8-parallelogram-area-point-p': rpmG8ParallelogramAreaPointP,
+  'rpm-g8-parallelogram-moving-points': rpmG8ParallelogramMovingPoints,
+  'rpm-g8-parallelogram-all-types-mixed': rpmG8ParallelogramAllTypesMixed,
+  'rpm-g8-parallelogram-advanced-skill-up': rpmG8ParallelogramAdvancedSkillUp,
+
+  // -------------------------------------------------------------
+  // [중2-2] 04 여러 가지 사각형 세부 응용 유형 (RPM 2-2 p.52~65)
+  // -------------------------------------------------------------
+  'rpm-g8-rectangle-properties': rpmG8RectangleProperties,
+  'rpm-g8-rhombus-properties': rpmG8RhombusProperties,
+  'rpm-g8-square-properties': rpmG8SquareProperties,
+  'rpm-g8-isosceles-trapezoid': rpmG8IsoscelesTrapezoid,
+  'rpm-g8-special-quad-conditions': rpmG8SpecialQuadConditions,
+  'rpm-g8-midpoint-quadrilaterals': rpmG8MidpointQuadrilaterals,
+  'rpm-g8-parallel-line-triangle-area': rpmG8ParallelLineTriangleArea,
+  'rpm-g8-triangle-base-ratio-area': rpmG8TriangleBaseRatioArea,
+  'rpm-g8-trapezoid-diagonal-areas': rpmG8TrapezoidDiagonalAreas,
+  'rpm-g8-special-quads-all-types-mixed': rpmG8SpecialQuadsAllTypesMixed,
+  'rpm-g8-special-quads-advanced-skill-up': rpmG8SpecialQuadsAdvancedSkillUp,
+
 
 
 
