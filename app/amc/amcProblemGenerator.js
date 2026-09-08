@@ -42,6 +42,15 @@ function lcm(a, b) {
   return (a * b) / gcd(a, b);
 }
 
+function comb(n, k) {
+  if (k < 0 || k > n) return 0;
+  let result = 1;
+  for (let i = 0; i < k; i += 1) {
+    result = (result * (n - i)) / (i + 1);
+  }
+  return Math.round(result);
+}
+
 /**
  * Helper to build 5 unique choices given the correct answer and distractor generator
  */
@@ -2576,6 +2585,307 @@ export const GENERATORS = {
     const explanation = lang === 'ko'
       ? `**[The Essential Guide to Algebra 1 Topic 14.1 다항식의 곱셈]**\n\n$x^2$항은 $(${a2}x^2)(${b0}) + (${a1}x)(${b1}x)$에서 나오므로, 계수는 $${a2}\\times${b0} + ${a1}\\times${b1} = ${coeffX2}$입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${coeffX2})** 입니다.`
       : `**[The Essential Guide to Algebra 1 Topic 14.1 Multiplying Polynomials]**\n\nThe $x^2$ term comes from $(${a2}x^2)(${b0}) + (${a1}x)(${b1}x)$, so the coefficient is $${a2}\\times${b0} + ${a1}\\times${b1} = ${coeffX2}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${coeffX2})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // RADICALS & RATIONAL EXPONENTS (The Essential Guide to Algebra 2, Topic 7)
+  // -----------------------------------------------------------------------
+  'radicals-exponents': (lang) => {
+    const variant = pickRandom(['rational-exponent', 'simplify-radical']);
+
+    if (variant === 'rational-exponent') {
+      const n = randInt(2, 4);
+      const q = randInt(2, 3);
+      const b = n ** q;
+      const p = randInt(1, 3);
+      const ans = n ** p;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return n ** (q - p > 0 ? q - p : p);
+        if (i === 2) return b - ans;
+        if (i === 3) return ans + n;
+        return ans + randInt(2, 8) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? `$${b}^{\\frac{${p}}{${q}}}$의 값을 구하세요.`
+        : `Evaluate $${b}^{\\frac{${p}}{${q}}}$.`;
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 7.3 유리지수]**\n\n$${b}^{\\frac{${p}}{${q}}} = (\\sqrt[${q}]{${b}})^{${p}} = ${n}^{${p}} = ${ans}$입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 7.3 Rational Exponents]**\n\n$${b}^{\\frac{${p}}{${q}}} = (\\sqrt[${q}]{${b}})^{${p}} = ${n}^{${p}} = ${ans}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // simplify-radical: sqrt(k^2 * m) = k*sqrt(m), m squarefree
+    const k = randInt(2, 6);
+    const m = pickRandom([2, 3, 5, 6, 7, 10, 11, 13]);
+    const N = k * k * m;
+    const ans = `${k}\\sqrt{${m}}`;
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return `${k}\\sqrt{${N}}`;
+      if (i === 2) return `${k * m}\\sqrt{${m}}`;
+      if (i === 3) return `${k + 1}\\sqrt{${m}}`;
+      return `${k}\\sqrt{${m + i}}`;
+    });
+
+    const question = lang === 'ko'
+      ? `$\\sqrt{${N}}$을 간단히 하세요.`
+      : `Simplify $\\sqrt{${N}}$.`;
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 2 Topic 7.1 근호의 단순화]**\n\n$${N} = ${k}^2 \\times ${m}$이므로,\n\n$$\\sqrt{${N}} = \\sqrt{${k}^2\\times${m}} = ${k}\\sqrt{${m}}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+      : `**[The Essential Guide to Algebra 2 Topic 7.1 Simplifying Radicals]**\n\nSince $${N} = ${k}^2 \\times ${m}$,\n\n$$\\sqrt{${N}} = \\sqrt{${k}^2\\times${m}} = ${k}\\sqrt{${m}}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // RATIONAL FUNCTIONS (The Essential Guide to Algebra 2, Topic 8)
+  // -----------------------------------------------------------------------
+  'rational-functions': (lang) => {
+    const variant = pickRandom(['vertical-asymptotes', 'solve-rational-equation']);
+
+    if (variant === 'vertical-asymptotes') {
+      const h = randInt(-6, 6) || 1;
+      let j = randInt(-6, 6) || 2;
+      while (j === h) j = randInt(-6, 6) || (h + 1);
+      const b = -(h + j);
+      const c = h * j;
+      let a = randInt(-8, 8);
+      while (-a === h || -a === j) a = randInt(-8, 8);
+      const ans = h + j;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return h * j;
+        if (i === 2) return -ans;
+        if (i === 3) return Math.max(h, j) - Math.min(h, j);
+        return ans + randInt(2, 8) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const bTerm = b === 0 ? '' : (b > 0 ? ` + ${b}x` : ` - ${Math.abs(b)}x`);
+      const cTerm = c >= 0 ? ` + ${c}` : ` - ${Math.abs(c)}`;
+      const aTerm = a >= 0 ? `x + ${a}` : `x - ${Math.abs(a)}`;
+      const question = lang === 'ko'
+        ? `유리함수 $f(x) = \\dfrac{${aTerm}}{x^2${bTerm}${cTerm}}$의 모든 수직점근선의 $x$값의 합을 구하세요.`
+        : `Find the sum of the $x$-values of all vertical asymptotes of $f(x) = \\dfrac{${aTerm}}{x^2${bTerm}${cTerm}}$.`;
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 8.4 수직점근선]**\n\n분모를 인수분해하면 $x^2${bTerm}${cTerm} = (x-(${h}))(x-(${j}))$이므로, 수직점근선은 $x=${h}$와 $x=${j}$입니다 (분자는 이 값들에서 $0$이 되지 않으므로 구멍이 아닙니다). 합은 $${h}+${j}=${ans}$입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 8.4 Vertical Asymptotes]**\n\nFactoring the denominator gives $x^2${bTerm}${cTerm} = (x-(${h}))(x-(${j}))$, so the vertical asymptotes are $x=${h}$ and $x=${j}$ (the numerator doesn't vanish there, so these aren't holes). The sum is $${h}+${j}=${ans}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // solve-rational-equation: k/(x-h) = m, solve for x
+    const h = randInt(-8, 8);
+    let xTarget = randInt(-8, 8);
+    while (xTarget === h) xTarget = randInt(-8, 8);
+    const m = pickRandom([2, 3, -2, -3, 4, -4]);
+    const k = m * (xTarget - h);
+
+    const { choices, correctIdx } = buildChoices(xTarget, (i) => {
+      if (i === 1) return h;
+      if (i === 2) return -xTarget;
+      if (i === 3) return h - (xTarget - h);
+      return xTarget + randInt(2, 7) * (i % 2 === 0 ? 1 : -1);
+    });
+
+    const hTerm = h >= 0 ? `x - ${h}` : `x + ${Math.abs(h)}`;
+    const question = lang === 'ko'
+      ? `방정식 $\\dfrac{${k}}{${hTerm}} = ${m}$을 만족하는 $x$의 값을 구하세요.`
+      : `Solve $\\dfrac{${k}}{${hTerm}} = ${m}$ for $x$.`;
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 2 Topic 8.7 유리방정식]**\n\n양변에 $${hTerm}$을 곱하면 $${k} = ${m}(${hTerm})$이므로,\n\n$$${hTerm} = \\frac{${k}}{${m}} \\implies x = ${xTarget}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${xTarget})** 입니다.`
+      : `**[The Essential Guide to Algebra 2 Topic 8.7 Solving Rational Equations]**\n\nMultiplying both sides by $${hTerm}$ gives $${k} = ${m}(${hTerm})$, so\n\n$$${hTerm} = \\frac{${k}}{${m}} \\implies x = ${xTarget}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${xTarget})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // EXPONENTIAL & LOGARITHMIC EQUATIONS (The Essential Guide to Algebra 2, Topic 9)
+  // -----------------------------------------------------------------------
+  'exponential-logarithmic': (lang) => {
+    const variant = pickRandom(['exponential-equation', 'log-equation']);
+
+    if (variant === 'exponential-equation') {
+      const a = pickRandom([2, 3, 5]);
+      const E = randInt(0, 6);
+      const rhs = a ** E;
+      const p = randInt(1, 4);
+      const xTarget = randInt(-5, 5);
+      const q = E - p * xTarget;
+
+      const { choices, correctIdx } = buildChoices(xTarget, (i) => {
+        if (i === 1) return -xTarget;
+        if (i === 2) return E;
+        if (i === 3) return xTarget + p;
+        return xTarget + randInt(2, 6) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const exponentExpr = `${p}x ${q >= 0 ? '+' : '-'} ${Math.abs(q)}`;
+      const question = lang === 'ko'
+        ? `방정식 $${a}^{${exponentExpr}} = ${rhs}$를 만족하는 $x$의 값을 구하세요.`
+        : `Solve $${a}^{${exponentExpr}} = ${rhs}$ for $x$.`;
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 9.2 지수방정식]**\n\n$${rhs} = ${a}^{${E}}$이므로 밑이 같을 때 지수를 비교합니다:\n\n$$${p}x ${q >= 0 ? '+' : '-'} ${Math.abs(q)} = ${E} \\implies x = ${xTarget}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${xTarget})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 9.2 Exponential Equations]**\n\nSince $${rhs} = ${a}^{${E}}$, compare exponents (matching bases):\n\n$$${p}x ${q >= 0 ? '+' : '-'} ${Math.abs(q)} = ${E} \\implies x = ${xTarget}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${xTarget})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // log-equation: log_a(x - h) = n, solve for x
+    const a = pickRandom([2, 3, 5]);
+    const n = randInt(1, 4);
+    const h = randInt(-8, 8);
+    const ans = a ** n + h;
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return a ** n - h;
+      if (i === 2) return a * n + h;
+      if (i === 3) return h;
+      return ans + randInt(2, 9) * (i % 2 === 0 ? 1 : -1);
+    });
+
+    const hTerm = h >= 0 ? `x - ${h}` : `x + ${Math.abs(h)}`;
+    const question = lang === 'ko'
+      ? `방정식 $\\log_{${a}}(${hTerm}) = ${n}$을 만족하는 $x$의 값을 구하세요.`
+      : `Solve $\\log_{${a}}(${hTerm}) = ${n}$ for $x$.`;
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 2 Topic 9.4 로그방정식]**\n\n로그의 정의에 의해 $${hTerm} = ${a}^{${n}} = ${a ** n}$이므로,\n\n$$x = ${a ** n} ${h >= 0 ? '+' : '-'} ${Math.abs(h)} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+      : `**[The Essential Guide to Algebra 2 Topic 9.4 Logarithmic Equations]**\n\nBy the definition of a logarithm, $${hTerm} = ${a}^{${n}} = ${a ** n}$, so\n\n$$x = ${a ** n} ${h >= 0 ? '+' : '-'} ${Math.abs(h)} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // GEOMETRIC SEQUENCES & SERIES (The Essential Guide to Algebra 2, Topic 10)
+  // -----------------------------------------------------------------------
+  'geometric-series': (lang) => {
+    const variant = pickRandom(['series-sum', 'nth-term']);
+    const a1 = randInt(1, 5);
+    const r = pickRandom([2, 3, -2, -3]);
+    const n = randInt(3, 5);
+
+    if (variant === 'series-sum') {
+      const sum = Math.round(a1 * (r ** n - 1) / (r - 1));
+
+      const { choices, correctIdx } = buildChoices(sum, (i) => {
+        if (i === 1) return a1 * r ** n;
+        if (i === 2) return a1 * n;
+        if (i === 3) return Math.round(a1 * (r ** (n - 1) - 1) / (r - 1));
+        return sum + randInt(2, 15) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? `첫째항이 $${a1}$이고 공비가 $${r}$인 등비수열의 첫 $${n}$항의 합을 구하세요.`
+        : `Find the sum of the first $${n}$ terms of a geometric sequence with first term $${a1}$ and common ratio $${r}$.`;
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 10.3 등비급수]**\n\n$S_n = \\dfrac{a_1(r^n-1)}{r-1} = \\dfrac{${a1}((${r})^{${n}}-1)}{${r}-1} = ${sum}$입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${sum})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 10.3 Geometric Series]**\n\n$S_n = \\dfrac{a_1(r^n-1)}{r-1} = \\dfrac{${a1}((${r})^{${n}}-1)}{${r}-1} = ${sum}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${sum})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // nth-term
+    const term = a1 * r ** (n - 1);
+
+    const { choices, correctIdx } = buildChoices(term, (i) => {
+      if (i === 1) return a1 * r ** n;
+      if (i === 2) return a1 * r ** (n - 2);
+      if (i === 3) return a1 * n * r;
+      return term + randInt(2, 12) * (i % 2 === 0 ? 1 : -1);
+    });
+
+    const question = lang === 'ko'
+      ? `첫째항이 $${a1}$이고 공비가 $${r}$인 등비수열의 제 $${n}$항을 구하세요.`
+      : `Find the $${n}$th term of a geometric sequence with first term $${a1}$ and common ratio $${r}$.`;
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 2 Topic 10.3 등비수열]**\n\n$a_n = a_1 \\cdot r^{n-1} = ${a1}\\times(${r})^{${n - 1}} = ${term}$입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${term})** 입니다.`
+      : `**[The Essential Guide to Algebra 2 Topic 10.3 Geometric Sequences]**\n\n$a_n = a_1 \\cdot r^{n-1} = ${a1}\\times(${r})^{${n - 1}} = ${term}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${term})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // BINOMIAL THEOREM (The Essential Guide to Algebra 2, Topic 11.7)
+  // -----------------------------------------------------------------------
+  'binomial-theorem': (lang) => {
+    const n = randInt(4, 7);
+    const c = pickRandom([1, 2, 3, -1, -2]);
+    const k = randInt(1, n - 1);
+    const coeff = comb(n, k) * c ** (n - k);
+
+    const { choices, correctIdx } = buildChoices(coeff, (i) => {
+      if (i === 1) return comb(n, k) * c ** k;
+      if (i === 2) return comb(n, n - k) * c ** k;
+      if (i === 3) return comb(n, k);
+      return coeff + randInt(2, 15) * (i % 2 === 0 ? 1 : -1);
+    });
+
+    const cTerm = c >= 0 ? `x + ${c}` : `x - ${Math.abs(c)}`;
+    const question = lang === 'ko'
+      ? `$(${cTerm})^{${n}}$의 전개식에서 $x^{${k}}$의 계수를 구하세요.`
+      : `Find the coefficient of $x^{${k}}$ in the expansion of $(${cTerm})^{${n}}$.`;
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 2 Topic 11.7 이항정리]**\n\n이항정리에 의해 일반항은 $\\binom{${n}}{${n - k}}x^{${k}}${c}^{${n - k}}$이므로, 계수는\n\n$$\\binom{${n}}{${n - k}}\\times${c}^{${n - k}} = ${comb(n, k)}\\times${c ** (n - k)} = ${coeff}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${coeff})** 입니다.`
+      : `**[The Essential Guide to Algebra 2 Topic 11.7 Binomial Theorem]**\n\nBy the Binomial Theorem, the general term is $\\binom{${n}}{${n - k}}x^{${k}}${c}^{${n - k}}$, so the coefficient is\n\n$$\\binom{${n}}{${n - k}}\\times${c}^{${n - k}} = ${comb(n, k)}\\times${c ** (n - k)} = ${coeff}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${coeff})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // PROBABILITY DISTRIBUTIONS (The Essential Guide to Algebra 2, Topic 13)
+  // -----------------------------------------------------------------------
+  'probability-distributions': (lang) => {
+    const variant = pickRandom(['binomial-probability', 'expected-value']);
+
+    if (variant === 'binomial-probability') {
+      const n = randInt(4, 6);
+      const k = randInt(0, n);
+      const numerator = comb(n, k);
+      const denominator = 2 ** n;
+      const g = gcd(numerator, denominator);
+      const ans = `${numerator / g}/${denominator / g}`;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return `${comb(n, Math.max(0, k - 1))}/${denominator}`;
+        if (i === 2) return `${numerator}/${denominator}`;
+        if (i === 3) return `1/${denominator / g}`;
+        return `${numerator / g}/${denominator / g + i}`;
+      });
+
+      const question = lang === 'ko'
+        ? `공정한 동전을 $${n}$번 던질 때, 정확히 $${k}$번 앞면이 나올 확률을 구하세요.`
+        : `A fair coin is flipped $${n}$ times. What is the probability of getting exactly $${k}$ heads?`;
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 13.2 이항분포]**\n\n$P(X=${k}) = \\binom{${n}}{${k}}\\left(\\dfrac{1}{2}\\right)^{${n}} = \\dfrac{${numerator}}{${denominator}} = ${ans}$입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 13.2 Binomial Distribution]**\n\n$P(X=${k}) = \\binom{${n}}{${k}}\\left(\\dfrac{1}{2}\\right)^{${n}} = \\dfrac{${numerator}}{${denominator}} = ${ans}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // expected-value: E[X] = np for X ~ Binomial(n, p_num/p_den)
+    const pDen = pickRandom([2, 3, 4, 5]);
+    let n = randInt(2, 6) * pDen;
+    if (n > 40) n = pDen * 4;
+    const pNum = randInt(1, pDen - 1);
+    const ans = (n * pNum) / pDen;
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return n;
+      if (i === 2) return pNum;
+      if (i === 3) return ans + pDen;
+      return ans + randInt(2, 8) * (i % 2 === 0 ? 1 : -1);
+    });
+
+    const question = lang === 'ko'
+      ? `확률변수 $X$가 이항분포 $B\\left(${n}, \\dfrac{${pNum}}{${pDen}}\\right)$를 따를 때, $X$의 기댓값 $E(X)$를 구하세요.`
+      : `A random variable $X$ follows the binomial distribution $B\\left(${n}, \\dfrac{${pNum}}{${pDen}}\\right)$. Find the expected value $E(X)$.`;
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 2 Topic 13.2 이항분포의 기댓값]**\n\n이항분포 $B(n,p)$의 기댓값은 $E(X)=np$이므로,\n\n$$E(X) = ${n}\\times\\dfrac{${pNum}}{${pDen}} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+      : `**[The Essential Guide to Algebra 2 Topic 13.2 Expected Value of Binomial Distribution]**\n\nFor a binomial distribution $B(n,p)$, $E(X)=np$, so\n\n$$E(X) = ${n}\\times\\dfrac{${pNum}}{${pDen}} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
 
     return { question, choices, correctIdx, explanation };
   },

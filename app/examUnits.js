@@ -96,6 +96,18 @@ export const AMC_FINE_SUBJECTS = [
         intlCourse: { id: 'intl-algebra-1', label: 'Algebra 1', labelKo: '직선의 방정식과 기울기', href: '/curriculum#intl-algebra-1' },
         domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
       },
+      {
+        id: 'radicals-exponents', label: '근호와 유리지수', labelEn: 'Radicals & Rational Exponents', desc: '근호식의 단순화, 유리지수의 계산, 무리방정식',
+        tier: 'intermediate',
+        intlCourse: { id: 'intl-algebra-2', label: 'Algebra 2', labelKo: '근호와 유리지수', href: '/curriculum#intl-algebra-2' },
+        domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
+      },
+      {
+        id: 'geometric-series', label: '등비수열과 급수', labelEn: 'Geometric Sequences & Series', desc: '일반항과 첫 n항의 합, 등비중항',
+        tier: 'intermediate',
+        intlCourse: { id: 'intl-algebra-2', label: 'Algebra 2', labelKo: '등비수열과 급수 (Geometric Series)', href: '/curriculum#intl-algebra-2' },
+        domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
+      },
     ],
   },
   {
@@ -254,6 +266,18 @@ export const AMC_FINE_SUBJECTS = [
         intlCourse: { id: 'intl-algebra-1', label: 'Algebra 1', labelKo: '기초 확률론 (Probability)', href: '/curriculum#intl-algebra-1' },
         domain: { id: 'domain-data', label: 'Data & Probability', labelKo: '자료와 가능성 · 확률과 통계', href: '/curriculum#domain-data' },
       },
+      {
+        id: 'binomial-theorem', label: '이항정리', labelEn: 'Binomial Theorem', desc: '이항계수, 전개식의 특정 항의 계수',
+        tier: 'advanced',
+        intlCourse: { id: 'intl-algebra-2', label: 'Algebra 2', labelKo: '이항정리 (Binomial Theorem)', href: '/curriculum#intl-algebra-2' },
+        domain: { id: 'domain-data', label: 'Data & Probability', labelKo: '자료와 가능성 · 확률과 통계', href: '/curriculum#domain-data' },
+      },
+      {
+        id: 'probability-distributions', label: '확률분포', labelEn: 'Probability Distributions', desc: '이항분포의 확률, 기댓값',
+        tier: 'advanced',
+        intlCourse: { id: 'intl-precalculus', label: 'Precalculus', labelKo: '확률분포 (Probability Distributions)', href: '/curriculum#intl-precalculus' },
+        domain: { id: 'domain-data', label: 'Data & Probability', labelKo: '자료와 가능성 · 확률과 통계', href: '/curriculum#domain-data' },
+      },
     ],
   },
   {
@@ -370,6 +394,18 @@ export const AMC_FINE_SUBJECTS = [
         id: 'polynomial-arithmetic', label: '다항식의 연산', labelEn: 'Polynomial Arithmetic', desc: '다항식의 곱셈, 나머지 정리, 계수 비교',
         tier: 'advanced',
         intlCourse: { id: 'intl-algebra-2', label: 'Algebra 2', labelKo: '다항식의 연산', href: '/curriculum#intl-algebra-2' },
+        domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
+      },
+      {
+        id: 'rational-functions', label: '유리함수', labelEn: 'Rational Functions', desc: '점근선, 유리방정식 풀이',
+        tier: 'advanced',
+        intlCourse: { id: 'intl-algebra-2', label: 'Algebra 2', labelKo: '유리함수 (Rational Functions)', href: '/curriculum#intl-algebra-2' },
+        domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
+      },
+      {
+        id: 'exponential-logarithmic', label: '지수·로그 방정식', labelEn: 'Exponential & Logarithmic Equations', desc: '지수방정식과 로그방정식 풀이',
+        tier: 'advanced',
+        intlCourse: { id: 'intl-precalculus', label: 'Precalculus', labelKo: '지수·로그 방정식', href: '/curriculum#intl-precalculus' },
         domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
       },
     ],
