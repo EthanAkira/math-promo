@@ -251,7 +251,7 @@ export const ALGEBRA_COMPLETION_UNITS = [
   unit('algebra2-trigonometry', '삼각함수', '삼각함수의 값', 'Trigonometric values', '특수각의 정확한 삼각함수 값', 'Use exact unit-circle values', profiles(P.H2A, P.A2, P.PC), exactTrigonometry),
   unit('internal-division-coordinate', '도형의 방정식', '선분의 내분점', 'Internal division point', '내분 공식과 좌표 계산', 'Use the section formula in coordinates', profiles(P.H1), internalDivision),
   unit('external-division-coordinate', '도형의 방정식', '선분의 외분점', 'External division point', '외분 공식과 좌표 계산', 'Use the external section formula in coordinates', profiles(P.H1), externalDivision),
-  unit('line-distance-conditions', '도형의 방정식', '직선의 평행·수직·거리', 'Line conditions & distance', '기울기 관계와 점·직선 사이 거리', 'Use slopes and point-to-line distance', profiles(P.H1), lineDistanceConditions),
+  unit('line-distance-conditions', '도형의 방정식', '직선의 평행·수직·거리', 'Line conditions & distance', '기울기 관계와 점·직선 사이 거리', 'Use slopes and point-to-line distance', profiles(P.H1, P.A1), lineDistanceConditions),
   unit('circle-equations-complete', '도형의 방정식', '원의 방정식', 'Circle equations', '중심과 반지름을 이용한 원의 표준형', 'Read and construct circle equations', profiles(P.H1), circleEquations),
   unit('coordinate-transformations', '도형의 방정식', '도형의 이동', 'Coordinate transformations', '점과 도형의 평행이동·대칭이동', 'Translate and reflect coordinate figures', profiles(P.H1), coordinateTransformations),
   unit('propositions-complete', '집합과 명제', '명제·조건·반례', 'Propositions & counterexamples', '명제의 참·거짓과 반례 판단', 'Test propositions and use counterexamples', profiles(P.H1), propositions),

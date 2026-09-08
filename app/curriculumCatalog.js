@@ -1356,6 +1356,13 @@ const INTERNATIONAL_COURSE_STAGE_SEEDS = [
       { label: 'Linear Functions & Graphs', href: '/middle-school/pre-algebra?profile=algebra-1&unit=linear-functions-2', ready: true, availability: 'ready' },
       { label: 'Quadratic Functions', href: '/middle-school/pre-algebra?profile=algebra-1&unit=quadratic-functions', ready: true, availability: 'ready' },
       { label: 'Probability & Categorical Data', href: '/middle-school/pre-algebra?profile=algebra-1&unit=probability-2', ready: true, availability: 'ready' },
+      { label: 'Absolute-Value Equations', href: '/middle-school/pre-algebra?profile=algebra-1&unit=absolute-value-equations', ready: true, availability: 'ready' },
+      { label: 'Compound Inequalities', href: '/middle-school/pre-algebra?profile=algebra-1&unit=compound-inequality', ready: true, availability: 'ready' },
+      { label: 'Absolute-Value Functions', href: '/middle-school/pre-algebra?profile=algebra-1&unit=absolute-value-function', ready: true, availability: 'ready' },
+      { label: 'Direct Proportion Equations', href: '/middle-school/pre-algebra?profile=algebra-1&unit=direct-relation', ready: true, availability: 'ready' },
+      { label: 'Inverse Proportion Equations', href: '/middle-school/pre-algebra?profile=algebra-1&unit=inverse-relation', ready: true, availability: 'ready' },
+      { label: 'Parallel & Perpendicular Lines', href: '/middle-school/pre-algebra?profile=algebra-1&unit=line-distance-conditions', ready: true, availability: 'ready' },
+      { label: 'Linear Programming', href: '/middle-school/pre-algebra?profile=algebra-1&unit=linear-programming', ready: true, availability: 'ready' },
     ],
   },
   {
@@ -1400,6 +1407,9 @@ const INTERNATIONAL_COURSE_STAGE_SEEDS = [
       { label: 'Arithmetic Sequences & Series', href: '/middle-school/pre-algebra?profile=algebra-2&unit=sequences', ready: true, availability: 'ready' },
       { label: 'Geometric Sequences & Series', href: '/middle-school/pre-algebra?profile=algebra-2&unit=geometric-sequences', ready: true, availability: 'ready' },
       { label: 'Sequence & Growth Modeling', href: '/middle-school/pre-algebra?profile=algebra-2&unit=algebra-modeling', ready: true, availability: 'ready' },
+      { label: 'Quadratic Inequalities', href: '/middle-school/pre-algebra?profile=algebra-2&unit=quadratic-inequalities', ready: true, availability: 'ready' },
+      { label: 'Matrix Operations', href: '/middle-school/pre-algebra?profile=algebra-2&unit=matrices', ready: true, availability: 'ready' },
+      { label: 'Matrix Multiplication', href: '/middle-school/pre-algebra?profile=algebra-2&unit=matrix-multiplication', ready: true, availability: 'ready' },
     ],
   },
   {

@@ -807,6 +807,54 @@ function algebraModeling(random) {
   return item(`한 제품의 판매가는 ${price}천 원, 변동비는 ${cost}천 원이고 고정비는 ${fixed}천 원입니다. 이익이 ${target}천 원이 되려면 몇 개를 팔아야 합니까?`, `(${price}−${cost})x−${fixed}=${target}`, units, withEnglish({}, `Price is ${price}, variable cost ${cost}, fixed cost ${fixed}. How many units give profit ${target}?`, `(${price}−${cost})x−${fixed}=${target}을 풀면 x=${units}입니다.`, `Solve (${price}−${cost})x−${fixed}=${target} to get x=${units}.`));
 }
 
+function compoundInequality(random) {
+  const m = pick(random, [2, 3, 4, 5]);
+  const b = randomInt(random, -8, 8);
+  const left = randomInt(random, -6, 6);
+  const right = left + randomInt(random, 2, 6);
+  const a = m * left + b;
+  const c = m * right + b;
+  const ask = pick(random, ['lower', 'upper', 'width']);
+  const answer = ask === 'lower' ? left : ask === 'upper' ? right : right - left;
+  const askKo = { lower: '해의 하한(가장 작은 경계값)', upper: '해의 상한(가장 큰 경계값)', width: '해의 범위의 폭(상한−하한)' }[ask];
+  const askEn = { lower: 'the lower bound of the solution', upper: 'the upper bound of the solution', width: 'the width of the solution interval (upper minus lower bound)' }[ask];
+  const expr = linear(m, b);
+  return item(`연립부등식 ${a} < ${expr} < ${c}를 만족하는 ${askKo}을 구하세요.`, '', answer, withEnglish({}, `Solve the compound inequality ${a} < ${expr} < ${c} and find ${askEn}.`, `각 변에서 ${b}를 빼고 ${m}으로 나누면 ${left} < x < ${right}를 얻습니다. 따라서 답은 ${answer}입니다.`, `Subtract ${b} from each part and divide by ${m} to get ${left} < x < ${right}. So the answer is ${answer}.`));
+}
+
+function absoluteValueFunction(random) {
+  const h = randomInt(random, -8, 8);
+  const k = randomInt(random, -10, 10);
+  const hTerm = h >= 0 ? `x − ${h}` : `x + ${Math.abs(h)}`;
+  const kTerm = signed(k);
+  if (random() < 0.5) {
+    const n = randomInt(random, -8, 8);
+    const answer = Math.abs(n - h) + k;
+    return item(`f(x) = |${hTerm}| ${kTerm}일 때, f(${n})의 값을 구하세요.`, '', answer, withEnglish({}, `If f(x) = |${hTerm}| ${kTerm}, find f(${n}).`, `f(${n}) = |${n}−(${h})| ${kTerm} = ${Math.abs(n - h)} ${kTerm} = ${answer}입니다.`, `f(${n}) = |${n}−(${h})| ${kTerm} = ${Math.abs(n - h)} ${kTerm} = ${answer}.`));
+  }
+  return item(`함수 y = |${hTerm}| ${kTerm}의 최솟값을 구하세요.`, '', k, withEnglish({}, `Find the minimum value of y = |${hTerm}| ${kTerm}.`, `절댓값은 항상 0 이상이므로 최솟값은 x=${h}일 때 y=${k}입니다.`, `Since an absolute value is always at least 0, the minimum occurs at x=${h}, giving y=${k}.`));
+}
+
+function linearProgramming(random) {
+  let vertices; let values; let p; let q; let tries = 0;
+  do {
+    vertices = Array.from({ length: 4 }, () => [randomInt(random, -6, 10), randomInt(random, -6, 10)]);
+    p = nonZero(random, -5, 5);
+    q = nonZero(random, -5, 5);
+    values = vertices.map(([x, y]) => p * x + q * y);
+    tries += 1;
+  } while (new Set(values).size < 4 && tries < 30);
+  const askMax = random() < 0.5;
+  const answer = askMax ? Math.max(...values) : Math.min(...values);
+  const bestVertex = vertices[values.indexOf(answer)];
+  const vertexListKo = vertices.map(([x, y]) => `(${x}, ${y})`).join(', ');
+  const objective = `z = ${linear(p, 0)} ${signed(q)}y`;
+  const askKo = askMax ? '최댓값' : '최솟값';
+  const askEn = askMax ? 'maximum' : 'minimum';
+  const evalListKo = vertices.map(([x, y], index) => `(${x},${y})→${values[index]}`).join(', ');
+  return item(`실현가능영역의 꼭짓점이 ${vertexListKo}일 때, 목적함수 ${objective}의 ${askKo}을 구하세요.`, '', answer, withEnglish({}, `A feasible region has vertices ${vertexListKo}. Find the ${askEn} value of the objective function ${objective}.`, `일차계획법에서 목적함수의 최댓값과 최솟값은 항상 실현가능영역의 꼭짓점에서 나타납니다. 각 꼭짓점에서 z값을 계산하면 ${evalListKo}이므로, ${askKo}은 ${answer}입니다 (꼭짓점 (${bestVertex[0]}, ${bestVertex[1]})).`, `In linear programming, the maximum and minimum of the objective function always occur at a vertex of the feasible region. Evaluating z at each vertex: ${evalListKo}. So the ${askEn} is ${answer} (at vertex (${bestVertex[0]}, ${bestVertex[1]})).`));
+}
+
 const P = {
   M2: ['kr-middle-2'],
   M3: ['kr-middle-3'],
@@ -847,4 +895,7 @@ export const SECONDARY_ALGEBRA_UNITS = [
   { id: 'logarithms', category: '지수와 로그', label: '로그', description: '로그의 정의와 기본 계산', en: ['Logarithms', 'Evaluate logarithms from their definition'], profiles: profiles(P.H2A, P.A2, P.PC), make: logarithms },
   { id: 'sequences', category: '수열', label: '등차수열', description: '일반항과 첫 n항의 합', en: ['Arithmetic sequences', 'Find terms and finite sums'], profiles: profiles(P.H2A, P.A2, P.PC), make: sequences },
   { id: 'algebra-modeling', category: '수학적 모델링', label: '대수 문장제와 모델링', description: '비용·수익 관계를 식으로 세워 해결하기', en: ['Algebraic modeling', 'Build and solve equations from applied contexts'], profiles: profiles(P.M2, P.M3, P.H1, P.A1, P.A2), make: algebraModeling },
+  { id: 'compound-inequality', category: '방정식과 부등식', label: '연립부등식(합성부등식)', description: 'a<mx+b<c 꼴 연립부등식의 해', en: ['Compound inequalities', 'Solve compound (conjunctive) inequalities of the form a<mx+b<c'], profiles: profiles(P.A1), make: compoundInequality },
+  { id: 'absolute-value-function', category: '함수', label: '절댓값 함수', description: 'y=|x−h|+k의 함숫값과 최솟값', en: ['Absolute value functions', 'Evaluate and find the minimum of y=|x−h|+k'], profiles: profiles(P.A1, P.A2), make: absoluteValueFunction },
+  { id: 'linear-programming', category: '방정식과 부등식', label: '일차계획법', description: '실현가능영역의 꼭짓점에서 목적함수의 최대·최소', en: ['Linear programming', 'Optimize a linear objective function over a feasible region'], profiles: profiles(P.A1, P.A2), make: linearProgramming },
 ];
