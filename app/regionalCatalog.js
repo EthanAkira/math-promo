@@ -169,6 +169,33 @@ const zhHK = {
   // RPM 1-2 입체도형 총괄 모의고사
   'rpm-solid-figures-semester-mock-exam': '中學七年級下學期立體圖形綜合模擬測驗（多面體與測量）',
 
+  // -------------------------------------------------------------
+  // RPM 08 자료의 정리와 해석 (統計與數據分析)
+  // -------------------------------------------------------------
+  'rpm-data-stem-and-leaf-plot': '莖葉圖之解讀與百分比計算',
+  'rpm-data-torn-stem-leaf-plot': '破損殘缺之莖葉圖數據還原',
+  'rpm-data-frequency-table-basic-terms': '次數分配表之基本名詞與組中點計算',
+  'rpm-data-frequency-table-missing-freq': '次數分配表中未知次數求值',
+  'rpm-data-histogram-rectangle-area': '直方圖矩形面積與總次數關係應用',
+  'rpm-data-torn-histogram': '破損殘缺之直方圖次數還原',
+  'rpm-data-frequency-polygon-structure': '次數分配折線圖之畫法與性質判別',
+  'rpm-data-frequency-polygon-area': '次數分配折線圖與橫軸所圍之面積計算',
+  'rpm-data-torn-frequency-polygon': '部分缺失之次數分配折線圖數據還原',
+  'rpm-data-two-groups-polygon-compare': '兩組資料次數分配折線圖之分佈比較',
+  'rpm-data-relative-frequency-concept': '相對次數之意義與性質（總和為1）',
+  'rpm-data-relative-frequency-table-calc': '相對次數分配表計算與次數逆推',
+  'rpm-data-torn-relative-frequency-table': '破損殘缺之相對次數分配表填空還原',
+  'rpm-data-two-groups-relative-freq-ratio': '總次數相異之兩組資料相對次數比計算',
+  'rpm-data-relative-frequency-graph-area': '相對次數折線圖與橫軸所圍面積（等於組距）',
+  'rpm-data-two-groups-relative-freq-compare': '兩組資料之相對次數折線圖進階比較（實力UP）',
+  'rpm-data-statistics-all-mixed': '資料的整理與統計圖表全單元綜合複習',
+
+  // -------------------------------------------------------------
+  // RPM 중1-2 전 범위 최종 총괄 모의고사
+  // -------------------------------------------------------------
+  'rpm-grade7-semester-two-final-exam': '中學七年級下學期全範圍最終實戰總括模擬測驗（幾何與統計全單元）',
+
+
 
 
   'common-divisors-gcd': '公因數與最高公因數', 'gcd-basic': '最高公因數基礎', 'gcd-prime-form': '利用質因數分解求最高公因數', coprime: '互質數', 'common-multiples-lcm': '公倍數與最低公倍數', 'lcm-basic': '最低公倍數基礎', 'lcm-prime-form': '利用質因數分解求最低公倍數', 'gcd-lcm-relation': '最高公因數與最低公倍數的關係', 'gcd-lcm-application': '最高公因數與最低公倍數應用', 'gcd-lcm-mixed': '最高公因數與最低公倍數綜合練習',

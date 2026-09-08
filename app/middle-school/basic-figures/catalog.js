@@ -111,6 +111,24 @@ import {
   rpmSolidSurfaceShortestPath,
   rpmSolidsSurfaceVolumeAllMixed,
   rpmSolidFiguresSemesterMockExam,
+  rpmDataStemAndLeafPlot,
+  rpmDataTornStemLeafPlot,
+  rpmDataFrequencyTableBasicTerms,
+  rpmDataFrequencyTableMissingFreq,
+  rpmDataHistogramRectangleArea,
+  rpmDataTornHistogram,
+  rpmDataFrequencyPolygonStructure,
+  rpmDataFrequencyPolygonArea,
+  rpmDataTornFrequencyPolygon,
+  rpmDataTwoGroupsPolygonCompare,
+  rpmDataRelativeFrequencyConcept,
+  rpmDataRelativeFrequencyTableCalc,
+  rpmDataTornRelativeFrequencyTable,
+  rpmDataTwoGroupsRelativeFreqRatio,
+  rpmDataRelativeFrequencyGraphArea,
+  rpmDataTwoGroupsRelativeFreqCompare,
+  rpmDataStatisticsAllMixed,
+  rpmGrade7SemesterTwoFinalExam,
 } from '../rpmAppliedEngine.js';
 import { CORE_GEOMETRY_UNITS } from './geometryProblemEngine.js';
 import { ADVANCED_GEOMETRY_UNITS } from './advancedGeometryEngine.js';
@@ -518,6 +536,102 @@ const CURRICULUM_PROFILES = {
   'logic-conditional-forms': ['kr-high-1', 'geometry'],
   'logic-detachment-syllogism': ['kr-high-1', 'geometry'],
   'logic-segment-angle-properties': ['kr-high-1', 'geometry'],
+  // RPM 04 다각형
+  'rpm-poly-concept-interior-exterior': ['kr-middle-1', 'pre-algebra'],
+  'rpm-poly-diagonal-count-formula': ['kr-middle-1', 'pre-algebra'],
+  'rpm-poly-find-polygon-from-diagonals': ['kr-middle-1', 'pre-algebra'],
+  'rpm-poly-triangle-angle-sum-ratio': ['kr-middle-1', 'pre-algebra'],
+  'rpm-poly-triangle-exterior-angle-prop': ['kr-middle-1', 'pre-algebra'],
+  'rpm-poly-boomerang-concave-angle': ['kr-middle-1', 'pre-algebra'],
+  'rpm-poly-incenter-angle-bisector': ['kr-middle-1', 'pre-algebra'],
+  'rpm-poly-exterior-interior-bisector': ['kr-middle-1', 'pre-algebra'],
+  'rpm-poly-interior-angle-sum-formula': ['kr-middle-1', 'pre-algebra'],
+  'rpm-poly-exterior-angle-sum-const': ['kr-middle-1', 'pre-algebra'],
+  'rpm-poly-regular-interior-exterior': ['kr-middle-1', 'pre-algebra'],
+  'rpm-poly-regular-ratio-angle': ['kr-middle-1', 'pre-algebra'],
+  'rpm-poly-regular-diagonal-angle': ['kr-middle-1', 'pre-algebra'],
+  'rpm-poly-two-polygons-shared-side': ['kr-middle-1', 'pre-algebra'],
+  'rpm-poly-star-polygon-angle-sum': ['kr-middle-1', 'pre-algebra'],
+  'rpm-poly-paper-fold-parallel-angle': ['kr-middle-1', 'pre-algebra'],
+  'rpm-poly-all-mixed': ['kr-middle-1', 'pre-algebra'],
+
+  // RPM 05 원과 부채꼴
+  'rpm-circle-sector-concept-terms': ['kr-middle-1', 'pre-algebra'],
+  'rpm-circle-central-angle-arc-prop': ['kr-middle-1', 'pre-algebra'],
+  'rpm-circle-parallel-chord-arc': ['kr-middle-1', 'pre-algebra'],
+  'rpm-circle-central-angle-area-prop': ['kr-middle-1', 'pre-algebra'],
+  'rpm-circle-chord-not-proportional': ['kr-middle-1', 'pre-algebra'],
+  'rpm-circle-circumference-and-area': ['kr-middle-1', 'pre-algebra'],
+  'rpm-sector-arc-length-and-area': ['kr-middle-1', 'pre-algebra'],
+  'rpm-sector-area-from-arc-radius': ['kr-middle-1', 'pre-algebra'],
+  'rpm-shaded-region-perimeter': ['kr-middle-1', 'pre-algebra'],
+  'rpm-shaded-region-area-diff': ['kr-middle-1', 'pre-algebra'],
+  'rpm-figure-rotation-swept-area': ['kr-middle-1', 'pre-algebra'],
+  'rpm-tethered-animal-pasture-area': ['kr-middle-1', 'pre-algebra'],
+  'rpm-rolling-circle-track-area': ['kr-middle-1', 'pre-algebra'],
+  'rpm-circle-sector-all-mixed': ['kr-middle-1', 'pre-algebra'],
+  'rpm-plane-figures-semester-mock-exam': ['kr-middle-1', 'pre-algebra'],
+
+  // RPM 06 다면체와 회전체
+  'rpm-polyhedra-concept-classification': ['kr-middle-1', 'pre-algebra'],
+  'rpm-polyhedra-prism-pyramid-elements': ['kr-middle-1', 'pre-algebra'],
+  'rpm-polyhedra-identify-from-conditions': ['kr-middle-1', 'pre-algebra'],
+  'rpm-polyhedra-euler-formula': ['kr-middle-1', 'pre-algebra'],
+  'rpm-polyhedra-regular-types-conditions': ['kr-middle-1', 'pre-algebra'],
+  'rpm-polyhedra-regular-face-shapes': ['kr-middle-1', 'pre-algebra'],
+  'rpm-polyhedra-regular-elements-count': ['kr-middle-1', 'pre-algebra'],
+  'rpm-polyhedra-cube-net-opposite-faces': ['kr-middle-1', 'pre-algebra'],
+  'rpm-polyhedra-cross-section-shapes': ['kr-middle-1', 'pre-algebra'],
+  'rpm-polyhedra-dual-connections': ['kr-middle-1', 'pre-algebra'],
+  'rpm-revolution-solids-types': ['kr-middle-1', 'pre-algebra'],
+  'rpm-revolution-planar-to-solid': ['kr-middle-1', 'pre-algebra'],
+  'rpm-revolution-cross-section-property': ['kr-middle-1', 'pre-algebra'],
+  'rpm-revolution-cross-section-area-calc': ['kr-middle-1', 'pre-algebra'],
+  'rpm-revolution-cone-net-central-angle': ['kr-middle-1', 'pre-algebra'],
+  'rpm-revolution-advanced-properties': ['kr-middle-1', 'pre-algebra'],
+  'rpm-polyhedra-revolution-all-mixed': ['kr-middle-1', 'pre-algebra'],
+
+  // RPM 07 입체도형의 겉넓이와 부피
+  'rpm-solids-prism-surface-area': ['kr-middle-1', 'pre-algebra'],
+  'rpm-solids-cylinder-surface-area': ['kr-middle-1', 'pre-algebra'],
+  'rpm-solids-prism-cylinder-volume': ['kr-middle-1', 'pre-algebra'],
+  'rpm-solids-hollow-prism-surface-volume': ['kr-middle-1', 'pre-algebra'],
+  'rpm-solids-pyramid-surface-volume': ['kr-middle-1', 'pre-algebra'],
+  'rpm-solids-cone-surface-area': ['kr-middle-1', 'pre-algebra'],
+  'rpm-solids-cone-volume': ['kr-middle-1', 'pre-algebra'],
+  'rpm-solids-truncated-corner-pyramid': ['kr-middle-1', 'pre-algebra'],
+  'rpm-solids-frustum-surface-volume': ['kr-middle-1', 'pre-algebra'],
+  'rpm-solids-revolution-surface-volume': ['kr-middle-1', 'pre-algebra'],
+  'rpm-solids-sphere-surface-area': ['kr-middle-1', 'pre-algebra'],
+  'rpm-solids-sphere-volume': ['kr-middle-1', 'pre-algebra'],
+  'rpm-solids-truncated-sphere-part': ['kr-middle-1', 'pre-algebra'],
+  'rpm-solids-cone-sphere-cylinder-ratio': ['kr-middle-1', 'pre-algebra'],
+  'rpm-solids-container-water-level': ['kr-middle-1', 'pre-algebra'],
+  'rpm-solids-surface-shortest-path': ['kr-middle-1', 'pre-algebra'],
+  'rpm-solids-surface-volume-all-mixed': ['kr-middle-1', 'pre-algebra'],
+  'rpm-solid-figures-semester-mock-exam': ['kr-middle-1', 'pre-algebra'],
+
+  // RPM 08 자료의 정리와 해석
+  'rpm-data-stem-and-leaf-plot': ['kr-middle-1', 'pre-algebra'],
+  'rpm-data-torn-stem-leaf-plot': ['kr-middle-1', 'pre-algebra'],
+  'rpm-data-frequency-table-basic-terms': ['kr-middle-1', 'pre-algebra'],
+  'rpm-data-frequency-table-missing-freq': ['kr-middle-1', 'pre-algebra'],
+  'rpm-data-histogram-rectangle-area': ['kr-middle-1', 'pre-algebra'],
+  'rpm-data-torn-histogram': ['kr-middle-1', 'pre-algebra'],
+  'rpm-data-frequency-polygon-structure': ['kr-middle-1', 'pre-algebra'],
+  'rpm-data-frequency-polygon-area': ['kr-middle-1', 'pre-algebra'],
+  'rpm-data-torn-frequency-polygon': ['kr-middle-1', 'pre-algebra'],
+  'rpm-data-two-groups-polygon-compare': ['kr-middle-1', 'pre-algebra'],
+  'rpm-data-relative-frequency-concept': ['kr-middle-1', 'pre-algebra'],
+  'rpm-data-relative-frequency-table-calc': ['kr-middle-1', 'pre-algebra'],
+  'rpm-data-torn-relative-frequency-table': ['kr-middle-1', 'pre-algebra'],
+  'rpm-data-two-groups-relative-freq-ratio': ['kr-middle-1', 'pre-algebra'],
+  'rpm-data-relative-frequency-graph-area': ['kr-middle-1', 'pre-algebra'],
+  'rpm-data-two-groups-relative-freq-compare': ['kr-middle-1', 'pre-algebra'],
+  'rpm-data-statistics-all-mixed': ['kr-middle-1', 'pre-algebra'],
+
+  // RPM 중1-2 전 범위 최종 총괄 모의고사
+  'rpm-grade7-semester-two-final-exam': ['kr-middle-1', 'pre-algebra'],
 };
 
 function withCurriculumProfiles(units) {
@@ -682,6 +796,118 @@ const UNIT_META = {
   'similarity-area-challenge': { tier: 'advanced', category: 'advanced-geometry-challenge' },
   'conic-vector-challenge': { tier: 'advanced', category: 'advanced-geometry-challenge' },
   'space-projection-challenge': { tier: 'advanced', category: 'advanced-geometry-challenge' },
+  // -------------------------------------------------------------
+  // RPM 04 다각형 세부 응용 유형
+  // -------------------------------------------------------------
+  'rpm-poly-concept-interior-exterior': { tier: 'basic', category: 'rpm-polygons-applied' },
+  'rpm-poly-diagonal-count-formula': { tier: 'basic', category: 'rpm-polygons-applied' },
+  'rpm-poly-find-polygon-from-diagonals': { tier: 'intermediate', category: 'rpm-polygons-applied' },
+  'rpm-poly-triangle-angle-sum-ratio': { tier: 'basic', category: 'rpm-polygons-applied' },
+  'rpm-poly-triangle-exterior-angle-prop': { tier: 'basic', category: 'rpm-polygons-applied' },
+  'rpm-poly-boomerang-concave-angle': { tier: 'intermediate', category: 'rpm-polygons-applied' },
+  'rpm-poly-incenter-angle-bisector': { tier: 'intermediate', category: 'rpm-polygons-applied' },
+  'rpm-poly-exterior-interior-bisector': { tier: 'intermediate', category: 'rpm-polygons-applied' },
+  'rpm-poly-interior-angle-sum-formula': { tier: 'basic', category: 'rpm-polygons-applied' },
+  'rpm-poly-exterior-angle-sum-const': { tier: 'basic', category: 'rpm-polygons-applied' },
+  'rpm-poly-regular-interior-exterior': { tier: 'basic', category: 'rpm-polygons-applied' },
+  'rpm-poly-regular-ratio-angle': { tier: 'intermediate', category: 'rpm-polygons-applied' },
+  'rpm-poly-regular-diagonal-angle': { tier: 'intermediate', category: 'rpm-polygons-applied' },
+  'rpm-poly-two-polygons-shared-side': { tier: 'intermediate', category: 'rpm-polygons-applied' },
+  'rpm-poly-star-polygon-angle-sum': { tier: 'intermediate', category: 'rpm-polygons-applied' },
+  'rpm-poly-paper-fold-parallel-angle': { tier: 'intermediate', category: 'rpm-polygons-applied' },
+  'rpm-poly-all-mixed': { tier: 'advanced', category: 'rpm-polygons-applied' },
+
+  // -------------------------------------------------------------
+  // RPM 05 원과 부채꼴 세부 응용 유형
+  // -------------------------------------------------------------
+  'rpm-circle-sector-concept-terms': { tier: 'basic', category: 'rpm-circles-sectors-applied' },
+  'rpm-circle-central-angle-arc-prop': { tier: 'basic', category: 'rpm-circles-sectors-applied' },
+  'rpm-circle-parallel-chord-arc': { tier: 'intermediate', category: 'rpm-circles-sectors-applied' },
+  'rpm-circle-central-angle-area-prop': { tier: 'basic', category: 'rpm-circles-sectors-applied' },
+  'rpm-circle-chord-not-proportional': { tier: 'basic', category: 'rpm-circles-sectors-applied' },
+  'rpm-circle-circumference-and-area': { tier: 'basic', category: 'rpm-circles-sectors-applied' },
+  'rpm-sector-arc-length-and-area': { tier: 'basic', category: 'rpm-circles-sectors-applied' },
+  'rpm-sector-area-from-arc-radius': { tier: 'intermediate', category: 'rpm-circles-sectors-applied' },
+  'rpm-shaded-region-perimeter': { tier: 'intermediate', category: 'rpm-circles-sectors-applied' },
+  'rpm-shaded-region-area-diff': { tier: 'intermediate', category: 'rpm-circles-sectors-applied' },
+  'rpm-figure-rotation-swept-area': { tier: 'advanced', category: 'rpm-circles-sectors-applied' },
+  'rpm-tethered-animal-pasture-area': { tier: 'advanced', category: 'rpm-circles-sectors-applied' },
+  'rpm-rolling-circle-track-area': { tier: 'advanced', category: 'rpm-circles-sectors-applied' },
+  'rpm-circle-sector-all-mixed': { tier: 'advanced', category: 'rpm-circles-sectors-applied' },
+
+  // 평면도형 총괄평가 모의고사
+  'rpm-plane-figures-semester-mock-exam': { tier: 'advanced', category: 'rpm-plane-mock' },
+
+  // -------------------------------------------------------------
+  // RPM 06 다면체와 회전체 세부 응용 유형
+  // -------------------------------------------------------------
+  'rpm-polyhedra-concept-classification': { tier: 'basic', category: 'rpm-polyhedra-revolution-applied' },
+  'rpm-polyhedra-prism-pyramid-elements': { tier: 'basic', category: 'rpm-polyhedra-revolution-applied' },
+  'rpm-polyhedra-identify-from-conditions': { tier: 'intermediate', category: 'rpm-polyhedra-revolution-applied' },
+  'rpm-polyhedra-euler-formula': { tier: 'basic', category: 'rpm-polyhedra-revolution-applied' },
+  'rpm-polyhedra-regular-types-conditions': { tier: 'basic', category: 'rpm-polyhedra-revolution-applied' },
+  'rpm-polyhedra-regular-face-shapes': { tier: 'basic', category: 'rpm-polyhedra-revolution-applied' },
+  'rpm-polyhedra-regular-elements-count': { tier: 'basic', category: 'rpm-polyhedra-revolution-applied' },
+  'rpm-polyhedra-cube-net-opposite-faces': { tier: 'intermediate', category: 'rpm-polyhedra-revolution-applied' },
+  'rpm-polyhedra-cross-section-shapes': { tier: 'intermediate', category: 'rpm-polyhedra-revolution-applied' },
+  'rpm-polyhedra-dual-connections': { tier: 'intermediate', category: 'rpm-polyhedra-revolution-applied' },
+  'rpm-revolution-solids-types': { tier: 'basic', category: 'rpm-polyhedra-revolution-applied' },
+  'rpm-revolution-planar-to-solid': { tier: 'basic', category: 'rpm-polyhedra-revolution-applied' },
+  'rpm-revolution-cross-section-property': { tier: 'intermediate', category: 'rpm-polyhedra-revolution-applied' },
+  'rpm-revolution-cross-section-area-calc': { tier: 'intermediate', category: 'rpm-polyhedra-revolution-applied' },
+  'rpm-revolution-cone-net-central-angle': { tier: 'intermediate', category: 'rpm-polyhedra-revolution-applied' },
+  'rpm-revolution-advanced-properties': { tier: 'advanced', category: 'rpm-polyhedra-revolution-applied' },
+  'rpm-polyhedra-revolution-all-mixed': { tier: 'advanced', category: 'rpm-polyhedra-revolution-applied' },
+
+  // -------------------------------------------------------------
+  // RPM 07 입체도형의 겉넓이와 부피 세부 응용 유형
+  // -------------------------------------------------------------
+  'rpm-solids-prism-surface-area': { tier: 'basic', category: 'rpm-solids-measures-applied' },
+  'rpm-solids-cylinder-surface-area': { tier: 'basic', category: 'rpm-solids-measures-applied' },
+  'rpm-solids-prism-cylinder-volume': { tier: 'basic', category: 'rpm-solids-measures-applied' },
+  'rpm-solids-hollow-prism-surface-volume': { tier: 'intermediate', category: 'rpm-solids-measures-applied' },
+  'rpm-solids-pyramid-surface-volume': { tier: 'intermediate', category: 'rpm-solids-measures-applied' },
+  'rpm-solids-cone-surface-area': { tier: 'basic', category: 'rpm-solids-measures-applied' },
+  'rpm-solids-cone-volume': { tier: 'basic', category: 'rpm-solids-measures-applied' },
+  'rpm-solids-truncated-corner-pyramid': { tier: 'intermediate', category: 'rpm-solids-measures-applied' },
+  'rpm-solids-frustum-surface-volume': { tier: 'intermediate', category: 'rpm-solids-measures-applied' },
+  'rpm-solids-revolution-surface-volume': { tier: 'intermediate', category: 'rpm-solids-measures-applied' },
+  'rpm-solids-sphere-surface-area': { tier: 'basic', category: 'rpm-solids-measures-applied' },
+  'rpm-solids-sphere-volume': { tier: 'basic', category: 'rpm-solids-measures-applied' },
+  'rpm-solids-truncated-sphere-part': { tier: 'intermediate', category: 'rpm-solids-measures-applied' },
+  'rpm-solids-cone-sphere-cylinder-ratio': { tier: 'intermediate', category: 'rpm-solids-measures-applied' },
+  'rpm-solids-container-water-level': { tier: 'advanced', category: 'rpm-solids-measures-applied' },
+  'rpm-solids-surface-shortest-path': { tier: 'advanced', category: 'rpm-solids-measures-applied' },
+  'rpm-solids-surface-volume-all-mixed': { tier: 'advanced', category: 'rpm-solids-measures-applied' },
+
+  // 입체도형 총괄평가 모의고사
+  'rpm-solid-figures-semester-mock-exam': { tier: 'advanced', category: 'rpm-solid-mock' },
+
+  // -------------------------------------------------------------
+  // RPM 08 자료의 정리와 해석 세부 응용 유형
+  // -------------------------------------------------------------
+  'rpm-data-stem-and-leaf-plot': { tier: 'basic', category: 'rpm-data-stats-applied' },
+  'rpm-data-torn-stem-leaf-plot': { tier: 'intermediate', category: 'rpm-data-stats-applied' },
+  'rpm-data-frequency-table-basic-terms': { tier: 'basic', category: 'rpm-data-stats-applied' },
+  'rpm-data-frequency-table-missing-freq': { tier: 'intermediate', category: 'rpm-data-stats-applied' },
+  'rpm-data-histogram-rectangle-area': { tier: 'intermediate', category: 'rpm-data-stats-applied' },
+  'rpm-data-torn-histogram': { tier: 'intermediate', category: 'rpm-data-stats-applied' },
+  'rpm-data-frequency-polygon-structure': { tier: 'basic', category: 'rpm-data-stats-applied' },
+  'rpm-data-frequency-polygon-area': { tier: 'intermediate', category: 'rpm-data-stats-applied' },
+  'rpm-data-torn-frequency-polygon': { tier: 'intermediate', category: 'rpm-data-stats-applied' },
+  'rpm-data-two-groups-polygon-compare': { tier: 'intermediate', category: 'rpm-data-stats-applied' },
+  'rpm-data-relative-frequency-concept': { tier: 'basic', category: 'rpm-data-stats-applied' },
+  'rpm-data-relative-frequency-table-calc': { tier: 'intermediate', category: 'rpm-data-stats-applied' },
+  'rpm-data-torn-relative-frequency-table': { tier: 'intermediate', category: 'rpm-data-stats-applied' },
+  'rpm-data-two-groups-relative-freq-ratio': { tier: 'advanced', category: 'rpm-data-stats-applied' },
+  'rpm-data-relative-frequency-graph-area': { tier: 'intermediate', category: 'rpm-data-stats-applied' },
+  'rpm-data-two-groups-relative-freq-compare': { tier: 'advanced', category: 'rpm-data-stats-applied' },
+  'rpm-data-statistics-all-mixed': { tier: 'advanced', category: 'rpm-data-stats-applied' },
+
+  // -------------------------------------------------------------
+  // RPM 중1-2 전 범위 최종 실전 총괄 모의고사
+  // -------------------------------------------------------------
+  'rpm-grade7-semester-two-final-exam': { tier: 'advanced', category: 'rpm-grade7-final-mock' },
 };
 
 export const UNIT_CATEGORY_LABELS = {
@@ -695,6 +921,9 @@ export const UNIT_CATEGORY_LABELS = {
   'rpm-polyhedra-revolution-applied': { label: '[RPM 세부응용] 06 다면체와 회전체', labelEn: '[Applied] 06 Polyhedra & Revolution' },
   'rpm-solids-measures-applied': { label: '[RPM 세부응용] 07 입체도형의 겉넓이와 부피', labelEn: '[Applied] 07 Solids Surface & Volume' },
   'rpm-solid-mock': { label: '[총괄평가] 중학 1-2 입체도형 종합 모의고사', labelEn: '[Mock Exam] Grade 7-2 Solid Figures Comprehensive' },
+  'rpm-data-stats-applied': { label: '[RPM 세부응용] 08 자료의 정리와 해석', labelEn: '[Applied] 08 Data & Statistics' },
+  'rpm-grade7-final-mock': { label: '[최종총괄] 중학 1-2 전 범위 최종 실전 모의고사', labelEn: '[Final Exam] Grade 7-2 Comprehensive' },
+
 
 
   'basic-figures-intro': { label: '기본 도형 (점·선·면·각)', labelEn: 'Basic Figures (Points, Lines & Angles)' },
@@ -860,6 +1089,31 @@ export const RPM_SOLID_FIGURES_MOCK_UNITS = [
   { id: 'rpm-solid-figures-semester-mock-exam', label: '[입체도형 총괄평가] 중1-2 입체도형 종합 실전 모의고사', description: '다면체와 회전체, 입체도형의 겉넓이와 부피 전 범위를 망라한 중단원 및 실력UP 총괄 모의고사', en: ['Grade 7-2 Solid Figures Comprehensive Mock Exam', 'Comprehensive mock exam covering all topics in Polyhedra, Revolution Solids, Surface Area, and Volume'], make: rpmSolidFiguresSemesterMockExam },
 ];
 
+export const RPM_DATA_STATISTICS_APPLIED_UNITS = [
+  { id: 'rpm-data-stem-and-leaf-plot', label: '[자료와 통계 응용 01] 줄기와 잎 그림 해석', description: '전체 자료의 수, k번째로 큰/작은 변량, 특정 범위 백분율 계산', en: ['Data & Statistics Type 01: Stem-and-Leaf Plot Interpretation', 'Find total data points, k-th values, and percentage in range'], make: rpmDataStemAndLeafPlot },
+  { id: 'rpm-data-torn-stem-leaf-plot', label: '[자료와 통계 응용 02] 찢어진 줄기와 잎 그림', description: '일부가 찢어져 보이지 않는 줄기와 잎 그림에서 주어진 조건으로 미지수 추적', en: ['Data & Statistics Type 02: Torn Stem-and-Leaf Plot', 'Deduce hidden leaves from given totals, percentages, or conditions'], make: rpmDataTornStemLeafPlot },
+  { id: 'rpm-data-frequency-table-basic-terms', label: '[자료와 통계 응용 03] 도수분포표 기본 용어 및 계급값', description: '변량, 계급, 계급의 크기, 계급값, 도수의 뜻과 계산', en: ['Data & Statistics Type 03: Frequency Table Basic Terms & Class Marks', 'Concepts and calculations of class intervals, widths, class marks, and frequencies'], make: rpmDataFrequencyTableBasicTerms },
+  { id: 'rpm-data-frequency-table-missing-freq', label: '[자료와 통계 응용 04] 도수분포표에서 미지수 도수 구하기', description: '도수의 총합 및 비율 조건을 이용하여 표에서 지워진 계급의 도수 계산', en: ['Data & Statistics Type 04: Finding Missing Frequencies in Tables', 'Calculate missing frequencies using total frequency and percentage conditions'], make: rpmDataFrequencyTableMissingFreq },
+  { id: 'rpm-data-histogram-rectangle-area', label: '[자료와 통계 응용 05] 히스토그램 직사각형의 넓이', description: '(직사각형 넓이의 합) = (계급의 크기) × (도수의 총합) 성질을 이용한 넓이 계산', en: ['Data & Statistics Type 05: Histogram Rectangle Areas', 'Calculate total rectangle area = class width × total frequency'], make: rpmDataHistogramRectangleArea },
+  { id: 'rpm-data-torn-histogram', label: '[자료와 통계 응용 06] 일부가 찢어진 히스토그램', description: '직사각형 일부가 찢어진 히스토그램에서 백분율 조건을 이용한 지워진 도수 추적', en: ['Data & Statistics Type 06: Torn Histogram Reconstruction', 'Find missing bar heights using total frequency and percentage clues'], make: rpmDataTornHistogram },
+  { id: 'rpm-data-frequency-polygon-structure', label: '[자료와 통계 응용 07] 도수분포다각형의 작성과 성질', description: '계급값 위의 점 연결, 양 끝 도수 0인 계급 추가, 참/거짓 개념 판별', en: ['Data & Statistics Type 07: Frequency Polygon Properties', 'True/False conceptual properties of frequency polygons and connecting midpoints'], make: rpmDataFrequencyPolygonStructure },
+  { id: 'rpm-data-frequency-polygon-area', label: '[자료와 통계 응용 08] 도수분포다각형과 가로축 둘러싸인 넓이', description: '도수분포다각형과 가로축으로 둘러싸인 부분의 넓이 = (계급의 크기) × (도수의 총합)', en: ['Data & Statistics Type 08: Frequency Polygon Enclosed Area', 'Enclosed area with horizontal axis = class width × total frequency'], make: rpmDataFrequencyPolygonArea },
+  { id: 'rpm-data-torn-frequency-polygon', label: '[자료와 통계 응용 09] 일부가 보이지 않는 도수분포다각형', description: '잉크가 묻거나 찢어져 가려진 점의 도수를 전체 도수 합으로부터 역산', en: ['Data & Statistics Type 09: Torn Frequency Polygon', 'Calculate hidden vertex frequency from total frequency sum'], make: rpmDataTornFrequencyPolygon },
+  { id: 'rpm-data-two-groups-polygon-compare', label: '[자료와 통계 응용 10] 두 집단의 도수분포다각형 비교', description: '오른쪽/왼쪽 치우침에 따른 두 집단의 성적·변량 분포 상태 비교 해석', en: ['Data & Statistics Type 10: Comparing Frequency Polygons of Two Groups', 'Interpret relative performance and distribution shifts between two groups'], make: rpmDataTwoGroupsPolygonCompare },
+  { id: 'rpm-data-relative-frequency-concept', label: '[자료와 통계 응용 11] 상대도수의 뜻과 성질', description: '상대도수 = (도수) / (도수의 총합), 총합은 항상 1, 도수에 정비례하는 성질', en: ['Data & Statistics Type 11: Relative Frequency Definition & Properties', 'Relative frequency = frequency / total; sum equals 1; directly proportional'], make: rpmDataRelativeFrequencyConcept },
+  { id: 'rpm-data-relative-frequency-table-calc', label: '[자료와 통계 응용 12] 도수분포표 상대도수 계산 및 역추적', description: '상대도수와 도수의 총합을 이용하여 특정 계급의 도수 역계산', en: ['Data & Statistics Type 12: Calculating Relative Frequency & Reversing Frequencies', 'Compute frequency = relative frequency × total frequency'], make: rpmDataRelativeFrequencyTableCalc },
+  { id: 'rpm-data-torn-relative-frequency-table', label: '[자료와 통계 응용 13] 일부가 찢어진 상대도수 분포표', description: '빈칸 A, B가 있는 상대도수 분포표에서 총합 1과 비례 관계를 이용한 빈칸 완성', en: ['Data & Statistics Type 13: Torn Relative Frequency Table', 'Determine missing values A and B using total sum 1 and proportions'], make: rpmDataTornRelativeFrequencyTable },
+  { id: 'rpm-data-two-groups-relative-freq-ratio', label: '[자료와 통계 응용 14] 도수 총합이 다른 두 집단의 상대도수 비교', description: '두 집단의 도수의 총합의 비와 특정 계급의 도수의 비로부터 상대도수의 비 계산', en: ['Data & Statistics Type 14: Relative Frequency Ratio of Two Groups', 'Find ratio of relative frequencies from ratio of totals and ratio of frequencies'], make: rpmDataTwoGroupsRelativeFreqRatio },
+  { id: 'rpm-data-relative-frequency-graph-area', label: '[자료와 통계 응용 15] 상대도수 그래프와 가로축 둘러싸인 넓이', description: '상대도수의 분포를 나타낸 다각형과 가로축으로 둘러싸인 부분의 넓이 = 계급의 크기', en: ['Data & Statistics Type 15: Relative Frequency Polygon Enclosed Area', 'Area enclosed by relative frequency polygon and axis = class width × 1'], make: rpmDataRelativeFrequencyGraphArea },
+  { id: 'rpm-data-two-groups-relative-freq-compare', label: '[자료와 통계 응용 16] 두 집단의 상대도수 그래프 비교 (실력UP)', description: '도수의 총합이 서로 다른 두 집단의 분포 상태 비교 시 상대도수 그래프 활용', en: ['Data & Statistics Type 16: Advanced Comparison of Relative Frequency Distributions', 'Compare distribution shapes between groups with unequal sample sizes'], make: rpmDataTwoGroupsRelativeFreqCompare },
+  { id: 'rpm-data-statistics-all-mixed', label: '[자료와 통계 종합] 자료의 정리와 해석 전 유형 실전 혼합', description: '줄기와 잎, 도수분포표, 히스토그램, 도수분포다각형, 상대도수 전 16개 핵심 유형 무작위 실전 세트', en: ['Data & Statistics Comprehensive: All 16 Types Mixed', 'Randomized practice set covering all 16 data collection and representation types'], make: rpmDataStatisticsAllMixed },
+];
+
+export const RPM_GRADE7_FINAL_MOCK_UNITS = [
+  { id: 'rpm-grade7-semester-two-final-exam', label: '[중1-2 최종총괄] 중학 1-2 전 범위 최종 실전 모의고사', description: '기본도형, 위치관계, 작도합동, 평면도형, 입체도형, 통계 등 중학 1-2 전 범위 총괄 실전 모의고사 (RPM p.160~175)', en: ['Grade 7-2 Comprehensive Final Examination', 'Ultimate comprehensive mock exam covering all chapters of Grade 7 Semester 2 (Basic Figures, Relations, Congruence, Polygons, Circles, Solids, Statistics)'], make: rpmGrade7SemesterTwoFinalExam },
+];
+
+
 
 
 
@@ -890,6 +1144,8 @@ export const BASIC_FIGURE_UNITS = withDifficultyTier([
   ...RPM_POLYHEDRA_REVOLUTION_APPLIED_UNITS,
   ...RPM_SOLIDS_MEASURES_APPLIED_UNITS,
   ...RPM_SOLID_FIGURES_MOCK_UNITS,
+  ...RPM_DATA_STATISTICS_APPLIED_UNITS,
+  ...RPM_GRADE7_FINAL_MOCK_UNITS,
 ]);
 
 export function findBasicFigureUnit(unitId) {

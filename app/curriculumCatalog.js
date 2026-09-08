@@ -942,6 +942,8 @@ const KOREAN_GRADE_STAGE_SEEDS = [
       { label: '입체도형 겉넓이·부피 세부 응용 (RPM 07)', href: '/middle-school/basic-figures?profile=kr&unit=rpm-solids-surface-volume-all-mixed', ready: true, availability: 'ready' },
       { label: '중1-2 입체도형 종합 모의고사', href: '/middle-school/basic-figures?profile=kr&unit=rpm-solid-figures-semester-mock-exam', ready: true, availability: 'ready' },
       { label: '자료의 정리와 해석 (도수분포표)', href: '/middle-school/pre-algebra?profile=kr-middle-1&unit=frequency-table', ready: true, availability: 'ready' },
+      { label: '자료의 정리와 해석 세부 응용 (RPM 08)', href: '/middle-school/basic-figures?profile=kr&unit=rpm-data-statistics-all-mixed', ready: true, availability: 'ready' },
+      { label: '중1-2 전 범위 최종 실전 총괄 모의고사', href: '/middle-school/basic-figures?profile=kr&unit=rpm-grade7-semester-two-final-exam', ready: true, availability: 'ready' },
     ],
   },
 
@@ -1974,6 +1976,8 @@ const DOMAIN_STAGE_SEEDS = [
     availability: 'ready',
     topics: [
       { label: '중1 줄기와 잎 그림 · 도수분포표', href: '/middle-school/pre-algebra?profile=kr-middle-1&unit=frequency-table', ready: true, availability: 'ready' },
+      { label: '중1 자료의 정리와 해석 세부 응용 (RPM 08)', href: '/middle-school/basic-figures?profile=kr&unit=rpm-data-statistics-all-mixed', ready: true, availability: 'ready' },
+      { label: '중1-2 전 범위 최종 실전 총괄 모의고사', href: '/middle-school/basic-figures?profile=kr&unit=rpm-grade7-semester-two-final-exam', ready: true, availability: 'ready' },
       { label: '중2·Algebra 1 경우의 수와 확률', href: '/middle-school/pre-algebra?profile=kr-middle-2&unit=probability-2', ready: true, availability: 'ready' },
       { label: '중3 대푯값과 산포도 (평균·표준편차)', href: '/middle-school/pre-algebra?profile=kr-middle-3&unit=data-variation', ready: true, availability: 'ready' },
       { label: '고2 확률과 통계 (확률분포·통계적 추정)', href: '/middle-school/pre-algebra?profile=kr-high-2-probability-statistics', ready: true, availability: 'ready' },

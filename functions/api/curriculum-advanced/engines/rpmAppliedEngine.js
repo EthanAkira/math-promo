@@ -8582,6 +8582,483 @@ export function rpmSolidFiguresSemesterMockExam(random) {
 
 
 
+// =============================================================
+// CHAPTER 08 & 09: 자료의 정리와 해석 응용 (RPM 1-2 Pages 144 ~ 158 & 160 ~ 175)
+// =============================================================
+
+
+// [유형 01] 줄기와 잎 그림의 해석 (RPM #1000~#1005, #1073)
+// 전체 자료의 수, k번째로 큰/작은 값, 특정 값 이상/이하의 백분율
+export function rpmDataStemAndLeafPlot(random) {
+  // 줄기 1, 2, 3, 4
+  const stem1 = [2, 5, 8];
+  const stem2 = [1, 4, 4, 7, 9];
+  const stem3 = [0, 2, 3, 5, 6, 8];
+  const stem4 = [1, 3];
+  const allValues = [
+    ...stem1.map((l) => 10 + l),
+    ...stem2.map((l) => 20 + l),
+    ...stem3.map((l) => 30 + l),
+    ...stem4.map((l) => 40 + l),
+  ];
+  const totalCount = allValues.length; // 16명
+
+  const mode = ri(random, 1, 3);
+  if (mode === 1) {
+    // 전체 학생 수 구하기
+    return {
+      prompt: `어느 학급 학생들의 턱걸이 횟수를 조사한 줄기와 잎 그림에서 줄기 1에 잎 3개, 줄기 2에 잎 5개, 줄기 3에 잎 6개, 줄기 4에 잎 2개가 있다. 전체 학생 수를 구하시오. (단, 단위 명은 생략)`,
+      promptEn: `In a stem-and-leaf plot of pull-up counts, stem 1 has 3 leaves, stem 2 has 5 leaves, stem 3 has 6 leaves, and stem 4 has 2 leaves. Find the total number of students.`,
+      expression: `3 + 5 + 6 + 2`,
+      answer: String(totalCount),
+      explanation: `줄기와 잎 그림에서 잎의 총 개수가 전체 자료의 개수(학생 수)와 같습니다. 따라서 전체 학생 수는 3 + 5 + 6 + 2 = ${totalCount}명입니다.`,
+    };
+  } else if (mode === 2) {
+    // k번째로 큰 값 구하기 (예: 3번째로 큰 값)
+    const k = ri(random, 2, 4);
+    const sortedDesc = [...allValues].sort((a, b) => b - a);
+    const ansVal = sortedDesc[k - 1];
+    return {
+      prompt: `줄기와 잎 그림에 나타난 자료 [12, 15, 18, 21, 24, 24, 27, 29, 30, 32, 33, 35, 36, 38, 41, 43]에서 기록이 ${k}번째로 높은 값을 구하시오.`,
+      promptEn: `From the stem-and-leaf data [12, 15, 18, 21, 24, 24, 27, 29, 30, 32, 33, 35, 36, 38, 41, 43], find the ${k}th highest value.`,
+      expression: `\\text{${k}번째로 큰 값}`,
+      answer: String(ansVal),
+      explanation: `자료를 큰 값부터 나열하면 43, 41, 38, 36, 35, ... 입니다. 따라서 ${k}번째로 높은 값은 ${ansVal}입니다.`,
+    };
+  } else {
+    // 특정 값(30) 이상인 학생의 백분율 (%)
+    const threshold = 30;
+    const overCount = allValues.filter((v) => v >= threshold).length; // 8명
+    const percent = Math.round((overCount / totalCount) * 100); // 50%
+    return {
+      prompt: `전체 학생 수가 ${totalCount}명인 줄기와 잎 그림에서 기록이 ${threshold}회 이상인 학생이 ${overCount}명이다. 기록이 ${threshold}회 이상인 학생은 전체의 몇 %인지 구하시오. (단, % 기호는 생략하고 숫자만 입력)`,
+      promptEn: `In a stem-and-leaf plot of ${totalCount} students, ${overCount} students have records of at least ${threshold}. What percentage is this?`,
+      expression: `\\frac{${overCount}}{${totalCount}} \\times 100`,
+      answer: String(percent),
+      explanation: `기록이 ${threshold}회 이상인 학생의 백분율은 (${overCount} / ${totalCount}) × 100 = ${percent}% 입니다.`,
+    };
+  }
+}
+
+// [유형 02] 찢어진 줄기와 잎 그림의 미지수 추적 (RPM #1006~#1010, #1074)
+export function rpmDataTornStemLeafPlot(random) {
+  // 전체 학생 수 20명, 줄기 1, 2, 3, 4
+  // 줄기 1에 4명, 줄기 3에 6명, 줄기 4에 3명, 줄기 2가 찢어져서 보이지 않음
+  const count1 = 4;
+  const count3 = 6;
+  const count4 = 3;
+  const total = 20;
+  const tornCount = total - (count1 + count3 + count4); // 7명
+
+  return {
+    prompt: `어느 학급 학생 20명의 수학 점수를 조사한 줄기와 잎 그림에서 줄기 6(60점대)에 잎이 4개, 줄기 8(80점대)에 잎이 6개, 줄기 9(90점대)에 잎이 3개 있고, 줄기 7(70점대) 부분이 찢어져서 보이지 않는다. 70점대(줄기 7)에 속하는 학생 수를 구하시오. (단, 단위 명은 생략)`,
+    promptEn: `In a stem-and-leaf plot of 20 students' scores, stem 6 has 4 leaves, stem 8 has 6 leaves, stem 9 has 3 leaves, and stem 7 is torn. Find the number of students in stem 7.`,
+    expression: `${total} - (${count1} + ${count3} + ${count4})`,
+    answer: String(tornCount),
+    explanation: `전체 학생 수가 ${total}명이므로, 찢어진 줄기 7의 학생 수는 ${total} - (${count1} + ${count3} + ${count4}) = ${total} - ${count1 + count3 + count4} = ${tornCount}명입니다.`,
+  };
+}
+
+// [유형 03] 도수분포표의 기본 용어 및 계급값 (RPM #1011~#1016)
+// 계급, 계급의 크기, 계급값
+export function rpmDataFrequencyTableBasicTerms(random) {
+  const width = pick(random, [5, 10]);
+  const start = ri(random, 4, 8) * 10;
+  const end = start + width;
+  const mid = (start + end) / 2;
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 계급값 구하기
+    return {
+      prompt: `도수분포표에서 계급이 '${start} 이상 ${end} 미만'일 때, 이 계급의 계급값을 구하시오.`,
+      promptEn: `In a frequency table, find the class midpoint (class mark) for the interval '${start} to ${end}'.`,
+      expression: `\\frac{${start} + ${end}}{2}`,
+      answer: String(mid),
+      explanation: `계급값은 계급의 양 끝값의 중앙값이므로 (${start} + ${end}) / 2 = ${mid}입니다.`,
+    };
+  } else {
+    // 계급의 크기 구하기
+    return {
+      prompt: `계급이 '${start} 이상 ${end} 미만'일 때, 이 계급의 크기를 구하시오.`,
+      promptEn: `Find the class width for the interval '${start} to ${end}'.`,
+      expression: `${end} - ${start}`,
+      answer: String(width),
+      explanation: `계급의 크기는 계급의 양 끝값의 차이이므로 ${end} - ${start} = ${width}입니다.`,
+    };
+  }
+}
+
+// [유형 04] 도수분포표에서 미지수 도수 구하기 (RPM #1017~#1022, #1075)
+export function rpmDataFrequencyTableMissingFreq(random) {
+  const total = pick(random, [25, 30, 40, 50]);
+  const f1 = ri(random, 3, 6);
+  const f2 = ri(random, 5, 9);
+  const f3 = ri(random, 4, 8);
+  const fHidden = total - (f1 + f2 + f3); // remaining
+
+  if (fHidden <= 2) {
+    // fallback safe
+    return {
+      prompt: `전체 학생 수가 30명인 도수분포표에서 네 계급의 도수가 각각 5명, 9명, A명, 6명일 때, 도수 A의 값을 구하시오.`,
+      promptEn: `In a frequency table with total frequency 30, three classes have frequencies 5, 9, 6 and one class has frequency A. Find A.`,
+      expression: `30 - (5 + 9 + 6)`,
+      answer: '10',
+      explanation: `도수의 총합이 30명이므로 A = 30 - (5 + 9 + 6) = 30 - 20 = 10명입니다.`,
+    };
+  }
+
+  return {
+    prompt: `전체 학생 수가 ${total}명인 도수분포표에서 네 계급의 도수가 각각 ${f1}명, ${f2}명, A명, ${f3}명일 때, 도수 A의 값을 구하시오.`,
+    promptEn: `In a frequency table of ${total} students, the frequencies are ${f1}, ${f2}, A, and ${f3}. Find A.`,
+    expression: `${total} - (${f1} + ${f2} + ${f3})`,
+    answer: String(fHidden),
+    explanation: `도수의 총합은 ${total}명이므로 A = ${total} - (${f1} + ${f2} + ${f3}) = ${total} - ${f1 + f2 + f3} = ${fHidden}명입니다.`,
+  };
+}
+
+// [유형 05] 히스토그램의 이해 및 직사각형의 넓이 (RPM #1023~#1028, #1077)
+// 직사각형 넓이의 합 = (계급의 크기) * (도수의 총합)
+export function rpmDataHistogramRectangleArea(random) {
+  const width = pick(random, [5, 10]);
+  const totalStudents = ri(random, 20, 40);
+  const totalArea = width * totalStudents;
+
+  return {
+    prompt: `어느 히스토그램에서 계급의 크기가 ${width}이고, 조사한 학생의 총 수가 ${totalStudents}명이다. 이 히스토그램에 그려진 모든 직사각형의 넓이의 합을 구하시오.`,
+    promptEn: `In a histogram, the class width is ${width} and the total frequency is ${totalStudents}. Find the sum of the areas of all rectangles.`,
+    expression: `${width} \\times ${totalStudents}`,
+    answer: String(totalArea),
+    explanation: `히스토그램에서 각 직사각형의 넓이는 (계급의 크기) × (그 계급의 도수)이므로, 모든 직사각형의 넓이의 합은 (계급의 크기) × (도수의 총합) = ${width} × ${totalStudents} = ${totalArea}입니다.`,
+  };
+}
+
+// [유형 06] 일부가 찢어진 히스토그램 (RPM #1029~#1035, #1078)
+export function rpmDataTornHistogram(random) {
+  // 전체 학생 수 40명, 찢어진 계급의 도수 구하기
+  const total = 40;
+  const f1 = 4;
+  const f2 = 8;
+  const f4 = 10;
+  const f5 = 6;
+  const fTorn = total - (f1 + f2 + f4 + f5); // 12명
+
+  return {
+    prompt: `전체 학생 수가 ${total}명인 히스토그램에서 한 계급의 윗부분이 찢어져서 보이지 않는다. 나머지 네 계급의 도수가 각각 ${f1}명, ${f2}명, ${f4}명, ${f5}명일 때, 찢어진 계급의 도수를 구하시오. (단, 단위 명은 생략)`,
+    promptEn: `In a histogram of ${total} students, one rectangle is torn. The other four classes have frequencies ${f1}, ${f2}, ${f4}, and ${f5}. Find the frequency of the torn class.`,
+    expression: `${total} - (${f1} + ${f2} + ${f4} + ${f5})`,
+    answer: String(fTorn),
+    explanation: `도수의 총합이 ${total}명이므로, 찢어진 계급의 도수는 ${total} - (${f1} + ${f2} + ${f4} + ${f5}) = ${total} - ${f1 + f2 + f4 + f5} = ${fTorn}명입니다.`,
+  };
+}
+
+// [유형 07] 도수분포다각형의 작성과 성질 (RPM #1036~#1040)
+export function rpmDataFrequencyPolygonStructure(random) {
+  const statements = [
+    {
+      q: '도수분포다각형은 히스토그램의 각 직사각형의 윗변의 중앙의 점을 차례로 선분으로 연결하여 만든다.',
+      qEn: 'A frequency polygon is constructed by connecting the midpoints of the top edges of each histogram bar.',
+      ans: true,
+      expl: '도수분포다각형은 각 계급의 계급값(직사각형 윗변 중앙)에 점을 찍고 차례로 이어 그립니다.',
+    },
+    {
+      q: '도수분포다각형을 그릴 때 양 끝에는 도수가 1인 계급을 하나씩 추가한다.',
+      qEn: 'When plotting a frequency polygon, a class with frequency 1 is added at each end.',
+      ans: false,
+      expl: '도수분포다각형의 양 끝에는 도수가 "0"인 계급을 하나씩 추가하여 가로축과 만나도록 그립니다.',
+    },
+    {
+      q: '도수분포다각형과 가로축으로 둘러싸인 부분의 넓이는 히스토그램의 직사각형의 넓이의 합과 항상 같다.',
+      qEn: 'The area enclosed by the frequency polygon and horizontal axis is always equal to the sum of the histogram bar areas.',
+      ans: true,
+      expl: '잘려 나간 삼각형 부분과 새로 채워지는 삼각형 부분의 넓이가 서로 합동으로 상쇄되므로 두 넓이는 항상 같습니다.',
+    },
+    {
+      q: '도수분포다각형을 이용하면 두 개 이상의 집단의 분포 상태를 한 그래프에서 쉽게 비교할 수 있다.',
+      qEn: 'A frequency polygon allows easy comparison of two or more data sets on the same graph.',
+      ans: true,
+      expl: '선그래프 형태이므로 여러 집단의 분포 곡선을 겹쳐서 비교하기에 매우 적합합니다.',
+    },
+  ];
+  const target = pick(random, statements);
+  return {
+    prompt: `도수분포다각형에 대한 다음 설명의 참/거짓을 판별하시오: "${target.q}"`,
+    promptEn: `Determine True or False: "${target.qEn}"`,
+    expression: target.q,
+    answer: target.ans ? '1' : '2',
+    choices: [
+      { value: '1', label: '참 (O)', labelEn: 'True' },
+      { value: '2', label: '거짓 (X)', labelEn: 'False' },
+    ],
+    explanation: target.expl,
+  };
+}
+
+// [유형 08] 도수분포다각형과 가로축으로 둘러싸인 부분의 넓이 (RPM #1041~#1045, #1079)
+// 넓이 = (계급의 크기) * (도수의 총합)
+export function rpmDataFrequencyPolygonArea(random) {
+  const width = pick(random, [5, 10, 2]);
+  const totalCount = ri(random, 15, 35);
+  const totalArea = width * totalCount;
+
+  return {
+    prompt: `계급의 크기가 ${width}이고 도수의 총합이 ${totalCount}인 도수분포다각형과 가로축으로 둘러싸인 부분의 넓이를 구하시오.`,
+    promptEn: `Find the area of the region enclosed by a frequency polygon and the horizontal axis, given a class width of ${width} and a total frequency of ${totalCount}.`,
+    expression: `${width} \\times ${totalCount}`,
+    answer: String(totalArea),
+    explanation: `도수분포다각형과 가로축으로 둘러싸인 부분의 넓이는 히스토그램의 직사각형들의 넓이의 합과 같습니다. 넓이 = (계급의 크기) × (도수의 총합) = ${width} × ${totalCount} = ${totalArea}입니다.`,
+  };
+}
+
+// [유형 09] 일부가 보이지 않는 도수분포다각형 (RPM #1046~#1050, #1080)
+export function rpmDataTornFrequencyPolygon(random) {
+  const total = 50;
+  const f1 = 6;
+  const f2 = 12;
+  const f4 = 14;
+  const f5 = 8;
+  const fHidden = total - (f1 + f2 + f4 + f5); // 10명
+
+  return {
+    prompt: `학생 수가 총 50명인 도수분포다각형에서 한 계급의 점이 지워져 보이지 않는다. 나머지 네 계급의 도수가 각각 6명, 12명, 14명, 8명일 때, 지워진 계급의 학생 수를 구하시오.`,
+    promptEn: `In a frequency polygon of 50 students, one point is missing. The other four classes have frequencies 6, 12, 14, and 8. Find the frequency of the missing class.`,
+    expression: `50 - (6 + 12 + 14 + 8)`,
+    answer: String(fHidden),
+    explanation: `도수의 총합이 50명이므로, 지워진 계급의 도수는 50 - (6 + 12 + 14 + 8) = 50 - 40 = 10명입니다.`,
+  };
+}
+
+// [유형 10] 두 집단의 도수분포다각형 비교 (RPM #1051~#1054)
+export function rpmDataTwoGroupsPolygonCompare(random) {
+  return {
+    prompt: `A반과 B반 학생들의 영어 점수를 나타낸 도수분포다각형을 비교하였더니, A반의 그래프가 B반의 그래프보다 전체적으로 오른쪽으로 치우쳐 있었다. 이에 대한 올바른 해석을 고르시오.`,
+    promptEn: `Comparing the frequency polygons of class A and class B English scores, class A's curve is shifted overall to the right of class B's. Choose the correct interpretation.`,
+    expression: `\\text{오른쪽으로 치우칠수록 점수가 높은 학생이 많다}`,
+    answer: '1',
+    choices: [
+      { value: '1', label: 'A반의 영어 점수가 대체로 B반보다 우수하다.', labelEn: 'Class A generally has better English scores than Class B.' },
+      { value: '2', label: 'B반의 영어 점수가 대체로 A반보다 우수하다.', labelEn: 'Class B generally has better English scores than Class A.' },
+      { value: '3', label: 'A반 학생 수가 B반 학생 수보다 항상 더 많다.', labelEn: 'Class A has more students than Class B.' },
+      { value: '4', label: '두 반의 최고 점수는 반드시 같다.', labelEn: 'The highest scores of both classes must be identical.' },
+    ],
+    explanation: `도수분포다각형에서 그래프가 전체적으로 오른쪽으로 치우쳐 있다는 것은 변량(점수)이 높은 쪽에 도수가 더 많이 분포한다는 뜻이므로, A반의 점수가 대체로 B반보다 더 우수하다고 해석할 수 있습니다.`,
+  };
+}
+
+// [유형 11] 상대도수의 뜻과 성질 (RPM #1055~#1059)
+// 상대도수 = 도수 / 총합, 합 = 1, 도수에 정비례
+export function rpmDataRelativeFrequencyConcept(random) {
+  const total = 50;
+  const freq = pick(random, [5, 10, 15, 20, 25]);
+  const relFreq = (freq / total).toFixed(2);
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 상대도수 계산
+    return {
+      prompt: `전체 학생 수가 ${total}명인 학급에서 어떤 계급의 도수가 ${freq}명일 때, 이 계급의 상대도수를 소수로 구하시오.`,
+      promptEn: `In a class of ${total} students, a class has frequency ${freq}. Find its relative frequency as a decimal.`,
+      expression: `\\frac{${freq}}{${total}}`,
+      answer: String(Number(relFreq)),
+      explanation: `상대도수 = (그 계급의 도수) / (도수의 총합) = ${freq} / ${total} = ${relFreq} 입니다.`,
+    };
+  } else {
+    // 상대도수의 총합
+    return {
+      prompt: `어떤 도수분포표에서 모든 계급의 상대도수의 총합은 항상 얼마인가?`,
+      promptEn: `In any relative frequency distribution, what is always the sum of all relative frequencies?`,
+      expression: `\\sum \\text{상대도수} = 1`,
+      answer: '1',
+      explanation: `모든 계급의 도수의 합은 전체 도수와 같으므로, 상대도수의 총합은 항상 1입니다.`,
+    };
+  }
+}
+
+// [유형 12] 도수분포표에서 상대도수 계산 및 도수 역추적 (RPM #1060~#1063, #1083)
+// 도수 = 총합 * 상대도수, 총합 = 도수 / 상대도수
+export function rpmDataRelativeFrequencyTableCalc(random) {
+  const total = pick(random, [40, 50, 80, 100]);
+  const rel = pick(random, [0.15, 0.25, 0.3, 0.35]);
+  const freq = Math.round(total * rel);
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 상대도수와 총합으로 도수 구하기
+    return {
+      prompt: `도수의 총합이 ${total}명인 집단에서 어떤 계급의 상대도수가 ${rel}일 때, 이 계급의 도수를 구하시오. (단, 단위 명은 생략)`,
+      promptEn: `In a population of ${total} people, a class has relative frequency ${rel}. Find its frequency.`,
+      expression: `${total} \\times ${rel}`,
+      answer: String(freq),
+      explanation: `도수 = (도수의 총합) × (그 계급의 상대도수) = ${total} × ${rel} = ${freq}명입니다.`,
+    };
+  } else {
+    // 도수와 상대도수로 도수의 총합 구하기
+    return {
+      prompt: `어느 도수분포표에서 어떤 계급의 도수가 ${freq}명이고, 그 계급의 상대도수가 ${rel}이다. 이 집단의 전체 도수의 총합을 구하시오.`,
+      promptEn: `A class has frequency ${freq} and relative frequency ${rel}. Find the total frequency of the distribution.`,
+      expression: `\\frac{${freq}}{${rel}}`,
+      answer: String(total),
+      explanation: `도수의 총합 = (그 계급의 도수) / (상대도수) = ${freq} / ${rel} = ${total}명입니다.`,
+    };
+  }
+}
+
+// [유형 13] 일부가 찢어진 상대도수 분포표 (RPM #1064~#1068, #1084)
+export function rpmDataTornRelativeFrequencyTable(random) {
+  // 상대도수 총합 1
+  // rel1 = 0.1, rel2 = 0.25, rel4 = 0.2, rel5 = 0.15 => rel3 = 1 - 0.7 = 0.3
+  const rel1 = 0.1;
+  const rel2 = 0.25;
+  const rel4 = 0.2;
+  const rel5 = 0.15;
+  const rel3 = 0.3;
+  const total = 50;
+  const f3 = Math.round(total * rel3); // 15명
+
+  return {
+    prompt: `전체 학생 수가 50명인 상대도수 분포표의 일부가 찢어져 한 계급의 상대도수가 보이지 않는다. 나머지 네 계급의 상대도수가 각각 0.1, 0.25, 0.2, 0.15일 때, 찢어진 계급의 실제 도수(학생 수)를 구하시오.`,
+    promptEn: `In a relative frequency table of 50 students, one class is torn. The other four classes have relative frequencies 0.1, 0.25, 0.2, and 0.15. Find the frequency (student count) of the torn class.`,
+    expression: `50 \\times (1 - (0.1 + 0.25 + 0.2 + 0.15))`,
+    answer: String(f3),
+    explanation: `1) 상대도수의 총합은 항상 1이므로 찢어진 계급의 상대도수는 1 - (0.1 + 0.25 + 0.2 + 0.15) = 1 - 0.7 = 0.3 입니다.\n2) 전체 학생 수가 50명이므로 실제 도수는 50 × 0.3 = 15명입니다.`,
+  };
+}
+
+// [유형 14] 도수의 총합이 다른 두 집단의 상대도수 비교 (RPM #1069~#1072, #1085)
+// A반과 B반의 총도수 비 m:n, 특정 계급 도수 비 p:q => 상대도수의 비 (p/m) : (q/n)
+export function rpmDataTwoGroupsRelativeFreqRatio(random) {
+  const cases = [
+    { m: 3, n: 2, p: 4, q: 3, ratioA: 4 * 2, ratioB: 3 * 3 }, // (4/3):(3/2) = 8:9
+    { m: 2, n: 1, p: 3, q: 2, ratioA: 3 * 1, ratioB: 2 * 2 }, // (3/2):(2/1) = 3:4
+    { m: 3, n: 1, p: 2, q: 3, ratioA: 2 * 1, ratioB: 3 * 3 }, // (2/3):(3/1) = 2:9
+    { m: 4, n: 3, p: 2, q: 1, ratioA: 2 * 3, ratioB: 1 * 4 }, // (2/4):(1/3) = 6:4 = 3:2
+  ];
+  const target = pick(random, cases);
+  // Simplify ratio
+  const g = ((a, b) => {
+    while (b) [a, b] = [b, a % b];
+    return a;
+  })(target.ratioA, target.ratioB);
+  const simA = target.ratioA / g;
+  const simB = target.ratioB / g;
+
+  return {
+    prompt: `두 집단 A, B의 전체 도수의 총합의 비가 ${target.m} : ${target.n}이고, 어떤 계급의 도수의 비가 ${target.p} : ${target.q}일 때, 이 계급의 상대도수의 비를 가장 간단한 자연수의 비로 나타내시오. (예: 3:2)`,
+    promptEn: `Two groups A and B have total frequencies in the ratio ${target.m} : ${target.n}. A certain class has frequencies in the ratio ${target.p} : ${target.q}. Find the ratio of their relative frequencies in simplest integer form.`,
+    expression: `\\frac{${target.p}}{${target.m}} : \\frac{${target.q}}{${target.n}}`,
+    answer: `${simA}:${simB}`,
+    explanation: `상대도수는 (계급의 도수) / (도수의 총합) 입니다. A와 B의 상대도수의 비는 (${target.p} / ${target.m}) : (${target.q} / ${target.n}) = (${target.p} × ${target.n}) : (${target.q} × ${target.m}) = ${target.ratioA} : ${target.ratioB} = ${simA} : ${simB} 입니다.`,
+  };
+}
+
+// [유형 15] 상대도수의 분포를 나타낸 그래프의 넓이 (RPM #1086~#1090)
+// 둘러싸인 넓이 = (계급의 크기) * 1 = 계급의 크기
+export function rpmDataRelativeFrequencyGraphArea(random) {
+  const width = pick(random, [2, 5, 10]);
+
+  return {
+    prompt: `계급의 크기가 ${width}인 상대도수의 분포를 나타낸 그래프와 가로축으로 둘러싸인 부분의 넓이를 구하시오.`,
+    promptEn: `Find the area of the region enclosed by a relative frequency polygon and the horizontal axis, given a class width of ${width}.`,
+    expression: `${width} \\times 1`,
+    answer: String(width),
+    explanation: `상대도수의 분포를 나타낸 그래프와 가로축으로 둘러싸인 부분의 넓이는 (계급의 크기) × (상대도수의 총합) 입니다. 상대도수의 총합은 항상 1이므로, 넓이는 ${width} × 1 = ${width}입니다.`,
+  };
+}
+
+// [유형 16] 두 집단의 상대도수 그래프 비교 (실력 UP) (RPM #1091~#1096)
+export function rpmDataTwoGroupsRelativeFreqCompare(random) {
+  return {
+    prompt: `도수의 총합이 서로 다른 두 집단 A, B의 분포 상태를 비교하려고 할 때 가장 적절한 방법을 고르시오.`,
+    promptEn: `What is the most appropriate statistical method to compare the distribution shapes of two groups with different total frequencies?`,
+    expression: `\\text{상대도수의 분포를 나타낸 그래프}`,
+    answer: '3',
+    choices: [
+      { value: '1', label: '줄기와 잎 그림', labelEn: 'Stem-and-leaf plot' },
+      { value: '2', label: '히스토그램', labelEn: 'Histogram' },
+      { value: '3', label: '상대도수의 분포를 나타낸 그래프', labelEn: 'Relative frequency polygon' },
+      { value: '4', label: '도수분포표', labelEn: 'Frequency table' },
+    ],
+    explanation: `도수의 총합이 서로 다른 두 집단을 비교할 때에는 단순 도수로 비교하면 왜곡이 생기므로, 전체에 대한 비율인 '상대도수의 분포를 나타낸 그래프'를 함께 그려 비교하는 것이 가장 적절합니다.`,
+  };
+}
+
+// [단원 종합] 자료의 정리와 해석 전 유형 혼합
+export function rpmDataStatisticsAllMixed(random) {
+  const generators = [
+    rpmDataStemAndLeafPlot,
+    rpmDataTornStemLeafPlot,
+    rpmDataFrequencyTableBasicTerms,
+    rpmDataFrequencyTableMissingFreq,
+    rpmDataHistogramRectangleArea,
+    rpmDataTornHistogram,
+    rpmDataFrequencyPolygonStructure,
+    rpmDataFrequencyPolygonArea,
+    rpmDataTornFrequencyPolygon,
+    rpmDataTwoGroupsPolygonCompare,
+    rpmDataRelativeFrequencyConcept,
+    rpmDataRelativeFrequencyTableCalc,
+    rpmDataTornRelativeFrequencyTable,
+    rpmDataTwoGroupsRelativeFreqRatio,
+    rpmDataRelativeFrequencyGraphArea,
+    rpmDataTwoGroupsRelativeFreqCompare,
+  ];
+  return pick(random, generators)(random);
+}
+
+// [중1-2 전 범위 최종 실전 모의고사 (Pages 160 ~ 175)]
+// [중1-2 전 범위 최종 실전 총괄 모의고사 (RPM 1-2 Pages 160 ~ 175)]
+export function rpmGrade7SemesterTwoFinalExam(random) {
+  const examPool = [
+    // 01 기본도형
+    rpmGeoBasicIntersections,
+    rpmGeoBasicClockAngle,
+    rpmGeoBasicMidpointSegment,
+    rpmGeoBasicVerticalAngles,
+    // 02 위치 관계
+    rpmPosSolidSkewEdges,
+    rpmPosParallelBentLineSingle,
+    rpmPosPaperFoldAngles,
+    // 03 작도와 합동
+    rpmCongTriangleInequality,
+    rpmCongTriangleSssSasAsa,
+    rpmCongRotationEquilateralSquare,
+    // 04 다각형
+    rpmPolyDiagonalCountFormula,
+    rpmPolyRegularInteriorExterior,
+    rpmPolyBoomerangConcaveAngle,
+    // 05 원과 부채꼴
+    rpmCircleCentralAngleArcProp,
+    rpmSectorArcLengthAndArea,
+    rpmRollingCircleTrackArea,
+    // 06 다면체와 회전체
+    rpmPolyhedronEulerFormula,
+    rpmCubeNetOppositeFaces,
+    rpmRevolutionCrossSectionAreaCalc,
+    // 07 입체도형의 겉넓이와 부피
+    rpmPrismSurfaceAreaCalc,
+    rpmConeSurfaceAreaCalc,
+    rpmSphereVolumeCalc,
+    rpmConeSphereCylinderRatio,
+    // 08 자료의 정리와 해석
+    rpmDataStemAndLeafPlot,
+    rpmDataFrequencyTableMissingFreq,
+    rpmDataHistogramRectangleArea,
+    rpmDataFrequencyPolygonArea,
+    rpmDataRelativeFrequencyConcept,
+    rpmDataRelativeFrequencyTableCalc,
+    rpmDataTwoGroupsRelativeFreqRatio,
+    rpmDataRelativeFrequencyGraphArea,
+  ];
+  const selectedGen = pick(random, examPool);
+  const prob = selectedGen(random);
+  return {
+    ...prob,
+    category: '중학 1-2 전 범위 최종 실전 총괄 모의고사',
+    categoryEn: 'Grade 7-2 Comprehensive Final Examination',
+  };
+}
+
+
 export const RPM_ADVANCED_ENGINES = {
   // 01 소인수분해 RPM 세부 유형 (RPM 1-1 Pages 10~15)
   'rpm-prime-prop-closest': rpmPrimePropClosest,
@@ -9023,5 +9500,31 @@ export const RPM_ADVANCED_ENGINES = {
   // 중 1-2 입체도형 종합 실전 총괄 모의고사
   // -------------------------------------------------------------
   'rpm-solid-figures-semester-mock-exam': rpmSolidFiguresSemesterMockExam,
+
+  // -------------------------------------------------------------
+  // 08 자료의 정리와 해석 세부 응용 유형 (RPM 1-2 p.144~158)
+  // -------------------------------------------------------------
+  'rpm-data-stem-and-leaf-plot': rpmDataStemAndLeafPlot,
+  'rpm-data-torn-stem-leaf-plot': rpmDataTornStemLeafPlot,
+  'rpm-data-frequency-table-basic-terms': rpmDataFrequencyTableBasicTerms,
+  'rpm-data-frequency-table-missing-freq': rpmDataFrequencyTableMissingFreq,
+  'rpm-data-histogram-rectangle-area': rpmDataHistogramRectangleArea,
+  'rpm-data-torn-histogram': rpmDataTornHistogram,
+  'rpm-data-frequency-polygon-structure': rpmDataFrequencyPolygonStructure,
+  'rpm-data-frequency-polygon-area': rpmDataFrequencyPolygonArea,
+  'rpm-data-torn-frequency-polygon': rpmDataTornFrequencyPolygon,
+  'rpm-data-two-groups-polygon-compare': rpmDataTwoGroupsPolygonCompare,
+  'rpm-data-relative-frequency-concept': rpmDataRelativeFrequencyConcept,
+  'rpm-data-relative-frequency-table-calc': rpmDataRelativeFrequencyTableCalc,
+  'rpm-data-torn-relative-frequency-table': rpmDataTornRelativeFrequencyTable,
+  'rpm-data-two-groups-relative-freq-ratio': rpmDataTwoGroupsRelativeFreqRatio,
+  'rpm-data-relative-frequency-graph-area': rpmDataRelativeFrequencyGraphArea,
+  'rpm-data-two-groups-relative-freq-compare': rpmDataTwoGroupsRelativeFreqCompare,
+  'rpm-data-statistics-all-mixed': rpmDataStatisticsAllMixed,
+
+  // -------------------------------------------------------------
+  // 중 1-2 전 범위 최종 실전 총괄 모의고사 (RPM 1-2 p.160~175)
+  // -------------------------------------------------------------
+  'rpm-grade7-semester-two-final-exam': rpmGrade7SemesterTwoFinalExam,
 'rpm-geo-semester-one-mock-exam': rpmGeoSemesterOneMockExam,
 };
