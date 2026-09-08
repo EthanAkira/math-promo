@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
-import { COORDINATE_UNITS, findCoordinateUnit, localizeCoordinateUnit } from './catalog';
+import { COORDINATE_UNITS, RPM_COORDINATE_APPLIED_UNITS, findCoordinateUnit, localizeCoordinateUnit } from './catalog';
 import { findRpmAppliedGenerator } from '../rpmAppliedEngine';
 import RpmDiagram from '../RpmDiagram';
 import CurriculumMappingBar from '../CurriculumMappingBar';
@@ -186,15 +186,19 @@ export default function CoordinatePlaneGenerator() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const initialUnit = findCoordinateUnit(params.get('unit')).id;
-    const initialSeed = (params.get('sheet') || createSeed()).toUpperCase();
     const initialTier = params.get('tier') === 'advanced' ? 'advanced' : 'basic';
+    const tierUnits = initialTier === 'advanced' ? RPM_COORDINATE_APPLIED_UNITS : COORDINATE_UNITS;
+    const requestedUnitId = params.get('unit');
+    const matchedUnit = tierUnits.find((u) => u.id === requestedUnitId) || findCoordinateUnit(requestedUnitId);
+    const initialUnit = matchedUnit.id;
+    const initialSeed = (params.get('sheet') || createSeed()).toUpperCase();
     const initialView = params.get('view') === 'answers' ? 'answers' : 'problems';
     setUnitId(initialUnit); setSeed(initialSeed); setTier(initialTier); setView(initialView);
     window.history.replaceState({}, '', buildUrl(initialSeed, initialUnit, initialTier, initialView));
     setReady(true);
   }, []);
 
+  const currentUnits = tier === 'advanced' ? RPM_COORDINATE_APPLIED_UNITS : COORDINATE_UNITS;
   const unit = findCoordinateUnit(unitId);
   const basicProblems = useMemo(() => makeBasicProblems(seed, unit), [seed, unit]);
   const appliedProblems = useMemo(() => makeAppliedProblems(seed, unit), [seed, unit]);
@@ -227,8 +231,10 @@ export default function CoordinatePlaneGenerator() {
       if (!user) { window.alert(tr(language, 'advancedAlertNeedLogin')); return; }
       if (advancedSubStatus !== 'active') { window.alert(tr(language, 'advancedAlertNeedSub')); return; }
     }
-    setTier(nextTier); setAnswers({}); setChecked(false);
-    replaceUrl(seed, unitId, nextTier, view);
+    const targetUnits = nextTier === 'advanced' ? RPM_COORDINATE_APPLIED_UNITS : COORDINATE_UNITS;
+    const nextUnit = targetUnits.some((u) => u.id === unitId) ? unitId : targetUnits[0].id;
+    setTier(nextTier); setUnitId(nextUnit); setAnswers({}); setChecked(false);
+    replaceUrl(seed, nextUnit, nextTier, view);
   }
 
   function checkAnswers() {
@@ -254,7 +260,7 @@ export default function CoordinatePlaneGenerator() {
       <div>
         <label htmlFor="coordinate-unit">{tr(language, 'skill')}</label>
         <select id="coordinate-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>
-          {COORDINATE_UNITS.map((item) => <option key={item.id} value={item.id}>{localizeCoordinateUnit(item, language)}</option>)}
+          {currentUnits.map((item) => <option key={item.id} value={item.id}>{localizeCoordinateUnit(item, language)}</option>)}
         </select>
         <p>{unitDescription}</p>
       </div>

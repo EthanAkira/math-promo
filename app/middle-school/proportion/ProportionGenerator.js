@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
-import { PROPORTION_UNITS, findProportionUnit, localizeProportionUnit } from './catalog';
+import { PROPORTION_UNITS, RPM_PROPORTION_APPLIED_UNITS, findProportionUnit, localizeProportionUnit } from './catalog';
 import { findRpmAppliedGenerator } from '../rpmAppliedEngine';
 import RpmDiagram from '../RpmDiagram';
 import CurriculumMappingBar from '../CurriculumMappingBar';
@@ -173,15 +173,19 @@ export default function ProportionGenerator() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const initialUnit = findProportionUnit(params.get('unit')).id;
-    const initialSeed = (params.get('sheet') || createSeed()).toUpperCase();
     const initialTier = params.get('tier') === 'advanced' ? 'advanced' : 'basic';
+    const tierUnits = initialTier === 'advanced' ? RPM_PROPORTION_APPLIED_UNITS : PROPORTION_UNITS;
+    const requestedUnitId = params.get('unit');
+    const matchedUnit = tierUnits.find((u) => u.id === requestedUnitId) || findProportionUnit(requestedUnitId);
+    const initialUnit = matchedUnit.id;
+    const initialSeed = (params.get('sheet') || createSeed()).toUpperCase();
     const initialView = params.get('view') === 'answers' ? 'answers' : 'problems';
     setUnitId(initialUnit); setSeed(initialSeed); setTier(initialTier); setView(initialView);
     window.history.replaceState({}, '', buildUrl(initialSeed, initialUnit, initialTier, initialView));
     setReady(true);
   }, []);
 
+  const currentUnits = tier === 'advanced' ? RPM_PROPORTION_APPLIED_UNITS : PROPORTION_UNITS;
   const unit = findProportionUnit(unitId);
   const basicProblems = useMemo(() => makeBasicProblems(seed, unit), [seed, unit]);
   const appliedProblems = useMemo(() => makeAppliedProblems(seed, unit), [seed, unit]);
@@ -214,8 +218,10 @@ export default function ProportionGenerator() {
       if (!user) { window.alert(tr(language, 'advancedAlertNeedLogin')); return; }
       if (advancedSubStatus !== 'active') { window.alert(tr(language, 'advancedAlertNeedSub')); return; }
     }
-    setTier(nextTier); setAnswers({}); setChecked(false);
-    replaceUrl(seed, unitId, nextTier, view);
+    const targetUnits = nextTier === 'advanced' ? RPM_PROPORTION_APPLIED_UNITS : PROPORTION_UNITS;
+    const nextUnit = targetUnits.some((u) => u.id === unitId) ? unitId : targetUnits[0].id;
+    setTier(nextTier); setUnitId(nextUnit); setAnswers({}); setChecked(false);
+    replaceUrl(seed, nextUnit, nextTier, view);
   }
 
   function checkAnswers() {
@@ -241,7 +247,7 @@ export default function ProportionGenerator() {
       <div>
         <label htmlFor="proportion-unit">{tr(language, 'skill')}</label>
         <select id="proportion-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>
-          {PROPORTION_UNITS.map((item) => <option key={item.id} value={item.id}>{localizeProportionUnit(item, language)}</option>)}
+          {currentUnits.map((item) => <option key={item.id} value={item.id}>{localizeProportionUnit(item, language)}</option>)}
         </select>
         <p>{unitDescription}</p>
       </div>

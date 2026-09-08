@@ -179,12 +179,65 @@ export const PROPORTION_UNITS = [
   { id: 'proportion-mixed', label: '정비례와 반비례 종합', description: '정비례·반비례의 판별, 관계식, 활용을 골고루 연습하기', en: ['Proportion review', 'Mixed practice across direct and inverse proportion'], make: (random) => pick(random, mixedGenerators)(random) },
 ];
 
+export const RPM_PROPORTION_APPLIED_UNITS = [
+  { id: 'rpm-prop-direct-identify', label: '[정비례 반비례 유형 01] 정비례 관계의 식별 (식과 문장제)', description: 'y=ax (a≠0) 관계식 판별 및 두 양 사이의 정비례 관계 문장제 식별', en: ['Proportion Type 01: Identifying Direct Proportion', 'Recognize y=ax and real-world direct proportion scenarios'], make: rpmPropDirectIdentify },
+  { id: 'rpm-prop-direct-table', label: '[정비례 반비례 유형 02] 정비례 관계의 표와 관계식 y=ax', description: '표의 x, y 대응 관계를 파악하여 정비례 상수 a 구하고 미지수 값 계산하기', en: ['Proportion Type 02: Direct Proportion Tables & Equations', 'Find constant of proportionality a from table and evaluate missing values'], make: rpmPropDirectTable },
+  { id: 'rpm-prop-direct-graph-properties', label: '[정비례 반비례 유형 03] 정비례 그래프 y=ax의 성질', description: '원점을 지나는 직선, a의 부호에 따른 지나는 사분면과 증가·감소 성질', en: ['Proportion Type 03: Properties of Direct Proportion Graphs', 'Analyze slope, passing quadrants, and increase/decrease behavior of y=ax'], make: rpmPropDirectGraphProperties },
+  { id: 'rpm-prop-direct-slope-axis-distance', label: '[정비례 반비례 유형 04] 정비례 그래프의 기울기와 축에 가까운 정도', description: '|a|의 크기가 클수록 y축에 가깝고, 작을수록 x축에 가까운 성질 비교하기', en: ['Proportion Type 04: Slope Steepness & Axis Proximity', 'Compare |a| magnitude to determine proximity to x-axis and y-axis'], make: rpmPropDirectSlopeAxisDistance },
+  { id: 'rpm-prop-direct-point-on-graph', label: '[정비례 반비례 유형 05] 정비례 그래프 위의 점과 미지수 좌표', description: 'y=ax의 그래프가 점 (p, q)를 지날 때 상수 a 및 다른 점의 미지수 좌표 구하기', en: ['Proportion Type 05: Points on Direct Proportion Lines', 'Solve for unknown coordinates by substituting given points into y=ax'], make: rpmPropDirectPointOnGraph },
+  { id: 'rpm-prop-direct-find-equation', label: '[정비례 반비례 유형 06] 그래프에서 정비례 관계식 y=ax 구하기', description: '원점을 지나는 직선 위의 한 점의 좌표를 읽어 정비례 관계식 유도하기', en: ['Proportion Type 06: Finding Direct Proportion from Graph', 'Determine y=ax from a labeled point on a line through the origin'], make: rpmPropDirectFindEquation },
+  { id: 'rpm-prop-direct-graph-area', label: '[정비례 반비례 유형 07] 정비례 그래프와 도형의 넓이', description: '직선 위의 점과 수선의 발, 원점으로 이루어진 직각삼각형의 넓이 구하기', en: ['Proportion Type 07: Geometry & Area in Direct Proportion', 'Calculate triangle areas bounded by the line, axis perpendiculars, and origin'], make: rpmPropDirectGraphArea },
+  { id: 'rpm-prop-inverse-identify', label: '[정비례 반비례 유형 08] 반비례 관계의 식별 (식과 문장제)', description: 'y=a/x 또는 xy=a (a≠0) 식별 및 곱이 일정한 실생활 반비례 문장제 파악', en: ['Proportion Type 08: Identifying Inverse Proportion', 'Identify y=a/x and real situations where product of two quantities is constant'], make: rpmPropInverseIdentify },
+  { id: 'rpm-prop-inverse-table', label: '[정비례 반비례 유형 09] 반비례 관계의 표와 관계식 y=a/x', description: '표에서 x와 y의 곱 xy=a가 일정함을 이용하여 빈칸 완성 및 미지수 계산', en: ['Proportion Type 09: Inverse Proportion Tables & Equations', 'Deduce y=a/x using constant product xy=a and fill missing table entries'], make: rpmPropInverseTable },
+  { id: 'rpm-prop-inverse-graph-properties', label: '[정비례 반비례 유형 10] 반비례 그래프 y=a/x의 성질', description: '원점에 대칭인 한 쌍의 곡선, a의 부호에 따른 사분면과 각 사분면에서의 증감', en: ['Proportion Type 10: Properties of Inverse Proportion Curves', 'Analyze hyperbolas symmetric about origin, quadrants, and monotonic intervals'], make: rpmPropInverseGraphProperties },
+  { id: 'rpm-prop-inverse-origin-distance', label: '[정비례 반비례 유형 11] 반비례 그래프와 원점에서 떨어진 거리', description: '|a|의 값이 클수록 원점에서 멀어지고, 작을수록 원점에 가까운 성질 비교', en: ['Proportion Type 11: Distance from Origin in Inverse Curves', 'Compare |a| values to determine which hyperbola is furthest from origin'], make: rpmPropInverseOriginDistance },
+  { id: 'rpm-prop-inverse-point-on-graph', label: '[정비례 반비례 유형 12] 반비례 그래프 위의 점과 미지수 좌표', description: 'y=a/x 그래프가 점 (p, q)를 지날 때 곱 xy=a로 미지수 좌표 계산하기', en: ['Proportion Type 12: Points on Inverse Proportion Hyperbolas', 'Determine constant a and solve missing coordinates using xy=a'], make: rpmPropInversePointOnGraph },
+  { id: 'rpm-prop-inverse-lattice-points', label: '[정비례 반비례 유형 13] 반비례 그래프 위의 정수 좌표 격자점 개수', description: 'y=a/x 위의 점 중에서 x좌표와 y좌표가 모두 정수인 점의 개수 (약수의 개수 × 2)', en: ['Proportion Type 13: Integer Lattice Points on Hyperbolas', 'Calculate number of integer coordinate points (x, y) using factor counting'], make: rpmPropInverseLatticePoints },
+  { id: 'rpm-prop-inverse-find-equation', label: '[정비례 반비례 유형 14] 그래프에서 반비례 관계식 y=a/x 구하기', description: '원점에 대칭인 쌍곡선 위의 한 점의 좌표를 읽어 반비례 관계식 유도하기', en: ['Proportion Type 14: Finding Inverse Proportion from Graph', 'Derive y=a/x by reading coordinate point on hyperbolic curve'], make: rpmPropInverseFindEquation },
+  { id: 'rpm-prop-direct-inverse-intersection', label: '[정비례 반비례 유형 15] 정비례와 반비례의 교점과 상수 결정', description: '정비례 y=ax와 반비례 y=b/x가 만나는 교점의 좌표 대입과 상수 ab 구하기', en: ['Proportion Type 15: Intersections of Direct & Inverse Lines', 'Solve for intersection points and product constants ab of y=ax and y=b/x'], make: rpmPropDirectInverseIntersection },
+  { id: 'rpm-prop-inverse-rect-area', label: '[정비례 반비례 유형 16] 반비례 그래프와 직사각형의 넓이', description: '곡선 위의 점과 좌표축으로 둘러싸인 직사각형의 넓이가 항상 |a|로 일정함을 활용하기', en: ['Proportion Type 16: Rectangle Area from Hyperbolic Points', 'Utilize constant area property xy=|a| for axis-aligned rectangles under hyperbola'], make: rpmPropInverseRectArea },
+  { id: 'rpm-prop-direct-word-candle-gear', label: '[정비례 반비례 유형 17] 정비례의 실생활 활용 (양초·연비·독서량)', description: '양초가 타는 길이, 1L당 주행 거리, 독서 쪽수 등 일정한 비율로 변화하는 문제', en: ['Proportion Type 17: Real-world Direct Proportion Applications', 'Solve problems involving steady consumption, fuel efficiency, and uniform rates'], make: rpmPropDirectWordCandleGear },
+  { id: 'rpm-prop-inverse-word-tank-volume', label: '[정비례 반비례 유형 18] 반비례의 실생활 활용 (물통 채우기·원기둥)', description: '총 용량이 일정한 물통 채우기(시간과 급수량), 부피가 일정한 원기둥(밑면과 높이)', en: ['Proportion Type 18: Real-world Inverse Applications (Tanks & Volumes)', 'Model constant tank capacity (rate × time) and fixed cylinder volumes'], make: rpmPropInverseWordTankVolume },
+  { id: 'rpm-prop-inverse-word-work-boyle', label: '[정비례 반비례 유형 19] 반비례 과학·작업 활용 (보일의 법칙·인원수)', description: '기체의 압력과 부피(보일의 법칙), 정해진 일을 완성하는 작업 인원수와 시간', en: ['Proportion Type 19: Scientific & Labor Inverse Proportions', 'Apply Boyles law (P × V = C) and team labor equations (workers × days = work)'], make: rpmPropInverseWordWorkBoyle },
+  { id: 'rpm-prop-two-travelers-graph', label: '[정비례 반비례 유형 20] 두 사람의 이동 거리 그래프 비교와 추월', description: '시차를 두고 출발한 두 사람의 이동 그래프에서 만나는 시각과 거리 분석', en: ['Proportion Type 20: Comparative Motion Graphs & Catchup Times', 'Determine meeting times and distance gaps between two moving travelers'], make: rpmPropTwoTravelersGraph },
+  { id: 'rpm-prop-chain-proportion', label: '[정비례 반비례 유형 21] 연쇄 비례 (정비례와 반비례의 결합)', description: 'y가 x에 정비례하고 z가 y에 반비례할 때 주어진 조건으로 미지수 값 유도하기', en: ['Proportion Type 21: Chained Proportion Systems', 'Evaluate multi-step proportions where y is proportional to x and z inversely to y'], make: rpmPropChainProportion },
+  { id: 'rpm-prop-all-types-mixed', label: '[단원 실전 다지기] 매일 정비례와 반비례 종합', description: '정비례/반비례 판별, 그래프 성질, 교점, 넓이, 실생활 활용 전 유형 종합 출제', en: ['Daily Proportion Comprehensive', 'Comprehensive mixed practice across all direct and inverse proportion types'], make: rpmPropAllTypesMixed },
+  { id: 'rpm-semester-one-mock-exam', label: '[1학기 총괄평가] 매일 중학 1-1 전 범위 실전 모의고사 (소인수분해~반비례)', description: '소인수분해, 정수와 유리수, 일차방정식, 좌표평면, 정비례·반비례 전 단원 실전 모의고사', en: ['Semester 1 Final Review Mock Exam', 'Comprehensive mock exam across all Grade 7 Semester 1 chapters'], make: rpmSemesterOneMockExam },
+];
+
+export const PROPORTION_ALL_UNITS = [...PROPORTION_UNITS, ...RPM_PROPORTION_APPLIED_UNITS];
+
 export function findProportionUnit(unitId) {
-  return PROPORTION_UNITS.find((unit) => unit.id === unitId) || PROPORTION_UNITS[0];
+  return PROPORTION_ALL_UNITS.find((unit) => unit.id === unitId) || PROPORTION_UNITS[0];
 }
 
 export function localizeProportionUnit(unit, language, field = 'label') {
   if (language === 'ko') return unit[field];
   return localizeRegionalUnit(unit.id, language, unit.en[field === 'label' ? 0 : 1], field);
 }
-import { localizeRegionalUnit } from '../../regionalCatalog';
+import { localizeRegionalUnit } from '../../regionalCatalog.js';
+import {
+  rpmPropDirectIdentify,
+  rpmPropDirectTable,
+  rpmPropDirectGraphProperties,
+  rpmPropDirectSlopeAxisDistance,
+  rpmPropDirectPointOnGraph,
+  rpmPropDirectFindEquation,
+  rpmPropDirectGraphArea,
+  rpmPropInverseIdentify,
+  rpmPropInverseTable,
+  rpmPropInverseGraphProperties,
+  rpmPropInverseOriginDistance,
+  rpmPropInversePointOnGraph,
+  rpmPropInverseLatticePoints,
+  rpmPropInverseFindEquation,
+  rpmPropDirectInverseIntersection,
+  rpmPropInverseRectArea,
+  rpmPropDirectWordCandleGear,
+  rpmPropInverseWordTankVolume,
+  rpmPropInverseWordWorkBoyle,
+  rpmPropTwoTravelersGraph,
+  rpmPropChainProportion,
+  rpmPropAllTypesMixed,
+  rpmSemesterOneMockExam,
+} from '../rpmAppliedEngine.js';

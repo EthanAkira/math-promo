@@ -3679,61 +3679,1091 @@ function rpmAppAllTypesMixed(random, profile = 'ko') {
 const rpmEqExcessDeficit = rpmAppExcessDeficitBenches;
 const rpmEqCatchupTravel = rpmAppSpeedCatchupDelay;
 
-// -------------------------------------------------------------
-// 06: 좌표평면과 그래프 응용
-// -------------------------------------------------------------
-function rpmCoordTriangleArea(random, profile) {
-  const x1 = ri(random, 1, 4);
-  const y1 = ri(random, 1, 5);
-  const x2 = x1;
-  const y2 = -ri(random, 1, 4);
-  const x3 = -ri(random, 2, 5);
-  const y3 = ri(random, -3, 3);
-  const base = Math.abs(y1 - y2);
-  const height = Math.abs(x1 - x3);
-  const area = (base * height) / 2;
-  const ans = Number.isInteger(area) ? String(area) : String(area.toFixed(1));
 
-  return {
-    prompt: tx(profile,
-      `좌표평면 위의 세 점 A(${x1}, ${y1}), B(${x2}, ${y2}), C(${x3}, ${y3})을 꼭짓점으로 하는 삼각형 ABC의 넓이를 구하시오.`,
-      `Find the area of triangle ABC with vertices A(${x1}, ${y1}), B(${x2}, ${y2}), C(${x3}, ${y3}).`),
-    expression: `A(${x1}, ${y1}), B(${x2}, ${y2}), C(${x3}, ${y3})`,
-    answer: ans,
-    diagram: {
-      kind: 'rpm-plane-polygon',
-      vertices: [{ x: x1, y: y1, label: 'A' }, { x: x2, y: y2, label: 'B' }, { x: x3, y: y3, label: 'C' }],
-      xRange: [-6, 6],
-      yRange: [-6, 6],
+// -------------------------------------------------------------
+// CHAPTER 08 & 09: 좌표평면과 그래프, 정비례와 반비례 세부 응용 유형 (RPM 1-1 p.122~149, 152~173)
+// -------------------------------------------------------------
+
+// -------------------------------------------------------------
+// CHAPTER 08: 좌표평면과 그래프 (Pages 122~129)
+// -------------------------------------------------------------
+
+const randomInt = (random, min, max) => Math.floor(random() * (max - min + 1)) + min;
+
+function nonZeroInt(random, min, max) {
+  let value;
+  do { value = ri(random, min, max); } while (value === 0);
+  return value;
+}
+
+function simplifyFrac(n, d) {
+  if (d < 0) { n = -n; d = -d; }
+  const g = gcd(n, d);
+  return [n / g, d / g];
+}
+
+function fracTex(n, d) {
+  const [num, den] = simplifyFrac(n, d);
+  if (den === 1) return `${num}`;
+  if (num < 0) return `-\\frac{${-num}}{${den}}`;
+  return `\\frac{${num}}{${den}}`;
+}
+
+function problem(prompt, expression, answer, extra = {}) {
+  return { prompt, expression, answer: String(answer), answerSuffix: '', ...extra };
+}
+
+function rpmCoordOrderedPairEquality(random, profile = 'ko') {
+  const a = pick(random, [2, 3, 4]);
+  const e = 1;
+  const xVal = nonZeroInt(random, -5, 5);
+  const b = nonZeroInt(random, -6, 6);
+  const f = (a - e) * xVal + b;
+
+  const c = 1;
+  const g = pick(random, [-2, -3, 2, 3]);
+  const yVal = nonZeroInt(random, -5, 5);
+  const d = nonZeroInt(random, -6, 6);
+  const h = (c - g) * yVal + d;
+
+  const ask = pick(random, ['x+y', 'x-y', 'xy']);
+  let ans, askKo, askEn;
+  if (ask === 'x+y') { ans = xVal + yVal; askKo = 'a+b'; askEn = 'a+b'; }
+  else if (ask === 'x-y') { ans = xVal - yVal; askKo = 'a-b'; askEn = 'a-b'; }
+  else { ans = xVal * yVal; askKo = 'ab'; askEn = 'ab'; }
+
+  const signB = b >= 0 ? `+${b}` : `${b}`;
+  const signF = f >= 0 ? `+${f}` : `${f}`;
+  const signD = d >= 0 ? `+${d}` : `${d}`;
+  const signH = h >= 0 ? `+${h}` : `${h}`;
+
+  const cStr = c === 1 ? 'b' : `${c}b`;
+  const gStr = g === 1 ? 'b' : (g === -1 ? '-b' : `${g}b`);
+  const aStr = a === 1 ? 'a' : `${a}a`;
+
+  const p1 = `(${aStr}${signB}, ${cStr}${signD})`;
+  const p2 = `(a${signF}, ${gStr}${signH})`;
+
+  const prompt = tx(
+    profile,
+    `두 순서쌍 $${p1}$와 $${p2}$가 서로 같을 때, $${askKo}$의 값을 구하시오.`,
+    `If the two ordered pairs $${p1}$ and $${p2}$ are equal, find the value of $${askEn}$.`
+  );
+  return problem(prompt, '', ans);
+}
+
+function rpmCoordAxisPoints(random, profile = 'ko') {
+  const mode = randomInt(random, 0, 1);
+  if (mode === 0) {
+    const m = pick(random, [2, 3, 4, 5]);
+    const aVal = nonZeroInt(random, -6, 6);
+    const constY = -m * aVal;
+    const signY = constY >= 0 ? `+${constY}` : `${constY}`;
+    const k = pick(random, [1, 2]);
+    const constX = nonZeroInt(random, -8, 8);
+    const signX = constX >= 0 ? `+${constX}` : `${constX}`;
+    const xCoord = k * aVal + constX;
+
+    const prompt = tx(
+      profile,
+      `점 $P(${k === 1 ? 'a' : `${k}a`}${signX}, ${m}a${signY})$가 $x$축 위의 점일 때, 점 $P$의 좌표를 구하시오.`,
+      `If point $P(${k === 1 ? 'a' : `${k}a`}${signX}, ${m}a${signY})$ lies on the $x$-axis, find the coordinates of point $P$.`
+    );
+    return problem(prompt, '', `(${xCoord}, 0)`);
+  } else {
+    const m = pick(random, [2, 3, 4]);
+    const aVal = nonZeroInt(random, -6, 6);
+    const constX = -m * aVal;
+    const signX = constX >= 0 ? `+${constX}` : `${constX}`;
+    const k = pick(random, [1, 2]);
+    const constY = nonZeroInt(random, -8, 8);
+    const signY = constY >= 0 ? `+${constY}` : `${constY}`;
+    const yCoord = k * aVal + constY;
+
+    const prompt = tx(
+      profile,
+      `점 $Q(${m}a${signX}, ${k === 1 ? 'a' : `${k}a`}${signY})$가 $y$축 위의 점일 때, 점 $Q$의 좌표를 구하시오.`,
+      `If point $Q(${m}a${signX}, ${k === 1 ? 'a' : `${k}a`}${signY})$ lies on the $y$-axis, find the coordinates of point $Q$.`
+    );
+    return problem(prompt, '', `(0, ${yCoord})`);
+  }
+}
+
+function rpmCoordTriangleArea(random, profile = 'ko') {
+  const yBase = randomInt(random, -3, 3);
+  const x1 = randomInt(random, -5, -1);
+  const baseLen = randomInt(random, 4, 8);
+  const x2 = x1 + baseLen;
+  let y3;
+  do { y3 = randomInt(random, -5, 5); } while (Math.abs(y3 - yBase) < 2);
+  const x3 = randomInt(random, -4, 4);
+  const height = Math.abs(y3 - yBase);
+  const area = (baseLen * height) / 2;
+
+  const pA = `(${x1}, ${yBase})`;
+  const pB = `(${x2}, ${yBase})`;
+  const pC = `(${x3}, ${y3})`;
+
+  const prompt = tx(
+    profile,
+    `세 점 $A${pA}$, $B${pB}$, $C${pC}$를 꼭짓점으로 하는 삼각형 $ABC$의 넓이를 구하시오.`,
+    `Find the area of triangle $ABC$ with vertices $A${pA}$, $B${pB}$, and $C${pC}$.`
+  );
+  const planePoints = [
+    { x: x1, y: yBase, label: 'A' },
+    { x: x2, y: yBase, label: 'B' },
+    { x: x3, y: y3, label: 'C' },
+  ];
+  return problem(prompt, '', area, { kind: 'coordinate-plane', plane: { points: planePoints, highlight: '' } });
+}
+
+function rpmCoordPolygonArea(random, profile = 'ko') {
+  const yBottom = randomInt(random, -4, -1);
+  const yTop = randomInt(random, 1, 4);
+  const height = yTop - yBottom;
+  const xBottomLeft = randomInt(random, -5, -2);
+  const bBottom = randomInt(random, 6, 8);
+  const xBottomRight = xBottomLeft + bBottom;
+
+  const xTopLeft = randomInt(random, -3, 0);
+  const bTop = randomInt(random, 2, 4);
+  const xTopRight = xTopLeft + bTop;
+
+  const area = ((bBottom + bTop) * height) / 2;
+  const pA = `(${xTopLeft}, ${yTop})`;
+  const pB = `(${xBottomLeft}, ${yBottom})`;
+  const pC = `(${xBottomRight}, ${yBottom})`;
+  const pD = `(${xTopRight}, ${yTop})`;
+
+  const prompt = tx(
+    profile,
+    `네 점 $A${pA}$, $B${pB}$, $C${pC}$, $D${pD}$를 꼭짓점으로 하는 사각형 $ABCD$의 넓이를 구하시오.`,
+    `Find the area of quadrilateral $ABCD$ with vertices $A${pA}$, $B${pB}$, $C${pC}$, and $D${pD}$.`
+  );
+  const planePoints = [
+    { x: xTopLeft, y: yTop, label: 'A' },
+    { x: xBottomLeft, y: yBottom, label: 'B' },
+    { x: xBottomRight, y: yBottom, label: 'C' },
+    { x: xTopRight, y: yTop, label: 'D' },
+  ];
+  return problem(prompt, '', area, { kind: 'coordinate-plane', plane: { points: planePoints, highlight: '' } });
+}
+
+function rpmCoordQuadrantIdentify(random, profile = 'ko') {
+  const qChoicesKo = ['① 제1사분면', '② 제2사분면', '③ 제3사분면', '④ 제4사분면', '⑤ 어느 사분면에도 속하지 않는다'];
+  const qChoicesEn = ['① Quadrant I', '② Quadrant II', '③ Quadrant III', '④ Quadrant IV', '⑤ Not in any quadrant'];
+
+  const mode = randomInt(random, 0, 4);
+  let x, y, ans;
+  if (mode === 0) { x = randomInt(random, 1, 9); y = randomInt(random, 1, 9); ans = '1'; }
+  else if (mode === 1) { x = randomInt(random, -9, -1); y = randomInt(random, 1, 9); ans = '2'; }
+  else if (mode === 2) { x = randomInt(random, -9, -1); y = randomInt(random, -9, -1); ans = '3'; }
+  else if (mode === 3) { x = randomInt(random, 1, 9); y = randomInt(random, -9, -1); ans = '4'; }
+  else {
+    if (random() < 0.5) { x = nonZeroInt(random, -9, 9); y = 0; }
+    else { x = 0; y = nonZeroInt(random, -9, 9); }
+    ans = '5';
+  }
+
+  const prompt = tx(
+    profile,
+    `점 $(${x}, ${y})$는 제몇 사분면 위의 점인지 구하시오. (단, 좌표축 위의 점은 ⑤ 선택)`,
+    `Which quadrant does the point $(${x}, ${y})$ belong to?`
+  );
+  return problem(prompt, '', ans, { kind: 'choice', choicesKo: qChoicesKo, choicesEn: qChoicesEn });
+}
+
+function rpmCoordQuadrantSignCondition(random, profile = 'ko') {
+  const qChoicesKo = ['① 제1사분면', '② 제2사분면', '③ 제3사분면', '④ 제4사분면'];
+  const qChoicesEn = ['① Quadrant I', '② Quadrant II', '③ Quadrant III', '④ Quadrant IV'];
+
+  const aSign = pick(random, [1, -1]);
+  const bSign = pick(random, [1, -1]);
+  const aVal = aSign;
+  const bVal = bSign;
+
+  const initQuad = (aVal > 0 && bVal > 0) ? 1 : (aVal < 0 && bVal > 0 ? 2 : (aVal < 0 && bVal < 0 ? 3 : 4));
+
+  const targets = [
+    { expr: '(-ab, a)', getCoords: (a, b) => [-a * b, a] },
+    { expr: '(ab, -b)', getCoords: (a, b) => [a * b, -b] },
+    { expr: '(-b, -a)', getCoords: (a, b) => [-b, -a] },
+    { expr: '(-a, b)', getCoords: (a, b) => [-a, b] },
+    { expr: '(b, -ab)', getCoords: (a, b) => [b, -a * b] },
+  ];
+  const target = pick(random, targets);
+  const [txX, txY] = target.getCoords(aVal, bVal);
+  const targetQuad = (txX > 0 && txY > 0) ? 1 : (txX < 0 && txY > 0 ? 2 : (txX < 0 && txY < 0 ? 3 : 4));
+
+  const prompt = tx(
+    profile,
+    `점 $(a, b)$가 제$${initQuad}$사분면 위의 점일 때, 점 $${target.expr}$는 제몇 사분면 위의 점인지 구하시오.`,
+    `If point $(a, b)$ is in Quadrant $${initQuad}$, which quadrant does point $${target.expr}$ lie in?`
+  );
+  return problem(prompt, '', String(targetQuad), { kind: 'choice', choicesKo: qChoicesKo, choicesEn: qChoicesEn });
+}
+
+function rpmCoordSignProductSum(random, profile = 'ko') {
+  const qChoicesKo = ['① 제1사분면', '② 제2사분면', '③ 제3사분면', '④ 제4사분면'];
+  const qChoicesEn = ['① Quadrant I', '② Quadrant II', '③ Quadrant III', '④ Quadrant IV'];
+
+  const scenario = pick(random, [
+    { condKo: 'ab < 0, a > b', condEn: 'ab < 0, a > b', a: 1, b: -1 },
+    { condKo: 'ab < 0, a < b', condEn: 'ab < 0, a < b', a: -1, b: 1 },
+    { condKo: 'ab > 0, a + b < 0', condEn: 'ab > 0, a + b < 0', a: -1, b: -1 },
+    { condKo: 'ab > 0, a + b > 0', condEn: 'ab > 0, a + b > 0', a: 1, b: 1 },
+  ]);
+
+  const pointOptions = [
+    { expr: '(a, -b)', fn: (a, b) => [a, -b] },
+    { expr: '(-a, b)', fn: (a, b) => [-a, b] },
+    { expr: '(a - b, ab)', fn: (a, b) => [a - b, a * b] },
+    { expr: '(b - a, -ab)', fn: (a, b) => [b - a, -a * b] },
+    { expr: '(-b, a)', fn: (a, b) => [-b, a] },
+  ];
+  const pt = pick(random, pointOptions);
+  const [px, py] = pt.fn(scenario.a, scenario.b);
+  const ansQuad = (px > 0 && py > 0) ? 1 : (px < 0 && py > 0 ? 2 : (px < 0 && py < 0 ? 3 : 4));
+
+  const prompt = tx(
+    profile,
+    `$${scenario.condKo}$일 때, 점 $${pt.expr}$는 제몇 사분면 위의 점인지 구하시오.`,
+    `If $${scenario.condEn}$, which quadrant does point $${pt.expr}$ lie in?`
+  );
+  return problem(prompt, '', String(ansQuad), { kind: 'choice', choicesKo: qChoicesKo, choicesEn: qChoicesEn });
+}
+
+function rpmCoordAbsConditionQuadrant(random, profile = 'ko') {
+  const qChoicesKo = ['① 제1사분면', '② 제2사분면', '③ 제3사분면', '④ 제4사분면'];
+  const qChoicesEn = ['① Quadrant I', '② Quadrant II', '③ Quadrant III', '④ Quadrant IV'];
+
+  const variant = pick(random, [
+    { condKo: 'ab < 0, a + b > 0, |a| > |b|', condEn: 'ab < 0, a + b > 0, |a| > |b|', a: 3, b: -1, targetExpr: '(b, a - b)', fn: (a, b) => [b, a - b] },
+    { condKo: 'ab < 0, a + b < 0, |a| < |b|', condEn: 'ab < 0, a + b < 0, |a| < |b|', a: 2, b: -4, targetExpr: '(a, b - a)', fn: (a, b) => [a, b - a] },
+    { condKo: 'ab < 0, a > b, |a| < |b|', condEn: 'ab < 0, a > b, |a| < |b|', a: 1, b: -3, targetExpr: '(a + b, a - b)', fn: (a, b) => [a + b, a - b] },
+    { condKo: 'ab < 0, a < b, |a| > |b|', condEn: 'ab < 0, a < b, |a| > |b|', a: -4, b: 2, targetExpr: '(a + b, ab)', fn: (a, b) => [a + b, a * b] },
+  ]);
+
+  const [px, py] = variant.fn(variant.a, variant.b);
+  const ansQuad = (px > 0 && py > 0) ? 1 : (px < 0 && py > 0 ? 2 : (px < 0 && py < 0 ? 3 : 4));
+
+  const prompt = tx(
+    profile,
+    `$${variant.condKo}$일 때, 점 $${variant.targetExpr}$는 제몇 사분면 위의 점인지 구하시오.`,
+    `If $${variant.condEn}$, which quadrant does point $${variant.targetExpr}$ lie in?`
+  );
+  return problem(prompt, '', String(ansQuad), { kind: 'choice', choicesKo: qChoicesKo, choicesEn: qChoicesEn });
+}
+
+function rpmCoordSymmetricPoints(random, profile = 'ko') {
+  const symAxis = pick(random, ['x-axis', 'y-axis', 'origin']);
+  const aVal = nonZeroInt(random, -4, 4);
+  const bVal = nonZeroInt(random, -4, 4);
+
+  const k1 = pick(random, [2, 3]);
+  const d1 = nonZeroInt(random, -5, 5);
+  const xCoord = k1 * aVal + d1;
+
+  const k2 = pick(random, [1, 2]);
+  const d2 = nonZeroInt(random, -5, 5);
+  const yCoord = k2 * bVal + d2;
+
+  const strP1 = `(${k1}a${d1 >= 0 ? `+${d1}` : d1}, ${k2}b${d2 >= 0 ? `+${d2}` : d2})`;
+  let strP2, promptAxisKo, promptAxisEn;
+
+  if (symAxis === 'x-axis') {
+    promptAxisKo = '$x$축'; promptAxisEn = 'the $x$-axis';
+    strP2 = `(${xCoord}, ${-yCoord})`;
+  } else if (symAxis === 'y-axis') {
+    promptAxisKo = '$y$축'; promptAxisEn = 'the $y$-axis';
+    strP2 = `(${-xCoord}, ${yCoord})`;
+  } else {
+    promptAxisKo = '원점'; promptAxisEn = 'the origin';
+    strP2 = `(${-xCoord}, ${-yCoord})`;
+  }
+
+  const ask = pick(random, ['a+b', 'ab']);
+  const ans = ask === 'a+b' ? aVal + bVal : aVal * bVal;
+  const askStr = ask === 'a+b' ? 'a+b' : 'ab';
+
+  const prompt = tx(
+    profile,
+    `두 점 $${strP1}$과 $${strP2}$가 ${promptAxisKo}에 대하여 대칭일 때, $${askStr}$의 값을 구하시오.`,
+    `If the two points $${strP1}$ and $${strP2}$ are symmetric about ${promptAxisEn}, find the value of $${askStr}$.`
+  );
+  return problem(prompt, '', ans);
+}
+
+function rpmCoordSymmetricArea(random, profile = 'ko') {
+  const x = randomInt(random, 2, 6);
+  const y = randomInt(random, 2, 6);
+  const symType = pick(random, ['y-axis', 'origin']);
+  const area = 2 * x * y;
+  const cDescKo = symType === 'origin' ? '원점에 대하여 대칭인 점을 $C$' : '$y$축에 대하여 대칭인 점을 $C$';
+  const cDescEn = symType === 'origin' ? 'point $C$ is symmetric to $A$ about the origin' : 'point $C$ is symmetric to $A$ about the $y$-axis';
+
+  const prompt = tx(
+    profile,
+    `점 $A(${x}, ${y})$에 대하여 $x$축에 대하여 대칭인 점을 $B$, ${cDescKo}라 할 때, 삼각형 $ABC$의 넓이를 구하시오.`,
+    `Let $B$ be symmetric to $A(${x}, ${y})$ about the $x$-axis, and ${cDescEn}. Find the area of triangle $ABC$.`
+  );
+  return problem(prompt, '', area);
+}
+
+function rpmCoordGraphSituation(random, profile = 'ko') {
+  const situations = [
+    {
+      storyKo: '밑면이 넓고 위로 갈수록 좁아지는 병에 매초 일정한 양의 물을 넣을 때, 경과 시간 $x$와 물의 높이 $y$ 사이의 변화',
+      storyEn: 'Water is poured at a constant rate into a vase that is wider at the bottom and narrower at the top. Relationship between time $x$ and height $y$',
+      ans: '1',
+      choicesKo: ['① 높이가 점점 더 빠르게 증가한다 (곡선 형태)', '② 높이가 일정하게 증가한다 (직선 형태)', '③ 높이가 점점 더 느리게 증가한다', '④ 높이가 증가하다가 감소한다'],
+      choicesEn: ['① Height increases at an increasing rate', '② Height increases linearly', '③ Height increases at a decreasing rate', '④ Height increases then decreases'],
     },
-    explanation: tx(profile,
-      `밑변 ${base}, 높이 ${height}이므로 넓이는 1/2 × ${base} × ${height} = ${ans}입니다.`,
-      `Base ${base}, height ${height} gives area 1/2 × ${base} × ${height} = ${ans}.`),
-  };
+    {
+      storyKo: '길이가 일정한 향에 불을 붙여 일정하게 타들어갈 때, 경과 시간 $x$와 남은 향의 길이 $y$ 사이의 변화',
+      storyEn: 'An incense stick burns at a constant rate. Relationship between time $x$ and remaining length $y$',
+      ans: '2',
+      choicesKo: ['① 시간이 지날수록 길이가 일정하게 증가한다', '② 시간이 지날수록 길이가 일정하게 감소한다 (기울기가 음수인 직선)', '③ 길이가 곡선으로 감소하다가 증가한다', '④ 길이가 전혀 변하지 않는다'],
+      choicesEn: ['① Length increases linearly', '② Length decreases linearly (line with negative slope)', '③ Length curves down then up', '④ Length stays unchanged'],
+    },
+    {
+      storyKo: '자동차가 고속도로에서 일정한 속력 시속 100km로 달릴 때, 주행 시간 $x$와 속력 $y$ 사이의 관계',
+      storyEn: 'A car drives at a constant speed of 100 km/h. Relationship between driving time $x$ and speed $y$',
+      ans: '3',
+      choicesKo: ['① 속력이 시간에 비례하여 증가한다', '② 속력이 시간에 반비례하여 감소한다', '③ 시간에 관계없이 속력이 수평선($x$축에 평행)을 이룬다', '④ 속력이 계단 모양으로 증가한다'],
+      choicesEn: ['① Speed increases proportionally', '② Speed decreases inversely', '③ Speed forms a horizontal line parallel to $x$-axis', '④ Speed increases like stairs'],
+    }
+  ];
+
+  const item = pick(random, situations);
+  const prompt = tx(
+    profile,
+    `다음 상황에서 $x$와 $y$ 사이의 관계를 나타낸 그래프의 특징으로 가장 알맞은 것을 고르시오.\n[상황] ${item.storyKo}`,
+    `Choose the best description of the graph relating $x$ and $y$ for the given situation:\n[Situation] ${item.storyEn}`
+  );
+  return problem(prompt, '', item.ans, { kind: 'choice', choicesKo: item.choicesKo, choicesEn: item.choicesEn });
+}
+
+function rpmCoordGraphDistanceTime(random, profile = 'ko') {
+  const arrive = pick(random, [20, 30, 40]);
+  const stay = pick(random, [20, 30, 40]);
+  const returnTime = pick(random, [20, 30]);
+  const leave = arrive + stay;
+  const home = leave + returnTime;
+  const distance = pick(random, [3, 4, 5, 6]);
+
+  const mode = randomInt(random, 0, 2);
+  let prompt, ans, suffix;
+
+  if (mode === 0) {
+    prompt = tx(
+      profile,
+      `그래프는 지효가 집에서 출발하여 공원까지 다녀왔을 때, 시간에 따른 집으로부터의 거리를 나타낸 것입니다. 공원에 도착한 시각은 출발한 지 몇 분 후인지 구하시오.`,
+      `The graph shows distance from home over time. How many minutes after departing did the traveler reach the park?`
+    );
+    ans = arrive; suffix = '분 후';
+  } else if (mode === 1) {
+    prompt = tx(
+      profile,
+      `그래프는 지효가 집에서 출발하여 공원까지 다녀왔을 때, 시간에 따른 집으로부터의 거리를 나타낸 것입니다. 공원에 머무른 시간은 몇 분인지 구하시오.`,
+      `The graph shows distance from home over time. For how many minutes did the traveler stay at the park?`
+    );
+    ans = stay; suffix = '분';
+  } else {
+    prompt = tx(
+      profile,
+      `그래프는 지효가 집에서 출발하여 공원까지 다녀왔을 때, 시간에 따른 집으로부터의 거리를 나타낸 것입니다. 집으로 완전히 돌아오는 데 걸린 총 시간은 몇 분인지 구하시오.`,
+      `The graph shows distance from home over time. What was the total trip duration in minutes until returning home?`
+    );
+    ans = home; suffix = '분';
+  }
+
+  const graphData = { arrive, leave, home, distance };
+  return problem(prompt, '', ans, { kind: 'trip-graph', graph: graphData, answerSuffix: suffix });
+}
+
+function rpmCoordGraphSpeedTime(random, profile = 'ko') {
+  const maxSpeed = pick(random, [50, 60, 70, 80]);
+  const stopMins = pick(random, [4, 5, 6, 8]);
+  const totalMins = pick(random, [15, 16, 18, 20]);
+
+  const ask = pick(random, ['maxSpeed', 'stopTime', 'totalTime']);
+  let prompt, ans, suffix;
+
+  if (ask === 'maxSpeed') {
+    prompt = tx(
+      profile,
+      `어떤 버스가 출발하여 다음 정류장에 도착할 때까지의 속력 변화를 측정한 결과, 최고 속력은 시속 몇 $\\text{km}$인지 구하시오. (운행 시간 $0\\sim${totalMins}$분, 정지 시간 총 $${stopMins}$분, 최고 속력 구간 시속 $${maxSpeed}\\text{km/h}$)`,
+      `A bus travels between stops with maximum speed $${maxSpeed}\\text{ km/h}$, stopping for $${stopMins}$ minutes, taking $${totalMins}$ minutes total. What was the maximum speed in $\\text{km/h}$?`
+    );
+    ans = maxSpeed; suffix = 'km/h';
+  } else if (ask === 'stopTime') {
+    prompt = tx(
+      profile,
+      `어떤 버스가 운행 중 신호 대기와 정류장 정차로 속력이 $0\\text{km/h}$로 정지해 있던 총 시간은 몇 분인지 구하시오. (최고 속력 시속 $${maxSpeed}\\text{km/h}$, 정지 시간 총 $${stopMins}$분, 총 운행 $${totalMins}$분)`,
+      `Find the total number of minutes the bus was stopped (speed $0\\text{ km/h}$) during the trip.`
+    );
+    ans = stopMins; suffix = '분';
+  } else {
+    prompt = tx(
+      profile,
+      `어떤 버스가 출발하여 목적지에 도착할 때까지 걸린 전체 운행 시간은 몇 분인지 구하시오. (최고 속력 시속 $${maxSpeed}\\text{km/h}$, 정지 시간 총 $${stopMins}$분, 총 운행 $${totalMins}$분)`,
+      `Find the total duration of the trip in minutes from departure to destination.`
+    );
+    ans = totalMins; suffix = '분';
+  }
+
+  return problem(prompt, '', ans, { answerSuffix: suffix });
+}
+
+function rpmCoordAllTypesMixed(random, profile = 'ko') {
+  const gens = [
+    rpmCoordOrderedPairEquality,
+    rpmCoordAxisPoints,
+    rpmCoordTriangleArea,
+    rpmCoordPolygonArea,
+    rpmCoordQuadrantIdentify,
+    rpmCoordQuadrantSignCondition,
+    rpmCoordSignProductSum,
+    rpmCoordAbsConditionQuadrant,
+    rpmCoordSymmetricPoints,
+    rpmCoordSymmetricArea,
+    rpmCoordGraphSituation,
+    rpmCoordGraphDistanceTime,
+    rpmCoordGraphSpeedTime,
+  ];
+  return pick(random, gens)(random, profile);
 }
 
 // -------------------------------------------------------------
-// 07: 정비례와 반비례 응용
+// CHAPTER 09: 정비례와 반비례 (Pages 134~149)
 // -------------------------------------------------------------
-function rpmPropIntersection(random, profile) {
-  const a = pick(random, [2, 3, -2, -3]);
-  const meetX = pick(random, [2, 3, 4]);
-  const meetY = a * meetX;
-  const k = meetX * meetY;
-  const askSum = random() < 0.5;
-  const ans = askSum ? k + meetY : k;
 
-  return {
-    prompt: tx(profile,
-      `정비례 y = ${a}x 와 반비례 y = a/x 가 점 P(${meetX}, b)에서 만날 때, ${askSum ? 'a + b의 값' : '상수 a의 값'}을 구하시오.`,
-      `Direct variation y = ${a}x and inverse variation y = a/x intersect at P(${meetX}, b). Find ${askSum ? 'a + b' : 'constant a'}.`),
-    expression: `y = ${a}x, y = a/x, P(${meetX}, b)`,
-    answer: String(ans),
-    diagram: { kind: 'rpm-hyperbola-line', slope: a, k, meetX, meetY },
-    explanation: tx(profile,
-      `b = ${meetY}, a = ${k}이므로 ${askSum ? `a + b = ${ans}` : `a = ${k}`}입니다.`,
-      `b = ${meetY}, a = ${k}, giving ${askSum ? `a + b = ${ans}` : `a = ${k}`}.`),
-  };
+// 1. rpmPropDirectIdentify (1010~1012, 1089번)
+function rpmPropDirectIdentify(random, profile = 'ko') {
+  const a = pick(random, [2, 3, 4, 5, -2, -3, -4, -5]);
+  const b = pick(random, [1, 2, 3, -1, -2]);
+  const candidates = [
+    { text: `$y = ${a}x$`, isDirect: true },
+    { text: `$y = ${fracTex(1, Math.abs(a))}x$`, isDirect: true },
+    { text: `$y = -${fracTex(1, Math.abs(a))}x$`, isDirect: true },
+    { text: `$y = ${a}x ${b >= 0 ? `+ ${b}` : `- ${-b}`}$`, isDirect: false },
+    { text: `$y = ${fracTex(a, 1)} / x$ ($xy = ${a}$)`, isDirect: false },
+    { text: `$y = ${a}x^2$`, isDirect: false },
+  ];
+  const chosen = pick(random, candidates);
+  const prompt = tx(
+    profile,
+    `다음 식에서 $y$가 $x$에 정비례하는지 판별하시오.\n[식] ${chosen.text}`,
+    `Decide whether $y$ is directly proportional to $x$ in the equation: ${chosen.text}`
+  );
+  return problem(prompt, '', chosen.isDirect ? '1' : '2', {
+    kind: 'choice',
+    choicesKo: ['① 정비례한다 (○)', '② 정비례하지 않는다 (×)'],
+    choicesEn: ['① Directly proportional (○)', '② Not directly proportional (×)'],
+  });
+}
+
+// 2. rpmPropDirectTable (1013~1016, 1090번)
+function rpmPropDirectTable(random, profile = 'ko') {
+  const a = pick(random, [2, 3, 4, 5, -2, -3, -4]);
+  const x1 = 1, y1 = a * 1;
+  const x2 = 2, y2 = a * 2;
+  const x3 = 3, y3 = a * 3;
+  const x4 = 4, y4 = a * 4;
+
+  const targetX = pick(random, [5, 6, 7, -2, -3]);
+  const ans = a * targetX;
+
+  const prompt = tx(
+    profile,
+    `$y$가 $x$에 정비례하고, $x$와 $y$ 사이의 관계를 표로 나타내면 다음과 같습니다.\n| $x$ | $1$ | $2$ | $3$ | $4$ |\n| $y$ | $${y1}$ | $${y2}$ | $${y3}$ | $${y4}$ |\n이때 $x = ${targetX}$일 때 $y$의 값을 구하시오.`,
+    `$y$ is directly proportional to $x$, given by table:\n| $x$ | $1$ | $2$ | $3$ | $4$ |\n| $y$ | $${y1}$ | $${y2}$ | $${y3}$ | $${y4}$ |\nFind the value of $y$ when $x = ${targetX}$.`
+  );
+  return problem(prompt, '', ans);
+}
+
+// 3. rpmPropDirectGraphProperties (1017~1019, 1093, 1095번)
+function rpmPropDirectGraphProperties(random, profile = 'ko') {
+  const a = pick(random, [2, 3, 4, -2, -3, -4]);
+  const isPos = a > 0;
+  const prompt = tx(
+    profile,
+    `정비례 관계 $y = ${a}x$의 그래프에 대한 설명으로 옳은 것을 고르시오.`,
+    `Choose the correct statement about the graph of direct proportion $y = ${a}x$.`
+  );
+  let ans, choicesKo, choicesEn;
+  if (isPos) {
+    ans = '1';
+    choicesKo = [
+      '① 제1사분면과 제3사분면을 지난다',
+      '② 제2사분면과 제4사분면을 지난다',
+      '③ $x$의 값이 증가하면 $y$의 값은 감소한다',
+      '④ 원점을 지나지 않는 직선이다',
+    ];
+    choicesEn = [
+      '① Passes through Quadrants I and III',
+      '② Passes through Quadrants II and IV',
+      '③ As $x$ increases, $y$ decreases',
+      '④ Does not pass through the origin',
+    ];
+  } else {
+    ans = '2';
+    choicesKo = [
+      '① 제1사분면과 제3사분면을 지난다',
+      '② 제2사분면과 제4사분면을 지난다',
+      '③ $x$의 값이 증가하면 $y$의 값도 항상 증가한다',
+      '④ 점 $(0, 1)$을 지난다',
+    ];
+    choicesEn = [
+      '① Passes through Quadrants I and III',
+      '② Passes through Quadrants II and IV',
+      '③ As $x$ increases, $y$ increases',
+      '④ Passes through $(0, 1)$',
+    ];
+  }
+  return problem(prompt, '', ans, { kind: 'choice', choicesKo, choicesEn });
+}
+
+// 4. rpmPropDirectSlopeAxisDistance (1020~1023, 1094번)
+function rpmPropDirectSlopeAxisDistance(random, profile = 'ko') {
+  // Comparing |a|: larger |a| is closer to y-axis, smaller |a| is closer to x-axis
+  const slopes = [1, 2, 4, -3, -5];
+  const targetType = pick(random, ['y-axis-close', 'x-axis-close']);
+  let ans, promptKo, promptEn;
+
+  const choicesKo = [
+    '① $y = x$',
+    '② $y = 2x$',
+    '③ $y = 4x$',
+    '④ $y = -3x$',
+    '⑤ $y = -5x$',
+  ];
+  const choicesEn = choicesKo;
+
+  if (targetType === 'y-axis-close') {
+    // Largest |a| is 5 => choice 5
+    ans = '5';
+    promptKo = '다음 정비례 관계의 그래프 중 $y$축에 가장 가까운 것은?';
+    promptEn = 'Which of the following direct proportion graphs is closest to the $y$-axis?';
+  } else {
+    // Smallest |a| is 1 => choice 1
+    ans = '1';
+    promptKo = '다음 정비례 관계의 그래프 중 $x$축에 가장 가까운 것은?';
+    promptEn = 'Which of the following direct proportion graphs is closest to the $x$-axis?';
+  }
+  return problem(tx(profile, promptKo, promptEn), '', ans, { kind: 'choice', choicesKo, choicesEn });
+}
+
+// 5. rpmPropDirectPointOnGraph (1024~1030, 1096, 1098번)
+function rpmPropDirectPointOnGraph(random, profile = 'ko') {
+  const a = pick(random, [2, 3, 4, 5, -2, -3, -4, -5]);
+  const x0 = nonZeroInt(random, -4, 4);
+  const y0 = a * x0;
+
+  // Ask for unknown coordinate in (x1, k) or (m, y1)
+  const mode = randomInt(random, 0, 1);
+  if (mode === 0) {
+    const x1 = nonZeroInt(random, -6, 6);
+    const ans = a * x1;
+    const prompt = tx(
+      profile,
+      `정비례 관계 $y = ax$의 그래프가 점 $(${x0}, ${y0})$를 지날 때, 점 $(${x1}, k)$도 이 그래프 위의 점이다. 상수 $k$의 값을 구하시오.`,
+      `The graph of $y = ax$ passes through $(${x0}, ${y0})$. If point $(${x1}, k)$ also lies on the graph, find $k$.`
+    );
+    return problem(prompt, '', ans);
+  } else {
+    const y1 = a * nonZeroInt(random, -6, 6);
+    const ans = y1 / a;
+    const prompt = tx(
+      profile,
+      `정비례 관계 $y = ax$의 그래프가 점 $(${x0}, ${y0})$를 지날 때, 점 $(m, ${y1})$도 이 그래프 위의 점이다. 상수 $m$의 값을 구하시오.`,
+      `The graph of $y = ax$ passes through $(${x0}, ${y0})$. If point $(m, ${y1})$ also lies on the graph, find $m$.`
+    );
+    return problem(prompt, '', ans);
+  }
+}
+
+// 6. rpmPropDirectFindEquation (1031~1034, 1097, 1101번)
+function rpmPropDirectFindEquation(random, profile = 'ko') {
+  const [n, d] = pick(random, [[1, 1], [2, 1], [3, 1], [-1, 1], [-2, 1], [-3, 1], [1, 2], [-1, 2], [2, 3], [-2, 3], [3, 2], [-3, 2]]);
+  const mult = pick(random, [1, 2]);
+  const x0 = d * mult;
+  const y0 = n * mult;
+
+  const slopeStr = fracTex(n, d);
+  const coeffText = (n === d) ? 'x' : (n === -d ? '-x' : (d === 1 ? `${n}x` : `${n}/${d}x`));
+  const ans = `y=${coeffText}`;
+
+  const prompt = tx(
+    profile,
+    `오른쪽 그림과 같이 원점을 지나는 직선이 점 $(${x0}, ${y0})$를 지날 때, $x$와 $y$ 사이의 관계식을 구하시오.`,
+    `The line through the origin passes through $(${x0}, ${y0})$. Find the equation relating $x$ and $y$.`
+  );
+  return problem(prompt, '', ans, {
+    kind: 'proportion-graph',
+    graph: { mode: 'direct', a: { n, d }, point: { x: x0, y: y0 }, range: 8 }
+  });
+}
+
+// 7. rpmPropDirectGraphArea (1035~1037, 1103번)
+function rpmPropDirectGraphArea(random, profile = 'ko') {
+  // Point A on y = ax (x > 0, a > 0), drop perpendicular to x-axis at B(x, 0).
+  // Triangle OAB area = 1/2 * x * (ax) = 1/2 * a * x^2
+  const a = pick(random, [2, 3, 4, 6]);
+  const xVal = pick(random, [2, 4, 6]);
+  const yVal = a * xVal;
+  const area = (xVal * yVal) / 2;
+
+  const prompt = tx(
+    profile,
+    `정비례 관계 $y = ${a}x$의 그래프 위의 점 $A(${xVal}, k)$에서 $x$축에 내린 수선의 발을 $B$라 할 때, 삼각형 $AOB$의 넓이를 구하시오. (단, $O$는 원점)`,
+    `Point $A(${xVal}, k)$ is on the graph of $y = ${a}x$. If $B$ is the foot of the perpendicular from $A$ to the $x$-axis, find the area of triangle $AOB$.`
+  );
+  return problem(prompt, '', area);
+}
+
+// 8. rpmPropInverseIdentify (1038~1040, 1091번)
+function rpmPropInverseIdentify(random, profile = 'ko') {
+  const a = pick(random, [6, 12, 18, 24, -6, -12, -18]);
+  const b = pick(random, [1, 2, -1, -2]);
+  const forms = [
+    { text: `$y = \\frac{${Math.abs(a)}}{x}$`, isInv: true },
+    { text: `$xy = ${a}$`, isInv: true },
+    { text: `$y = ${a}x$`, isInv: false },
+    { text: `$y = \\frac{x}{${Math.abs(a)}}$`, isInv: false },
+    { text: `$y = \\frac{${a}}{x} ${b >= 0 ? `+ ${b}` : `- ${-b}`}$`, isInv: false },
+  ];
+  const chosen = pick(random, forms);
+  const prompt = tx(
+    profile,
+    `다음 식에서 $y$가 $x$에 반비례하는지 판별하시오.\n[식] ${chosen.text}`,
+    `Decide whether $y$ is inversely proportional to $x$ in: ${chosen.text}`
+  );
+  return problem(prompt, '', chosen.isInv ? '1' : '2', {
+    kind: 'choice',
+    choicesKo: ['① 반비례한다 (○)', '② 반비례하지 않는다 (×)'],
+    choicesEn: ['① Inversely proportional (○)', '② Not inversely proportional (×)'],
+  });
+}
+
+// 9. rpmPropInverseTable (1041~1044번)
+function rpmPropInverseTable(random, profile = 'ko') {
+  const a = pick(random, [24, 36, 48, 60, -24, -36, -48]);
+  // Pick clean divisors
+  const xVals = [1, 2, 3, 4];
+  const yVals = xVals.map((x) => a / x);
+  const targetX = pick(random, [6, 8, 12]);
+  const ans = a / targetX;
+
+  const prompt = tx(
+    profile,
+    `$y$가 $x$에 반비례하고, $x$와 $y$ 사이의 관계를 표로 나타내면 다음과 같습니다.\n| $x$ | $1$ | $2$ | $3$ | $4$ |\n| $y$ | $${yVals[0]}$ | $${yVals[1]}$ | $${yVals[2]}$ | $${yVals[3]}$ |\n이때 $x = ${targetX}$일 때 $y$의 값을 구하시오.`,
+    `$y$ is inversely proportional to $x$, given by table:\n| $x$ | $1$ | $2$ | $3$ | $4$ |\n| $y$ | $${yVals[0]}$ | $${yVals[1]}$ | $${yVals[2]}$ | $${yVals[3]}$ |\nFind $y$ when $x = ${targetX}$.`
+  );
+  return problem(prompt, '', ans);
+}
+
+// 10. rpmPropInverseGraphProperties (1045~1047, 1095번)
+function rpmPropInverseGraphProperties(random, profile = 'ko') {
+  const a = pick(random, [12, 18, 24, -12, -18, -24]);
+  const isPos = a > 0;
+  const prompt = tx(
+    profile,
+    `반비례 관계 $y = \\frac{${a}}{x}$의 그래프에 대한 설명으로 옳은 것을 고르시오.`,
+    `Choose the correct statement about the graph of inverse proportion $y = \\frac{${a}}{x}$.`
+  );
+  let ans, choicesKo, choicesEn;
+  if (isPos) {
+    ans = '1';
+    choicesKo = [
+      '① 제1사분면과 제3사분면을 지나는 한 쌍의 매끄러운 곡선이다',
+      '② 제2사분면과 제4사분면을 지나는 한 쌍의 곡선이다',
+      '③ 원점을 지나는 직선이다',
+      '④ 각 사분면에서 $x$의 값이 증가하면 $y$의 값도 증가한다',
+    ];
+    choicesEn = [
+      '① A pair of smooth curves in Quadrants I and III',
+      '② A pair of smooth curves in Quadrants II and IV',
+      '③ A line passing through the origin',
+      '④ In each quadrant, as $x$ increases, $y$ increases',
+    ];
+  } else {
+    ans = '2';
+    choicesKo = [
+      '① 제1사분면과 제3사분면을 지난다',
+      '② 제2사분면과 제4사분면을 지나는 한 쌍의 매끄러운 곡선이다',
+      '③ 점 $(0, 0)$을 지난다',
+      '④ $x$축과 만난다',
+    ];
+    choicesEn = [
+      '① Passes through Quadrants I and III',
+      '② A pair of smooth curves in Quadrants II and IV',
+      '③ Passes through $(0, 0)$',
+      '④ Intersects the $x$-axis',
+    ];
+  }
+  return problem(prompt, '', ans, { kind: 'choice', choicesKo, choicesEn });
+}
+
+// 11. rpmPropInverseOriginDistance (1048~1050번)
+function rpmPropInverseOriginDistance(random, profile = 'ko') {
+  // Closest or furthest from origin based on |a|
+  const choicesKo = [
+    '① $y = \\frac{2}{x}$',
+    '② $y = -\\frac{4}{x}$',
+    '③ $y = \\frac{6}{x}$',
+    '④ $y = -\\frac{8}{x}$',
+    '⑤ $y = \\frac{12}{x}$',
+  ];
+  const choicesEn = choicesKo;
+  const target = pick(random, ['furthest', 'closest']);
+  let ans, promptKo, promptEn;
+
+  if (target === 'furthest') {
+    ans = '5'; // |12| is largest
+    promptKo = '다음 반비례 관계의 그래프 중 원점에서 가장 멀리 떨어진 것은?';
+    promptEn = 'Which inverse proportion graph is furthest from the origin?';
+  } else {
+    ans = '1'; // |2| is smallest
+    promptKo = '다음 반비례 관계의 그래프 중 원점에 가장 가까운 것은?';
+    promptEn = 'Which inverse proportion graph is closest to the origin?';
+  }
+  return problem(tx(profile, promptKo, promptEn), '', ans, { kind: 'choice', choicesKo, choicesEn });
+}
+
+// 12. rpmPropInversePointOnGraph (1051~1054, 1102번)
+function rpmPropInversePointOnGraph(random, profile = 'ko') {
+  const a = pick(random, [12, 18, 24, 30, 36, -12, -18, -24, -36]);
+  // Divisors of |a|
+  const absA = Math.abs(a);
+  const divs = [];
+  for (let i = 1; i <= absA; i++) if (absA % i === 0) divs.push(i);
+
+  const x0 = pick(random, divs) * pick(random, [1, -1]);
+  const y0 = a / x0;
+
+  const mode = randomInt(random, 0, 1);
+  if (mode === 0) {
+    let x1;
+    do { x1 = pick(random, divs) * pick(random, [1, -1]); } while (x1 === x0);
+    const ans = a / x1;
+    const prompt = tx(
+      profile,
+      `반비례 관계 $y = \\frac{a}{x}$의 그래프가 점 $(${x0}, ${y0})$를 지날 때, 점 $(${x1}, k)$도 이 그래프 위의 점이다. 상수 $k$의 값을 구하시오.`,
+      `The graph of $y = \\frac{a}{x}$ passes through $(${x0}, ${y0})$. If point $(${x1}, k)$ also lies on the graph, find $k$.`
+    );
+    return problem(prompt, '', ans);
+  } else {
+    let y1;
+    do { y1 = (a / pick(random, divs)); } while (y1 === y0);
+    const ans = a / y1;
+    const prompt = tx(
+      profile,
+      `반비례 관계 $y = \\frac{a}{x}$의 그래프가 점 $(${x0}, ${y0})$를 지날 때, 점 $(m, ${y1})$도 이 그래프 위의 점이다. 상수 $m$의 값을 구하시오.`,
+      `The graph of $y = \\frac{a}{x}$ passes through $(${x0}, ${y0})$. If point $(m, ${y1})$ also lies on the graph, find $m$.`
+    );
+    return problem(prompt, '', ans);
+  }
+}
+
+// 13. rpmPropInverseLatticePoints (1055~1057, 1105번)
+function rpmPropInverseLatticePoints(random, profile = 'ko') {
+  // y = a / x (a ≠ 0). Count points (x, y) where both x and y are integers.
+  // Count of integer pairs = 2 * (number of positive divisors of |a|)
+  const a = pick(random, [12, 16, 18, 20, 24, 30, 36]);
+  let divCount = 0;
+  for (let i = 1; i <= a; i++) {
+    if (a % i === 0) divCount++;
+  }
+  const ans = divCount * 2;
+
+  const prompt = tx(
+    profile,
+    `반비례 관계 $y = \\frac{${a}}{x}$의 그래프 위의 점 중에서 $x$좌표와 $y$좌표가 모두 정수인 점의 개수를 구하시오.`,
+    `Find the number of points $(x, y)$ on the graph of $y = \\frac{${a}}{x}$ where both $x$ and $y$ are integers.`
+  );
+  return problem(prompt, '', ans);
+}
+
+// 14. rpmPropInverseFindEquation (1058~1060, 1108번)
+function rpmPropInverseFindEquation(random, profile = 'ko') {
+  const x0 = pick(random, [2, 3, 4, -2, -3, -4]);
+  const y0 = pick(random, [2, 3, 4, 5, -2, -3, -4, -5]);
+  const a = x0 * y0;
+
+  const ans = `y=${a}/x`;
+  const prompt = tx(
+    profile,
+    `오른쪽 그림과 같이 원점에 대하여 대칭인 한 쌍의 곡선이 점 $(${x0}, ${y0})$를 지날 때, $x$와 $y$ 사이의 관계식을 구하시오.`,
+    `A pair of curves symmetric about the origin passes through $(${x0}, ${y0})$. Find the equation relating $x$ and $y$.`
+  );
+  return problem(prompt, '', ans, {
+    kind: 'proportion-graph',
+    graph: { mode: 'inverse', a, point: { x: x0, y: y0 }, range: 8 }
+  });
+}
+
+// 15. rpmPropDirectInverseIntersection (1061~1064, 1100, 1112번)
+function rpmPropDirectInverseIntersection(random, profile = 'ko') {
+  // y = m*x and y = b/x intersect at (x0, y0) in Quadrant 1 (or 3)
+  const m = pick(random, [2, 3, 4]);
+  const x0 = pick(random, [2, 3, 4]);
+  const y0 = m * x0;
+  const b = x0 * y0; // b = m * x0^2
+
+  const ask = pick(random, ['ab', 'a+b']);
+  // Let direct be y = ax => a = m
+  const ans = ask === 'ab' ? m * b : m + b;
+  const askStr = ask === 'ab' ? 'ab' : 'a+b';
+
+  const prompt = tx(
+    profile,
+    `정비례 관계 $y = ax$의 그래프와 반비례 관계 $y = \\frac{b}{x}$의 그래프가 점 $(${x0}, ${y0})$에서 만날 때, $${askStr}$의 값을 구하시오. (단, $a, b$는 상수)`,
+    `The graph of $y = ax$ and the graph of $y = \\frac{b}{x}$ intersect at $(${x0}, ${y0})$. Find the value of $${askStr}$.`
+  );
+  return problem(prompt, '', ans);
+}
+
+// 16. rpmPropInverseRectArea (1065~1069, 1114번)
+function rpmPropInverseRectArea(random, profile = 'ko') {
+  // For any point P(x, y) on y = a/x, area of rect formed with axes is |x * y| = |a|.
+  const a = pick(random, [12, 16, 18, 20, 24, 30, 36]);
+  const prompt = tx(
+    profile,
+    `반비례 관계 $y = \\frac{${a}}{x} (x > 0)$의 그래프 위의 한 점 $P$에서 $x$축, $y$축에 내린 수선의 발을 각각 $A, B$라 하고 원점을 $O$라 할 때, 직사각형 $PAOB$의 넓이를 구하시오.`,
+    `Let $P$ be a point on $y = \\frac{${a}}{x} (x > 0)$. If $A$ and $B$ are perpendicular feet to the axes, and $O$ is the origin, find the area of rectangle $PAOB$.`
+  );
+  return problem(prompt, '', a);
+}
+
+// 17. rpmPropDirectWordCandleGear (1070~1077, 1110, 1113번)
+function rpmPropDirectWordCandleGear(random, profile = 'ko') {
+  const scenario = pick(random, [
+    () => {
+      // Candle burning
+      const rate = pick(random, [0.5, 0.6, 0.8, 1.2]);
+      const mins = pick(random, [10, 15, 20, 30]);
+      const burned = Math.round(rate * mins * 10) / 10;
+      const prompt = tx(
+        profile,
+        `불을 붙이면 매분 $${rate}\\text{cm}$씩 일정하게 타는 양초가 있다. 불을 붙인 지 $${mins}$분 동안 탄 양초의 길이는 몇 $\\text{cm}$인지 구하시오.`,
+        `A candle burns at a rate of $${rate}\\text{ cm/min}$. How many $\\text{cm}$ of the candle burn in $${mins}$ minutes?`
+      );
+      return problem(prompt, '', burned, { answerSuffix: 'cm' });
+    },
+    () => {
+      // Fuel and distance: 5L for 60km => 12km per L
+      const perLiter = pick(random, [10, 12, 14, 15]);
+      const totalKm = pick(random, [120, 150, 180, 240]);
+      const neededLiters = totalKm / perLiter;
+      const prompt = tx(
+        profile,
+        `휘발유 $1\\text{L}$로 $${perLiter}\\text{km}$를 달릴 수 있는 자동차가 있다. 이 자동차가 $${totalKm}\\text{km}$를 이동하는 데 필요한 휘발유의 양은 몇 $\\text{L}$인지 구하시오.`,
+        `A car travels $${perLiter}\\text{ km}$ per $1\\text{ L}$ of fuel. How many liters are required to travel $${totalKm}\\text{ km}$?`
+      );
+      return problem(prompt, '', neededLiters, { answerSuffix: 'L' });
+    },
+    () => {
+      // Reading pages: 300 pages in 20 days => 15 pages/day
+      const pagesPerDay = pick(random, [12, 15, 20, 25]);
+      const days = pick(random, [8, 10, 12, 14]);
+      const total = pagesPerDay * days;
+      const prompt = tx(
+        profile,
+        `하루에 $${pagesPerDay}$쪽씩 일정하게 책을 읽을 때, $${days}$일 동안 읽은 책의 총 쪽수를 구하시오.`,
+        `If a student reads $${pagesPerDay}$ pages each day, how many pages are read in $${days}$ days?`
+      );
+      return problem(prompt, '', total, { answerSuffix: '쪽' });
+    }
+  ]);
+  return scenario();
+}
+
+// 18. rpmPropInverseWordTankVolume (1078~1080번)
+function rpmPropInverseWordTankVolume(random, profile = 'ko') {
+  const scenario = pick(random, [
+    () => {
+      // Water tank filling: rate * minutes = total volume
+      const rate1 = pick(random, [4, 5, 6, 8]);
+      const min1 = pick(random, [30, 40, 60, 80]);
+      const totalVol = rate1 * min1;
+      const min2 = pick(random, [20, 24, 50]);
+      const rate2 = totalVol / min2;
+      const prompt = tx(
+        profile,
+        `매분 $${rate1}\\text{L}$씩 물을 넣으면 $${min1}$분 만에 가득 차는 물통이 있다. 이 물통에 물을 $${min2}$분 만에 가득 채우려면 매분 몇 $\\text{L}$씩 물을 넣어야 하는지 구하시오.`,
+        `A water tank fills in $${min1}$ minutes at $${rate1}\\text{ L/min}$. What flow rate in $\\text{L/min}$ is needed to fill it in $${min2}$ minutes?`
+      );
+      return problem(prompt, '', rate2, { answerSuffix: 'L' });
+    },
+    () => {
+      // Cylinder volume = baseArea * height = V (constant)
+      const volume = pick(random, [60, 80, 120, 180, 240]);
+      const height = pick(random, [4, 5, 6, 8, 10]);
+      const baseArea = volume / height;
+      const prompt = tx(
+        profile,
+        `부피가 $${volume}\\text{cm}^3$로 일정한 원기둥이 있다. 이 원기둥의 높이가 $${height}\\text{cm}$일 때, 밑면의 넓이는 몇 $\\text{cm}^2$인지 구하시오.`,
+        `A cylinder has fixed volume $${volume}\\text{ cm}^3$. If the height is $${height}\\text{ cm}$, find the base area in $\\text{cm}^2$.`
+      );
+      return problem(prompt, '', baseArea, { answerSuffix: 'cm²' });
+    }
+  ]);
+  return scenario();
+}
+
+// 19. rpmPropInverseWordWorkBoyle (1081~1084, 1104번)
+function rpmPropInverseWordWorkBoyle(random, profile = 'ko') {
+  const scenario = pick(random, [
+    () => {
+      // Work done: people * hours = constant total
+      const p1 = pick(random, [6, 8, 10, 12]);
+      const h1 = pick(random, [10, 12, 15, 20]);
+      const totalWork = p1 * h1;
+      const h2 = pick(random, [5, 6, 8]);
+      const p2 = totalWork / h2;
+      const prompt = tx(
+        profile,
+        `$${p1}$명이 $${h1}$시간 동안 작업해야 끝나는 일이 있다. 이 일을 $${h2}$시간 만에 끝내려면 몇 명이 작업해야 하는지 구하시오. (단, 한 사람의 작업 속도는 모두 같다.)`,
+        `An assignment takes $${p1}$ people $${h1}$ hours. How many people are needed to complete it in $${h2}$ hours?`
+      );
+      return problem(prompt, '', p2, { answerSuffix: '명' });
+    },
+    () => {
+      // Boyle's law: P * V = C
+      const p1 = pick(random, [2, 3, 4]);
+      const v1 = pick(random, [30, 40, 60]);
+      const constant = p1 * v1;
+      const p2 = pick(random, [5, 6]);
+      const v2 = constant / p2;
+      const prompt = tx(
+        profile,
+        `온도가 일정할 때 기체의 부피는 압력에 반비례한다. 어떤 기체의 압력이 $${p1}$기압일 때 부피가 $${v1}\\text{mL}$라면, 압력을 $${p2}$기압으로 높였을 때 기체의 부피는 몇 $\\text{mL}$인지 구하시오.`,
+        `At constant temperature, gas volume is inversely proportional to pressure. If volume is $${v1}\\text{ mL}$ at $${p1}\\text{ atm}$, find the volume at $${p2}\\text{ atm}$.`
+      );
+      return problem(prompt, '', v2, { answerSuffix: 'mL' });
+    }
+  ]);
+  return scenario();
+}
+
+// 20. rpmPropTwoTravelersGraph (1085~1088, 1107번)
+function rpmPropTwoTravelersGraph(random, profile = 'ko') {
+  // Traveler A speed vA, Traveler B speed vB (vA > vB)
+  const vB = pick(random, [60, 80, 100]); // m/min
+  const vA = vB + pick(random, [20, 40]);
+  const delay = pick(random, [5, 10]); // B starts first or headstart
+  // Catch up time: vA * t = vB * (t + delay) => (vA - vB)*t = vB * delay
+  const catchupMinutes = (vB * delay) / (vA - vB);
+  if (!Number.isInteger(catchupMinutes)) return rpmPropTwoTravelersGraph(random, profile);
+
+  const prompt = tx(
+    profile,
+    `집에서 공원까지 형과 동생이 걸어간다. 동생이 분속 $${vB}\\text{m}$로 출발한 지 $${delay}$분 후에 형이 분속 $${vA}\\text{m}$로 출발하여 동생을 따라갔다. 형이 출발한 지 몇 분 후에 동생을 만나는지 구하시오.`,
+    `A brother starts $${delay}$ minutes later at $${vA}\\text{ m/min}$ chasing the younger brother who walks at $${vB}\\text{ m/min}$. How many minutes after starting will he catch up?`
+  );
+  return problem(prompt, '', catchupMinutes, { answerSuffix: '분 후' });
+}
+
+// 21. rpmPropChainProportion (1111, 173쪽 10번)
+function rpmPropChainProportion(random, profile = 'ko') {
+  // y is directly proportional to x: y = a * x
+  // z is inversely proportional to y: z = b / y
+  const a = pick(random, [2, 3, 4, -2, -3]);
+  const x0 = pick(random, [2, 3, 4]);
+  const y0 = a * x0;
+
+  const y1 = pick(random, [2, 4, 6]);
+  const z1 = pick(random, [3, 5, 6]);
+  const b = y1 * z1;
+
+  // Question: when x = targetX, what is z?
+  const targetX = pick(random, [1, 2, 5]);
+  const targetY = a * targetX;
+  const targetZFrac = simplifyFrac(b, targetY);
+
+  const prompt = tx(
+    profile,
+    `$y$는 $x$에 정비례하고 $x = ${x0}$일 때 $y = ${y0}$이다. 또 $z$는 $y$에 반비례하고 $y = ${y1}$일 때 $z = ${z1}$이다. $x = ${targetX}$일 때 $z$의 값을 구하시오.`,
+    `$y$ is directly proportional to $x$ with $y = ${y0}$ when $x = ${x0}$, and $z$ is inversely proportional to $y$ with $z = ${z1}$ when $y = ${y1}$. Find $z$ when $x = ${targetX}$.`
+  );
+  const ansStr = fracTex(targetZFrac[0], targetZFrac[1]);
+  return problem(prompt, '', ansStr);
+}
+
+// 22. rpmPropAllTypesMixed
+function rpmPropAllTypesMixed(random, profile = 'ko') {
+  const gens = [
+    rpmPropDirectIdentify,
+    rpmPropDirectTable,
+    rpmPropDirectGraphProperties,
+    rpmPropDirectSlopeAxisDistance,
+    rpmPropDirectPointOnGraph,
+    rpmPropDirectFindEquation,
+    rpmPropDirectGraphArea,
+    rpmPropInverseIdentify,
+    rpmPropInverseTable,
+    rpmPropInverseGraphProperties,
+    rpmPropInverseOriginDistance,
+    rpmPropInversePointOnGraph,
+    rpmPropInverseLatticePoints,
+    rpmPropInverseFindEquation,
+    rpmPropDirectInverseIntersection,
+    rpmPropInverseRectArea,
+    rpmPropDirectWordCandleGear,
+    rpmPropInverseWordTankVolume,
+    rpmPropInverseWordWorkBoyle,
+    rpmPropTwoTravelersGraph,
+    rpmPropChainProportion,
+  ];
+  return pick(random, gens)(random, profile);
+}
+
+// -------------------------------------------------------------
+// PART 3: 중학 1-1 전 범위 실전 총괄 모의고사 (Pages 152~173)
+// -------------------------------------------------------------
+function rpmSemesterOneMockExam(random, profile = 'ko') {
+  // Picks evenly from all 9 major domains (Ch 01 ~ Ch 09)
+  const allDomainGens = [
+    // Ch 08
+    rpmCoordOrderedPairEquality,
+    rpmCoordAxisPoints,
+    rpmCoordTriangleArea,
+    rpmCoordPolygonArea,
+    rpmCoordQuadrantIdentify,
+    rpmCoordQuadrantSignCondition,
+    rpmCoordSignProductSum,
+    rpmCoordAbsConditionQuadrant,
+    rpmCoordSymmetricPoints,
+    rpmCoordSymmetricArea,
+    rpmCoordGraphSituation,
+    rpmCoordGraphDistanceTime,
+    rpmCoordGraphSpeedTime,
+    // Ch 09
+    rpmPropDirectIdentify,
+    rpmPropDirectTable,
+    rpmPropDirectGraphProperties,
+    rpmPropDirectSlopeAxisDistance,
+    rpmPropDirectPointOnGraph,
+    rpmPropDirectFindEquation,
+    rpmPropDirectGraphArea,
+    rpmPropInverseIdentify,
+    rpmPropInverseTable,
+    rpmPropInverseGraphProperties,
+    rpmPropInverseOriginDistance,
+    rpmPropInversePointOnGraph,
+    rpmPropInverseLatticePoints,
+    rpmPropInverseFindEquation,
+    rpmPropDirectInverseIntersection,
+    rpmPropInverseRectArea,
+    rpmPropDirectWordCandleGear,
+    rpmPropInverseWordTankVolume,
+    rpmPropInverseWordWorkBoyle,
+    rpmPropTwoTravelersGraph,
+    rpmPropChainProportion,
+  ];
+  return pick(random, allDomainGens)(random, profile);
 }
 
 export const RPM_ADVANCED_ENGINES = {
@@ -3957,22 +4987,74 @@ export const RPM_ADVANCED_ENGINES = {
   'concentration': rpmAppSaltTwoSolutionsMix,
   'equations-review': rpmAppAllTypesMixed,
 
-  'ordered-pair-condition': rpmCoordTriangleArea,
-  'plane-read-point': rpmCoordTriangleArea,
-  'plane-find-point': rpmCoordTriangleArea,
-  'quadrant-identify': rpmCoordTriangleArea,
-  'quadrant-sign': rpmCoordTriangleArea,
-  'quadrant-transform': rpmCoordTriangleArea,
-  'symmetric-points': rpmCoordTriangleArea,
-  'trip-graph': rpmCoordTriangleArea,
-  'coordinate-mixed': rpmCoordTriangleArea,
+  // 08 좌표평면과 그래프 세부 응용 유형 (RPM 1-1 p.122~129)
+  'rpm-coord-ordered-pair-equality': rpmCoordOrderedPairEquality,
+  'rpm-coord-axis-points': rpmCoordAxisPoints,
+  'rpm-coord-triangle-area': rpmCoordTriangleArea,
+  'rpm-coord-polygon-area': rpmCoordPolygonArea,
+  'rpm-coord-quadrant-identify': rpmCoordQuadrantIdentify,
+  'rpm-coord-quadrant-sign-condition': rpmCoordQuadrantSignCondition,
+  'rpm-coord-sign-product-sum': rpmCoordSignProductSum,
+  'rpm-coord-abs-condition-quadrant': rpmCoordAbsConditionQuadrant,
+  'rpm-coord-symmetric-points': rpmCoordSymmetricPoints,
+  'rpm-coord-symmetric-area': rpmCoordSymmetricArea,
+  'rpm-coord-graph-situation': rpmCoordGraphSituation,
+  'rpm-coord-graph-distance-time': rpmCoordGraphDistanceTime,
+  'rpm-coord-graph-speed-time': rpmCoordGraphSpeedTime,
+  'rpm-coord-all-types-mixed': rpmCoordAllTypesMixed,
 
-  'direct-concept': rpmPropIntersection,
-  'direct-equation': rpmPropIntersection,
-  'direct-graph': rpmPropIntersection,
-  'inverse-concept': rpmPropIntersection,
-  'inverse-equation': rpmPropIntersection,
-  'inverse-graph': rpmPropIntersection,
-  'proportion-applications': rpmPropIntersection,
-  'proportion-mixed': rpmPropIntersection,
+  // 08 좌표평면 기본 탭 호환
+  'ordered-pair-condition': rpmCoordOrderedPairEquality,
+  'plane-read-point': rpmCoordTriangleArea,
+  'plane-find-point': rpmCoordAxisPoints,
+  'quadrant-identify': rpmCoordQuadrantIdentify,
+  'quadrant-sign': rpmCoordQuadrantSignCondition,
+  'quadrant-transform': rpmCoordSignProductSum,
+  'symmetric-points': rpmCoordSymmetricPoints,
+  'trip-graph': rpmCoordGraphDistanceTime,
+  'coordinate-mixed': rpmCoordAllTypesMixed,
+
+  // 09 정비례와 반비례 세부 응용 유형 (RPM 1-1 p.134~149)
+  'rpm-prop-direct-identify': rpmPropDirectIdentify,
+  'rpm-prop-direct-table': rpmPropDirectTable,
+  'rpm-prop-direct-graph-properties': rpmPropDirectGraphProperties,
+  'rpm-prop-direct-slope-axis-distance': rpmPropDirectSlopeAxisDistance,
+  'rpm-prop-direct-point-on-graph': rpmPropDirectPointOnGraph,
+  'rpm-prop-direct-find-equation': rpmPropDirectFindEquation,
+  'rpm-prop-direct-graph-area': rpmPropDirectGraphArea,
+  'rpm-prop-inverse-identify': rpmPropInverseIdentify,
+  'rpm-prop-inverse-table': rpmPropInverseTable,
+  'rpm-prop-inverse-graph-properties': rpmPropInverseGraphProperties,
+  'rpm-prop-inverse-origin-distance': rpmPropInverseOriginDistance,
+  'rpm-prop-inverse-point-on-graph': rpmPropInversePointOnGraph,
+  'rpm-prop-inverse-lattice-points': rpmPropInverseLatticePoints,
+  'rpm-prop-inverse-find-equation': rpmPropInverseFindEquation,
+  'rpm-prop-direct-inverse-intersection': rpmPropDirectInverseIntersection,
+  'rpm-prop-inverse-rect-area': rpmPropInverseRectArea,
+  'rpm-prop-direct-word-candle-gear': rpmPropDirectWordCandleGear,
+  'rpm-prop-inverse-word-tank-volume': rpmPropInverseWordTankVolume,
+  'rpm-prop-inverse-word-work-boyle': rpmPropInverseWordWorkBoyle,
+  'rpm-prop-two-travelers-graph': rpmPropTwoTravelersGraph,
+  'rpm-prop-chain-proportion': rpmPropChainProportion,
+  'rpm-prop-all-types-mixed': rpmPropAllTypesMixed,
+
+  // 09 정비례와 반비례 기본 탭 호환
+  'direct-concept': rpmPropDirectIdentify,
+  'direct-relation': rpmPropDirectFindEquation,
+  'direct-classify': rpmPropDirectIdentify,
+  'direct-evaluate': rpmPropDirectPointOnGraph,
+  'direct-equation': rpmPropDirectFindEquation,
+  'direct-graph': rpmPropDirectGraphProperties,
+  'inverse-concept': rpmPropInverseIdentify,
+  'inverse-relation': rpmPropInverseFindEquation,
+  'inverse-classify': rpmPropInverseIdentify,
+  'inverse-evaluate': rpmPropInversePointOnGraph,
+  'inverse-equation': rpmPropInverseFindEquation,
+  'inverse-graph': rpmPropInverseGraphProperties,
+  'proportion-applications': rpmPropDirectWordCandleGear,
+  'proportion-application': rpmPropInverseWordTankVolume,
+  'proportion-mixed': rpmPropAllTypesMixed,
+
+  // 중학 1-1 전 범위 총괄 실전 모의고사 (RPM 1-1 p.152~173)
+  'rpm-semester-one-mock-exam': rpmSemesterOneMockExam,
 };
