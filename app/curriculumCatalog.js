@@ -920,7 +920,7 @@ const KOREAN_GRADE_STAGE_SEEDS = [
     topics: [
       { label: '중1 비기하 통합 생성기', href: '/middle-school/pre-algebra?profile=kr-middle-1', ready: true, availability: 'ready' },
       { label: '소수와 소인수분해', href: '/middle-school/prime-factorization', ready: true, availability: 'ready', amc: { href: '/amc/units?unit=primes-factorization&variant=1' } },
-      { label: '최대공약수와 최소공배수', href: '/middle-school/gcd-lcm', ready: true, availability: 'ready' },
+      { label: '최대공약수와 최소공배수', href: '/middle-school/gcd-lcm', ready: true, availability: 'ready', amc: { href: '/amc/units?unit=gcd-lcm&variant=1' } },
       { label: '정수와 유리수', href: '/middle-school/integers-rationals', ready: true, availability: 'ready' },
       { label: '문자와 식', href: '/middle-school/algebra-basics.html?unit=expressions-review', ready: true, availability: 'ready' },
       { label: '일차방정식', href: '/middle-school/algebra-basics.html?unit=equations-review', ready: true, availability: 'ready' },
