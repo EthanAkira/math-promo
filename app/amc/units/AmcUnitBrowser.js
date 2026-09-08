@@ -172,6 +172,20 @@ export default function AmcUnitBrowser() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
+  // A deep link with ?variant=1 (used by the curriculum-tab "AMC 문제 보기" toggle) should land
+  // directly on a freshly generated, language-matched practice problem — NOT the raw archived past
+  // AMC exam text, which is kept verbatim in its original English regardless of site language and
+  // would otherwise be the first thing a Korean-language visitor sees after clicking through.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const u = params.get('unit');
+    if (!u || params.get('variant') !== '1') return;
+    const found = AMC_FINE_SUBJECTS.flatMap((subject) => subject.units).find((unit) => unit.id === u);
+    if (!found) return;
+    setGeneratedVariants((prev) => ({ ...prev, [u]: generateAmcVariantProblem(found, language) }));
+  }, [language]);
+
   // Auth check
   useEffect(() => {
     if (authStatus !== 'ready') return;
