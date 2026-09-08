@@ -3425,59 +3425,622 @@ export const rpmAlgebraCoeffDifference = rpmAlgLinearAddSub;
 // CHAPTER 06: 일차방정식의 풀이 응용 (Equations Applied)
 // -------------------------------------------------------------
 
-// 1. 비례식 형태의 일차방정식 (RPM p.99 #785)
-export function rpmEqProportionStyle(random) {
-  const xVal = ri(random, 2, 7);
-  const a1 = ri(random, 2, 4);
-  const b1 = ri(random, -5, 6);
-  const term1 = a1 * xVal + b1;
-  const a2 = 1;
-  const b2 = ri(random, -4, 4);
-  const term2 = a2 * xVal + b2;
+export function rpmEqIdentityEquation(random) {
+  const mode = pick(random, ['verbal-to-eq', 'identify-eq', 'identify-non-eq']);
+  if (mode === 'verbal-to-eq') {
+    const k = ri(random, 2, 7);
+    const sub = ri(random, 2, 9);
+    const mult = ri(random, 2, 4);
+    const right = `${k}x - ${sub} = ${mult}x`;
+    const choices = [
+      { label: right, labelEn: right, isRight: true },
+      { label: `${k}x + ${sub} = ${mult}x`, labelEn: `${k}x + ${sub} = ${mult}x`, isRight: false },
+      { label: `${k}(x - ${sub}) = ${mult}x`, labelEn: `${k}(x - ${sub}) = ${mult}x`, isRight: false },
+      { label: `${k}x - ${sub} = x + ${mult}`, labelEn: `${k}x - ${sub} = x + ${mult}`, isRight: false },
+      { label: `${k}x - ${sub} > ${mult}x`, labelEn: `${k}x - ${sub} > ${mult}x`, isRight: false },
+    ].sort(() => random() - 0.5);
+    const rightIdx = choices.findIndex((c) => c.isRight) + 1;
+    return {
+      prompt: `다음 문장을 등식으로 나타낸 것으로 옳은 것은?\n"어떤 수 x의 ${k}배에서 ${sub}를 뺀 것은 x의 ${mult}배와 같다."`,
+      promptEn: `Which equation correctly represents:\n"Subtracting ${sub} from ${k} times x equals ${mult} times x."`,
+      kind: 'choice',
+      choicesKo: choices.map((c) => c.label),
+      choicesEn: choices.map((c) => c.labelEn),
+      answer: String(rightIdx),
+      explanation: `x의 ${k}배에서 ${sub}를 뺀 식은 ${k}x - ${sub}이고, x의 ${mult}배는 ${mult}x이므로 등식은 ${right}입니다.`,
+      explanationEn: `${k} times x minus ${sub} is ${k}x - ${sub}, and ${mult} times x is ${mult}x, so the equation is ${right}.`
+    };
+  }
 
-  const m = pick(random, [2, 3, 4]);
-  const n = 1;
+  if (mode === 'identify-non-eq') {
+    const choices = [
+      { label: '3x - 6 = 0', labelEn: '3x - 6 = 0', isRight: false },
+      { label: '2x + 5 = 11', labelEn: '2x + 5 = 11', isRight: false },
+      { label: '4x - 7 < 9', labelEn: '4x - 7 < 9', isRight: true },
+      { label: 'x/2 = 4', labelEn: 'x/2 = 4', isRight: false },
+      { label: '5x = 2x + 9', labelEn: '5x = 2x + 9', isRight: false },
+    ].sort(() => random() - 0.5);
+    const rightIdx = choices.findIndex((c) => c.isRight) + 1;
+    return {
+      prompt: '다음 보기 중 등식이 아닌 것은?',
+      promptEn: 'Which of the following is NOT an equation?',
+      kind: 'choice',
+      choicesKo: choices.map((c) => c.label),
+      choicesEn: choices.map((c) => c.labelEn),
+      answer: String(rightIdx),
+      explanation: '등호(=)를 사용하여 수나 식이 같음을 나타낸 식만이 등식입니다. 부등호(<, > 등)를 사용한 식은 부등식입니다.',
+      explanationEn: 'Only expressions using an equals sign (=) are equations. Expressions with inequality signs are inequalities.'
+    };
+  }
 
-  // Let term1 : term2 = (term1 / g) : (term2 / g)
-  // Simplified: (a1 x + b1) : (x + b2) = (m * mult) : (mult)
-  const leftExpr = `${a1}x ${b1 >= 0 ? '+' : '-'} ${Math.abs(b1)}`;
-  const rightExpr = `x ${b2 >= 0 ? '+' : '-'} ${Math.abs(b2)}`;
-  const ratioLeft = term1;
-  const ratioRight = term2;
-
-  const promptKo = `비례식 (${leftExpr}) : (${rightExpr}) = ${ratioLeft} : ${ratioRight} 을 만족시키는 x의 값을 구하시오.`;
-  const promptEn = `Solve for x in the proportion (${leftExpr}) : (${rightExpr}) = ${ratioLeft} : ${ratioRight}.`;
-
+  // identify-eq
+  const choices = [
+    { label: '3x - 7', labelEn: '3x - 7', isRight: false },
+    { label: '2x + 4 > 10', labelEn: '2x + 4 > 10', isRight: false },
+    { label: '5x + 3y - 2', labelEn: '5x + 3y - 2', isRight: false },
+    { label: '4x - 1 = 7', labelEn: '4x - 1 = 7', isRight: true },
+    { label: '3x + 1 ≤ 4x', labelEn: '3x + 1 ≤ 4x', isRight: false },
+  ].sort(() => random() - 0.5);
+  const rightIdx = choices.findIndex((c) => c.isRight) + 1;
   return {
-    prompt: promptKo,
-    promptEn,
-    expression: `(${leftExpr}) : (${rightExpr}) = ${ratioLeft} : ${ratioRight}`,
-    answer: String(xVal),
-    explanation: `내항의 곱은 외항의 곱과 같으므로, ${ratioRight}(${leftExpr}) = ${ratioLeft}(${rightExpr})입니다. 식을 전개하여 일차방정식을 풀면 x = ${xVal}을 얻습니다.`,
+    prompt: '다음 보기 중 등식인 것은?',
+    promptEn: 'Which of the following is an equation?',
+    kind: 'choice',
+    choicesKo: choices.map((c) => c.label),
+    choicesEn: choices.map((c) => c.labelEn),
+    answer: String(rightIdx),
+    explanation: '등호(=)를 사용하여 나타낸 식만이 등식입니다. 다항식(3x-7)이나 부등식은 등식이 아닙니다.',
+    explanationEn: 'Only a statement with an equals sign (=) is an equation. Polynomials and inequalities are not equations.'
   };
 }
 
-// 2. 항등식 조건에서 상수 구하기 (RPM p.95 #756, p.103 #815)
+// 2. [방정식 풀이 유형 02] 방정식의 해 판별과 수 대입
+export function rpmEqRootSubstitute(random) {
+  const mode = pick(random, ['abs-condition-root', 'bracket-check-false', 'find-root-val']);
+  if (mode === 'abs-condition-root') {
+    const k = pick(random, [2, 3, 4, 5]);
+    const a = ri(random, 2, 4);
+    const c = ri(random, 1, 6);
+    const rhs = a * (-k) + c;
+    return {
+      prompt: `x가 절댓값이 ${k}인 수일 때, 일차방정식 ${a}x + ${c} = ${rhs}의 해를 구하시오.`,
+      promptEn: `Given that |x| = ${k}, find the solution to the linear equation ${a}x + ${c} = ${rhs}.`,
+      expression: `|x| = ${k},  ${a}x + ${c} = ${rhs}`,
+      answer: `-${k}`,
+      explanation: `절댓값이 ${k}인 수는 ${k} 또는 -${k}입니다. x = ${k}를 대입하면 ${a}×${k}+${c} = ${a * k + c} ≠ ${rhs}이고, x = -${k}를 대입하면 ${a}×(-${k})+${c} = ${rhs}이므로 해는 x = -${k}입니다.`,
+      explanationEn: `|x| = ${k} implies x is ${k} or -${k}. Substituting x = -${k} gives ${a}(-${k}) + ${c} = ${rhs}.`
+    };
+  }
+
+  if (mode === 'bracket-check-false') {
+    const r = ri(random, -3, 4) || 2;
+    const wr = r + pick(random, [-2, -1, 1, 2]);
+    const choices = [
+      { eq: `2x - 3 = ${2 * r - 3}`, val: r, isWrong: false },
+      { eq: `3(x + 1) = ${3 * (r + 1)}`, val: r, isWrong: false },
+      { eq: `5x - 4 = 3x + ${2 * r - 4}`, val: r, isWrong: false },
+      { eq: `4(x - 2) = ${4 * (r - 2)}`, val: r, isWrong: false },
+      { eq: `2x + 5 = ${2 * r + 5}`, val: wr, isWrong: true },
+    ].sort(() => random() - 0.5);
+    const wrongIdx = choices.findIndex((c) => c.isWrong) + 1;
+    return {
+      prompt: '다음 중 [ ] 안의 수가 주어진 일차방정식의 해가 아닌 것은?',
+      promptEn: 'For which equation is the value in [ ] NOT a solution?',
+      kind: 'choice',
+      choicesKo: choices.map((c) => `${c.eq}  [${c.val}]`),
+      choicesEn: choices.map((c) => `${c.eq}  [${c.val}]`),
+      answer: String(wrongIdx),
+      explanation: '[ ] 안의 수를 각 방정식의 x에 대입하여 좌변과 우변의 값이 같지 않은 것을 찾습니다.',
+      explanationEn: 'Substitute the bracketed value into x for each equation; the answer is where LHS ≠ RHS.'
+    };
+  }
+
+  // find-root-val
+  const k = ri(random, -3, 3) || 1;
+  const a = ri(random, 2, 5);
+  const b = ri(random, -5, 5);
+  const rhs = a * k + b;
+  const rightEq = `${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)} = ${rhs}`;
+  const choices = [
+    rightEq,
+    `${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)} = ${rhs + 3}`,
+    `2x + 1 = ${2 * (k + 1) + 1}`,
+    `3(x - 2) = ${3 * (k - 1)}`,
+    `x - ${k + 2} = 0`
+  ].sort(() => random() - 0.5);
+  const rightIdx = choices.indexOf(rightEq) + 1;
+  return {
+    prompt: `다음 일차방정식 중 해가 x = ${k}인 것은?`,
+    promptEn: `Which of the following equations has the solution x = ${k}?`,
+    kind: 'choice',
+    choicesKo: choices,
+    choicesEn: choices,
+    answer: String(rightIdx),
+    explanation: `각 식에 x = ${k}를 대입하면 ${rightEq}에서 ${a}×(${k}) ${b >= 0 ? '+' : '-'} ${Math.abs(b)} = ${rhs}로 등식이 성립합니다.`,
+    explanationEn: `Substituting x = ${k} into ${rightEq} yields ${rhs} = ${rhs}.`
+  };
+}
+
+// 3. [방정식 풀이 유형 03] 방정식과 항등식의 구분
+export function rpmEqIdentityDistinguish(random) {
+  const k = ri(random, 2, 5);
+  const c = ri(random, 1, 6);
+  const rightId = `${k}(x - ${c}) = ${k}x - ${k * c}`;
+  const choices = [
+    { label: rightId, isRight: true },
+    { label: `${k}x - ${c} = ${k * c}`, isRight: false },
+    { label: `2x + 4 = 8x + 1`, isRight: false },
+    { label: `${k}x - 1 = ${k}(x - 1)`, isRight: false },
+    { label: `x - ${c} = ${c} - x`, isRight: false },
+  ].sort(() => random() - 0.5);
+  const rightIdx = choices.findIndex((c) => c.isRight) + 1;
+  return {
+    prompt: '다음 중 x의 값에 관계없이 항상 참인 등식(항등식)은?',
+    promptEn: 'Which of the following equations is an identity (always true for all x)?',
+    kind: 'choice',
+    choicesKo: choices.map((c) => c.label),
+    choicesEn: choices.map((c) => c.label),
+    answer: String(rightIdx),
+    explanation: `${rightId}의 좌변을 전개하면 ${k}x - ${k * c}로 (좌변)=(우변)이 항상 같으므로 x에 대한 항등식입니다.`,
+    explanationEn: `Expanding LHS of ${rightId} gives ${k}x - ${k * c}, which equals RHS for all x.`
+  };
+}
+
+// 4. [방정식 풀이 유형 04] 항등식이 되는 미지수 조건
 export function rpmEqIdentityCondition(random) {
-  const aVal = ri(random, 2, 5);
-  const bVal = ri(random, -6, 6);
-  const mult = ri(random, 2, 4);
-  // 2a x + (a + b) = mult*x + constVal
-  const leftXCoeff = mult * aVal;
-  const leftConst = aVal + bVal;
+  const mode = pick(random, ['find-box', 'find-ab-sum']);
+  if (mode === 'find-box') {
+    const a = ri(random, 2, 5);
+    const b = ri(random, 1, 4);
+    const c = ri(random, 2, 4);
+    const boxCoeff = a + c;
+    const boxConst = a * b;
+    const ans = `${boxCoeff}x - ${boxConst}`;
+    const choices = [
+      { label: `${boxCoeff}x - ${boxConst}`, isRight: true },
+      { label: `${boxCoeff}x + ${boxConst}`, isRight: false },
+      { label: `${a}x - ${boxConst}`, isRight: false },
+      { label: `${boxCoeff}x - ${b}`, isRight: false },
+      { label: `${a - c}x - ${boxConst}`, isRight: false },
+    ].sort(() => random() - 0.5);
+    const rightIdx = choices.findIndex((c) => c.isRight) + 1;
+    return {
+      prompt: `등식 ${a}(x - ${b}) = -${c}x + □ 가 x의 값에 관계없이 항상 성립할 때, □ 안에 알맞은 식은?`,
+      promptEn: `Given that ${a}(x - ${b}) = -${c}x + [ ? ] is an identity in x, find the missing expression in [ ? ].`,
+      kind: 'choice',
+      choicesKo: choices.map((c) => c.label),
+      choicesEn: choices.map((c) => c.label),
+      answer: String(rightIdx),
+      explanation: `좌변을 전개하면 ${a}x - ${a * b} = -${c}x + □ 이므로 □ = ${a}x - ${a * b} - (-${c}x) = ${ans}입니다.`,
+      explanationEn: `LHS expanded is ${a}x - ${a * b} = -${c}x + [ ? ], so [ ? ] = ${ans}.`
+    };
+  }
 
-  const promptKo = `등식 ${leftXCoeff}x + ${leftConst} = a(${mult}x + 1) + b 가 모든 x에 대하여 항상 참일 때, 상수 a, b에 대하여 a - b의 값을 구하시오.`;
-  const promptEn = `The equality ${leftXCoeff}x + ${leftConst} = a(${mult}x + 1) + b is true for all x. Find the value of a - b for constants a and b.`;
-  const ans = aVal - bVal;
-
+  // find-ab-sum: ax + b = c(x + d) + e
+  const c = ri(random, 2, 6);
+  const d = ri(random, 1, 5);
+  const e = ri(random, -6, 6);
+  const aVal = c;
+  const bVal = c * d + e;
+  const ans = aVal + bVal;
   return {
-    prompt: promptKo,
-    promptEn,
-    expression: `${leftXCoeff}x + ${leftConst} = a(${mult}x + 1) + b`,
+    prompt: `등식 ax + b = ${c}(x + ${d}) ${e >= 0 ? '+' : '-'} ${Math.abs(e)} 가 x에 대한 항등식일 때, 상수 a, b에 대하여 a + b의 값을 구하시오.`,
+    promptEn: `If ax + b = ${c}(x + ${d}) ${e >= 0 ? '+' : '-'} ${Math.abs(e)} is an identity in x, find a + b.`,
+    expression: `ax + b = ${c}(x + ${d}) ${e >= 0 ? '+' : '-'} ${Math.abs(e)}`,
     answer: String(ans),
-    explanation: `우변을 전개하면 ${mult}ax + (a + b)입니다. x에 대한 항등식이므로 ${mult}a = ${leftXCoeff}에서 a = ${aVal}, a + b = ${leftConst}에서 b = ${leftConst} - ${aVal} = ${bVal}입니다. 따라서 a - b = ${aVal} - (${bVal}) = ${ans}입니다.`,
+    explanation: `우변을 전개하여 정리하면 ${c}x + ${c * d} ${e >= 0 ? '+' : '-'} ${Math.abs(e)} = ${c}x + ${bVal}입니다. x에 대한 항등식이므로 a = ${aVal}, b = ${bVal}입니다. 따라서 a + b = ${aVal} + ${bVal} = ${ans}입니다.`,
+    explanationEn: `Expanding RHS gives ${c}x + ${bVal}. Equating coefficients: a = ${aVal}, b = ${bVal}, so a + b = ${ans}.`
   };
 }
+
+// 5. [방정식 풀이 유형 05] 등식의 성질 참·거짓 판별
+export function rpmEqPropertiesEquality(random) {
+  const choices = [
+    { label: '3a = 6b 이면 a = 2b 이다.', labelEn: 'If 3a = 6b, then a = 2b.', isFalse: false },
+    { label: 'a/2 = b/3 이면 3a = 2b 이다.', labelEn: 'If a/2 = b/3, then 3a = 2b.', isFalse: false },
+    { label: 'a - b = x - y 이면 a - x = b - y 이다.', labelEn: 'If a - b = x - y, then a - x = b - y.', isFalse: false },
+    { label: 'ac = bc 이면 항상 a = b 이다.', labelEn: 'If ac = bc, then always a = b.', isFalse: true },
+    { label: 'a = b 이면 a - 5 = b - 5 이다.', labelEn: 'If a = b, then a - 5 = b - 5.', isFalse: false },
+  ].sort(() => random() - 0.5);
+  const falseIdx = choices.findIndex((c) => c.isFalse) + 1;
+  return {
+    prompt: '다음 중 등식의 성질에 대한 설명으로 옳지 않은 것은?',
+    promptEn: 'Which of the following statements about properties of equality is FALSE?',
+    kind: 'choice',
+    choicesKo: choices.map((c) => c.label),
+    choicesEn: choices.map((c) => c.labelEn),
+    answer: String(falseIdx),
+    explanation: 'ac = bc일 때 c = 0이면 a와 b가 서로 달라도 등식이 성립하므로, c ≠ 0이라는 조건이 없을 때는 반드시 a = b라고 할 수 없습니다.',
+    explanationEn: 'If c = 0, ac = bc holds even when a ≠ b, so we cannot conclude a = b unless c ≠ 0.'
+  };
+}
+
+// 6. [방정식 풀이 유형 06] 등식의 성질을 이용한 방정식의 풀이
+export function rpmEqSolveUsingProperties(random) {
+  const mode = pick(random, ['find-c-val', 'find-step']);
+  if (mode === 'find-c-val') {
+    const a = ri(random, 2, 5);
+    const b = ri(random, 3, 9);
+    const d = ri(random, 1, 8);
+    const ans = -b;
+    return {
+      prompt: `방정식 ${a}x + ${b} = ${d}를 풀기 위해 등식의 성질 "a=b이면 a+c = b+c이다"를 한 번만 이용하여 좌변에 ${a}x항만 남기려고 한다. 이때 c의 값을 구하시오.`,
+      promptEn: `To solve ${a}x + ${b} = ${d} by using "if a=b then a+c=b+c" once to leave only the ${a}x term on the LHS, find c.`,
+      expression: `${a}x + ${b} = ${d}`,
+      answer: String(ans),
+      explanation: `좌변에서 상수항 ${b}를 없애기 위해 양변에 ${ans}를 더해야 하므로 c = ${ans}입니다.`,
+      explanationEn: `To eliminate the constant ${b} from the LHS, add ${ans} to both sides, so c = ${ans}.`
+    };
+  }
+
+  // find-step
+  return {
+    prompt: `다음 방정식의 풀이 과정에서 등식의 성질 "a=b이면 a/c = b/c이다 (c≠0)"를 이용한 단계를 고르시오.\n[풀이 과정]\n(2/3)x - 1 = 1\n㉠ 2x - 3 = 3\n㉡ 2x = 6\n㉢ x = 3`,
+    promptEn: `Identify the step that uses the property "if a=b then a/c = b/c (c≠0)":\n(2/3)x - 1 = 1\n[A] 2x - 3 = 3\n[B] 2x = 6\n[C] x = 3`,
+    kind: 'choice',
+    choicesKo: ['㉠', '㉡', '㉢'],
+    choicesEn: ['Step A', 'Step B', 'Step C'],
+    answer: '3',
+    explanation: '2x = 6에서 양변을 2로 나누어 x = 3을 구하는 과정(㉢)에서 나눗셈의 성질이 이용되었습니다.',
+    explanationEn: 'In step C (2x = 6 to x = 3), both sides are divided by 2.'
+  };
+}
+
+// 7. [방정식 풀이 유형 07] 이항
+export function rpmEqTranspositionRule(random) {
+  const mode = pick(random, ['ax-equals-b-form', 'correct-transpose-choice']);
+  if (mode === 'ax-equals-b-form') {
+    const a1 = ri(random, 4, 7);
+    const a2 = ri(random, 1, a1 - 1);
+    const b1 = ri(random, 1, 8);
+    const b2 = ri(random, -8, -1);
+    const aFinal = a1 - a2;
+    const bFinal = b2 - b1;
+    const ans = aFinal + bFinal;
+    return {
+      prompt: `등식 ${a1}x + ${b1} = ${a2}x ${b2 >= 0 ? '+' : '-'} ${Math.abs(b2)}를 이항만을 이용하여 ax = b (a > 0)의 꼴로 나타내었을 때, 상수 a, b에 대하여 a + b의 값을 구하시오.`,
+      promptEn: `Transform ${a1}x + ${b1} = ${a2}x ${b2 >= 0 ? '+' : '-'} ${Math.abs(b2)} into ax = b (a > 0) using transposition only. Find a + b.`,
+      expression: `${a1}x + ${b1} = ${a2}x ${b2 >= 0 ? '+' : '-'} ${Math.abs(b2)}`,
+      answer: String(ans),
+      explanation: `${a2}x를 좌변으로, ${b1}을 우변으로 이항하면 (${a1} - ${a2})x = ${b2} - ${b1}이므로 ${aFinal}x = ${bFinal}입니다. 따라서 a = ${aFinal}, b = ${bFinal}이므로 a + b = ${ans}입니다.`,
+      explanationEn: `Transposing gives ${aFinal}x = ${bFinal}, so a = ${aFinal}, b = ${bFinal}, and a + b = ${ans}.`
+    };
+  }
+
+  // correct-transpose-choice
+  const choices = [
+    { label: '3x - 5 = 7  ⇨  3x = 7 + 5', isRight: true },
+    { label: '4x = 6 - 3x  ⇨  4x - 3x = 6', isRight: false },
+    { label: '5x + 2 = 1  ⇨  5x = 1 + 2', isRight: false },
+    { label: '2x - 1 = x + 4  ⇨  2x + x = 4 + 1', isRight: false },
+    { label: '6x - 4 = 2  ⇨  6x = 2 - 4', isRight: false },
+  ].sort(() => random() - 0.5);
+  const rightIdx = choices.findIndex((c) => c.isRight) + 1;
+  return {
+    prompt: '다음 중 밑줄 친 항을 바르게 이항한 것은?',
+    promptEn: 'Which of the following demonstrates correct transposition?',
+    kind: 'choice',
+    choicesKo: choices.map((c) => c.label),
+    choicesEn: choices.map((c) => c.label),
+    answer: String(rightIdx),
+    explanation: '등식의 어느 한 변에 있는 항을 그 부호를 바꾸어 다른 변으로 옮기는 것을 이항이라 합니다. -5를 이항하면 +5가 됩니다.',
+    explanationEn: 'Transposing a term across the equals sign requires changing its sign. -5 transposes to +5.'
+  };
+}
+
+// 8. [방정식 풀이 유형 08] 일차방정식의 뜻과 일차방정식이 될 조건
+export function rpmEqLinearDefIdentify(random) {
+  const mode = pick(random, ['param-condition', 'identify-linear-mcq']);
+  if (mode === 'param-condition') {
+    const k = ri(random, 2, 8);
+    const c = ri(random, 1, 9);
+    const rightChoice = `a ≠ -${k}`;
+    const choices = [
+      rightChoice,
+      `a = -${k}`,
+      `a ≠ ${k}`,
+      `a = ${k}`,
+      `a ≠ ${c}`
+    ].sort(() => random() - 0.5);
+    const rightIdx = choices.indexOf(rightChoice) + 1;
+    return {
+      prompt: `등식 ${k}x - ${c} = 5 - ax 가 x에 대한 일차방정식이 되기 위한 상수 a의 조건은?`,
+      promptEn: `Find the condition on constant a for ${k}x - ${c} = 5 - ax to be a linear equation in x.`,
+      kind: 'choice',
+      choicesKo: choices,
+      choicesEn: choices,
+      answer: String(rightIdx),
+      explanation: `모든 항을 좌변으로 이항하여 정리하면 (${k} + a)x - ${c + 5} = 0 입니다. x에 대한 일차방정식이 되려면 x의 계수가 0이 아니어야 하므로 ${k} + a ≠ 0, 즉 a ≠ -${k} 이어야 합니다.`,
+      explanationEn: `Rearranging gives (${k} + a)x - ${c + 5} = 0. For this to be linear, the coefficient of x must not be 0: a ≠ -${k}.`
+    };
+  }
+
+  // identify-linear-mcq
+  const choices = [
+    { label: 'x^2 + x = x^2 - 4', isRight: true },
+    { label: 'x^2 + 3 = x', isRight: false },
+    { label: '2(x + 1) = 2x + 2', isRight: false },
+    { label: '3x - 5', isRight: false },
+    { label: '2/x + 1 = 5', isRight: false },
+  ].sort(() => random() - 0.5);
+  const rightIdx = choices.findIndex((c) => c.isRight) + 1;
+  return {
+    prompt: '다음 보기 중 일차방정식인 것은?',
+    promptEn: 'Which of the following is a linear equation in one variable?',
+    kind: 'choice',
+    choicesKo: choices.map((c) => c.label),
+    choicesEn: choices.map((c) => c.label),
+    answer: String(rightIdx),
+    explanation: 'x^2 + x = x^2 - 4에서 x^2을 소거하면 x + 4 = 0으로 일차식 = 0 꼴이 되므로 일차방정식입니다.',
+    explanationEn: 'In x^2 + x = x^2 - 4, the quadratic terms cancel to leave x + 4 = 0, which is linear.'
+  };
+}
+
+// 9. [방정식 풀이 유형 09] 괄호가 있는 일차방정식의 풀이
+export function rpmEqBracketsExpand(random) {
+  const root = ri(random, -5, 6);
+  const a = ri(random, 2, 4);
+  const b = ri(random, 1, 4);
+  const c = ri(random, 2, 3);
+  const d = ri(random, 1, 5);
+  const lhsCoeff = a + c;
+  const lhsConst = a * b - c * d;
+  const targetVal = lhsCoeff * root + lhsConst;
+  const e = ri(random, 1, 5);
+  const rhsX = lhsCoeff - e;
+  const rhsConst = targetVal - rhsX * root;
+  return {
+    prompt: '다음 괄호가 있는 일차방정식을 푸시오.',
+    promptEn: 'Solve the linear equation with parentheses.',
+    expression: `${a}(x + ${b}) - ${c}(${d} - x) = ${rhsX}x ${rhsConst >= 0 ? '+' : '-'} ${Math.abs(rhsConst)}`,
+    answer: String(root),
+    explanation: `괄호를 분배법칙으로 풀면 ${a}x + ${a * b} - ${c * d} + ${c}x = ${rhsX}x ${rhsConst >= 0 ? '+' : '-'} ${Math.abs(rhsConst)} 입니다. 동류항을 정리하여 이항하면 ${e}x = ${e * root} 이므로 x = ${root} 입니다.`,
+    explanationEn: `Expanding parentheses and combining like terms yields ${e}x = ${e * root}, so x = ${root}.`
+  };
+}
+
+// 10. [방정식 풀이 유형 10] 계수가 소수인 일차방정식의 풀이
+export function rpmEqDecimalCoef(random) {
+  const root = ri(random, -6, 8) || 2;
+  const aTenths = ri(random, 3, 7);
+  const bTenths = ri(random, 1, 9);
+  const cTenths = ri(random, 1, aTenths - 1);
+  const dTenths = (aTenths - cTenths) * root - bTenths;
+  return {
+    prompt: '다음 계수가 소수인 일차방정식을 푸시오.',
+    promptEn: 'Solve the linear equation with decimals.',
+    expression: `${(aTenths / 10).toFixed(1)}x - ${(bTenths / 10).toFixed(1)} = ${(cTenths / 10).toFixed(1)}x ${dTenths >= 0 ? '+' : '-'} ${Math.abs(dTenths / 10).toFixed(1)}`,
+    answer: String(root),
+    explanation: `양변에 10을 곱하여 계수를 정수로 고치면 ${aTenths}x - ${bTenths} = ${cTenths}x ${dTenths >= 0 ? '+' : '-'} ${Math.abs(dTenths)} 입니다. 이항하면 ${aTenths - cTenths}x = ${(aTenths - cTenths) * root} 이므로 x = ${root} 입니다.`,
+    explanationEn: `Multiplying both sides by 10 clears decimals: ${aTenths - cTenths}x = ${(aTenths - cTenths) * root}, giving x = ${root}.`
+  };
+}
+
+// 11. [방정식 풀이 유형 11] 계수가 분수인 일차방정식의 풀이
+export function rpmEqFractionCoef(random) {
+  const root = ri(random, -5, 6) || 3;
+  const d1 = pick(random, [2, 3]);
+  const d2 = pick(random, [4, 6]);
+  const L = lcm(d1, d2);
+  const m1 = L / d1;
+  const m2 = L / d2;
+  const c1 = ri(random, 1, 5);
+  const c2 = ri(random, 1, 5);
+  const netX = m1 - 2 * m2;
+  const nonZeroNetX = netX === 0 ? 1 : netX;
+  const netConst = -m1 * c1 + m2 * c2;
+  const totalLHS = nonZeroNetX * root + netConst;
+  return {
+    prompt: '다음 계수가 분수인 일차방정식을 푸시오.',
+    promptEn: 'Solve the linear equation with fractions.',
+    expression: `(x - ${c1})/${d1} - (2x - ${c2})/${d2} = ${fracStr(totalLHS, L)}`,
+    answer: String(root),
+    explanation: `분모의 최소공배수인 ${L}을 양변에 곱하면 ${m1}(x - ${c1}) - ${m2}(2x - ${c2}) = ${totalLHS} 입니다. 전개하여 정리하면 ${nonZeroNetX}x = ${nonZeroNetX * root} 이므로 x = ${root} 입니다.`,
+    explanationEn: `Multiply both sides by LCM ${L}: simplifying gives ${nonZeroNetX}x = ${nonZeroNetX * root}, so x = ${root}.`
+  };
+}
+
+// 12. [방정식 풀이 유형 12] 소수와 분수가 혼합된 일차방정식의 풀이
+export function rpmEqMixedDecimalFraction(random) {
+  const root = ri(random, -4, 5) || 2;
+  const den = pick(random, [2, 4, 5]);
+  const a = ri(random, 1, 4);
+  const b = ri(random, 1, 4);
+  const cVal = (root - a) / den - 0.5 * (root - b);
+  return {
+    prompt: '다음 소수와 분수가 혼합된 일차방정식을 푸시오.',
+    promptEn: 'Solve the linear equation containing both decimals and fractions.',
+    expression: `(x - ${a})/${den} = 0.5(x - ${b}) ${cVal >= 0 ? '+' : '-'} ${Math.abs(cVal).toFixed(2)}`,
+    answer: String(root),
+    explanation: `0.5를 1/2로 바꾸고 분모의 최소공배수를 양변에 곱하여 정수 계수 일차방정식으로 고쳐 풀면 x = ${root} 입니다.`,
+    explanationEn: `Convert 0.5 to 1/2 and multiply both sides by the LCM of the denominators to find x = ${root}.`
+  };
+}
+
+// 13. [방정식 풀이 유형 13] 비례식으로 주어진 일차방정식의 풀이
+export function rpmEqProportionCrossMult(random) {
+  const m = ri(random, 2, 4);
+  const p = ri(random, 3, 5);
+  const k = ri(random, 1, 5);
+  const diff = 2 * m - p;
+  const safeDiff = diff === 0 ? 1 : diff;
+  const n = ri(random, 1, 5);
+  const ansX = fracStr(p * k + m * n, safeDiff);
+  return {
+    prompt: '다음 비례식을 만족시키는 x의 값을 구하시오.',
+    promptEn: 'Solve the proportion for x.',
+    expression: `(x + ${k}) : ${m} = (2x - ${n}) : ${p}`,
+    answer: ansX,
+    explanation: `비례식 a:b = c:d 에서 (외항의 곱) = (내항의 곱)이므로 ${p}(x + ${k}) = ${m}(2x - ${n}) 입니다. 전개하면 ${p}x + ${p * k} = ${2 * m}x - ${m * n} 이고 이항하여 정리하면 x = ${ansX} 입니다.`,
+    explanationEn: `Product of extremes equals product of means: ${p}(x + ${k}) = ${m}(2x - ${n}). Solving gives x = ${ansX}.`
+  };
+}
+
+// 14. [방정식 풀이 유형 14] 일차방정식의 해가 주어진 경우
+export function rpmEqRootGivenParam(random) {
+  const root = ri(random, 1, 5);
+  const paramA = ri(random, -5, 5) || 2;
+  const c = ri(random, 2, 5);
+  const rhsConst = (c - 2) * root - paramA;
+  return {
+    prompt: `일차방정식 ${c}x - a = 2x ${rhsConst >= 0 ? '+' : '-'} ${Math.abs(rhsConst)} 의 해가 x = ${root} 일 때, 상수 a의 값을 구하시오.`,
+    promptEn: `Given that x = ${root} is the solution to ${c}x - a = 2x ${rhsConst >= 0 ? '+' : '-'} ${Math.abs(rhsConst)}, find constant a.`,
+    expression: `${c}x - a = 2x ${rhsConst >= 0 ? '+' : '-'} ${Math.abs(rhsConst)}  [x = ${root}]`,
+    answer: String(paramA),
+    explanation: `x = ${root}을 방정식에 대입하면 ${c}×${root} - a = 2×${root} ${rhsConst >= 0 ? '+' : '-'} ${Math.abs(rhsConst)} 입니다. 계산하면 ${c * root} - a = ${2 * root + rhsConst} 이므로 -a = ${2 * root + rhsConst - c * root} 에서 a = ${paramA} 입니다.`,
+    explanationEn: `Substitute x = ${root}: ${c}(${root}) - a = 2(${root}) + (${rhsConst}). Solving for a yields a = ${paramA}.`
+  };
+}
+
+// 15. [방정식 풀이 유형 15] 두 일차방정식의 해가 서로 같은 경우
+export function rpmEqTwoEqsSameRoot(random) {
+  const root = ri(random, -4, 5) || 2;
+  const a1 = ri(random, 2, 4);
+  const b1 = ri(random, 1, 6);
+  const eq1RHS = a1 * root + b1;
+  const paramA = ri(random, 1, 6);
+  const eq2RHS = 2 * root + paramA;
+  return {
+    prompt: `x에 대한 두 일차방정식 ${a1}x + ${b1} = ${eq1RHS} 와 2x + a = ${eq2RHS} 의 해가 서로 같을 때, 상수 a의 값을 구하시오.`,
+    promptEn: `If ${a1}x + ${b1} = ${eq1RHS} and 2x + a = ${eq2RHS} have the same solution, find constant a.`,
+    expression: `${a1}x + ${b1} = ${eq1RHS},  2x + a = ${eq2RHS}`,
+    answer: String(paramA),
+    explanation: `첫 번째 방정식 ${a1}x + ${b1} = ${eq1RHS}를 풀면 ${a1}x = ${eq1RHS - b1} 에서 x = ${root} 입니다. 두 방정식의 해가 같으므로 x = ${root}을 두 번째 방정식에 대입하면 2×(${root}) + a = ${eq2RHS} 이므로 a = ${paramA} 입니다.`,
+    explanationEn: `Solving the first equation gives x = ${root}. Substituting into the second yields 2(${root}) + a = ${eq2RHS}, so a = ${paramA}.`
+  };
+}
+
+// 16. [방정식 풀이 유형 16] 특수한 해를 갖는 일차방정식
+export function rpmEqSpecialRoots(random) {
+  const mode = pick(random, ['inf-many', 'no-solution']);
+  if (mode === 'inf-many') {
+    const aVal = 2;
+    const bVal = 3;
+    const ans = aVal + bVal;
+    return {
+      prompt: `x에 대한 방정식 ax - 5 = 2(x - b) + 1 의 해가 무수히 많을 때, a + b의 값을 구하시오. (단, a, b는 상수)`,
+      promptEn: `If ax - 5 = 2(x - b) + 1 has infinitely many solutions, find a + b.`,
+      expression: `ax - 5 = 2(x - b) + 1`,
+      answer: String(ans),
+      explanation: `우변을 전개하여 동류항을 정리하면 (a - 2)x = -2b + 6 입니다. 해가 무수히 많으려면 0×x = 0 꼴이어야 하므로 a - 2 = 0 에서 a = 2 이고, -2b + 6 = 0 에서 b = 3 입니다. 따라서 a + b = 5 입니다.`,
+      explanationEn: `Rearranging gives (a - 2)x = -2b + 6. For infinitely many solutions, 0x = 0, so a = 2 and b = 3, giving a + b = 5.`
+    };
+  }
+
+  // no-solution
+  const b = ri(random, 3, 7);
+  const rightChoice = 'a ≠ -4';
+  const choices = [
+    rightChoice,
+    'a = -4',
+    'a ≠ 4',
+    'a = 4',
+    'a는 모든 수'
+  ].sort(() => random() - 0.5);
+  const rightIdx = choices.indexOf(rightChoice) + 1;
+  return {
+    prompt: `x에 대한 일차방정식 ${b}x - a = ${b}x + 4 가 해를 갖지 않기 위한 상수 a의 조건은?`,
+    promptEn: `Find the condition on constant a for ${b}x - a = ${b}x + 4 to have no solution.`,
+    kind: 'choice',
+    choicesKo: choices,
+    choicesEn: choices,
+    answer: String(rightIdx),
+    explanation: `식을 정리하면 0×x = 4 + a 입니다. 해가 존재하지 않으려면 0×x = (0이 아닌 상수) 꼴이어야 하므로 4 + a ≠ 0, 즉 a ≠ -4 이어야 합니다.`,
+    explanationEn: `Rearranging gives 0x = 4 + a. For no solution, 4 + a ≠ 0, meaning a ≠ -4.`
+  };
+}
+
+// 17. [방정식 풀이 유형 17] 해의 조건이 주어진 경우
+export function rpmEqRootIntegerNatural(random) {
+  const k = pick(random, [7, 9, 11]);
+  const validA = [];
+  for (let diff = 2; diff < k; diff += 2) {
+    validA.push(k - diff);
+  }
+  const sumA = validA.reduce((acc, v) => acc + v, 0);
+  return {
+    prompt: `x에 대한 일차방정식 6x + a = 4x + ${k} 의 해가 자연수가 되도록 하는 모든 자연수 a의 값의 합을 구하시오.`,
+    promptEn: `Find the sum of all natural numbers a such that the solution to 6x + a = 4x + ${k} is a natural number.`,
+    expression: `6x + a = 4x + ${k}`,
+    answer: String(sumA),
+    explanation: `방정식을 정리하면 2x = ${k} - a 이므로 x = (${k} - a)/2 입니다. x가 자연수가 되려면 ${k} - a가 2의 배수(짝수)이면서 양수이어야 합니다. 따라서 ${k} - a = ${validA.map((_, i) => (i + 1) * 2).join(', ')} 이므로 가능한 자연수 a는 ${validA.join(', ')} 입니다. 그 합은 ${sumA} 입니다.`,
+    explanationEn: `Solving gives x = (${k} - a)/2. For x to be a natural number, ${k} - a must be a positive even integer. Possible values of a are ${validA.join(', ')}, with sum ${sumA}.`
+  };
+}
+
+// 18. [방정식 풀이 심화 18] 해의 비와 배수 관계
+export function rpmEqRootRatioMultiple(random) {
+  const r1 = 4;
+  const r2 = 6;
+  const aVal = ri(random, 1, 5);
+  const rhsConst = r2 - aVal;
+  return {
+    prompt: `x에 대한 두 일차방정식 5 - x = (x - 1)/3 과 2x - a = x + ${rhsConst} 의 해의 비가 2 : 3 일 때, 상수 a의 값을 구하시오.`,
+    promptEn: `Given that the ratio of the roots of 5 - x = (x - 1)/3 and 2x - a = x + ${rhsConst} is 2 : 3, find constant a.`,
+    expression: `5 - x = (x - 1)/3,  2x - a = x + ${rhsConst}`,
+    answer: String(aVal),
+    explanation: `첫 번째 방정식의 양변에 3을 곱하면 15 - 3x = x - 1 이므로 4x = 16 에서 x = ${r1} 입니다. 두 방정식의 해의 비가 2 : 3 이므로 두 번째 방정식의 해는 ${r1} × (3/2) = ${r2} 입니다. x = ${r2}를 두 번째 식에 대입하면 2×${r2} - a = ${r2} + ${rhsConst} 이므로 a = ${aVal} 입니다.`,
+    explanationEn: `The first root is x = ${r1}. With ratio 2:3, the second root is ${r2}. Substituting x = ${r2} into the second equation yields a = ${aVal}.`
+  };
+}
+
+// 19. [방정식 풀이 심화 19] 계수를 잘못 보고 푼 일차방정식
+export function rpmEqMistakenCoef(random) {
+  return {
+    prompt: `어떤 학생이 일차방정식 3x - 3 = 6x - 7 을 푸는데 좌변의 x항의 계수 3을 잘못 보고 풀었더니 해가 x = -2 이었다. 3을 어떤 수로 잘못 보았는가?`,
+    promptEn: `A student solves 3x - 3 = 6x - 7 but misreads the coefficient 3 on the LHS, obtaining x = -2. What number was it misread as?`,
+    kind: 'choice',
+    choicesKo: ['4', '6', '8', '10', '12'],
+    choicesEn: ['4', '6', '8', '10', '12'],
+    answer: '3',
+    explanation: `잘못 본 계수를 a라 하면 ax - 3 = 6x - 7 입니다. 이 방정식의 해가 x = -2 이므로 대입하면 -2a - 3 = 6×(-2) - 7 = -19 입니다. -2a = -16 이므로 a = 8 입니다.`,
+    explanationEn: `Let the misread coefficient be a: a(-2) - 3 = 6(-2) - 7 = -19, giving -2a = -16, so a = 8.`
+  };
+}
+
+// 20. [방정식 풀이 발전 20] 공통해를 공유하는 복합 일차방정식 시스템
+export function rpmEqCommonRootSystems(random) {
+  return {
+    prompt: `비례식 (x/3 - 1) : 4 = (x + 3)/4 : 6 을 만족시키는 x의 값이 두 일차방정식 (x - a)/2 - (2x - 1)/4 = -2 와 x - b = -9 의 공통해일 때, 상수 a, b에 대하여 ab의 값을 구하시오.`,
+    promptEn: `If the solution to (x/3 - 1) : 4 = (x + 3)/4 : 6 is also the common solution to (x - a)/2 - (2x - 1)/4 = -2 and x - b = -9, find ab.`,
+    expression: `(x/3 - 1) : 4 = (x + 3)/4 : 6,  (x - a)/2 - (2x - 1)/4 = -2,  x - b = -9`,
+    answer: '81',
+    explanation: `비례식에서 6(x/3 - 1) = x + 3 이므로 2x - 6 = x + 3 에서 x = 9 입니다. x = 9를 첫 번째 방정식에 대입하면 (9 - a)/2 - 17/4 = -2 에서 양변에 4를 곱하면 18 - 2a - 17 = -8, -2a = -9 에서 a = 9/2 입니다. x = 9를 두 번째 방정식에 대입하면 9 - b = -9 에서 b = 18 입니다. 따라서 ab = (9/2) × 18 = 81 입니다.`,
+    explanationEn: `Solving the proportion gives x = 9. Substituting x = 9 gives a = 9/2 and b = 18, so ab = 81.`
+  };
+}
+
+// 21. [단원 실전 다지기] 매일 일차방정식 풀이 종합
+const allGenerators = [
+  rpmEqIdentityEquation,
+  rpmEqRootSubstitute,
+  rpmEqIdentityDistinguish,
+  rpmEqIdentityCondition,
+  rpmEqPropertiesEquality,
+  rpmEqSolveUsingProperties,
+  rpmEqTranspositionRule,
+  rpmEqLinearDefIdentify,
+  rpmEqBracketsExpand,
+  rpmEqDecimalCoef,
+  rpmEqFractionCoef,
+  rpmEqMixedDecimalFraction,
+  rpmEqProportionCrossMult,
+  rpmEqRootGivenParam,
+  rpmEqTwoEqsSameRoot,
+  rpmEqSpecialRoots,
+  rpmEqRootIntegerNatural,
+  rpmEqRootRatioMultiple,
+  rpmEqMistakenCoef,
+  rpmEqCommonRootSystems
+];
+
+export function rpmEqAllTypesMixed(random) {
+  const chosen = pick(random, allGenerators);
+  return chosen(random);
+}
+
+// Backward compatibility legacy alias
+export const rpmEqProportionStyle = rpmEqProportionCrossMult;
 
 // -------------------------------------------------------------
 // CHAPTER 07: 일차방정식의 활용 응용 (Applications Applied)
@@ -3858,10 +4421,34 @@ export const RPM_APPLIED_GENERATORS = {
   'monomial-multiply-divide': rpmAlgMonomialMultDiv,
   'simplify-linear': rpmAlgLinearAddSub,
   'expressions-review': rpmAlgAllTypesMixed,
+  // 06 일차방정식의 풀이 세부 응용 유형 (RPM 1-1 p.94~103)
+  'rpm-eq-identity-equation': rpmEqIdentityEquation,
+  'rpm-eq-root-substitute': rpmEqRootSubstitute,
+  'rpm-eq-identity-distinguish': rpmEqIdentityDistinguish,
+  'rpm-eq-identity-condition': rpmEqIdentityCondition,
+  'rpm-eq-properties-equality': rpmEqPropertiesEquality,
+  'rpm-eq-solve-using-properties': rpmEqSolveUsingProperties,
+  'rpm-eq-transposition-rule': rpmEqTranspositionRule,
+  'rpm-eq-linear-def-identify': rpmEqLinearDefIdentify,
+  'rpm-eq-brackets-expand': rpmEqBracketsExpand,
+  'rpm-eq-decimal-coef': rpmEqDecimalCoef,
+  'rpm-eq-fraction-coef': rpmEqFractionCoef,
+  'rpm-eq-mixed-decimal-fraction': rpmEqMixedDecimalFraction,
+  'rpm-eq-proportion-cross-mult': rpmEqProportionCrossMult,
+  'rpm-eq-root-given-param': rpmEqRootGivenParam,
+  'rpm-eq-two-eqs-same-root': rpmEqTwoEqsSameRoot,
+  'rpm-eq-special-roots': rpmEqSpecialRoots,
+  'rpm-eq-root-integer-natural': rpmEqRootIntegerNatural,
+  'rpm-eq-root-ratio-multiple': rpmEqRootRatioMultiple,
+  'rpm-eq-mistaken-coef': rpmEqMistakenCoef,
+  'rpm-eq-common-root-systems': rpmEqCommonRootSystems,
+  'rpm-eq-all-types-mixed': rpmEqAllTypesMixed,
+
+  // 06 일차방정식의 풀이 기본 탭 호환
   'equation-identity': rpmEqIdentityCondition,
-  'equality-properties': rpmEqProportionStyle,
-  'linear-equations': rpmEqProportionStyle,
-  'advanced-linear-equations': rpmEqIdentityCondition,
+  'equality-properties': rpmEqPropertiesEquality,
+  'linear-equations': rpmEqBracketsExpand,
+  'advanced-linear-equations': rpmEqMixedDecimalFraction,
   'equation-word-problems': rpmEqExcessDeficit,
   'distance-speed-time': rpmEqCatchupTravel,
   'concentration': rpmEqExcessDeficit,

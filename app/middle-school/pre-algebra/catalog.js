@@ -275,6 +275,14 @@ const UNIT_TIERS = {
   'rpm-alg-substitute-expression': 'advanced', 'rpm-alg-unknown-box-poly': 'advanced', 'rpm-alg-correct-poly-calc': 'advanced',
   'rpm-alg-geometry-shaded-area': 'advanced', 'rpm-alg-neg-power-linear': 'advanced', 'rpm-alg-magic-square-pyramid': 'advanced',
   'rpm-alg-cost-profit-complex': 'advanced', 'rpm-alg-multi-var-complex-eval': 'advanced', 'rpm-alg-all-types-mixed': 'advanced',
+  // 06 일차방정식의 풀이 세부 응용 유형 (RPM 1-1 p.94~103)
+  'rpm-eq-identity-equation': 'advanced', 'rpm-eq-root-substitute': 'advanced', 'rpm-eq-identity-distinguish': 'advanced',
+  'rpm-eq-identity-condition': 'advanced', 'rpm-eq-properties-equality': 'advanced', 'rpm-eq-solve-using-properties': 'advanced',
+  'rpm-eq-transposition-rule': 'advanced', 'rpm-eq-linear-def-identify': 'advanced', 'rpm-eq-brackets-expand': 'advanced',
+  'rpm-eq-decimal-coef': 'advanced', 'rpm-eq-fraction-coef': 'advanced', 'rpm-eq-mixed-decimal-fraction': 'advanced',
+  'rpm-eq-proportion-cross-mult': 'advanced', 'rpm-eq-root-given-param': 'advanced', 'rpm-eq-two-eqs-same-root': 'advanced',
+  'rpm-eq-special-roots': 'advanced', 'rpm-eq-root-integer-natural': 'advanced', 'rpm-eq-root-ratio-multiple': 'advanced',
+  'rpm-eq-mistaken-coef': 'advanced', 'rpm-eq-common-root-systems': 'advanced', 'rpm-eq-all-types-mixed': 'advanced',
   // coordinate-plane/catalog.js
   'plane-read-point': 'basic', 'plane-find-point': 'basic', 'quadrant-identify': 'basic', 'quadrant-sign': 'basic',
   'symmetric-points': 'intermediate', 'quadrant-transform': 'intermediate', 'ordered-pair-condition': 'intermediate',
