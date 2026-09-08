@@ -258,6 +258,88 @@ const zhHK = {
   'rpm-poly-calc-all-mixed': '多項式運算單元全類型實戰綜合複習',
   'rpm-poly-calc-advanced-skill-up': '多項式運算最高難度實力UP進階題',
 
+  // -------------------------------------------------------------
+  // RPM [중2-1] 04 일차부등식 (一元一次不等式)
+  // -------------------------------------------------------------
+  'rpm-linear-ineq-concept-identify': '不等式之概念與式別判斷',
+  'rpm-linear-ineq-truth-value': '不等式之真偽判別與解之檢驗',
+  'rpm-linear-ineq-express-sentence': '以不等式列出日常用語語意關係',
+  'rpm-linear-ineq-properties': '不等式之基本運算性質（加減乘除與變號法則）',
+  'rpm-linear-ineq-range-of-expression': '由已知範圍求一次式之數值範圍',
+  'rpm-linear-ineq-identify-linear': '一元一次不等式之辨識與簡化判斷',
+  'rpm-linear-ineq-solve-basic-number-line': '一元一次不等式之基礎求解與數線圖示',
+  'rpm-linear-ineq-brackets': '含括號之一元一次不等式化簡與求解',
+  'rpm-linear-ineq-decimals-fractions': '含小數與分數之一元一次不等式求解（去分母去小數）',
+  'rpm-linear-ineq-same-solution': '解相同之兩不等式求未知常數',
+  'rpm-linear-ineq-given-solution-find-constant': '已知不等式之解求係數或常數值',
+  'rpm-linear-ineq-negative-coeff': '含文字負係數之不等式求解與方向轉變',
+  'rpm-linear-ineq-integer-solutions-condition': '由整數解或自然數解個數條件求常數範圍',
+  'rpm-linear-ineq-all-types-mixed': '一元一次不等式單元全類型實戰綜合複習',
+  'rpm-linear-ineq-advanced-skill-up': '一元一次不等式最高難度實力UP進階題',
+
+  // -------------------------------------------------------------
+  // RPM [중2-1] 05 일차부등식의 활용 (一元一次不等式之應用)
+  // -------------------------------------------------------------
+  'rpm-ineq-app-numbers': '不等式應用：連續整數與數的關係問題',
+  'rpm-ineq-app-cost-count': '不等式應用：總預算與購買數量最大化問題',
+  'rpm-ineq-app-savings-deposit': '不等式應用：每月儲蓄存款金額超越問題',
+  'rpm-ineq-app-average-score': '不等式應用：達成目標平均分數之最低成績',
+  'rpm-ineq-app-pricing-plans': '不等式應用：兩種收費方案選擇之優劣判別',
+  'rpm-ineq-app-group-discount': '不等式應用：團體折扣優惠門票購買決策問題',
+  'rpm-ineq-app-store-comparison': '不等式應用：實體商店與網路（含運費車資）價格比較',
+  'rpm-ineq-app-cost-price-profit': '不等式應用：成本、定價、打折與利潤保證問題',
+  'rpm-ineq-app-geometry': '不等式應用：三角形邊長關係與幾何圖形面積',
+  'rpm-ineq-app-salt-water-evaporate-add': '不等式應用：食鹽水加水稀釋或蒸發濃度控制',
+  'rpm-ineq-app-speed-round-trip-time': '不等式應用：往返路程不同速度與時限問題',
+  'rpm-ineq-app-speed-shopping-station': '不等式應用：火車發車前購物往返最大距離',
+  'rpm-ineq-app-speed-change-midway': '不等式應用：中途變換速度之時限達陣問題',
+  'rpm-ineq-app-all-types-mixed': '一元一次不等式應用單元全類型實戰綜合複習',
+  'rpm-ineq-app-advanced-skill-up': '一元一次不等式應用最高難度實力UP進階題',
+
+  // -------------------------------------------------------------
+  // RPM [중2-1] 06 연립일차방정식 (二元一次聯立方程式)
+  // -------------------------------------------------------------
+  'rpm-sys-linear-two-vars-identify': '二元一次方程式之辨識與概念',
+  'rpm-sys-linear-natural-pairs': '二元一次方程式之正整數解有序數對求解',
+  'rpm-sys-linear-given-sol-find-constant': '已知單一方程式之解求未知常數',
+  'rpm-sys-linear-system-solution-concept': '二元一次聯立方程式之意義與共同解',
+  'rpm-sys-linear-given-sol-system-const': '已知聯立方程式之解求兩方程式之常數',
+  'rpm-sys-linear-substitution-method': '代入消去法解二元一次聯立方程式',
+  'rpm-sys-linear-addition-subtraction-method': '加減消去法解二元一次聯立方程式',
+  'rpm-sys-linear-parentheses': '含括號之二元一次聯立方程式化簡與求解',
+  'rpm-sys-linear-decimals-fractions': '含小數與分數係數之二元一次聯立方程式求解',
+  'rpm-sys-linear-abc-form': 'A = B = C 型聯立方程式拆解與求解',
+  'rpm-sys-linear-satisfy-other-equation': '聯立方程式之解滿足另一額外方程式問題',
+  'rpm-sys-linear-variable-relation': '已知解的關係式（x為y之倍數等）求方程式常數',
+  'rpm-sys-linear-two-systems-common-sol': '兩組聯立方程式具有相同解求未定係數',
+  'rpm-sys-linear-faulty-observation': '看錯係數問題與正確聯立解之還原',
+  'rpm-sys-linear-special-infinitely-many': '聯立方程式有無限多組解（重合直線條件）',
+  'rpm-sys-linear-special-no-solution': '聯立方程式無解（平行直線條件）',
+  'rpm-sys-linear-repeating-decimals': '含循環小數係數之二元一次聯立方程式',
+  'rpm-sys-linear-all-types-mixed': '二元一次聯立方程式單元全類型實戰綜合複習',
+  'rpm-sys-linear-advanced-skill-up': '二元一次聯立方程式最高難度實力UP進階題',
+
+  // -------------------------------------------------------------
+  // RPM [중2-1] 07 연립일차방정식의 활용 (二元一次聯立方程式之應用)
+  // -------------------------------------------------------------
+  'rpm-sys-app-two-digit-numbers': '聯立方程應用：兩位數之數字調換與關係問題',
+  'rpm-sys-app-ages': '聯立方程應用：年齡關係與將來倍數問題',
+  'rpm-sys-app-price-quantity': '聯立方程應用：兩物單價、總數量與總金額問題',
+  'rpm-sys-app-scores-rock-paper-scissors': '聯立方程應用：猜拳勝負爬階與得分計分問題',
+  'rpm-sys-app-geometry': '聯立方程應用：長方形周長與邊長增減面積問題',
+  'rpm-sys-app-speed-opposite-same-track': '聯立方程應用：環形跑道相向而行與同向追趕速度問題',
+  'rpm-sys-app-speed-river-boat': '聯立方程應用：順流逆流船速與水流速度問題',
+  'rpm-sys-app-speed-train-bridge': '聯立方程應用：列車通過鐵橋與隧道之車長與車速問題',
+  'rpm-sys-app-salt-two-solutions': '聯立方程應用：混合兩種不同濃度食鹽水質量守恆問題',
+  'rpm-sys-app-salt-water-evaporate-add': '聯立方程應用：食鹽水加水與蒸發之二次濃度調配問題',
+  'rpm-sys-app-alloy-metals': '聯立方程應用：兩種合金熔融配比問題',
+  'rpm-sys-app-student-percent-change': '聯立方程應用：男女學生增減百分率與總人數變化問題',
+  'rpm-sys-app-work-rate': '聯立方程應用：工程合作工作量與工作天數問題',
+  'rpm-sys-app-cost-price-profit': '聯立方程應用：兩種商品成本、定價與總獲利問題',
+  'rpm-sys-app-all-types-mixed': '二元一次聯立方程式應用單元全類型實戰綜合複習',
+  'rpm-sys-app-advanced-skill-up': '二元一次聯立方程式應用最高難度實力UP進階題',
+
+
 
 
 

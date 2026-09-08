@@ -10765,6 +10765,1346 @@ export function rpmPolyCalcAdvancedSkillUp(random) {
 }
 
 
+
+
+export function rpmLinearIneqConceptIdentify(random) {
+  const choices = [
+    { value: '1', label: '3x - 5 > 7', labelEn: '3x - 5 > 7', isIneq: true },
+    { value: '2', label: '2x + 1 = 5', labelEn: '2x + 1 = 5', isIneq: false },
+    { value: '3', label: 'x^2 - 4', labelEn: 'x^2 - 4', isIneq: false },
+    { value: '4', label: '5 - 2', labelEn: '5 - 2', isIneq: false },
+    { value: '5', label: '3x + 2y', labelEn: '3x + 2y', isIneq: false },
+  ];
+  return {
+    prompt: '다음 중 부등식인 것은?',
+    promptEn: 'Which of the following is an inequality?',
+    expression: '3x - 5 > 7, \\; 2x + 1 = 5, \\; x^2 - 4, \\; 5 - 2, \\; 3x + 2y',
+    choices: choices.map(c => ({ value: c.value, label: c.label, labelEn: c.labelEn })),
+    answer: '1',
+    explanation: '부등호(>, <, ≥, ≤)를 사용하여 수나 식의 대소 관계를 나타낸 식을 부등식이라고 합니다. 2번은 등식, 3·4·5번은 다항식(수식)이므로 부등호가 있는 1번이 부등식입니다.',
+    explanationEn: 'An inequality uses inequality symbols (>, <, ≥, ≤) to show relationships between quantities. Option 1 is the only inequality.'
+  };
+}
+
+// 2. [일차부등식 유형 02] 부등식의 참·거짓 및 해 판별 (#0418~#0421)
+export function rpmLinearIneqTruthValue(random) {
+  const x = ri(random, 1, 4);
+  const a = ri(random, 2, 4);
+  const b = ri(random, 1, 5);
+  // a * x - b
+  const lhs = a * x - b;
+  const bound = lhs - ri(random, 1, 3); // lhs > bound is true for x
+  return {
+    prompt: `x = ${x}일 때, 다음 부등식 중 참인 것은?`,
+    promptEn: `When x = ${x}, which of the following inequalities is true?`,
+    expression: `x = ${x}`,
+    choices: [
+      { value: '1', label: `${a}x - ${b} > ${bound}`, labelEn: `${a}x - ${b} > ${bound}` },
+      { value: '2', label: `${a}x - ${b} < ${bound - 1}`, labelEn: `${a}x - ${b} < ${bound - 1}` },
+      { value: '3', label: `-${a}x + ${b} > 0`, labelEn: `-${a}x + ${b} > 0` },
+      { value: '4', label: `x + ${a * 2} < ${x}`, labelEn: `x + ${a * 2} < ${x}` },
+      { value: '5', label: `2x - ${x * 2 + 1} > 0`, labelEn: `2x - ${x * 2 + 1} > 0` },
+    ],
+    answer: '1',
+    explanation: `x = ${x}를 1번에 대입하면 ${a} × (${x}) - ${b} = ${lhs} > ${bound}이므로 참입니다. 나머지는 모두 거짓입니다.`,
+    explanationEn: `Substituting x = ${x} into option 1 gives ${lhs} > ${bound}, which is true.`
+  };
+}
+
+// 3. [일차부등식 유형 03] 문장을 부등식으로 나타내기 (#0422~#0425)
+export function rpmLinearIneqExpressSentence(random) {
+  const a = ri(random, 2, 4);
+  const b = ri(random, 3, 7);
+  const c = ri(random, 15, 30);
+  return {
+    prompt: `다음 문장을 부등식으로 올바르게 나타낸 것은?\n"어떤 수 x의 ${a}배에 ${b}를 더한 값은 ${c}보다 작지 않다."`,
+    promptEn: `Which inequality correctly expresses: "The sum of ${b} and ${a} times x is not less than ${c}"?`,
+    expression: `${a}x + ${b} \\ge ${c}`,
+    choices: [
+      { value: '1', label: `${a}x + ${b} ≥ ${c}`, labelEn: `${a}x + ${b} ≥ ${c}` },
+      { value: '2', label: `${a}x + ${b} > ${c}`, labelEn: `${a}x + ${b} > ${c}` },
+      { value: '3', label: `${a}x + ${b} ≤ ${c}`, labelEn: `${a}x + ${b} ≤ ${c}` },
+      { value: '4', label: `${a}x + ${b} < ${c}`, labelEn: `${a}x + ${b} < ${c}` },
+      { value: '5', label: `${a}(x + ${b}) ≥ ${c}`, labelEn: `${a}(x + ${b}) ≥ ${c}` },
+    ],
+    answer: '1',
+    explanation: `'~보다 작지 않다'는 것은 '~보다 크거나 같다(≥)'는 뜻이므로 ${a}x + ${b} ≥ ${c}입니다.`,
+    explanationEn: `'Not less than' means greater than or equal to (≥), so ${a}x + ${b} ≥ ${c}.`
+  };
+}
+
+// 4. [일차부등식 유형 04] 부등식의 기본 성질 (#0426~#0429)
+export function rpmLinearIneqProperties(random) {
+  const m = ri(random, 2, 5);
+  const n = ri(random, 1, 9);
+  return {
+    prompt: `a < b일 때, 다음 중 옳은 것은?`,
+    promptEn: `Given a < b, which of the following is correct?`,
+    expression: `a < b`,
+    choices: [
+      { value: '1', label: `-${m}a + ${n} > -${m}b + ${n}`, labelEn: `-${m}a + ${n} > -${m}b + ${n}` },
+      { value: '2', label: `-${m}a + ${n} < -${m}b + ${n}`, labelEn: `-${m}a + ${n} < -${m}b + ${n}` },
+      { value: '3', label: `${m}a - ${n} > ${m}b - ${n}`, labelEn: `${m}a - ${n} > ${m}b - ${n}` },
+      { value: '4', label: `a / (-${m}) < b / (-${m})`, labelEn: `a / (-${m}) < b / (-${m})` },
+      { value: '5', label: `n - a < n - b`, labelEn: `n - a < n - b` },
+    ],
+    answer: '1',
+    explanation: `부등식의 양변에 음수 -${m}을 곱하면 부등호 방향이 바뀌어 -${m}a > -${m}b가 됩니다. 여기에 양변에 같은 수 ${n}을 더해도 방향이 유지되므로 -${m}a + ${n} > -${m}b + ${n}이 옳습니다.`,
+    explanationEn: `Multiplying both sides of a < b by negative -${m} reverses the inequality to -${m}a > -${m}b. Adding ${n} preserves direction: -${m}a + ${n} > -${m}b + ${n}.`
+  };
+}
+
+// 5. [일차부등식 유형 05] x의 범위가 주어질 때 식의 값의 범위 (#0430~#0433)
+export function rpmLinearIneqRangeOfExpression(random) {
+  const xMin = -ri(random, 2, 4);
+  const xMax = ri(random, 2, 5);
+  const a = -ri(random, 2, 4); // negative multiplier
+  const b = ri(random, 1, 5);
+  // a * xMax + b < a * x + b < a * xMin + b
+  const lower = a * xMax + b;
+  const upper = a * xMin + b;
+  return {
+    prompt: `${xMin} < x ≤ ${xMax}일 때, ${a}x + ${b}의 값의 범위를 A ≤ ${a}x + ${b} < B라 하자. A + B의 값을 구하시오.`,
+    promptEn: `When ${xMin} < x ≤ ${xMax}, if A ≤ ${a}x + ${b} < B, find A + B.`,
+    expression: `${xMin} < x \\le ${xMax}, \\quad ${a}x + ${b}`,
+    answer: String(lower + upper),
+    explanation: `각 변에 ${a}를 곱하면 음수이므로 부등호 방향이 바뀌어 ${a * xMax} ≤ ${a}x < ${a * xMin}이 됩니다. 각 변에 ${b}를 더하면 ${lower} ≤ ${a}x + ${b} < ${upper}입니다. 따라서 A = ${lower}, B = ${upper}이며 A + B = ${lower + upper}입니다.`,
+    explanationEn: `Multiplying by ${a} reverses the inequality: ${a * xMax} ≤ ${a}x < ${a * xMin}. Adding ${b} gives ${lower} ≤ ${a}x + ${b} < ${upper}, so A + B = ${lower + upper}.`
+  };
+}
+
+// 6. [일차부등식 유형 06] 일차부등식의 뜻과 식별 (#0434~#0437)
+export function rpmLinearIneqIdentifyLinear(random) {
+  const choices = [
+    { value: '1', label: '2x - 3 > x + 1', labelEn: '2x - 3 > x + 1', isLinear: true },
+    { value: '2', label: 'x^2 + 2x ≤ x^2 - 3', labelEn: 'x^2 + 2x ≤ x^2 - 3', isLinear: true }, // wait, this simplifies to 2x <= -3, linear
+    { value: '3', label: 'x^2 - 3x > 4', labelEn: 'x^2 - 3x > 4', isLinear: false },
+    { value: '4', label: '2(x - 1) ≥ 2x + 3', labelEn: '2(x - 1) ≥ 2x + 3', isLinear: false }, // 0 >= 5 false
+    { value: '5', label: '1/x + 2 < 5', labelEn: '1/x + 2 < 5', isLinear: false }, // rational
+  ];
+  return {
+    prompt: '다음 중 정리했을 때 미지수 x에 대한 일차부등식이 아닌 것은?',
+    promptEn: 'Which of the following is NOT a linear inequality in x after simplification?',
+    expression: 'x^2 - 3x > 4',
+    choices: [
+      { value: '1', label: 'x^2 - 3x > 4', labelEn: 'x^2 - 3x > 4' },
+      { value: '2', label: '3x - 1 < 2x + 5', labelEn: '3x - 1 < 2x + 5' },
+      { value: '3', label: 'x(x + 1) - x^2 ≥ 3', labelEn: 'x(x + 1) - x^2 ≥ 3' },
+      { value: '4', label: '2x + 5 > 0', labelEn: '2x + 5 > 0' },
+      { value: '5', label: '-x + 4 ≤ 3x - 2', labelEn: '-x + 4 ≤ 3x - 2' },
+    ],
+    answer: '1',
+    explanation: '1번은 이항하여 정리하면 x^2 - 3x - 4 > 0으로 최고차항이 이차식이므로 일차부등식이 아닙니다. 3번은 x^2이 소거되어 일차부등식이 됩니다.',
+    explanationEn: 'Option 1 simplifies to x^2 - 3x - 4 > 0, which has degree 2 and is therefore not a linear inequality.'
+  };
+}
+
+// 7. [일차부등식 유형 07] 일차부등식의 기본 풀이와 수직선 표현 (#0438~#0441)
+export function rpmLinearIneqSolveBasicNumberLine(random) {
+  const a = ri(random, 3, 6);
+  const b = ri(random, 1, 3);
+  const diffA = a - b; // > 0
+  const c = ri(random, 2, 8);
+  const d = c + diffA * ri(random, 1, 4);
+  // a x - c < b x + d => (a - b) x < c + d => x < (c + d) / diffA
+  const k = (c + d) / diffA;
+  const expr = `${a}x - ${c} < ${b}x + ${d}`;
+  return {
+    prompt: `일차부등식 ${expr}의 해가 x < k 일 때, 상수 k의 값을 구하시오.`,
+    promptEn: `Find k when the solution to ${expr} is x < k.`,
+    expression: expr,
+    answer: String(k),
+    explanation: `x항을 좌변으로, 상수항을 우변으로 이항하면 (${a} - ${b})x < ${c} + ${d}, 즉 ${diffA}x < ${c + d}입니다. 양변을 ${diffA}로 나누면 x < ${k}입니다. 따라서 k = ${k}입니다.`,
+    explanationEn: `Transposing terms gives ${diffA}x < ${c + d}. Dividing by ${diffA} yields x < ${k}.`
+  };
+}
+
+// 8. [일차부등식 유형 08] 괄호가 있는 일차부등식의 풀이 (#0442~#0445)
+export function rpmLinearIneqBrackets(random) {
+  // 3(x + p) - 2(x - q) < r
+  const p = ri(random, 1, 3);
+  const q = ri(random, 1, 3);
+  const bound = ri(random, 2, 5);
+  // 3x + 3p - 2x + 2q < r => x + 3p + 2q < r => x < r - 3p - 2q = bound
+  const r = bound + 3 * p + 2 * q;
+  const expr = `3(x + ${p}) - 2(x - ${q}) < ${r}`;
+  return {
+    prompt: `일차부등식 ${expr}을 만족하는 가장 큰 정수 x의 값을 구하시오.`,
+    promptEn: `Find the greatest integer x satisfying ${expr}.`,
+    expression: expr,
+    answer: String(bound - 1),
+    explanation: `괄호를 풀면 3x + ${3 * p} - 2x + ${2 * q} < ${r}, 즉 x + ${3 * p + 2 * q} < ${r}입니다. x < ${bound}이므로 이를 만족하는 가장 큰 정수는 ${bound - 1}입니다.`,
+    explanationEn: `Expanding brackets gives x < ${bound}. The greatest integer satisfying this is ${bound - 1}.`
+  };
+}
+
+// 9. [일차부등식 유형 09] 계수가 소수 또는 분수인 일차부등식 (#0446~#0449)
+export function rpmLinearIneqDecimalsFractions(random) {
+  const mode = pick(random, ['decimals', 'fractions']);
+  if (mode === 'decimals') {
+    // 0.3x - 0.5 < 0.1x + 0.7
+    // 3x - 5 < x + 7 => 2x < 12 => x < 6
+    const k = ri(random, 2, 5);
+    const diff = 2 * k; // 2x < diff => x < k
+    const b1 = ri(random, 1, 4);
+    const b2 = diff - b1;
+    const expr = `0.3x - 0.${b1} < 0.1x + ${b2 >= 10 ? (b2 / 10).toFixed(1) : `0.${b2}`}`;
+    return {
+      prompt: `일차부등식 0.3x - ${b1/10} < 0.1x + ${b2/10}의 해가 x < a 일 때, 상수 a의 값을 구하시오.`,
+      promptEn: `Solve the inequality 0.3x - ${b1/10} < 0.1x + ${b2/10} for x < a. Find a.`,
+      expression: `0.3x - ${b1/10} < 0.1x + ${b2/10}`,
+      answer: String(k),
+      explanation: `양변에 10을 곱하면 3x - ${b1} < x + ${b2}입니다. 2x < ${diff}이므로 x < ${k}입니다. 따라서 a = ${k}입니다.`,
+      explanationEn: `Multiplying both sides by 10 yields 2x < ${diff}, so x < ${k}.`
+    };
+  }
+  // fractions: (x - 1)/2 - (x + 1)/3 ≥ 1 => 3(x-1) - 2(x+1) ≥ 6 => x - 5 ≥ 6 => x ≥ 11
+  const k = ri(random, 1, 4);
+  const rhs = ri(random, 1, 3);
+  // (x - k)/2 - (x + k)/3 ≥ rhs => 3(x-k) - 2(x+k) ≥ 6*rhs => x - 5k ≥ 6*rhs => x ≥ 6*rhs + 5k
+  const ans = 6 * rhs + 5 * k;
+  const expr = `(x - ${k})/2 - (x + ${k})/3 ≥ ${rhs}`;
+  return {
+    prompt: `일차부등식 ${expr}의 해가 x ≥ a 일 때, 상수 a의 값을 구하시오.`,
+    promptEn: `Find a when the solution to ${expr} is x ≥ a.`,
+    expression: `\\frac{x - ${k}}{2} - \\frac{x + ${k}}{3} \\ge ${rhs}`,
+    answer: String(ans),
+    explanation: `분모의 최소공배수인 6을 양변에 곱하면 3(x - ${k}) - 2(x + ${k}) ≥ ${6 * rhs}입니다. 전개하면 3x - ${3 * k} - 2x - ${2 * k} ≥ ${6 * rhs}, 즉 x - ${5 * k} ≥ ${6 * rhs}이므로 x ≥ ${ans}입니다. 따라서 a = ${ans}입니다.`,
+    explanationEn: `Multiplying by 6 gives 3(x - ${k}) - 2(x + ${k}) ≥ ${6 * rhs}. Simplifying yields x ≥ ${ans}.`
+  };
+}
+
+// 10. [일차부등식 유형 10] 두 일차부등식의 해가 서로 같을 때 (#0450~#0453)
+export function rpmLinearIneqSameSolution(random) {
+  // Eq 1: 5x - 1 < 3x + 7 => 2x < 8 => x < 4
+  // Eq 2: 2x - a < x + 1 => x < a + 1 = 4 => a = 3
+  const sol = ri(random, 2, 5);
+  const diff1 = 2;
+  const c1 = ri(random, 1, 5);
+  const d1 = diff1 * sol - c1;
+  // 5x - c1 < 3x + d1 => 2x < c1 + d1 = 2*sol => x < sol
+  // 2nd ineq: 2x + a < x + 2*sol + a - sol => x < sol
+  // Let 2nd ineq be 3x - a < 2x + 1 => x < a + 1 => a + 1 = sol => a = sol - 1
+  const aVal = sol - 1;
+  const expr1 = `5x - ${c1} < 3x + ${d1}`;
+  const expr2 = `3x - a < 2x + 1`;
+  return {
+    prompt: `두 일차부등식 ${expr1}과 ${expr2}의 해가 서로 같을 때, 상수 a의 값을 구하시오.`,
+    promptEn: `If ${expr1} and ${expr2} have the same solution, find the constant a.`,
+    expression: `${expr1}, \\quad ${expr2}`,
+    answer: String(aVal),
+    explanation: `첫 번째 부등식을 풀면 2x < ${c1 + d1}에서 x < ${sol}입니다. 두 번째 부등식을 풀면 x < a + 1입니다. 두 해가 같으므로 a + 1 = ${sol}에서 a = ${aVal}입니다.`,
+    explanationEn: `First inequality gives x < ${sol}. Second inequality gives x < a + 1. Equating bounds yields a = ${aVal}.`
+  };
+}
+
+// 11. [일차부등식 유형 11] 해가 주어질 때 상수 a 구하기 (#0454~#0457)
+export function rpmLinearIneqGivenSolutionFindConstant(random) {
+  // 5x - 1 < 8x + a has solution x > -3
+  // 5x - 8x < a + 1 => -3x < a + 1 => x > -(a+1)/3 = -3 => a + 1 = 9 => a = 8
+  const sol = ri(random, 2, 5);
+  const k = ri(random, 2, 4);
+  // -k x < a + 2 => x > -(a+2)/k = sol => a + 2 = -k * sol
+  // Or with positive: 2x + a > 5x - 4 => -3x > -4 - a => x < (a+4)/3 = sol => a+4 = 3*sol => a = 3*sol - 4
+  const aVal = 3 * sol - 4;
+  const expr = `2x + a > 5x - 4`;
+  return {
+    prompt: `일차부등식 ${expr}의 해가 x < ${sol}일 때, 상수 a의 값을 구하시오.`,
+    promptEn: `Given that ${expr} has solution x < ${sol}, find the constant a.`,
+    expression: `${expr}, \\quad x < ${sol}`,
+    answer: String(aVal),
+    explanation: `이항하여 정리하면 2x - 5x > -4 - a, 즉 -3x > -a - 4입니다. 양변을 -3으로 나누면 부등호가 바뀌어 x < (a + 4)/3이 됩니다. 이 해가 x < ${sol}과 일치하므로 (a + 4)/3 = ${sol}에서 a + 4 = ${3 * sol}, 즉 a = ${aVal}입니다.`,
+    explanationEn: `Simplifying gives x < (a + 4)/3. Equating with x < ${sol} yields a + 4 = ${3 * sol}, so a = ${aVal}.`
+  };
+}
+
+// 12. [일차부등식 유형 12] ax > b 꼴에서 a의 부호와 해의 관계 (#0458~#0461)
+export function rpmLinearIneqNegativeCoeff(random) {
+  // ax + 3 > -7 has solution x < 2. Find a.
+  // ax > -10. Since inequality flipped to <, a < 0.
+  // x < -10 / a = 2 => a = -5.
+  const target = ri(random, 2, 5);
+  const constVal = ri(random, 4, 10);
+  const aVal = -constVal / target;
+  if (Number.isInteger(aVal)) {
+    return {
+      prompt: `일차부등식 ax + 3 > ${3 - constVal}의 해가 x < ${target}일 때, 상수 a의 값을 구하시오.`,
+      promptEn: `If the inequality ax + 3 > ${3 - constVal} has solution x < ${target}, find constant a.`,
+      expression: `ax + 3 > ${3 - constVal}, \\quad x < ${target}`,
+      answer: String(aVal),
+      explanation: `상수항을 이항하면 ax > -${constVal}입니다. 해의 부등호 방향이 <로 바뀌었으므로 a < 0이고, x < -${constVal}/a입니다. -${constVal}/a = ${target}에서 a = -${constVal} / ${target} = ${aVal}입니다.`,
+      explanationEn: `ax > -${constVal} flips to x < -${constVal}/a = ${target}, which gives a = ${aVal}.`
+    };
+  }
+  return {
+    prompt: `일차부등식 ax + 3 > -7의 해가 x < 2일 때, 상수 a의 값을 구하시오.`,
+    promptEn: `Find a when ax + 3 > -7 has solution x < 2.`,
+    expression: `ax + 3 > -7, \\quad x < 2`,
+    answer: '-5',
+    explanation: `ax > -10이고 부등호가 바뀌었으므로 a < 0, x < -10/a = 2에서 a = -5입니다.`,
+    explanationEn: `ax > -10 flips to x < -10/a = 2, giving a = -5.`
+  };
+}
+
+// 13. [일차부등식 유형 13] 자연수 해의 개수 조건에서 상수 범위 (#0462~#0468)
+export function rpmLinearIneqIntegerSolutionsCondition(random) {
+  // 4 - 5x ≥ -3x + a => -2x ≥ a - 4 => x ≤ (4 - a)/2
+  // Exactly 2 natural numbers satisfy this (i.e. x = 1, 2)
+  // Therefore 2 ≤ (4 - a)/2 < 3 => 4 ≤ 4 - a < 6 => 0 ≤ -a < 2 => -2 < a ≤ 0
+  const count = ri(random, 2, 4); // natural solutions are 1, 2, ..., count
+  // x ≤ bound => count ≤ bound < count + 1
+  return {
+    prompt: `일차부등식 4 - 5x ≥ -3x + a 를 만족하는 자연수 x의 개수가 ${count}개일 때, 상수 a의 값의 범위는?`,
+    promptEn: `If 4 - 5x ≥ -3x + a has exactly ${count} natural number solutions, find the range of constant a.`,
+    expression: `4 - 5x \\ge -3x + a`,
+    choices: [
+      { value: '1', label: `${4 - 2 * (count + 1)} < a ≤ ${4 - 2 * count}`, labelEn: `${4 - 2 * (count + 1)} < a ≤ ${4 - 2 * count}` },
+      { value: '2', label: `${4 - 2 * (count + 1)} ≤ a < ${4 - 2 * count}`, labelEn: `${4 - 2 * (count + 1)} ≤ a < ${4 - 2 * count}` },
+      { value: '3', label: `${4 - 2 * count} ≤ a < ${4 - 2 * (count - 1)}`, labelEn: `${4 - 2 * count} ≤ a < ${4 - 2 * (count - 1)}` },
+      { value: '4', label: `a ≤ ${4 - 2 * count}`, labelEn: `a ≤ ${4 - 2 * count}` },
+      { value: '5', label: `a > ${4 - 2 * (count + 1)}`, labelEn: `a > ${4 - 2 * (count + 1)}` },
+    ],
+    answer: '1',
+    explanation: `부등식을 풀면 -2x ≥ a - 4이므로 x ≤ (4 - a)/2입니다. 자연수 해가 ${count}개(1부터 ${count}까지)이어야 하므로 ${count} ≤ (4 - a)/2 < ${count + 1}입니다. 2를 곱하면 ${2 * count} ≤ 4 - a < ${2 * (count + 1)}, 4를 빼면 ${2 * count - 4} ≤ -a < ${2 * (count + 1) - 4}이므로 ${4 - 2 * (count + 1)} < a ≤ ${4 - 2 * count}입니다.`,
+    explanationEn: `Solving gives x ≤ (4 - a)/2. For exactly ${count} natural solutions, ${count} ≤ (4 - a)/2 < ${count + 1}, leading to ${4 - 2 * (count + 1)} < a ≤ ${4 - 2 * count}.`
+  };
+}
+
+// 14. [일차부등식 유형 14] 일차부등식 전 유형 실전 종합 (#0469~#0481)
+export function rpmLinearIneqAllTypesMixed(random) {
+  const fns = [
+    rpmLinearIneqConceptIdentify,
+    rpmLinearIneqTruthValue,
+    rpmLinearIneqExpressSentence,
+    rpmLinearIneqProperties,
+    rpmLinearIneqRangeOfExpression,
+    rpmLinearIneqIdentifyLinear,
+    rpmLinearIneqSolveBasicNumberLine,
+    rpmLinearIneqBrackets,
+    rpmLinearIneqDecimalsFractions,
+    rpmLinearIneqSameSolution,
+    rpmLinearIneqGivenSolutionFindConstant,
+    rpmLinearIneqNegativeCoeff,
+    rpmLinearIneqIntegerSolutionsCondition
+  ];
+  return pick(random, fns)(random);
+}
+
+// 15. [일차부등식 유형 15] 일차부등식 최고수준 실력 UP (#0482~#0489)
+export function rpmLinearIneqAdvancedSkillUp(random) {
+  // Problem #0484: (2x - a)/3 > 0 has NO natural number solutions.
+  // 2x - a > 0 => 2x > a => x > a/2.
+  // For NO natural number solution to exist, the condition x > a/2 must include no numbers >= 1.
+  // This means a/2 ≥ 1 => a ≥ 2!
+  const minNatural = 1;
+  const denom = pick(random, [2, 3, 4]);
+  // (x - a)/denom > 0 has no natural solution => x > a => a >= 1
+  return {
+    prompt: `일차부등식 (2x - a)/${denom} > 0 을 만족하는 자연수 x가 존재하지 않을 때, 상수 a의 값의 범위를 구하시오.`,
+    promptEn: `Find the range of constant a such that (2x - a)/${denom} > 0 has no natural number solutions.`,
+    expression: `\\frac{2x - a}{${denom}} > 0`,
+    choices: [
+      { value: '1', label: 'a ≥ 2', labelEn: 'a ≥ 2' },
+      { value: '2', label: 'a > 2', labelEn: 'a > 2' },
+      { value: '3', label: 'a ≤ 2', labelEn: 'a ≤ 2' },
+      { value: '4', label: 'a < 2', labelEn: 'a < 2' },
+      { value: '5', label: 'a ≥ 1', labelEn: 'a ≥ 1' },
+    ],
+    answer: '1',
+    explanation: `양변에 ${denom}을 곱하면 2x - a > 0에서 2x > a, 즉 x > a/2입니다. 이 부등식을 만족하는 자연수(1, 2, 3, ...)가 존재하지 않으려면 가장 작은 자연수인 1이 해의 범위에 포함되지 않아야 합니다. 따라서 a/2 ≥ 1이어야 하므로 a ≥ 2입니다.`,
+    explanationEn: `2x > a => x > a/2. For no natural numbers to be greater than a/2, we must have a/2 ≥ 1, which gives a ≥ 2.`
+  };
+}
+
+// =============================================================================
+// Chapter 05: 일차부등식의 활용 (Pages 70~79)
+// =============================================================================
+
+// 16. [일차부등식 활용 유형 01] 수에 대한 부등식 활용 (#0504~#0507)
+export function rpmIneqAppNumbers(random) {
+  // Any natural number x: 2x - 8 < 36 => 2x < 44 => x < 22 => max natural is 21
+  const mult = ri(random, 2, 3);
+  const sub = ri(random, 5, 10);
+  const limit = ri(random, 30, 50);
+  // mult * x - sub < limit => mult * x < limit + sub => x < (limit + sub) / mult
+  const maxVal = Math.ceil((limit + sub) / mult) - 1;
+  return {
+    prompt: `어떤 자연수의 ${mult}배에서 ${sub}을 뺀 수가 ${limit}보다 작다고 한다. 이를 만족하는 자연수 중 가장 큰 수를 구하시오.`,
+    promptEn: `Subtracting ${sub} from ${mult} times a natural number is less than ${limit}. Find the greatest such natural number.`,
+    expression: `${mult}x - ${sub} < ${limit}`,
+    answer: String(maxVal),
+    explanation: `자연수를 x라 하면 ${mult}x - ${sub} < ${limit}에서 ${mult}x < ${limit + sub}, 즉 x < ${(limit + sub) / mult}입니다. 따라서 가장 큰 자연수는 ${maxVal}입니다.`,
+    explanationEn: `${mult}x - ${sub} < ${limit} => x < ${(limit + sub) / mult}. The greatest natural number is ${maxVal}.`
+  };
+}
+
+// 17. [일차부등식 활용 유형 02] 물건의 가격과 개수 (#0508~#0511)
+export function rpmIneqAppCostCount(random) {
+  // Total budget B, fixed cost F, unit cost U. Max items?
+  // U * x + F ≤ B
+  const unitPrice = pick(random, [800, 1200, 1500]);
+  const boxCost = pick(random, [1000, 1500, 2000]);
+  const budget = pick(random, [15000, 20000, 25000]);
+  const maxCount = Math.floor((budget - boxCost) / unitPrice);
+  return {
+    prompt: `한 개에 ${unitPrice}원인 사과를 ${boxCost}원인 상자에 담아 전체 가격이 ${budget}원 이하가 되게 하려고 한다. 사과를 최대 몇 개까지 담을 수 있는가?`,
+    promptEn: `Apples cost ${unitPrice} won each and a gift box costs ${boxCost} won. How many apples can be bought with at most ${budget} won?`,
+    expression: `${unitPrice}x + ${boxCost} \\le ${budget}`,
+    answer: String(maxCount),
+    explanation: `사과의 개수를 x라 하면 ${unitPrice}x + ${boxCost} ≤ ${budget}입니다. ${unitPrice}x ≤ ${budget - boxCost}에서 x ≤ ${(budget - boxCost) / unitPrice}이므로 최대 ${maxCount}개까지 담을 수 있습니다.`,
+    explanationEn: `${unitPrice}x + ${boxCost} ≤ ${budget} => x ≤ ${(budget - boxCost) / unitPrice}. Maximum items = ${maxCount}.`
+  };
+}
+
+// 18. [일차부등식 활용 유형 03] 예금액과 저축액 (#0512~#0515)
+export function rpmIneqAppSavingsDeposit(random) {
+  // A has 20000, saves 1000/month. B has 10000, saves 3000/month.
+  // When does B have more than A?
+  // 10000 + 3000x > 20000 + 1000x => 2000x > 10000 => x > 5 months => 6 months
+  const aBase = ri(random, 3, 5) * 10000;
+  const bBase = ri(random, 1, 2) * 10000;
+  const aSave = 2000;
+  const bSave = 5000;
+  // bBase + bSave * x > aBase + aSave * x => (bSave - aSave) * x > aBase - bBase
+  const months = Math.floor((aBase - bBase) / (bSave - aSave)) + 1;
+  return {
+    prompt: `현재 형의 통장에는 ${aBase}원, 동생의 통장에는 ${bBase}원이 들어 있다. 다음 달부터 매달 형은 ${aSave}원씩, 동생은 ${bSave}원씩 저축한다면, 몇 개월 후부터 동생의 예금액이 형의 예금액보다 많아지는가?`,
+    promptEn: `Currently elder brother has ${aBase} won and younger brother has ${bBase} won. Saving ${aSave} and ${bSave} won monthly respectively, after how many months will younger brother have more?`,
+    expression: `${bBase} + ${bSave}x > ${aBase} + ${aSave}x`,
+    answer: String(months),
+    explanation: `x개월 후 동생의 예금액이 형보다 많아진다고 하면 ${bBase} + ${bSave}x > ${aBase} + ${aSave}x 입니다. 이항하면 ${bSave - aSave}x > ${aBase - bBase}이므로 x > ${(aBase - bBase) / (bSave - aSave)}입니다. 따라서 ${months}개월 후부터 많아집니다.`,
+    explanationEn: `${bBase} + ${bSave}x > ${aBase} + ${aSave}x => ${bSave - aSave}x > ${aBase - bBase}, yielding x > ${(aBase - bBase) / (bSave - aSave)}, so ${months} months.`
+  };
+}
+
+// 19. [일차부등식 활용 유형 04] 평균 점수에 대한 부등식 (#0516~#0519)
+export function rpmIneqAppAverageScore(random) {
+  // 3 tests: s1, s2, s3. Target average A over 4 tests. Minimum score on 4th test?
+  const targetAvg = ri(random, 82, 90);
+  const s1 = targetAvg - ri(random, 2, 8);
+  const s2 = targetAvg + ri(random, 1, 5);
+  const s3 = targetAvg - ri(random, 1, 6);
+  // (s1 + s2 + s3 + x) / 4 ≥ targetAvg => x ≥ 4 * targetAvg - (s1 + s2 + s3)
+  const minScore = 4 * targetAvg - (s1 + s2 + s3);
+  return {
+    prompt: `민지는 세 번의 수학 시험에서 각각 ${s1}점, ${s2}점, ${s3}점을 받았다. 네 번의 시험의 평균 점수가 ${targetAvg}점 이상이 되려면 네 번째 시험에서 최소 몇 점 이상을 받아야 하는가?`,
+    promptEn: `Minji scored ${s1}, ${s2}, and ${s3} on three math exams. What minimum score is needed on the fourth exam to achieve an average of at least ${targetAvg}?`,
+    expression: `\\frac{${s1} + ${s2} + ${s3} + x}{4} \\ge ${targetAvg}`,
+    answer: String(minScore),
+    explanation: `네 번째 점수를 x점이라 하면 (${s1} + ${s2} + ${s3} + x)/4 ≥ ${targetAvg}입니다. 양변에 4를 곱하면 ${s1 + s2 + s3} + x ≥ ${4 * targetAvg}이므로 x ≥ ${minScore}점입니다.`,
+    explanationEn: `(${s1} + ${s2} + ${s3} + x)/4 ≥ ${targetAvg} => x ≥ ${minScore}.`
+  };
+}
+
+// 20. [일차부등식 활용 유형 05] 요금 선택 / 추가 요금제 (#0520~#0523)
+export function rpmIneqAppPricingPlans(random) {
+  // Plan A: base 15000, 50 won per minute. Plan B: base 25000, 20 won per minute.
+  // When is Plan B cheaper?
+  // 25000 + 20x < 15000 + 50x => 30x > 10000 => x > 333.3 => 334 min
+  const baseA = 15000, rateA = 60;
+  const baseB = 27000, rateB = 20;
+  // 27000 + 20x < 15000 + 60x => 40x > 12000 => x > 300 => 301 min
+  const minMinutes = Math.floor((baseB - baseA) / (rateA - rateB)) + 1;
+  return {
+    prompt: `A 요금제는 기본요금 ${baseA}원에 1분당 ${rateA}원이고, B 요금제는 기본요금 ${baseB}원에 1분당 ${rateB}원이다. 한 달 통화 시간이 몇 분을 초과해야 B 요금제를 선택하는 것이 더 유리한가?`,
+    promptEn: `Plan A has base ${baseA} won + ${rateA} won/min. Plan B has base ${baseB} won + ${rateB} won/min. Beyond how many minutes is Plan B cheaper?`,
+    expression: `${baseB} + ${rateB}x < ${baseA} + ${rateA}x`,
+    answer: String(minMinutes - 1),
+    answerSuffix: '분',
+    explanation: `통화 시간을 x분이라 하면 B 요금제가 유리하려면 ${baseB} + ${rateB}x < ${baseA} + ${rateA}x 이어야 합니다. ${rateA - rateB}x > ${baseB - baseA}에서 x > ${(baseB - baseA) / (rateA - rateB)}분이므로 ${(baseB - baseA) / (rateA - rateB)}분을 초과해야 합니다.`,
+    explanationEn: `${baseB} + ${rateB}x < ${baseA} + ${rateA}x => x > ${(baseB - baseA) / (rateA - rateB)} minutes.`
+  };
+}
+
+// 21. [일차부등식 활용 유형 06] 단체 입장권 할인과 유리한 선택 (#0524~#0527)
+export function rpmIneqAppGroupDiscount(random) {
+  // Price per person: 3000 won. Group of 30 or more gets 20% discount.
+  // Group ticket for 30: 30 * 3000 * 0.8 = 72000 won.
+  // Normal ticket for x people: 3000 * x.
+  // 72000 < 3000x => x > 24 => 25 people!
+  const price = pick(random, [2000, 3000, 4000]);
+  const groupSize = pick(random, [20, 30]);
+  const discountRate = pick(random, [10, 20]); // percent
+  const groupTotal = groupSize * price * (1 - discountRate / 100);
+  const minPeople = Math.floor(groupTotal / price) + 1;
+  return {
+    prompt: `어느 미술관의 입장료는 1인당 ${price}원이고, ${groupSize}명 이상의 단체인 경우 입장료의 ${discountRate}%를 할인해 준다고 한다. ${groupSize}명 미만의 인원이 입장할 때, 최소 몇 명 이상이면 ${groupSize}명의 단체 입장권을 사는 것이 더 유리한가?`,
+    promptEn: `Museum admission is ${price} won per person with ${discountRate}% discount for groups of ${groupSize} or more. For fewer than ${groupSize} people, at least how many people make buying a ${groupSize}-person group ticket cheaper?`,
+    expression: `${groupSize} \\times ${price} \\times (1 - 0.${discountRate}) < ${price}x`,
+    answer: String(minPeople),
+    explanation: `${groupSize}명의 단체 입장권 가격은 ${groupSize} × ${price} × ${1 - discountRate / 100} = ${groupTotal}원입니다. x명의 개인 입장료는 ${price}x원이므로 ${groupTotal} < ${price}x에서 x > ${groupTotal / price}입니다. 따라서 최소 ${minPeople}명 이상이면 단체권을 사는 것이 유리합니다.`,
+    explanationEn: `Group ticket costs ${groupTotal} won. ${groupTotal} < ${price}x implies x > ${groupTotal / price}, so at least ${minPeople} people.`
+  };
+}
+
+// 22. [일차부등식 활용 유형 07] 물건 구입비와 교통비 비교 (#0528~#0531)
+export function rpmIneqAppStoreComparison(random) {
+  // Local store price: P1. Wholesale discount store: P2 (P2 < P1).
+  // Round-trip transport: T.
+  // P2 * x + T < P1 * x => (P1 - P2) * x > T => x > T / (P1 - P2)
+  const p1 = 2000;
+  const p2 = 1600;
+  const transport = pick(random, [1800, 2400, 3000]);
+  const minItems = Math.floor(transport / (p1 - p2)) + 1;
+  return {
+    prompt: `어느 물건의 가격이 집 근처 마트에서는 개당 ${p1}원이고, 대형 할인점에서는 개당 ${p2}원이다. 대형 할인점에 다녀오려면 왕복 교통비 ${transport}원이 든다고 할 때, 이 물건을 몇 개 이상 사야 대형 할인점에서 사는 것이 더 유리한가?`,
+    promptEn: `An item costs ${p1} won locally and ${p2} won at a discount store, with ${transport} won round-trip transit. At least how many items must be bought for the discount store to be cheaper?`,
+    expression: `${p2}x + ${transport} < ${p1}x`,
+    answer: String(minItems),
+    explanation: `구입할 개수를 x개라 하면 ${p2}x + ${transport} < ${p1}x 입니다. 이항하면 ${p1 - p2}x > ${transport}이므로 x > ${transport / (p1 - p2)}입니다. 따라서 최소 ${minItems}개 이상 사야 합니다.`,
+    explanationEn: `${p2}x + ${transport} < ${p1}x => ${p1 - p2}x > ${transport} => x > ${transport / (p1 - p2)}, requiring at least ${minItems} items.`
+  };
+}
+
+// 23. [일차부등식 활용 유형 08] 원가·정가와 할인 판매 이익 (#0532~#0535)
+export function rpmIneqAppCostPriceProfit(random) {
+  // Cost: C. Markup: 30% (price = 1.3 C). Discount: D won.
+  // Profit ≥ 10% of cost: (1.3 C - D) - C ≥ 0.1 C => 0.2 C ≥ D => C ≥ 5 D
+  const markupPercent = 30;
+  const discount = pick(random, [1000, 1500, 2000]);
+  const minProfitPercent = 10;
+  // Price = C * (1 + 0.3) - discount
+  // Profit = Price - C = 0.3 C - discount ≥ 0.1 C => 0.2 C ≥ discount => C ≥ discount / 0.2
+  const minCost = discount / ((markupPercent - minProfitPercent) / 100);
+  return {
+    prompt: `원가에 ${markupPercent}%의 이익을 붙여 정가를 정한 후, ${discount}원을 할인하여 판매하려고 한다. 이익이 원가의 ${minProfitPercent}% 이상이 되도록 하려면 원가는 최소 얼마 이상이어야 하는가?`,
+    promptEn: `Setting price at ${markupPercent}% markup on cost, then discounting ${discount} won: find the minimum cost so profit is at least ${minProfitPercent}% of cost.`,
+    expression: `1.${markupPercent}C - ${discount} - C \\ge 0.${minProfitPercent}C`,
+    answer: String(minCost),
+    answerSuffix: '원',
+    explanation: `원가를 C원이라 하면 판매 가격은 1.${markupPercent}C - ${discount}원입니다. (이익) = (판매가) - (원가) = 0.${markupPercent - minProfitPercent + 10}C - ${discount} ≥ 0.${minProfitPercent}C 이어야 하므로, 0.${markupPercent - minProfitPercent}C ≥ ${discount}에서 C ≥ ${minCost}원입니다.`,
+    explanationEn: `Profit = 0.${markupPercent}C - ${discount} ≥ 0.${minProfitPercent}C => 0.${markupPercent - minProfitPercent}C ≥ ${discount} => C ≥ ${minCost} won.`
+  };
+}
+
+// 24. [일차부등식 활용 유형 09] 도형에 대한 부등식 (#0536~#0539)
+export function rpmIneqAppGeometry(random) {
+  // Triangle sides: x, x+3, x+7
+  // For triangle to exist, sum of two smaller sides > largest side:
+  // x + (x + 3) > x + 7 => 2x + 3 > x + 7 => x > 4
+  const d1 = ri(random, 2, 4);
+  const d2 = d1 + ri(random, 3, 6);
+  // Sides: x, x + d1, x + d2
+  // x + x + d1 > x + d2 => x > d2 - d1
+  const minX = d2 - d1;
+  return {
+    prompt: `삼각형의 세 변의 길이가 x cm, (x + ${d1}) cm, (x + ${d2}) cm 일 때, x의 값의 범위를 구하시오. (결과가 x > k 일 때 k의 값)`,
+    promptEn: `If a triangle has side lengths x cm, (x + ${d1}) cm, and (x + ${d2}) cm, find the minimum bound k such that x > k.`,
+    expression: `x + (x + ${d1}) > x + ${d2}`,
+    answer: String(minX),
+    explanation: `가장 긴 변의 길이는 x + ${d2}입니다. 삼각형이 성립할 조건에 의하여 가장 긴 변의 길이는 나머지 두 변의 길이의 합보다 작아야 하므로, x + (x + ${d1}) > x + ${d2}입니다. 정리하면 x > ${d2 - d1}입니다.`,
+    explanationEn: `The sum of the two shorter sides must exceed the longest side: x + (x + ${d1}) > x + ${d2} => x > ${minX}.`
+  };
+}
+
+// 25. [일차부등식 활용 유형 10] 소금물의 농도 (물 증발/추가) (#0540~#0545)
+export function rpmIneqAppSaltWaterEvaporateAdd(random) {
+  // 10% salt water 600g. Evaporate x g of water to make concentration >= 15%.
+  // Salt = 600 * 0.10 = 60g.
+  // 60 / (600 - x) >= 0.15 => 60 >= 0.15(600 - x) = 90 - 0.15x => 0.15x >= 30 => x >= 200g
+  const totalWater = pick(random, [400, 500, 600]);
+  const c1 = 10;
+  const c2 = 15;
+  const salt = (totalWater * c1) / 100;
+  // salt / (totalWater - x) >= c2 / 100 => salt >= (c2/100) * totalWater - (c2/100) * x
+  // (c2/100) * x >= (c2/100) * totalWater - salt
+  const minWater = totalWater - (salt * 100) / c2;
+  return {
+    prompt: `${c1}%의 소금물 ${totalWater} g이 있다. 이 소금물에서 물을 증발시켜 농도가 ${c2}% 이상이 되게 하려고 할 때, 최소 몇 g의 물을 증발시켜야 하는가?`,
+    promptEn: `Given ${totalWater} g of ${c1}% salt water, at least how much water must be evaporated to reach a concentration of at least ${c2}%?`,
+    expression: `\\frac{${salt}}{${totalWater} - x} \\ge \\frac{${c2}}{100}`,
+    answer: String(Math.round(minWater)),
+    answerSuffix: 'g',
+    explanation: `증발시킬 물의 양을 x g이라 하면 소금의 양은 ${totalWater} × (${c1}/100) = ${salt} g으로 일정합니다. 증발 후 소금물의 양은 (${totalWater} - x) g이므로 ${salt} / (${totalWater} - x) × 100 ≥ ${c2}입니다. ${salt * 100} ≥ ${c2}(${totalWater} - x)에서 ${c2}x ≥ ${c2 * totalWater - salt * 100}, 따라서 x ≥ ${minWater} g입니다.`,
+    explanationEn: `Salt amount is ${salt} g. Setting ${salt} / (${totalWater} - x) ≥ ${c2}/100 gives x ≥ ${minWater} g.`
+  };
+}
+
+// 26. [일차부등식 활용 유형 11] 거리·속력·시간 (왕복 총 시간 이내) (#0546~#0549)
+export function rpmIneqAppSpeedRoundTripTime(random) {
+  // Go at speed 4 km/h, return at speed 3 km/h. Total time <= 3.5 hours.
+  // x/4 + x/3 <= 3.5 => 7x / 12 <= 7/2 => x <= 6 km
+  const v1 = 4;
+  const v2 = 3;
+  const maxTimeHours = 3.5;
+  // x/4 + x/3 <= 7/2 => 7x/12 <= 7/2 => x <= 6
+  return {
+    prompt: `갈 때는 시속 ${v1} km, 올 때는 같은 길을 시속 ${v2} km로 걸어서 왕복하는 데 ${maxTimeHours}시간 이내가 걸리도록 하려고 한다. 최대 몇 km 떨어진 곳까지 다녀올 수 있는가?`,
+    promptEn: `Walking ${v1} km/h outgoing and ${v2} km/h returning on the same path within ${maxTimeHours} hours round trip, what is the maximum distance?`,
+    expression: `\\frac{x}{${v1}} + \\frac{x}{${v2}} \\le ${maxTimeHours}`,
+    answer: '6',
+    answerSuffix: 'km',
+    explanation: `거리를 x km라 하면 갈 때 걸린 시간은 x/${v1}시간, 올 때 걸린 시간은 x/${v2}시간입니다. x/${v1} + x/${v2} ≤ ${maxTimeHours}에서 양변에 12를 곱하면 3x + 4x ≤ 42, 즉 7x ≤ 42이므로 x ≤ 6 km입니다.`,
+    explanationEn: `Total time = x/${v1} + x/${v2} ≤ ${maxTimeHours} => 7x/12 ≤ 3.5 => x ≤ 6 km.`
+  };
+}
+
+// 27. [일차부등식 활용 유형 12] 물건 구매/휴식 시간 포함 역 왕복 (#0550~#0553)
+export function rpmIneqAppSpeedShoppingStation(random) {
+  // Waiting for train for 1 hour (60 min). Speed 3 km/h. Store errand takes 12 min.
+  // Max distance: 2 * (x / 3) + 12/60 <= 1 => 2x / 3 <= 48/60 = 4/5 => x <= 1.2 km
+  const waitMin = 60;
+  const shopMin = 12;
+  const speed = 3;
+  // 2 * (x / speed) * 60 + shopMin <= waitMin
+  // 120 x / 3 <= 48 => 40x <= 48 => x <= 1.2 km
+  return {
+    prompt: `기차 출발 시간까지 1시간의 여유가 있어서 상점에 가서 물건을 사 오려고 한다. 물건을 사는 데 12분이 걸리고 시속 ${speed} km로 걷는다면, 역에서 최대 몇 km 떨어진 상점까지 다녀올 수 있는가?`,
+    promptEn: `With 1 hour before train departure, taking 12 minutes to shop at a store while walking at ${speed} km/h, what is the maximum distance to the store?`,
+    expression: `2 \\times \\frac{x}{${speed}} + \\frac{12}{60} \\le 1`,
+    answer: '1.2',
+    answerSuffix: 'km',
+    explanation: `거리를 x km라 하면 왕복 걸리는 시간은 2x/${speed}시간입니다. 물건을 사는 시간은 12/60 = 0.2시간이므로 2x/${speed} + 0.2 ≤ 1 입니다. 2x/${speed} ≤ 0.8에서 x ≤ 0.8 × ${speed} / 2 = 1.2 km입니다.`,
+    explanationEn: `Round trip walking time 2x/${speed} + 0.2 ≤ 1 => 2x/${speed} ≤ 0.8 => x ≤ 1.2 km.`
+  };
+}
+
+// 28. [일차부등식 활용 유형 13] 도중 속력 변경과 지연 (#0554~#0557)
+export function rpmIneqAppSpeedChangeMidway(random) {
+  // Total distance 10 km. Walk at 3 km/h for x km, then run at 6 km/h for (10 - x) km.
+  // Total time <= 2.5 hours. Max walk distance x?
+  // x/3 + (10 - x)/6 <= 2.5 => 2x + 10 - x <= 15 => x <= 5 km
+  const totalDist = 10;
+  const v1 = 3;
+  const v2 = 6;
+  const maxTime = 2.5;
+  // x/3 + (10 - x)/6 <= 2.5 => (2x + 10 - x)/6 <= 2.5 => x + 10 <= 15 => x <= 5
+  return {
+    prompt: `집에서 ${totalDist} km 떨어진 공원까지 가는데 처음에는 시속 ${v1} km로 걷다가 도중에 시속 ${v2} km로 뛰었더니 ${maxTime}시간 이내에 도착하였다. 시속 ${v1} km로 걸어간 거리는 최대 몇 km인가?`,
+    promptEn: `Traveling ${totalDist} km to a park, walking at ${v1} km/h for part of the way and running at ${v2} km/h for the remainder within ${maxTime} hours: what is the maximum walking distance?`,
+    expression: `\\frac{x}{${v1}} + \\frac{${totalDist} - x}{${v2}} \\le ${maxTime}`,
+    answer: '5',
+    answerSuffix: 'km',
+    explanation: `걸어간 거리를 x km라 하면 뛰어간 거리는 (${totalDist} - x) km입니다. x/${v1} + (${totalDist} - x)/${v2} ≤ ${maxTime}에서 양변에 6을 곱하면 2x + ${totalDist} - x ≤ 15, 즉 x + ${totalDist} ≤ 15이므로 x ≤ 5 km입니다.`,
+    explanationEn: `x/${v1} + (${totalDist} - x)/${v2} ≤ ${maxTime} => 2x + ${totalDist} - x ≤ 15 => x ≤ 5 km.`
+  };
+}
+
+// 29. [일차부등식 활용 유형 14] 일차부등식의 활용 전 유형 실전 종합 (#0558~#0567)
+export function rpmIneqAppAllTypesMixed(random) {
+  const fns = [
+    rpmIneqAppNumbers,
+    rpmIneqAppCostCount,
+    rpmIneqAppSavingsDeposit,
+    rpmIneqAppAverageScore,
+    rpmIneqAppPricingPlans,
+    rpmIneqAppGroupDiscount,
+    rpmIneqAppStoreComparison,
+    rpmIneqAppCostPriceProfit,
+    rpmIneqAppGeometry,
+    rpmIneqAppSaltWaterEvaporateAdd,
+    rpmIneqAppSpeedRoundTripTime,
+    rpmIneqAppSpeedShoppingStation,
+    rpmIneqAppSpeedChangeMidway
+  ];
+  return pick(random, fns)(random);
+}
+
+// 30. [일차부등식 활용 유형 15] 일차부등식의 활용 최고수준 실력 UP (#0568~#0575)
+export function rpmIneqAppAdvancedSkillUp(random) {
+  // Problem #0568: 8% salt water 200g. How much water to evaporate for >= 10%?
+  // Salt = 16g. 16 / (200 - x) >= 0.10 => 160 >= 200 - x => x >= 40g.
+  return {
+    prompt: `8%의 소금물 200 g이 있다. 이 소금물에서 물을 증발시켜 농도가 10% 이상이 되게 하려면 최소 몇 g의 물을 증발시켜야 하는가?`,
+    promptEn: `Given 200 g of 8% salt water, at least how much water must be evaporated to make concentration at least 10%?`,
+    expression: `\\frac{16}{200 - x} \\ge \\frac{10}{100}`,
+    answer: '40',
+    answerSuffix: 'g',
+    explanation: `소금의 양은 200 × 0.08 = 16 g입니다. 물을 x g 증발시키면 소금물의 양은 (200 - x) g이 되므로 16 / (200 - x) ≥ 0.10 입니다. 양변에 (200 - x)를 곱하면 16 ≥ 20 - 0.1x, 0.1x ≥ 4에서 x ≥ 40 g입니다.`,
+    explanationEn: `Salt is 16 g. 16 / (200 - x) ≥ 0.1 => 16 ≥ 20 - 0.1x => x ≥ 40 g.`
+  };
+}
+
+export function rpmSysLinearTwoVarsIdentify(random) {
+  return {
+    prompt: '다음 중 미지수가 2개인 일차방정식은?',
+    promptEn: 'Which of the following is a linear equation in two variables?',
+    expression: 'ax + by + c = 0',
+    choices: [
+      { value: '1', label: '3x - 2y = 5', labelEn: '3x - 2y = 5' },
+      { value: '2', label: 'x^2 + y = 3', labelEn: 'x^2 + y = 3' },
+      { value: '3', label: '2x - 3y', labelEn: '2x - 3y' },
+      { value: '4', label: '1/x + y = 2', labelEn: '1/x + y = 2' },
+      { value: '5', label: 'x - 2y = x + 3', labelEn: 'x - 2y = x + 3' },
+    ],
+    answer: '1',
+    explanation: '미지수가 2개이고 차수가 모두 1인 등식을 미지수가 2개인 일차방정식이라고 합니다. 2번은 이차식, 3번은 등호가 없고, 4번은 분모에 미지수가 있으며, 5번은 x가 소거되어 미지수가 1개가 되므로 1번만 해당합니다.',
+    explanationEn: 'Only option 1 has two variables of degree 1 and an equality sign.'
+  };
+}
+
+// 32. [연립일차방정식 유형 02] 일차방정식의 자연수 해 순서쌍 (#0622~#0625)
+export function rpmSysLinearNaturalPairs(random) {
+  // 2x + 3y = C
+  // Find count of natural pairs (x, y >= 1)
+  const a = 2;
+  const b = 3;
+  const C = pick(random, [17, 19, 23, 25]);
+  let count = 0;
+  for (let y = 1; y * b < C; y++) {
+    if ((C - b * y) % a === 0) {
+      count++;
+    }
+  }
+  return {
+    prompt: `일차방정식 ${a}x + ${b}y = ${C} 를 만족하는 자연수 x, y의 순서쌍 (x, y)의 개수를 구하시오.`,
+    promptEn: `Find the number of natural number pairs (x, y) satisfying ${a}x + ${b}y = ${C}.`,
+    expression: `${a}x + ${b}y = ${C}`,
+    answer: String(count),
+    explanation: `y는 자연수이므로 y = 1부터 대입하면, 2x = ${C} - 3y에서 x가 자연수가 되는 순서쌍 (x, y)의 개수는 총 ${count}개입니다.`,
+    explanationEn: `Substituting natural numbers y = 1, 2, ... into 2x = ${C} - 3y yields ${count} integer solutions for x >= 1.`
+  };
+}
+
+// 33. [연립일차방정식 유형 03] 해가 주어질 때 일차방정식의 미지수 구하기 (#0626~#0629)
+export function rpmSysLinearGivenSolFindConstant(random) {
+  // ax + by = c has solution (m, n)
+  const m = ri(random, 1, 4);
+  const n = ri(random, 1, 4);
+  const b = ri(random, 2, 4);
+  const c = ri(random, 10, 25);
+  // a * m + b * n = c => a = (c - b * n) / m
+  const aVal = (c - b * n) / m;
+  if (Number.isInteger(aVal) && aVal !== 0) {
+    return {
+      prompt: `일차방정식 ax + ${b}y = ${c} 의 한 해가 (${m}, ${n})일 때, 상수 a의 값을 구하시오.`,
+      promptEn: `If (${m}, ${n}) is a solution to ax + ${b}y = ${c}, find constant a.`,
+      expression: `ax + ${b}y = ${c}, \\quad (x, y) = (${m}, ${n})`,
+      answer: String(aVal),
+      explanation: `x = ${m}, y = ${n}을 방정식에 대입하면 a × (${m}) + ${b} × (${n}) = ${c}입니다. ${m}a + ${b * n} = ${c}에서 ${m}a = ${c - b * n}, 따라서 a = ${aVal}입니다.`,
+      explanationEn: `Substituting (${m}, ${n}) gives ${m}a + ${b * n} = ${c}, so a = ${aVal}.`
+    };
+  }
+  return {
+    prompt: `일차방정식 ax + 3y = 15 의 한 해가 (3, 2)일 때, 상수 a의 값을 구하시오.`,
+    promptEn: `Find a when (3, 2) is a solution to ax + 3y = 15.`,
+    expression: `ax + 3y = 15, \\quad (x, y) = (3, 2)`,
+    answer: '3',
+    explanation: `x = 3, y = 2를 대입하면 3a + 6 = 15에서 3a = 9, 즉 a = 3입니다.`,
+    explanationEn: `3a + 6 = 15 => a = 3.`
+  };
+}
+
+// 34. [연립일차방정식 유형 04] 연립일차방정식의 해의 뜻 (#0630~#0633)
+export function rpmSysLinearSystemSolutionConcept(random) {
+  // Check which pair (x, y) satisfies both x + y = 5 and 2x - y = 4 => 3x = 9 => x = 3, y = 2
+  const x = ri(random, 2, 4);
+  const y = ri(random, 1, 3);
+  const c1 = x + y;
+  const c2 = 2 * x - y;
+  return {
+    prompt: `연립방정식 x + y = ${c1}, 2x - y = ${c2} 의 해는?`,
+    promptEn: `Find the solution to the system x + y = ${c1}, 2x - y = ${c2}.`,
+    expression: `\\begin{cases} x + y = ${c1} \\\\ 2x - y = ${c2} \\end{cases}`,
+    choices: [
+      { value: '1', label: `x = ${x}, y = ${y}`, labelEn: `x = ${x}, y = ${y}` },
+      { value: '2', label: `x = ${x + 1}, y = ${y - 1}`, labelEn: `x = ${x + 1}, y = ${y - 1}` },
+      { value: '3', label: `x = ${x - 1}, y = ${y + 1}`, labelEn: `x = ${x - 1}, y = ${y + 1}` },
+      { value: '4', label: `x = ${x}, y = ${y + 1}`, labelEn: `x = ${x}, y = ${y + 1}` },
+      { value: '5', label: `x = ${x + 1}, y = ${y}`, labelEn: `x = ${x + 1}, y = ${y}` },
+    ],
+    answer: '1',
+    explanation: `두 식을 더하면 3x = ${c1 + c2}이므로 x = ${x}입니다. 첫 번째 식에 대입하면 y = ${c1} - ${x} = ${y}입니다.`,
+    explanationEn: `Adding both equations gives 3x = ${c1 + c2} => x = ${x}. Substituting gives y = ${y}.`
+  };
+}
+
+// 35. [연립일차방정식 유형 05] 해가 주어질 때 상수 a, b 구하기 (#0634~#0637)
+export function rpmSysLinearGivenSolSystemConst(random) {
+  const x = ri(random, 1, 3);
+  const y = ri(random, 1, 3);
+  const a = ri(random, 2, 4);
+  const b = ri(random, 2, 4);
+  const c1 = a * x + y;
+  const c2 = 2 * x + b * y;
+  // ax + y = c1, 2x + by = c2
+  return {
+    prompt: `연립방정식 ax + y = ${c1}, 2x + by = ${c2} 의 해가 (${x}, ${y})일 때, a + b의 값을 구하시오.`,
+    promptEn: `If (${x}, ${y}) is the solution to ax + y = ${c1}, 2x + by = ${c2}, find a + b.`,
+    expression: `\\begin{cases} ax + y = ${c1} \\\\ 2x + by = ${c2} \\end{cases}`,
+    answer: String(a + b),
+    explanation: `x = ${x}, y = ${y}를 각 식에 대입하면 ${x}a + ${y} = ${c1}에서 a = ${a}이고, ${2 * x} + ${y}b = ${c2}에서 b = ${b}입니다. 따라서 a + b = ${a + b}입니다.`,
+    explanationEn: `Substituting gives a = ${a} and b = ${b}. Thus a + b = ${a + b}.`
+  };
+}
+
+// 36. [연립일차방정식 유형 06] 대입법을 이용한 연립방정식의 풀이 (#0638~#0641)
+export function rpmSysLinearSubstitutionMethod(random) {
+  // y = 2x - 1, 3x + 2y = C
+  // 3x + 2(2x - 1) = 7x - 2 = C => 7x = C + 2
+  const x = ri(random, 1, 3);
+  const y = 2 * x - 1;
+  const C = 3 * x + 2 * y;
+  return {
+    prompt: `연립방정식 y = 2x - 1, 3x + 2y = ${C} 의 해가 x = a, y = b일 때, a + b의 값을 구하시오.`,
+    promptEn: `Solve the system y = 2x - 1, 3x + 2y = ${C}. Let x = a, y = b. Find a + b.`,
+    expression: `\\begin{cases} y = 2x - 1 \\\\ 3x + 2y = ${C} \\end{cases}`,
+    answer: String(x + y),
+    explanation: `y = 2x - 1을 두 번째 식에 대입하면 3x + 2(2x - 1) = ${C}, 즉 7x - 2 = ${C}에서 7x = ${C + 2}, x = ${x}입니다. y = 2(${x}) - 1 = ${y}이므로 a + b = ${x + y}입니다.`,
+    explanationEn: `Substituting y gives 7x - 2 = ${C} => x = ${x}, y = ${y}. a + b = ${x + y}.`
+  };
+}
+
+// 37. [연립일차방정식 유형 07] 가감법을 이용한 연립방정식의 풀이 (#0642~#0645)
+export function rpmSysLinearAdditionSubtractionMethod(random) {
+  // 3x + 2y = c1
+  // 2x + 3y = c2
+  const x = ri(random, 1, 4);
+  const y = ri(random, 1, 4);
+  const c1 = 3 * x + 2 * y;
+  const c2 = 2 * x + 3 * y;
+  return {
+    prompt: `연립방정식 3x + 2y = ${c1}, 2x + 3y = ${c2} 의 해가 x = a, y = b일 때, a - b의 값을 구하시오.`,
+    promptEn: `Solve 3x + 2y = ${c1}, 2x + 3y = ${c2}. Let x = a, y = b. Find a - b.`,
+    expression: `\\begin{cases} 3x + 2y = ${c1} \\\\ 2x + 3y = ${c2} \\end{cases}`,
+    answer: String(x - y),
+    explanation: `두 식을 변끼리 빼면 (3x - 2x) + (2y - 3y) = x - y = ${c1 - c2}입니다. 따라서 a - b = ${x - y}입니다.`,
+    explanationEn: `Subtracting the two equations gives x - y = ${c1 - c2} = ${x - y}.`
+  };
+}
+
+// 38. [연립일차방정식 유형 08] 괄호가 있는 연립방정식의 풀이 (#0646~#0649)
+export function rpmSysLinearParentheses(random) {
+  const x = ri(random, 2, 5);
+  const y = ri(random, 1, 4);
+  // 2(x + y) - y = 2x + y = C1
+  // 3(x - 1) + 2y = 3x + 2y - 3 = C2 => 3x + 2y = C2 + 3
+  const c1 = 2 * x + y;
+  const c2 = 3 * x + 2 * y - 3;
+  return {
+    prompt: `연립방정식 2(x + y) - y = ${c1}, 3(x - 1) + 2y = ${c2} 의 해가 x = a, y = b일 때, a + b의 값을 구하시오.`,
+    promptEn: `Solve 2(x + y) - y = ${c1}, 3(x - 1) + 2y = ${c2}. Find a + b.`,
+    expression: `\\begin{cases} 2(x + y) - y = ${c1} \\\\ 3(x - 1) + 2y = ${c2} \\end{cases}`,
+    answer: String(x + y),
+    explanation: `괄호를 정리하면 2x + y = ${c1} 과 3x + 2y = ${c2 + 3} 입니다. 첫 식에 2를 곱해 빼면 4x + 2y - (3x + 2y) = x = ${2 * c1 - (c2 + 3)} = ${x}입니다. y = ${y}이므로 a + b = ${x + y}입니다.`,
+    explanationEn: `Simplifying gives 2x + y = ${c1} and 3x + 2y = ${c2 + 3}. Solving gives x = ${x}, y = ${y}, so a + b = ${x + y}.`
+  };
+}
+
+// 39. [연립일차방정식 유형 09] 계수가 소수 또는 분수인 연립방정식 (#0650~#0655)
+export function rpmSysLinearDecimalsFractions(random) {
+  const x = ri(random, 2, 4);
+  const y = ri(random, 1, 3);
+  // 0.2x + 0.3y = (2x + 3y)/10
+  // x/2 + y/3 = (3x + 2y)/6
+  const num1 = 2 * x + 3 * y;
+  const num2 = 3 * x + 2 * y;
+  return {
+    prompt: `연립방정식 0.2x + 0.3y = ${num1/10}, x/2 + y/3 = ${fracStr(num2, 6)} 의 해 x의 값을 구하시오.`,
+    promptEn: `Solve 0.2x + 0.3y = ${num1/10}, x/2 + y/3 = ${fracStr(num2, 6)} for x.`,
+    expression: `\\begin{cases} 0.2x + 0.3y = ${num1/10} \\\\ \\frac{x}{2} + \\frac{y}{3} = ${fracStr(num2, 6)} \\end{cases}`,
+    answer: String(x),
+    explanation: `첫 번째 식의 양변에 10을 곱하면 2x + 3y = ${num1}입니다. 두 번째 식의 양변에 6을 곱하면 3x + 2y = ${num2}입니다. 두 연립방정식을 풀면 x = ${x}, y = ${y}입니다.`,
+    explanationEn: `Clearing decimals and fractions gives 2x + 3y = ${num1} and 3x + 2y = ${num2}, yielding x = ${x}.`
+  };
+}
+
+// 40. [연립일차방정식 유형 10] A = B = C 꼴의 연립방정식 (#0656~#0659)
+export function rpmSysLinearABCForm(random) {
+  const x = ri(random, 2, 4);
+  const y = ri(random, 1, 3);
+  // A = x + 2y
+  // B = 2x - y + C_diff
+  // C = val
+  const A_val = x + 2 * y;
+  const exprA = `x + 2y`;
+  const exprB = `2x - y + ${A_val - (2 * x - y)}`;
+  return {
+    prompt: `방정식 ${exprA} = ${exprB} = ${A_val} 의 해가 x = a, y = b일 때, a + b의 값을 구하시오.`,
+    promptEn: `Solve ${exprA} = ${exprB} = ${A_val}. Find a + b.`,
+    expression: `${exprA} = ${exprB} = ${A_val}`,
+    answer: String(x + y),
+    explanation: `A = C, B = C로 두 개의 식을 세우면 x + 2y = ${A_val}, 2x - y = ${2 * x - y}입니다. 연립하여 풀면 x = ${x}, y = ${y}이므로 a + b = ${x + y}입니다.`,
+    explanationEn: `Forming the system with A = C and B = C gives x = ${x}, y = ${y}, so a + b = ${x + y}.`
+  };
+}
+
+// 41. [연립일차방정식 유형 11] 연립방정식 해가 다른 일차방정식을 만족할 때 (#0660~#0663)
+export function rpmSysLinearSatisfyOtherEquation(random) {
+  const x = ri(random, 2, 4);
+  const y = ri(random, 1, 3);
+  // System: x + y = c1, 2x - y = c2
+  // Satisfies 3x + a y = c3 => a = (c3 - 3x) / y
+  const c1 = x + y;
+  const c2 = 2 * x - y;
+  const a = ri(random, 2, 4);
+  const c3 = 3 * x + a * y;
+  return {
+    prompt: `연립방정식 x + y = ${c1}, 2x - y = ${c2} 의 해가 일차방정식 3x + ay = ${c3} 을 만족할 때, 상수 a의 값을 구하시오.`,
+    promptEn: `If the solution to x + y = ${c1}, 2x - y = ${c2} satisfies 3x + ay = ${c3}, find constant a.`,
+    expression: `\\begin{cases} x + y = ${c1} \\\\ 2x - y = ${c2} \\end{cases}, \\quad 3x + ay = ${c3}`,
+    answer: String(a),
+    explanation: `연립방정식을 풀면 x = ${x}, y = ${y}입니다. 이를 3x + ay = ${c3}에 대입하면 3(${x}) + ${y}a = ${c3}, 즉 ${y}a = ${c3 - 3 * x}에서 a = ${a}입니다.`,
+    explanationEn: `Solving the system yields (${x}, ${y}). Substituting gives a = ${a}.`
+  };
+}
+
+// 42. [연립일차방정식 유형 12] x, y 사이의 관계식이 주어진 연립방정식 (#0664~#0667)
+export function rpmSysLinearVariableRelation(random) {
+  // y = 2x, ax + y = c1, x - y = c2
+  const x = ri(random, 1, 3);
+  const y = 2 * x;
+  const a = ri(random, 2, 4);
+  const c1 = a * x + y;
+  return {
+    prompt: `연립방정식 ax + y = ${c1}, 3x - y = ${3 * x - y} 의 해에서 y의 값이 x의 값의 2배일 때, 상수 a의 값을 구하시오.`,
+    promptEn: `In ax + y = ${c1}, 3x - y = ${3 * x - y}, if y = 2x, find constant a.`,
+    expression: `y = 2x, \\quad \\begin{cases} ax + y = ${c1} \\\\ 3x - y = ${3 * x - y} \\end{cases}`,
+    answer: String(a),
+    explanation: `y = 2x를 3x - y = ${3 * x - y}에 대입하면 3x - 2x = x = ${x}입니다. y = 2(${x}) = ${y}이므로 첫 번째 식에 대입하면 ${x}a + ${y} = ${c1}에서 a = ${a}입니다.`,
+    explanationEn: `Using y = 2x gives x = ${x}, y = ${y}. Substituting into the first equation yields a = ${a}.`
+  };
+}
+
+// 43. [연립일차방정식 유형 13] 두 연립방정식의 해가 서로 같을 때 (#0668~#0671)
+export function rpmSysLinearTwoSystemsCommonSol(random) {
+  const x = ri(random, 2, 4);
+  const y = ri(random, 1, 3);
+  // Equations without constants: x + y = c1, 2x - 3y = c2
+  // Equations with constants a, b: ax + y = c3, x + by = c4
+  const c1 = x + y;
+  const c2 = 2 * x - 3 * y;
+  const a = ri(random, 2, 3);
+  const b = ri(random, 2, 3);
+  const c3 = a * x + y;
+  const c4 = x + b * y;
+  return {
+    prompt: `두 연립방정식 {x + y = ${c1}, ax + y = ${c3}}과 {2x - 3y = ${c2}, x + by = ${c4}}의 해가 서로 같을 때, a + b의 값을 구하시오.`,
+    promptEn: `If systems {x + y = ${c1}, ax + y = ${c3}} and {2x - 3y = ${c2}, x + by = ${c4}} share the same solution, find a + b.`,
+    expression: `\\begin{cases} x + y = ${c1} \\\\ ax + y = ${c3} \\end{cases}, \\quad \\begin{cases} 2x - 3y = ${c2} \\\\ x + by = ${c4} \\end{cases}`,
+    answer: String(a + b),
+    explanation: `상수가 없는 두 식 x + y = ${c1}과 2x - 3y = ${c2}를 연립하여 풀면 x = ${x}, y = ${y}입니다. 이를 대입하면 a = ${a}, b = ${b}이므로 a + b = ${a + b}입니다.`,
+    explanationEn: `Solving the constant-free pair gives (${x}, ${y}), leading to a = ${a}, b = ${b}, and sum = ${a + b}.`
+  };
+}
+
+// 44. [연립일차방정식 유형 14] 잘못 보고 푼 연립방정식 (#0672~#0675)
+export function rpmSysLinearFaultyObservation(random) {
+  // A mistake on constant in equation 1: solved correctly for eq 2: 2x + y = 7
+  // Student got x = 2 => y = 7 - 4 = 3.
+  // Find correct solution...
+  return {
+    prompt: `연립방정식 {ax + y = 5, 2x - y = 1}을 푸는데 첫 번째 식의 5를 다른 수로 잘못 보고 풀어서 x = 2를 얻었다. 바르게 푼 해에서 x의 값을 구하시오.`,
+    promptEn: `In {ax + y = 5, 2x - y = 1}, mistaking 5 in the first equation gave x = 2. Find the correct x value. (Given a = 1)`,
+    expression: `\\begin{cases} x + y = 5 \\\\ 2x - y = 1 \\end{cases}`,
+    answer: '2',
+    explanation: `x + y = 5와 2x - y = 1을 바르게 연립하여 풀면 3x = 6에서 x = 2입니다.`,
+    explanationEn: `Adding equations gives 3x = 6 => x = 2.`
+  };
+}
+
+// 45. [연립일차방정식 유형 15] 해가 무수히 많은 연립방정식 (#0676~#0679)
+export function rpmSysLinearSpecialInfinitelyMany(random) {
+  // 2x + 3y = 6
+  // 4x + a y = b  has infinitely many solutions => 4/2 = a/3 = b/6 = 2 => a = 6, b = 12
+  const mult = pick(random, [2, 3]);
+  const a0 = 2, b0 = 3, c0 = pick(random, [4, 5, 6]);
+  const a = a0 * mult;
+  const b = b0 * mult;
+  const c = c0 * mult;
+  return {
+    prompt: `연립방정식 ${a0}x + ${b0}y = ${c0}, ${a}x + ay = b 의 해가 무수히 많을 때, a + b의 값을 구하시오.`,
+    promptEn: `When ${a0}x + ${b0}y = ${c0} and ${a}x + ay = b have infinitely many solutions, find a + b.`,
+    expression: `\\begin{cases} ${a0}x + ${b0}y = ${c0} \\\\ ${a}x + ay = b \\end{cases}`,
+    answer: String(b + c),
+    explanation: `해가 무수히 많으려면 두 방정식의 계수와 상수항의 비가 모두 같아야 합니다. 즉 ${a}/${a0} = a/${b0} = b/${c0} = ${mult}이므로 a = ${b}, b = ${c}입니다. 따라서 a + b = ${b + c}입니다.`,
+    explanationEn: `For infinitely many solutions, ratios must be equal: ${mult} = a/${b0} = b/${c0} => a = ${b}, b = ${c}, sum = ${b + c}.`
+  };
+}
+
+// 46. [연립일차방정식 유형 16] 해가 없는 연립방정식 (#0680~#0683)
+export function rpmSysLinearSpecialNoSolution(random) {
+  // 2x - 3y = 4
+  // 4x + a y = 5 has no solution => 4/2 = a/(-3) != 5/4 => a = -6
+  const mult = pick(random, [2, 3]);
+  const a0 = 2, b0 = -3;
+  const a = a0 * mult;
+  const aVal = b0 * mult;
+  return {
+    prompt: `연립방정식 ${a0}x - 3y = 4, ${a}x + ay = 5 의 해가 없을 때, 상수 a의 값을 구하시오.`,
+    promptEn: `Find a when ${a0}x - 3y = 4 and ${a}x + ay = 5 have no solution.`,
+    expression: `\\begin{cases} ${a0}x - 3y = 4 \\\\ ${a}x + ay = 5 \\end{cases}`,
+    answer: String(aVal),
+    explanation: `해가 없으려면 x, y의 계수의 비는 같고 상수항의 비는 달라야 합니다. 즉 ${a}/${a0} = a/(-3) ≠ 5/4 이어야 하므로 ${mult} = a/(-3)에서 a = ${aVal}입니다.`,
+    explanationEn: `No solution requires matching coefficient ratios: ${mult} = a/(-3) => a = ${aVal}.`
+  };
+}
+
+// 47. [연립일차방정식 유형 17] 계수가 순환소수인 연립방정식 (#0684~#0687)
+export function rpmSysLinearRepeatingDecimals(random) {
+  // 0.3_dot x + 0.6_dot y = 1 => 1/3 x + 2/3 y = 1 => x + 2y = 3
+  // 0.5_dot x - 0.2_dot y = 1/9 => 5/9 x - 2/9 y = 1/9 => 5x - 2y = 1
+  // Add: 6x = 4 => x = 2/3 (use integer)
+  // Let's use:
+  // 0.3_dot x + y = 3 => 1/3 x + y = 3 => x + 3y = 9
+  // x - y = 1
+  // Add: 4y = 8 => y = 2, x = 3
+  return {
+    prompt: `연립방정식 0.3̇ x + y = 3, x - y = 1 의 해가 x = a, y = b일 때, a + b의 값을 구하시오. (단, 0.3̇ = 1/3)`,
+    promptEn: `Solve 0.3̇ x + y = 3, x - y = 1. Find a + b.`,
+    expression: `\\begin{cases} 0.\\dot{3}x + y = 3 \\\\ x - y = 1 \\end{cases}`,
+    answer: '5',
+    explanation: `0.3̇ = 3/9 = 1/3이므로 첫 식은 1/3 x + y = 3, 즉 x + 3y = 9입니다. 두 식을 연립하여 풀면 x = 3, y = 2입니다. 따라서 a + b = 5입니다.`,
+    explanationEn: `0.3̇ = 1/3. The system becomes x + 3y = 9 and x - y = 1, giving x = 3, y = 2, sum = 5.`
+  };
+}
+
+// 48. [연립일차방정식 유형 18] 연립일차방정식 전 유형 실전 종합 (#0688~#0704)
+export function rpmSysLinearAllTypesMixed(random) {
+  const fns = [
+    rpmSysLinearTwoVarsIdentify,
+    rpmSysLinearNaturalPairs,
+    rpmSysLinearGivenSolFindConstant,
+    rpmSysLinearSystemSolutionConcept,
+    rpmSysLinearGivenSolSystemConst,
+    rpmSysLinearSubstitutionMethod,
+    rpmSysLinearAdditionSubtractionMethod,
+    rpmSysLinearParentheses,
+    rpmSysLinearDecimalsFractions,
+    rpmSysLinearABCForm,
+    rpmSysLinearSatisfyOtherEquation,
+    rpmSysLinearVariableRelation,
+    rpmSysLinearTwoSystemsCommonSol,
+    rpmSysLinearFaultyObservation,
+    rpmSysLinearSpecialInfinitelyMany,
+    rpmSysLinearSpecialNoSolution,
+    rpmSysLinearRepeatingDecimals
+  ];
+  return pick(random, fns)(random);
+}
+
+// 49. [연립일차방정식 유형 19] 연립일차방정식 최고수준 실력 UP (#0705~#0720)
+export function rpmSysLinearAdvancedSkillUp(random) {
+  // Problem #0705: (2x + y = k) and (x - y = -1) satisfies x + y = 3.
+  // x - y = -1 and x + y = 3 => 2x = 2 => x = 1, y = 2.
+  // Then k = 2(1) + 2 = 4.
+  const x = ri(random, 1, 3);
+  const y = ri(random, 2, 4);
+  const diff = x - y;
+  const sum = x + y;
+  const k = 2 * x + y;
+  return {
+    prompt: `연립방정식 {2x + y = k, x - y = ${diff}}의 해가 일차방정식 x + y = ${sum}을 만족할 때, 상수 k의 값을 구하시오.`,
+    promptEn: `If the solution to {2x + y = k, x - y = ${diff}} satisfies x + y = ${sum}, find constant k.`,
+    expression: `\\begin{cases} 2x + y = k \\\\ x - y = ${diff} \\end{cases}, \\quad x + y = ${sum}`,
+    answer: String(k),
+    explanation: `x - y = ${diff}와 x + y = ${sum}을 연립하여 풀면 2x = ${diff + sum}에서 x = ${x}, y = ${y}입니다. 이를 2x + y = k에 대입하면 k = 2(${x}) + ${y} = ${k}입니다.`,
+    explanationEn: `Solving x - y = ${diff} and x + y = ${sum} gives (${x}, ${y}). Then k = 2(${x}) + ${y} = ${k}.`
+  };
+}
+
+// =============================================================================
+// Chapter 07: 연립일차방정식의 활용 (Pages 100~111)
+// =============================================================================
+
+// 50. [연립방정식 활용 유형 01] 두 자리 자연수 (#0732~#0735)
+export function rpmSysAppTwoDigitNumbers(random) {
+  // Tens digit x, units digit y.
+  // x + y = 10. Reversing digits gives 10y + x = (10x + y) + 36 => 9y - 9x = 36 => y - x = 4.
+  // x = 3, y = 7 => original number is 37.
+  const x = ri(random, 2, 4);
+  const diff = ri(random, 2, 4);
+  const y = x + diff;
+  const sumDigits = x + y;
+  const diffNumber = 9 * diff;
+  const origNumber = 10 * x + y;
+  return {
+    prompt: `각 자리의 숫자의 합이 ${sumDigits}인 두 자리 자연수가 있다. 십의 자리의 숫자와 일의 자리의 숫자를 바꾼 수는 처음 수보다 ${diffNumber}만큼 크다고 한다. 처음 자연수를 구하시오.`,
+    promptEn: `A two-digit number has sum of digits ${sumDigits}. Reversing the digits increases the number by ${diffNumber}. Find the original number.`,
+    expression: `x + y = ${sumDigits}, \\quad 10y + x = (10x + y) + ${diffNumber}`,
+    answer: String(origNumber),
+    explanation: `십의 자리 숫자를 x, 일의 자리 숫자를 y라 하면 x + y = ${sumDigits}이고, (10y + x) - (10x + y) = 9(y - x) = ${diffNumber}에서 y - x = ${diff}입니다. 연립하여 풀면 x = ${x}, y = ${y}이므로 처음 자연수는 ${origNumber}입니다.`,
+    explanationEn: `x + y = ${sumDigits} and y - x = ${diff} yields x = ${x}, y = ${y}. The number is ${origNumber}.`
+  };
+}
+
+// 51. [연립방정식 활용 유형 02] 나이에 대한 연립방정식 활용 (#0736~#0739)
+export function rpmSysAppAges(random) {
+  // Father x, son y.
+  // x - y = 30. In 10 years, x + 10 = 2(y + 10) + 4 => x - 2y = 14.
+  // x = 46, y = 16.
+  const sonAge = ri(random, 12, 16);
+  const ageDiff = ri(random, 28, 34);
+  const fatherAge = sonAge + ageDiff;
+  const years = ri(random, 5, 10);
+  const k = 2;
+  const excess = (fatherAge + years) - k * (sonAge + years);
+  return {
+    prompt: `현재 아버지와 아들의 나이의 차는 ${ageDiff}세이다. ${years}년 후에는 아버지의 나이가 아들의 나이의 ${k}배보다 ${excess}세가 많아진다고 한다. 현재 아들의 나이를 구하시오.`,
+    promptEn: `The age difference between father and son is ${ageDiff}. In ${years} years, father's age will be ${excess} more than ${k} times son's age. Find son's current age.`,
+    expression: `x - y = ${ageDiff}, \\quad (x + ${years}) = ${k}(y + ${years}) + ${excess}`,
+    answer: String(sonAge),
+    answerSuffix: '세',
+    explanation: `현재 아버지의 나이를 x세, 아들의 나이를 y세라 하면 x - y = ${ageDiff}입니다. ${years}년 후 (x + ${years}) = ${k}(y + ${years}) + ${excess}에서 x - ${k}y = ${k * years + excess - years}입니다. 두 식을 연립하여 풀면 y = ${sonAge}세입니다.`,
+    explanationEn: `x - y = ${ageDiff} and x - 2y = ${fatherAge + years - 2 * (sonAge + years)} gives son's age y = ${sonAge}.`
+  };
+}
+
+// 52. [연립방정식 활용 유형 03] 물건의 가격과 개수 (#0740~#0743)
+export function rpmSysAppPriceQuantity(random) {
+  // Pencils x (800 won), Erasers y (500 won). Total 10 items for 6800 won.
+  // x + y = 10, 800x + 500y = 6800 => 8x + 5y = 68 => 3x = 18 => x = 6, y = 4
+  const pA = 800, pB = 500;
+  const x = ri(random, 4, 7);
+  const y = 10 - x;
+  const totalCost = pA * x + pB * y;
+  return {
+    prompt: `한 자루에 ${pA}원인 연필과 한 개에 ${pB}원인 지우개를 합하여 모두 10개를 사고 ${totalCost}원을 지불하였다. 산 연필의 개수를 구하시오.`,
+    promptEn: `Pencils cost ${pA} won and erasers cost ${pB} won. Buying 10 items total for ${totalCost} won, how many pencils were bought?`,
+    expression: `x + y = 10, \\quad ${pA}x + ${pB}y = ${totalCost}`,
+    answer: String(x),
+    explanation: `연필을 x자루, 지우개를 y개라 하면 x + y = 10, ${pA}x + ${pB}y = ${totalCost}입니다. 양변을 100으로 나누어 연립하면 x = ${x}자루입니다.`,
+    explanationEn: `x + y = 10 and 8x + 5y = ${totalCost/100} yields x = ${x}.`
+  };
+}
+
+// 53. [연립방정식 활용 유형 04] 점수 및 가위바위보 (#0744~#0747)
+export function rpmSysAppScoresRockPaperScissors(random) {
+  // Total 10 games. Win +2 stairs, Lose -1 stair.
+  // A is at +8 stairs, B is at -1 stairs.
+  // A won x, lost y. x + y = 10, 2x - y = 8 => 3x = 18 => x = 6 wins.
+  const totalGames = 10;
+  const x = ri(random, 6, 8);
+  const y = totalGames - x;
+  const posA = 2 * x - y;
+  return {
+    prompt: `지민이와 지수가 가위바위보를 하여 이긴 사람은 2계단 올라가고 진 사람은 1계단 내려가기로 하였다. 비기는 경우 없이 10번 게임을 한 결과 지민이는 처음보다 ${posA}계단 올라가 있었다. 지민이가 이긴 횟수를 구하시오.`,
+    promptEn: `In 10 rock-paper-scissors games, winner climbs 2 steps and loser descends 1 step. If Jimin ended up ${posA} steps above start, how many times did Jimin win?`,
+    expression: `x + y = 10, \\quad 2x - y = ${posA}`,
+    answer: String(x),
+    explanation: `지민이가 이긴 횟수를 x회, 진 횟수를 y회라 하면 x + y = 10이고 2x - y = ${posA}입니다. 두 식을 더하면 3x = ${10 + posA}이므로 x = ${x}회입니다.`,
+    explanationEn: `x + y = 10 and 2x - y = ${posA} gives 3x = ${10 + posA} => x = ${x}.`
+  };
+}
+
+// 54. [연립방정식 활용 유형 05] 도형에 대한 연립방정식 활용 (#0748~#0751)
+export function rpmSysAppGeometry(random) {
+  // Rectangle perimeter = 2(w + h) = 40 => w + h = 20
+  // Length is 4 cm longer than width: w - h = 4 => w = 12, h = 8
+  const w = ri(random, 10, 15);
+  const h = ri(random, 5, 9);
+  const perimeter = 2 * (w + h);
+  const diff = w - h;
+  return {
+    prompt: `둘레의 길이가 ${perimeter} cm인 직사각형이 있다. 가로의 길이가 세로의 길이보다 ${diff} cm 더 길 때, 이 직사각형의 가로의 길이를 구하시오.`,
+    promptEn: `A rectangle has perimeter ${perimeter} cm, and its length is ${diff} cm longer than its width. Find the length.`,
+    expression: `2(x + y) = ${perimeter}, \\quad x - y = ${diff}`,
+    answer: String(w),
+    answerSuffix: 'cm',
+    explanation: `가로를 x cm, 세로를 y cm라 하면 x + y = ${perimeter / 2}이고 x - y = ${diff}입니다. 두 식을 더하면 2x = ${perimeter / 2 + diff}이므로 x = ${w} cm입니다.`,
+    explanationEn: `x + y = ${perimeter / 2} and x - y = ${diff} yields x = ${w} cm.`
+  };
+}
+
+// 55. [연립방정식 활용 유형 06] 트랙/호수 둘레 반대·같은 방향 (#0752~#0755)
+export function rpmSysAppSpeedOppositeSameTrack(random) {
+  // Track circumference: 3 km (3000 m).
+  // Opposite direction: meet after 15 min (speed sum = 3000 / 15 = 200 m/min).
+  // Same direction: meet after 60 min (speed diff = 3000 / 60 = 50 m/min).
+  // vA = (200 + 50)/2 = 125 m/min, vB = 75 m/min.
+  const dist = 3000;
+  const tOpp = 15;
+  const tSame = 60;
+  const sumV = dist / tOpp;
+  const diffV = dist / tSame;
+  const vA = (sumV + diffV) / 2;
+  return {
+    prompt: `둘레의 길이가 ${dist} m인 호수를 A와 B가 같은 지점에서 동시에 출발하여 반대 방향으로 돌면 ${tOpp}분 후에 만나고, 같은 방향으로 돌면 ${tSame}분 후에 만난다. A의 분속을 구하시오. (단, A가 B보다 빠르다)`,
+    promptEn: `On a ${dist} m circular lake, walking in opposite directions meets after ${tOpp} min, while same direction meets after ${tSame} min. Find A's speed in m/min.`,
+    expression: `${tOpp}(x + y) = ${dist}, \\quad ${tSame}(x - y) = ${dist}`,
+    answer: String(vA),
+    answerSuffix: 'm/분',
+    explanation: `A의 속력을 x m/분, B의 속력을 y m/분이라 하면 반대 방향: x + y = ${sumV}, 같은 방향: x - y = ${diffV}입니다. 더하면 2x = ${sumV + diffV}에서 x = ${vA} m/분입니다.`,
+    explanationEn: `x + y = ${sumV} and x - y = ${diffV} gives x = ${vA} m/min.`
+  };
+}
+
+// 56. [연립방정식 활용 유형 07] 강물과 배의 속력 (#0756~#0759)
+export function rpmSysAppSpeedRiverBoat(random) {
+  // Distance = 24 km. Upstream takes 3 hours (speed = 8 km/h). Downstream takes 2 hours (speed = 12 km/h).
+  // Boat speed x, river speed y.
+  // x - y = 8, x + y = 12 => x = 10, y = 2 km/h.
+  const dist = 24;
+  const tUp = 3;
+  const tDown = 2;
+  const vUp = dist / tUp;
+  const vDown = dist / tDown;
+  const riverSpeed = (vDown - vUp) / 2;
+  return {
+    prompt: `길이가 ${dist} km인 강을 보트를 타고 거슬러 올라가는 데는 ${tUp}시간, 따라 내려오는 데는 ${tDown}시간이 걸렸다. 강물의 시속을 구하시오. (단, 보트와 강물의 속력은 일정하다)`,
+    promptEn: `Traveling ${dist} km on a river takes ${tUp} hours upstream and ${tDown} hours downstream. Find the river current speed in km/h.`,
+    expression: `x - y = \\frac{${dist}}{${tUp}}, \\quad x + y = \\frac{${dist}}{${tDown}}`,
+    answer: String(riverSpeed),
+    answerSuffix: 'km/h',
+    explanation: `보트 속력을 x, 강물 속력을 y라 하면 거슬러 올라갈 때 x - y = ${vUp}, 내려올 때 x + y = ${vDown}입니다. 빼면 2y = ${vDown - vUp}이므로 강물의 속력은 ${riverSpeed} km/h입니다.`,
+    explanationEn: `x - y = ${vUp} and x + y = ${vDown} gives river speed y = ${riverSpeed} km/h.`
+  };
+}
+
+// 57. [연립방정식 활용 유형 08] 열차의 터널과 다리 통과 (#0760~#0763)
+export function rpmSysAppSpeedTrainBridge(random) {
+  // Train length L, speed v.
+  // Bridge: 1000m in 40s => 1000 + L = 40v
+  // Tunnel: 1600m in 60s => 1600 + L = 60v
+  // Subtract: 600 = 20v => v = 30 m/s. L = 40(30) - 1000 = 200 m.
+  const lenBridge = 1000, timeBridge = 40;
+  const lenTunnel = 1600, timeTunnel = 60;
+  const v = (lenTunnel - lenBridge) / (timeTunnel - timeBridge);
+  const L = timeBridge * v - lenBridge;
+  return {
+    prompt: `일정한 속력으로 달리는 기차가 ${lenBridge} m 길이의 철교를 완전히 통과하는 데 ${timeBridge}초가 걸리고, ${lenTunnel} m 길이의 터널을 완전히 통과하는 데 ${timeTunnel}초가 걸린다. 이 기차의 길이를 구하시오.`,
+    promptEn: `A train crosses a ${lenBridge} m bridge in ${timeBridge} s and a ${lenTunnel} m tunnel in ${timeTunnel} s at constant speed. Find the train length in meters.`,
+    expression: `${lenBridge} + L = ${timeBridge}v, \\quad ${lenTunnel} + L = ${timeTunnel}v`,
+    answer: String(L),
+    answerSuffix: 'm',
+    explanation: `기차의 길이를 L m, 속력을 v m/초라 하면 ${lenBridge} + L = ${timeBridge}v, ${lenTunnel} + L = ${timeTunnel}v 입니다. 두 식을 빼면 ${lenTunnel - lenBridge} = ${timeTunnel - timeBridge}v에서 v = ${v} m/초입니다. L = ${timeBridge} × ${v} - ${lenBridge} = ${L} m입니다.`,
+    explanationEn: `Subtracting equations gives v = ${v} m/s, so train length L = ${L} m.`
+  };
+}
+
+// 58. [연립방정식 활용 유형 09] 두 소금물 섞기 (#0764~#0767)
+export function rpmSysAppSaltTwoSolutions(random) {
+  // Solution A (x%), Solution B (y%).
+  // Mix 100g A + 200g B => 6% salt water (300g, 18g salt) => x + 2y = 18
+  // Mix 200g A + 100g B => 8% salt water (300g, 24g salt) => 2x + y = 24
+  // Add: 3x + 3y = 42 => x + y = 14. Subtract: x - y = 6 => x = 10%, y = 4%
+  return {
+    prompt: `농도가 서로 다른 두 종류의 소금물 A, B가 있다. 소금물 A를 100 g, 소금물 B를 200 g 섞으면 6%의 소금물이 되고, 소금물 A를 200 g, 소금물 B를 100 g 섞으면 8%의 소금물이 된다. 소금물 A의 농도를 구하시오.`,
+    promptEn: `Mixing 100 g of A with 200 g of B yields 6% solution; mixing 200 g of A with 100 g of B yields 8% solution. Find the concentration of A.`,
+    expression: `x + 2y = 18, \\quad 2x + y = 24`,
+    answer: '10',
+    answerSuffix: '%',
+    explanation: `소금물 A의 농도를 x%, B의 농도를 y%라 하면 100 × (x/100) + 200 × (y/100) = 300 × 0.06 = 18에서 x + 2y = 18입니다. 또한 2x + y = 24입니다. 연립하여 풀면 x = 10%, y = 4%입니다.`,
+    explanationEn: `x + 2y = 18 and 2x + y = 24 yields x = 10%.`
+  };
+}
+
+// 59. [연립방정식 활용 유형 10] 소금물에 물 증발/추가 또는 소금 추가 (#0768~#0771)
+export function rpmSysAppSaltWaterEvaporateAdd(random) {
+  // 10% salt water 200g. Add x g of salt to make 20% salt water.
+  // (20 + x) / (200 + x) = 0.20 => 20 + x = 40 + 0.2x => 0.8x = 20 => x = 25g
+  return {
+    prompt: `10%의 소금물 200 g에 소금을 더 넣어서 20%의 소금물을 만들려고 한다. 더 넣어야 할 소금의 양을 구하시오.`,
+    promptEn: `How much salt must be added to 200 g of 10% salt water to produce a 20% salt solution?`,
+    expression: `\\frac{20 + x}{200 + x} = \\frac{20}{100}`,
+    answer: '25',
+    answerSuffix: 'g',
+    explanation: `소금물 200 g에 녹아 있는 소금은 20 g입니다. 소금 x g을 더 넣으면 전체 소금물의 양은 (200 + x) g, 소금의 양은 (20 + x) g이므로 (20 + x)/(200 + x) = 0.20에서 20 + x = 40 + 0.2x, 0.8x = 20, 즉 x = 25 g입니다.`,
+    explanationEn: `(20 + x) / (200 + x) = 0.2 => 0.8x = 20 => x = 25 g.`
+  };
+}
+
+// 60. [연립방정식 활용 유형 11] 합금의 비율에 대한 활용 (#0772~#0775)
+export function rpmSysAppAlloyMetals(random) {
+  // Alloy A: copper 20%, zinc 30%. Alloy B: copper 40%, zinc 10%.
+  // Make alloy with 280g copper and 210g zinc.
+  // 0.2x + 0.4y = 280 => 2x + 4y = 2800 => x + 2y = 1400
+  // 0.3x + 0.1y = 210 => 3x + y = 2100
+  // 5x = 4200 - 1400 = 2800 => x = 560g, y = 420g
+  return {
+    prompt: `두 종류의 합금 A, B가 있다. A는 구리를 20%, 아연을 30% 포함하고, B는 구리를 40%, 아연을 10% 포함한다. 두 합금을 녹여서 구리 280 g, 아연 210 g을 얻으려면 합금 A는 몇 g 필요한가?`,
+    promptEn: `Alloy A is 20% copper and 30% zinc; Alloy B is 40% copper and 10% zinc. To obtain 280 g copper and 210 g zinc, how many grams of Alloy A are needed?`,
+    expression: `0.2x + 0.4y = 280, \\quad 0.3x + 0.1y = 210`,
+    answer: '560',
+    answerSuffix: 'g',
+    explanation: `합금 A를 x g, 합금 B를 y g이라 하면 0.2x + 0.4y = 280, 0.3x + 0.1y = 210입니다. 연립하여 풀면 x = 560 g, y = 420 g입니다. 따라서 합금 A는 560 g 필요합니다.`,
+    explanationEn: `0.2x + 0.4y = 280 and 0.3x + 0.1y = 210 gives x = 560 g.`
+  };
+}
+
+// 61. [연립방정식 활용 유형 12] 학생 수의 증가와 감소 (#0776~#0779)
+export function rpmSysAppStudentPercentChange(random) {
+  // Last year total: 1000 students. Male increased by 5%, female decreased by 10%.
+  // Total decreased by 10 students. Find this year's male students.
+  // x + y = 1000, 0.05x - 0.10y = -10 => 5x - 10y = -1000 => x - 2y = -200
+  // 3y = 1200 => y = 400, x = 600.
+  // This year's male: 600 * 1.05 = 630.
+  const lastTotal = 1000;
+  const pInc = 5;
+  const pDec = 10;
+  const netChange = -10;
+  const maleLast = 600;
+  const maleThis = maleLast * 1.05;
+  return {
+    prompt: `어느 중학교의 작년 전체 학생 수는 ${lastTotal}명이었다. 올해는 남학생 수가 ${pInc}% 증가하고 여학생 수가 ${pDec}% 감소하여 전체 학생 수가 ${Math.abs(netChange)}명 감소하였다. 올해의 남학생 수를 구하시오.`,
+    promptEn: `Last year enrollment was ${lastTotal}. This year boys increased by ${pInc}% and girls decreased by ${pDec}%, resulting in an overall decrease of ${Math.abs(netChange)}. Find the number of boys this year.`,
+    expression: `x + y = 1000, \\quad 0.05x - 0.10y = -10`,
+    answer: String(maleThis),
+    answerSuffix: '명',
+    explanation: `작년 남학생을 x명, 여학생을 y명이라 하면 x + y = 1000이고 0.05x - 0.10y = -10입니다. 연립하여 풀면 작년 남학생 x = 600명입니다. 올해 남학생은 600 × 1.05 = 630명입니다.`,
+    explanationEn: `x + y = 1000 and 0.05x - 0.1y = -10 gives last year's boys x = 600. This year boys = 630.`
+  };
+}
+
+// 62. [연립방정식 활용 유형 13] 일에 대한 연립방정식 활용 (#0780~#0783)
+export function rpmSysAppWorkRate(random) {
+  // A and B work together for 4 days to finish (4a + 4b = 1).
+  // A works 2 days, then B finishes in 7 days (2a + 7b = 1).
+  // 4a + 14b = 2 => 10b = 1 => b = 1/10 (B takes 10 days).
+  // 4a + 4/10 = 1 => 4a = 6/10 => a = 3/20 (A takes 20/3 days).
+  return {
+    prompt: `어떤 일을 완성하는 데 A와 B가 함께 하면 4일이 걸린다. 이 일을 A가 2일 동안 한 후 나머지를 B가 7일 동안 하여 완성하였다. 이 일을 B가 혼자서 한다면 며칠이 걸리는가?`,
+    promptEn: `A and B together finish a task in 4 days. If A works for 2 days and B finishes in 7 days, how many days would B take alone?`,
+    expression: `4x + 4y = 1, \\quad 2x + 7y = 1`,
+    answer: '10',
+    answerSuffix: '일',
+    explanation: `전체 일의 양을 1이라 하고, A, B가 하루에 하는 일의 양을 각각 x, y라 하면 4x + 4y = 1, 2x + 7y = 1입니다. 연립하여 풀면 y = 1/10입니다. 따라서 B가 혼자서 하면 10일이 걸립니다.`,
+    explanationEn: `4x + 4y = 1 and 2x + 7y = 1 yields B's daily rate y = 1/10, taking 10 days.`
+  };
+}
+
+// 63. [연립방정식 활용 유형 14] 원가·정가와 할인 판매 이익 (#0784~#0787)
+export function rpmSysAppCostPriceProfit(random) {
+  // Two products A and B cost 10000 won in total.
+  // A sold at 20% profit, B at 10% profit. Total profit 1400 won.
+  // x + y = 10000, 0.20x + 0.10y = 1400 => 2x + y = 14000 => x = 4000, y = 6000
+  return {
+    prompt: `두 상품 A, B를 합하여 10000원에 사서 A 상품은 원가의 20%, B 상품은 원가의 10%의 이익을 붙여서 팔았더니 전체 이익이 1400원이었다. A 상품의 원가를 구하시오.`,
+    promptEn: `Buying items A and B for 10000 won total, A was sold at 20% profit and B at 10% profit, yielding 1400 won total profit. Find the cost of item A.`,
+    expression: `x + y = 10000, \\quad 0.20x + 0.10y = 1400`,
+    answer: '4000',
+    answerSuffix: '원',
+    explanation: `A의 원가를 x원, B의 원가를 y원이라 하면 x + y = 10000, 0.2x + 0.1y = 1400입니다. 10을 곱하면 2x + y = 14000이므로 빼면 x = 4000원입니다.`,
+    explanationEn: `x + y = 10000 and 2x + y = 14000 gives x = 4000 won.`
+  };
+}
+
+// 64. [연립방정식 활용 유형 15] 연립방정식의 활용 전 유형 실전 종합 (#0788~#0804)
+export function rpmSysAppAllTypesMixed(random) {
+  const fns = [
+    rpmSysAppTwoDigitNumbers,
+    rpmSysAppAges,
+    rpmSysAppPriceQuantity,
+    rpmSysAppScoresRockPaperScissors,
+    rpmSysAppGeometry,
+    rpmSysAppSpeedOppositeSameTrack,
+    rpmSysAppSpeedRiverBoat,
+    rpmSysAppSpeedTrainBridge,
+    rpmSysAppSaltTwoSolutions,
+    rpmSysAppSaltWaterEvaporateAdd,
+    rpmSysAppAlloyMetals,
+    rpmSysAppStudentPercentChange,
+    rpmSysAppWorkRate,
+    rpmSysAppCostPriceProfit
+  ];
+  return pick(random, fns)(random);
+}
+
+// 65. [연립방정식 활용 유형 16] 연립방정식의 활용 최고수준 실력 UP (#0805~#0817)
+export function rpmSysAppAdvancedSkillUp(random) {
+  // Problem #0813: Ostriches (2 legs) and giraffes (4 legs), 30 heads, 82 legs.
+  // x + y = 30, 2x + 4y = 82 => x + 2y = 41 => y = 11 giraffes, x = 19 ostriches.
+  return {
+    prompt: `동물원에 타조와 기린을 합하여 모두 30마리가 있다. 타조와 기린의 다리 수의 합이 82개일 때, 타조의 수를 구하시오.`,
+    promptEn: `There are 30 ostriches and giraffes in a zoo with 82 legs in total. How many ostriches are there?`,
+    expression: `x + y = 30, \\quad 2x + 4y = 82`,
+    answer: '19',
+    answerSuffix: '마리',
+    explanation: `타조의 수를 x마리, 기린의 수를 y마리라 하면 x + y = 30이고 2x + 4y = 82입니다. 2로 나누면 x + 2y = 41이므로 두 식을 빼면 y = 11마리입니다. x = 30 - 11 = 19마리입니다.`,
+    explanationEn: `x + y = 30 and 2x + 4y = 82 yields giraffes y = 11 and ostriches x = 19.`
+  };
+}
+
 export const RPM_ADVANCED_ENGINES = {
   // 01 소인수분해 RPM 세부 유형 (RPM 1-1 Pages 10~15)
   'rpm-prime-prop-closest': rpmPrimePropClosest,
@@ -11294,5 +12634,86 @@ export const RPM_ADVANCED_ENGINES = {
   'rpm-poly-calc-geometry-app': rpmPolyCalcGeometryApplication,
   'rpm-poly-calc-all-mixed': rpmPolyCalcAllMixed,
   'rpm-poly-calc-advanced-skill-up': rpmPolyCalcAdvancedSkillUp,
+  // -------------------------------------------------------------
+  // [중2-1] 04 일차부등식 세부 응용 유형 (RPM 2-1 p.58~67)
+  // -------------------------------------------------------------
+  'rpm-linear-ineq-concept-identify': rpmLinearIneqConceptIdentify,
+  'rpm-linear-ineq-truth-value': rpmLinearIneqTruthValue,
+  'rpm-linear-ineq-express-sentence': rpmLinearIneqExpressSentence,
+  'rpm-linear-ineq-properties': rpmLinearIneqProperties,
+  'rpm-linear-ineq-range-of-expression': rpmLinearIneqRangeOfExpression,
+  'rpm-linear-ineq-identify-linear': rpmLinearIneqIdentifyLinear,
+  'rpm-linear-ineq-solve-basic-number-line': rpmLinearIneqSolveBasicNumberLine,
+  'rpm-linear-ineq-brackets': rpmLinearIneqBrackets,
+  'rpm-linear-ineq-decimals-fractions': rpmLinearIneqDecimalsFractions,
+  'rpm-linear-ineq-same-solution': rpmLinearIneqSameSolution,
+  'rpm-linear-ineq-given-solution-find-constant': rpmLinearIneqGivenSolutionFindConstant,
+  'rpm-linear-ineq-negative-coeff': rpmLinearIneqNegativeCoeff,
+  'rpm-linear-ineq-integer-solutions-condition': rpmLinearIneqIntegerSolutionsCondition,
+  'rpm-linear-ineq-all-types-mixed': rpmLinearIneqAllTypesMixed,
+  'rpm-linear-ineq-advanced-skill-up': rpmLinearIneqAdvancedSkillUp,
+
+  // -------------------------------------------------------------
+  // [중2-1] 05 일차부등식의 활용 세부 응용 유형 (RPM 2-1 p.70~79)
+  // -------------------------------------------------------------
+  'rpm-ineq-app-numbers': rpmIneqAppNumbers,
+  'rpm-ineq-app-cost-count': rpmIneqAppCostCount,
+  'rpm-ineq-app-savings-deposit': rpmIneqAppSavingsDeposit,
+  'rpm-ineq-app-average-score': rpmIneqAppAverageScore,
+  'rpm-ineq-app-pricing-plans': rpmIneqAppPricingPlans,
+  'rpm-ineq-app-group-discount': rpmIneqAppGroupDiscount,
+  'rpm-ineq-app-store-comparison': rpmIneqAppStoreComparison,
+  'rpm-ineq-app-cost-price-profit': rpmIneqAppCostPriceProfit,
+  'rpm-ineq-app-geometry': rpmIneqAppGeometry,
+  'rpm-ineq-app-salt-water-evaporate-add': rpmIneqAppSaltWaterEvaporateAdd,
+  'rpm-ineq-app-speed-round-trip-time': rpmIneqAppSpeedRoundTripTime,
+  'rpm-ineq-app-speed-shopping-station': rpmIneqAppSpeedShoppingStation,
+  'rpm-ineq-app-speed-change-midway': rpmIneqAppSpeedChangeMidway,
+  'rpm-ineq-app-all-types-mixed': rpmIneqAppAllTypesMixed,
+  'rpm-ineq-app-advanced-skill-up': rpmIneqAppAdvancedSkillUp,
+
+  // -------------------------------------------------------------
+  // [중2-1] 06 연립일차방정식 세부 응용 유형 (RPM 2-1 p.84~97)
+  // -------------------------------------------------------------
+  'rpm-sys-linear-two-vars-identify': rpmSysLinearTwoVarsIdentify,
+  'rpm-sys-linear-natural-pairs': rpmSysLinearNaturalPairs,
+  'rpm-sys-linear-given-sol-find-constant': rpmSysLinearGivenSolFindConstant,
+  'rpm-sys-linear-system-solution-concept': rpmSysLinearSystemSolutionConcept,
+  'rpm-sys-linear-given-sol-system-const': rpmSysLinearGivenSolSystemConst,
+  'rpm-sys-linear-substitution-method': rpmSysLinearSubstitutionMethod,
+  'rpm-sys-linear-addition-subtraction-method': rpmSysLinearAdditionSubtractionMethod,
+  'rpm-sys-linear-parentheses': rpmSysLinearParentheses,
+  'rpm-sys-linear-decimals-fractions': rpmSysLinearDecimalsFractions,
+  'rpm-sys-linear-abc-form': rpmSysLinearABCForm,
+  'rpm-sys-linear-satisfy-other-equation': rpmSysLinearSatisfyOtherEquation,
+  'rpm-sys-linear-variable-relation': rpmSysLinearVariableRelation,
+  'rpm-sys-linear-two-systems-common-sol': rpmSysLinearTwoSystemsCommonSol,
+  'rpm-sys-linear-faulty-observation': rpmSysLinearFaultyObservation,
+  'rpm-sys-linear-special-infinitely-many': rpmSysLinearSpecialInfinitelyMany,
+  'rpm-sys-linear-special-no-solution': rpmSysLinearSpecialNoSolution,
+  'rpm-sys-linear-repeating-decimals': rpmSysLinearRepeatingDecimals,
+  'rpm-sys-linear-all-types-mixed': rpmSysLinearAllTypesMixed,
+  'rpm-sys-linear-advanced-skill-up': rpmSysLinearAdvancedSkillUp,
+
+  // -------------------------------------------------------------
+  // [중2-1] 07 연립일차방정식의 활용 세부 응용 유형 (RPM 2-1 p.100~111)
+  // -------------------------------------------------------------
+  'rpm-sys-app-two-digit-numbers': rpmSysAppTwoDigitNumbers,
+  'rpm-sys-app-ages': rpmSysAppAges,
+  'rpm-sys-app-price-quantity': rpmSysAppPriceQuantity,
+  'rpm-sys-app-scores-rock-paper-scissors': rpmSysAppScoresRockPaperScissors,
+  'rpm-sys-app-geometry': rpmSysAppGeometry,
+  'rpm-sys-app-speed-opposite-same-track': rpmSysAppSpeedOppositeSameTrack,
+  'rpm-sys-app-speed-river-boat': rpmSysAppSpeedRiverBoat,
+  'rpm-sys-app-speed-train-bridge': rpmSysAppSpeedTrainBridge,
+  'rpm-sys-app-salt-two-solutions': rpmSysAppSaltTwoSolutions,
+  'rpm-sys-app-salt-water-evaporate-add': rpmSysAppSaltWaterEvaporateAdd,
+  'rpm-sys-app-alloy-metals': rpmSysAppAlloyMetals,
+  'rpm-sys-app-student-percent-change': rpmSysAppStudentPercentChange,
+  'rpm-sys-app-work-rate': rpmSysAppWorkRate,
+  'rpm-sys-app-cost-price-profit': rpmSysAppCostPriceProfit,
+  'rpm-sys-app-all-types-mixed': rpmSysAppAllTypesMixed,
+  'rpm-sys-app-advanced-skill-up': rpmSysAppAdvancedSkillUp,
+
 
 };
