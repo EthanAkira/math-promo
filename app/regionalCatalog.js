@@ -128,6 +128,48 @@ const zhHK = {
 
   'rpm-plane-figures-semester-mock-exam': '中學七年級下學期平面圖形綜合模擬測驗（多邊形與圓）',
 
+  // RPM 06 다면체와 회전체
+  'rpm-polyhedra-concept-classification': '多面體之概念與種類判別',
+  'rpm-polyhedra-prism-pyramid-elements': '稜柱、稜錐與稜台之面、頂點與邊數計算',
+  'rpm-polyhedra-identify-from-conditions': '依條件反求多面體名稱',
+  'rpm-polyhedra-euler-formula': '歐拉多面體公式（v-e+f=2）應用',
+  'rpm-polyhedra-regular-types-conditions': '正多面體之定義與五種正多面體判別',
+  'rpm-polyhedra-regular-face-shapes': '正多面體面之形狀與頂點聚面數',
+  'rpm-polyhedra-regular-elements-count': '正多面體頂點、邊與面之數量計算',
+  'rpm-polyhedra-cube-net-opposite-faces': '正方體展開圖與對立面判別',
+  'rpm-polyhedra-cross-section-shapes': '正方體截面多邊形形狀判別',
+  'rpm-polyhedra-dual-connections': '正多面體各面中心連接之對偶多面體',
+  'rpm-revolution-solids-types': '旋轉體之概念與種類判別',
+  'rpm-revolution-planar-to-solid': '平面圖形旋轉與旋轉體配對',
+  'rpm-revolution-cross-section-property': '旋轉體截面形狀之性質判別',
+  'rpm-revolution-cross-section-area-calc': '旋轉體截面面積計算',
+  'rpm-revolution-cone-net-central-angle': '圓錐側面展開圖扇形圓心角計算',
+  'rpm-revolution-advanced-properties': '旋轉體性質進階綜合判別（實力UP）',
+  'rpm-polyhedra-revolution-all-mixed': '多面體與旋轉體單元綜合複習',
+
+  // RPM 07 입체도형의 겉넓이와 부피
+  'rpm-solids-prism-surface-area': '稜柱之表面積計算',
+  'rpm-solids-cylinder-surface-area': '圓柱之表面積計算（2πr²+2πrh）',
+  'rpm-solids-prism-cylinder-volume': '柱體（稜柱與圓柱）之體積計算',
+  'rpm-solids-hollow-prism-surface-volume': '空心圓柱之表面積與體積計算',
+  'rpm-solids-pyramid-surface-volume': '稜錐之表面積與體積計算',
+  'rpm-solids-cone-surface-area': '圓錐之表面積計算（πr²+πrl）',
+  'rpm-solids-cone-volume': '圓錐之體積計算（1/3πr²h）',
+  'rpm-solids-truncated-corner-pyramid': '正方體切角三稜錐體積（1/6 a³）',
+  'rpm-solids-frustum-surface-volume': '錐台（圓錐台）之表面積與體積計算',
+  'rpm-solids-revolution-surface-volume': '直角三角形旋轉體表面積與體積計算',
+  'rpm-solids-sphere-surface-area': '球與半球之表面積計算（4πr²與3πr²）',
+  'rpm-solids-sphere-volume': '球與半球之體積計算（4/3πr³與2/3πr³）',
+  'rpm-solids-truncated-sphere-part': '球之切片（1/8塊等）表面積與體積',
+  'rpm-solids-cone-sphere-cylinder-ratio': '內切圓錐、球與圓柱體積比（1:2:3）',
+  'rpm-solids-container-water-level': '錐形容器之水深比與容積比計算',
+  'rpm-solids-surface-shortest-path': '立體圖形表面最短路徑（展開圖線段長）',
+  'rpm-solids-surface-volume-all-mixed': '立體圖形表面積與體積單元綜合複習',
+
+  // RPM 1-2 입체도형 총괄 모의고사
+  'rpm-solid-figures-semester-mock-exam': '中學七年級下學期立體圖形綜合模擬測驗（多面體與測量）',
+
+
 
   'common-divisors-gcd': '公因數與最高公因數', 'gcd-basic': '最高公因數基礎', 'gcd-prime-form': '利用質因數分解求最高公因數', coprime: '互質數', 'common-multiples-lcm': '公倍數與最低公倍數', 'lcm-basic': '最低公倍數基礎', 'lcm-prime-form': '利用質因數分解求最低公倍數', 'gcd-lcm-relation': '最高公因數與最低公倍數的關係', 'gcd-lcm-application': '最高公因數與最低公倍數應用', 'gcd-lcm-mixed': '最高公因數與最低公倍數綜合練習',
   'positive-negative': '正數與負數', 'integer-classification': '整數的分類', 'rational-classification': '有理數的分類', 'number-line': '數線與坐標', 'absolute-value': '絕對值', 'number-comparison': '比較數的大小', 'inequality-expression': '不等號的運用', 'integer-solutions': '符合條件的整數', 'integer-rational-mixed': '整數與有理數綜合練習', 'rational-addition': '有理數加法', 'rational-subtraction': '有理數減法', 'rational-add-subtract': '加減混合運算', 'rational-multiplication': '有理數乘法與乘方', 'rational-division': '有理數除法與倒數', 'rational-four-operations': '有理數四則混合運算', 'rational-operations-review': '有理數四則運算綜合練習',

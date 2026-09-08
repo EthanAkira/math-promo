@@ -7467,6 +7467,1121 @@ export function rpmPlaneFiguresSemesterMockExam(random) {
 }
 
 
+
+// =============================================================
+// CHAPTER 06: 다면체와 회전체 응용 (RPM 1-2 Pages 104 ~ 117)
+// =============================================================
+
+
+// [유형 01] 다면체의 뜻과 판별 (RPM #750~#755, #830)
+// 다각형인 면으로만 둘러싸인 입체도형
+export function rpmPolyhedronConceptClassification(random) {
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 참/거짓 판별
+    const items = [
+      {
+        q: '원기둥과 원뿔은 곡면으로 둘러싸여 있으므로 다면체가 아니다.',
+        qEn: 'Cylinders and cones are bounded by curved surfaces, so they are not polyhedra.',
+        ans: true,
+        expl: '다면체는 오직 다각형인 평면으로만 둘러싸인 입체도형입니다. 원기둥, 원뿔, 구 등 곡면을 포함하는 입체도형은 다면체가 아닙니다.',
+      },
+      {
+        q: '모든 면이 삼각형인 사각뿔은 칠면체이다.',
+        qEn: 'A quadrangular pyramid whose lateral faces are triangles is a heptahedron.',
+        ans: false,
+        expl: '사각뿔은 밑면 1개(사각형)와 옆면 4개(삼각형)로 이루어진 오면체(5면체)입니다.',
+      },
+      {
+        q: '다면체 중 면의 개수가 가장 적은 것은 사면체(삼각뿔)이다.',
+        qEn: 'The polyhedron with the smallest number of faces is a tetrahedron (triangular pyramid).',
+        ans: true,
+        expl: '입체도형을 이루기 위해서는 최소 4개의 면이 필요하므로 사면체(면 4개)가 가장 면의 개수가 적은 다면체입니다.',
+      },
+      {
+        q: '각뿔대의 두 밑면은 서로 평행하지만 합동은 아니다.',
+        qEn: 'The two bases of a frustum of a pyramid are parallel, but not congruent.',
+        ans: true,
+        expl: '각뿔대는 각뿔을 밑면에 평행한 평면으로 잘라 생기는 입체도형이므로 두 밑면은 평행하지만 크기가 다른 닮은 다각형입니다.',
+      },
+    ];
+    const target = pick(random, items);
+    return {
+      prompt: `다면체에 대한 다음 설명의 참/거짓을 판별하시오: "${target.q}"`,
+      promptEn: `Determine True or False: "${target.qEn}"`,
+      expression: target.q,
+      answer: target.ans ? '1' : '2',
+      choices: [
+        { value: '1', label: '참 (O)', labelEn: 'True' },
+        { value: '2', label: '거짓 (X)', labelEn: 'False' },
+      ],
+      explanation: target.expl,
+    };
+  } else {
+    // 객관식: 다음 중 다면체인 것의 개수 고르기
+    return {
+      prompt: `다음 보기 중 다면체인 것만을 있는 대로 고른 것은? ㉠ 삼각기둥  ㉡ 원기둥  ㉢ 오각뿔  ㉣ 구  ㉤ 사각뿔대  ㉥ 원뿔`,
+      promptEn: `Which of the following are polyhedra? (a) triangular prism, (b) cylinder, (c) pentagonal pyramid, (d) sphere, (e) square frustum, (f) cone`,
+      expression: `\\text{다면체: 삼각기둥, 오각뿔, 사각뿔대}`,
+      answer: '2',
+      choices: [
+        { value: '1', label: '㉠, ㉡, ㉢', labelEn: '(a), (b), (c)' },
+        { value: '2', label: '㉠, ㉢, ㉤', labelEn: '(a), (c), (e)' },
+        { value: '3', label: '㉢, ㉤, ㉥', labelEn: '(c), (e), (f)' },
+        { value: '4', label: '㉠, ㉢, ㉣, ㉤', labelEn: '(a), (c), (d), (e)' },
+      ],
+      explanation: `다면체는 다각형인 면으로만 둘러싸인 입체도형입니다. 원기둥, 구, 원뿔은 곡면을 포함하므로 다면체가 아닙니다. 따라서 다면체는 ㉠ 삼각기둥, ㉢ 오각뿔, ㉤ 사각뿔대의 3개입니다.`,
+    };
+  }
+}
+
+// [유형 02] 각기둥, 각뿔, 각뿔대의 구성요소 (RPM #756~#762)
+// n각기둥: 면 n+2, 꼭짓점 2n, 모서리 3n
+// n각뿔: 면 n+1, 꼭짓점 n+1, 모서리 2n
+// n각뿔대: 면 n+2, 꼭짓점 2n, 모서리 3n
+export function rpmPolyhedronPrismPyramidElements(random) {
+  const types = ['각기둥', '각뿔', '각뿔대'];
+  const type = pick(random, types);
+  const n = ri(random, 5, 12);
+  const koreanNums = ['', '', '', '삼', '사', '오', '육', '칠', '팔', '구', '십', '십일', '십이'];
+  const name = `${koreanNums[n]}${type}`;
+
+  let v = 0, e = 0, f = 0;
+  if (type === '각기둥' || type === '각뿔대') {
+    v = 2 * n;
+    e = 3 * n;
+    f = n + 2;
+  } else {
+    v = n + 1;
+    e = 2 * n;
+    f = n + 1;
+  }
+
+  const mode = ri(random, 1, 3);
+  if (mode === 1) {
+    // 모서리의 개수 구하기
+    return {
+      prompt: `${name}의 모서리의 개수를 구하시오.`,
+      promptEn: `Find the number of edges of a ${n}-${type}.`,
+      expression: type === '각뿔' ? `2 \\times ${n}` : `3 \\times ${n}`,
+      answer: String(e),
+      explanation: `${name}은 밑면이 ${n}각형이므로, 모서리의 개수는 ${type === '각뿔' ? `2n = 2 × ${n} = ${e}개` : `3n = 3 × ${n} = ${e}개`}입니다.`,
+    };
+  } else if (mode === 2) {
+    // 면의 개수 f와 꼭짓점의 개수 v의 합
+    const sumVF = v + f;
+    return {
+      prompt: `${name}의 꼭짓점의 개수를 v, 면의 개수를 f라 할 때, v + f의 값을 구하시오.`,
+      promptEn: `Let v be the number of vertices and f be the number of faces of a ${n}-${type}. Find v + f.`,
+      expression: `${v} + ${f}`,
+      answer: String(sumVF),
+      explanation: `${name}의 꼭짓점의 개수 v = ${v}개, 면의 개수 f = ${f}개입니다. 따라서 v + f = ${v} + ${f} = ${sumVF}입니다.`,
+    };
+  } else {
+    // 몇 면체인지 구하기
+    return {
+      prompt: `${name}은 몇 면체인지 숫자로 구하시오. (예: 육면체이면 6)`,
+      promptEn: `How many faces does a ${n}-${type} have? (Enter the number)`,
+      expression: type === '각뿔' ? `${n} + 1` : `${n} + 2`,
+      answer: String(f),
+      explanation: `${name}의 면의 개수는 ${type === '각뿔' ? `밑면 1개 + 옆면 ${n}개 = ${f}개` : `밑면 2개 + 옆면 ${n}개 = ${f}개`}이므로 ${f}면체입니다.`,
+    };
+  }
+}
+
+// [유형 03] 조건을 만족시키는 다면체 구하기 (RPM #763~#769)
+export function rpmPolyhedronIdentifyFromConditions(random) {
+  const n = ri(random, 5, 10);
+  const koreanNums = ['', '', '', '삼', '사', '오', '육', '칠', '팔', '구', '십'];
+  const mode = ri(random, 1, 3);
+
+  if (mode === 1) {
+    // 꼭짓점 수가 2n개이고, 옆면의 모양이 사다리꼴인 다면체 => n각뿔대
+    const v = 2 * n;
+    return {
+      prompt: `다음 조건을 모두 만족시키는 입체도형의 이름을 구하시오: (가) 두 밑면은 평행하다. (나) 옆면의 모양은 사다리꼴이다. (다) 꼭짓점의 개수는 ${v}개이다.`,
+      promptEn: `Identify the polyhedron satisfying: (a) two bases are parallel, (b) lateral faces are trapezoids, (c) has ${v} vertices.`,
+      expression: `\\text{꼭짓점 } 2n = ${v} \\implies n = ${n}`,
+      answer: `${koreanNums[n]}각뿔대`,
+      explanation: `옆면의 모양이 사다리꼴이고 두 밑면이 평행한 입체도형은 각뿔대입니다. 꼭짓점의 개수가 2n = ${v}개이므로 n = ${n}입니다. 따라서 구하는 입체도형은 ${koreanNums[n]}각뿔대입니다.`,
+    };
+  } else if (mode === 2) {
+    // 면의 개수가 n+1개이고, 꼭짓점의 개수가 n+1개이며 옆면이 삼각형인 다면체 => n각뿔
+    const f = n + 1;
+    return {
+      prompt: `다음 조건을 만족시키는 다면체의 이름을 구하시오: (가) 밑면은 1개이다. (나) 옆면의 모양은 이등변삼각형이다. (다) 면의 개수는 ${f}개이다.`,
+      promptEn: `Identify the polyhedron satisfying: (a) has 1 base, (b) lateral faces are isosceles triangles, (c) has ${f} faces.`,
+      expression: `n + 1 = ${f} \\implies n = ${n}`,
+      answer: `${koreanNums[n]}각뿔`,
+      explanation: `밑면이 1개이고 옆면이 삼각형인 다면체는 각뿔입니다. 면의 개수가 n + 1 = ${f}개이므로 n = ${n}입니다. 따라서 ${koreanNums[n]}각뿔입니다.`,
+    };
+  } else {
+    // 모서리의 개수가 3n개이고 옆면이 직사각형인 다면체 => n각기둥
+    const e = 3 * n;
+    return {
+      prompt: `두 밑면이 서로 평행하고 합동인 다각형이며, 옆면이 모두 직사각형인 다면체의 모서리의 개수가 ${e}개이다. 이 다면체의 이름을 구하시오.`,
+      promptEn: `A prism has two parallel and congruent bases, rectangular lateral faces, and ${e} edges. What is its name?`,
+      expression: `3n = ${e} \\implies n = ${n}`,
+      answer: `${koreanNums[n]}각기둥`,
+      explanation: `두 밑면이 평행하고 합동이며 옆면이 직사각형인 다면체는 각기둥입니다. 각기둥의 모서리의 개수는 3n = ${e}개이므로 n = ${n}입니다. 따라서 ${koreanNums[n]}각기둥입니다.`,
+    };
+  }
+}
+
+// [유형 04] 오일러 공식 (v - e + f = 2) (RPM #770~#774)
+export function rpmPolyhedronEulerFormula(random) {
+  const n = ri(random, 5, 12);
+  // v - e + f = 2
+  // n각기둥: v = 2n, e = 3n, f = n + 2 => 2n - 3n + (n + 2) = 2
+  // Let's create an arbitrary solid where two values are given, and find the third
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    const v = ri(random, 8, 20);
+    const f = ri(random, 6, 16);
+    const e = v + f - 2;
+    return {
+      prompt: `어떤 다면체의 꼭짓점의 개수가 ${v}개이고, 면의 개수가 ${f}개일 때, 오일러 공식(v - e + f = 2)을 이용하여 모서리의 개수 e를 구하시오.`,
+      promptEn: `A polyhedron has ${v} vertices and ${f} faces. Using Euler's formula v - e + f = 2, find the number of edges e.`,
+      expression: `${v} + ${f} - 2`,
+      answer: String(e),
+      explanation: `모든 다면체에 대하여 꼭짓점의 개수 v, 모서리의 개수 e, 면의 개수 f 사이에는 v - e + f = 2 가 성립합니다. 따라서 e = v + f - 2 = ${v} + ${f} - 2 = ${e}개입니다.`,
+    };
+  } else {
+    const v = ri(random, 10, 24);
+    const e = ri(random, 18, 36);
+    const f = e + 2 - v;
+    return {
+      prompt: `어떤 다면체의 꼭짓점의 개수가 ${v}개이고, 모서리의 개수가 ${e}개일 때, 이 다면체의 면의 개수 f를 구하시오.`,
+      promptEn: `A polyhedron has ${v} vertices and ${e} edges. Find the number of faces f using Euler's formula.`,
+      expression: `${e} + 2 - ${v}`,
+      answer: String(f),
+      explanation: `오일러 공식 v - e + f = 2 에 대입하면 ${v} - ${e} + f = 2 이므로, f = ${e} + 2 - ${v} = ${f}개입니다.`,
+    };
+  }
+}
+
+// [유형 05] 정다면체의 뜻과 종류 (5가지) (RPM #775~#781)
+// 정다면체가 5가지뿐인 이유 (입체각 < 360°)
+export function rpmRegularPolyhedraTypesConditions(random) {
+  const statements = [
+    {
+      q: '정다면체는 정사면체, 정육면체, 정팔면체, 정십이면체, 정이십면체의 5가지뿐이다.',
+      qEn: 'There are only 5 regular polyhedra: tetrahedron, cube, octahedron, dodecahedron, and icosahedron.',
+      ans: true,
+      expl: '입체각을 이루려면 한 꼭짓점에 모인 면의 내각의 합이 360°보다 작아야 하므로 정다면체는 정확히 5가지만 존재합니다.',
+    },
+    {
+      q: '정육각형을 면으로 하는 정다면체를 만들 수 있다.',
+      qEn: 'A regular polyhedron can be constructed using regular hexagons as faces.',
+      ans: false,
+      expl: '정육각형의 한 내각은 120°이므로 3개만 모여도 360°가 되어 입체를 이룰 수 없습니다. 따라서 정육각형으로 된 정다면체는 존재하지 않습니다.',
+    },
+    {
+      q: '각 면이 모두 합동인 정다각형으로 이루어진 다면체는 항상 정다면체이다.',
+      qEn: 'A polyhedron whose faces are all congruent regular polygons is always a regular polyhedron.',
+      ans: false,
+      expl: '각 면이 합동인 정다각형이어도 각 꼭짓점에 모인 면의 개수가 다르면 정다면체가 아닙니다. (예: 삼각기둥의 옆면을 정사각형으로 붙이거나 정사각뿔 두 개를 붙인 델타다면체)',
+    },
+    {
+      q: '정다면체의 한 꼭짓점에 모일 수 있는 면의 개수는 최소 3개이다.',
+      qEn: 'The minimum number of faces meeting at a vertex of a regular polyhedron is 3.',
+      ans: true,
+      expl: '공간에서 입체각을 형성하기 위해서는 적어도 3개의 면이 한 꼭짓점에 모여야 합니다.',
+    },
+  ];
+  const target = pick(random, statements);
+  return {
+    prompt: `정다면체에 대한 다음 설명의 참/거짓을 판별하시오: "${target.q}"`,
+    promptEn: `Determine True or False: "${target.qEn}"`,
+    expression: target.q,
+    answer: target.ans ? '1' : '2',
+    choices: [
+      { value: '1', label: '참 (O)', labelEn: 'True' },
+      { value: '2', label: '거짓 (X)', labelEn: 'False' },
+    ],
+    explanation: target.expl,
+  };
+}
+
+// [유형 06] 정다면체의 면의 모양과 한 꼭짓점에 모인 면의 개수 (RPM #782~#787)
+export function rpmRegularPolyhedraFaceShapes(random) {
+  const regulars = [
+    { name: '정사면체', face: '정삼각형', count: 3, v: 4, e: 6, f: 4 },
+    { name: '정육면체', face: '정사각형', count: 3, v: 8, e: 12, f: 6 },
+    { name: '정팔면체', face: '정삼각형', count: 4, v: 6, e: 12, f: 8 },
+    { name: '정십이면체', face: '정오각형', count: 3, v: 20, e: 30, f: 12 },
+    { name: '정이십면체', face: '정삼각형', count: 5, v: 12, e: 30, f: 20 },
+  ];
+  const target = pick(random, regulars);
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 면의 모양 묻기
+    return {
+      prompt: `${target.name}의 각 면의 모양을 고르시오.`,
+      promptEn: `What is the shape of each face of a regular ${target.name}?`,
+      expression: `\\text{면의 모양: } ${target.face}`,
+      answer: target.face === '정삼각형' ? '1' : target.face === '정사각형' ? '2' : '3',
+      choices: [
+        { value: '1', label: '정삼각형', labelEn: 'Equilateral triangle' },
+        { value: '2', label: '정사각형', labelEn: 'Square' },
+        { value: '3', label: '정오각형', labelEn: 'Regular pentagon' },
+        { value: '4', label: '정육각형', labelEn: 'Regular hexagon' },
+      ],
+      explanation: `${target.name}의 각 면의 모양은 ${target.face}입니다. (정사면체/정팔면체/정이십면체: 정삼각형, 정육면체: 정사각형, 정십이면체: 정오각형)`,
+    };
+  } else {
+    // 한 꼭짓점에 모인 면의 개수
+    return {
+      prompt: `${target.name}의 한 꼭짓점에 모인 면의 개수를 구하시오. (숫자만 입력)`,
+      promptEn: `Find the number of faces meeting at each vertex of a regular ${target.name}.`,
+      expression: String(target.count),
+      answer: String(target.count),
+      explanation: `${target.name}의 한 꼭짓점에 모인 면의 개수는 ${target.count}개입니다.`,
+    };
+  }
+}
+
+// [유형 07] 정다면체의 꼭짓점, 모서리, 면의 개수 (RPM #788~#795)
+export function rpmRegularPolyhedraElementsCount(random) {
+  const regulars = [
+    { name: '정사면체', v: 4, e: 6, f: 4 },
+    { name: '정육면체', v: 8, e: 12, f: 6 },
+    { name: '정팔면체', v: 6, e: 12, f: 8 },
+    { name: '정십이면체', v: 20, e: 30, f: 12 },
+    { name: '정이십면체', v: 12, e: 30, f: 20 },
+  ];
+  const target = pick(random, regulars);
+
+  const mode = ri(random, 1, 3);
+  if (mode === 1) {
+    // 꼭짓점의 개수
+    return {
+      prompt: `${target.name}의 꼭짓점의 개수를 구하시오.`,
+      promptEn: `Find the number of vertices of a regular ${target.name}.`,
+      expression: String(target.v),
+      answer: String(target.v),
+      explanation: `${target.name}의 꼭짓점의 개수는 ${target.v}개입니다.`,
+    };
+  } else if (mode === 2) {
+    // 모서리의 개수
+    return {
+      prompt: `${target.name}의 모서리의 개수를 구하시오.`,
+      promptEn: `Find the number of edges of a regular ${target.name}.`,
+      expression: String(target.e),
+      answer: String(target.e),
+      explanation: `${target.name}의 모서리의 개수는 ${target.e}개입니다.`,
+    };
+  } else {
+    // 모서리 e 와 꼭짓점 v의 차: e - v
+    const diff = target.e - target.v;
+    return {
+      prompt: `${target.name}의 모서리의 개수를 e, 꼭짓점의 개수를 v라 할 때, e - v의 값을 구하시오.`,
+      promptEn: `For a regular ${target.name}, let e be edges and v be vertices. Find e - v.`,
+      expression: `${target.e} - ${target.v}`,
+      answer: String(diff),
+      explanation: `${target.name}의 모서리의 개수는 ${target.e}개, 꼭짓점의 개수는 ${target.v}개입니다. 따라서 e - v = ${target.e} - ${target.v} = ${diff}입니다.`,
+    };
+  }
+}
+
+// [유형 08] 정다면체의 전개도와 마주보는 면 (RPM #796~#802)
+export function rpmCubeNetOppositeFaces(random) {
+  // 정육면체 주사위 눈 마주보는 합 = 7, 또는 전개도에서 마주보는 면 찾기
+  // 주사위 1..6 마주보는 쌍: (1, 6), (2, 5), (3, 4)
+  const diceNum = ri(random, 1, 6);
+  const oppNum = 7 - diceNum;
+
+  return {
+    prompt: `오른쪽 그림과 같은 정육면체 모양의 주사위 전개도에서 마주보는 두 면의 눈의 수의 합은 항상 7이다. 숫자 ${diceNum}이 적힌 면과 마주보는 면에 적힌 숫자를 구하시오.`,
+    promptEn: `In a net of a standard die, opposite faces sum to 7. What number is opposite to the face with ${diceNum}?`,
+    expression: `7 - ${diceNum}`,
+    answer: String(oppNum),
+    explanation: `주사위에서 마주보는 두 면의 눈의 수의 합은 항상 7입니다. 따라서 ${diceNum}이 적힌 면과 마주보는 면의 숫자는 7 - ${diceNum} = ${oppNum}입니다.`,
+  };
+}
+
+// [유형 09] 다면체의 단면의 모양 (RPM #803~#808)
+// 정육면체를 한 평면으로 자를 때 생기는 단면 (삼각형, 사각형, 오각형, 육각형 등)
+export function rpmPolyhedronCrossSectionShapes(random) {
+  return {
+    prompt: `정육면체를 하나의 평면으로 잘랐을 때 생길 수 없는 단면의 모양을 고르시오.`,
+    promptEn: `Which of the following polygon shapes CANNOT be formed by slicing a cube with a plane?`,
+    expression: `\\text{정육면체 면은 6개이므로 칠각형은 불가}`,
+    answer: '4',
+    choices: [
+      { value: '1', label: '정삼각형', labelEn: 'Equilateral triangle' },
+      { value: '2', label: '직사각형', labelEn: 'Rectangle' },
+      { value: '3', label: '육각형', labelEn: 'Hexagon' },
+      { value: '4', label: '칠각형', labelEn: 'Heptagon' },
+    ],
+    explanation: `정육면체는 6개의 면을 가지고 있으므로, 하나의 평면이 자를 수 있는 면의 최대 개수는 6개입니다. 따라서 단면은 삼각형, 사각형, 오각형, 육각형까지만 가능하며, 칠각형은 절대로 생길 수 없습니다.`,
+  };
+}
+
+// [유형 10] 정다면체의 각 면의 중심을 연결하여 만든 입체도형 (쌍대다면체) (RPM #809~#813)
+export function rpmDualPolyhedraConnections(random) {
+  const dualPairs = [
+    { orig: '정육면체', inner: '정팔면체', origF: 6, innerV: 6 },
+    { orig: '정팔면체', inner: '정육면체', origF: 8, innerV: 8 },
+    { orig: '정사면체', inner: '정사면체', origF: 4, innerV: 4 },
+    { orig: '정십이면체', inner: '정이십면체', origF: 12, innerV: 12 },
+    { orig: '정이십면체', inner: '정십이면체', origF: 20, innerV: 20 },
+  ];
+  const target = pick(random, dualPairs);
+
+  return {
+    prompt: `${target.orig}의 각 면의 중심을 연결하여 만든 입체도형의 이름을 구하시오.`,
+    promptEn: `What polyhedron is formed by connecting the centers of all faces of a ${target.orig}?`,
+    expression: `\\text{${target.orig}의 면의 수 } ${target.origF} = \\text{안쪽 입체도형의 꼭짓점의 수}`,
+    answer: target.inner,
+    explanation: `${target.orig}의 면의 개수는 ${target.origF}개이므로, 각 면의 중심을 연결하여 만든 입체도형의 꼭짓점의 개수도 ${target.origF}개가 됩니다. 꼭짓점이 ${target.origF}개인 정다면체는 ${target.inner}입니다.`,
+  };
+}
+
+// [유형 11] 회전체의 뜻과 종류 (RPM #814~#819)
+// 원기둥, 원뿔, 원뿔대, 구
+export function rpmSolidsOfRevolutionTypes(random) {
+  return {
+    prompt: `다음 보기 중 회전체인 것만을 있는 대로 고른 것은? ㉠ 원기둥  ㉡ 사각뿔  ㉢ 구  ㉣ 정육면체  ㉤ 원뿔대  ㉥ 삼각기둥`,
+    promptEn: `Which of the following are solids of revolution? (a) cylinder, (b) square pyramid, (c) sphere, (d) cube, (e) cone frustum, (f) triangular prism`,
+    expression: `\\text{회전체: 원기둥, 구, 원뿔대}`,
+    answer: '1',
+    choices: [
+      { value: '1', label: '㉠, ㉢, ㉤', labelEn: '(a), (c), (e)' },
+      { value: '2', label: '㉠, ㉡, ㉤', labelEn: '(a), (b), (e)' },
+      { value: '3', label: '㉢, ㉤, ㉥', labelEn: '(c), (e), (f)' },
+      { value: '4', label: '㉠, ㉢, ㉣, ㉤', labelEn: '(a), (c), (d), (e)' },
+    ],
+    explanation: `평면도형을 회전축을 중심으로 1회전 시켜 얻는 입체도형을 회전체라고 합니다. 원기둥(직사각형 회전), 구(반원 회전), 원뿔대(사다리꼴 회전)가 회전체입니다. 따라서 정답은 ㉠, ㉢, ㉤ 입니다.`,
+  };
+}
+
+// [유형 12] 회전체와 평면도형의 관계 (회전시켜 생기는 입체도형) (RPM #820~#824)
+export function rpmPlanarFigureToRevolutionSolid(random) {
+  const pairs = [
+    { shape: '직각삼각형의 한 직각변', solid: '원뿔', expl: '직각삼각형을 한 직각변을 회전축으로 1회전 시키면 원뿔이 생깁니다.' },
+    { shape: '직사각형의 한 변', solid: '원기둥', expl: '직사각형을 한 변을 회전축으로 1회전 시키면 원기둥이 생깁니다.' },
+    { shape: '직각사다리꼴의 수직인 변', solid: '원뿔대', expl: '직각사다리꼴을 직각인 변을 회전축으로 1회전 시키면 원뿔대가 생깁니다.' },
+    { shape: '반원의 지름', solid: '구', expl: '반원을 지름을 회전축으로 1회전 시키면 구가 생깁니다.' },
+  ];
+  const target = pick(random, pairs);
+
+  return {
+    prompt: `${target.shape}을 회전축으로 하여 1회전 시킬 때 생기는 회전체의 이름을 구하시오.`,
+    promptEn: `What solid of revolution is generated by rotating around the ${target.shape}?`,
+    expression: `\\text{생기는 회전체: } ${target.solid}`,
+    answer: target.solid,
+    explanation: target.expl,
+  };
+}
+
+// [유형 13] 회전체의 단면의 모양 (RPM #825~#829)
+// 회전축에 수직인 평면 -> 항상 원
+// 회전축을 포함하는 평면 -> 선대칭도형 (원기둥: 직사각형, 원뿔: 이등변삼각형, 원뿔대: 등변사다리꼴, 구: 원)
+export function rpmRevolutionCrossSectionProperty(random) {
+  const items = [
+    { solid: '원기둥', incPlane: '직사각형', perpPlane: '원' },
+    { solid: '원뿔', incPlane: '이등변삼각형', perpPlane: '원' },
+    { solid: '원뿔대', incPlane: '등변사다리꼴', perpPlane: '원' },
+    { solid: '구', incPlane: '원', perpPlane: '원' },
+  ];
+  const target = pick(random, items);
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    return {
+      prompt: `${target.solid}을 회전축을 포함하는 평면으로 잘랐을 때 생기는 단면의 모양을 고르시오.`,
+      promptEn: `What is the shape of the cross-section of a ${target.solid} cut by a plane containing the axis of rotation?`,
+      expression: `\\text{단면 모양: } ${target.incPlane}`,
+      answer: target.incPlane === '직사각형' ? '1' : target.incPlane === '이등변삼각형' ? '2' : target.incPlane === '등변사다리꼴' ? '3' : '4',
+      choices: [
+        { value: '1', label: '직사각형', labelEn: 'Rectangle' },
+        { value: '2', label: '이등변삼각형', labelEn: 'Isosceles triangle' },
+        { value: '3', label: '등변사다리꼴', labelEn: 'Isosceles trapezoid' },
+        { value: '4', label: '원', labelEn: 'Circle' },
+      ],
+      explanation: `${target.solid}을 회전축을 포함하는 평면으로 자르면 ${target.incPlane}이 생기며, 이는 회전축에 대하여 선대칭도형입니다.`,
+    };
+  } else {
+    return {
+      prompt: `모든 회전체를 회전축에 수직인 평면으로 잘랐을 때 생기는 단면의 모양은 항상 무엇인가?`,
+      promptEn: `What is always the shape of a cross-section of ANY solid of revolution cut perpendicular to its axis of rotation?`,
+      expression: `\\text{항상 원}`,
+      answer: '원',
+      explanation: `모든 회전체는 회전축에 수직인 평면으로 자르면 그 단면이 항상 "원"이 됩니다.`,
+    };
+  }
+}
+
+// [유형 14] 회전체의 단면의 넓이 계산 (RPM #830~#835)
+export function rpmRevolutionCrossSectionAreaCalc(random) {
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 밑면의 반지름이 r이고 높이가 h인 원뿔을 회전축을 포함하는 평면으로 자를 때 생기는 단면(이등변삼각형)의 넓이
+    // 밑변 = 2r, 높이 = h => 넓이 = (1/2) * 2r * h = r * h
+    const r = ri(random, 3, 10);
+    const h = ri(random, 6, 15);
+    const triArea = r * h;
+    return {
+      prompt: `밑면의 반지름의 길이가 ${r}cm이고 높이가 ${h}cm인 원뿔을 회전축을 포함하는 평면으로 잘랐을 때 생기는 단면의 넓이를 구하시오. (단, 단위 cm²는 생략)`,
+      promptEn: `A cone has base radius ${r} cm and height ${h} cm. Find the area of the cross-section cut by a plane containing the axis of rotation.`,
+      expression: `\\frac{1}{2} \\times (2 \\times ${r}) \\times ${h} = ${r} \\times ${h}`,
+      answer: String(triArea),
+      explanation: `회전축을 포함하는 평면으로 자른 단면은 밑변의 길이가 지름(2 × ${r} = ${2 * r}cm)이고 높이가 ${h}cm인 이등변삼각형입니다. 따라서 단면의 넓이는 (1/2) × ${2 * r} × ${h} = ${triArea}cm²입니다.`,
+    };
+  } else {
+    // 밑면의 반지름이 r이고 높이가 h인 원기둥을 회전축을 포함하는 평면으로 자른 단면(직사각형)의 넓이
+    // 가로 = 2r, 세로 = h => 넓이 = 2rh
+    const r = ri(random, 3, 8);
+    const h = ri(random, 5, 12);
+    const rectArea = 2 * r * h;
+    return {
+      prompt: `밑면의 반지름의 길이가 ${r}cm이고 높이가 ${h}cm인 원기둥을 회전축을 포함하는 평면으로 잘랐을 때 생기는 단면의 넓이를 구하시오. (단, 단위 cm²는 생략)`,
+      promptEn: `A cylinder has base radius ${r} cm and height ${h} cm. Find the area of the cross-section cut by a plane containing the axis of rotation.`,
+      expression: `(2 \\times ${r}) \\times ${h}`,
+      answer: String(rectArea),
+      explanation: `원기둥을 회전축을 포함하는 평면으로 자른 단면은 가로의 길이가 지름(2 × ${r} = ${2 * r}cm)이고 세로의 길이가 높이(${h}cm)인 직사각형입니다. 따라서 넓이는 ${2 * r} × ${h} = ${rectArea}cm²입니다.`,
+    };
+  }
+}
+
+// [유형 15] 원뿔 전개도 부채꼴의 중심각 크기 (RPM #836~#842)
+// x = 360° × (r / l)
+export function rpmConeNetSectorCentralAngle(random) {
+  // r, l such that 360 * r / l is integer
+  const pairs = [
+    { r: 2, l: 6, deg: 120 },
+    { r: 3, l: 9, deg: 120 },
+    { r: 3, l: 12, deg: 90 },
+    { r: 4, l: 12, deg: 120 },
+    { r: 2, l: 8, deg: 90 },
+    { r: 5, l: 12, deg: 150 },
+    { r: 3, l: 6, deg: 180 },
+    { r: 2, l: 5, deg: 144 },
+    { r: 5, l: 18, deg: 100 },
+    { r: 3, l: 8, deg: 135 },
+  ];
+  const target = pick(random, pairs);
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // r과 l이 주어질 때 중심각 구하기
+    return {
+      prompt: `밑면의 반지름의 길이가 ${target.r}cm이고 모선의 길이가 ${target.l}cm인 원뿔의 전개도에서 옆면을 이루는 부채꼴의 중심각의 크기를 구하시오. (단, 단위 °는 생략)`,
+      promptEn: `In the net of a cone with base radius ${target.r} cm and slant height ${target.l} cm, find the central angle of the sector forming the lateral surface.`,
+      expression: `360^\\circ \\times \\frac{${target.r}}{${target.l}}`,
+      answer: String(target.deg),
+      explanation: `부채꼴의 호의 길이는 밑면인 원의 둘레와 같습니다: 2π × ${target.l} × (x / 360) = 2π × ${target.r}. 따라서 중심각 x = 360° × (${target.r} / ${target.l}) = ${target.deg}°입니다.`,
+    };
+  } else {
+    // 중심각과 모선이 주어졌을 때 밑면의 반지름 r 구하기
+    return {
+      prompt: `모선의 길이가 ${target.l}cm이고 옆면 부채꼴의 중심각의 크기가 ${target.deg}°인 원뿔의 밑면의 반지름의 길이를 구하시오. (단, 단위 cm는 생략)`,
+      promptEn: `A cone has slant height ${target.l} cm and lateral sector central angle ${target.deg}°. Find the radius of its base.`,
+      expression: `${target.l} \\times \\frac{${target.deg}}{360}`,
+      answer: String(target.r),
+      explanation: `밑면의 반지름 r = (모선) × (중심각 / 360°) = ${target.l} × (${target.deg} / 360) = ${target.r}cm입니다.`,
+    };
+  }
+}
+
+// [유형 16] 회전체의 성질 심화 판별 (실력 UP) (RPM #843~#849)
+export function rpmRevolutionSolidsAdvancedProperties(random) {
+  const items = [
+    {
+      q: '구는 회전축이 무수히 많다.',
+      qEn: 'A sphere has infinitely many axes of rotation.',
+      ans: true,
+      expl: '구의 중심을 지나는 모든 직선은 구의 회전축이 되므로 회전축이 무수히 많습니다.',
+    },
+    {
+      q: '원기둥을 밑면에 비스듬한 평면으로 자를 때 생기는 단면은 타원이다.',
+      qEn: 'The cross-section formed by cutting a cylinder with a plane inclined to its base is an ellipse.',
+      ans: true,
+      expl: '원기둥을 밑면과 평행하지 않고 비스듬하게 자르면 단면은 타원이 됩니다.',
+    },
+    {
+      q: '원뿔대는 두 밑면이 평행하므로 회전축을 포함하는 단면은 직사각형이다.',
+      qEn: 'Since the two bases of a cone frustum are parallel, the cross-section containing the rotation axis is a rectangle.',
+      ans: false,
+      expl: '원뿔대를 회전축을 포함하는 평면으로 자른 단면은 두 밑변의 길이가 다른 "등변사다리꼴"입니다.',
+    },
+    {
+      q: '구를 중심을 지나는 평면으로 자를 때 단면의 넓이가 가장 크다.',
+      qEn: 'The cross-sectional area of a sphere is maximized when the cutting plane passes through the center of the sphere.',
+      ans: true,
+      expl: '구의 중심을 지나는 평면으로 자르면 단면인 원의 반지름이 구의 반지름과 같아져 단면의 넓이가 최대(대원)가 됩니다.',
+    },
+  ];
+  const target = pick(random, items);
+  return {
+    prompt: `회전체의 성질에 대한 다음 설명의 참/거짓을 판별하시오: "${target.q}"`,
+    promptEn: `Determine True or False: "${target.qEn}"`,
+    expression: target.q,
+    answer: target.ans ? '1' : '2',
+    choices: [
+      { value: '1', label: '참 (O)', labelEn: 'True' },
+      { value: '2', label: '거짓 (X)', labelEn: 'False' },
+    ],
+    explanation: target.expl,
+  };
+}
+
+// [단원 종합] 다면체와 회전체 전 유형 혼합
+export function rpmPolyhedronRevolutionAllMixed(random) {
+  const generators = [
+    rpmPolyhedronConceptClassification,
+    rpmPolyhedronPrismPyramidElements,
+    rpmPolyhedronIdentifyFromConditions,
+    rpmPolyhedronEulerFormula,
+    rpmRegularPolyhedraTypesConditions,
+    rpmRegularPolyhedraFaceShapes,
+    rpmRegularPolyhedraElementsCount,
+    rpmCubeNetOppositeFaces,
+    rpmPolyhedronCrossSectionShapes,
+    rpmDualPolyhedraConnections,
+    rpmSolidsOfRevolutionTypes,
+    rpmPlanarFigureToRevolutionSolid,
+    rpmRevolutionCrossSectionProperty,
+    rpmRevolutionCrossSectionAreaCalc,
+    rpmConeNetSectorCentralAngle,
+    rpmRevolutionSolidsAdvancedProperties,
+  ];
+  return pick(random, generators)(random);
+}
+
+// =============================================================
+// CHAPTER 07: 입체도형의 겉넓이와 부피 응용 (RPM 1-2 Pages 122 ~ 138)
+// =============================================================
+
+
+// [유형 01] 각기둥의 겉넓이 (RPM #880~#885, #953)
+// 겉넓이 = 2 * (밑넓이) + (옆넓이)
+export function rpmPrismSurfaceAreaCalc(random) {
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 밑면이 직각삼각형인 삼각기둥
+    // 직각삼각형 두 변: a, b (빗변 c)
+    const triples = [
+      [3, 4, 5],
+      [5, 12, 13],
+      [6, 8, 10],
+    ];
+    const [a, b, c] = pick(random, triples);
+    const h = ri(random, 6, 12);
+    const baseArea = (a * b) / 2;
+    const basePerimeter = a + b + c;
+    const sideArea = basePerimeter * h;
+    const totalArea = 2 * baseArea + sideArea;
+
+    return {
+      prompt: `밑면이 직각을 낀 두 변의 길이가 각각 ${a}cm, ${b}cm이고 빗변의 길이가 ${c}cm인 직각삼각형이고, 높이가 ${h}cm인 삼각기둥의 겉넓이를 구하시오. (단, 단위 cm²는 생략)`,
+      promptEn: `Find the surface area of a triangular prism whose base is a right triangle with legs ${a} cm, ${b} cm, hypotenuse ${c} cm, and height ${h} cm.`,
+      expression: `2 \\times \\left(\\frac{1}{2} \\times ${a} \\times ${b}\\right) + (${a} + ${b} + ${c}) \\times ${h}`,
+      answer: String(totalArea),
+      explanation: `1) 밑넓이 = (1/2) × ${a} × ${b} = ${baseArea}cm²\n2) 밑면의 둘레 = ${a} + ${b} + ${c} = ${basePerimeter}cm이므로 옆넓이 = ${basePerimeter} × ${h} = ${sideArea}cm²\n3) 겉넓이 = 2 × (밑넓이) + (옆넓이) = 2 × ${baseArea} + ${sideArea} = ${totalArea}cm²입니다.`,
+    };
+  } else {
+    // 직육면체의 겉넓이
+    const a = ri(random, 3, 7);
+    const b = ri(random, 4, 8);
+    const c = ri(random, 5, 10);
+    const totalArea = 2 * (a * b + b * c + c * a);
+
+    return {
+      prompt: `가로의 길이가 ${a}cm, 세로의 길이가 ${b}cm, 높이가 ${c}cm인 직육면체의 겉넓이를 구하시오. (단, 단위 cm²는 생략)`,
+      promptEn: `Find the surface area of a rectangular cuboid with dimensions ${a} cm by ${b} cm by ${c} cm.`,
+      expression: `2 \\times (${a} \\times ${b} + ${b} \\times ${c} + ${c} \\times ${a})`,
+      answer: String(totalArea),
+      explanation: `직육면체의 겉넓이는 2 × (ab + bc + ca) 입니다. 2 × (${a} × ${b} + ${b} × ${c} + ${c} × ${a}) = 2 × (${a * b} + ${b * c} + ${c * a}) = 2 × ${a * b + b * c + c * a} = ${totalArea}cm²입니다.`,
+    };
+  }
+}
+
+// [유형 02] 원기둥의 겉넓이 (RPM #886~#891)
+// S = 2πr² + 2πrh = 2πr(r + h)
+export function rpmCylinderSurfaceAreaCalc(random) {
+  const r = ri(random, 3, 8);
+  const h = ri(random, 5, 12);
+  const k = 2 * r * (r + h); // S = kπ
+
+  return {
+    prompt: `밑면의 반지름의 길이가 ${r}cm이고 높이가 ${h}cm인 원기둥의 겉넓이가 kπ cm²일 때, 상수 k의 값을 구하시오.`,
+    promptEn: `A cylinder has base radius ${r} cm and height ${h} cm. If its surface area is kπ cm², find k.`,
+    expression: `2\\pi \\times ${r}^2 + 2\\pi \\times ${r} \\times ${h} = 2\\pi \\times ${r} \\times (${r} + ${h})`,
+    answer: String(k),
+    explanation: `원기둥의 겉넓이 S = 2 × (밑넓이) + (옆넓이) = 2 × (π × ${r}²) + (2π × ${r} × ${h}) = ${2 * r * r}π + ${2 * r * h}π = ${k}π cm²입니다. 따라서 k = ${k}입니다.`,
+  };
+}
+
+// [유형 03] 기둥(각기둥, 원기둥)의 부피 (RPM #892~#899)
+// V = (밑넓이) * h
+export function rpmPrismCylinderVolumeCalc(random) {
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 원기둥의 부피 V = kπ
+    const r = ri(random, 3, 9);
+    const h = ri(random, 4, 12);
+    const k = r * r * h;
+    return {
+      prompt: `밑면의 반지름의 길이가 ${r}cm이고 높이가 ${h}cm인 원기둥의 부피가 kπ cm³일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `A cylinder has base radius ${r} cm and height ${h} cm. If its volume is kπ cm³, find k.`,
+      expression: `\\pi \\times ${r}^2 \\times ${h}`,
+      answer: String(k),
+      explanation: `원기둥의 부피 V = (밑넓이) × (높이) = π × ${r}² × ${h} = ${k}π cm³입니다. 따라서 k = ${k}입니다.`,
+    };
+  } else {
+    // 사각기둥(밑면 사다리꼴)의 부피
+    const top = ri(random, 4, 8);
+    const bottom = top + ri(random, 2, 6);
+    const trapH = ri(random, 4, 6);
+    const prismH = ri(random, 5, 10);
+    const baseArea = ((top + bottom) * trapH) / 2;
+    const volume = baseArea * prismH;
+
+    return {
+      prompt: `밑면이 윗변의 길이가 ${top}cm, 아랫변의 길이가 ${bottom}cm, 높이가 ${trapH}cm인 사다리꼴이고, 기둥의 높이가 ${prismH}cm인 사각기둥의 부피를 구하시오. (단, 단위 cm³는 생략)`,
+      promptEn: `Find the volume of a prism whose base is a trapezoid with top base ${top} cm, bottom base ${bottom} cm, base height ${trapH} cm, and prism height ${prismH} cm.`,
+      expression: `\\frac{(${top} + ${bottom}) \\times ${trapH}}{2} \\times ${prismH}`,
+      answer: String(volume),
+      explanation: `1) 밑면인 사다리꼴의 넓이 = (${top} + ${bottom}) × ${trapH} / 2 = ${baseArea}cm²\n2) 기둥의 부피 = (밑넓이) × (높이) = ${baseArea} × ${prismH} = ${volume}cm³입니다.`,
+    };
+  }
+}
+
+// [유형 04] 구멍이 뚫린 기둥의 겉넓이와 부피 (RPM #900~#905)
+export function rpmHollowPrismSurfaceVolume(random) {
+  // 바깥 반지름 R, 안쪽 구멍 반지름 r, 높이 h인 원기둥 관
+  const r = 3;
+  const R = 6;
+  const h = ri(random, 8, 12);
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 부피 V = π(R² - r²)h
+    const k = (R * R - r * r) * h;
+    return {
+      prompt: `밑면의 바깥쪽 반지름이 ${R}cm이고 안쪽에 반지름 ${r}cm인 원기둥 모양의 구멍이 뚫려 있는 높이 ${h}cm인 입체도형의 부피가 kπ cm³일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `A hollow cylinder has outer radius ${R} cm, inner radius ${r} cm, and height ${h} cm. If its volume is kπ cm³, find k.`,
+      expression: `\\pi \\times (${R}^2 - ${r}^2) \\times ${h}`,
+      answer: String(k),
+      explanation: `부피 = (큰 원기둥의 부피) - (작은 원기둥의 부피) = π × ${R}² × ${h} - π × ${r}² × ${h} = (${R * R} - ${r * r}) × ${h} × π = ${k}π cm³이므로 k = ${k}입니다.`,
+    };
+  } else {
+    // 겉넓이 = 2 * (밑면 도넛 넓이) + (바깥 옆넓이) + (안쪽 옆넓이)
+    // 밑면 2개: 2 * π(R² - r²) = 2 * (36 - 9)π = 54π
+    // 바깥 옆넓이: 2πRh = 2π * 6 * h = 12hπ
+    // 안쪽 옆넓이: 2πrh = 2π * 3 * h = 6hπ
+    // 총 겉넓이 k = 54 + 18h
+    const base2 = 2 * (R * R - r * r);
+    const lateral = 2 * (R + r) * h;
+    const totalK = base2 + lateral;
+    return {
+      prompt: `밑면의 바깥 반지름이 ${R}cm이고 안쪽에 반지름 ${r}cm인 원기둥 모양의 구멍이 뚫려 있는 높이 ${h}cm인 입체도형의 겉넓이가 kπ cm²일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `Find the surface area coefficient k of a hollow cylinder with outer radius ${R} cm, inner radius ${r} cm, and height ${h} cm (Total area = kπ cm²).`,
+      expression: `2 \\times \\pi (${R}^2 - ${r}^2) + 2\\pi \\times ${R} \\times ${h} + 2\\pi \\times ${r} \\times ${h}`,
+      answer: String(totalK),
+      explanation: `1) 밑면 2개의 넓이 = 2 × π × (${R}² - ${r}²) = 2 × (${R * R - r * r})π = ${base2}π cm²\n2) 바깥쪽 옆넓이 = 2π × ${R} × ${h} = ${2 * R * h}π cm²\n3) 안쪽 구멍의 옆넓이 = 2π × ${r} × ${h} = ${2 * r * h}π cm²\n4) 따라서 총 겉넓이는 (${base2} + ${2 * R * h} + ${2 * r * h})π = ${totalK}π cm²이므로 k = ${totalK}입니다.`,
+    };
+  }
+}
+
+// [유형 05] 각뿔의 겉넓이와 부피 (RPM #906~#913)
+// 겉넓이 = 밑넓이 + 옆넓이, 부피 = (1/3) * 밑넓이 * 높이
+export function rpmPyramidSurfaceAreaVolume(random) {
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 정사각뿔의 겉넓이: 한 변 a, 옆면 이등변삼각형 높이 s
+    const a = ri(random, 6, 12);
+    const s = ri(random, 8, 15);
+    const baseArea = a * a;
+    const sideArea = 4 * ((a * s) / 2);
+    const totalArea = baseArea + sideArea;
+
+    return {
+      prompt: `밑면이 한 변의 길이가 ${a}cm인 정사각형이고, 옆면을 이루는 이등변삼각형의 높이가 ${s}cm인 정사각뿔의 겉넓이를 구하시오. (단, 단위 cm²는 생략)`,
+      promptEn: `Find the surface area of a square pyramid with base side ${a} cm and lateral triangle slant height ${s} cm.`,
+      expression: `${a}^2 + 4 \\times \\left(\\frac{1}{2} \\times ${a} \\times ${s}\\right)`,
+      answer: String(totalArea),
+      explanation: `1) 밑넓이 = ${a} × ${a} = ${baseArea}cm²\n2) 옆넓이 = 4 × (1/2 × ${a} × ${s}) = ${sideArea}cm²\n3) 겉넓이 = ${baseArea} + ${sideArea} = ${totalArea}cm²입니다.`,
+    };
+  } else {
+    // 정사각뿔의 부피 V = (1/3) * a² * h
+    const a = ri(random, 3, 6) * 2; // 짝수
+    const h = ri(random, 2, 5) * 3; // 3의 배수
+    const vol = (a * a * h) / 3;
+
+    return {
+      prompt: `밑면이 한 변의 길이가 ${a}cm인 정사각형이고 높이가 ${h}cm인 정사각뿔의 부피를 구하시오. (단, 단위 cm³는 생략)`,
+      promptEn: `Find the volume of a square pyramid with base side length ${a} cm and height ${h} cm.`,
+      expression: `\\frac{1}{3} \\times ${a}^2 \\times ${h}`,
+      answer: String(vol),
+      explanation: `각뿔의 부피 공식은 V = (1/3) × (밑넓이) × (높이) 입니다. V = (1/3) × (${a} × ${a}) × ${h} = (1/3) × ${a * a} × ${h} = ${vol}cm³입니다.`,
+    };
+  }
+}
+
+// [유형 06] 원뿔의 겉넓이 (RPM #914~#918)
+// S = πr² + πrl
+export function rpmConeSurfaceAreaCalc(random) {
+  const r = ri(random, 3, 8);
+  const l = r + ri(random, 3, 8); // 모선의 길이
+  const baseK = r * r;
+  const sideK = r * l;
+  const totalK = baseK + sideK;
+
+  return {
+    prompt: `밑면의 반지름의 길이가 ${r}cm이고 모선의 길이가 ${l}cm인 원뿔의 겉넓이가 kπ cm²일 때, 상수 k의 값을 구하시오.`,
+    promptEn: `A cone has base radius ${r} cm and slant height ${l} cm. If its surface area is kπ cm², find k.`,
+    expression: `\\pi \\times ${r}^2 + \\pi \\times ${r} \\times ${l}`,
+    answer: String(totalK),
+    explanation: `원뿔의 겉넓이 S = (밑넓이) + (옆넓이) = πr² + πrl = π × ${r}² + π × ${r} × ${l} = ${baseK}π + ${sideK}π = ${totalK}π cm²입니다. 따라서 k = ${totalK}입니다.`,
+  };
+}
+
+// [유형 07] 원뿔의 부피 (RPM #919~#923)
+// V = (1/3)πr²h
+export function rpmConeVolumeCalc(random) {
+  const r = ri(random, 3, 9);
+  const h = ri(random, 2, 6) * 3; // 3의 배수
+  const k = (r * r * h) / 3;
+
+  return {
+    prompt: `밑면의 반지름의 길이가 ${r}cm이고 높이가 ${h}cm인 원뿔의 부피가 kπ cm³일 때, 상수 k의 값을 구하시오.`,
+    promptEn: `A cone has base radius ${r} cm and height ${h} cm. If its volume is kπ cm³, find k.`,
+    expression: `\\frac{1}{3} \\pi \\times ${r}^2 \\times ${h}`,
+    answer: String(k),
+    explanation: `원뿔의 부피 공식은 V = (1/3)πr²h 입니다. V = (1/3) × π × ${r}² × ${h} = (1/3) × π × ${r * r} × ${h} = ${k}π cm³이므로 k = ${k}입니다.`,
+  };
+}
+
+// [유형 08] 정육면체/직육면체에서 삼각뿔 잘라내기 (RPM #924~#925)
+// 한 모퉁이를 잘라낸 삼각뿔의 부피 = (1/6) * a * b * c
+export function rpmTruncatedCornerPyramidVolume(random) {
+  const a = ri(random, 4, 10); // 정육면체 한 모서리
+  // 모퉁이 세 모서리가 모두 a인 삼각뿔의 부피 = (1/3) * (1/2 * a * a) * a = (1/6) a³
+  // Or general dimensions: cut corner x, y, z
+  const x = a;
+  const y = a;
+  const z = a;
+  const cubeVol = a * a * a;
+  // Let's use a nice multiple of 6 for a
+  const sideList = [6, 12];
+  const side = pick(random, sideList);
+  const cornerVol = (side * side * side) / 6;
+  const remainVol = side * side * side - cornerVol;
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 잘라낸 삼각뿔의 부피
+    return {
+      prompt: `한 모서리의 길이가 ${side}cm인 정육면체의 한 꼭짓점에서 세 모서리의 중점을 지나도록 평면으로 잘라낼 때 생기는 삼각뿔의 부피를 구하시오. (단, 중점까지의 거리는 ${side / 2}cm, 단위 cm³는 생략)`,
+      promptEn: `A corner of a cube with edge length ${side} cm is sliced off through the midpoints of three concurrent edges (length ${side / 2} cm). Find the volume of this small triangular pyramid.`,
+      expression: `\\frac{1}{3} \\times \\left(\\frac{1}{2} \\times ${side / 2} \\times ${side / 2}\\right) \\times ${side / 2}`,
+      answer: String(Math.round(((side / 2) * (side / 2) * (side / 2)) / 6)),
+      explanation: `잘라낸 삼각뿔의 세 모서리는 각각 ${side / 2}cm이므로 직교합니다. 부피 V = (1/3) × (1/2 × ${side / 2} × ${side / 2}) × (${side / 2}) = ${Math.round(((side / 2) * (side / 2) * (side / 2)) / 6)}cm³입니다.`,
+    };
+  } else {
+    // 정육면체의 한 꼭짓점을 포함하는 세 변 전체로 만든 삼각뿔의 부피: (1/6) side³
+    return {
+      prompt: `한 모서리의 길이가 ${side}cm인 정육면체 ABCD-EFGH에서 꼭짓점 B, D, G를 이어서 만든 삼각뿔 C-BDG의 부피를 구하시오. (단, 단위 cm³는 생략)`,
+      promptEn: `In a cube of edge ${side} cm, find the volume of the corner triangular pyramid C-BDG formed by vertices B, D, G with apex C.`,
+      expression: `\\frac{1}{6} \\times ${side}^3`,
+      answer: String(cornerVol),
+      explanation: `삼각뿔 C-BDG는 밑면이 직각이등변삼각형 △BCD(넓이: 1/2 × ${side} × ${side})이고 높이가 CG = ${side}cm인 삼각뿔입니다. 따라서 부피 V = (1/3) × (1/2 × ${side}²) × ${side} = (1/6) × ${side}³ = ${cornerVol}cm³입니다.`,
+    };
+  }
+}
+
+// [유형 09] 뿔대의 겉넓이와 부피 (RPM #926~#929)
+// 부피 = 큰 뿔 - 작은 뿔
+export function rpmFrustumSurfaceAreaVolume(random) {
+  // 원뿔대: 아랫 밑면 반지름 R = 6, 윗 밑면 반지름 r = 3
+  // 작은 뿔 높이 h1 = 4, 큰 뿔 높이 h2 = 8, 뿔대 높이 h = 4
+  // 큰 뿔 부피 = (1/3) * π * 36 * 8 = 96π
+  // 작은 뿔 부피 = (1/3) * π * 9 * 4 = 12π
+  // 뿔대 부피 = 96π - 12π = 84π
+  const r = 3;
+  const R = 6;
+  const hFrustum = 4;
+  const smallVolK = (r * r * 4) / 3; // 12
+  const bigVolK = (R * R * 8) / 3; // 96
+  const frustumVolK = bigVolK - smallVolK; // 84
+
+  return {
+    prompt: `아랫면의 반지름이 ${R}cm, 윗면의 반지름이 ${r}cm, 높이가 ${hFrustum}cm인 원뿔대의 부피가 kπ cm³일 때, 상수 k의 값을 구하시오. (단, 원래 원뿔의 높이는 8cm)`,
+    promptEn: `A cone frustum has bottom radius ${R} cm, top radius ${r} cm, and height ${hFrustum} cm (cut from a cone of height 8 cm). If its volume is kπ cm³, find k.`,
+    expression: `\\frac{1}{3}\\pi \\times ${R}^2 \\times 8 - \\frac{1}{3}\\pi \\times ${r}^2 \\times 4`,
+    answer: String(frustumVolK),
+    explanation: `원뿔대의 부피 = (큰 원뿔의 부피) - (작은 원뿔의 부피) = (1/3 × π × ${R}² × 8) - (1/3 × π × ${r}² × 4) = ${bigVolK}π - ${smallVolK}π = ${frustumVolK}π cm³이므로 k = ${frustumVolK}입니다.`,
+  };
+}
+
+// [유형 10] 회전체의 겉넓이와 부피 (RPM #930~#933)
+// 직각삼각형 1회전 -> 원뿔
+export function rpmRevolutionSolidSurfaceVolume(random) {
+  const triples = [
+    { r: 3, h: 4, l: 5 },
+    { r: 6, h: 8, l: 10 },
+    { r: 5, h: 12, l: 13 },
+  ];
+  const t = pick(random, triples);
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 부피 V = (1/3)πr²h
+    const volK = (t.r * t.r * t.h) / 3;
+    return {
+      prompt: `밑변의 길이가 ${t.r}cm이고 높이가 ${t.h}cm인 직각삼각형을 높이를 회전축으로 하여 1회전 시켰을 때 생기는 회전체의 부피가 kπ cm³이다. 상수 k의 값을 구하시오.`,
+      promptEn: `A right triangle with base ${t.r} cm and height ${t.h} cm is rotated 360° around its height. If the resulting solid has volume kπ cm³, find k.`,
+      expression: `\\frac{1}{3} \\pi \\times ${t.r}^2 \\times ${t.h}`,
+      answer: String(volK),
+      explanation: `직각삼각형을 한 직각변을 축으로 회전시키면 밑면의 반지름이 ${t.r}cm이고 높이가 ${t.h}cm인 원뿔이 됩니다. 부피 V = (1/3) × π × ${t.r}² × ${t.h} = ${volK}π cm³이므로 k = ${volK}입니다.`,
+    };
+  } else {
+    // 겉넓이 S = πr² + πrl
+    const totalK = t.r * t.r + t.r * t.l;
+    return {
+      prompt: `밑변의 길이가 ${t.r}cm, 높이가 ${t.h}cm, 빗변이 ${t.l}cm인 직각삼각형을 높이를 회전축으로 하여 1회전 시켰을 때 생기는 회전체의 겉넓이가 kπ cm²이다. 상수 k의 값을 구하시오.`,
+      promptEn: `A right triangle with legs ${t.r} cm, ${t.h} cm, and hypotenuse ${t.l} cm is rotated 360° around its height leg. If the surface area is kπ cm², find k.`,
+      expression: `\\pi \\times ${t.r}^2 + \\pi \\times ${t.r} \\times ${t.l}`,
+      answer: String(totalK),
+      explanation: `생기는 회전체는 반지름 ${t.r}cm, 모선 ${t.l}cm인 원뿔입니다. 겉넓이 S = π × ${t.r}² + π × ${t.r} × ${t.l} = ${t.r * t.r}π + ${t.r * t.l}π = ${totalK}π cm²이므로 k = ${totalK}입니다.`,
+    };
+  }
+}
+
+// [유형 11] 구와 반구의 겉넓이 (RPM #934~#937)
+// 구: S = 4πr², 반구: S = 3πr²
+export function rpmSphereSurfaceAreaCalc(random) {
+  const r = ri(random, 3, 10);
+  const mode = ri(random, 1, 2);
+
+  if (mode === 1) {
+    // 구의 겉넓이
+    const k = 4 * r * r;
+    return {
+      prompt: `반지름의 길이가 ${r}cm인 구의 겉넓이가 kπ cm²일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `The surface area of a sphere of radius ${r} cm is kπ cm². Find k.`,
+      expression: `4\\pi \\times ${r}^2`,
+      answer: String(k),
+      explanation: `구의 겉넓이 공식은 S = 4πr² 입니다. S = 4 × π × ${r}² = ${k}π cm²이므로 k = ${k}입니다.`,
+    };
+  } else {
+    // 반구의 겉넓이 (곡면 2πr² + 밑면 πr² = 3πr²)
+    const k = 3 * r * r;
+    return {
+      prompt: `반지름의 길이가 ${r}cm인 반구의 겉넓이가 kπ cm²일 때, 상수 k의 값을 구하시오. (단, 잘린 밑면 원의 넓이 포함)`,
+      promptEn: `Find the total surface area coefficient k of a solid hemisphere of radius ${r} cm (Total area = kπ cm²).`,
+      expression: `2\\pi \\times ${r}^2 + \\pi \\times ${r}^2 = 3\\pi \\times ${r}^2`,
+      answer: String(k),
+      explanation: `반구의 겉넓이는 곡면 부분(2πr²)과 잘린 밑면 원의 넓이(πr²)의 합이므로 S = 3πr² = 3 × π × ${r}² = ${k}π cm²입니다. 따라서 k = ${k}입니다.`,
+    };
+  }
+}
+
+// [유형 12] 구와 반구의 부피 (RPM #938~#941)
+// 구: V = (4/3)πr³, 반구: V = (2/3)πr³
+export function rpmSphereVolumeCalc(random) {
+  const rList = [3, 6, 9];
+  const r = pick(random, rList);
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 구의 부피
+    const k = (4 * Math.pow(r, 3)) / 3;
+    return {
+      prompt: `반지름의 길이가 ${r}cm인 구의 부피가 kπ cm³일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `The volume of a sphere with radius ${r} cm is kπ cm³. Find k.`,
+      expression: `\\frac{4}{3} \\pi \\times ${r}^3`,
+      answer: String(k),
+      explanation: `구의 부피 공식은 V = (4/3)πr³ 입니다. V = (4/3) × π × ${r}³ = ${k}π cm³이므로 k = ${k}입니다.`,
+    };
+  } else {
+    // 반구의 부피
+    const k = (2 * Math.pow(r, 3)) / 3;
+    return {
+      prompt: `반지름의 길이가 ${r}cm인 반구의 부피가 kπ cm³일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `Find the volume coefficient k of a hemisphere with radius ${r} cm (Volume = kπ cm³).`,
+      expression: `\\frac{2}{3} \\pi \\times ${r}^3`,
+      answer: String(k),
+      explanation: `반구의 부피는 구 부피의 절반이므로 V = (2/3)πr³ = (2/3) × π × ${r}³ = ${k}π cm³입니다. 따라서 k = ${k}입니다.`,
+    };
+  }
+}
+
+// [유형 13] 구의 일부분(1/8 조각 등)을 잘라낸 입체도형 (RPM #942~#945)
+export function rpmTruncatedSpherePartSurfaceVolume(random) {
+  // 반지름 r인 구의 1/8을 잘라낸 입체도형 (남은 부분 7/8 또는 잘라낸 1/8 조각)
+  // 반지름 r = 6
+  // 1/8 조각:
+  // 부피 = (1/8) * (4/3 * π * r³) = (1/6) * π * 216 = 36π
+  // 겉넓이 = (1/8) * 4πr² + 3 * (사분원 넓이: 1/4 * πr²) = (1/2)πr² + (3/4)πr² = (5/4)πr²
+  const r = 6;
+  const volPart = (1 / 6) * Math.pow(r, 3); // 36
+  const areaPart = (5 / 4) * Math.pow(r, 2); // (5/4) * 36 = 45
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 1/8 조각의 부피
+    return {
+      prompt: `반지름의 길이가 ${r}cm인 구의 (1/8)에 해당하는 조각의 부피가 kπ cm³일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `Find the volume coefficient k of a one-eighth (1/8) sector of a sphere of radius ${r} cm (Volume = kπ cm³).`,
+      expression: `\\frac{1}{8} \\times \\left(\\frac{4}{3} \\pi \\times ${r}^3\\right)`,
+      answer: String(volPart),
+      explanation: `구 전체의 부피는 (4/3) × π × ${r}³ = 288π cm³입니다. 1/8 조각의 부피는 288π / 8 = ${volPart}π cm³이므로 k = ${volPart}입니다.`,
+    };
+  } else {
+    // 1/8 조각의 겉넓이
+    return {
+      prompt: `반지름의 길이가 ${r}cm인 구의 (1/8)에 해당하는 조각의 겉넓이가 kπ cm²일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `Find the surface area coefficient k of a one-eighth slice of a sphere of radius ${r} cm (Surface area = kπ cm²).`,
+      expression: `\\frac{1}{8} \\times (4\\pi \\times ${r}^2) + 3 \\times \\left(\\frac{1}{4} \\pi \\times ${r}^2\\right)`,
+      answer: String(areaPart),
+      explanation: `1) 구면 부분의 넓이 = (1/8) × (4π × ${r}²) = (1/2) × 36π = 18π cm²\n2) 평면 부분(사분원 3개)의 넓이 = 3 × (1/4 × π × ${r}²) = 3 × 9π = 27π cm²\n3) 따라서 총 겉넓이는 18π + 27π = ${areaPart}π cm²이므로 k = ${areaPart}입니다.`,
+    };
+  }
+}
+
+// [유형 14] 원기둥, 구, 원뿔의 부피의 비 (1 : 2 : 3) (RPM #946~#952)
+export function rpmConeSphereCylinderRatio(random) {
+  // 밑면의 지름과 높이가 모두 2r로 같은 원기둥 안에 구와 원뿔이 꼭 맞게 들어감
+  // 원뿔 : 구 : 원기둥 = 1 : 2 : 3
+  const sphereVol = ri(random, 2, 8) * 18; // 36, 54, 72, etc. (multiple of 2)
+  const coneVol = sphereVol / 2;
+  const cylinderVol = coneVol * 3;
+
+  const mode = ri(random, 1, 2);
+  if (mode === 1) {
+    // 구의 부피가 주어졌을 때 원기둥의 부피 구하기
+    return {
+      prompt: `오른쪽 그림과 같이 원기둥 안에 구와 원뿔이 꼭 맞게 들어 있다. 구의 부피가 ${sphereVol}π cm³일 때, 원기둥의 부피가 kπ cm³이다. 상수 k의 값을 구하시오.`,
+      promptEn: `A sphere and a cone fit snugly inside a cylinder. If the sphere's volume is ${sphereVol}π cm³, find the cylinder's volume kπ cm³ (find k).`,
+      expression: `${sphereVol} \\times \\frac{3}{2}`,
+      answer: String(cylinderVol),
+      explanation: `원기둥에 꼭 맞는 원뿔, 구, 원기둥의 부피의 비는 항상 1 : 2 : 3 입니다. 구의 부피가 ${sphereVol}π cm³이므로 원뿔의 부피는 ${coneVol}π cm³, 원기둥의 부피는 3 × ${coneVol}π = ${cylinderVol}π cm³입니다. 따라서 k = ${cylinderVol}입니다.`,
+    };
+  } else {
+    // 구의 부피가 주어졌을 때 원뿔의 부피 구하기
+    return {
+      prompt: `원기둥 안에 구와 원뿔이 꼭 맞게 들어 있을 때, 구의 부피가 ${sphereVol}π cm³이다. 이 안에 들어 있는 원뿔의 부피가 kπ cm³일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `A sphere and a cone fit snugly in a cylinder. If the sphere volume is ${sphereVol}π cm³, find the cone's volume coefficient k.`,
+      expression: `\\frac{${sphereVol}}{2}`,
+      answer: String(coneVol),
+      explanation: `원뿔과 구의 부피의 비는 1 : 2 입니다. 따라서 원뿔의 부피 = (구의 부피) / 2 = ${sphereVol}π / 2 = ${coneVol}π cm³이므로 k = ${coneVol}입니다.`,
+    };
+  }
+}
+
+// [유형 15] 그릇에 담긴 물의 부피와 높이 (RPM #964~#966)
+export function rpmContainerWaterLevelVolume(random) {
+  // 높이가 H인 원뿔 모양 그릇에 깊이가 H/2 또는 H/3 만큼 물이 차 있을 때
+  // 닮음비 1 : 2 => 부피비 1 : 8
+  // 전체 용량 V일 때 물의 부피 = V / 8, 더 채워야 할 물의 부피 = 7/8 V
+  const totalVol = 8 * ri(random, 5, 15); // multiple of 8
+  const waterVol = totalVol / 8;
+  const neededVol = totalVol - waterVol;
+
+  return {
+    prompt: `원뿔 모양의 그릇에 높이의 (1/2)까지 물을 채웠다. 이 그릇에 가득 채울 수 있는 전체 물의 부피가 ${totalVol}mL일 때, 그릇을 가득 채우기 위해 더 부어야 하는 물의 양을 구하시오. (단, 단위 mL는 생략)`,
+    promptEn: `A conical vessel is filled with water to 1/2 of its total depth. If the full capacity is ${totalVol} mL, how much more water is needed to fill the vessel completely?`,
+    expression: `${totalVol} \\times \\left(1 - \\left(\\frac{1}{2}\\right)^3\\right)`,
+    answer: String(neededVol),
+    explanation: `물과 그릇 전체는 닮음비가 1 : 2인 닮은 입체도형입니다. 부피비는 닮음비의 세제곱이므로 1³ : 2³ = 1 : 8 입니다. 따라서 현재 채워진 물의 양은 전체의 1/8인 ${waterVol}mL이고, 더 부어야 하는 물의 양은 전체의 7/8인 ${totalVol} - ${waterVol} = ${neededVol}mL입니다.`,
+  };
+}
+
+// [유형 16] 입체도형 표면 위의 최단 거리 (실력 UP) (RPM #967, #980~#983)
+export function rpmSolidSurfaceShortestPath(random) {
+  // 원기둥 옆면을 한 바퀴 돌아 A에서 B(A 바로 위 꼭짓점)까지의 최단거리
+  // 전개도 직사각형에서 가로 = 2πr, 세로 = h
+  // 피타고라스 삼각형: 가로 2πr = a, 세로 h = b => 최단거리 = c
+  // RPM에서는 정육면체 모서리를 지나는 최단거리 또는 원뿔 옆면 최단거리:
+  // 정육면체 한 모서리 a=4, A에서 맞은편 G까지 2개 면을 지나 이동할 때 최단거리:
+  // 전개도에서 가로 2a, 세로 a 직각삼각형 대각선
+  // 또는 원뿔에서 모선 l = 12, 밑면 r = 2 => 중심각 x = 360 * 2 / 12 = 60°
+  // A에서 모선 한 바퀴 돌아 다시 A로 오는 최단 거리 = 정삼각형이므로 선분 길이 = l = 12
+  const l = ri(random, 6, 15);
+  // r = l / 6 => 중심각 60도, 정삼각형
+  return {
+    prompt: `밑면의 반지름의 길이가 ${l}cm이고 모선의 길이가 ${6 * l}cm인 원뿔의 전개도에서 옆면 부채꼴의 중심각의 크기는 60°이다. 모선 OA 위의 점 A에서 출발하여 원뿔의 옆면을 한 바퀴 돌아 다시 점 A로 돌아오는 실의 최단 길이를 구하시오. (단, 모선의 길이는 ${6 * l}cm, 단위 cm는 생략)`,
+    promptEn: `On a cone with slant height ${6 * l} cm and lateral sector central angle 60°, find the shortest path length wrapped around the cone from point A back to A.`,
+    expression: `${6 * l}`,
+    answer: String(6 * l),
+    explanation: `입체도형의 옆면을 돌아가는 최단거리는 전개도 상에서 두 점을 잇는 선분의 길이입니다. 전개도에서 부채꼴의 중심각이 60°이고 양 변(모선)의 길이가 각각 ${6 * l}cm이므로, 점 A와 A'을 잇는 삼각형은 정삼각형이 됩니다. 따라서 최단 길이는 모선의 길이와 같은 ${6 * l}cm입니다.`,
+  };
+}
+
+// [단원 종합] 입체도형의 겉넓이와 부피 전 유형 혼합
+export function rpmSolidsSurfaceVolumeAllMixed(random) {
+  const generators = [
+    rpmPrismSurfaceAreaCalc,
+    rpmCylinderSurfaceAreaCalc,
+    rpmPrismCylinderVolumeCalc,
+    rpmHollowPrismSurfaceVolume,
+    rpmPyramidSurfaceAreaVolume,
+    rpmConeSurfaceAreaCalc,
+    rpmConeVolumeCalc,
+    rpmTruncatedCornerPyramidVolume,
+    rpmFrustumSurfaceAreaVolume,
+    rpmRevolutionSolidSurfaceVolume,
+    rpmSphereSurfaceAreaCalc,
+    rpmSphereVolumeCalc,
+    rpmTruncatedSpherePartSurfaceVolume,
+    rpmConeSphereCylinderRatio,
+    rpmContainerWaterLevelVolume,
+    rpmSolidSurfaceShortestPath,
+  ];
+  return pick(random, generators)(random);
+}
+
+
+
+
+// [중1-2 입체도형 총괄 모의고사]
+export function rpmSolidFiguresSemesterMockExam(random) {
+  const allMixed = [
+    // 06 다면체와 회전체
+    rpmPolyhedronConceptClassification,
+    rpmPolyhedronPrismPyramidElements,
+    rpmPolyhedronIdentifyFromConditions,
+    rpmPolyhedronEulerFormula,
+    rpmRegularPolyhedraTypesConditions,
+    rpmRegularPolyhedraFaceShapes,
+    rpmRegularPolyhedraElementsCount,
+    rpmCubeNetOppositeFaces,
+    rpmPolyhedronCrossSectionShapes,
+    rpmDualPolyhedraConnections,
+    rpmSolidsOfRevolutionTypes,
+    rpmPlanarFigureToRevolutionSolid,
+    rpmRevolutionCrossSectionProperty,
+    rpmRevolutionCrossSectionAreaCalc,
+    rpmConeNetSectorCentralAngle,
+    rpmRevolutionSolidsAdvancedProperties,
+    // 07 입체도형의 겉넓이와 부피
+    rpmPrismSurfaceAreaCalc,
+    rpmCylinderSurfaceAreaCalc,
+    rpmPrismCylinderVolumeCalc,
+    rpmHollowPrismSurfaceVolume,
+    rpmPyramidSurfaceAreaVolume,
+    rpmConeSurfaceAreaCalc,
+    rpmConeVolumeCalc,
+    rpmTruncatedCornerPyramidVolume,
+    rpmFrustumSurfaceAreaVolume,
+    rpmRevolutionSolidSurfaceVolume,
+    rpmSphereSurfaceAreaCalc,
+    rpmSphereVolumeCalc,
+    rpmTruncatedSpherePartSurfaceVolume,
+    rpmConeSphereCylinderRatio,
+    rpmContainerWaterLevelVolume,
+    rpmSolidSurfaceShortestPath,
+  ];
+  return pick(random, allMixed)(random);
+}
+
+
+
 export const RPM_ADVANCED_ENGINES = {
   // 01 소인수분해 RPM 세부 유형 (RPM 1-1 Pages 10~15)
   'rpm-prime-prop-closest': rpmPrimePropClosest,
@@ -7861,5 +8976,52 @@ export const RPM_ADVANCED_ENGINES = {
   // 중 1-2 평면도형 종합 실전 총괄 모의고사
   // -------------------------------------------------------------
   'rpm-plane-figures-semester-mock-exam': rpmPlaneFiguresSemesterMockExam,
+
+  // -------------------------------------------------------------
+  // 06 다면체와 회전체 세부 응용 유형 (RPM 1-2 p.104~117)
+  // -------------------------------------------------------------
+  'rpm-polyhedra-concept-classification': rpmPolyhedronConceptClassification,
+  'rpm-polyhedra-prism-pyramid-elements': rpmPolyhedronPrismPyramidElements,
+  'rpm-polyhedra-identify-from-conditions': rpmPolyhedronIdentifyFromConditions,
+  'rpm-polyhedra-euler-formula': rpmPolyhedronEulerFormula,
+  'rpm-polyhedra-regular-types-conditions': rpmRegularPolyhedraTypesConditions,
+  'rpm-polyhedra-regular-face-shapes': rpmRegularPolyhedraFaceShapes,
+  'rpm-polyhedra-regular-elements-count': rpmRegularPolyhedraElementsCount,
+  'rpm-polyhedra-cube-net-opposite-faces': rpmCubeNetOppositeFaces,
+  'rpm-polyhedra-cross-section-shapes': rpmPolyhedronCrossSectionShapes,
+  'rpm-polyhedra-dual-connections': rpmDualPolyhedraConnections,
+  'rpm-revolution-solids-types': rpmSolidsOfRevolutionTypes,
+  'rpm-revolution-planar-to-solid': rpmPlanarFigureToRevolutionSolid,
+  'rpm-revolution-cross-section-property': rpmRevolutionCrossSectionProperty,
+  'rpm-revolution-cross-section-area-calc': rpmRevolutionCrossSectionAreaCalc,
+  'rpm-revolution-cone-net-central-angle': rpmConeNetSectorCentralAngle,
+  'rpm-revolution-advanced-properties': rpmRevolutionSolidsAdvancedProperties,
+  'rpm-polyhedra-revolution-all-mixed': rpmPolyhedronRevolutionAllMixed,
+
+  // -------------------------------------------------------------
+  // 07 입체도형의 겉넓이와 부피 세부 응용 유형 (RPM 1-2 p.122~138)
+  // -------------------------------------------------------------
+  'rpm-solids-prism-surface-area': rpmPrismSurfaceAreaCalc,
+  'rpm-solids-cylinder-surface-area': rpmCylinderSurfaceAreaCalc,
+  'rpm-solids-prism-cylinder-volume': rpmPrismCylinderVolumeCalc,
+  'rpm-solids-hollow-prism-surface-volume': rpmHollowPrismSurfaceVolume,
+  'rpm-solids-pyramid-surface-volume': rpmPyramidSurfaceAreaVolume,
+  'rpm-solids-cone-surface-area': rpmConeSurfaceAreaCalc,
+  'rpm-solids-cone-volume': rpmConeVolumeCalc,
+  'rpm-solids-truncated-corner-pyramid': rpmTruncatedCornerPyramidVolume,
+  'rpm-solids-frustum-surface-volume': rpmFrustumSurfaceAreaVolume,
+  'rpm-solids-revolution-surface-volume': rpmRevolutionSolidSurfaceVolume,
+  'rpm-solids-sphere-surface-area': rpmSphereSurfaceAreaCalc,
+  'rpm-solids-sphere-volume': rpmSphereVolumeCalc,
+  'rpm-solids-truncated-sphere-part': rpmTruncatedSpherePartSurfaceVolume,
+  'rpm-solids-cone-sphere-cylinder-ratio': rpmConeSphereCylinderRatio,
+  'rpm-solids-container-water-level': rpmContainerWaterLevelVolume,
+  'rpm-solids-surface-shortest-path': rpmSolidSurfaceShortestPath,
+  'rpm-solids-surface-volume-all-mixed': rpmSolidsSurfaceVolumeAllMixed,
+
+  // -------------------------------------------------------------
+  // 중 1-2 입체도형 종합 실전 총괄 모의고사
+  // -------------------------------------------------------------
+  'rpm-solid-figures-semester-mock-exam': rpmSolidFiguresSemesterMockExam,
 'rpm-geo-semester-one-mock-exam': rpmGeoSemesterOneMockExam,
 };

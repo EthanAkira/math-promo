@@ -76,6 +76,41 @@ import {
   rpmRollingCircleTrackArea,
   rpmCircleSectorAllTypesMixed,
   rpmPlaneFiguresSemesterMockExam,
+  rpmPolyhedronConceptClassification,
+  rpmPolyhedronPrismPyramidElements,
+  rpmPolyhedronIdentifyFromConditions,
+  rpmPolyhedronEulerFormula,
+  rpmRegularPolyhedraTypesConditions,
+  rpmRegularPolyhedraFaceShapes,
+  rpmRegularPolyhedraElementsCount,
+  rpmCubeNetOppositeFaces,
+  rpmPolyhedronCrossSectionShapes,
+  rpmDualPolyhedraConnections,
+  rpmSolidsOfRevolutionTypes,
+  rpmPlanarFigureToRevolutionSolid,
+  rpmRevolutionCrossSectionProperty,
+  rpmRevolutionCrossSectionAreaCalc,
+  rpmConeNetSectorCentralAngle,
+  rpmRevolutionSolidsAdvancedProperties,
+  rpmPolyhedronRevolutionAllMixed,
+  rpmPrismSurfaceAreaCalc,
+  rpmCylinderSurfaceAreaCalc,
+  rpmPrismCylinderVolumeCalc,
+  rpmHollowPrismSurfaceVolume,
+  rpmPyramidSurfaceAreaVolume,
+  rpmConeSurfaceAreaCalc,
+  rpmConeVolumeCalc,
+  rpmTruncatedCornerPyramidVolume,
+  rpmFrustumSurfaceAreaVolume,
+  rpmRevolutionSolidSurfaceVolume,
+  rpmSphereSurfaceAreaCalc,
+  rpmSphereVolumeCalc,
+  rpmTruncatedSpherePartSurfaceVolume,
+  rpmConeSphereCylinderRatio,
+  rpmContainerWaterLevelVolume,
+  rpmSolidSurfaceShortestPath,
+  rpmSolidsSurfaceVolumeAllMixed,
+  rpmSolidFiguresSemesterMockExam,
 } from '../rpmAppliedEngine.js';
 import { CORE_GEOMETRY_UNITS } from './geometryProblemEngine.js';
 import { ADVANCED_GEOMETRY_UNITS } from './advancedGeometryEngine.js';
@@ -657,6 +692,10 @@ export const UNIT_CATEGORY_LABELS = {
   'rpm-polygons-applied': { label: '[RPM 세부응용] 04 다각형', labelEn: '[Applied] 04 Polygons' },
   'rpm-circles-sectors-applied': { label: '[RPM 세부응용] 05 원과 부채꼴', labelEn: '[Applied] 05 Circles & Sectors' },
   'rpm-plane-mock': { label: '[총괄평가] 중학 1-2 평면도형 종합 모의고사', labelEn: '[Mock Exam] Grade 7-2 Plane Figures Comprehensive' },
+  'rpm-polyhedra-revolution-applied': { label: '[RPM 세부응용] 06 다면체와 회전체', labelEn: '[Applied] 06 Polyhedra & Revolution' },
+  'rpm-solids-measures-applied': { label: '[RPM 세부응용] 07 입체도형의 겉넓이와 부피', labelEn: '[Applied] 07 Solids Surface & Volume' },
+  'rpm-solid-mock': { label: '[총괄평가] 중학 1-2 입체도형 종합 모의고사', labelEn: '[Mock Exam] Grade 7-2 Solid Figures Comprehensive' },
+
 
   'basic-figures-intro': { label: '기본 도형 (점·선·면·각)', labelEn: 'Basic Figures (Points, Lines & Angles)' },
   'core-geometry': { label: '평면도형 기초', labelEn: 'Core Plane Geometry' },
@@ -777,6 +816,51 @@ export const RPM_PLANE_FIGURES_MOCK_UNITS = [
   { id: 'rpm-plane-figures-semester-mock-exam', label: '[평면도형 총괄평가] 중1-2 평면도형 종합 실전 모의고사', description: '다각형과 원과 부채꼴 전 범위를 망라한 중단원 및 실력UP 총괄 모의고사', en: ['Grade 7-2 Plane Figures Comprehensive Mock Exam', 'Comprehensive mock exam covering all topics in Polygons, Circles, and Sectors'], make: rpmPlaneFiguresSemesterMockExam },
 ];
 
+export const RPM_POLYHEDRA_REVOLUTION_APPLIED_UNITS = [
+  { id: 'rpm-polyhedra-concept-classification', label: '[다면체·회전체 응용 01] 다면체의 뜻과 판별', description: '다각형인 면으로만 둘러싸인 입체도형 판별 및 최소 사면체 성질', en: ['Polyhedra & Revolution Type 01: Polyhedron Concept & Classification', 'Identify polyhedra bounded purely by polygons and minimum face rules'], make: rpmPolyhedronConceptClassification },
+  { id: 'rpm-polyhedra-prism-pyramid-elements', label: '[다면체·회전체 응용 02] 각기둥·각뿔·각뿔대의 구성요소', description: 'n각기둥, n각뿔, n각뿔대의 면, 꼭짓점, 모서리의 개수 공식 계산', en: ['Polyhedra & Revolution Type 02: Prism, Pyramid & Frustum Elements', 'Formulas for faces, vertices, and edges of n-gonal prisms, pyramids, and frustums'], make: rpmPolyhedronPrismPyramidElements },
+  { id: 'rpm-polyhedra-identify-from-conditions', label: '[다면체·회전체 응용 03] 조건을 만족시키는 다면체 구하기', description: '면의 모양, 밑면의 수, 꼭짓점·모서리 수로부터 다면체 이름 역추적', en: ['Polyhedra & Revolution Type 03: Identifying Polyhedra from Conditions', 'Reverse lookup of polyhedron name from face shapes, base counts, and vertex/edge counts'], make: rpmPolyhedronIdentifyFromConditions },
+  { id: 'rpm-polyhedra-euler-formula', label: '[다면체·회전체 응용 04] 오일러 공식 (v - e + f = 2)', description: '다면체의 꼭짓점(v), 모서리(e), 면(f)의 오일러 다면체 정리 활용', en: ['Polyhedra & Revolution Type 04: Euler Characteristic Formula (v - e + f = 2)', 'Apply Euler polyhedron theorem to calculate unknown vertices, edges, or faces'], make: rpmPolyhedronEulerFormula },
+  { id: 'rpm-polyhedra-regular-types-conditions', label: '[다면체·회전체 응용 05] 정다면체의 뜻과 조건 (5가지)', description: '각 면이 합동인 정다각형이고 꼭짓점당 면 수가 같은 5가지 정다면체 원리', en: ['Polyhedra & Revolution Type 05: Regular Polyhedra Definition & 5 Types', 'Criteria for the exactly 5 Platonic solids based on vertex angle sums < 360°'], make: rpmRegularPolyhedraTypesConditions },
+  { id: 'rpm-polyhedra-regular-face-shapes', label: '[다면체·회전체 응용 06] 정다면체 면의 모양과 꼭짓점당 면 수', description: '정삼각형(4,8,20면체), 정사각형(6면체), 정오각형(12면체) 및 모인 면 수', en: ['Polyhedra & Revolution Type 06: Regular Polyhedra Face Shapes & Vertex Counts', 'Face geometries (triangle, square, pentagon) and number of faces meeting at each vertex'], make: rpmRegularPolyhedraFaceShapes },
+  { id: 'rpm-polyhedra-regular-elements-count', label: '[다면체·회전체 응용 07] 정다면체 꼭짓점·모서리·면의 개수', description: '5개 정다면체의 v, e, f 개수 암기 및 계산 활용', en: ['Polyhedra & Revolution Type 07: Counting Vertices, Edges, and Faces of Regular Solids', 'Calculation and relations between v, e, and f of Platonic solids'], make: rpmRegularPolyhedraElementsCount },
+  { id: 'rpm-polyhedra-cube-net-opposite-faces', label: '[다면체·회전체 응용 08] 정다면체의 전개도와 마주보는 면', description: '정육면체 주사위 전개도에서 마주보는 면의 눈의 합(7) 및 위치 판별', en: ['Polyhedra & Revolution Type 08: Cube Nets & Opposite Faces', 'Identify opposite faces and die pip sums (sum = 7) on unfolded cube nets'], make: rpmCubeNetOppositeFaces },
+  { id: 'rpm-polyhedra-cross-section-shapes', label: '[다면체·회전체 응용 09] 다면체의 단면의 모양', description: '정육면체를 평면으로 자를 때 생길 수 있는 다각형 단면(삼각형~육각형, 칠각형 불가)', en: ['Polyhedra & Revolution Type 09: Cross-Sections of Polyhedra', 'Possible polygon cross-sections of a sliced cube (triangles up to hexagons; heptagons impossible)'], make: rpmPolyhedronCrossSectionShapes },
+  { id: 'rpm-polyhedra-dual-connections', label: '[다면체·회전체 응용 10] 정다면체 면의 중심 연결 입체 (쌍대다면체)', description: '정다면체 각 면의 중심을 연결하여 생기는 쌍대 정다면체 관계 판별', en: ['Polyhedra & Revolution Type 10: Dual Polyhedra by Connecting Face Centers', 'Determine dual Platonic solids formed by joining centers of adjacent faces'], make: rpmDualPolyhedraConnections },
+  { id: 'rpm-revolution-solids-types', label: '[다면체·회전체 응용 11] 회전체의 뜻과 종류', description: '원기둥, 원뿔, 원뿔대, 구 등 회전축을 중심으로 1회전 시켜 생기는 입체 판별', en: ['Polyhedra & Revolution Type 11: Solids of Revolution Definition & Types', 'Classification of cylinder, cone, frustum, and sphere formed by revolving plane shapes'], make: rpmSolidsOfRevolutionTypes },
+  { id: 'rpm-revolution-planar-to-solid', label: '[다면체·회전체 응용 12] 평면도형의 회전과 회전체 매칭', description: '직사각형, 직각삼각형, 사다리꼴, 반원 회전 시 생성되는 입체도형 매칭', en: ['Polyhedra & Revolution Type 12: Revolving Planar Figures into 3D Solids', 'Matching rectangles, right triangles, trapezoids, and semicircles to their revolved solids'], make: rpmPlanarFigureToRevolutionSolid },
+  { id: 'rpm-revolution-cross-section-property', label: '[다면체·회전체 응용 13] 회전체의 단면의 성질', description: '회전축에 수직인 단면(원)과 회전축을 포함하는 단면(선대칭도형) 성질', en: ['Polyhedra & Revolution Type 13: Cross-Section Properties of Revolved Solids', 'Perpendicular cuts are circles; axial cuts are line-symmetric congruent figures'], make: rpmRevolutionCrossSectionProperty },
+  { id: 'rpm-revolution-cross-section-area-calc', label: '[다면체·회전체 응용 14] 회전체의 단면의 넓이 계산', description: '원뿔의 이등변삼각형 단면, 원기둥의 직사각형 단면 넓이 공식 계산', en: ['Polyhedra & Revolution Type 14: Cross-Sectional Area Calculations', 'Calculate area of axial triangle sections in cones and rectangle sections in cylinders'], make: rpmRevolutionCrossSectionAreaCalc },
+  { id: 'rpm-revolution-cone-net-central-angle', label: '[다면체·회전체 응용 15] 원뿔 전개도 부채꼴의 중심각 크기', description: '밑면 반지름 r과 모선 l로부터 옆면 부채꼴 중심각 x = 360° × (r / l) 계산', en: ['Polyhedra & Revolution Type 15: Cone Lateral Net Sector Central Angle', 'Compute central angle x = 360° × (r / l) from base radius r and slant height l'], make: rpmConeNetSectorCentralAngle },
+  { id: 'rpm-revolution-advanced-properties', label: '[다면체·회전체 응용 16] 회전체의 성질 심화 판별 (실력UP)', description: '구의 무수히 많은 회전축, 대원 단면, 비스듬한 단면 타원 등 심화 정오 판별', en: ['Polyhedra & Revolution Type 16: Advanced Properties of Solids of Revolution', 'Sphere infinite axes, great circle maximum area, and inclined cylindrical ellipse sections'], make: rpmRevolutionSolidsAdvancedProperties },
+  { id: 'rpm-polyhedra-revolution-all-mixed', label: '[다면체·회전체 종합] 다면체와 회전체 전 유형 실전 혼합', description: '다면체와 회전체 단원 16개 세부 핵심 유형 무작위 실전 출제 세트', en: ['Polyhedra & Revolution Comprehensive: All 16 Types Mixed', 'Randomized practice set covering all 16 polyhedra and revolution applied problem types'], make: rpmPolyhedronRevolutionAllMixed },
+];
+
+export const RPM_SOLIDS_MEASURES_APPLIED_UNITS = [
+  { id: 'rpm-solids-prism-surface-area', label: '[겉넓이와 부피 응용 01] 각기둥의 겉넓이', description: '밑면이 삼각형, 사각형인 각기둥의 겉넓이(2×밑넓이 + 옆넓이) 계산', en: ['Solids Surface & Volume Type 01: Prism Surface Area', 'Compute surface area of triangular and rectangular prisms (2×base + lateral area)'], make: rpmPrismSurfaceAreaCalc },
+  { id: 'rpm-solids-cylinder-surface-area', label: '[겉넓이와 부피 응용 02] 원기둥의 겉넓이', description: 'S = 2πr² + 2πrh = 2πr(r + h) 공식을 활용한 원기둥 겉넓이 계산', en: ['Solids Surface & Volume Type 02: Cylinder Surface Area', 'Calculate surface area of a cylinder using S = 2πr² + 2πrh'], make: rpmCylinderSurfaceAreaCalc },
+  { id: 'rpm-solids-prism-cylinder-volume', label: '[겉넓이와 부피 응용 03] 기둥(각기둥, 원기둥)의 부피', description: '밑넓이 × 높이 공식을 이용한 사각기둥 및 원기둥 부피 계산', en: ['Solids Surface & Volume Type 03: Prism & Cylinder Volume', 'Calculate volume of prisms and cylinders using V = base area × height'], make: rpmPrismCylinderVolumeCalc },
+  { id: 'rpm-solids-hollow-prism-surface-volume', label: '[겉넓이와 부피 응용 04] 구멍이 뚫린 기둥의 겉넓이와 부피', description: '원기둥 구멍이 뚫린 기둥의 도넛형 밑넓이, 바깥/안쪽 옆넓이 및 부피 계산', en: ['Solids Surface & Volume Type 04: Hollow Cylinder Surface Area & Volume', 'Surface area (outer + inner + 2 bases) and volume of hollow cylinder tubes'], make: rpmHollowPrismSurfaceVolume },
+  { id: 'rpm-solids-pyramid-surface-volume', label: '[겉넓이와 부피 응용 05] 각뿔의 겉넓이와 부피', description: '정사각뿔의 겉넓이(밑넓이+이등변삼각형 4개) 및 부피(1/3 × 밑넓이 × 높이)', en: ['Solids Surface & Volume Type 05: Pyramid Surface Area & Volume', 'Square pyramid surface area (base + 4 triangles) and volume (1/3 × base × height)'], make: rpmPyramidSurfaceAreaVolume },
+  { id: 'rpm-solids-cone-surface-area', label: '[겉넓이와 부피 응용 06] 원뿔의 겉넓이', description: '밑넓이(πr²) + 옆넓이(πrl) 공식을 이용한 원뿔의 겉넓이 계산', en: ['Solids Surface & Volume Type 06: Cone Surface Area', 'Compute cone total surface area S = πr² + πrl using base radius and slant height'], make: rpmConeSurfaceAreaCalc },
+  { id: 'rpm-solids-cone-volume', label: '[겉넓이와 부피 응용 07] 원뿔의 부피', description: 'V = (1/3)πr²h 공식을 이용한 원뿔의 부피 계산', en: ['Solids Surface & Volume Type 07: Cone Volume Formula', 'Calculate cone volume using V = (1/3)πr²h'], make: rpmConeVolumeCalc },
+  { id: 'rpm-solids-truncated-corner-pyramid', label: '[겉넓이와 부피 응용 08] 정육면체 모퉁이를 자른 삼각뿔의 부피', description: '정육면체 꼭짓점에서 세 변을 잘라낸 삼각뿔(1/6 a³) 및 남은 입체 부피', en: ['Solids Surface & Volume Type 08: Corner Truncated Pyramid Volume', 'Volume of a corner triangular pyramid cut from a cube (V = 1/6 a³)'], make: rpmTruncatedCornerPyramidVolume },
+  { id: 'rpm-solids-frustum-surface-volume', label: '[겉넓이와 부피 응용 09] 뿔대(원뿔대)의 겉넓이와 부피', description: '큰 뿔의 부피에서 작은 뿔의 부피를 뺀 뿔대의 부피 및 옆면 넓이 계산', en: ['Solids Surface & Volume Type 09: Frustum Volume & Surface Area', 'Calculate frustum volume by subtracting small cone from large cone'], make: rpmFrustumSurfaceAreaVolume },
+  { id: 'rpm-solids-revolution-surface-volume', label: '[겉넓이와 부피 응용 10] 회전체의 겉넓이와 부피', description: '직각삼각형 회전체(원뿔)의 겉넓이와 부피 동시 계산', en: ['Solids Surface & Volume Type 10: Revolved Solid Surface Area & Volume', 'Surface area and volume of right triangle revolved solids (cones)'], make: rpmRevolutionSolidSurfaceVolume },
+  { id: 'rpm-solids-sphere-surface-area', label: '[겉넓이와 부피 응용 11] 구와 반구의 겉넓이', description: '구(4πr²) 및 반구(곡면 2πr² + 밑면 πr² = 3πr²)의 겉넓이 계산', en: ['Solids Surface & Volume Type 11: Sphere & Hemisphere Surface Area', 'Compute surface area of sphere (4πr²) and solid hemisphere (3πr²)'], make: rpmSphereSurfaceAreaCalc },
+  { id: 'rpm-solids-sphere-volume', label: '[겉넓이와 부피 응용 12] 구와 반구의 부피', description: '구(4/3 πr³) 및 반구(2/3 πr³)의 부피 공식 계산', en: ['Solids Surface & Volume Type 12: Sphere & Hemisphere Volume', 'Calculate volume of sphere (4/3 πr³) and hemisphere (2/3 πr³)'], make: rpmSphereVolumeCalc },
+  { id: 'rpm-solids-truncated-sphere-part', label: '[겉넓이와 부피 응용 13] 구의 일부분(1/8 조각 등)의 겉넓이와 부피', description: '구의 1/8 조각 입체도형의 구면(1/8) + 사분원 3개 겉넓이 및 부피 계산', en: ['Solids Surface & Volume Type 13: Sliced Sphere Sector (1/8 Chunk) Measures', 'Surface area (spherical wedge + 3 quarter-circle planes) and volume of 1/8 sphere'], make: rpmTruncatedSpherePartSurfaceVolume },
+  { id: 'rpm-solids-cone-sphere-cylinder-ratio', label: '[겉넓이와 부피 응용 14] 원뿔·구·원기둥의 부피의 비 (1 : 2 : 3)', description: '동일 지름과 높이를 갖는 원뿔, 구, 원기둥의 부피비 1 : 2 : 3 활용 문제', en: ['Solids Surface & Volume Type 14: Cone, Sphere & Cylinder Volume Ratio (1:2:3)', 'Solve snug-fit inscribed volume ratios: cone (1) : sphere (2) : cylinder (3)'], make: rpmConeSphereCylinderRatio },
+  { id: 'rpm-solids-container-water-level', label: '[겉넓이와 부피 응용 15] 그릇에 담긴 물의 부피와 높이', description: '원뿔 그릇의 깊이비 1:2와 부피비 1:8을 이용한 물의 양 역추적', en: ['Solids Surface & Volume Type 15: Conical Container Water Volume & Depth Ratio', 'Apply cubic scale factor (1:8 volume ratio for 1:2 depth) to water level calculations'], make: rpmContainerWaterLevelVolume },
+  { id: 'rpm-solids-surface-shortest-path', label: '[겉넓이와 부피 응용 16] 입체도형 표면 위의 최단 거리 (실력UP)', description: '원뿔 옆면 전개도(부채꼴) 상에서 두 점을 잇는 직선 선분 최단거리 계산', en: ['Solids Surface & Volume Type 16: Shortest Path on Solid Surface (Unfolded Net)', 'Find shortest wrapped string path across lateral surfaces using unfolded nets'], make: rpmSolidSurfaceShortestPath },
+  { id: 'rpm-solids-surface-volume-all-mixed', label: '[겉넓이와 부피 종합] 입체도형의 겉넓이와 부피 전 유형 혼합', description: '입체도형의 겉넓이와 부피 단원 16개 핵심 유형 무작위 실전 출제 세트', en: ['Solids Surface & Volume Comprehensive: All 16 Types Mixed', 'Randomized practice set covering all 16 solid figure measurement applied types'], make: rpmSolidsSurfaceVolumeAllMixed },
+];
+
+export const RPM_SOLID_FIGURES_MOCK_UNITS = [
+  { id: 'rpm-solid-figures-semester-mock-exam', label: '[입체도형 총괄평가] 중1-2 입체도형 종합 실전 모의고사', description: '다면체와 회전체, 입체도형의 겉넓이와 부피 전 범위를 망라한 중단원 및 실력UP 총괄 모의고사', en: ['Grade 7-2 Solid Figures Comprehensive Mock Exam', 'Comprehensive mock exam covering all topics in Polyhedra, Revolution Solids, Surface Area, and Volume'], make: rpmSolidFiguresSemesterMockExam },
+];
+
+
 
 
 export const BASIC_FIGURE_UNITS = withDifficultyTier([
@@ -803,6 +887,9 @@ export const BASIC_FIGURE_UNITS = withDifficultyTier([
   ...RPM_POLYGONS_APPLIED_UNITS,
   ...RPM_CIRCLES_SECTORS_APPLIED_UNITS,
   ...RPM_PLANE_FIGURES_MOCK_UNITS,
+  ...RPM_POLYHEDRA_REVOLUTION_APPLIED_UNITS,
+  ...RPM_SOLIDS_MEASURES_APPLIED_UNITS,
+  ...RPM_SOLID_FIGURES_MOCK_UNITS,
 ]);
 
 export function findBasicFigureUnit(unitId) {
