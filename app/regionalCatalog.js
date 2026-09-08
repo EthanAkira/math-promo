@@ -219,6 +219,45 @@ const zhHK = {
   'rpm-rat-dec-all-mixed': '有理數與循環小數單元全類型實戰綜合複習',
   'rpm-rat-dec-advanced-skill-up': '有理數與循環小數最高難度實力UP進階題',
 
+  // -------------------------------------------------------------
+  // RPM [중2-1] 02 단항식의 계산 (單項式的運算)
+  // -------------------------------------------------------------
+  'rpm-mono-exponent-sum': '指數律（一）：同底數乘法之指數相加',
+  'rpm-mono-exponent-product': '指數律（二）：乘方之乘方指數相乘與大小比較',
+  'rpm-mono-exponent-quotient': '指數律（三）：同底數除法之指數相減',
+  'rpm-mono-exponent-power-product': '指數律（四）：積之乘方展開',
+  'rpm-mono-exponent-power-quotient': '指數律（五）：商之乘方與符號判別',
+  'rpm-mono-exponent-equation-base': '指數律應用：化為同底數求指數方程式未知數',
+  'rpm-mono-exponent-addition': '指數律應用：相同乘方之連加轉乘法運算',
+  'rpm-mono-exponent-substitution': '指數律應用：利用代換文字表示複合乘方',
+  'rpm-mono-exponent-digits-count': '指數律應用：利用2與5配對求位數問題',
+  'rpm-mono-mult-basic': '單項式之乘法運算',
+  'rpm-mono-div-basic': '單項式之除法運算',
+  'rpm-mono-mult-div-mixed': '單項式之乘除混合運算',
+  'rpm-mono-missing-box': '單項式乘除逆運算求方框未知式',
+  'rpm-mono-geometry-app': '單項式運算之幾何圖形面積與體積應用',
+  'rpm-mono-exponent-factor-out': '指數律進階：提出公因數解指數相加方程式',
+  'rpm-mono-units-digit-cycle': '指數律進階：乘方之個位數字規律週期性',
+  'rpm-mono-all-mixed': '單項式運算單元全類型實戰綜合複習',
+  'rpm-mono-advanced-skill-up': '單項式運算最高難度實力UP進階題',
+
+  // -------------------------------------------------------------
+  // RPM [중2-1] 03 다항식의 계산 (多項式的運算)
+  // -------------------------------------------------------------
+  'rpm-poly-calc-add-sub-basic': '多項式之加法與減法運算',
+  'rpm-poly-calc-quadratic-add-sub': '二次多項式之加減法與同類項合併',
+  'rpm-poly-calc-brackets-order': '含括號多項式去括號順序與化簡（小中大括號）',
+  'rpm-poly-calc-wrong-calculation': '算錯多項式還原與正確結果計算',
+  'rpm-poly-calc-monomial-mult': '單項式乘以多項式分配律展開',
+  'rpm-poly-calc-monomial-div': '多項式除以單項式之運算',
+  'rpm-poly-calc-four-ops-mixed': '多項式之四則混合運算',
+  'rpm-poly-calc-missing-box': '多項式運算中求方框未知式',
+  'rpm-poly-calc-evaluate-value': '多項式先化簡後代入數值求值',
+  'rpm-poly-calc-sub-expression': '以指定文字多項式代入化簡為單一變數式',
+  'rpm-poly-calc-geometry-app': '多項式運算之幾何圖形面積與容器體積應用',
+  'rpm-poly-calc-all-mixed': '多項式運算單元全類型實戰綜合複習',
+  'rpm-poly-calc-advanced-skill-up': '多項式運算最高難度實力UP進階題',
+
 
 
 

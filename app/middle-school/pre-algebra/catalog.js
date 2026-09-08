@@ -10,6 +10,40 @@ import { KOREAN_HIGH2_UNITS } from './koreanHigh2Engine';
 import { PRECALCULUS_UNITS } from './precalculusEngine';
 import { KOREAN_HIGH3_UNITS } from './koreanHigh3Engine';
 import { AP_CALCULUS_UNITS } from './apCalculusEngine';
+import {
+  rpmMonoExponentSum,
+  rpmMonoExponentProduct,
+  rpmMonoExponentQuotient,
+  rpmMonoExponentPowerProduct,
+  rpmMonoExponentPowerQuotient,
+  rpmMonoExponentEquationBase,
+  rpmMonoExponentAddition,
+  rpmMonoExponentSubstitution,
+  rpmMonoExponentDigitsCount,
+  rpmMonoMultBasic,
+  rpmMonoDivBasic,
+  rpmMonoMultDivMixed,
+  rpmMonoMissingBox,
+  rpmMonoGeometryApplication,
+  rpmMonoExponentFactorOut,
+  rpmMonoUnitsDigitCycle,
+  rpmMonoAllTypesMixed,
+  rpmMonoAdvancedSkillUp,
+  rpmPolyCalcAddSubBasic,
+  rpmPolyCalcQuadraticAddSub,
+  rpmPolyCalcBracketsOrder,
+  rpmPolyCalcWrongCalculation,
+  rpmPolyCalcMonomialPolyMult,
+  rpmPolyCalcMonomialPolyDiv,
+  rpmPolyCalcFourOpsMixed,
+  rpmPolyCalcMissingBox,
+  rpmPolyCalcEvaluateValue,
+  rpmPolyCalcSubExpression,
+  rpmPolyCalcGeometryApplication,
+  rpmPolyCalcAllMixed,
+  rpmPolyCalcAdvancedSkillUp,
+} from '../rpmAppliedEngine';
+
 
 function randomInt(random, min, max) {
   return Math.floor(random() * (max - min + 1)) + min;
@@ -218,11 +252,50 @@ const NEW_UNITS = [
   { id: 'frequency-table', label: '도수분포표와 상대도수', description: '계급의 도수와 상대도수 구하기', en: ['Frequency tables', 'Read class frequencies and calculate relative frequencies'], profiles: ['pre-algebra', 'kr-middle-1'], category: '자료와 가능성', make: frequencyTable },
 ];
 
+export const RPM_MONOMIALS_APPLIED_UNITS = [
+  { id: 'rpm-mono-exponent-sum', label: '[단항식 계산 01] 지수법칙 1 - 지수의 합', description: '밑이 같은 거듭제곱의 곱셈에서 지수의 합 공식 적용하기', en: ['Monomials Type 01: Product Rule (Exponent Sum)', 'Apply the exponent sum rule a^m × a^n = a^{m+n}'], make: (random) => rpmMonoExponentSum(random) },
+  { id: 'rpm-mono-exponent-product', label: '[단항식 계산 02] 지수법칙 2 - 지수의 곱', description: '거듭제곱의 거듭제곱에서 지수의 곱 공식 및 대소 비교', en: ['Monomials Type 02: Power Rule (Exponent Product)', 'Apply (a^m)^n = a^{mn} and compare magnitudes of powers'], make: (random) => rpmMonoExponentProduct(random) },
+  { id: 'rpm-mono-exponent-quotient', label: '[단항식 계산 03] 지수법칙 3 - 지수의 나눗셈', description: '밑이 같은 거듭제곱의 나눗셈에서 지수의 차 공식 적용하기', en: ['Monomials Type 03: Quotient Rule (Exponent Difference)', 'Apply exponent division rules for m > n, m = n, and m < n'], make: (random) => rpmMonoExponentQuotient(random) },
+  { id: 'rpm-mono-exponent-power-product', label: '[단항식 계산 04] 지수법칙 4 - 곱의 거듭제곱', description: '단항식의 곱 전체의 거듭제곱을 전개하여 각 인수에 분배', en: ['Monomials Type 04: Power of a Product', 'Expand powers of monomial products (ab)^n = a^n b^n'], make: (random) => rpmMonoExponentPowerProduct(random) },
+  { id: 'rpm-mono-exponent-power-quotient', label: '[단항식 계산 05] 지수법칙 5 - 몫의 거듭제곱', description: '분수 꼴 단항식의 거듭제곱에서 분모와 분자에 지수 분배', en: ['Monomials Type 05: Power of a Quotient', 'Apply power of quotients (b/a)^n = b^n / a^n'], make: (random) => rpmMonoExponentPowerQuotient(random) },
+  { id: 'rpm-mono-exponent-equation-base', label: '[단항식 계산 06] 지수법칙 응용 - 밑을 같게 하는 지수방정식', description: '양변의 밑을 소인수분해하여 일치시킨 후 미지수 지수 구하기', en: ['Monomials Type 06: Exponential Equations via Common Base', 'Unify bases using prime powers to solve for unknown exponents'], make: (random) => rpmMonoExponentEquationBase(random) },
+  { id: 'rpm-mono-exponent-addition', label: '[단항식 계산 07] 지수법칙 응용 - 거듭제곱의 덧셈식', description: '같은 거듭제곱의 덧셈을 곱셈으로 묶어 단일 거듭제곱으로 정리', en: ['Monomials Type 07: Repeated Addition of Powers', 'Convert repeated additions a^x + a^x into products k · a^x'], make: (random) => rpmMonoExponentAddition(random) },
+  { id: 'rpm-mono-exponent-substitution', label: '[단항식 계산 08] 지수법칙 응용 - 문자를 사용한 식의 변형', description: '기본 거듭제곱을 문자로 치환하여 합성 거듭제곱을 표현하기', en: ['Monomials Type 08: Expression Substitution with Variables', 'Express composite powers in terms of given variables A and B'], make: (random) => rpmMonoExponentSubstitution(random) },
+  { id: 'rpm-mono-exponent-digits-count', label: '[단항식 계산 09] 지수법칙 응용 - 몇 자리 자연수인가', description: '2와 5의 지수를 맞추어 10의 거듭제곱 형태로 자릿수 결정', en: ['Monomials Type 09: Number of Digits of Large Powers', 'Pair powers of 2 and 5 into 10^k to determine digit counts'], make: (random) => rpmMonoExponentDigitsCount(random) },
+  { id: 'rpm-mono-mult-basic', label: '[단항식 계산 10] 단항식의 곱셈', description: '계수는 계수끼리, 문자는 문자끼리 지수법칙을 적용하여 곱셈', en: ['Monomials Type 10: Monomial Multiplication', 'Multiply monomial coefficients and apply exponent rules to variables'], make: (random) => rpmMonoMultBasic(random) },
+  { id: 'rpm-mono-div-basic', label: '[단항식 계산 11] 단항식의 나눗셈', description: '분수 꼴 또는 역수의 곱셈으로 변환하여 단항식 나누기', en: ['Monomials Type 11: Monomial Division', 'Divide monomials via fraction forms or reciprocal multiplication'], make: (random) => rpmMonoDivBasic(random) },
+  { id: 'rpm-mono-mult-div-mixed', label: '[단항식 계산 12] 단항식의 곱셈과 나눗셈 혼합', description: '거듭제곱을 먼저 풀고 역수 곱셈을 적용하여 혼합 연산 수행', en: ['Monomials Type 12: Mixed Monomial Operations', 'Handle powers first and convert divisions to reciprocal products'], make: (random) => rpmMonoMultDivMixed(random) },
+  { id: 'rpm-mono-missing-box', label: '[단항식 계산 13] 단항식의 계산에서 □ 구하기', description: '등식의 성질을 이용하여 모르는 단항식 □를 역연산으로 도출', en: ['Monomials Type 13: Finding Unknown Monomial in Box', 'Isolate unknown box expression using inverse monomial operations'], make: (random) => rpmMonoMissingBox(random) },
+  { id: 'rpm-mono-geometry-app', label: '[단항식 계산 14] 단항식의 계산 도형 활용', description: '삼각형, 직사각형, 원뿔, 원기둥의 넓이와 부피 공식에 적용', en: ['Monomials Type 14: Geometric Applications of Monomials', 'Compute lengths, areas, and volumes involving monomial dimensions'], make: (random) => rpmMonoGeometryApplication(random) },
+  { id: 'rpm-mono-exponent-factor-out', label: '[단항식 계산 15] 지수법칙 심화 - 공통 거듭제곱 묶기', description: '지수의 덧셈식을 공통 인수로 묶어 미지수 방정식 해결', en: ['Monomials Type 15: Factoring Out Common Powers', 'Factor out common exponential terms to solve linear exponent equations'], make: (random) => rpmMonoExponentFactorOut(random) },
+  { id: 'rpm-mono-units-digit-cycle', label: '[단항식 계산 16] 지수법칙 심화 - 일의 자리 숫자 규칙성', description: '거듭제곱의 일의 자리 숫자가 이루는 주기적 반복 규칙 발견', en: ['Monomials Type 16: Units Digit Periodicity in Powers', 'Find periodic cycles of terminal digits in large powers'], make: (random) => rpmMonoUnitsDigitCycle(random) },
+  { id: 'rpm-mono-all-mixed', label: '[단원 실전 다지기] 단항식의 계산 전 유형 실전 종합', description: '지수법칙 5개 공식, 지수방정식, 자릿수, 단항식 연산 및 도형 전 유형 실전 혼합', en: ['Monomials Comprehensive Practice', 'Mixed applied practice across all monomial and exponent rule types'], make: (random) => rpmMonoAllTypesMixed(random) },
+  { id: 'rpm-mono-advanced-skill-up', label: '[단원 최고수준] 단항식의 계산 실력 UP', description: '저장 매체 용량 계산, 복합 문자 변형, 입체도형 부피비 등 고난도 발전 문제', en: ['Monomials Advanced Challenge', 'High-level challenge problems: digital storage powers, 3D volume ratios'], make: (random) => rpmMonoAdvancedSkillUp(random) },
+];
+
+export const RPM_POLYNOMIALS_APPLIED_UNITS = [
+  { id: 'rpm-poly-calc-add-sub-basic', label: '[다항식 계산 01] 다항식의 덧셈과 뺄셈', description: '괄호를 풀고 동류항끼리 모아서 일차 다항식 덧셈과 뺄셈 수행', en: ['Polynomials Type 01: Addition & Subtraction', 'Unfold parentheses and collect like terms for linear polynomials'], make: (random) => rpmPolyCalcAddSubBasic(random) },
+  { id: 'rpm-poly-calc-quadratic-add-sub', label: '[다항식 계산 02] 이차식의 덧셈과 뺄셈', description: '이차항, 일차항, 상수항 동류항끼리 모아 이차 다항식 연산', en: ['Polynomials Type 02: Quadratic Addition & Subtraction', 'Group quadratic, linear, and constant like-terms correctly'], make: (random) => rpmPolyCalcQuadraticAddSub(random) },
+  { id: 'rpm-poly-calc-brackets-order', label: '[다항식 계산 03] 괄호가 있는 다항식의 계산', description: '소괄호 → 중괄호 → 대괄호 순서로 단계별 전개 및 동류항 정리', en: ['Polynomials Type 03: Nested Brackets Order', 'Expand parentheses from innermost () to {} to [] systematically'], make: (random) => rpmPolyCalcBracketsOrder(random) },
+  { id: 'rpm-poly-calc-wrong-calculation', label: '[다항식 계산 04] 잘못 계산한 식에서 바른 식 구하기', description: '잘못된 덧셈/뺄셈 연산 결과로부터 원래 다항식을 찾고 올바른 결과 계산', en: ['Polynomials Type 04: Reconstructing Miscalculated Polynomials', 'Recover initial polynomial from faulty operations and find correct result'], make: (random) => rpmPolyCalcWrongCalculation(random) },
+  { id: 'rpm-poly-calc-monomial-mult', label: '[다항식 계산 05] 단항식과 다항식의 곱셈', description: '분배법칙을 활용하여 단항식을 다항식의 각 항에 전개하고 동류항 정리', en: ['Polynomials Type 05: Monomial × Polynomial Expansion', 'Distribute monomial over polynomial terms and combine like terms'], make: (random) => rpmPolyCalcMonomialPolyMult(random) },
+  { id: 'rpm-poly-calc-monomial-div', label: '[다항식 계산 06] 다항식과 단항식의 나눗셈', description: '분수 꼴 또는 역수의 곱셈을 이용하여 다항식을 단항식으로 나누기', en: ['Polynomials Type 06: Polynomial ÷ Monomial Division', 'Divide each polynomial term by monomial divisor or multiply reciprocal'], make: (random) => rpmPolyCalcMonomialPolyDiv(random) },
+  { id: 'rpm-poly-calc-four-ops-mixed', label: '[다항식 계산 07] 다항식의 사칙 혼합 계산', description: '거듭제곱, 괄호, 곱셈·나눗셈, 덧셈·뺄셈의 연산 순서에 맞춘 계산', en: ['Polynomials Type 07: Mixed Four Operations with Polynomials', 'Execute mixed operations following order: powers, brackets, mult/div, add/sub'], make: (random) => rpmPolyCalcFourOpsMixed(random) },
+  { id: 'rpm-poly-calc-missing-box', label: '[다항식 계산 08] 다항식 계산에서 □ 구하기', description: '다항식의 나눗셈이나 곱셈식에서 빈칸 □에 알맞은 식 역연산', en: ['Polynomials Type 08: Finding Missing Polynomial in Box', 'Solve for missing polynomial in equations using inverse operations'], make: (random) => rpmPolyCalcMissingBox(random) },
+  { id: 'rpm-poly-calc-evaluate-value', label: '[다항식 계산 09] 식의 대입과 식의 값 구하기', description: '복잡한 다항식을 최대한 간단히 정리한 후 미지수의 값을 대입하여 계산', en: ['Polynomials Type 09: Expression Simplification & Evaluation', 'Simplify algebraic expressions before substituting numerical values'], make: (random) => rpmPolyCalcEvaluateValue(random) },
+  { id: 'rpm-poly-calc-sub-expression', label: '[다항식 계산 10] 한 문자에 대한 식으로 나타내기', description: 'A, B로 표현된 식을 먼저 정리한 뒤 대입하여 목표 문자의 식으로 표현', en: ['Polynomials Type 10: Substitution into Single Target Variables', 'Simplify expressions in terms of capital variables before polynomial substitution'], make: (random) => rpmPolyCalcSubExpression(random) },
+  { id: 'rpm-poly-calc-geometry-app', label: '[다항식 계산 11] 다항식의 계산 도형 활용', description: '사다리꼴 넓이, 입체도형 부피 및 물 채우기 등 도형 공식 활용', en: ['Polynomials Type 11: Geometric Applications of Polynomials', 'Apply polynomial expressions to trapezoid areas and 3D container volumes'], make: (random) => rpmPolyCalcGeometryApplication(random) },
+  { id: 'rpm-poly-calc-all-mixed', label: '[단원 실전 다지기] 다항식의 계산 전 유형 실전 종합', description: '괄호 전개, 단항식 곱셈·나눗셈, 사칙 혼합, 식의 대입 및 도형 활용 전 유형 종합', en: ['Polynomials Comprehensive Practice', 'Mixed applied practice across all polynomial operation types'], make: (random) => rpmPolyCalcAllMixed(random) },
+  { id: 'rpm-poly-calc-advanced-skill-up', label: '[단원 최고수준] 다항식의 계산 실력 UP', description: '겹쳐진 색종이 띠의 넓이, 곱셈·나눗셈 역연산 연립식 등 최고난도 응용', en: ['Polynomials Advanced Challenge', 'High-level challenge problems: overlapping sheet strips, double-error corrections'], make: (random) => rpmPolyCalcAdvancedSkillUp(random) },
+];
+
 const SOURCE_GROUPS = [
   ['수와 연산', ['pre-algebra', 'kr-middle-1'], PRIME_BASIC_UNITS],
   ['수와 연산', ['pre-algebra', 'kr-middle-1'], GCD_LCM_BASIC_UNITS],
   ['수와 연산', ['pre-algebra', 'kr-middle-1'], INTEGER_RATIONAL_UNITS],
   ['유리수와 순환소수', ['pre-algebra', 'kr-middle-2'], RPM_RATIONAL_DECIMALS_APPLIED_UNITS],
+  ['단항식의 계산', ['pre-algebra', 'kr-middle-2', 'algebra-1'], RPM_MONOMIALS_APPLIED_UNITS],
+  ['다항식의 계산', ['pre-algebra', 'kr-middle-2', 'algebra-1'], RPM_POLYNOMIALS_APPLIED_UNITS],
   ['문자와 식', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], [...ALGEBRA_UNITS, ...RPM_ALGEBRA_APPLIED_UNITS]],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], COORDINATE_UNITS],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'algebra-1'], PROPORTION_UNITS],
@@ -256,6 +329,41 @@ const UNIT_TIERS = {
   'rpm-rat-dec-mistake-equation': 'intermediate',
   'rpm-rat-dec-all-mixed': 'advanced',
   'rpm-rat-dec-advanced-skill-up': 'advanced',
+
+  // RPM 2-1 Chapter 02 단항식의 계산
+  'rpm-mono-exponent-sum': 'basic',
+  'rpm-mono-exponent-product': 'basic',
+  'rpm-mono-exponent-quotient': 'basic',
+  'rpm-mono-exponent-power-product': 'basic',
+  'rpm-mono-exponent-power-quotient': 'basic',
+  'rpm-mono-exponent-equation-base': 'intermediate',
+  'rpm-mono-exponent-addition': 'intermediate',
+  'rpm-mono-exponent-substitution': 'intermediate',
+  'rpm-mono-exponent-digits-count': 'intermediate',
+  'rpm-mono-mult-basic': 'basic',
+  'rpm-mono-div-basic': 'basic',
+  'rpm-mono-mult-div-mixed': 'intermediate',
+  'rpm-mono-missing-box': 'intermediate',
+  'rpm-mono-geometry-app': 'intermediate',
+  'rpm-mono-exponent-factor-out': 'intermediate',
+  'rpm-mono-units-digit-cycle': 'intermediate',
+  'rpm-mono-all-mixed': 'advanced',
+  'rpm-mono-advanced-skill-up': 'advanced',
+
+  // RPM 2-1 Chapter 03 다항식의 계산
+  'rpm-poly-calc-add-sub-basic': 'basic',
+  'rpm-poly-calc-quadratic-add-sub': 'basic',
+  'rpm-poly-calc-brackets-order': 'intermediate',
+  'rpm-poly-calc-wrong-calculation': 'intermediate',
+  'rpm-poly-calc-monomial-mult': 'basic',
+  'rpm-poly-calc-monomial-div': 'intermediate',
+  'rpm-poly-calc-four-ops-mixed': 'intermediate',
+  'rpm-poly-calc-missing-box': 'intermediate',
+  'rpm-poly-calc-evaluate-value': 'intermediate',
+  'rpm-poly-calc-sub-expression': 'intermediate',
+  'rpm-poly-calc-geometry-app': 'intermediate',
+  'rpm-poly-calc-all-mixed': 'advanced',
+  'rpm-poly-calc-advanced-skill-up': 'advanced',
 
   // prime-factorization/catalog.js
   'prime-composite': 'basic', 'prime-factorization': 'basic', 'power-form': 'basic', 'powers': 'basic',

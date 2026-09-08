@@ -9762,6 +9762,1009 @@ export function rpmRatDecAdvancedSkillUp(random) {
   }
 }
 
+
+function formatLinear(a, b, varName = 'x') {
+  let res = '';
+  if (a !== 0) {
+    if (a === 1) res += varName;
+    else if (a === -1) res += `-${varName}`;
+    else res += `${a}${varName}`;
+  }
+  if (b !== 0) {
+    if (res === '') res += String(b);
+    else if (b > 0) res += ` + ${b}`;
+    else res += ` - ${Math.abs(b)}`;
+  }
+  return res || '0';
+}
+
+function formatPoly2(a, b, c, varName = 'x') {
+  let parts = [];
+  if (a !== 0) {
+    if (a === 1) parts.push(`${varName}^2`);
+    else if (a === -1) parts.push(`-${varName}^2`);
+    else parts.push(`${a}${varName}^2`);
+  }
+  if (b !== 0) {
+    const sign = b > 0 ? (parts.length ? '+ ' : '') : '- ';
+    const absB = Math.abs(b);
+    const term = absB === 1 ? varName : `${absB}${varName}`;
+    parts.push(`${sign}${term}`);
+  }
+  if (c !== 0) {
+    const sign = c > 0 ? (parts.length ? '+ ' : '') : '- ';
+    parts.push(`${sign}${Math.abs(c)}`);
+  }
+  return parts.join(' ') || '0';
+}
+
+function formatLinear2Var(a, b, var1 = 'x', var2 = 'y') {
+  let parts = [];
+  if (a !== 0) {
+    if (a === 1) parts.push(var1);
+    else if (a === -1) parts.push(`-${var1}`);
+    else parts.push(`${a}${var1}`);
+  }
+  if (b !== 0) {
+    const sign = b > 0 ? (parts.length ? '+ ' : '') : '- ';
+    const absB = Math.abs(b);
+    const term = absB === 1 ? var2 : `${absB}${var2}`;
+    parts.push(`${sign}${term}`);
+  }
+  return parts.join(' ') || '0';
+}
+
+// =============================================================================
+// Chapter 02: 단항식의 계산 (Pages 30~41)
+// =============================================================================
+
+// 1. [단항식의 계산 유형 01] 지수법칙 (1) - 지수의 합 (#0198~#0201)
+export function rpmMonoExponentSum(random) {
+  const mode = pick(random, ['find-box', 'even-product-factor', 'sum-given']);
+  if (mode === 'find-box') {
+    const a = ri(random, 2, 4);
+    const b = ri(random, 1, 3);
+    const box = ri(random, 2, 5);
+    const c = ri(random, 2, 4);
+    const N = a + b + box + c;
+    const v = pick(random, ['x', 'a']);
+    return {
+      prompt: `${v}^${a} × ${v}^${b} × ${v}^□ × ${v}^${c} = ${v}^${N} 일 때, □ 안에 알맞은 자연수를 구하시오.`,
+      promptEn: `Find the natural number for □ when ${v}^${a} × ${v}^${b} × ${v}^□ × ${v}^${c} = ${v}^${N}.`,
+      expression: `${v}^{${a}} \\cdot ${v}^{${b}} \\cdot ${v}^{\\square} \\cdot ${v}^{${c}} = ${v}^{${N}}`,
+      answer: String(box),
+      explanation: `지수법칙 a^m × a^n = a^{m+n}에 의하여 ${v}^{${a} + ${b} + □ + ${c}} = ${v}^{${a + b + c} + □} = ${v}^{${N}}입니다. 따라서 □ = ${N} - ${a + b + c} = ${box}입니다.`,
+      explanationEn: `By the product rule of exponents, the sum of powers is ${a} + ${b} + □ + ${c} = ${N}, so □ = ${box}.`
+    };
+  }
+  if (mode === 'even-product-factor') {
+    const k = pick(random, [5, 6, 7]);
+    let pow2 = 0, pow3 = 0, pow5 = 0, pow7 = 0;
+    let listStr = [];
+    for (let i = 1; i <= k; i++) {
+      let num = 2 * i;
+      listStr.push(String(num));
+      let temp = num;
+      while (temp % 2 === 0) { pow2++; temp /= 2; }
+      while (temp % 3 === 0) { pow3++; temp /= 3; }
+      while (temp % 5 === 0) { pow5++; temp /= 5; }
+      while (temp % 7 === 0) { pow7++; temp /= 7; }
+    }
+    const sumAll = pow2 + pow3 + pow5 + (k >= 7 ? pow7 : 0);
+    const exprRhs = k >= 7 ? `2^a × 3^b × 5^c × 7^d` : `2^a × 3^b × 5^c`;
+    const targetStr = k >= 7 ? `a + b + c + d` : `a + b + c`;
+    return {
+      prompt: `${listStr.join(' × ')} = ${exprRhs} 일 때, 자연수 ${targetStr}의 값을 구하시오.`,
+      promptEn: `If ${listStr.join(' × ')} = ${exprRhs}, find the value of ${targetStr}.`,
+      expression: `${listStr.join(' \\times ')} = ${exprRhs}`,
+      answer: String(sumAll),
+      explanation: `각 수를 소인수분해하면 2의 지수 a = ${pow2}, 3의 지수 b = ${pow3}, 5의 지수 c = ${pow5}${k >= 7 ? `, 7의 지수 d = ${pow7}` : ''}입니다. 따라서 합은 ${sumAll}입니다.`,
+      explanationEn: `Factoring each term yields exponents a = ${pow2}, b = ${pow3}, c = ${pow5}${k >= 7 ? `, d = ${pow7}` : ''}, summing to ${sumAll}.`
+    };
+  }
+  const S = ri(random, 4, 7);
+  const val = Math.pow(2, S);
+  return {
+    prompt: `x + y = ${S}일 때, 2^x × 2^y의 값을 구하시오.`,
+    promptEn: `When x + y = ${S}, find the value of 2^x × 2^y.`,
+    expression: `x + y = ${S}, \\quad 2^x \\times 2^y`,
+    answer: String(val),
+    explanation: `지수법칙에 의하여 2^x × 2^y = 2^{x+y} = 2^${S} = ${val}입니다.`,
+    explanationEn: `By the exponent rule, 2^x × 2^y = 2^{x+y} = 2^${S} = ${val}.`
+  };
+}
+
+// 2. [단항식의 계산 유형 02] 지수법칙 (2) - 지수의 곱 (#0202~#0205)
+export function rpmMonoExponentProduct(random) {
+  const mode = pick(random, ['solve-box', 'power-compare', 'product-simplify']);
+  if (mode === 'solve-box') {
+    const a = ri(random, 2, 4);
+    const b = ri(random, 2, 3);
+    const c = ri(random, 2, 4);
+    const box = ri(random, 2, 4);
+    const total = a * b + c * box;
+    return {
+      prompt: `(a^${a})^${b} × (a^${c})^□ = a^${total} 일 때, □ 안에 알맞은 자연수를 구하시오.`,
+      promptEn: `Find □ when (a^${a})^${b} × (a^${c})^□ = a^${total}.`,
+      expression: `(a^{${a}})^{${b}} \\times (a^{${c}})^{\\square} = a^{${total}}`,
+      answer: String(box),
+      explanation: `(a^${a})^${b} = a^{${a * b}}이고 (a^${c})^□ = a^{${c} × □}입니다. 지수의 합이 ${total}이므로 ${a * b} + ${c} × □ = ${total}, 즉 ${c} × □ = ${c * box}에서 □ = ${box}입니다.`,
+      explanationEn: `(a^${a})^${b} = a^{${a * b}} and (a^${c})^□ = a^{${c}□}. Then ${a * b} + ${c}□ = ${total}, so □ = ${box}.`
+    };
+  }
+  if (mode === 'power-compare') {
+    const basePowers = [
+      { base: 2, p: 5, label: '2^{50}' },
+      { base: 3, p: 4, label: '3^{40}' },
+      { base: 4, p: 3, label: '4^{30}' },
+      { base: 5, p: 2, label: '5^{20}' },
+      { base: 6, p: 1, label: '6^{10}' },
+    ];
+    const choices = basePowers.map((item, idx) => ({
+      value: String(idx + 1),
+      label: item.label,
+      labelEn: item.label
+    }));
+    return {
+      prompt: `다음 중 가장 큰 수는?`,
+      promptEn: `Which of the following numbers is the greatest?`,
+      expression: `2^{50}, \\; 3^{40}, \\; 4^{30}, \\; 5^{20}, \\; 6^{10}`,
+      choices,
+      answer: '2',
+      explanation: `모든 지수를 10의 배수로 변형하면 2^{50} = (2^5)^{10} = 32^{10}, 3^{40} = (3^4)^{10} = 81^{10}, 4^{30} = (4^3)^{10} = 64^{10}, 5^{20} = (5^2)^{10} = 25^{10}, 6^{10}입니다. 밑이 가장 큰 81^{10} = 3^{40}이 가장 큽니다.`,
+      explanationEn: `Rewriting each with power 10: 32^{10}, 81^{10}, 64^{10}, 25^{10}, 6^{10}. Since 81 is largest, 3^{40} is the greatest.`
+    };
+  }
+  const a = ri(random, 1, 3), b = ri(random, 2, 4), c = ri(random, 2, 3);
+  const d = ri(random, 2, 3), e = ri(random, 1, 2), f = ri(random, 2, 3);
+  const p = a * c + d * f;
+  const q = b * c + e * f;
+  return {
+    prompt: `(x^${a}y^${b})^${c} × (x^${d}y^${e})^${f} = x^p y^q 일 때, p + q의 값을 구하시오.`,
+    promptEn: `When (x^${a}y^${b})^${c} × (x^${d}y^${e})^${f} = x^p y^q, find p + q.`,
+    expression: `(x^{${a}}y^{${b}})^{${c}} \\times (x^{${d}}y^{${e}})^{${f}} = x^p y^q`,
+    answer: String(p + q),
+    explanation: `x의 지수는 ${a}×${c} + ${d}×${f} = ${p}이고, y의 지수는 ${b}×${c} + ${e}×${f} = ${q}입니다. 따라서 p + q = ${p} + ${q} = ${p + q}입니다.`,
+    explanationEn: `Exponent of x is ${p} and of y is ${q}. Thus p + q = ${p + q}.`
+  };
+}
+
+// 3. [단항식의 계산 유형 03] 지수법칙 (3) - 지수의 나눗셈 (#0206~#0208)
+export function rpmMonoExponentQuotient(random) {
+  const mode = pick(random, ['solve-box-div', 'three-way-div', 'div-chain']);
+  if (mode === 'solve-box-div') {
+    const a = ri(random, 6, 10);
+    const b = ri(random, 2, 4);
+    const box = ri(random, 4, 7);
+    const c = a - (box - b);
+    return {
+      prompt: `x^${a} ÷ (x^□ ÷ x^${b}) = x^${c} 일 때, □ 안에 알맞은 자연수를 구하시오. (단, □ > ${b})`,
+      promptEn: `Find □ when x^${a} ÷ (x^□ ÷ x^${b}) = x^${c} with □ > ${b}.`,
+      expression: `x^{${a}} \\div (x^{\\square} \\div x^{${b}}) = x^{${c}}`,
+      answer: String(box),
+      explanation: `x^□ ÷ x^${b} = x^{□ - ${b}}이므로 x^{${a} - (□ - ${b})} = x^{${a + b} - □} = x^{${c}}입니다. 따라서 □ = ${a + b} - ${c} = ${box}입니다.`,
+      explanationEn: `x^${a} ÷ x^{□ - ${b}} = x^{${a + b} - □} = x^{${c}}, so □ = ${box}.`
+    };
+  }
+  if (mode === 'three-way-div') {
+    const a = ri(random, 3, 5), b = ri(random, 3, 4);
+    const c = ri(random, 2, 3), d = ri(random, 2, 3);
+    const p1 = a * b, p2 = c * d;
+    if (p1 > p2) {
+      const diff = p1 - p2;
+      return {
+        prompt: `(x^${a})^${b} ÷ (x^${c})^${d} = x^k 일 때, 자연수 k의 값을 구하시오.`,
+        promptEn: `When (x^${a})^${b} ÷ (x^${c})^${d} = x^k, find k.`,
+        expression: `(x^{${a}})^{${b}} \\div (x^{${c}})^{${d}} = x^k`,
+        answer: String(diff),
+        explanation: `(x^${a})^${b} = x^{${p1}}, (x^${c})^${d} = x^{${p2}}입니다. ${p1} > ${p2}이므로 나눗셈 결과는 x^{${p1} - ${p2}} = x^{${diff}}입니다. 따라서 k = ${diff}입니다.`,
+        explanationEn: `x^{${p1}} ÷ x^{${p2}} = x^{${diff}}, so k = ${diff}.`
+      };
+    }
+  }
+  const N = ri(random, 12, 18);
+  const a = ri(random, 2, 5);
+  const b = ri(random, 2, 4);
+  const k = N - a - b;
+  return {
+    prompt: `x^${N} ÷ x^${a} ÷ x^${b} = x^k 일 때, 자연수 k의 값을 구하시오.`,
+    promptEn: `Find k when x^${N} ÷ x^${a} ÷ x^${b} = x^k.`,
+    expression: `x^{${N}} \\div x^{${a}} \\div x^{${b}} = x^k`,
+    answer: String(k),
+    explanation: `x^{${N} - ${a} - ${b}} = x^{${k}}이므로 k = ${k}입니다.`,
+    explanationEn: `x^{${N} - ${a} - ${b}} = x^{${k}}, so k = ${k}.`
+  };
+}
+
+// 4. [단항식의 계산 유형 04] 지수법칙 (4) - 곱의 거듭제곱 (#0209~#0212)
+export function rpmMonoExponentPowerProduct(random) {
+  const mode = pick(random, ['neg-coeff-power', 'factor-base-power']);
+  if (mode === 'neg-coeff-power') {
+    const k = ri(random, 2, 3);
+    const c = pick(random, [2, 3]);
+    const a = ri(random, 2, 3);
+    const b = ri(random, 1, 3);
+    const K = Math.pow(-k, c);
+    const p = a * c;
+    const q = b * c;
+    return {
+      prompt: `(-${k}x^${a}y^${b})^${c} = ${K < 0 ? `-${Math.abs(K)}` : K}x^p y^q 일 때, p + q의 값을 구하시오.`,
+      promptEn: `If (-${k}x^${a}y^${b})^${c} = ${K}x^p y^q, find p + q.`,
+      expression: `(-${k}x^{${a}}y^{${b}})^{${c}} = ${K}x^p y^q`,
+      answer: String(p + q),
+      explanation: `지수법칙에 의하여 (-${k})^${c} = ${K}, x^{${a}×${c}} = x^${p}, y^{${b}×${c}} = y^${q}입니다. 따라서 p = ${p}, q = ${q}이며 p + q = ${p + q}입니다.`,
+      explanationEn: `Expanding gives (-${k})^${c} = ${K}, p = ${p}, q = ${q}, so p + q = ${p + q}.`
+    };
+  }
+  const bases = [
+    { num: 72, p2: 3, p3: 2 },
+    { num: 108, p2: 2, p3: 3 },
+    { num: 144, p2: 4, p3: 2 },
+    { num: 216, p2: 3, p3: 3 }
+  ];
+  const item = pick(random, bases);
+  const x = ri(random, 2, 4);
+  const a = item.p2 * x;
+  const b = item.p3 * x;
+  return {
+    prompt: `${item.num}^${x} = 2^a × 3^b 일 때, 자연수 a + b의 값을 구하시오.`,
+    promptEn: `When ${item.num}^${x} = 2^a × 3^b, find a + b.`,
+    expression: `${item.num}^{${x}} = 2^a \\times 3^b`,
+    answer: String(a + b),
+    explanation: `${item.num}을 소인수분해하면 2^${item.p2} × 3^${item.p3}입니다. 따라서 (${item.num})^${x} = (2^${item.p2} × 3^${item.p3})^${x} = 2^{${a}} × 3^{${b}}이므로 a = ${a}, b = ${b}이고 a + b = ${a + b}입니다.`,
+    explanationEn: `Factoring ${item.num} = 2^${item.p2} × 3^${item.p3}. Raising to power ${x} gives 2^{${a}} × 3^{${b}}, so a + b = ${a + b}.`
+  };
+}
+
+// 5. [단항식의 계산 유형 05] 지수법칙 (5) - 몫의 거듭제곱 (#0213~#0215)
+export function rpmMonoExponentPowerQuotient(random) {
+  const k = ri(random, 2, 3);
+  const a = ri(random, 2, 3);
+  const b = ri(random, 2, 4);
+  const c = pick(random, [2, 3]);
+  const A = Math.pow(-k, c);
+  const p = a * c;
+  const q = b * c;
+  const A_str = A < 0 ? `-${Math.abs(A)}` : `${A}`;
+  return {
+    prompt: `(- (${k}x^a) / y^b )^${c} = (${A_str}x^${p}) / y^${q} 일 때, a + b의 값을 구하시오. (단, a, b는 자연수)`,
+    promptEn: `Given (- (${k}x^a) / y^b )^${c} = (${A_str}x^${p}) / y^${q}, find a + b.`,
+    expression: `\\left(-\\frac{${k}x^a}{y^b}\\right)^{${c}} = \\frac{${A_str}x^{${p}}}{y^{${q}}}`,
+    answer: String(a + b),
+    explanation: `분자의 x 지수는 a × ${c} = ${p}이므로 a = ${a}이고, 분모의 y 지수는 b × ${c} = ${q}이므로 b = ${b}입니다. 따라서 a + b = ${a + b}입니다.`,
+    explanationEn: `From a × ${c} = ${p} we have a = ${a}, and from b × ${c} = ${q} we have b = ${b}. Thus a + b = ${a + b}.`
+  };
+}
+
+// 6. [단항식의 계산 유형 06] 지수법칙 응용 (1) - 밑을 같게 하는 지수방정식 (#0216~#0219)
+export function rpmMonoExponentEquationBase(random) {
+  const mode = pick(random, ['base-equality', 'pow2-mult', 'pow3-mult']);
+  if (mode === 'base-equality') {
+    const a = ri(random, 1, 2);
+    const b = ri(random, 1, 2);
+    const x = 2 * a + 3 * b;
+    return {
+      prompt: `4^(x + ${a}) = 8^(x - ${b}) 일 때, 자연수 x의 값을 구하시오.`,
+      promptEn: `Find the natural number x satisfying 4^(x + ${a}) = 8^(x - ${b}).`,
+      expression: `4^{x + ${a}} = 8^{x - ${b}}`,
+      answer: String(x),
+      explanation: `밑을 2로 통일하면 4 = 2^2, 8 = 2^3이므로 (2^2)^(x + ${a}) = (2^3)^(x - ${b})입니다. 2(x + ${a}) = 3(x - ${b})에서 2x + ${2 * a} = 3x - ${3 * b}, 따라서 x = ${x}입니다.`,
+      explanationEn: `Expressing in base 2: 2(x + ${a}) = 3(x - ${b}) => 2x + ${2 * a} = 3x - ${3 * b} => x = ${x}.`
+    };
+  }
+  if (mode === 'pow2-mult') {
+    const a = ri(random, 1, 3);
+    const x = ri(random, 2, 4);
+    const N = 3 * x + 2 * a;
+    const powVal = Math.pow(2, N);
+    return {
+      prompt: `2^x × 4^(x + ${a}) = ${powVal} 일 때, 자연수 x의 값을 구하시오.`,
+      promptEn: `Find the natural number x when 2^x × 4^(x + ${a}) = ${powVal}.`,
+      expression: `2^x \\times 4^{x + ${a}} = ${powVal}`,
+      answer: String(x),
+      explanation: `4 = 2^2이므로 2^x × (2^2)^(x + ${a}) = 2^{x + 2x + ${2 * a}} = 2^{3x + ${2 * a}}입니다. ${powVal} = 2^{${N}}이므로 3x + ${2 * a} = ${N}에서 3x = ${3 * x}, 즉 x = ${x}입니다.`,
+      explanationEn: `2^{x + 2(x + ${a})} = 2^{3x + ${2 * a}} = 2^{${N}}, so 3x + ${2 * a} = ${N} gives x = ${x}.`
+    };
+  }
+  const x = ri(random, 2, 4);
+  const k = 2 * x - 1;
+  const val = Math.pow(3, k);
+  return {
+    prompt: `3^(2x - 1) = ${val} 일 때, 자연수 x의 값을 구하시오.`,
+    promptEn: `Solve for the natural number x in 3^(2x - 1) = ${val}.`,
+    expression: `3^{2x - 1} = ${val}`,
+    answer: String(x),
+    explanation: `${val} = 3^{${k}}이므로 2x - 1 = ${k}에서 2x = ${k + 1}, x = ${x}입니다.`,
+    explanationEn: `Since ${val} = 3^{${k}}, 2x - 1 = ${k} implies x = ${x}.`
+  };
+}
+
+// 7. [단항식의 계산 유형 07] 지수법칙 응용 (2) - 거듭제곱의 덧셈 (#0220~#0223)
+export function rpmMonoExponentAddition(random) {
+  const mode = pick(random, ['pow2-sum', 'pow3-sum', 'pow-fraction']);
+  if (mode === 'pow2-sum') {
+    const x = ri(random, 4, 8);
+    const totalExp = x + 2;
+    return {
+      prompt: `2^${x} + 2^${x} + 2^${x} + 2^${x} = 2^k 일 때, 자연수 k의 값을 구하시오.`,
+      promptEn: `Find k when 2^${x} + 2^${x} + 2^${x} + 2^${x} = 2^k.`,
+      expression: `2^{${x}} + 2^{${x}} + 2^{${x}} + 2^{${x}} = 2^k`,
+      answer: String(totalExp),
+      explanation: `2^${x}이 4개 더해져 있으므로 4 × 2^${x} = 2^2 × 2^${x} = 2^{${x} + 2} = 2^{${totalExp}}입니다. 따라서 k = ${totalExp}입니다.`,
+      explanationEn: `Sum of 4 copies of 2^${x} is 4 × 2^${x} = 2^2 × 2^${x} = 2^{${totalExp}}, so k = ${totalExp}.`
+    };
+  }
+  if (mode === 'pow3-sum') {
+    const x = ri(random, 5, 9);
+    const totalExp = x + 1;
+    return {
+      prompt: `3^${x} + 3^${x} + 3^${x} = 3^k 일 때, 자연수 k의 값을 구하시오.`,
+      promptEn: `Find k when 3^${x} + 3^${x} + 3^${x} = 3^k.`,
+      expression: `3^{${x}} + 3^{${x}} + 3^{${x}} = 3^k`,
+      answer: String(totalExp),
+      explanation: `3^${x}이 3개 더해져 있으므로 3 × 3^${x} = 3^{${x} + 1} = 3^{${totalExp}}입니다. 따라서 k = ${totalExp}입니다.`,
+      explanationEn: `3 copies of 3^${x} is 3 × 3^${x} = 3^{${totalExp}}, so k = ${totalExp}.`
+    };
+  }
+  const a = ri(random, 2, 4);
+  const b = ri(random, 2, 4);
+  const p = 2 * a + 2;
+  const q = b + 1;
+  return {
+    prompt: `(4^${a} + 4^${a} + 4^${a} + 4^${a}) / (3^${b} + 3^${b} + 3^${b}) = 2^p / 3^q 일 때, p + q의 값을 구하시오.`,
+    promptEn: `If (4^${a} + 4^${a} + 4^${a} + 4^${a}) / (3^${b} + 3^${b} + 3^${b}) = 2^p / 3^q, find p + q.`,
+    expression: `\\frac{4^{${a}} + 4^{${a}} + 4^{${a}} + 4^{${a}}}{3^{${b}} + 3^{${b}} + 3^{${b}}} = \\frac{2^p}{3^q}`,
+    answer: String(p + q),
+    explanation: `분자는 4 × 4^${a} = 4^{${a + 1}} = (2^2)^{${a + 1}} = 2^{${p}}이고, 분모는 3 × 3^${b} = 3^{${q}}입니다. 따라서 p = ${p}, q = ${q}이며 p + q = ${p + q}입니다.`,
+    explanationEn: `Numerator is 4^{${a+1}} = 2^{${p}}, denominator is 3^{${q}}. Thus p + q = ${p + q}.`
+  };
+}
+
+// 8. [단항식의 계산 유형 08] 지수법칙 응용 (3) - 문자를 사용한 식의 변형 (#0224~#0227)
+export function rpmMonoExponentSubstitution(random) {
+  const mode = pick(random, ['single-sub', 'two-vars-sub']);
+  if (mode === 'single-sub') {
+    const base = pick(random, [2, 3]);
+    if (base === 2) {
+      const shift = ri(random, 1, 2);
+      const coeff = Math.pow(2, shift * 3);
+      const choices = [
+        { value: '1', label: `A^3 / ${coeff}`, labelEn: `A^3 / ${coeff}` },
+        { value: '2', label: `${coeff} A^3`, labelEn: `${coeff} A^3` },
+        { value: '3', label: `A^2 / ${coeff}`, labelEn: `A^2 / ${coeff}` },
+        { value: '4', label: `A^3 / ${Math.pow(2, shift)}`, labelEn: `A^3 / ${Math.pow(2, shift)}` },
+        { value: '5', label: `8 A^3`, labelEn: `8 A^3` },
+      ];
+      return {
+        prompt: `2^(x + ${shift}) = A 일 때, 8^x를 A를 사용하여 나타낸 것은?`,
+        promptEn: `Express 8^x in terms of A when 2^(x + ${shift}) = A.`,
+        expression: `2^{x + ${shift}} = A, \\quad 8^x`,
+        choices,
+        answer: '1',
+        explanation: `2^(x + ${shift}) = 2^x × 2^${shift} = A이므로 2^x = A / ${Math.pow(2, shift)}입니다. 따라서 8^x = (2^3)^x = (2^x)^3 = (A / ${Math.pow(2, shift)})^3 = A^3 / ${coeff}입니다.`,
+        explanationEn: `2^x = A / ${Math.pow(2, shift)}. Thus 8^x = (2^x)^3 = A^3 / ${coeff}.`
+      };
+    } else {
+      const choices = [
+        { value: '1', label: `9 A^2`, labelEn: `9 A^2` },
+        { value: '2', label: `3 A^2`, labelEn: `3 A^2` },
+        { value: '3', label: `A^2 / 9`, labelEn: `A^2 / 9` },
+        { value: '4', label: `27 A^2`, labelEn: `27 A^2` },
+        { value: '5', label: `81 A^2`, labelEn: `81 A^2` },
+      ];
+      return {
+        prompt: `3^(x - 1) = A 일 때, 9^x를 A를 사용하여 나타낸 것은?`,
+        promptEn: `Express 9^x in terms of A when 3^(x - 1) = A.`,
+        expression: `3^{x - 1} = A, \\quad 9^x`,
+        choices,
+        answer: '1',
+        explanation: `3^(x - 1) = 3^x / 3 = A에서 3^x = 3A입니다. 따라서 9^x = (3^2)^x = (3^x)^2 = (3A)^2 = 9 A^2입니다.`,
+        explanationEn: `3^x = 3A. Then 9^x = (3A)^2 = 9 A^2.`
+      };
+    }
+  }
+  const target = pick(random, [
+    { num: 72, ans: 'A^3 B^2', pA: 3, pB: 2 },
+    { num: 12, ans: 'A^2 B', pA: 2, pB: 1 },
+    { num: 18, ans: 'A B^2', pA: 1, pB: 2 },
+    { num: 36, ans: 'A^2 B^2', pA: 2, pB: 2 }
+  ]);
+  const choices = [
+    { value: '1', label: target.ans, labelEn: target.ans },
+    { value: '2', label: `A^${target.pA + 1} B^${target.pB}`, labelEn: `A^${target.pA + 1} B^${target.pB}` },
+    { value: '3', label: `A^${target.pA} B^${target.pB + 1}`, labelEn: `A^${target.pA} B^${target.pB + 1}` },
+    { value: '4', label: `2 A^${target.pA} B^${target.pB}`, labelEn: `2 A^${target.pA} B^${target.pB}` },
+    { value: '5', label: `3 A^${target.pA} B^${target.pB}`, labelEn: `3 A^${target.pA} B^${target.pB}` },
+  ];
+  return {
+    prompt: `2^x = A, 3^x = B 일 때, ${target.num}^x를 A, B를 사용하여 나타낸 것은?`,
+    promptEn: `Express ${target.num}^x in terms of A and B when 2^x = A and 3^x = B.`,
+    expression: `2^x = A, \\quad 3^x = B, \\quad ${target.num}^x`,
+    choices,
+    answer: '1',
+    explanation: `${target.num}을 소인수분해하면 2^${target.pA} × 3^${target.pB}입니다. 따라서 ${target.num}^x = (2^${target.pA} × 3^${target.pB})^x = (2^x)^${target.pA} × (3^x)^${target.pB} = ${target.ans}입니다.`,
+    explanationEn: `${target.num} = 2^${target.pA} × 3^${target.pB}. Thus ${target.num}^x = ${target.ans}.`
+  };
+}
+
+// 9. [단항식의 계산 유형 09] 지수법칙 응용 (4) - 몇 자리 자연수인가 (#0228~#0231)
+export function rpmMonoExponentDigitsCount(random) {
+  const diff = ri(random, 1, 3);
+  const b = ri(random, 5, 8);
+  const a = b + diff;
+  const mult = Math.pow(2, diff);
+  const digitsOfMult = String(mult).length;
+  const totalDigits = digitsOfMult + b;
+  return {
+    prompt: `2^${a} × 5^${b} 은 몇 자리의 자연수인지 구하시오.`,
+    promptEn: `How many digits does 2^${a} × 5^${b} have?`,
+    expression: `2^{${a}} \\times 5^{${b}}`,
+    answer: String(totalDigits),
+    explanation: `2^${a} × 5^${b} = 2^${diff} × (2^${b} × 5^${b}) = ${mult} × 10^${b}입니다. ${mult} 뒤에 0이 ${b}개 붙으므로 전체 자리수는 ${digitsOfMult} + ${b} = ${totalDigits}자리입니다.`,
+    explanationEn: `2^${a} × 5^${b} = ${mult} × 10^${b}, which has ${digitsOfMult} + ${b} = ${totalDigits} digits.`
+  };
+}
+
+// 10. [단항식의 계산 유형 10] 단항식의 곱셈 (#0232~#0235)
+export function rpmMonoMultBasic(random) {
+  const a = ri(random, 2, 3);
+  const b = ri(random, 2, 4);
+  const p = ri(random, 1, 2);
+  const q = ri(random, 1, 2);
+  const r = ri(random, 1, 3);
+  const coeff = a * a * b;
+  const expX = 2 * p + 1;
+  const expY = 2 * q + r;
+  return {
+    prompt: `(-${a}x^${p}y^${q})^2 × (${b}xy^${r}) = A x^B y^C 일 때, A + B + C의 값을 구하시오.`,
+    promptEn: `Given (-${a}x^${p}y^${q})^2 × (${b}xy^${r}) = A x^B y^C, find A + B + C.`,
+    expression: `(-${a}x^{${p}}y^{${q}})^2 \\times (${b}xy^{${r}}) = A x^B y^C`,
+    answer: String(coeff + expX + expY),
+    explanation: `(-${a}x^${p}y^${q})^2 = ${a * a}x^{${2 * p}}y^{${2 * q}}입니다. 여기에 ${b}xy^${r}를 곱하면 계수는 ${a * a} × ${b} = ${coeff}, x의 지수는 ${2 * p} + 1 = ${expX}, y의 지수는 ${2 * q} + ${r} = ${expY}입니다. 따라서 A + B + C = ${coeff} + ${expX} + ${expY} = ${coeff + expX + expY}입니다.`,
+    explanationEn: `Expanding yields ${coeff}x^{${expX}}y^{${expY}}, so A = ${coeff}, B = ${expX}, C = ${expY}, and their sum is ${coeff + expX + expY}.`
+  };
+}
+
+// 11. [단항식의 계산 유형 11] 단항식의 나눗셈 (#0236~#0239)
+export function rpmMonoDivBasic(random) {
+  const c2 = pick(random, [-4, -3, -2, 2, 3, 4]);
+  const coeff = ri(random, 2, 5) * (c2 < 0 ? -1 : 1);
+  const c1 = coeff * c2;
+  const p1 = ri(random, 3, 5), q1 = ri(random, 2, 4);
+  const p2 = ri(random, 1, 2), q2 = ri(random, 1, 2);
+  const expX = p1 - p2;
+  const expY = q1 - q2;
+  return {
+    prompt: `(${c1}x^${p1}y^${q1}) ÷ (${c2}x^${p2}y^${q2}) = A x^B y^C 일 때, 상수 A + B + C의 값을 구하시오.`,
+    promptEn: `If (${c1}x^${p1}y^${q1}) ÷ (${c2}x^${p2}y^${q2}) = A x^B y^C, find A + B + C.`,
+    expression: `(${c1}x^{${p1}}y^{${q1}}) \\div (${c2}x^{${p2}}y^{${q2}}) = A x^B y^C`,
+    answer: String(coeff + expX + expY),
+    explanation: `계수는 ${c1} ÷ (${c2}) = ${coeff}, x의 지수는 ${p1} - ${p2} = ${expX}, y의 지수는 ${q1} - ${q2} = ${expY}입니다. 따라서 A = ${coeff}, B = ${expX}, C = ${expY}이며 합은 ${coeff + expX + expY}입니다.`,
+    explanationEn: `Dividing coefficients gives ${coeff}, and subtracting powers gives x^{${expX}}y^{${expY}}. Sum is ${coeff + expX + expY}.`
+  };
+}
+
+// 12. [단항식의 계산 유형 12] 단항식의 곱셈과 나눗셈의 혼합 계산 (#0240~#0243)
+export function rpmMonoMultDivMixed(random) {
+  const k1 = pick(random, [2, 3]);
+  const k2 = pick(random, [2, 4]);
+  const k3 = ri(random, 2, 3);
+  const p1 = ri(random, 1, 2), q1 = ri(random, 1, 2);
+  const numCoeff = (k1 * k1) * k3;
+  if (numCoeff % k2 === 0) {
+    const finalCoeff = numCoeff / k2;
+    const finalX = 2 * p1;
+    const finalY = 2 * q1;
+    return {
+      prompt: `(-${k1}x^${p1}y^${q1})^2 ÷ (${k2}xy) × (${k3}xy) = A x^B y^C 일 때, 자연수 A + B + C의 값을 구하시오.`,
+      promptEn: `Given (-${k1}x^${p1}y^${q1})^2 ÷ (${k2}xy) × (${k3}xy) = A x^B y^C, find A + B + C.`,
+      expression: `(-${k1}x^{${p1}}y^{${q1}})^2 \\div (${k2}xy) \\times (${k3}xy) = A x^B y^C`,
+      answer: String(finalCoeff + finalX + finalY),
+      explanation: `거듭제곱을 풀면 ${k1 * k1}x^{${2 * p1}}y^{${2 * q1}}입니다. 나눗셈을 곱셈으로 바꾸어 계산하면 (${k1 * k1} × ${k3} ÷ ${k2}) x^{${2 * p1} - 1 + 1} y^{${2 * q1} - 1 + 1} = ${finalCoeff}x^{${finalX}}y^{${finalY}}입니다. 따라서 A + B + C = ${finalCoeff} + ${finalX} + ${finalY} = ${finalCoeff + finalX + finalY}입니다.`,
+      explanationEn: `Simplifying gives ${finalCoeff}x^{${finalX}}y^{${finalY}}, so A + B + C = ${finalCoeff + finalX + finalY}.`
+    };
+  }
+  return {
+    prompt: `(-2x^2 y)^2 ÷ (4xy) × (3xy) = A x^B y^C 일 때, A + B + C의 값을 구하시오.`,
+    promptEn: `Find A + B + C for (-2x^2 y)^2 ÷ (4xy) × (3xy) = A x^B y^C.`,
+    expression: `(-2x^2 y)^2 \\div (4xy) \\times (3xy) = A x^B y^C`,
+    answer: '9',
+    explanation: `4x^4 y^2 ÷ 4xy × 3xy = x^3 y × 3xy = 3x^4 y^2입니다. A = 3, B = 4, C = 2이므로 합은 9입니다.`,
+    explanationEn: `Calculates to 3x^4 y^2, yielding A + B + C = 9.`
+  };
+}
+
+// 13. [단항식의 계산 유형 13] 단항식의 계산에서 □ 안에 알맞은 식 구하기 (#0244~#0246)
+export function rpmMonoMissingBox(random) {
+  const p = ri(random, 1, 2);
+  const q = ri(random, 1, 2);
+  const a = ri(random, 2, 3);
+  const b = ri(random, 2, 3);
+  const boxK = b * ri(random, 1, 2);
+  const cCoeff = (a * boxK) / b;
+  const pAdj = p + 2;
+  const C_x = 1 + pAdj - 2;
+  const C_y = q;
+  const boxAns = `${boxK}x^${pAdj}y^${q}`;
+  const choices = [
+    { value: '1', label: boxAns, labelEn: boxAns },
+    { value: '2', label: `${boxK}x^${pAdj + 1}y^${q}`, labelEn: `${boxK}x^${pAdj + 1}y^${q}` },
+    { value: '3', label: `${boxK + 1}x^${pAdj}y^${q}`, labelEn: `${boxK + 1}x^${pAdj}y^${q}` },
+    { value: '4', label: `${boxK}x^${pAdj}y^${q + 1}`, labelEn: `${boxK}x^${pAdj}y^${q + 1}` },
+    { value: '5', label: `${boxK * 2}x^${pAdj}y^${q}`, labelEn: `${boxK * 2}x^${pAdj}y^${q}` },
+  ];
+  return {
+    prompt: `(${a}xy) × □ ÷ (${b}x^2 y) = ${cCoeff}x^${C_x}y^${C_y} 일 때, □ 안에 알맞은 식은?`,
+    promptEn: `Find the expression for □ in (${a}xy) × □ ÷ (${b}x^2 y) = ${cCoeff}x^${C_x}y^${C_y}.`,
+    expression: `(${a}xy) \\times \\square \\div (${b}x^2 y) = ${cCoeff}x^{${C_x}}y^{${C_y}}`,
+    choices,
+    answer: '1',
+    explanation: `□ = (${cCoeff}x^${C_x}y^${C_y}) × (${b}x^2 y) ÷ (${a}xy) = (${cCoeff * b}x^{${C_x + 2}}y^{${C_y + 1}}) ÷ (${a}xy) = ${boxAns}입니다.`,
+    explanationEn: `Isolating □ gives □ = (${cCoeff}x^${C_x}y^${C_y}) × (${b}x^2 y) ÷ (${a}xy) = ${boxAns}.`
+  };
+}
+
+// 14. [단항식의 계산 유형 14] 단항식의 계산의 도형에의 활용 (#0247~#0249)
+export function rpmMonoGeometryApplication(random) {
+  const shape = pick(random, ['triangle', 'rectangle', 'cone']);
+  if (shape === 'triangle') {
+    const bCoeff = ri(random, 2, 4) * 2;
+    const hCoeff = ri(random, 2, 5);
+    const p1 = ri(random, 1, 2), q1 = ri(random, 1, 2);
+    const p2 = ri(random, 1, 2), q2 = ri(random, 1, 2);
+    const areaCoeff = (bCoeff * hCoeff) / 2;
+    const areaP = p1 + p2;
+    const areaQ = q1 + q2;
+    return {
+      prompt: `밑변의 길이가 ${bCoeff}a^${p1}b^${q1}이고, 높이가 ${hCoeff}a^${p2}b^${q2}인 삼각형의 넓이를 구하시오. (단, 답은 계수를 입력)`,
+      promptEn: `Find the coefficient of the area of a triangle with base ${bCoeff}a^${p1}b^${q1} and height ${hCoeff}a^${p2}b^${q2}.`,
+      expression: `\\text{Base} = ${bCoeff}a^{${p1}}b^{${q1}}, \\quad \\text{Height} = ${hCoeff}a^{${p2}}b^{${q2}}`,
+      answer: String(areaCoeff),
+      answerSuffix: `a^${areaP}b^${areaQ}`,
+      explanation: `(삼각형의 넓이) = 1/2 × (밑변) × (높이) = 1/2 × (${bCoeff}a^${p1}b^${q1}) × (${hCoeff}a^${p2}b^${q2}) = ${areaCoeff}a^${areaP}b^${areaQ}입니다.`,
+      explanationEn: `Area = 1/2 × base × height = ${areaCoeff}a^${areaP}b^${areaQ}.`
+    };
+  }
+  if (shape === 'cone') {
+    const rCoeff = 3;
+    const hCoeff = ri(random, 2, 5) * 2;
+    const volCoeff = (rCoeff * rCoeff * hCoeff) / 3;
+    return {
+      prompt: `밑면인 원의 반지름의 길이가 ${rCoeff}a이고 부피가 ${volCoeff}πa^3b^2인 원뿔의 높이를 구하시오. (단, 높이의 계수를 입력)`,
+      promptEn: `Find the height coefficient of a cone with base radius ${rCoeff}a and volume ${volCoeff}πa^3b^2.`,
+      expression: `r = ${rCoeff}a, \\quad V = ${volCoeff}\\pi a^3 b^2`,
+      answer: String(hCoeff),
+      answerSuffix: 'ab^2',
+      explanation: `(원뿔의 부피) = 1/3 × π × r^2 × h = 1/3 × π × (${rCoeff}a)^2 × h = ${volCoeff}πa^3b^2입니다. h = (${volCoeff}πa^3b^2) ÷ (3πa^2) = ${hCoeff}ab^2입니다.`,
+      explanationEn: `Volume = 1/3 π r^2 h. Solving for h gives ${hCoeff}ab^2.`
+    };
+  }
+  const wCoeff = ri(random, 3, 5);
+  const hCoeff = ri(random, 2, 4);
+  const areaCoeff = wCoeff * hCoeff;
+  return {
+    prompt: `가로의 길이가 ${wCoeff}ab이고 넓이가 ${areaCoeff}a^3b^2인 직사각형의 세로의 길이를 구하시오. (단, 계수를 입력)`,
+    promptEn: `Find the coefficient of the length of a rectangle with width ${wCoeff}ab and area ${areaCoeff}a^3b^2.`,
+    expression: `\\text{Width} = ${wCoeff}ab, \\quad \\text{Area} = ${areaCoeff}a^3 b^2`,
+    answer: String(hCoeff),
+    answerSuffix: 'a^2b',
+    explanation: `(세로의 길이) = (넓이) ÷ (가로의 길이) = (${areaCoeff}a^3b^2) ÷ (${wCoeff}ab) = ${hCoeff}a^2b입니다.`,
+    explanationEn: `Length = Area ÷ Width = ${hCoeff}a^2b.`
+  };
+}
+
+// 15. [단항식의 계산 유형 15] 지수법칙 심화 (1) - 묶기 / 인수분해 (#0250~#0253)
+export function rpmMonoExponentFactorOut(random) {
+  const base = pick(random, [2, 3]);
+  const x = ri(random, 2, 4);
+  const factor = 1 + base + base * base;
+  const total = factor * Math.pow(base, x);
+  return {
+    prompt: `${base}^x + ${base}^(x + 1) + ${base}^(x + 2) = ${total} 일 때, 자연수 x의 값을 구하시오.`,
+    promptEn: `Find the natural number x when ${base}^x + ${base}^(x + 1) + ${base}^(x + 2) = ${total}.`,
+    expression: `${base}^x + ${base}^{x + 1} + ${base}^{x + 2} = ${total}`,
+    answer: String(x),
+    explanation: `좌변을 ${base}^x로 묶으면 ${base}^x(1 + ${base} + ${base * base}) = ${factor} × ${base}^x = ${total}입니다. ${base}^x = ${total} ÷ ${factor} = ${Math.pow(base, x)} = ${base}^${x}이므로 x = ${x}입니다.`,
+    explanationEn: `Factoring yields ${base}^x(1 + ${base} + ${base * base}) = ${factor} × ${base}^x = ${total}, so ${base}^x = ${Math.pow(base, x)} and x = ${x}.`
+  };
+}
+
+// 16. [단항식의 계산 유형 16] 지수법칙 심화 (2) - 거듭제곱의 일의 자리 숫자 규칙성 (#0254~#0256)
+export function rpmMonoUnitsDigitCycle(random) {
+  const base = pick(random, [2, 3, 7, 8]);
+  const exp = ri(random, 35, 95);
+  const cycles = {
+    2: [6, 2, 4, 8],
+    3: [1, 3, 9, 7],
+    7: [1, 7, 9, 3],
+    8: [6, 8, 4, 2]
+  };
+  const cycle = cycles[base];
+  const unitsDigit = cycle[exp % 4];
+  return {
+    prompt: `${base}^${exp}의 일의 자리의 숫자를 구하시오.`,
+    promptEn: `Find the units digit of ${base}^${exp}.`,
+    expression: `${base}^{${exp}} \\pmod{10}`,
+    answer: String(unitsDigit),
+    explanation: `${base}의 거듭제곱의 일의 자리 숫자는 [${cycle[1]}, ${cycle[2]}, ${cycle[3]}, ${cycle[0]}]의 4개 숫자가 반복됩니다. ${exp} = 4 × ${Math.floor(exp / 4)} + ${exp % 4}이므로 일의 자리 숫자는 ${unitsDigit}입니다.`,
+    explanationEn: `Powers of ${base} have units digits repeating in a cycle of 4: [${cycle[1]}, ${cycle[2]}, ${cycle[3]}, ${cycle[0]}]. ${exp} mod 4 = ${exp % 4}, so the units digit is ${unitsDigit}.`
+  };
+}
+
+// 17. [단항식의 계산 유형 17] 단항식의 계산 전 유형 실전 혼합 (#0257~#0274)
+export function rpmMonoAllTypesMixed(random) {
+  const fns = [
+    rpmMonoExponentSum,
+    rpmMonoExponentProduct,
+    rpmMonoExponentQuotient,
+    rpmMonoExponentPowerProduct,
+    rpmMonoExponentPowerQuotient,
+    rpmMonoExponentEquationBase,
+    rpmMonoExponentAddition,
+    rpmMonoExponentSubstitution,
+    rpmMonoExponentDigitsCount,
+    rpmMonoMultBasic,
+    rpmMonoDivBasic,
+    rpmMonoMultDivMixed,
+    rpmMonoMissingBox,
+    rpmMonoGeometryApplication,
+    rpmMonoExponentFactorOut,
+    rpmMonoUnitsDigitCycle
+  ];
+  return pick(random, fns)(random);
+}
+
+// 18. [단항식의 계산 유형 18] 단항식의 계산 최고수준 실력 UP (#0275~#0280)
+export function rpmMonoAdvancedSkillUp(random) {
+  const mode = pick(random, ['storage-units', 'advanced-sub', 'volume-ratio']);
+  if (mode === 'storage-units') {
+    const gb = pick(random, [16, 32, 64]);
+    const mb = pick(random, [4, 8, 16]);
+    const gbExp = gb === 16 ? 4 : (gb === 32 ? 5 : 6);
+    const mbExp = mb === 4 ? 2 : (mb === 8 ? 3 : 4);
+    const finalExp = gbExp + 10 - mbExp;
+    const choices = [
+      { value: '1', label: `2^${finalExp} 장`, labelEn: `2^${finalExp} photos` },
+      { value: '2', label: `2^${finalExp - 1} 장`, labelEn: `2^${finalExp - 1} photos` },
+      { value: '3', label: `2^${finalExp + 1} 장`, labelEn: `2^${finalExp + 1} photos` },
+      { value: '4', label: `2^${finalExp + 2} 장`, labelEn: `2^${finalExp + 2} photos` },
+      { value: '5', label: `2^${finalExp - 2} 장`, labelEn: `2^${finalExp - 2} photos` },
+    ];
+    return {
+      prompt: `용량이 ${gb} GB인 메모리 카드에 용량이 ${mb} MB인 사진을 최대 몇 장까지 저장할 수 있는가? (단, 1 GB = 2^10 MB)`,
+      promptEn: `How many ${mb} MB photos can be stored on a ${gb} GB memory card? (1 GB = 2^10 MB)`,
+      expression: `${gb} \\text{ GB} \\div ${mb} \\text{ MB}`,
+      choices,
+      answer: '1',
+      explanation: `${gb} GB = ${gb} × 2^10 MB = 2^${gbExp} × 2^10 MB = 2^${gbExp + 10} MB입니다. 사진 한 장의 용량은 ${mb} MB = 2^${mbExp} MB이므로 저장할 수 있는 사진 수는 2^${gbExp + 10} ÷ 2^${mbExp} = 2^${finalExp} 장입니다.`,
+      explanationEn: `${gb} GB = 2^{${gbExp + 10}} MB. Dividing by 2^{${mbExp}} MB yields 2^{${finalExp}} photos.`
+    };
+  }
+  if (mode === 'advanced-sub') {
+    return {
+      prompt: `a = 5^(x - 1), b = 2^(x + 2) 일 때, 80^x를 a, b를 사용하여 나타낸 식에서 분모의 값을 구하시오. (식: 5ab^4 / k 꼴)`,
+      promptEn: `Given a = 5^(x - 1) and b = 2^(x + 2), find the denominator k when 80^x is expressed as (5ab^4) / k.`,
+      expression: `a = 5^{x - 1}, \\quad b = 2^{x + 2}, \\quad 80^x`,
+      answer: '256',
+      explanation: `a = 5^x ÷ 5에서 5^x = 5a이고, b = 2^x × 4에서 2^x = b / 4입니다. 80 = 5 × 2^4이므로 80^x = 5^x × (2^x)^4 = 5a × (b / 4)^4 = (5ab^4) / 256입니다. 따라서 분모는 256입니다.`,
+      explanationEn: `5^x = 5a and 2^x = b/4. 80^x = 5^x × (2^x)^4 = 5a × (b/4)^4 = (5ab^4) / 256. The denominator is 256.`
+    };
+  }
+  return {
+    prompt: `반지름의 길이가 2ab인 구의 부피는 밑면의 반지름의 길이가 3b이고 높이가 ab^2인 원뿔의 부피의 몇 배인가? (결과: k a^2 / (9b) 일 때 k의 값)`,
+    promptEn: `The volume of a sphere with radius 2ab is how many times the volume of a cone with radius 3b and height ab^2? Find numerator k in k a^2 / (9b).`,
+    expression: `V_1 = \\frac{4}{3}\\pi (2ab)^3, \\quad V_2 = \\frac{1}{3}\\pi (3b)^2(ab^2)`,
+    answer: '32',
+    explanation: `구의 부피는 4/3 π (2ab)^3 = 32/3 π a^3 b^3입니다. 원뿔의 부피는 1/3 π (3b)^2 (ab^2) = 3 π a b^4 = 9/3 π a b^4입니다. 따라서 (구의 부피) ÷ (원뿔의 부피) = (32/3 π a^3 b^3) ÷ (3 π a b^4) = (32 a^2) / (9 b) 배이므로 k = 32입니다.`,
+    explanationEn: `Sphere volume is (32/3)π a^3 b^3 and cone volume is 3π a b^4. The ratio is (32 a^2) / (9 b), so k = 32.`
+  };
+}
+
+// =============================================================================
+// Chapter 03: 다항식의 계산 (Pages 44~51)
+// =============================================================================
+
+// 19. [다항식의 계산 유형 01] 다항식의 덧셈과 뺄셈 (#0306~#0309)
+export function rpmPolyCalcAddSubBasic(random) {
+  const m = pick(random, [-3, -2, 2, 3]);
+  const n = pick(random, [-3, -2, 2, 3]);
+  const a = ri(random, 1, 3), b = ri(random, -3, 3) || 1, c = ri(random, -4, 4);
+  const d = ri(random, 1, 3), e = ri(random, -3, 3) || -1, f = ri(random, -4, 4);
+  const coeffX = m * a + n * d;
+  const coeffY = m * b + n * e;
+  const constTerm = m * c + n * f;
+  const p1Str = `${formatLinear2Var(a, b)}${c > 0 ? ` + ${c}` : (c < 0 ? ` - ${Math.abs(c)}` : '')}`;
+  const p2Str = `${formatLinear2Var(d, e)}${f > 0 ? ` + ${f}` : (f < 0 ? ` - ${Math.abs(f)}` : '')}`;
+  const expr = `${m}(${p1Str}) ${n > 0 ? `+ ${n}` : `- ${Math.abs(n)}`}(${p2Str})`;
+  return {
+    prompt: `${expr}을 간단히 하였을 때, x의 계수를 A, y의 계수를 B, 상수항을 C라 하자. A + B + C의 값을 구하시오.`,
+    promptEn: `When simplifying ${expr}, let A be the coefficient of x, B be the coefficient of y, and C be the constant term. Find A + B + C.`,
+    expression: expr,
+    answer: String(coeffX + coeffY + constTerm),
+    explanation: `괄호를 풀면 (${m * a}x ${m * b >= 0 ? `+ ${m * b}` : `- ${Math.abs(m * b)}`}y ${m * c >= 0 ? `+ ${m * c}` : `- ${Math.abs(m * c)}`}) + (${n * d}x ${n * e >= 0 ? `+ ${n * e}` : `- ${Math.abs(n * e)}`}y ${n * f >= 0 ? `+ ${n * f}` : `- ${Math.abs(n * f)}`}) = ${coeffX}x ${coeffY >= 0 ? `+ ${coeffY}` : `- ${Math.abs(coeffY)}`}y ${constTerm >= 0 ? `+ ${constTerm}` : `- ${Math.abs(constTerm)}`}입니다. 따라서 A + B + C = ${coeffX + coeffY + constTerm}입니다.`,
+    explanationEn: `Expanding and collecting like terms yields ${coeffX}x + (${coeffY})y + (${constTerm}). The sum is ${coeffX + coeffY + constTerm}.`
+  };
+}
+
+// 20. [다항식의 계산 유형 02] 이차식의 덧셈과 뺄셈 (#0310~#0313)
+export function rpmPolyCalcQuadraticAddSub(random) {
+  const a = ri(random, 2, 4);
+  const b = ri(random, -4, -1);
+  const c = ri(random, 2, 6);
+  const d = ri(random, -4, -1);
+  const e = ri(random, -2, 2) || 1;
+  const f = ri(random, 1, 4);
+  const resA = a - d;
+  const resB = b - e;
+  const resC = c - f;
+  const expr = `(${formatPoly2(a, b, c)}) - (${formatPoly2(d, e, f)})`;
+  return {
+    prompt: `${expr}을 간단히 했을 때, x^2의 계수와 상수항의 합을 구하시오.`,
+    promptEn: `Find the sum of the x^2 coefficient and the constant term in ${expr}.`,
+    expression: expr,
+    answer: String(resA + resC),
+    explanation: `동류항끼리 모아 계산하면 (${a} - (${d}))x^2 + (${b} - (${e}))x + (${c} - (${f})) = ${resA}x^2 ${resB >= 0 ? `+ ${resB}` : `- ${Math.abs(resB)}`}x ${resC >= 0 ? `+ ${resC}` : `- ${Math.abs(resC)}`}입니다. 따라서 x^2의 계수 ${resA}와 상수항 ${resC}의 합은 ${resA + resC}입니다.`,
+    explanationEn: `Collecting like terms gives ${resA}x^2 + (${resB})x + (${resC}). The sum of the x^2 coefficient and the constant term is ${resA + resC}.`
+  };
+}
+
+// 21. [다항식의 계산 유형 03] 괄호가 있는 다항식의 덧셈과 뺄셈 (#0314~#0317)
+export function rpmPolyCalcBracketsOrder(random) {
+  const c1 = ri(random, 2, 4);
+  const c2 = ri(random, 2, 3);
+  const c3 = ri(random, 3, 5);
+  const c4 = ri(random, 2, 4);
+  const k = ri(random, 2, 6);
+  const ansX = c1 - c4;
+  const ansY = -(2 * c2 - c3);
+  const expr = `${c1}x - [${c2}y - {${c3}y - (${c4}x + ${c2}y)} + ${k}]`;
+  return {
+    prompt: `${expr}을 간단히 하였을 때, x의 계수를 a, y의 계수를 b라 하자. a + b의 값을 구하시오.`,
+    promptEn: `When simplifying ${expr}, let a be the coefficient of x and b be the coefficient of y. Find a + b.`,
+    expression: expr,
+    answer: String(ansX + ansY),
+    explanation: `소괄호 풀기: {${c3}y - ${c4}x - ${c2}y} = {-${c4}x + ${c3 - c2}y}. 중괄호 풀기: [${c2}y + ${c4}x - ${c3 - c2}y + ${k}] = [${c4}x + ${2 * c2 - c3}y + ${k}]. 대괄호 풀기: ${c1}x - ${c4}x - ${2 * c2 - c3}y - ${k} = ${ansX}x ${ansY >= 0 ? `+ ${ansY}` : `- ${Math.abs(ansY)}`}y - ${k}. 따라서 a + b = ${ansX} + (${ansY}) = ${ansX + ansY}입니다.`,
+    explanationEn: `Unfolding brackets in order: () -> {} -> [] results in ${ansX}x + (${ansY})y - ${k}. Thus a + b = ${ansX + ansY}.`
+  };
+}
+
+// 22. [다항식의 계산 유형 04] 잘못 계산하여 얻은 식에서 어떤 다항식 구하기 (#0318~#0321)
+export function rpmPolyCalcWrongCalculation(random) {
+  const pA = ri(random, 2, 4);
+  const pB = ri(random, -4, -1);
+  const pC = ri(random, 1, 3);
+  const qA = ri(random, 3, 6);
+  const qB = ri(random, 1, 4);
+  const qC = ri(random, -3, -1);
+  const corA = qA + 2 * pA;
+  const corB = qB + 2 * pB;
+  const corC = qC + 2 * pC;
+  const polyP = formatPoly2(pA, pB, pC);
+  const polyQ = formatPoly2(qA, qB, qC);
+  return {
+    prompt: `어떤 식 A에 ${polyP}를 더해야 할 것을 잘못하여 뺐더니 ${polyQ}가 되었다. 이때 바르게 계산한 식에서 x^2의 계수와 x의 계수, 상수항의 합을 구하시오.`,
+    promptEn: `Instead of adding ${polyP} to polynomial A, subtracting it yielded ${polyQ}. Find the sum of all coefficients in the correct result.`,
+    expression: `A - (${polyP}) = ${polyQ}`,
+    answer: String(corA + corB + corC),
+    explanation: `잘못된 식: A - (${polyP}) = ${polyQ}이므로 A = (${polyQ}) + (${polyP})입니다. 바르게 계산한 식은 A + (${polyP}) = (${polyQ}) + 2(${polyP}) = ${formatPoly2(corA, corB, corC)}입니다. 계수의 합은 ${corA} + (${corB}) + (${corC}) = ${corA + corB + corC}입니다.`,
+    explanationEn: `A = Q + P. Correct answer is A + P = Q + 2P = ${corA}x^2 + (${corB})x + (${corC}), sum of coefficients is ${corA + corB + corC}.`
+  };
+}
+
+// 23. [다항식의 계산 유형 05] 단항식과 다항식의 곱셈 (#0322~#0325)
+export function rpmPolyCalcMonomialPolyMult(random) {
+  const a1 = -ri(random, 2, 4);
+  const b1 = -ri(random, 3, 5);
+  const c1 = ri(random, 4, 7);
+  const a2 = -ri(random, 2, 3);
+  const b2 = ri(random, 4, 7);
+  const c2 = -ri(random, 2, 4);
+  const d2 = ri(random, 1, 3);
+  const resX2 = a1 * b1 + a2 * b2;
+  const resX = a1 * c1 + a2 * c2;
+  const resConst = a2 * d2;
+  const expr = `${a1}x(${b1}x + ${c1}) ${a2 > 0 ? `+ ${a2}` : `- ${Math.abs(a2)}`}(${b2}x^2 ${c2 > 0 ? `+ ${c2}` : `- ${Math.abs(c2)}`}x + ${d2})`;
+  return {
+    prompt: `${expr}을 전개하여 간단히 하였을 때, x^2의 계수를 A, x의 계수를 B, 상수항을 C라 하자. A + B + C의 값을 구하시오.`,
+    promptEn: `Expand and simplify ${expr}. Let A, B, C be the coefficients of x^2, x, and the constant term. Find A + B + C.`,
+    expression: expr,
+    answer: String(resX2 + resX + resConst),
+    explanation: `분배법칙으로 전개하면 (${a1 * b1}x^2 + ${a1 * c1}x) + (${a2 * b2}x^2 + ${a2 * c2}x + ${a2 * d2}) = ${resX2}x^2 ${resX >= 0 ? `+ ${resX}` : `- ${Math.abs(resX)}`}x ${resConst >= 0 ? `+ ${resConst}` : `- ${Math.abs(resConst)}`}입니다. 따라서 A + B + C = ${resX2 + resX + resConst}입니다.`,
+    explanationEn: `Expanding gives ${resX2}x^2 + (${resX})x + (${resConst}). The sum is ${resX2 + resX + resConst}.`
+  };
+}
+
+// 24. [다항식의 계산 유형 06] 다항식과 단항식의 나눗셈 (#0326~#0329)
+export function rpmPolyCalcMonomialPolyDiv(random) {
+  const q = pick(random, [2, 3]);
+  const p = ri(random, 1, 2);
+  const base1 = ri(random, 2, 4) * p;
+  const base2 = ri(random, 2, 5) * p;
+  const base3 = ri(random, 2, 4) * p;
+  const res1 = (base1 * q) / p;
+  const res2 = (base2 * q) / p;
+  const res3 = (base3 * q) / p;
+  const expr = `(${base1}x^2 y + ${base2}xy^2 - ${base3}y) ÷ (${p}/${q}y)`;
+  return {
+    prompt: `${expr}을 간단히 하였을 때, x^2의 계수 A와 xy의 계수 B, 상수항 C의 합 A + B - C의 값을 구하시오.`,
+    promptEn: `Simplify ${expr} to A x^2 + B xy - C. Find A + B - C.`,
+    expression: `(${base1}x^2 y + ${base2}xy^2 - ${base3}y) \\div \\left(\\frac{${p}}{${q}}y\\right)`,
+    answer: String(res1 + res2 - res3),
+    explanation: `역수 곱셈으로 바꾸면 (${base1}x^2 y + ${base2}xy^2 - ${base3}y) × (${q} / (${p}y)) = ${res1}x^2 + ${res2}xy - ${res3}입니다. A = ${res1}, B = ${res2}, C = ${res3}이므로 A + B - C = ${res1 + res2 - res3}입니다.`,
+    explanationEn: `Multiplying by reciprocal ${q}/(${p}y) yields ${res1}x^2 + ${res2}xy - ${res3}. Then A + B - C = ${res1 + res2 - res3}.`
+  };
+}
+
+// 25. [다항식의 계산 유형 07] 사칙계산이 혼합된 다항식의 계산 (#0330~#0333)
+export function rpmPolyCalcFourOpsMixed(random) {
+  const a = ri(random, 2, 4), b = ri(random, 1, 3);
+  const multCoeff = -ri(random, 2, 4);
+  const d1 = ri(random, 2, 5), d2 = ri(random, 2, 4);
+  const coeffX2 = multCoeff * a;
+  const coeffXY = -multCoeff * b;
+  const expr = `(${a}x - ${b}y) × (${multCoeff}x) - (${d1}x^2 y - ${d2}xy) ÷ (xy)`;
+  return {
+    prompt: `${expr}을 간단히 하였을 때, x^2의 계수와 xy의 계수의 합을 구하시오.`,
+    promptEn: `Find the sum of the x^2 and xy coefficients in ${expr}.`,
+    expression: expr,
+    answer: String(coeffX2 + coeffXY),
+    explanation: `앞부분: ${multCoeff * a}x^2 + ${-multCoeff * b}xy. 뒷부분: (${d1}x^2 y - ${d2}xy) ÷ (xy) = ${d1}x - ${d2}. 빼면 ${coeffX2}x^2 + ${coeffXY}xy - ${d1}x + ${d2}입니다. 따라서 x^2의 계수와 xy의 계수의 합은 ${coeffX2} + ${coeffXY} = ${coeffX2 + coeffXY}입니다.`,
+    explanationEn: `Simplifying gives ${coeffX2}x^2 + ${coeffXY}xy - ${d1}x + ${d2}. Sum of x^2 and xy coefficients is ${coeffX2 + coeffXY}.`
+  };
+}
+
+// 26. [다항식의 계산 유형 08] 다항식 계산에서 □ 안에 알맞은 식 구하기 (#0334~#0336)
+export function rpmPolyCalcMissingBox(random) {
+  const l = ri(random, 2, 3);
+  const w = ri(random, 2, 4);
+  const baseArea = l * w;
+  const hA = ri(random, 2, 5);
+  const hB = ri(random, 1, 3);
+  const volA = baseArea * hA;
+  const volB = baseArea * hB;
+  const ansStr = `${hA}a - ${hB}b`;
+  const choices = [
+    { value: '1', label: ansStr, labelEn: ansStr },
+    { value: '2', label: `${hA}a + ${hB}b`, labelEn: `${hA}a + ${hB}b` },
+    { value: '3', label: `${hA + 1}a - ${hB}b`, labelEn: `${hA + 1}a - ${hB}b` },
+    { value: '4', label: `${hA}a - ${hB + 1}b`, labelEn: `${hA}a - ${hB + 1}b` },
+    { value: '5', label: `${hA * 2}a - ${hB}b`, labelEn: `${hA * 2}a - ${hB}b` },
+  ];
+  return {
+    prompt: `밑면의 가로의 길이가 ${l}a, 세로의 길이가 ${w}b인 직육면체의 부피가 ${volA}a^2 b - ${volB}ab^2 일 때, 이 직육면체의 높이는?`,
+    promptEn: `A rectangular cuboid has base length ${l}a, width ${w}b, and volume ${volA}a^2 b - ${volB}ab^2. Find its height.`,
+    expression: `V = ${volA}a^2 b - ${volB}ab^2, \\quad \\text{Base} = ${l}a \\times ${w}b`,
+    choices,
+    answer: '1',
+    explanation: `(밑넓이) = ${l}a × ${w}b = ${baseArea}ab입니다. (높이) = (부피) ÷ (밑넓이) = (${volA}a^2 b - ${volB}ab^2) ÷ (${baseArea}ab) = ${ansStr}입니다.`,
+    explanationEn: `Base area is ${baseArea}ab. Height = Volume ÷ Base Area = ${ansStr}.`
+  };
+}
+
+// 27. [다항식의 계산 유형 09] 식의 대입과 식의 값 구하기 (#0337~#0340)
+export function rpmPolyCalcEvaluateValue(random) {
+  const a = ri(random, 4, 7);
+  const b = ri(random, 2, 4);
+  const c = ri(random, 1, 3);
+  const d = ri(random, 5, 8);
+  const xVal = ri(random, 2, 4);
+  const yVal = -ri(random, 1, 3);
+  const coeffX = a - c;
+  const coeffY = d - b;
+  const evalResult = coeffX * xVal + coeffY * yVal;
+  return {
+    prompt: `x = ${xVal}, y = ${yVal} 일 때, (${a}x^2 y - ${b}xy^2)/(xy) - (${c}x^2 - ${d}xy)/x 의 값을 구하시오.`,
+    promptEn: `Evaluate (${a}x^2 y - ${b}xy^2)/(xy) - (${c}x^2 - ${d}xy)/x when x = ${xVal} and y = ${yVal}.`,
+    expression: `\\frac{${a}x^2 y - ${b}xy^2}{xy} - \\frac{${c}x^2 - ${d}xy}{x}, \\quad x = ${xVal}, \\; y = ${yVal}`,
+    answer: String(evalResult),
+    explanation: `식을 먼저 간단히 하면 (${a}x - ${b}y) - (${c}x - ${d}y) = ${coeffX}x + ${coeffY}y입니다. 여기에 x = ${xVal}, y = ${yVal}를 대입하면 ${coeffX} × (${xVal}) + ${coeffY} × (${yVal}) = ${coeffX * xVal} + (${coeffY * yVal}) = ${evalResult}입니다.`,
+    explanationEn: `Simplifying gives ${coeffX}x + ${coeffY}y. Substituting x = ${xVal}, y = ${yVal} yields ${evalResult}.`
+  };
+}
+
+// 28. [다항식의 계산 유형 10] 한 문자에 대한 식으로 나타내기 (#0341~#0344)
+export function rpmPolyCalcSubExpression(random) {
+  const a = ri(random, 2, 4);
+  const b = -ri(random, 2, 4);
+  const c = -ri(random, 1, 3);
+  const d = ri(random, 2, 5);
+  const finalX = -2 * a + c;
+  const finalY = -2 * b + d;
+  const ansStr = formatLinear2Var(finalX, finalY);
+  const choices = [
+    { value: '1', label: ansStr, labelEn: ansStr },
+    { value: '2', label: formatLinear2Var(finalX + 1, finalY), labelEn: formatLinear2Var(finalX + 1, finalY) },
+    { value: '3', label: formatLinear2Var(finalX, finalY - 1), labelEn: formatLinear2Var(finalX, finalY - 1) },
+    { value: '4', label: formatLinear2Var(-finalX, finalY), labelEn: formatLinear2Var(-finalX, finalY) },
+    { value: '5', label: formatLinear2Var(finalX, -finalY), labelEn: formatLinear2Var(finalX, -finalY) },
+  ];
+  const A_str = formatLinear2Var(a, b);
+  const B_str = formatLinear2Var(c, d);
+  return {
+    prompt: `A = ${A_str}, B = ${B_str} 일 때, -4A + 2B - (B - 2A)를 x, y에 대한 식으로 나타낸 것은?`,
+    promptEn: `Given A = ${A_str} and B = ${B_str}, express -4A + 2B - (B - 2A) in terms of x and y.`,
+    expression: `A = ${A_str}, \\quad B = ${B_str}, \\quad -4A + 2B - (B - 2A)`,
+    choices,
+    answer: '1',
+    explanation: `주어진 식을 먼저 A, B로 간단히 하면 -4A + 2B - B + 2A = -2A + B입니다. 여기에 A, B를 대입하면 -2(${A_str}) + (${B_str}) = ${ansStr}입니다.`,
+    explanationEn: `Simplifying gives -2A + B. Substituting A and B yields ${ansStr}.`
+  };
+}
+
+// 29. [다항식의 계산 유형 11] 다항식의 계산의 도형에의 활용 (#0345~#0350)
+export function rpmPolyCalcGeometryApplication(random) {
+  const topA = ri(random, 1, 2);
+  const botA = ri(random, 3, 5);
+  const hCoeff = ri(random, 2, 4) * 2;
+  const sumA = topA + botA;
+  const areaCoeff = (sumA * hCoeff) / 2;
+  return {
+    prompt: `윗변의 길이가 ${topA}a + b, 아랫변의 길이가 ${botA}a - b이고 높이가 ${hCoeff}ab인 사다리꼴의 넓이를 구하시오. (단, 답은 넓이의 계수를 입력)`,
+    promptEn: `Find the coefficient of the area of a trapezoid with top base ${topA}a + b, bottom base ${botA}a - b, and height ${hCoeff}ab.`,
+    expression: `\\text{Top} = ${topA}a + b, \\quad \\text{Bottom} = ${botA}a - b, \\quad h = ${hCoeff}ab`,
+    answer: String(areaCoeff),
+    answerSuffix: 'a^2b',
+    explanation: `(사다리꼴 넓이) = 1/2 × ((윗변) + (아랫변)) × (높이) = 1/2 × (${sumA}a) × (${hCoeff}ab) = ${areaCoeff}a^2 b입니다.`,
+    explanationEn: `Area = 1/2 × ((${topA}a + b) + (${botA}a - b)) × ${hCoeff}ab = ${areaCoeff}a^2 b.`
+  };
+}
+
+// 30. [다항식의 계산 유형 12] 다항식의 계산 전 유형 실전 혼합 (#0351~#0357)
+export function rpmPolyCalcAllMixed(random) {
+  const fns = [
+    rpmPolyCalcAddSubBasic,
+    rpmPolyCalcQuadraticAddSub,
+    rpmPolyCalcBracketsOrder,
+    rpmPolyCalcWrongCalculation,
+    rpmPolyCalcMonomialPolyMult,
+    rpmPolyCalcMonomialPolyDiv,
+    rpmPolyCalcFourOpsMixed,
+    rpmPolyCalcMissingBox,
+    rpmPolyCalcEvaluateValue,
+    rpmPolyCalcSubExpression,
+    rpmPolyCalcGeometryApplication
+  ];
+  return pick(random, fns)(random);
+}
+
+// 31. [다항식의 계산 유형 13] 다항식의 계산 최고수준 실력 UP (#0358~#0364)
+export function rpmPolyCalcAdvancedSkillUp(random) {
+  const mode = pick(random, ['strip-overlap', 'wrong-mult-div']);
+  if (mode === 'strip-overlap') {
+    const N = pick(random, [8, 10, 12]);
+    const side = ri(random, 2, 3);
+    const overlap = ri(random, 2, 4);
+    const totalLenCoeffX = N * side;
+    const totalLenConst = (N - 1) * overlap;
+    const areaCoeffX2 = side * totalLenCoeffX;
+    const areaCoeffX = side * totalLenConst;
+    return {
+      prompt: `한 변의 길이가 ${side}x인 정사각형 모양의 색종이 ${N}장을 ${overlap}cm의 폭만큼 풀로 이어 붙여서 직사각형 모양의 띠를 만들었다. 만들어진 띠의 넓이가 Ax^2 - Bx 일 때, A + B의 값을 구하시오.`,
+      promptEn: `Connecting ${N} square paper sheets of side ${side}x with overlap width ${overlap}cm forms a rectangular strip of area Ax^2 - Bx. Find A + B.`,
+      expression: `\\text{Area} = Ax^2 - Bx`,
+      answer: String(areaCoeffX2 + areaCoeffX),
+      explanation: `직사각형 띠의 가로의 길이는 ${N} × ${side}x - (${N} - 1) × ${overlap} = ${totalLenCoeffX}x - ${totalLenConst}입니다. 세로의 길이는 ${side}x이므로 넓이는 ${side}x(${totalLenCoeffX}x - ${totalLenConst}) = ${areaCoeffX2}x^2 - ${areaCoeffX}x입니다. 따라서 A = ${areaCoeffX2}, B = ${areaCoeffX}이며 A + B = ${areaCoeffX2 + areaCoeffX}입니다.`,
+      explanationEn: `Strip length is ${totalLenCoeffX}x - ${totalLenConst} and width is ${side}x. Area is ${areaCoeffX2}x^2 - ${areaCoeffX}x, giving A + B = ${areaCoeffX2 + areaCoeffX}.`
+    };
+  }
+  const m = pick(random, [2, 3]);
+  const c1 = ri(random, 2, 4) * m * m;
+  const c2 = ri(random, 2, 4) * m * m;
+  const orig1 = c1 / m;
+  const orig2 = c2 / m;
+  const correct1 = orig1 / m;
+  const correct2 = orig2 / m;
+  return {
+    prompt: `어떤 다항식에 ${m}a를 나누어야 할 것을 잘못하여 곱했더니 ${c1}a^3 - ${c2}a^2 이 되었다. 이때 바르게 계산한 결과는 p a^2 - q a 꼴이 아닌 p a - q 이다. p + q의 값을 구하시오.`,
+    promptEn: `Dividing by ${m}a was intended, but multiplying by ${m}a resulted in ${c1}a^3 - ${c2}a^2. The correct result is p a - q. Find p + q.`,
+    expression: `P \\times ${m}a = ${c1}a^3 - ${c2}a^2`,
+    answer: String(correct1 + correct2),
+    explanation: `원래 다항식 P = (${c1}a^3 - ${c2}a^2) ÷ (${m}a) = ${orig1}a^2 - ${orig2}a입니다. 바르게 계산한 식은 P ÷ (${m}a) = (${orig1}a^2 - ${orig2}a) ÷ (${m}a) = ${correct1}a - ${correct2}입니다. 따라서 p = ${correct1}, q = ${correct2}이며 p + q = ${correct1 + correct2}입니다.`,
+    explanationEn: `Original polynomial is ${orig1}a^2 - ${orig2}a. Correct result is dividing again by ${m}a, giving ${correct1}a - ${correct2}. Thus p + q = ${correct1 + correct2}.`
+  };
+}
+
+
 export const RPM_ADVANCED_ENGINES = {
   // 01 소인수분해 RPM 세부 유형 (RPM 1-1 Pages 10~15)
   'rpm-prime-prop-closest': rpmPrimePropClosest,
@@ -10253,5 +11256,43 @@ export const RPM_ADVANCED_ENGINES = {
   'rpm-rat-dec-mistake-equation': rpmRatDecMistakeEquationApplication,
   'rpm-rat-dec-all-mixed': rpmRatDecAllTypesMixed,
   'rpm-rat-dec-advanced-skill-up': rpmRatDecAdvancedSkillUp,
-'rpm-geo-semester-one-mock-exam': rpmGeoSemesterOneMockExam,
+  // -------------------------------------------------------------
+  // [중2-1] 02 단항식의 계산 세부 응용 유형 (RPM 2-1 p.30~41)
+  // -------------------------------------------------------------
+  'rpm-mono-exponent-sum': rpmMonoExponentSum,
+  'rpm-mono-exponent-product': rpmMonoExponentProduct,
+  'rpm-mono-exponent-quotient': rpmMonoExponentQuotient,
+  'rpm-mono-exponent-power-product': rpmMonoExponentPowerProduct,
+  'rpm-mono-exponent-power-quotient': rpmMonoExponentPowerQuotient,
+  'rpm-mono-exponent-equation-base': rpmMonoExponentEquationBase,
+  'rpm-mono-exponent-addition': rpmMonoExponentAddition,
+  'rpm-mono-exponent-substitution': rpmMonoExponentSubstitution,
+  'rpm-mono-exponent-digits-count': rpmMonoExponentDigitsCount,
+  'rpm-mono-mult-basic': rpmMonoMultBasic,
+  'rpm-mono-div-basic': rpmMonoDivBasic,
+  'rpm-mono-mult-div-mixed': rpmMonoMultDivMixed,
+  'rpm-mono-missing-box': rpmMonoMissingBox,
+  'rpm-mono-geometry-app': rpmMonoGeometryApplication,
+  'rpm-mono-exponent-factor-out': rpmMonoExponentFactorOut,
+  'rpm-mono-units-digit-cycle': rpmMonoUnitsDigitCycle,
+  'rpm-mono-all-mixed': rpmMonoAllTypesMixed,
+  'rpm-mono-advanced-skill-up': rpmMonoAdvancedSkillUp,
+
+  // -------------------------------------------------------------
+  // [중2-1] 03 다항식의 계산 세부 응용 유형 (RPM 2-1 p.44~51)
+  // -------------------------------------------------------------
+  'rpm-poly-calc-add-sub-basic': rpmPolyCalcAddSubBasic,
+  'rpm-poly-calc-quadratic-add-sub': rpmPolyCalcQuadraticAddSub,
+  'rpm-poly-calc-brackets-order': rpmPolyCalcBracketsOrder,
+  'rpm-poly-calc-wrong-calculation': rpmPolyCalcWrongCalculation,
+  'rpm-poly-calc-monomial-mult': rpmPolyCalcMonomialPolyMult,
+  'rpm-poly-calc-monomial-div': rpmPolyCalcMonomialPolyDiv,
+  'rpm-poly-calc-four-ops-mixed': rpmPolyCalcFourOpsMixed,
+  'rpm-poly-calc-missing-box': rpmPolyCalcMissingBox,
+  'rpm-poly-calc-evaluate-value': rpmPolyCalcEvaluateValue,
+  'rpm-poly-calc-sub-expression': rpmPolyCalcSubExpression,
+  'rpm-poly-calc-geometry-app': rpmPolyCalcGeometryApplication,
+  'rpm-poly-calc-all-mixed': rpmPolyCalcAllMixed,
+  'rpm-poly-calc-advanced-skill-up': rpmPolyCalcAdvancedSkillUp,
+
 };
