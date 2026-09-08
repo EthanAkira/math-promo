@@ -99,14 +99,15 @@ export default function CurriculumExplorer() {
   const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState(() => (language === 'ko' ? 'korea' : 'courses'));
   const [krSubView, setKrSubView] = useState('grade'); // 'grade' | 'subject2022'
-  const [eastAsiaCountry, setEastAsiaCountry] = useState('japan'); // 'japan' | 'taiwan' | 'hongkong' | 'singapore' | 'malaysia' | 'vietnam'
+  const [eastAsiaCountry, setEastAsiaCountry] = useState('japan'); // 'japan' | 'taiwan' | 'hongkong'
+  const [southeastAsiaCountry, setSoutheastAsiaCountry] = useState('singapore'); // 'singapore' | 'malaysia' | 'vietnam'
 
   // If user has not manually changed tab on first load, adjust to language default once
   useEffect(() => {
     // A direct link (e.g. the top-nav "동아시아 교육과정" item) takes priority over both
     // sessionStorage and the language default, so it reliably lands on the right tab.
     const requestedTab = new URLSearchParams(window.location.search).get('curriculumTab');
-    if (requestedTab && ['korea', 'courses', 'domains', 'eastasia'].includes(requestedTab)) {
+    if (requestedTab && ['korea', 'courses', 'domains', 'eastasia', 'southeastasia'].includes(requestedTab)) {
       setActiveTab(requestedTab);
       try { window.sessionStorage.setItem('math-curriculum-tab', requestedTab); } catch {}
       return;
@@ -136,14 +137,13 @@ export default function CurriculumExplorer() {
       { id: 'courses', label: copy.mainTabs[1], help: copy.mainTabHelp[1] },
       { id: 'domains', label: copy.mainTabs[2], help: copy.mainTabHelp[2] },
       { id: 'eastasia', label: copy.mainTabs[3], help: copy.mainTabHelp[3] },
+      { id: 'southeastasia', label: copy.mainTabs[4], help: copy.mainTabHelp[4] },
     ],
     [copy]
   );
 
-  const EAST_ASIA_STAGES = {
-    japan: JAPAN_STAGES, taiwan: TAIWAN_STAGES, hongkong: HONGKONG_STAGES,
-    singapore: SINGAPORE_STAGES, malaysia: MALAYSIA_STAGES, vietnam: VIETNAM_STAGES,
-  };
+  const EAST_ASIA_STAGES = { japan: JAPAN_STAGES, taiwan: TAIWAN_STAGES, hongkong: HONGKONG_STAGES };
+  const SOUTHEAST_ASIA_STAGES = { singapore: SINGAPORE_STAGES, malaysia: MALAYSIA_STAGES, vietnam: VIETNAM_STAGES };
 
   const koreanSchoolGroups = useMemo(
     () => [
@@ -406,7 +406,7 @@ export default function CurriculumExplorer() {
           <div className="eastasia-curriculum-wrap">
             <div className="curriculum-subview-bar">
               <div className="subview-toggle-group country-toggle-group" role="group" aria-label="동아시아 교육과정 국가 선택">
-                {['japan', 'taiwan', 'hongkong', 'singapore', 'malaysia', 'vietnam'].map((country) => (
+                {['japan', 'taiwan', 'hongkong'].map((country) => (
                   <button
                     type="button"
                     key={country}
@@ -426,6 +426,35 @@ export default function CurriculumExplorer() {
 
             <div className="curriculum-stage-grid">
               {EAST_ASIA_STAGES[eastAsiaCountry].map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
+            </div>
+          </div>
+        )}
+
+        {/* Tab 5: 동남아시아 교육과정 (싱가포르·말레이시아·베트남) */}
+        {activeTab === 'southeastasia' && (
+          <div className="eastasia-curriculum-wrap">
+            <div className="curriculum-subview-bar">
+              <div className="subview-toggle-group country-toggle-group" role="group" aria-label="동남아시아 교육과정 국가 선택">
+                {['singapore', 'malaysia', 'vietnam'].map((country) => (
+                  <button
+                    type="button"
+                    key={country}
+                    className={`subview-btn ${southeastAsiaCountry === country ? 'active' : ''}`}
+                    onClick={() => setSoutheastAsiaCountry(country)}
+                  >
+                    <strong>{copy.southeastAsiaCountries[country]}</strong>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="curriculum-notice-banner official">
+              <span className="notice-icon">🌏</span>
+              <p>{copy.notices.southeastAsiaNotice}</p>
+            </div>
+
+            <div className="curriculum-stage-grid">
+              {SOUTHEAST_ASIA_STAGES[southeastAsiaCountry].map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
             </div>
           </div>
         )}

@@ -8,8 +8,8 @@ export const CURRICULUM_COPY = {
     eyebrow: 'CURRICULUM MAP',
     title: '어떤 순서로 수학을 찾아볼까요?',
     description: '한국 교육과정(학년별/2022 개정 과목별), 국제학교 과정, 수학 영역별의 관점으로 체계적으로 탐색할 수 있습니다.',
-    mainTabs: ['한국 교육과정', '국제학교 과정', '수학 영역별', '아시아 교육과정'],
-    mainTabHelp: ['초1~고3 학년별 및 2022 개정 과목별', 'Pre-Algebra · Algebra 1·2 · Precalculus', '수와 연산, 대수, 기하, 확률·통계 등 개념 지도', '일본 · 대만 · 홍콩 · 싱가포르 · 말레이시아 · 베트남'],
+    mainTabs: ['한국 교육과정', '국제학교 과정', '수학 영역별', '동아시아 교육과정', '동남아시아 교육과정'],
+    mainTabHelp: ['초1~고3 학년별 및 2022 개정 과목별', 'Pre-Algebra · Algebra 1·2 · Precalculus', '수와 연산, 대수, 기하, 확률·통계 등 개념 지도', '일본 · 대만 · 홍콩', '싱가포르 · 말레이시아 · 베트남'],
     subViews: {
       byGrade: '학년별 보기 · 기존 분류',
       bySubject2022: '2022 개정 과목별 보기',
@@ -18,6 +18,8 @@ export const CURRICULUM_COPY = {
       japan: '일본 교육과정',
       taiwan: '대만 교육과정',
       hongkong: '홍콩 교육과정',
+    },
+    southeastAsiaCountries: {
       singapore: '싱가포르 교육과정',
       malaysia: '말레이시아 교육과정',
       vietnam: '베트남 교육과정',
@@ -45,7 +47,8 @@ export const CURRICULUM_COPY = {
       subject2022Notice: '2022 개정 교육과정이 완전히 적용된 뒤의 공식 과목 체계(공통·일반 선택·진로 선택·융합 선택·전문)입니다. 2027학년도 수능까지는 현재 고3에게 아직 적용되지 않으며, 고3의 실제 응시 과목명은 "학년별 보기"에서 확인하세요.',
       intlNotice: '국제학교 및 해외 교육과정(Pre-Algebra, Algebra 1·2, Precalculus 등)의 독립 과정입니다. 한국 교육과정과 별도로 관리됩니다.',
       domainNotice: '학년과 교육과정을 넘어 수와 연산, 변화와 관계, 도형과 측정, 자료와 가능성 등의 수학 핵심 개념별로 탐색합니다.',
-      eastAsiaNotice: '일본·대만·홍콩·싱가포르·말레이시아·베트남 교육과정의 실제 학년·과목 명칭에 맞춰 기존 문제 은행을 재구성해 보여드립니다. 각국 기출문제를 분석한 실제 응용문제는 추후 추가될 예정이며, 추가되면 한국 심화 문제와 동일하게 유료 구독(curriculum-advanced)으로 열람할 수 있습니다.',
+      eastAsiaNotice: '일본·대만·홍콩 교육과정의 실제 학년·과목 명칭에 맞춰 기존 문제 은행을 재구성해 보여드립니다. 각국 기출문제를 분석한 실제 응용문제는 추후 추가될 예정이며, 추가되면 한국 심화 문제와 동일하게 유료 구독(curriculum-advanced)으로 열람할 수 있습니다.',
+      southeastAsiaNotice: '싱가포르·말레이시아·베트남 교육과정의 실제 학년·과목 명칭에 맞춰 기존 문제 은행을 재구성해 보여드립니다. 각국 기출문제를 분석한 실제 응용문제는 추후 추가될 예정이며, 추가되면 한국 심화 문제와 동일하게 유료 구독(curriculum-advanced)으로 열람할 수 있습니다.',
       bottomNote: '표시된 학년·과목은 탐색을 위한 대표 경로이며, 학교와 국가에 따라 단원 순서가 달라질 수 있습니다.',
     },
     labels: {
@@ -60,8 +63,8 @@ export const CURRICULUM_COPY = {
     eyebrow: 'CURRICULUM MAP',
     title: 'Choose how you want to explore math',
     description: 'Browse by Korean curriculum (grades / 2022 subjects), international course sequence, or mathematical domain.',
-    mainTabs: ['Korean Curriculum', 'Course Sequence', 'Math Domains', 'Asia Curricula'],
-    mainTabHelp: ['Grades 1–12 & 2022 Revised Subjects', 'Pre-Algebra, Algebra 1–2, Precalculus', 'Concept strands across systems', 'Japan · Taiwan · Hong Kong · Singapore · Malaysia · Vietnam'],
+    mainTabs: ['Korean Curriculum', 'Course Sequence', 'Math Domains', 'East Asia Curricula', 'Southeast Asia Curricula'],
+    mainTabHelp: ['Grades 1–12 & 2022 Revised Subjects', 'Pre-Algebra, Algebra 1–2, Precalculus', 'Concept strands across systems', 'Japan · Taiwan · Hong Kong', 'Singapore · Malaysia · Vietnam'],
     subViews: {
       byGrade: 'By Grade · Classic Names',
       bySubject2022: '2022 Revised Subjects',
@@ -70,6 +73,8 @@ export const CURRICULUM_COPY = {
       japan: 'Japan Curriculum',
       taiwan: 'Taiwan Curriculum',
       hongkong: 'Hong Kong Curriculum',
+    },
+    southeastAsiaCountries: {
       singapore: 'Singapore Curriculum',
       malaysia: 'Malaysia Curriculum',
       vietnam: 'Vietnam Curriculum',
@@ -97,7 +102,8 @@ export const CURRICULUM_COPY = {
       subject2022Notice: 'This is the official subject structure once the 2022 revision is fully in effect (Common / General Elective / Career Elective / Convergence / Advanced). It does not yet apply to today’s actual grade-12 students until the CSAT for the 2027 admission cycle — see "By Grade" for what grade 12 currently sits.',
       intlNotice: 'Independent progression for international school programs (Pre-Algebra, Algebra 1–2, Precalculus). Managed separately from national curricula.',
       domainNotice: 'Explore core mathematical concepts across grades: Number & Operations, Algebra, Geometry, Data & Probability.',
-      eastAsiaNotice: 'The existing problem bank is reorganized to match the real grade and subject names used in Japan, Taiwan, Hong Kong, Singapore, Malaysia, and Vietnam. Country-specific applied problems drawn from real past exams will be added later, gated behind the same paid subscription (curriculum-advanced) as the Korean advanced-tier problems.',
+      eastAsiaNotice: 'The existing problem bank is reorganized to match the real grade and subject names used in Japan, Taiwan, and Hong Kong. Country-specific applied problems drawn from real past exams will be added later, gated behind the same paid subscription (curriculum-advanced) as the Korean advanced-tier problems.',
+      southeastAsiaNotice: 'The existing problem bank is reorganized to match the real grade and subject names used in Singapore, Malaysia, and Vietnam. Country-specific applied problems drawn from real past exams will be added later, gated behind the same paid subscription (curriculum-advanced) as the Korean advanced-tier problems.',
       bottomNote: 'These are reference pathways. Exact topic sequences vary by school, country, and syllabus.',
     },
     labels: {
@@ -112,8 +118,8 @@ export const CURRICULUM_COPY = {
     eyebrow: 'CURRICULUM MAP',
     title: 'Choose a Mathematics learning pathway',
     description: 'Browse the practice library by Korean levels/2022 subjects, international course sequence, or mathematical strands.',
-    mainTabs: ['Korean Curriculum', 'Course Sequence', 'Mathematical Strands', 'Asia Curricula'],
-    mainTabHelp: ['Primary, Secondary & Junior College', 'Pre-Algebra, Algebra 1–2 & beyond', 'Number, algebra, geometry and data', 'Japan · Taiwan · Hong Kong · Singapore · Malaysia · Vietnam'],
+    mainTabs: ['Korean Curriculum', 'Course Sequence', 'Mathematical Strands', 'East Asia Curricula', 'Southeast Asia Curricula'],
+    mainTabHelp: ['Primary, Secondary & Junior College', 'Pre-Algebra, Algebra 1–2 & beyond', 'Number, algebra, geometry and data', 'Japan · Taiwan · Hong Kong', 'Singapore · Malaysia · Vietnam'],
     subViews: {
       byGrade: 'By Level · Classic Tracks',
       bySubject2022: '2022 Revised Subjects',
@@ -122,6 +128,8 @@ export const CURRICULUM_COPY = {
       japan: 'Japan Curriculum',
       taiwan: 'Taiwan Curriculum',
       hongkong: 'Hong Kong Curriculum',
+    },
+    southeastAsiaCountries: {
       singapore: 'Singapore Curriculum',
       malaysia: 'Malaysia Curriculum',
       vietnam: 'Vietnam Curriculum',
@@ -149,7 +157,8 @@ export const CURRICULUM_COPY = {
       subject2022Notice: 'Official 2022 Korean Curriculum structure for Core, Elective, Career, and Specialist subjects.',
       intlNotice: 'Independent sequence for international-school curricula (Pre-Algebra, Algebra 1–2, Precalculus).',
       domainNotice: 'Explore mathematical strands across levels: Number, Algebra, Geometry, Probability & Statistics.',
-      eastAsiaNotice: 'The existing problem bank is reorganised to match the real grade and subject names used in Japan, Taiwan, Hong Kong, Singapore, Malaysia, and Vietnam. Country-specific applied problems from real past exams will be added later, gated behind the same paid subscription as the Korean advanced-tier problems.',
+      eastAsiaNotice: 'The existing problem bank is reorganised to match the real grade and subject names used in Japan, Taiwan, and Hong Kong. Country-specific applied problems from real past exams will be added later, gated behind the same paid subscription as the Korean advanced-tier problems.',
+      southeastAsiaNotice: 'The existing problem bank is reorganised to match the real grade and subject names used in Singapore, Malaysia, and Vietnam. Country-specific applied problems from real past exams will be added later, gated behind the same paid subscription as the Korean advanced-tier problems.',
       bottomNote: 'These are reference pathways. Topic order may vary between MOE, international-school and other programmes.',
     },
     labels: {
@@ -164,8 +173,8 @@ export const CURRICULUM_COPY = {
     eyebrow: '课程地图',
     title: '您想按什么顺序学习数学？',
     description: '可按韩国教育课程（年级/2022修订科目）、国际学校课程顺序或数学领域浏览题库。',
-    mainTabs: ['韩国教育课程', '国际学校课程', '数学领域', '亚洲教育课程'],
-    mainTabHelp: ['小学至高中年级与2022新课程', '以预备代数、代数1·2为中心', '数与运算、代数、几何与概率', '日本 · 台湾 · 香港 · 新加坡 · 马来西亚 · 越南'],
+    mainTabs: ['韩国教育课程', '国际学校课程', '数学领域', '东亚教育课程', '东南亚教育课程'],
+    mainTabHelp: ['小学至高中年级与2022新课程', '以预备代数、代数1·2为中心', '数与运算、代数、几何与概率', '日本 · 台湾 · 香港', '新加坡 · 马来西亚 · 越南'],
     subViews: {
       byGrade: '按年级 · 传统分类',
       bySubject2022: '2022修订科目分类',
@@ -174,6 +183,8 @@ export const CURRICULUM_COPY = {
       japan: '日本教育课程',
       taiwan: '台湾教育课程',
       hongkong: '香港教育课程',
+    },
+    southeastAsiaCountries: {
       singapore: '新加坡教育课程',
       malaysia: '马来西亚教育课程',
       vietnam: '越南教育课程',
@@ -201,7 +212,8 @@ export const CURRICULUM_COPY = {
       subject2022Notice: '2022修订课程官方分类体系，涵盖公统、一般选修、生涯选修及融合选修。',
       intlNotice: '国际学校独立课程序列（Pre-Algebra、Algebra 1·2等），与韩国课程独立管理。',
       domainNotice: '跨越年级限制，按数与代数、几何与测量、数据与概率等核心概念学习。',
-      eastAsiaNotice: '将现有题库按照日本、台湾、香港、新加坡、马来西亚、越南各自实际的年级与科目名称重新编排。基于各国历年真题分析的应用题将稍后加入，届时与韩国进阶题一样，需订阅付费版（curriculum-advanced）才能查看。',
+      eastAsiaNotice: '将现有题库按照日本、台湾、香港各自实际的年级与科目名称重新编排。基于各国历年真题分析的应用题将稍后加入，届时与韩国进阶题一样，需订阅付费版（curriculum-advanced）才能查看。',
+      southeastAsiaNotice: '将现有题库按照新加坡、马来西亚、越南各自实际的年级与科目名称重新编排。基于各国历年真题分析的应用题将稍后加入，届时与韩国进阶题一样，需订阅付费版（curriculum-advanced）才能查看。',
       bottomNote: '这些是便于浏览的参考路径；具体单元顺序因学校、国家和课程而异。',
     },
     labels: {
@@ -216,8 +228,8 @@ export const CURRICULUM_COPY = {
     eyebrow: '課程地圖',
     title: '選擇你的數學學習路徑',
     description: '可按韓國教育課程（年級/2022修訂科目）、國際學校課程次序或數學範疇瀏覽題庫。',
-    mainTabs: ['韓國教育課程', '國際學校課程', '數學範疇', '亞洲教育課程'],
-    mainTabHelp: ['小學至高中年級與2022新課程', '預備代數、代數1及2等課程', '數與代數、圖形、數據與概率', '日本 · 台灣 · 香港 · 新加坡 · 馬來西亞 · 越南'],
+    mainTabs: ['韓國教育課程', '國際學校課程', '數學範疇', '東亞教育課程', '東南亞教育課程'],
+    mainTabHelp: ['小學至高中年級與2022新課程', '預備代數、代數1及2等課程', '數與代數、圖形、數據與概率', '日本 · 台灣 · 香港', '新加坡 · 馬來西亞 · 越南'],
     subViews: {
       byGrade: '按年級 · 傳統分類',
       bySubject2022: '2022修訂科目分類',
@@ -226,6 +238,8 @@ export const CURRICULUM_COPY = {
       japan: '日本教育課程',
       taiwan: '台灣教育課程',
       hongkong: '香港教育課程',
+    },
+    southeastAsiaCountries: {
       singapore: '新加坡教育課程',
       malaysia: '馬來西亞教育課程',
       vietnam: '越南教育課程',
@@ -253,7 +267,8 @@ export const CURRICULUM_COPY = {
       subject2022Notice: '2022修訂課程官方分類體系，包含共通、一般選修、生涯選修及融合選修。',
       intlNotice: '國際學校獨立課程序列（Pre-Algebra、Algebra 1·2等），與韓國課程獨立管理。',
       domainNotice: '按數與代數、圖形與測量、數據與概率等核心概念跨年級探索。',
-      eastAsiaNotice: '將現有題庫按照日本、台灣、香港、新加坡、馬來西亞、越南各自實際的年級與科目名稱重新編排。基於各地歷屆試題分析的應用題將稍後加入，屆時與韓國進階題一樣，需訂閱付費版（curriculum-advanced）才能查看。',
+      eastAsiaNotice: '將現有題庫按照日本、台灣、香港各自實際的年級與科目名稱重新編排。基於各地歷屆試題分析的應用題將稍後加入，屆時與韓國進階題一樣，需訂閱付費版（curriculum-advanced）才能查看。',
+      southeastAsiaNotice: '將現有題庫按照新加坡、馬來西亞、越南各自實際的年級與科目名稱重新編排。基於各地歷屆試題分析的應用題將稍後加入，屆時與韓國進階題一樣，需訂閱付費版（curriculum-advanced）才能查看。',
       bottomNote: '此處為方便瀏覽的參考路徑；實際課題次序會因各校課程而異。',
     },
     labels: {
@@ -268,8 +283,8 @@ export const CURRICULUM_COPY = {
     eyebrow: '課程地圖',
     title: '選擇你的數學學習路徑',
     description: '可依韓國教育課程（年級/2022課綱科目）、國際學校課程順序或數學領域瀏覽題庫。',
-    mainTabs: ['韓國教育課程', '國際學校課程', '數學領域', '亞洲教育課程'],
-    mainTabHelp: ['國小至高中年級與2022新課綱', '先備代數、代數1與2等課程', '數與量、代數、幾何與資料', '日本 · 台灣 · 香港 · 新加坡 · 馬來西亞 · 越南'],
+    mainTabs: ['韓國教育課程', '國際學校課程', '數學領域', '東亞教育課程', '東南亞教育課程'],
+    mainTabHelp: ['國小至高中年級與2022新課綱', '先備代數、代數1與2等課程', '數與量、代數、幾何與資料', '日本 · 台灣 · 香港', '新加坡 · 馬來西亞 · 越南'],
     subViews: {
       byGrade: '依年級 · 傳統分類',
       bySubject2022: '2022課綱科目分類',
@@ -278,6 +293,8 @@ export const CURRICULUM_COPY = {
       japan: '日本教育課程',
       taiwan: '台灣教育課程',
       hongkong: '香港教育課程',
+    },
+    southeastAsiaCountries: {
       singapore: '新加坡教育課程',
       malaysia: '馬來西亞教育課程',
       vietnam: '越南教育課程',
@@ -305,7 +322,8 @@ export const CURRICULUM_COPY = {
       subject2022Notice: '2022新課綱官方分類體系，涵蓋共通、一般選修、生涯選修與融合選修。',
       intlNotice: '國際學校獨立課程順序（Pre-Algebra、Algebra 1·2等），與韓國課綱獨立管理。',
       domainNotice: '跨越年級與體系，依數與量、代數、幾何、機率與統計等概念進行學習。',
-      eastAsiaNotice: '將現有題庫依照日本、台灣、香港、新加坡、馬來西亞、越南各自實際的年級與科目名稱重新編排。依各地歷屆考題分析而成的應用題將稍後加入，屆時將與韓國進階題一樣，需訂閱付費版（curriculum-advanced）才能查看。',
+      eastAsiaNotice: '將現有題庫依照日本、台灣、香港各自實際的年級與科目名稱重新編排。依各地歷屆考題分析而成的應用題將稍後加入，屆時將與韓國進階題一樣，需訂閱付費版（curriculum-advanced）才能查看。',
+      southeastAsiaNotice: '將現有題庫依照新加坡、馬來西亞、越南各自實際的年級與科目名稱重新編排。依各地歷屆考題分析而成的應用題將稍後加入，屆時將與韓國進階題一樣，需訂閱付費版（curriculum-advanced）才能查看。',
       bottomNote: '此處為方便瀏覽的參考路徑；實際單元順序會因各校課程而異。',
     },
     labels: {
@@ -320,8 +338,8 @@ export const CURRICULUM_COPY = {
     eyebrow: 'カリキュラムマップ',
     title: 'どの順序で数学を探しますか？',
     description: '韓国の教育課程（学年別／2022改訂科目別）、国際課程、数学分野別の観点から探せます。',
-    mainTabs: ['韓国の教育課程', '国際科目別', '数学分野別', 'アジアの教育課程'],
-    mainTabHelp: ['小1〜高3学年別および2022改訂科目', 'Pre-Algebra・Algebra 1/2・Precalculus', '数と計算、代数、幾何、確率統計など', '日本 · 台湾 · 香港 · シンガポール · マレーシア · ベトナム'],
+    mainTabs: ['韓国の教育課程', '国際科目別', '数学分野別', '東アジアの教育課程', '東南アジアの教育課程'],
+    mainTabHelp: ['小1〜高3学年別および2022改訂科目', 'Pre-Algebra・Algebra 1/2・Precalculus', '数と計算、代数、幾何、確率統計など', '日本 · 台湾 · 香港', 'シンガポール · マレーシア · ベトナム'],
     subViews: {
       byGrade: '学年別 · 従来分類',
       bySubject2022: '2022改訂科目別',
@@ -330,6 +348,8 @@ export const CURRICULUM_COPY = {
       japan: '日本の教育課程',
       taiwan: '台湾の教育課程',
       hongkong: '香港の教育課程',
+    },
+    southeastAsiaCountries: {
       singapore: 'シンガポールの教育課程',
       malaysia: 'マレーシアの教育課程',
       vietnam: 'ベトナムの教育課程',
@@ -357,7 +377,8 @@ export const CURRICULUM_COPY = {
       subject2022Notice: '2022改訂教育課程の公式科目区分です。共通、一般選択、進路選択、融合選択ごとに学べます。',
       intlNotice: 'インターナショナルスクール等の独立課程です（Pre-Algebra、Algebra 1・2など）。韓国課程とは独立して管理されます。',
       domainNotice: '学年を越えて、数と計算、変化と関係、図形と測定、資料と可能性などの数学の本質別に探求できます。',
-      eastAsiaNotice: '既存の問題バンクを、日本・台湾・香港・シンガポール・マレーシア・ベトナムそれぞれの実際の学年・科目名称に合わせて再構成しています。各国の過去問を分析した応用問題は今後追加予定で、追加後は韓国の応用問題と同じ有料プラン（curriculum-advanced）で閲覧できます。',
+      eastAsiaNotice: '既存の問題バンクを、日本・台湾・香港それぞれの実際の学年・科目名称に合わせて再構成しています。各国の過去問を分析した応用問題は今後追加予定で、追加後は韓国の応用問題と同じ有料プラン（curriculum-advanced）で閲覧できます。',
+      southeastAsiaNotice: '既存の問題バンクを、シンガポール・マレーシア・ベトナムそれぞれの実際の学年・科目名称に合わせて再構成しています。各国の過去問を分析した応用問題は今後追加予定で、追加後は韓国の応用問題と同じ有料プラン（curriculum-advanced）で閲覧できます。',
       bottomNote: '学年・科目は代表的な案内です。実際の順序は学校やカリキュラムによって異なります。',
     },
     labels: {
@@ -372,8 +393,8 @@ export const CURRICULUM_COPY = {
     eyebrow: 'CARTE DU PROGRAMME',
     title: 'Comment souhaitez-vous explorer les maths ?',
     description: 'Parcourez le programme coréen (par classe / matières 2022), les cours internationaux ou les domaines mathématiques.',
-    mainTabs: ['Programme coréen', 'Parcours international', 'Domaines mathématiques', 'Programmes asiatiques'],
-    mainTabHelp: ['Classes 1 à 12 & Réforme 2022', 'Pré-algèbre, Algèbre 1–2, Précalcul', 'Nombres, algèbre, géométrie et probabilités', 'Japon · Taïwan · Hong Kong · Singapour · Malaisie · Vietnam'],
+    mainTabs: ['Programme coréen', 'Parcours international', 'Domaines mathématiques', "Programmes d'Asie de l'Est", "Programmes d'Asie du Sud-Est"],
+    mainTabHelp: ['Classes 1 à 12 & Réforme 2022', 'Pré-algèbre, Algèbre 1–2, Précalcul', 'Nombres, algèbre, géométrie et probabilités', 'Japon · Taïwan · Hong Kong', 'Singapour · Malaisie · Vietnam'],
     subViews: {
       byGrade: 'Par niveau · Noms classiques',
       bySubject2022: 'Matières réformées 2022',
@@ -382,6 +403,8 @@ export const CURRICULUM_COPY = {
       japan: 'Programme japonais',
       taiwan: 'Programme taïwanais',
       hongkong: 'Programme de Hong Kong',
+    },
+    southeastAsiaCountries: {
       singapore: 'Programme de Singapour',
       malaysia: 'Programme malaisien',
       vietnam: 'Programme vietnamien',
@@ -409,7 +432,8 @@ export const CURRICULUM_COPY = {
       subject2022Notice: 'Structure officielle du programme coréen 2022 : tronc commun, spécialités générales, appliquées et approfondies.',
       intlNotice: 'Progression indépendante pour les écoles internationales (Pré-algèbre, Algèbre 1–2, Précalcul).',
       domainNotice: 'Explorez par notions fondamentales : nombres et calcul, algèbre, géométrie, probabilités.',
-      eastAsiaNotice: 'La banque de problèmes existante est réorganisée selon les vrais noms de niveaux et de matières utilisés au Japon, à Taïwan, à Hong Kong, à Singapour, en Malaisie et au Vietnam. Des problèmes appliqués propres à chaque pays, issus de l’analyse d’examens réels, seront ajoutés plus tard, sous le même abonnement payant (curriculum-advanced) que les problèmes avancés coréens.',
+      eastAsiaNotice: 'La banque de problèmes existante est réorganisée selon les vrais noms de niveaux et de matières utilisés au Japon, à Taïwan et à Hong Kong. Des problèmes appliqués propres à chaque pays, issus de l’analyse d’examens réels, seront ajoutés plus tard, sous le même abonnement payant (curriculum-advanced) que les problèmes avancés coréens.',
+      southeastAsiaNotice: 'La banque de problèmes existante est réorganisée selon les vrais noms de niveaux et de matières utilisés à Singapour, en Malaisie et au Vietnam. Des problèmes appliqués propres à chaque pays, issus de l’analyse d’examens réels, seront ajoutés plus tard, sous le même abonnement payant (curriculum-advanced) que les problèmes avancés coréens.',
       bottomNote: 'Ces parcours servent de repères ; l’ordre précis varie selon l’établissement et le pays.',
     },
     labels: {
@@ -424,8 +448,8 @@ export const CURRICULUM_COPY = {
     eyebrow: 'MAPA CURRICULAR',
     title: '¿Cómo quieres explorar las matemáticas?',
     description: 'Consulta por currículo de Corea (cursos / materias 2022), secuencia internacional o áreas matemáticas.',
-    mainTabs: ['Currículo coreano', 'Secuencia de materias', 'Áreas matemáticas', 'Currículos de Asia'],
-    mainTabHelp: ['Grados 1 a 12 y reforma 2022', 'Preálgebra, Álgebra 1–2, Precálculo', 'Números, álgebra, geometría y datos', 'Japón · Taiwán · Hong Kong · Singapur · Malasia · Vietnam'],
+    mainTabs: ['Currículo coreano', 'Secuencia de materias', 'Áreas matemáticas', 'Currículos de Asia Oriental', 'Currículos del Sudeste Asiático'],
+    mainTabHelp: ['Grados 1 a 12 y reforma 2022', 'Preálgebra, Álgebra 1–2, Precálculo', 'Números, álgebra, geometría y datos', 'Japón · Taiwán · Hong Kong', 'Singapur · Malasia · Vietnam'],
     subViews: {
       byGrade: 'Por curso · Nombres clásicos',
       bySubject2022: 'Materias reformadas 2022',
@@ -434,6 +458,8 @@ export const CURRICULUM_COPY = {
       japan: 'Currículo de Japón',
       taiwan: 'Currículo de Taiwán',
       hongkong: 'Currículo de Hong Kong',
+    },
+    southeastAsiaCountries: {
       singapore: 'Currículo de Singapur',
       malaysia: 'Currículo de Malasia',
       vietnam: 'Currículo de Vietnam',
@@ -461,7 +487,8 @@ export const CURRICULUM_COPY = {
       subject2022Notice: 'Clasificación oficial del currículo coreano 2022 en materias comunes, optativas generales e itinerarios.',
       intlNotice: 'Secuencia independiente para programas internacionales (Preálgebra, Álgebra 1–2, Precálculo).',
       domainNotice: 'Explora conceptos transversales: aritmética, álgebra, geometría, probabilidad y estadística.',
-      eastAsiaNotice: 'El banco de problemas existente se reorganiza según los nombres reales de curso y materia usados en Japón, Taiwán, Hong Kong, Singapur, Malasia y Vietnam. Más adelante se añadirán problemas aplicados propios de cada país, basados en exámenes reales, bajo la misma suscripción de pago (curriculum-advanced) que los problemas avanzados coreanos.',
+      eastAsiaNotice: 'El banco de problemas existente se reorganiza según los nombres reales de curso y materia usados en Japón, Taiwán y Hong Kong. Más adelante se añadirán problemas aplicados propios de cada país, basados en exámenes reales, bajo la misma suscripción de pago (curriculum-advanced) que los problemas avanzados coreanos.',
+      southeastAsiaNotice: 'El banco de problemas existente se reorganiza según los nombres reales de curso y materia usados en Singapur, Malasia y Vietnam. Más adelante se añadirán problemas aplicados propios de cada país, basados en exámenes reales, bajo la misma suscripción de pago (curriculum-advanced) que los problemas avanzados coreanos.',
       bottomNote: 'Son rutas orientativas; el orden exacto varía según la escuela, el país y el programa.',
     },
     labels: {
@@ -476,8 +503,8 @@ export const CURRICULUM_COPY = {
     eyebrow: 'КАРТА ПРОГРАММЫ',
     title: 'Как вы хотите изучать математику?',
     description: 'Просматривайте по корейской программе (классы / предметы 2022), международным курсам или разделам.',
-    mainTabs: ['Корейская программа', 'Последовательность курсов', 'Разделы математики', 'Программы Азии'],
-    mainTabHelp: ['1–12 классы и реформа 2022', 'Предалгебра, Алгебра 1–2, Матанализ', 'Числа, алгебра, геометрия, статистика', 'Япония · Тайвань · Гонконг · Сингапур · Малайзия · Вьетнам'],
+    mainTabs: ['Корейская программа', 'Последовательность курсов', 'Разделы математики', 'Программы Восточной Азии', 'Программы Юго-Восточной Азии'],
+    mainTabHelp: ['1–12 классы и реформа 2022', 'Предалгебра, Алгебра 1–2, Матанализ', 'Числа, алгебра, геометрия, статистика', 'Япония · Тайвань · Гонконг', 'Сингапур · Малайзия · Вьетнам'],
     subViews: {
       byGrade: 'По классам · Традиционные',
       bySubject2022: 'Предметы реформы 2022',
@@ -486,6 +513,8 @@ export const CURRICULUM_COPY = {
       japan: 'Программа Японии',
       taiwan: 'Программа Тайваня',
       hongkong: 'Программа Гонконга',
+    },
+    southeastAsiaCountries: {
       singapore: 'Программа Сингапура',
       malaysia: 'Программа Малайзии',
       vietnam: 'Программа Вьетнама',
@@ -513,7 +542,8 @@ export const CURRICULUM_COPY = {
       subject2022Notice: 'Официальная структура корейской программы 2022 года: базовые, элективные и углубленные дисциплины.',
       intlNotice: 'Независимая траектория для международных программ (Предалгебра, Алгебра 1–2, Прекалькулус).',
       domainNotice: 'Изучайте сквозные понятия: арифметика, алгебра, геометрия, теория вероятностей.',
-      eastAsiaNotice: 'Существующий банк задач реорганизован под реальные названия классов и предметов Японии, Тайваня, Гонконга, Сингапура, Малайзии и Вьетнама. Прикладные задачи по реальным экзаменам каждой страны будут добавлены позже — по той же платной подписке (curriculum-advanced), что и продвинутые корейские задачи.',
+      eastAsiaNotice: 'Существующий банк задач реорганизован под реальные названия классов и предметов Японии, Тайваня и Гонконга. Прикладные задачи по реальным экзаменам каждой страны будут добавлены позже — по той же платной подписке (curriculum-advanced), что и продвинутые корейские задачи.',
+      southeastAsiaNotice: 'Существующий банк задач реорганизован под реальные названия классов и предметов Сингапура, Малайзии и Вьетнама. Прикладные задачи по реальным экзаменам каждой страны будут добавлены позже — по той же платной подписке (curriculum-advanced), что и продвинутые корейские задачи.',
       bottomNote: 'Это ориентировочные маршруты; точный порядок зависит от школы, страны и программы.',
     },
     labels: {
@@ -528,8 +558,8 @@ export const CURRICULUM_COPY = {
     eyebrow: 'خريطة المنهج',
     title: 'كيف تريد استكشاف الرياضيات؟',
     description: 'تصفح حسب المنهج الكوري (الصفوف / مواد 2022)، أو تسلسل المقررات الدولي، أو مجالات الرياضيات.',
-    mainTabs: ['المنهج الكوري', 'تسلسل المقررات', 'مجالات الرياضيات', 'مناهج آسيا'],
-    mainTabHelp: ['الصفوف 1-12 ومواد 2022 المعدلة', 'ما قبل الجبر والجبر 1 و2 وحساب التفاضل', 'الأعداد والجبر والهندسة والإحصاء', 'اليابان · تايوان · هونغ كونغ · سنغافورة · ماليزيا · فيتنام'],
+    mainTabs: ['المنهج الكوري', 'تسلسل المقررات', 'مجالات الرياضيات', 'مناهج شرق آسيا', 'مناهج جنوب شرق آسيا'],
+    mainTabHelp: ['الصفوف 1-12 ومواد 2022 المعدلة', 'ما قبل الجبر والجبر 1 و2 وحساب التفاضل', 'الأعداد والجبر والهندسة والإحصاء', 'اليابان · تايوان · هونغ كونغ', 'سنغافورة · ماليزيا · فيتنام'],
     subViews: {
       byGrade: 'حسب الصف · المسميات المعتادة',
       bySubject2022: 'مواد منهج 2022 المعدل',
@@ -538,6 +568,8 @@ export const CURRICULUM_COPY = {
       japan: 'منهج اليابان',
       taiwan: 'منهج تايوان',
       hongkong: 'منهج هونغ كونغ',
+    },
+    southeastAsiaCountries: {
       singapore: 'منهج سنغافورة',
       malaysia: 'منهج ماليزيا',
       vietnam: 'منهج فيتنام',
@@ -565,7 +597,8 @@ export const CURRICULUM_COPY = {
       subject2022Notice: 'الهيكل الرسمي لمنهج 2022 الكوري: المواد الأساسية والاختيارية والتخصصية.',
       intlNotice: 'مسار مستقل لبرامج المدارس الدولية (ما قبل الجبر، الجبر 1 و2، وما قبل التفاضل).',
       domainNotice: 'استكشف المفاهيم المحورية عبر المراحل: الأعداد، الجبر، الهندسة، الاحتمالات والإحصاء.',
-      eastAsiaNotice: 'تمت إعادة تنظيم بنك الأسئلة الحالي وفق أسماء الصفوف والمواد الفعلية المستخدمة في اليابان وتايوان وهونغ كونغ وسنغافورة وماليزيا وفيتنام. ستُضاف لاحقًا أسئلة تطبيقية خاصة بكل دولة مبنية على تحليل امتحانات حقيقية، وستكون متاحة عبر نفس الاشتراك المدفوع (curriculum-advanced) الخاص بالأسئلة الكورية المتقدمة.',
+      eastAsiaNotice: 'تمت إعادة تنظيم بنك الأسئلة الحالي وفق أسماء الصفوف والمواد الفعلية المستخدمة في اليابان وتايوان وهونغ كونغ. ستُضاف لاحقًا أسئلة تطبيقية خاصة بكل دولة مبنية على تحليل امتحانات حقيقية، وستكون متاحة عبر نفس الاشتراك المدفوع (curriculum-advanced) الخاص بالأسئلة الكورية المتقدمة.',
+      southeastAsiaNotice: 'تمت إعادة تنظيم بنك الأسئلة الحالي وفق أسماء الصفوف والمواد الفعلية المستخدمة في سنغافورة وماليزيا وفيتنام. ستُضاف لاحقًا أسئلة تطبيقية خاصة بكل دولة مبنية على تحليل امتحانات حقيقية، وستكون متاحة عبر نفس الاشتراك المدفوع (curriculum-advanced) الخاص بالأسئلة الكورية المتقدمة.',
       bottomNote: 'هذه مسارات إرشادية، وقد يختلف الترتيب حسب المدرسة والدولة والبرنامج.',
     },
     labels: {
@@ -580,8 +613,8 @@ export const CURRICULUM_COPY = {
     eyebrow: 'MAPA CURRICULAR',
     title: 'Como você quer explorar a matemática?',
     description: 'Navegue pelo currículo coreano (por ano / matérias 2022), sequência internacional ou áreas matemáticas.',
-    mainTabs: ['Currículo coreano', 'Sequência de cursos', 'Áreas da matemática', 'Currículos da Ásia'],
-    mainTabHelp: ['1.º ao 12.º ano e reforma 2022', 'Pré-Álgebra, Álgebra 1–2 e Pré-Cálculo', 'Números, álgebra, geometria e estatística', 'Japão · Taiwan · Hong Kong · Singapura · Malásia · Vietnã'],
+    mainTabs: ['Currículo coreano', 'Sequência de cursos', 'Áreas da matemática', 'Currículos do Leste Asiático', 'Currículos do Sudeste Asiático'],
+    mainTabHelp: ['1.º ao 12.º ano e reforma 2022', 'Pré-Álgebra, Álgebra 1–2 e Pré-Cálculo', 'Números, álgebra, geometria e estatística', 'Japão · Taiwan · Hong Kong', 'Singapura · Malásia · Vietnã'],
     subViews: {
       byGrade: 'Por ano · Nomes clássicos',
       bySubject2022: 'Matérias reformadas 2022',
@@ -590,6 +623,8 @@ export const CURRICULUM_COPY = {
       japan: 'Currículo do Japão',
       taiwan: 'Currículo de Taiwan',
       hongkong: 'Currículo de Hong Kong',
+    },
+    southeastAsiaCountries: {
       singapore: 'Currículo de Singapura',
       malaysia: 'Currículo da Malásia',
       vietnam: 'Currículo do Vietnã',
@@ -617,7 +652,8 @@ export const CURRICULUM_COPY = {
       subject2022Notice: 'Estrutura oficial do currículo coreano 2022 para matérias comuns, eletivas e especializadas.',
       intlNotice: 'Sequência independente para currículos de escolas internacionais (Pré-Álgebra, Álgebra 1–2).',
       domainNotice: 'Explore conceitos fundamentais: números e operações, álgebra, geometria, probabilidade.',
-      eastAsiaNotice: 'O banco de problemas existente foi reorganizado de acordo com os nomes reais de ano e disciplina usados no Japão, Taiwan, Hong Kong, Singapura, Malásia e Vietnã. Problemas aplicados de cada país, baseados em provas reais, serão adicionados mais tarde, sob a mesma assinatura paga (curriculum-advanced) dos problemas avançados coreanos.',
+      eastAsiaNotice: 'O banco de problemas existente foi reorganizado de acordo com os nomes reais de ano e disciplina usados no Japão, Taiwan e Hong Kong. Problemas aplicados de cada país, baseados em provas reais, serão adicionados mais tarde, sob a mesma assinatura paga (curriculum-advanced) dos problemas avançados coreanos.',
+      southeastAsiaNotice: 'O banco de problemas existente foi reorganizado de acordo com os nomes reais de ano e disciplina usados em Singapura, na Malásia e no Vietnã. Problemas aplicados de cada país, baseados em provas reais, serão adicionados mais tarde, sob a mesma assinatura paga (curriculum-advanced) dos problemas avançados coreanos.',
       bottomNote: 'São percursos de referência; a ordem exata varia conforme a escola, o país e o programa.',
     },
     labels: {
@@ -632,8 +668,8 @@ export const CURRICULUM_COPY = {
     eyebrow: 'पाठ्यक्रम मानचित्र',
     title: 'आप गणित को किस क्रम में देखना चाहते हैं?',
     description: 'कोरियाई पाठ्यक्रम (कक्षा/2022 विषय), अंतरराष्ट्रीय पाठ्यक्रम क्रम या गणितीय क्षेत्र के अनुसार देखें।',
-    mainTabs: ['कोरियाई पाठ्यक्रम', 'पाठ्यक्रम क्रम', 'गणित के क्षेत्र', 'एशिया के पाठ्यक्रम'],
-    mainTabHelp: ['कक्षा 1-12 और 2022 संशोधित विषय', 'प्री-अल्जेब्रा, अल्जेब्रा 1-2, प्रीकैलकुलस', 'संख्याएँ, बीजगणित, ज्यामिति और सांख्यिकी', 'जापान · ताइवान · हॉन्ग कॉन्ग · सिंगापुर · मलेशिया · वियतनाम'],
+    mainTabs: ['कोरियाई पाठ्यक्रम', 'पाठ्यक्रम क्रम', 'गणित के क्षेत्र', 'पूर्वी एशिया के पाठ्यक्रम', 'दक्षिण-पूर्व एशिया के पाठ्यक्रम'],
+    mainTabHelp: ['कक्षा 1-12 और 2022 संशोधित विषय', 'प्री-अल्जेब्रा, अल्जेब्रा 1-2, प्रीकैलकुलस', 'संख्याएँ, बीजगणित, ज्यामिति और सांख्यिकी', 'जापान · ताइवान · हॉन्ग कॉन्ग', 'सिंगापुर · मलेशिया · वियतनाम'],
     subViews: {
       byGrade: 'कक्षा अनुसार · पारंपरिक नाम',
       bySubject2022: '2022 संशोधित विषय',
@@ -642,6 +678,8 @@ export const CURRICULUM_COPY = {
       japan: 'जापान पाठ्यक्रम',
       taiwan: 'ताइवान पाठ्यक्रम',
       hongkong: 'हॉन्ग कॉन्ग पाठ्यक्रम',
+    },
+    southeastAsiaCountries: {
       singapore: 'सिंगापुर पाठ्यक्रम',
       malaysia: 'मलेशिया पाठ्यक्रम',
       vietnam: 'वियतनाम पाठ्यक्रम',
@@ -669,7 +707,8 @@ export const CURRICULUM_COPY = {
       subject2022Notice: '2022 कोरियाई पाठ्यक्रम की आधिकारिक संरचना: अनिवार्य, ऐच्छिक व उन्नत विषय।',
       intlNotice: 'अंतरराष्ट्रीय स्कूलों के लिए स्वतंत्र पाठ्यक्रम (प्री-अल्जेब्रा, अल्जेब्रा 1-2 आदि)।',
       domainNotice: 'संख्या, बीजगणित, ज्यामिति, प्रायिकता जैसे मूल सिद्धांतों के आधार पर सीखें।',
-      eastAsiaNotice: 'मौजूदा प्रश्न बैंक को जापान, ताइवान, हॉन्ग कॉन्ग, सिंगापुर, मलेशिया और वियतनाम में वास्तव में उपयोग होने वाले कक्षा और विषय नामों के अनुसार पुनर्गठित किया गया है। प्रत्येक देश के वास्तविक पिछले परीक्षा प्रश्नों के विश्लेषण पर आधारित अनुप्रयोग प्रश्न बाद में जोड़े जाएंगे, जो कोरियाई उन्नत प्रश्नों जैसी ही सशुल्क सदस्यता (curriculum-advanced) के अंतर्गत उपलब्ध होंगे।',
+      eastAsiaNotice: 'मौजूदा प्रश्न बैंक को जापान, ताइवान और हॉन्ग कॉन्ग में वास्तव में उपयोग होने वाले कक्षा और विषय नामों के अनुसार पुनर्गठित किया गया है। प्रत्येक देश के वास्तविक पिछले परीक्षा प्रश्नों के विश्लेषण पर आधारित अनुप्रयोग प्रश्न बाद में जोड़े जाएंगे, जो कोरियाई उन्नत प्रश्नों जैसी ही सशुल्क सदस्यता (curriculum-advanced) के अंतर्गत उपलब्ध होंगे।',
+      southeastAsiaNotice: 'मौजूदा प्रश्न बैंक को सिंगापुर, मलेशिया और वियतनाम में वास्तव में उपयोग होने वाले कक्षा और विषय नामों के अनुसार पुनर्गठित किया गया है। प्रत्येक देश के वास्तविक पिछले परीक्षा प्रश्नों के विश्लेषण पर आधारित अनुप्रयोग प्रश्न बाद में जोड़े जाएंगे, जो कोरियाई उन्नत प्रश्नों जैसी ही सशुल्क सदस्यता (curriculum-advanced) के अंतर्गत उपलब्ध होंगे।',
       bottomNote: 'ये मार्गदर्शक रास्ते हैं; वास्तविक क्रम स्कूल, देश और कार्यक्रम के अनुसार बदल सकता है।',
     },
     labels: {
@@ -684,8 +723,8 @@ export const CURRICULUM_COPY = {
     eyebrow: 'BẢN ĐỒ CHƯƠNG TRÌNH',
     title: 'Bạn muốn khám phá toán theo cách nào?',
     description: 'Xem theo chương trình Hàn Quốc (lớp / môn 2022), lộ trình quốc tế hoặc lĩnh vực toán học.',
-    mainTabs: ['Chương trình Hàn Quốc', 'Lộ trình môn học', 'Lĩnh vực toán học', 'Chương trình châu Á'],
-    mainTabHelp: ['Lớp 1–12 & Môn học sửa đổi 2022', 'Tiền đại số, Đại số 1–2, Tiền giải tích', 'Số học, đại số, hình học và xác suất', 'Nhật Bản · Đài Loan · Hồng Kông · Singapore · Malaysia · Việt Nam'],
+    mainTabs: ['Chương trình Hàn Quốc', 'Lộ trình môn học', 'Lĩnh vực toán học', 'Chương trình Đông Á', 'Chương trình Đông Nam Á'],
+    mainTabHelp: ['Lớp 1–12 & Môn học sửa đổi 2022', 'Tiền đại số, Đại số 1–2, Tiền giải tích', 'Số học, đại số, hình học và xác suất', 'Nhật Bản · Đài Loan · Hồng Kông', 'Singapore · Malaysia · Việt Nam'],
     subViews: {
       byGrade: 'Theo lớp · Tên truyền thống',
       bySubject2022: 'Môn học sửa đổi 2022',
@@ -694,6 +733,8 @@ export const CURRICULUM_COPY = {
       japan: 'Chương trình Nhật Bản',
       taiwan: 'Chương trình Đài Loan',
       hongkong: 'Chương trình Hồng Kông',
+    },
+    southeastAsiaCountries: {
       singapore: 'Chương trình Singapore',
       malaysia: 'Chương trình Malaysia',
       vietnam: 'Chương trình Việt Nam',
@@ -721,7 +762,8 @@ export const CURRICULUM_COPY = {
       subject2022Notice: 'Cấu trúc chính thức chương trình 2022 Hàn Quốc: môn chung, tự chọn chung, định hướng nghề và nâng cao.',
       intlNotice: 'Lộ trình độc lập cho trường quốc tế (Tiền đại số, Đại số 1–2, Tiền giải tích).',
       domainNotice: 'Khám phá các khái niệm cốt lõi: số & phép tính, đại số, hình học, xác suất thống kê.',
-      eastAsiaNotice: 'Ngân hàng bài tập hiện có được sắp xếp lại theo đúng tên lớp và môn học thực tế dùng ở Nhật Bản, Đài Loan, Hồng Kông, Singapore, Malaysia và Việt Nam. Các bài tập ứng dụng riêng theo từng nước, dựa trên đề thi thật, sẽ được bổ sung sau và sẽ dùng chung gói trả phí (curriculum-advanced) với các bài nâng cao của Hàn Quốc.',
+      eastAsiaNotice: 'Ngân hàng bài tập hiện có được sắp xếp lại theo đúng tên lớp và môn học thực tế dùng ở Nhật Bản, Đài Loan và Hồng Kông. Các bài tập ứng dụng riêng theo từng nước, dựa trên đề thi thật, sẽ được bổ sung sau và sẽ dùng chung gói trả phí (curriculum-advanced) với các bài nâng cao của Hàn Quốc.',
+      southeastAsiaNotice: 'Ngân hàng bài tập hiện có được sắp xếp lại theo đúng tên lớp và môn học thực tế dùng ở Singapore, Malaysia và Việt Nam. Các bài tập ứng dụng riêng theo từng nước, dựa trên đề thi thật, sẽ được bổ sung sau và sẽ dùng chung gói trả phí (curriculum-advanced) với các bài nâng cao của Hàn Quốc.',
       bottomNote: 'Đây là các lộ trình tham khảo; thứ tự cụ thể tùy trường, quốc gia và chương trình.',
     },
     labels: {
@@ -736,8 +778,8 @@ export const CURRICULUM_COPY = {
     eyebrow: 'PETA KURIKULUM',
     title: 'Bagaimana Anda ingin menjelajahi matematika?',
     description: 'Telusuri menurut kurikulum Korea (kelas / mata pelajaran 2022), urutan kursus internasional, atau bidang matematika.',
-    mainTabs: ['Kurikulum Korea', 'Urutan Kursus', 'Bidang Matematika', 'Kurikulum Asia'],
-    mainTabHelp: ['Kelas 1–12 & Pelajaran Revisi 2022', 'Pra-Aljabar, Aljabar 1–2, Pra-Kalkulus', 'Bilangan, aljabar, geometri, dan data', 'Jepang · Taiwan · Hong Kong · Singapura · Malaysia · Vietnam'],
+    mainTabs: ['Kurikulum Korea', 'Urutan Kursus', 'Bidang Matematika', 'Kurikulum Asia Timur', 'Kurikulum Asia Tenggara'],
+    mainTabHelp: ['Kelas 1–12 & Pelajaran Revisi 2022', 'Pra-Aljabar, Aljabar 1–2, Pra-Kalkulus', 'Bilangan, aljabar, geometri, dan data', 'Jepang · Taiwan · Hong Kong', 'Singapura · Malaysia · Vietnam'],
     subViews: {
       byGrade: 'Per Kelas · Nama Klasik',
       bySubject2022: 'Mata Pelajaran Revisi 2022',
@@ -746,6 +788,8 @@ export const CURRICULUM_COPY = {
       japan: 'Kurikulum Jepang',
       taiwan: 'Kurikulum Taiwan',
       hongkong: 'Kurikulum Hong Kong',
+    },
+    southeastAsiaCountries: {
       singapore: 'Kurikulum Singapura',
       malaysia: 'Kurikulum Malaysia',
       vietnam: 'Kurikulum Vietnam',
@@ -773,7 +817,8 @@ export const CURRICULUM_COPY = {
       subject2022Notice: 'Struktur resmi Kurikulum Korea 2022 untuk mata pelajaran umum, pilihan, dan lanjutan.',
       intlNotice: 'Urutan independen untuk sekolah internasional (Pra-Aljabar, Aljabar 1–2, Pra-Kalkulus).',
       domainNotice: 'Pelajari konsep inti: bilangan & operasi, aljabar, geometri, peluang & statistika.',
-      eastAsiaNotice: 'Bank soal yang sudah ada disusun ulang mengikuti nama kelas dan mata pelajaran sebenarnya yang dipakai di Jepang, Taiwan, Hong Kong, Singapura, Malaysia, dan Vietnam. Soal aplikasi khas tiap negara, berdasarkan analisis soal ujian asli, akan ditambahkan kemudian dan akan tersedia lewat langganan berbayar yang sama (curriculum-advanced) seperti soal lanjutan Korea.',
+      eastAsiaNotice: 'Bank soal yang sudah ada disusun ulang mengikuti nama kelas dan mata pelajaran sebenarnya yang dipakai di Jepang, Taiwan, dan Hong Kong. Soal aplikasi khas tiap negara, berdasarkan analisis soal ujian asli, akan ditambahkan kemudian dan akan tersedia lewat langganan berbayar yang sama (curriculum-advanced) seperti soal lanjutan Korea.',
+      southeastAsiaNotice: 'Bank soal yang sudah ada disusun ulang mengikuti nama kelas dan mata pelajaran sebenarnya yang dipakai di Singapura, Malaysia, dan Vietnam. Soal aplikasi khas tiap negara, berdasarkan analisis soal ujian asli, akan ditambahkan kemudian dan akan tersedia lewat langganan berbayar yang sama (curriculum-advanced) seperti soal lanjutan Korea.',
       bottomNote: 'Ini adalah jalur panduan; urutan tepat dapat berbeda menurut sekolah, negara, dan program.',
     },
     labels: {
