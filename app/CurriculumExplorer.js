@@ -13,6 +13,7 @@ import {
   SINGAPORE_STAGES,
   MALAYSIA_STAGES,
   VIETNAM_STAGES,
+  INDIA_STAGES,
   DOMAIN_STAGES,
 } from './curriculumCatalog';
 
@@ -101,13 +102,14 @@ export default function CurriculumExplorer() {
   const [krSubView, setKrSubView] = useState('grade'); // 'grade' | 'subject2022'
   const [eastAsiaCountry, setEastAsiaCountry] = useState('japan'); // 'japan' | 'taiwan' | 'hongkong'
   const [southeastAsiaCountry, setSoutheastAsiaCountry] = useState('singapore'); // 'singapore' | 'malaysia' | 'vietnam'
+  const [southAsiaCountry, setSouthAsiaCountry] = useState('india'); // 'india'
 
   // If user has not manually changed tab on first load, adjust to language default once
   useEffect(() => {
     // A direct link (e.g. the top-nav "동아시아 교육과정" item) takes priority over both
     // sessionStorage and the language default, so it reliably lands on the right tab.
     const requestedTab = new URLSearchParams(window.location.search).get('curriculumTab');
-    if (requestedTab && ['korea', 'courses', 'domains', 'eastasia', 'southeastasia'].includes(requestedTab)) {
+    if (requestedTab && ['korea', 'courses', 'domains', 'eastasia', 'southeastasia', 'southasia'].includes(requestedTab)) {
       setActiveTab(requestedTab);
       try { window.sessionStorage.setItem('math-curriculum-tab', requestedTab); } catch {}
       return;
@@ -138,12 +140,14 @@ export default function CurriculumExplorer() {
       { id: 'domains', label: copy.mainTabs[2], help: copy.mainTabHelp[2] },
       { id: 'eastasia', label: copy.mainTabs[3], help: copy.mainTabHelp[3] },
       { id: 'southeastasia', label: copy.mainTabs[4], help: copy.mainTabHelp[4] },
+      { id: 'southasia', label: copy.mainTabs[5], help: copy.mainTabHelp[5] },
     ],
     [copy]
   );
 
   const EAST_ASIA_STAGES = { japan: JAPAN_STAGES, taiwan: TAIWAN_STAGES, hongkong: HONGKONG_STAGES };
   const SOUTHEAST_ASIA_STAGES = { singapore: SINGAPORE_STAGES, malaysia: MALAYSIA_STAGES, vietnam: VIETNAM_STAGES };
+  const SOUTH_ASIA_STAGES = { india: INDIA_STAGES };
 
   const koreanSchoolGroups = useMemo(
     () => [
@@ -455,6 +459,35 @@ export default function CurriculumExplorer() {
 
             <div className="curriculum-stage-grid">
               {SOUTHEAST_ASIA_STAGES[southeastAsiaCountry].map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
+            </div>
+          </div>
+        )}
+
+        {/* Tab 6: 남아시아 교육과정 (인도) */}
+        {activeTab === 'southasia' && (
+          <div className="eastasia-curriculum-wrap">
+            <div className="curriculum-subview-bar">
+              <div className="subview-toggle-group country-toggle-group" role="group" aria-label="남아시아 교육과정 국가 선택">
+                {['india'].map((country) => (
+                  <button
+                    type="button"
+                    key={country}
+                    className={`subview-btn ${southAsiaCountry === country ? 'active' : ''}`}
+                    onClick={() => setSouthAsiaCountry(country)}
+                  >
+                    <strong>{copy.southAsiaCountries[country]}</strong>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="curriculum-notice-banner official">
+              <span className="notice-icon">🌏</span>
+              <p>{copy.notices.southAsiaNotice}</p>
+            </div>
+
+            <div className="curriculum-stage-grid">
+              {SOUTH_ASIA_STAGES[southAsiaCountry].map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
             </div>
           </div>
         )}
