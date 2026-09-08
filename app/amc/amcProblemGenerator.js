@@ -2216,6 +2216,369 @@ export const GENERATORS = {
 
     return { question, choices, correctIdx, explanation };
   },
+
+  // -----------------------------------------------------------------------
+  // SYSTEMS OF EQUATIONS (The Essential Guide to Algebra 1, Topic 3: Two-Variable Equations)
+  // -----------------------------------------------------------------------
+  'systems-of-equations': (lang) => {
+    const x0 = randInt(-8, 8);
+    const y0 = randInt(-8, 8);
+    let a; let b; let d; let e;
+    do {
+      a = randInt(-6, 6) || 1;
+      b = randInt(-6, 6) || 1;
+      d = randInt(-6, 6) || 1;
+      e = randInt(-6, 6) || 1;
+    } while (a * e - b * d === 0);
+    const c = a * x0 + b * y0;
+    const f = d * x0 + e * y0;
+    const ask = pickRandom(['x', 'y', 'sum']);
+    const ans = ask === 'x' ? x0 : ask === 'y' ? y0 : x0 + y0;
+    const askLabel = { x: '$x$', y: '$y$', sum: '$x+y$' }[ask];
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return ask === 'sum' ? x0 - y0 : (ask === 'x' ? y0 : x0);
+      if (i === 2) return -ans;
+      if (i === 3) return ans + 5;
+      return ans + randInt(2, 9) * (i % 2 === 0 ? 1 : -1);
+    });
+
+    const eq1 = `${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}y = ${c}`;
+    const eq2 = `${d}x ${e >= 0 ? '+' : '-'} ${Math.abs(e)}y = ${f}`;
+    const question = lang === 'ko'
+      ? `다음 연립방정식을 만족하는 ${askLabel}의 값을 구하세요.\n\n$$${eq1}$$\n$$${eq2}$$`
+      : `Find the value of ${askLabel} that satisfies the system of equations.\n\n$$${eq1}$$\n$$${eq2}$$`;
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 1 Topic 3.2-3.3 대입과 소거]**\n\n두 식을 소거하여 풀면 $x=${x0}$, $y=${y0}$입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+      : `**[The Essential Guide to Algebra 1 Topic 3.2-3.3 Substitution & Elimination]**\n\nSolving the system by elimination gives $x=${x0}$ and $y=${y0}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // LINEAR GRAPHS & SLOPE (The Essential Guide to Algebra 1, Topic 5: Linear Graphs)
+  // -----------------------------------------------------------------------
+  'linear-graphs': (lang) => {
+    const variant = pickRandom(['slope-two-points', 'perpendicular-slope']);
+
+    if (variant === 'slope-two-points') {
+      const x1 = randInt(-8, 8);
+      const y1 = randInt(-8, 8);
+      const m = pickRandom([-4, -3, -2, -1, 1, 2, 3, 4]);
+      const dx = pickRandom([1, 2, 3]);
+      const x2 = x1 + dx;
+      const y2 = y1 + m * dx;
+
+      const { choices, correctIdx } = buildChoices(m, (i) => {
+        if (i === 1) return -m;
+        if (i === 2) return m + 1;
+        if (i === 3) return m - 1;
+        return m + (i % 2 === 0 ? i : -i);
+      });
+
+      const question = lang === 'ko'
+        ? `두 점 $(${x1}, ${y1})$과 $(${x2}, ${y2})$를 지나는 직선의 기울기를 구하세요.`
+        : `Find the slope of the line passing through the points $(${x1}, ${y1})$ and $(${x2}, ${y2})$.`;
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 1 Topic 5.3 기울기]**\n\n기울기는 $\\dfrac{y_2-y_1}{x_2-x_1} = \\dfrac{${y2}-(${y1})}{${x2}-(${x1})} = \\dfrac{${y2 - y1}}{${x2 - x1}} = ${m}$입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${m})** 입니다.`
+        : `**[The Essential Guide to Algebra 1 Topic 5.3 Slope]**\n\nThe slope is $\\dfrac{y_2-y_1}{x_2-x_1} = \\dfrac{${y2}-(${y1})}{${x2}-(${x1})} = \\dfrac{${y2 - y1}}{${x2 - x1}} = ${m}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${m})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // perpendicular-slope
+    const m = pickRandom([-6, -5, -4, -3, -2, 2, 3, 4, 5, 6]);
+    const num = m < 0 ? 1 : -1;
+    const den = Math.abs(m);
+    const ans = `${num}/${den}`;
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return `${-num}/${den}`;
+      if (i === 2) return `${m}`;
+      if (i === 3) return `${-m}`;
+      return `${num}/${den + i}`;
+    });
+
+    const question = lang === 'ko'
+      ? `기울기가 $${m}$인 직선에 수직인 직선의 기울기를 구하세요.`
+      : `Find the slope of a line perpendicular to a line with slope $${m}$.`;
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 1 Topic 5.6 평행선과 수직선]**\n\n두 직선이 수직이면 기울기의 곱이 $-1$입니다. 따라서 수직인 직선의 기울기는 $-\\dfrac{1}{${m}} = ${ans}$입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+      : `**[The Essential Guide to Algebra 1 Topic 5.6 Parallel & Perpendicular Lines]**\n\nPerpendicular lines have slopes whose product is $-1$, so the perpendicular slope is $-\\dfrac{1}{${m}} = ${ans}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // FACTORING QUADRATICS (The Essential Guide to Algebra 1, Topics 7-8)
+  // -----------------------------------------------------------------------
+  'factoring-quadratics': (lang) => {
+    const variant = pickRandom(['factor-monic', 'difference-of-squares']);
+
+    if (variant === 'factor-monic') {
+      const r = randInt(-9, 9) || 1;
+      let s = randInt(-9, 9) || 2;
+      while (s === r) s = randInt(-9, 9) || (r + 1);
+      const b = -(r + s);
+      const c = r * s;
+      const larger = Math.max(r, s);
+
+      const { choices, correctIdx } = buildChoices(larger, (i) => {
+        if (i === 1) return Math.min(r, s);
+        if (i === 2) return -larger;
+        if (i === 3) return larger + 1;
+        return larger + (i % 2 === 0 ? i : -i);
+      });
+
+      const bTerm = b === 0 ? '' : (b > 0 ? ` + ${b}x` : ` - ${Math.abs(b)}x`);
+      const cTerm = c >= 0 ? ` + ${c}` : ` - ${Math.abs(c)}`;
+      const question = lang === 'ko'
+        ? `이차방정식 $x^2${bTerm}${cTerm} = 0$의 두 해 중 더 큰 값을 구하세요.`
+        : `Find the larger of the two solutions to the quadratic equation $x^2${bTerm}${cTerm} = 0$.`;
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 1 Topic 7.2-7.3 인수분해]**\n\n좌변을 인수분해하면 $(x-(${r}))(x-(${s}))=0$이므로, 해는 $x=${r}$ 또는 $x=${s}$입니다. 더 큰 값은 $${larger}$입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${larger})** 입니다.`
+        : `**[The Essential Guide to Algebra 1 Topic 7.2-7.3 Factoring]**\n\nFactoring the left side gives $(x-(${r}))(x-(${s}))=0$, so $x=${r}$ or $x=${s}$. The larger value is $${larger}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${larger})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // difference-of-squares
+    const b = randInt(5, 40);
+    const a = b + randInt(1, 6) * 2;
+    const ans = a * a - b * b;
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return (a - b) * (a + b - 2);
+      if (i === 2) return a * a + b * b;
+      if (i === 3) return (a + b) * (a + b);
+      return ans + randInt(2, 20) * (i % 2 === 0 ? 1 : -1);
+    });
+
+    const question = lang === 'ko'
+      ? `합차공식을 이용하여 $${a}^2 - ${b}^2$의 값을 구하세요.`
+      : `Use the difference of squares to compute $${a}^2 - ${b}^2$.`;
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 1 Topic 8.2 합차공식]**\n\n$A^2-B^2=(A-B)(A+B)$이므로,\n\n$$${a}^2 - ${b}^2 = (${a}-${b})(${a}+${b}) = ${a - b}\\times${a + b} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+      : `**[The Essential Guide to Algebra 1 Topic 8.2 Difference of Squares]**\n\nSince $A^2-B^2=(A-B)(A+B)$,\n\n$$${a}^2 - ${b}^2 = (${a}-${b})(${a}+${b}) = ${a - b}\\times${a + b} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // COMPLETING THE SQUARE & QUADRATIC FORMULA (The Essential Guide to Algebra 1, Topic 10)
+  // -----------------------------------------------------------------------
+  'completing-square': (lang) => {
+    const variant = pickRandom(['complete-square-constant', 'quadratic-formula']);
+
+    if (variant === 'complete-square-constant') {
+      const p = randInt(-9, 9) || 1;
+      const b = 2 * p;
+      const c = randInt(-25, 25);
+      const q = c - p * p;
+
+      const { choices, correctIdx } = buildChoices(q, (i) => {
+        if (i === 1) return c + p * p;
+        if (i === 2) return -q;
+        if (i === 3) return c;
+        return q + randInt(2, 9) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const bTerm = b === 0 ? '' : (b > 0 ? ` + ${b}x` : ` - ${Math.abs(b)}x`);
+      const cTerm = c >= 0 ? ` + ${c}` : ` - ${Math.abs(c)}`;
+      const pTerm = p >= 0 ? `+ ${p}` : `- ${Math.abs(p)}`;
+      const question = lang === 'ko'
+        ? `$x^2${bTerm}${cTerm}$를 완전제곱식을 이용하여 $(x ${pTerm})^2 + q$ 꼴로 나타낼 때, $q$의 값을 구하세요.`
+        : `Complete the square to write $x^2${bTerm}${cTerm}$ in the form $(x ${pTerm})^2 + q$. Find the value of $q$.`;
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 1 Topic 10.2 완전제곱식]**\n\n$x^2${bTerm} = (x ${pTerm})^2 - ${p * p}$이므로,\n\n$$x^2${bTerm}${cTerm} = (x ${pTerm})^2 - ${p * p}${cTerm} = (x ${pTerm})^2 + ${q}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${q})** 입니다.`
+        : `**[The Essential Guide to Algebra 1 Topic 10.2 Completing the Square]**\n\n$x^2${bTerm} = (x ${pTerm})^2 - ${p * p}$, so\n\n$$x^2${bTerm}${cTerm} = (x ${pTerm})^2 - ${p * p}${cTerm} = (x ${pTerm})^2 + ${q}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${q})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // quadratic-formula: larger root of a x^2+bx+c=0 built from clean integer roots
+    const a = pickRandom([1, 2, 3]);
+    const r = randInt(-6, 6) || 1;
+    let s = randInt(-6, 6) || 2;
+    while (s === r) s = randInt(-6, 6) || (r + 1);
+    const b = -a * (r + s);
+    const c = a * r * s;
+    const larger = Math.max(r, s);
+
+    const { choices, correctIdx } = buildChoices(larger, (i) => {
+      if (i === 1) return Math.min(r, s);
+      if (i === 2) return -larger;
+      if (i === 3) return larger + a;
+      return larger + (i % 2 === 0 ? i : -i);
+    });
+
+    const bTerm = b === 0 ? '' : (b > 0 ? ` + ${b}x` : ` - ${Math.abs(b)}x`);
+    const cTerm = c >= 0 ? ` + ${c}` : ` - ${Math.abs(c)}`;
+    const question = lang === 'ko'
+      ? `근의 공식을 이용하여 $${a}x^2${bTerm}${cTerm} = 0$의 두 해 중 더 큰 값을 구하세요.`
+      : `Use the quadratic formula to find the larger solution to $${a}x^2${bTerm}${cTerm} = 0$.`;
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 1 Topic 10.3 근의 공식]**\n\n$x=\\dfrac{-b\\pm\\sqrt{b^2-4ac}}{2a}$에 $a=${a}, b=${b}, c=${c}$를 대입하면 $x=${r}$ 또는 $x=${s}$를 얻습니다. 더 큰 값은 $${larger}$입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${larger})** 입니다.`
+      : `**[The Essential Guide to Algebra 1 Topic 10.3 Quadratic Formula]**\n\nSubstituting $a=${a}, b=${b}, c=${c}$ into $x=\\dfrac{-b\\pm\\sqrt{b^2-4ac}}{2a}$ gives $x=${r}$ or $x=${s}$. The larger value is $${larger}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${larger})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // QUADRATIC VERTEX & OPTIMIZATION (The Essential Guide to Algebra 1, Topic 11.5)
+  // -----------------------------------------------------------------------
+  'quadratic-optimization': (lang) => {
+    const a = pickRandom([1, 2, 3, -1, -2, -3]);
+    const h = randInt(-8, 8);
+    const k = randInt(-15, 15);
+    const b = -2 * a * h;
+    const c = a * h * h + k;
+    const aLead = a === 1 ? '' : (a === -1 ? '-' : `${a}`);
+
+    const { choices, correctIdx } = buildChoices(k, (i) => {
+      if (i === 1) return c;
+      if (i === 2) return -k;
+      if (i === 3) return k + a;
+      return k + randInt(2, 9) * (i % 2 === 0 ? 1 : -1);
+    });
+
+    const bTerm = b === 0 ? '' : (b > 0 ? ` + ${b}x` : ` - ${Math.abs(b)}x`);
+    const cTerm = c >= 0 ? ` + ${c}` : ` - ${Math.abs(c)}`;
+    const extremeKo = a > 0 ? '최솟값' : '최댓값';
+    const extremeEn = a > 0 ? 'minimum value' : 'maximum value';
+    const question = lang === 'ko'
+      ? `이차함수 $y = ${aLead}x^2${bTerm}${cTerm}$의 ${extremeKo}을 구하세요.`
+      : `Find the ${extremeEn} of the quadratic function $y = ${aLead}x^2${bTerm}${cTerm}$.`;
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 1 Topic 11.5 이차함수의 최대·최소]**\n\n완전제곱식으로 변형하면 $y = ${aLead}(x - (${h}))^2 + ${k}$이므로, 꼭짓점은 $(${h}, ${k})$입니다. $a${a > 0 ? '>0' : '<0'}$이므로 ${extremeKo}은 $${k}$입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${k})** 입니다.`
+      : `**[The Essential Guide to Algebra 1 Topic 11.5 Quadratic Optimization]**\n\nCompleting the square gives $y = ${aLead}(x - (${h}))^2 + ${k}$, so the vertex is $(${h}, ${k})$. Since $a${a > 0 ? '>0' : '<0'}$, the ${extremeEn} is $${k}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${k})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // FUNCTION GRAPHS & TRANSFORMATIONS (The Essential Guide to Algebra 1, Topic 13)
+  // -----------------------------------------------------------------------
+  'function-transformations': (lang) => {
+    const px = randInt(-6, 6);
+    const py = randInt(-9, 9) || 1;
+    const transform = pickRandom(['vshift', 'hshift', 'reflectX', 'reflectY', 'vscale', 'combo']);
+    const kShift = randInt(1, 5) * pickRandom([1, -1]);
+    const hShift = randInt(1, 5) * pickRandom([1, -1]);
+    const scale = pickRandom([2, 3, -1, -2]);
+
+    let newX = px; let newY = py; let rule = '';
+    if (transform === 'vshift') {
+      newY = py + kShift;
+      rule = `y = f(x) ${kShift >= 0 ? '+' : '-'} ${Math.abs(kShift)}`;
+    } else if (transform === 'hshift') {
+      newX = px + hShift;
+      rule = `y = f(x ${hShift >= 0 ? '-' : '+'} ${Math.abs(hShift)})`;
+    } else if (transform === 'reflectX') {
+      newY = -py;
+      rule = 'y = -f(x)';
+    } else if (transform === 'reflectY') {
+      newX = -px;
+      rule = 'y = f(-x)';
+    } else if (transform === 'vscale') {
+      newY = scale * py;
+      rule = `y = ${scale}f(x)`;
+    } else {
+      newX = px + hShift;
+      newY = py + kShift;
+      rule = `y = f(x ${hShift >= 0 ? '-' : '+'} ${Math.abs(hShift)}) ${kShift >= 0 ? '+' : '-'} ${Math.abs(kShift)}`;
+    }
+
+    const ans = `(${newX}, ${newY})`;
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return `(${px}, ${py})`;
+      if (i === 2) return `(${-newX}, ${newY})`;
+      if (i === 3) return `(${newX}, ${-newY})`;
+      return `(${newX + i}, ${newY - i})`;
+    });
+
+    const question = lang === 'ko'
+      ? `점 $(${px}, ${py})$가 함수 $y=f(x)$의 그래프 위에 있을 때, $${rule}$의 그래프 위에 반드시 있어야 하는 점을 구하세요.`
+      : `If the point $(${px}, ${py})$ lies on the graph of $y=f(x)$, find a point that must lie on the graph of $${rule}$.`;
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 1 Topic 13.2 그래프의 변환]**\n\n주어진 변환 규칙을 $(${px},${py})$에 적용하면 $(${newX}, ${newY})$를 얻습니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+      : `**[The Essential Guide to Algebra 1 Topic 13.2 Graph Transformations]**\n\nApplying the given transformation rule to $(${px},${py})$ gives $(${newX}, ${newY})$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // POLYNOMIAL ARITHMETIC (The Essential Guide to Algebra 1, Topic 14)
+  // -----------------------------------------------------------------------
+  'polynomial-arithmetic': (lang) => {
+    const variant = pickRandom(['remainder-theorem', 'coefficient-of-product']);
+
+    const term = (c, deg) => {
+      if (c === 0) return '';
+      const sign = c > 0 ? '+' : '-';
+      const abs = Math.abs(c);
+      const varPart = deg === 0 ? '' : (deg === 1 ? 'x' : `x^${deg}`);
+      const coeffPart = (abs === 1 && deg > 0) ? '' : `${abs}`;
+      return ` ${sign} ${coeffPart}${varPart}`;
+    };
+
+    if (variant === 'remainder-theorem') {
+      const a3 = randInt(-4, 4) || 1;
+      const a2 = randInt(-6, 6);
+      const a1 = randInt(-6, 6);
+      const a0 = randInt(-9, 9);
+      const k = randInt(-4, 4) || 1;
+      const remainder = a3 * k ** 3 + a2 * k ** 2 + a1 * k + a0;
+
+      const { choices, correctIdx } = buildChoices(remainder, (i) => {
+        if (i === 1) return a3 * k ** 3 + a2 * k ** 2 + a1 * k - a0;
+        if (i === 2) return a3 + a2 + a1 + a0;
+        if (i === 3) return remainder + k;
+        return remainder + randInt(2, 12) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const poly = `${a3}x^3${term(a2, 2)}${term(a1, 1)}${term(a0, 0)}`;
+      const divisor = k >= 0 ? `x - ${k}` : `x + ${Math.abs(k)}`;
+      const substituted = `${a3}(${k})^3${term(a2, 2).replace('x^2', `(${k})^2`)}${term(a1, 1).replace('x', `(${k})`)}${term(a0, 0)}`;
+
+      const question = lang === 'ko'
+        ? `다항식 $p(x) = ${poly}$를 $${divisor}$로 나눈 나머지를 구하세요.`
+        : `Find the remainder when $p(x) = ${poly}$ is divided by $${divisor}$.`;
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 1 Topic 14.2 나머지 정리]**\n\n나머지 정리에 의해, $p(x)$를 $x-${k}$로 나눈 나머지는 $p(${k})$와 같습니다:\n\n$$p(${k}) = ${substituted} = ${remainder}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${remainder})** 입니다.`
+        : `**[The Essential Guide to Algebra 1 Topic 14.2 Remainder Theorem]**\n\nBy the Remainder Theorem, the remainder when $p(x)$ is divided by $x-${k}$ equals $p(${k})$:\n\n$$p(${k}) = ${substituted} = ${remainder}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${remainder})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // coefficient-of-product
+    const a2 = randInt(-5, 5) || 1;
+    const a1 = randInt(-6, 6);
+    const a0 = randInt(-6, 6);
+    const b1 = randInt(-5, 5) || 1;
+    const b0 = randInt(-6, 6);
+    const coeffX2 = a2 * b0 + a1 * b1;
+
+    const { choices, correctIdx } = buildChoices(coeffX2, (i) => {
+      if (i === 1) return a2 * b1;
+      if (i === 2) return a1 * b0;
+      if (i === 3) return a2 * b0 - a1 * b1;
+      return coeffX2 + randInt(2, 9) * (i % 2 === 0 ? 1 : -1);
+    });
+
+    const p1 = `${a2}x^2${term(a1, 1)}${term(a0, 0)}`;
+    const p2 = `${b1}x${term(b0, 0)}`;
+
+    const question = lang === 'ko'
+      ? `$(${p1})(${p2})$를 전개했을 때, $x^2$의 계수를 구하세요.`
+      : `When $(${p1})(${p2})$ is expanded, find the coefficient of $x^2$.`;
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 1 Topic 14.1 다항식의 곱셈]**\n\n$x^2$항은 $(${a2}x^2)(${b0}) + (${a1}x)(${b1}x)$에서 나오므로, 계수는 $${a2}\\times${b0} + ${a1}\\times${b1} = ${coeffX2}$입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${coeffX2})** 입니다.`
+      : `**[The Essential Guide to Algebra 1 Topic 14.1 Multiplying Polynomials]**\n\nThe $x^2$ term comes from $(${a2}x^2)(${b0}) + (${a1}x)(${b1}x)$, so the coefficient is $${a2}\\times${b0} + ${a1}\\times${b1} = ${coeffX2}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${coeffX2})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
 };
 
 /**

@@ -84,6 +84,18 @@ export const AMC_FINE_SUBJECTS = [
         intlCourse: { id: 'intl-pre-algebra', label: 'Pre-Algebra', labelKo: '문자와 식의 계산', href: '/curriculum#intl-pre-algebra' },
         domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
       },
+      {
+        id: 'systems-of-equations', label: '연립방정식', labelEn: 'Systems of Equations', desc: '두 변수 연립방정식의 대입·소거법과 활용 문제',
+        tier: 'intermediate',
+        intlCourse: { id: 'intl-algebra-1', label: 'Algebra 1', labelKo: '연립방정식 (Systems of Equations)', href: '/curriculum#intl-algebra-1' },
+        domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
+      },
+      {
+        id: 'linear-graphs', label: '직선의 방정식과 기울기', labelEn: 'Linear Equations & Slope', desc: '기울기, 두 점을 지나는 직선, 평행선과 수직선',
+        tier: 'intermediate',
+        intlCourse: { id: 'intl-algebra-1', label: 'Algebra 1', labelKo: '직선의 방정식과 기울기', href: '/curriculum#intl-algebra-1' },
+        domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
+      },
     ],
   },
   {
@@ -312,6 +324,12 @@ export const AMC_FINE_SUBJECTS = [
         intlCourse: { id: 'intl-algebra-1', label: 'Algebra 1', labelKo: '함수의 성질과 그래프', href: '/curriculum#intl-algebra-1' },
         domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
       },
+      {
+        id: 'function-transformations', label: '함수의 그래프와 변환', labelEn: 'Function Graphs & Transformations', desc: '평행이동·대칭이동·확대축소가 그래프 위의 점에 미치는 영향',
+        tier: 'advanced',
+        intlCourse: { id: 'intl-algebra-2', label: 'Algebra 2', labelKo: '함수의 그래프와 변환', href: '/curriculum#intl-algebra-2' },
+        domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
+      },
     ],
   },
   {
@@ -329,6 +347,30 @@ export const AMC_FINE_SUBJECTS = [
         tier: 'advanced',
         intlCourse: { id: 'intl-algebra-2', label: 'Algebra 2', labelKo: '복소수 (Complex Numbers)', href: '/curriculum#intl-algebra-2' },
         domain: { id: 'domain-numbers', label: 'Number & Operations', labelKo: '수와 연산', href: '/curriculum#domain-numbers' },
+      },
+      {
+        id: 'factoring-quadratics', label: '이차식의 인수분해', labelEn: 'Factoring Quadratics', desc: '완전제곱식·합차공식을 이용한 이차식의 인수분해',
+        tier: 'advanced',
+        intlCourse: { id: 'intl-algebra-1', label: 'Algebra 1', labelKo: '이차식의 인수분해', href: '/curriculum#intl-algebra-1' },
+        domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
+      },
+      {
+        id: 'completing-square', label: '완전제곱식과 근의 공식', labelEn: 'Completing the Square & Quadratic Formula', desc: '완전제곱식으로 변형하기, 근의 공식으로 방정식 풀기',
+        tier: 'advanced',
+        intlCourse: { id: 'intl-algebra-2', label: 'Algebra 2', labelKo: '완전제곱식과 근의 공식', href: '/curriculum#intl-algebra-2' },
+        domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
+      },
+      {
+        id: 'quadratic-optimization', label: '이차함수의 최대·최소', labelEn: 'Quadratic Vertex & Optimization', desc: '포물선의 꼭짓점을 이용한 최댓값·최솟값 문제',
+        tier: 'advanced',
+        intlCourse: { id: 'intl-algebra-2', label: 'Algebra 2', labelKo: '이차함수의 최대·최소', href: '/curriculum#intl-algebra-2' },
+        domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
+      },
+      {
+        id: 'polynomial-arithmetic', label: '다항식의 연산', labelEn: 'Polynomial Arithmetic', desc: '다항식의 곱셈, 나머지 정리, 계수 비교',
+        tier: 'advanced',
+        intlCourse: { id: 'intl-algebra-2', label: 'Algebra 2', labelKo: '다항식의 연산', href: '/curriculum#intl-algebra-2' },
+        domain: { id: 'domain-algebra', label: 'Algebra & Relations', labelKo: '변화와 관계 · 대수', href: '/curriculum#domain-algebra' },
       },
     ],
   },
