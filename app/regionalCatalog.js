@@ -339,6 +339,63 @@ const zhHK = {
   'rpm-sys-app-all-types-mixed': '二元一次聯立方程式應用單元全類型實戰綜合複習',
   'rpm-sys-app-advanced-skill-up': '二元一次聯立方程式應用最高難度實力UP進階題',
 
+  // -------------------------------------------------------------
+  // RPM [중2-1] 08 일차함수와 그 그래프 (一次函數及其圖形)
+  // -------------------------------------------------------------
+  'rpm-linear-func-concept': '函數之定義與判別（一對一與多對一對應）',
+  'rpm-linear-func-eval-value': '一次函數值 f(a) 計算與代數組合求值',
+  'rpm-linear-func-identify-linear': '一次函數之意義與式別辨識（y = ax + b）',
+  'rpm-linear-func-point-on-graph': '一次函數圖形上的點與座標代入求未知數',
+  'rpm-linear-func-translation-y': '一次函數圖形之垂直平移（沿y軸平移b單位）',
+  'rpm-linear-func-intercepts': '一次函數圖形之x截距與y截距求法及性質',
+  'rpm-linear-func-slope-definition': '斜率之意義與變化量（y增加量 / x增加量）',
+  'rpm-linear-func-slope-two-points': '通過相異兩點之直線斜率求法',
+  'rpm-linear-func-draw-quadrants': '一次函數圖形繪製與所經象限判別',
+  'rpm-linear-func-axis-triangle-area': '一次函數圖形與兩座標軸所圍直角三角形面積',
+  'rpm-linear-func-sign-properties': 'y = ax + b 圖形性質與係數 a, b 之正負號判別',
+  'rpm-linear-func-parallel-lines': '兩直線互相平行之條件（斜率相等且截距相異）',
+  'rpm-linear-func-coincident-lines': '兩直線完全重合之條件（斜率與截距皆相等）',
+  'rpm-linear-func-comprehensive-properties': '一次函數性質綜合正誤判斷題',
+  'rpm-linear-func-app-temperature': '一次函數應用：水溫冷卻與蠟燭燃燒長度問題',
+  'rpm-linear-func-app-water-tank': '一次函數應用：水槽注水與排水速率問題',
+  'rpm-linear-func-app-speed-distance': '一次函數應用：等速行駛與剩餘路程時間問題',
+  'rpm-linear-func-app-moving-point': '一次函數應用：多邊形邊上動點P所圍三角形面積',
+  'rpm-linear-func-app-graph-modeling': '一次函數應用：已知實用折線圖建立函數關係式',
+  'rpm-linear-func-up-two-lines-area': '兩直線圖形與座標軸所圍三角形面積計算',
+  'rpm-linear-func-up-quadrant-condition': '直線不通過指定象限時參數範圍條件分析',
+  'rpm-linear-func-all-types-mixed': '一次函數及其圖形單元全類型實戰綜合複習',
+  'rpm-linear-func-advanced-skill-up': '一次函數及其圖形最高難度實力UP進階題',
+
+  // -------------------------------------------------------------
+  // RPM [중2-1] 09 일차함수와 일차방정식의 관계 (一次函數與二元一次方程式之關係)
+  // -------------------------------------------------------------
+  'rpm-line-eqn-form-ax-by-c': '二元一次方程式 ax + by + c = 0 之直線圖形與截距斜率',
+  'rpm-line-eqn-point-on-line': '二元一次方程式圖形上的點與待定係數求值',
+  'rpm-line-eqn-signs-properties': '方程式係數乘積符號與直線走勢圖形判斷',
+  'rpm-line-eqn-parallel-to-axes': '平行於座標軸之直線方程式（x = p 與 y = q）',
+  'rpm-line-eqn-four-lines-rect-area': '平行於座標軸之四條直線所圍長方形面積',
+  'rpm-line-eqn-from-slope-yint': '求直線方程式：已知斜率與y截距',
+  'rpm-line-eqn-from-slope-point': '求直線方程式：已知斜率與線上一點（點斜式）',
+  'rpm-line-eqn-from-two-points': '求直線方程式：已知線上相異兩點',
+  'rpm-line-eqn-from-intercepts': '求直線方程式：已知x截距與y截距（截距式）',
+  'rpm-line-eqn-intersection-as-solution': '聯立方程式之幾何意義：兩直線之交點即方程之解',
+  'rpm-line-eqn-intersection-find-const': '利用兩直線交點座標求方程式未定常數',
+  'rpm-line-eqn-line-through-intersection': '通過兩直線交點且滿足平行條件之新直線方程式',
+  'rpm-line-eqn-three-lines-one-point': '三直線共點（交於同一點）之條件與常數求解',
+  'rpm-line-eqn-system-solution-types': '聯立方程式之解的個數與兩直線位置關係（相交、平行、重合）',
+  'rpm-line-eqn-enclosed-triangle-area': '兩相交直線與座標軸所圍三角形面積',
+  'rpm-line-eqn-apps-real-life': '二元一次直線方程式在生活實際情境之交點應用',
+  'rpm-line-eqn-up-line-meets-segment': '過定點之直線與線段AB相交之斜率極值範圍',
+  'rpm-line-eqn-up-bisect-triangle-area': '過原點之直線平分座標軸直角三角形面積',
+  'rpm-line-eqn-all-types-mixed': '一次函數與直線方程式單元全類型實戰綜合複習',
+  'rpm-line-eqn-advanced-skill-up': '一次函數與直線方程式最高難度實力UP進階題',
+
+  // -------------------------------------------------------------
+  // [중2-1 최종총괄] 중학 2-1 전 범위 최종 실전 총괄 모의고사 (RPM p.152~167)
+  // -------------------------------------------------------------
+  'rpm-grade8-semester-one-final-exam': '中學八年級上學期全範圍最終實戰總括模擬測驗（有理數、式之運算、不等式、聯立方程、一次函數全單元）',
+
+
 
 
 

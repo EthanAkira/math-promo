@@ -13327,6 +13327,1149 @@ export function rpmSysAppAdvancedSkillUp(random) {
   };
 }
 
+
+
+export function rpmLinearFuncConcept(random) {
+  const mode = pick(random, ['identify-func', 'identify-non-func']);
+  if (mode === 'identify-func') {
+    const choices = [
+      { value: '1', label: '한 변의 길이가 x cm인 정사각형의 둘레의 길이 y cm', labelEn: 'Perimeter y cm of a square with side length x cm' },
+      { value: '2', label: '자연수 x보다 작은 자연수 y', labelEn: 'Natural numbers y less than natural number x' },
+      { value: '3', label: '절댓값이 x인 수 y', labelEn: 'Numbers y whose absolute value is x' },
+      { value: '4', label: '자연수 x의 배수 y', labelEn: 'Multiples y of natural number x' },
+      { value: '5', label: '자연수 x의 약수 y', labelEn: 'Divisors y of natural number x' },
+    ];
+    return {
+      prompt: '다음 보기 중 y가 x의 함수인 것은?',
+      promptEn: 'Which of the following describes y as a function of x?',
+      expression: 'y = f(x)',
+      choices,
+      answer: '1',
+      explanation: '정사각형의 둘레의 길이는 y = 4x로 x의 값 하나에 y의 값이 오직 하나씩 대응하므로 함수입니다. 2, 3, 4, 5번은 x의 값 하나에 y의 값이 없거나 2개 이상 정해지므로 함수가 아닙니다.',
+      explanationEn: 'The perimeter of a square is y = 4x, which assigns exactly one y to each x. The other options can have multiple or no corresponding y values.'
+    };
+  } else {
+    const choices = [
+      { value: '1', label: '자연수 x와 서로소인 자연수 y', labelEn: 'Natural numbers y coprime to natural number x' },
+      { value: '2', label: '하루 24시간 중 낮의 길이가 x시간일 때 밤의 길이 y시간', labelEn: 'Night hours y when day hours are x out of 24 hours' },
+      { value: '3', label: '한 자루에 800원인 볼펜 x자루의 가격 y원', labelEn: 'Price y won for x pens at 800 won each' },
+      { value: '4', label: '시속 60 km로 x시간 동안 달린 거리 y km', labelEn: 'Distance y km traveled in x hours at 60 km/h' },
+      { value: '5', label: '넓이가 30 cm²인 직사각형의 가로 x cm, 세로 y cm', labelEn: 'Height y cm of a rectangle with area 30 cm² and width x cm' },
+    ];
+    return {
+      prompt: '다음 보기 중 y가 x의 함수가 아닌 것은?',
+      promptEn: 'Which of the following does NOT describe y as a function of x?',
+      expression: 'y \\neq f(x)',
+      choices,
+      answer: '1',
+      explanation: '자연수 x와 서로소인 수는 무수히 많으므로 x의 값 하나에 y의 값이 오직 하나로 정해지지 않아 함수가 아닙니다. 나머지는 모두 1:1 대응 관계식이 성립합니다 (y = 24 - x, y = 800x, y = 60x, y = 30/x).',
+      explanationEn: 'There are infinitely many numbers coprime to x, so y is not uniquely determined. Hence 1 is not a function.'
+    };
+  }
+}
+
+// 02. [일차함수 유형 02] 함숫값 f(a) 구하기 (#0861~#0863)
+export function rpmLinearFuncEvalValue(random) {
+  const a = pick(random, [-4, -3, -2, 2, 3, 4, 5]);
+  const b = ri(random, -9, 9);
+  const p = ri(random, -3, 3);
+  const q = ri(random, -3, 3);
+  const k1 = pick(random, [1, 2, 3]);
+  const k2 = pick(random, [-2, -1, 1, 2]);
+  const fp = a * p + b;
+  const fq = a * q + b;
+  const ans = k1 * fp + k2 * fq;
+
+  return {
+    prompt: `일차함수 f(x) = ${formatLinear(a, b)} 에 대하여 ${k1 === 1 ? '' : k1}f(${p}) ${k2 > 0 ? '+ ' + (k2 === 1 ? '' : k2) : '- ' + (Math.abs(k2) === 1 ? '' : Math.abs(k2))}f(${q}) 의 값을 구하시오.`,
+    promptEn: `For the linear function f(x) = ${formatLinear(a, b)}, find the value of ${k1 === 1 ? '' : k1}f(${p}) ${k2 > 0 ? '+ ' + (k2 === 1 ? '' : k2) : '- ' + (Math.abs(k2) === 1 ? '' : Math.abs(k2))}f(${q}).`,
+    expression: `f(x) = ${formatLinear(a, b)}`,
+    answer: String(ans),
+    explanation: `f(${p}) = ${a} × (${p}) + (${b}) = ${fp} 이고, f(${q}) = ${a} × (${q}) + (${b}) = ${fq} 입니다. 따라서 준식은 ${k1} × (${fp}) + (${k2}) × (${fq}) = ${ans} 입니다.`,
+    explanationEn: `Evaluating f(${p}) = ${fp} and f(${q}) = ${fq}, the result is ${k1}(${fp}) + (${k2})(${fq}) = ${ans}.`
+  };
+}
+
+// 03. [일차함수 유형 03] 일차함수의 뜻과 식별 (#0864~#0868)
+export function rpmLinearFuncIdentifyLinear(random) {
+  const a = ri(random, 2, 5);
+  const b = ri(random, 1, 4);
+  const choices = [
+    { value: '1', label: `y = ${formatLinear(a, b)}`, labelEn: `y = ${formatLinear(a, b)}` },
+    { value: '2', label: `y = ${a}/x + ${b}`, labelEn: `y = ${a}/x + ${b}` },
+    { value: '3', label: `y = ${a}x^2 - ${b}x`, labelEn: `y = ${a}x^2 - ${b}x` },
+    { value: '4', label: `y = ${b}`, labelEn: `y = ${b}` },
+    { value: '5', label: `2(x - y) = 3 - 2y`, labelEn: `2(x - y) = 3 - 2y` },
+  ];
+  return {
+    prompt: '다음 보기 중 일차함수인 것은?',
+    promptEn: 'Which of the following is a linear function?',
+    expression: 'y = ax + b \\quad (a \\neq 0)',
+    choices,
+    answer: '1',
+    explanation: '일차함수는 y = ax + b (a ≠ 0) 꼴로 나타내어지는 함수입니다. 2번은 분모에 미지수가 있어 일차식이 아니고, 3번은 이차함수, 4번은 상수함수, 5번은 y가 소거되어 2x = 3이 되므로 함수의 꼴이 아닙니다. 따라서 1번만 일차함수입니다.',
+    explanationEn: 'A linear function must be in the form y = ax + b with a ≠ 0. Only option 1 satisfies this definition.'
+  };
+}
+
+// 04. [일차함수 유형 04] 일차함수 그래프 위의 점 (#0869~#0871)
+export function rpmLinearFuncPointOnGraph(random) {
+  const a = pick(random, [-3, -2, 2, 3, 4]);
+  const b = ri(random, -5, 5);
+  const p = ri(random, 1, 4);
+  const correctY = a * p + b;
+  const q = ri(random, -3, -1);
+  const correctX = q;
+  const qY = a * q + b;
+
+  // Let point (p, m) be on graph, find m. Or point (k, qY) be on graph, find k.
+  const mode = pick(random, ['find-y', 'find-x']);
+  if (mode === 'find-y') {
+    return {
+      prompt: `일차함수 y = ${formatLinear(a, b)} 의 그래프가 점 (${p}, m)을 지날 때, m의 값을 구하시오.`,
+      promptEn: `If the graph of y = ${formatLinear(a, b)} passes through the point (${p}, m), find m.`,
+      expression: `y = ${formatLinear(a, b)}`,
+      answer: String(correctY),
+      explanation: `x = ${p}, y = m을 식에 대입하면 m = ${a} × (${p}) + (${b}) = ${correctY} 입니다.`,
+      explanationEn: `Substituting x = ${p}, y = m gives m = ${a}(${p}) + (${b}) = ${correctY}.`
+    };
+  } else {
+    return {
+      prompt: `일차함수 y = ${formatLinear(a, b)} 의 그래프가 점 (k, ${qY})를 지날 때, k의 값을 구하시오.`,
+      promptEn: `If the graph of y = ${formatLinear(a, b)} passes through (k, ${qY}), find k.`,
+      expression: `y = ${formatLinear(a, b)}`,
+      answer: String(correctX),
+      explanation: `x = k, y = ${qY}를 식에 대입하면 ${qY} = ${a}k + (${b}) 에서 ${a}k = ${qY - b}, k = ${correctX} 입니다.`,
+      explanationEn: `Substituting x = k, y = ${qY} yields ${a}k + (${b}) = ${qY}, so k = ${correctX}.`
+    };
+  }
+}
+
+// 05. [일차함수 유형 05] 일차함수의 그래프의 평행이동 y = ax + b (#0872~#0876)
+export function rpmLinearFuncTranslationY(random) {
+  const a = pick(random, [-4, -3, -2, 2, 3, 4]);
+  const b = ri(random, -6, 6);
+  const p = pick(random, [-5, -4, -3, 3, 4, 5]);
+  const targetX = ri(random, 1, 4);
+  const targetY = a * targetX + b + p;
+
+  return {
+    prompt: `일차함수 y = ${formatLinear(a, b)} 의 그래프를 y축의 방향으로 ${p > 0 ? p + '만큼' : Math.abs(p) + '만큼 음의 방향으로(또는 -' + Math.abs(p) + '만큼)'} 평행이동하였더니 점 (${targetX}, k)를 지났다. 상수 k의 값을 구하시오.`,
+    promptEn: `The graph of y = ${formatLinear(a, b)} is translated along the y-axis by ${p}. If it passes through (${targetX}, k), find k.`,
+    expression: `y = ${formatLinear(a, b)} \\to y = ${formatLinear(a, b + p)}`,
+    answer: String(targetY),
+    explanation: `y축의 방향으로 ${p}만큼 평행이동한 일차함수의 식은 y = ${formatLinear(a, b)} + (${p}) = ${formatLinear(a, b + p)} 입니다. 점 (${targetX}, k)를 대입하면 k = ${a} × (${targetX}) + (${b + p}) = ${targetY} 입니다.`,
+    explanationEn: `The translated line is y = ${formatLinear(a, b + p)}. Substituting (${targetX}, k) gives k = ${targetY}.`
+  };
+}
+
+// 06. [일차함수 유형 06] 일차함수 그래프의 x절편, y절편 (#0877~#0880)
+export function rpmLinearFuncIntercepts(random) {
+  const m = pick(random, [-4, -3, -2, 2, 3, 4]);
+  const xInt = pick(random, [-6, -4, -3, -2, 2, 3, 4, 6]);
+  // y = m(x - xInt) = mx - m*xInt => yInt = -m * xInt
+  const yInt = -m * xInt;
+
+  const mode = pick(random, ['sum', 'diff']);
+  const ans = mode === 'sum' ? xInt + yInt : xInt - yInt;
+  const exprStr = `y = ${formatLinear(m, yInt)}`;
+
+  return {
+    prompt: `일차함수 ${exprStr} 의 그래프의 x절편을 a, y절편을 b라 할 때, ${mode === 'sum' ? 'a + b' : 'a - b'}의 값을 구하시오.`,
+    promptEn: `Let a be the x-intercept and b be the y-intercept of ${exprStr}. Find ${mode === 'sum' ? 'a + b' : 'a - b'}.`,
+    expression: exprStr,
+    answer: String(ans),
+    explanation: `y = 0을 대입하면 0 = ${m}x + (${yInt}) 에서 x = ${xInt} 이므로 x절편 a = ${xInt} 입니다. x = 0을 대입하면 y = ${yInt} 이므로 y절편 b = ${yInt} 입니다. 따라서 ${mode === 'sum' ? `a + b = ${xInt} + (${yInt}) = ${ans}` : `a - b = ${xInt} - (${yInt}) = ${ans}`} 입니다.`,
+    explanationEn: `Setting y = 0 gives x-intercept a = ${xInt}. Setting x = 0 gives y-intercept b = ${yInt}. Thus ${mode === 'sum' ? 'a + b' : 'a - b'} = ${ans}.`
+  };
+}
+
+// 07. [일차함수 유형 07] 기울기의 뜻과 증가량 (#0881~#0883)
+export function rpmLinearFuncSlopeDefinition(random) {
+  const a = pick(random, [-4, -3, -2, 2, 3, 4, 5]);
+  const b = ri(random, -7, 7);
+  const deltaX = pick(random, [2, 3, 4, 5]);
+  const deltaY = a * deltaX;
+
+  return {
+    prompt: `일차함수 y = ${formatLinear(a, b)} 의 그래프에서 x의 값이 ${deltaX}만큼 증가할 때, y의 값의 증가량을 구하시오.`,
+    promptEn: `For the linear function y = ${formatLinear(a, b)}, find the change in y when x increases by ${deltaX}.`,
+    expression: `\\text{기울기} = \\frac{y\\text{의 증가량}}{x\\text{의 증가량}} = ${a}`,
+    answer: String(deltaY),
+    explanation: `일차함수의 기울기는 ${a}이므로 (y의 증가량) / (x의 증가량) = ${a} 입니다. x의 증가량이 ${deltaX}이므로 y의 증가량은 ${a} × ${deltaX} = ${deltaY} 입니다.`,
+    explanationEn: `Slope is ${a}. Since Δy / Δx = ${a} and Δx = ${deltaX}, Δy = ${a} × ${deltaX} = ${deltaY}.`
+  };
+}
+
+// 08. [일차함수 유형 08] 두 점을 지나는 일차함수 그래프의 기울기 (#0884~#0887)
+export function rpmLinearFuncSlopeTwoPoints(random) {
+  const x1 = ri(random, -4, 2);
+  const diffX = pick(random, [2, 3, 4, 5]);
+  const x2 = x1 + diffX;
+  const a = pick(random, [-3, -2, 1, 2, 3]);
+  const y1 = ri(random, -5, 5);
+  const y2 = y1 + a * diffX;
+
+  // Let one coordinate be variable k: e.g. (x2, k) has slope a
+  const mode = pick(random, ['find-slope', 'find-coordinate']);
+  if (mode === 'find-slope') {
+    return {
+      prompt: `두 점 (${x1}, ${y1}), (${x2}, ${y2})를 지나는 일차함수 그래프의 기울기를 구하시오.`,
+      promptEn: `Find the slope of the line passing through the points (${x1}, ${y1}) and (${x2}, ${y2}).`,
+      expression: `(${x1}, ${y1}), \\; (${x2}, ${y2})`,
+      answer: String(a),
+      explanation: `기울기 = (y2 - y1) / (x2 - x1) = (${y2} - (${y1})) / (${x2} - (${x1})) = ${y2 - y1} / ${x2 - x1} = ${a} 입니다.`,
+      explanationEn: `Slope = (${y2} - ${y1}) / (${x2} - ${x1}) = ${a}.`
+    };
+  } else {
+    return {
+      prompt: `두 점 (${x1}, ${y1}), (${x2}, k)를 지나는 일차함수 그래프의 기울기가 ${a}일 때, 상수 k의 값을 구하시오.`,
+      promptEn: `If the line passing through (${x1}, ${y1}) and (${x2}, k) has slope ${a}, find k.`,
+      expression: `\\frac{k - (${y1})}{${x2} - (${x1})} = ${a}`,
+      answer: String(y2),
+      explanation: `기울기 공식을 세우면 (k - (${y1})) / (${x2} - (${x1})) = ${a} 이므로 (k - (${y1})) / ${diffX} = ${a}, k - (${y1}) = ${a * diffX}, k = ${y2} 입니다.`,
+      explanationEn: `Using the slope formula (k - ${y1}) / (${x2} - ${x1}) = ${a} yields k = ${y2}.`
+    };
+  }
+}
+
+// 09. [일차함수 유형 09] 일차함수 그래프 그리기와 지나는 사분면 (#0888~#0889)
+export function rpmLinearFuncDrawQuadrants(random) {
+  // Signs:
+  // a > 0, b > 0: passes 1, 2, 3 (does NOT pass 4)
+  // a > 0, b < 0: passes 1, 3, 4 (does NOT pass 2)
+  // a < 0, b > 0: passes 1, 2, 4 (does NOT pass 3)
+  // a < 0, b < 0: passes 2, 3, 4 (does NOT pass 1)
+  const aSign = pick(random, [1, -1]);
+  const bSign = pick(random, [1, -1]);
+  const a = aSign * ri(random, 1, 4);
+  const b = bSign * ri(random, 1, 6);
+
+  let missingQuadrant;
+  if (a > 0 && b > 0) missingQuadrant = '4';
+  else if (a > 0 && b < 0) missingQuadrant = '2';
+  else if (a < 0 && b > 0) missingQuadrant = '3';
+  else missingQuadrant = '1';
+
+  return {
+    prompt: `일차함수 y = ${formatLinear(a, b)} 의 그래프가 지나지 않는 사분면은 제 몇 사분면인지 구하시오. (숫자만 입력)`,
+    promptEn: `Which quadrant does the graph of y = ${formatLinear(a, b)} NOT pass through? (Enter digit 1-4)`,
+    expression: `y = ${formatLinear(a, b)}`,
+    answer: missingQuadrant,
+    answerSuffix: '사분면',
+    explanation: `기울기 a = ${a} (${a > 0 ? '양수, 오른쪽 위로 향함' : '음수, 오른쪽 아래로 향함'})이고, y절편 b = ${b} (${b > 0 ? '양수' : '음수'})입니다. 그래프를 그리면 제${missingQuadrant}사분면을 지나지 않습니다.`,
+    explanationEn: `Slope is ${a > 0 ? 'positive' : 'negative'} and y-intercept is ${b > 0 ? 'positive' : 'negative'}, so it does not pass through quadrant ${missingQuadrant}.`
+  };
+}
+
+// 10. [일차함수 유형 10] 일차함수 그래프와 좌표축으로 둘러싸인 도형의 넓이 (#0890~#0892)
+export function rpmLinearFuncAxisTriangleArea(random) {
+  const xInt = pick(random, [2, 3, 4, 6, 8]) * pick(random, [1, -1]);
+  const yInt = pick(random, [2, 3, 4, 5, 6]) * pick(random, [1, -1]);
+  const area = Math.abs(xInt * yInt) / 2;
+
+  // y = - (yInt / xInt) x + yInt
+  const slope = - yInt / xInt;
+  const slopeStr = fracStr(-yInt, xInt);
+  const expr = `y = ${slopeStr === '1' ? 'x' : slopeStr === '-1' ? '-x' : slopeStr + 'x'} ${yInt > 0 ? '+ ' + yInt : '- ' + Math.abs(yInt)}`;
+
+  return {
+    prompt: `일차함수 ${expr} 의 그래프와 x축, y축으로 둘러싸인 삼각형의 넓이를 구하시오.`,
+    promptEn: `Find the area of the triangle bounded by ${expr}, the x-axis, and the y-axis.`,
+    expression: expr,
+    answer: String(area),
+    explanation: `x절편은 ${xInt}이고 y절편은 ${yInt}입니다. 좌표축과 둘러싸인 삼각형은 직각삼각형이므로 넓이는 1/2 × |x절편| × |y절편| = 1/2 × ${Math.abs(xInt)} × ${Math.abs(yInt)} = ${area} 입니다.`,
+    explanationEn: `The x-intercept is ${xInt} and y-intercept is ${yInt}. Area = 1/2 × |${xInt}| × |${yInt}| = ${area}.`
+  };
+}
+
+// 11. [일차함수 유형 11] 일차함수 y = ax + b의 그래프의 성질 (부호 판별) (#0893~#0895)
+export function rpmLinearFuncSignProperties(random) {
+  // a, b signs given by graph shape, then ask about y = bx - a or y = -ax + b
+  const aSign = pick(random, [1, -1]);
+  const bSign = pick(random, [1, -1]);
+  const aDesc = aSign > 0 ? 'a > 0' : 'a < 0';
+  const bDesc = bSign > 0 ? 'b > 0' : 'b < 0';
+
+  const choices = [
+    { value: '1', label: `${aDesc}, ${bDesc}`, labelEn: `${aDesc}, ${bDesc}` },
+    { value: '2', label: `${aSign > 0 ? 'a < 0' : 'a > 0'}, ${bDesc}`, labelEn: `${aSign > 0 ? 'a < 0' : 'a > 0'}, ${bDesc}` },
+    { value: '3', label: `${aDesc}, ${bSign > 0 ? 'b < 0' : 'b > 0'}`, labelEn: `${aDesc}, ${bSign > 0 ? 'b < 0' : 'b > 0'}` },
+    { value: '4', label: `${aSign > 0 ? 'a < 0' : 'a > 0'}, ${bSign > 0 ? 'b < 0' : 'b > 0'}`, labelEn: `${aSign > 0 ? 'a < 0' : 'a > 0'}, ${bSign > 0 ? 'b < 0' : 'b > 0'}` },
+    { value: '5', label: `a = 0, ${bDesc}`, labelEn: `a = 0, ${bDesc}` },
+  ];
+
+  const dirDesc = aSign > 0 ? '오른쪽 위로 향하고' : '오른쪽 아래로 향하고';
+  const yIntDesc = bSign > 0 ? 'y축의 양의 부분에서 만난다' : 'y축의 음의 부분에서 만난다';
+
+  return {
+    prompt: `일차함수 y = ax + b의 그래프가 ${dirDesc}, ${yIntDesc}. 이때 상수 a, b의 부호로 알맞은 것은?`,
+    promptEn: `The graph of y = ax + b rises to the ${aSign > 0 ? 'upper right' : 'lower right'} and intersects the y-axis in the ${bSign > 0 ? 'positive' : 'negative'} part. Determine the signs of a and b.`,
+    expression: 'y = ax + b',
+    choices,
+    answer: '1',
+    explanation: `직선이 ${dirDesc} 있으므로 기울기 a는 ${aSign > 0 ? '양수(a > 0)' : '음수(a < 0)'}이고, ${yIntDesc} 있으므로 y절편 b는 ${bSign > 0 ? '양수(b > 0)' : '음수(b < 0)'}입니다.`,
+    explanationEn: `The direction indicates a ${aSign > 0 ? '> 0' : '< 0'}, and the y-intercept indicates b ${bSign > 0 ? '> 0' : '< 0'}.`
+  };
+}
+
+// 12. [일차함수 유형 12] 서로 평행한 두 일차함수의 그래프 (#0896~#0899)
+export function rpmLinearFuncParallelLines(random) {
+  const a = pick(random, [-4, -3, -2, 2, 3, 4]);
+  const b1 = ri(random, -6, 6);
+  const b2 = b1 + pick(random, [-4, -3, -2, 2, 3, 4]);
+  const k = ri(random, 1, 3);
+
+  // y = (k*a_unknown) x + b1 is parallel to y = a x + b2
+  // => k * m = a => m = a / k
+  return {
+    prompt: `두 일차함수 y = (${k}m - 1)x + ${b1} 과 y = ${formatLinear(a, b2)} 의 그래프가 서로 평행할 때, 상수 m의 값을 구하시오.`,
+    promptEn: `If the graphs of y = (${k}m - 1)x + ${b1} and y = ${formatLinear(a, b2)} are parallel, find m.`,
+    expression: `(${k}m - 1) = ${a}`,
+    answer: fracStr(a + 1, k),
+    explanation: `두 일차함수의 그래프가 서로 평행하려면 기울기가 같고 y절편이 달라야 합니다. 따라서 ${k}m - 1 = ${a} 에서 ${k}m = ${a + 1}, m = ${fracStr(a + 1, k)} 입니다. (y절편은 ${b1} ≠ ${b2} 로 서로 다릅니다.)`,
+    explanationEn: `Parallel lines have equal slopes and different y-intercepts: ${k}m - 1 = ${a} => m = ${fracStr(a + 1, k)}.`
+  };
+}
+
+// 13. [일차함수 유형 13] 일치하는 두 일차함수의 그래프 (#0900~#0903)
+export function rpmLinearFuncCoincidentLines(random) {
+  const a = pick(random, [-4, -3, -2, 2, 3, 4]);
+  const b = ri(random, -7, 7);
+  const p = ri(random, -5, 5);
+  // y = ax + b translated along y-axis by p becomes y = mx + n
+  // m = a, n = b + p
+  return {
+    prompt: `일차함수 y = ax + ${b} 의 그래프를 y축의 방향으로 ${p}만큼 평행이동하였더니 일차함수 y = ${a}x + c 의 그래프와 일치하였다. 상수 a + c의 값을 구하시오.`,
+    promptEn: `Translating y = ax + ${b} by ${p} along the y-axis yields y = ${a}x + c. Find a + c.`,
+    expression: `y = ax + ${b + p} \\equiv y = ${a}x + c`,
+    answer: String(a + (b + p)),
+    explanation: `평행이동한 식은 y = ax + (${b}) + (${p}) = ax + ${b + p} 입니다. 이 그래프가 y = ${a}x + c 와 일치하므로 a = ${a}, c = ${b + p} 입니다. 따라서 a + c = ${a} + (${b + p}) = ${a + b + p} 입니다.`,
+    explanationEn: `Translating gives y = ax + ${b + p}. For coincidence, a = ${a} and c = ${b + p}, so a + c = ${a + b + p}.`
+  };
+}
+
+// 14. [일차함수 유형 14] 일차함수 성질 종합 판정 (#0904~#0906)
+export function rpmLinearFuncComprehensiveProperties(random) {
+  const m = pick(random, [2, 3, -2, -3]);
+  const b = pick(random, [4, 6, -4, -6]);
+  const xInt = -b / m;
+
+  const trueStatements = [
+    `기울기는 ${m}이다.`,
+    `y절편은 ${b}이다.`,
+    `x절편은 ${xInt}이다.`,
+    `점 (1, ${m + b})를 지난다.`,
+    m > 0 ? 'x의 값이 증가하면 y의 값도 증가한다.' : 'x의 값이 증가하면 y의 값은 감소한다.'
+  ];
+  const falseStatement = m > 0 ? 'x의 값이 증가하면 y의 값은 감소한다.' : 'x의 값이 증가하면 y의 값도 증가한다.';
+
+  const choices = [
+    { value: '1', label: falseStatement, labelEn: falseStatement },
+    { value: '2', label: trueStatements[0], labelEn: trueStatements[0] },
+    { value: '3', label: trueStatements[1], labelEn: trueStatements[1] },
+    { value: '4', label: trueStatements[2], labelEn: trueStatements[2] },
+    { value: '5', label: trueStatements[3], labelEn: trueStatements[3] },
+  ];
+
+  return {
+    prompt: `일차함수 y = ${formatLinear(m, b)} 의 그래프에 대한 설명 중 옳지 않은 것은?`,
+    promptEn: `Which statement about the graph of y = ${formatLinear(m, b)} is FALSE?`,
+    expression: `y = ${formatLinear(m, b)}`,
+    choices,
+    answer: '1',
+    explanation: `기울기가 ${m} (${m > 0 ? '양수' : '음수'})이므로 x의 값이 증가할 때 y의 값은 ${m > 0 ? '증가' : '감소'}해야 합니다. 따라서 1번 설명이 옳지 않습니다.`,
+    explanationEn: `Since the slope is ${m}, y ${m > 0 ? 'increases' : 'decreases'} as x increases. Thus option 1 is false.`
+  };
+}
+
+// 15. [일차함수 활용 유형 15] 온도와 길이 (#0907~#0912)
+export function rpmLinearFuncAppTemperature(random) {
+  const initialTemp = pick(random, [80, 90, 100]);
+  const coolingRate = pick(random, [2, 3, 4, 5]);
+  const targetTemp = pick(random, [20, 30, 40, 50]);
+  const minutes = (initialTemp - targetTemp) / coolingRate;
+
+  return {
+    prompt: `${initialTemp} ℃인 뜨거운 물이 1분에 ${coolingRate} ℃씩 일정하게 식는다고 한다. 물의 온도가 ${targetTemp} ℃가 되는 것은 몇 분 후인지 구하시오.`,
+    promptEn: `Hot water at ${initialTemp} °C cools at a rate of ${coolingRate} °C per minute. After how many minutes will its temperature reach ${targetTemp} °C?`,
+    expression: `y = ${initialTemp} - ${coolingRate}x`,
+    answer: String(minutes),
+    answerSuffix: '분 후',
+    explanation: `x분 후의 온도를 y ℃라 하면 y = ${initialTemp} - ${coolingRate}x 입니다. y = ${targetTemp}를 대입하면 ${targetTemp} = ${initialTemp} - ${coolingRate}x, ${coolingRate}x = ${initialTemp - targetTemp}, x = ${minutes} 분 후입니다.`,
+    explanationEn: `Setting y = ${initialTemp} - ${coolingRate}x = ${targetTemp} gives ${coolingRate}x = ${initialTemp - targetTemp}, so x = ${minutes}.`
+  };
+}
+
+// 16. [일차함수 활용 유형 16] 물의 양 (#0913~#0915)
+export function rpmLinearFuncAppWaterTank(random) {
+  const initWater = pick(random, [10, 20, 30]);
+  const rate = pick(random, [3, 4, 5, 6]);
+  const tankCapacity = pick(random, [70, 80, 100, 120]);
+  const neededWater = tankCapacity - initWater;
+  const timeMin = Math.round(neededWater / rate);
+  const finalTank = initWater + rate * timeMin;
+
+  return {
+    prompt: `현재 ${initWater} L의 물이 들어 있는 물탱크에 1분에 ${rate} L씩 일정한 속도로 물을 채운다. 물탱크에 물의 양이 ${finalTank} L가 되도록 하려면 몇 분 동안 물을 채워야 하는지 구하시오.`,
+    promptEn: `A tank currently contains ${initWater} L of water. Water is added at ${rate} L/min. How many minutes until the tank has ${finalTank} L?`,
+    expression: `y = ${initWater} + ${rate}x`,
+    answer: String(timeMin),
+    answerSuffix: '분',
+    explanation: `x분 후 물의 양 y = ${initWater} + ${rate}x 입니다. ${finalTank} = ${initWater} + ${rate}x 에서 ${rate}x = ${finalTank - initWater}, x = ${timeMin} 분입니다.`,
+    explanationEn: `y = ${initWater} + ${rate}x = ${finalTank} gives x = ${timeMin} minutes.`
+  };
+}
+
+// 17. [일차함수 활용 유형 17] 속력, 거리, 시간 (#0916~#0918)
+export function rpmLinearFuncAppSpeedDistance(random) {
+  const totalDist = pick(random, [180, 240, 300, 360]);
+  const speed = pick(random, [60, 70, 80]);
+  const remainingTarget = pick(random, [60, 80, 100, 120]);
+  const travelHours = (totalDist - remainingTarget) / speed;
+
+  return {
+    prompt: `${totalDist} km 떨어진 목적지를 향해 시속 ${speed} km로 달릴 때, 남은 거리가 ${remainingTarget} km가 되는 것은 출발한 지 몇 시간 후인지 구하시오.`,
+    promptEn: `Driving towards a destination ${totalDist} km away at ${speed} km/h, after how many hours will the remaining distance be ${remainingTarget} km?`,
+    expression: `y = ${totalDist} - ${speed}x`,
+    answer: fracStr(totalDist - remainingTarget, speed),
+    answerSuffix: '시간 후',
+    explanation: `x시간 후 남은 거리를 y km라 하면 y = ${totalDist} - ${speed}x 입니다. ${remainingTarget} = ${totalDist} - ${speed}x 에서 ${speed}x = ${totalDist - remainingTarget}, x = ${fracStr(totalDist - remainingTarget, speed)} 시간 후입니다.`,
+    explanationEn: `Remaining distance y = ${totalDist} - ${speed}x. Setting y = ${remainingTarget} gives x = ${fracStr(totalDist - remainingTarget, speed)} hours.`
+  };
+}
+
+// 18. [일차함수 활용 유형 18] 도형 위를 움직이는 점 (동점 P) (#0919~#0921)
+export function rpmLinearFuncAppMovingPoint(random) {
+  const width = pick(random, [10, 12, 16, 20]);
+  const height = pick(random, [6, 8, 10]);
+  const speed = pick(random, [1, 2]);
+  const sec = pick(random, [2, 3, 4]);
+  // Point P moves from B towards C on rectangle ABCD at speed cm/s
+  // BP = speed * x. Area of triangle ABP = 1/2 * BP * AB = 1/2 * (speed * x) * height
+  const areaRate = (speed * height) / 2;
+  const targetArea = areaRate * sec;
+
+  return {
+    prompt: `가로의 길이가 ${width} cm, 세로의 길이가 ${height} cm인 직사각형 ABCD에서 점 P가 꼭짓점 B를 출발하여 변 BC를 따라 매초 ${speed} cm의 속력으로 꼭짓점 C까지 움직인다. 출발한 지 x초 후의 삼각형 ABP의 넓이가 ${targetArea} cm²가 되는 것은 몇 초 후인지 구하시오.`,
+    promptEn: `In rectangle ABCD (width ${width} cm, height ${height} cm), point P moves from B along BC towards C at ${speed} cm/s. After how many seconds will triangle ABP have area ${targetArea} cm²?`,
+    expression: `y = \\frac{1}{2} \\times (${speed}x) \\times ${height} = ${areaRate}x`,
+    answer: String(sec),
+    answerSuffix: '초 후',
+    explanation: `x초 후 선분 BP의 길이는 ${speed}x cm입니다. 삼각형 ABP의 넓이 y = 1/2 × BP × AB = 1/2 × (${speed}x) × ${height} = ${areaRate}x 입니다. ${targetArea} = ${areaRate}x 에서 x = ${sec} 초 후입니다.`,
+    explanationEn: `Length BP = ${speed}x cm. Area y = 1/2 × (${speed}x) × ${height} = ${areaRate}x. Setting ${areaRate}x = ${targetArea} gives x = ${sec}.`
+  };
+}
+
+// 19. [일차함수 활용 유형 19] 그래프가 주어진 경우의 모델링 (#0922~#0924)
+export function rpmLinearFuncAppGraphModeling(random) {
+  const initVal = pick(random, [20, 24, 30, 40]);
+  const burnTime = pick(random, [4, 5, 6, 8]);
+  const burnRate = initVal / burnTime;
+  const t = ri(random, 1, burnTime - 1);
+  const remaining = initVal - burnRate * t;
+
+  return {
+    prompt: `길이가 ${initVal} cm인 양초에 불을 붙이면 ${burnTime}시간 만에 다 탄다고 한다. 불을 붙인 지 ${t}시간 후에 남은 양초의 길이를 구하시오.`,
+    promptEn: `A candle of length ${initVal} cm burns completely in ${burnTime} hours. Find its remaining length after ${t} hours.`,
+    expression: `y = ${initVal} - \\frac{${initVal}}{${burnTime}}x = ${initVal} - ${burnRate}x`,
+    answer: String(remaining),
+    answerSuffix: 'cm',
+    explanation: `1시간에 ${initVal} / ${burnTime} = ${burnRate} cm씩 타므로 x시간 후 남은 양초의 길이는 y = ${initVal} - ${burnRate}x 입니다. x = ${t}를 대입하면 y = ${initVal} - ${burnRate} × ${t} = ${remaining} cm 입니다.`,
+    explanationEn: `Burn rate is ${burnRate} cm/h. Remaining length y = ${initVal} - ${burnRate}x. At x = ${t}, y = ${remaining} cm.`
+  };
+}
+
+// 20. [유형 UP] 두 일차함수 그래프와 좌표축으로 둘러싸인 넓이 (#0925~#0927)
+export function rpmLinearFuncUpTwoLinesArea(random) {
+  // Line 1: y = x + h
+  // Line 2: y = -a x + h (share y-intercept (0, h))
+  const h = pick(random, [2, 3, 4, 6]);
+  const a = pick(random, [2, 3]);
+  // x-intercept 1: -h
+  // x-intercept 2: h / a
+  // Base on x-axis = h + h/a = h(1 + 1/a)
+  // Area = 1/2 * base * height = 1/2 * (h * (a+1)/a) * h = h^2 (a+1) / (2a)
+  // Let's pick clean integers: e.g. a=1, h=4 => x-intercepts -4, 4 => base 8, height 4 => area 16
+  const xInt1 = -pick(random, [2, 3, 4]);
+  const xInt2 = pick(random, [2, 3, 4, 5]);
+  const yInt = pick(random, [2, 4, 6]);
+  const base = xInt2 - xInt1;
+  const area = (base * yInt) / 2;
+
+  const m1 = -yInt / xInt1;
+  const m2 = -yInt / xInt2;
+
+  return {
+    prompt: `두 일차함수 y = ${fracStr(yInt, -xInt1)}x + ${yInt} 과 y = ${fracStr(-yInt, xInt2)}x + ${yInt} 의 그래프와 x축으로 둘러싸인 도형의 넓이를 구하시오.`,
+    promptEn: `Find the area of the figure enclosed by y = ${fracStr(yInt, -xInt1)}x + ${yInt}, y = ${fracStr(-yInt, xInt2)}x + ${yInt}, and the x-axis.`,
+    expression: `y = ${fracStr(yInt, -xInt1)}x + ${yInt}, \\quad y = ${fracStr(-yInt, xInt2)}x + ${yInt}`,
+    answer: String(area),
+    explanation: `두 직선은 모두 y축과 점 (0, ${yInt})에서 만나므로 삼각형의 높이는 ${yInt}입니다. 각 직선의 x절편은 ${xInt1}과 ${xInt2}이므로 밑변의 길이는 ${xInt2} - (${xInt1}) = ${base}입니다. 따라서 넓이는 1/2 × ${base} × ${yInt} = ${area}입니다.`,
+    explanationEn: `The shared y-intercept is (0, ${yInt}), giving height ${yInt}. The x-intercepts are ${xInt1} and ${xInt2}, giving base ${base}. Area = 1/2 × ${base} × ${yInt} = ${area}.`
+  };
+}
+
+// 21. [유형 UP] 일차함수 그래프가 특정 사분면을 지나지 않을 조건 (#0928~#0930)
+export function rpmLinearFuncUpQuadrantCondition(random) {
+  // y = (2k - 3)x + (k + 2) passes quadrants 1, 2, 4 but not 3
+  // Passes 1, 2, 4 => slope < 0 and y-intercept > 0
+  const c1 = ri(random, 1, 3);
+  const c2 = ri(random, 2, 5);
+  // slope = k - c1 < 0 => k < c1
+  // y-intercept = k + c2 > 0 => k > -c2
+  // => -c2 < k < c1
+  return {
+    prompt: `일차함수 y = (k - ${c1})x + (k + ${c2}) 의 그래프가 제3사분면을 지나지 않도록 하는 상수 k의 값의 범위를 구하시오. (예: -2 < k < 3)`,
+    promptEn: `Find the range of k such that y = (k - ${c1})x + (k + ${c2}) does not pass through the 3rd quadrant. (Format: a < k < b)`,
+    expression: `y = (k - ${c1})x + (k + ${c2})`,
+    answer: `-${c2} < k < ${c1}`,
+    explanation: `제3사분면을 지나지 않으려면 오른쪽 아래로 향하면서 y축의 양의 부분을 지나야 하므로 (기울기) < 0 이고 (y절편) > 0 이어야 합니다. k - ${c1} < 0 에서 k < ${c1} 이고, k + ${c2} > 0 에서 k > -${c2} 입니다. 따라서 -${c2} < k < ${c1} 입니다.`,
+    explanationEn: `To avoid the 3rd quadrant, slope < 0 and y-intercept > 0: k - ${c1} < 0 => k < ${c1} and k + ${c2} > 0 => k > -${c2}. Result: -${c2} < k < ${c1}.`
+  };
+}
+
+// 22. [단원 실전 다지기] 일차함수와 그 그래프 전 유형 실전 종합 (#0931~#0956)
+export function rpmLinearFuncAllTypesMixed(random) {
+  const subTypes = [
+    rpmLinearFuncConcept,
+    rpmLinearFuncEvalValue,
+    rpmLinearFuncIdentifyLinear,
+    rpmLinearFuncPointOnGraph,
+    rpmLinearFuncTranslationY,
+    rpmLinearFuncIntercepts,
+    rpmLinearFuncSlopeDefinition,
+    rpmLinearFuncSlopeTwoPoints,
+    rpmLinearFuncDrawQuadrants,
+    rpmLinearFuncAxisTriangleArea,
+    rpmLinearFuncSignProperties,
+    rpmLinearFuncParallelLines,
+    rpmLinearFuncCoincidentLines,
+    rpmLinearFuncAppTemperature,
+    rpmLinearFuncAppWaterTank,
+    rpmLinearFuncAppSpeedDistance
+  ];
+  const chosen = pick(random, subTypes);
+  return chosen(random);
+}
+
+// 23. [단원 최고수준] 일차함수와 그 그래프 실력 UP (#0957~#0964)
+export function rpmLinearFuncAdvancedSkillUp(random) {
+  // Advanced problem: Line y = -2/3 x + 4 is parallel to y = ax + b, and distance between x-intercepts is D
+  const a = pick(random, [-3, -2, 2, 3]);
+  const b1 = ri(random, 2, 6);
+  const xInt1 = -b1 / a; // e.g. a=2, b1=6 => xInt1 = -3
+  const dist = pick(random, [3, 4, 5]);
+  const xInt2 = xInt1 + dist;
+  const b2 = -a * xInt2;
+
+  return {
+    prompt: `두 일차함수 y = ${formatLinear(a, b1)} 와 y = ax + b의 그래프가 서로 평행하고, 두 그래프가 x축과 만나는 두 점 사이의 거리가 ${dist}이다. b > ${b1}일 때, a + b의 값을 구하시오.`,
+    promptEn: `The graphs of y = ${formatLinear(a, b1)} and y = ax + b are parallel, and the distance between their x-intercepts is ${dist}. Given b > ${b1}, find a + b.`,
+    expression: `y = ${formatLinear(a, b1)}, \\quad y = ax + b`,
+    answer: String(a + (b1 + Math.abs(a) * dist)),
+    explanation: `평행하므로 a = ${a} 입니다. 첫 번째 그래프의 x절편은 -${b1} / ${a} = ${fracStr(-b1, a)} 입니다. 두 그래프 사이의 거리가 ${dist}이고 b > ${b1}이므로 두 번째 그래프의 x절편과의 차이에 의해 b = ${b1 + Math.abs(a) * dist} 가 됩니다. 따라서 a + b = ${a} + ${b1 + Math.abs(a) * dist} = ${a + b1 + Math.abs(a) * dist} 입니다.`,
+    explanationEn: `Since lines are parallel, a = ${a}. With x-intercept distance ${dist} and b > ${b1}, b = ${b1 + Math.abs(a) * dist}. Thus a + b = ${a + b1 + Math.abs(a) * dist}.`
+  };
+}
+
+export function rpmLineEqnFormAxByC(random) {
+  // a x + b y + c = 0 => y = -a/b x - c/b
+  const b = pick(random, [2, 3, 4]);
+  const a = pick(random, [-6, -4, -3, 3, 4, 6]);
+  const c = pick(random, [-12, -9, -6, 6, 9, 12]);
+  const slope = -a / b;
+  const yInt = -c / b;
+  const xInt = -c / a;
+
+  const mode = pick(random, ['slope-yint-sum', 'xint']);
+  if (mode === 'slope-yint-sum') {
+    const ans = slope + yInt;
+    return {
+      prompt: `일차방정식 ${a}x + ${b}y + (${c}) = 0 의 그래프의 기울기를 m, y절편을 n이라 할 때, m + n의 값을 구하시오.`,
+      promptEn: `For ${a}x + ${b}y + (${c}) = 0, let m be the slope and n be the y-intercept. Find m + n.`,
+      expression: `${a}x + ${b}y + (${c}) = 0`,
+      answer: fracStr(-a - c, b),
+      explanation: `식의 y에 관하여 정리하면 ${b}y = -${a}x - (${c}) 에서 y = ${fracStr(-a, b)}x + (${fracStr(-c, b)}) 입니다. 따라서 기울기 m = ${fracStr(-a, b)}, y절편 n = ${fracStr(-c, b)} 이므로 m + n = ${fracStr(-a - c, b)} 입니다.`,
+      explanationEn: `Solving for y gives y = ${fracStr(-a, b)}x + (${fracStr(-c, b)}). Then m = ${fracStr(-a, b)}, n = ${fracStr(-c, b)}, sum = ${fracStr(-a - c, b)}.`
+    };
+  } else {
+    return {
+      prompt: `일차방정식 ${a}x + ${b}y + (${c}) = 0 의 그래프의 x절편을 구하시오.`,
+      promptEn: `Find the x-intercept of the line ${a}x + ${b}y + (${c}) = 0.`,
+      expression: `${a}x + ${b}y + (${c}) = 0`,
+      answer: fracStr(-c, a),
+      explanation: `y = 0을 대입하면 ${a}x + (${c}) = 0 에서 ${a}x = -(${c}), x = ${fracStr(-c, a)} 입니다.`,
+      explanationEn: `Substituting y = 0 yields ${a}x + (${c}) = 0 => x = ${fracStr(-c, a)}.`
+    };
+  }
+}
+
+// 02. [직선의 방정식 유형 02] 일차방정식의 그래프 위의 점 (#1010~#1013)
+export function rpmLineEqnPointOnLine(random) {
+  const a = ri(random, 2, 5);
+  const b = ri(random, 1, 4);
+  const px = ri(random, -3, 3);
+  const py = ri(random, -3, 3);
+  // a * x - (k + 1) * y + c = 0
+  const kVal = ri(random, 1, 4);
+  const coeffY = -(kVal + 1);
+  const c = -(a * px + coeffY * py);
+
+  return {
+    prompt: `일차방정식 ${a}x - (k + 1)y + (${c}) = 0 의 그래프가 점 (${px}, ${py})를 지날 때, 상수 k의 값을 구하시오.`,
+    promptEn: `If the line ${a}x - (k + 1)y + (${c}) = 0 passes through (${px}, ${py}), find k.`,
+    expression: `${a}x - (k + 1)y + (${c}) = 0`,
+    answer: String(kVal),
+    explanation: `x = ${px}, y = ${py}를 대입하면 ${a} × (${px}) - (k + 1) × (${py}) + (${c}) = 0 에서 ${a * px + c} - ${py}(k + 1) = 0 입니다. 이를 k에 대하여 풀면 k = ${kVal} 입니다.`,
+    explanationEn: `Substituting (${px}, ${py}) gives ${a * px} - (k + 1)(${py}) + (${c}) = 0 => k = ${kVal}.`
+  };
+}
+
+// 03. [직선의 방정식 유형 03] 계수의 부호와 그래프의 개형 (#1014~#1016)
+export function rpmLineEqnSignsProperties(random) {
+  // ax + by + c = 0 => y = -a/b x - c/b
+  // Give condition: ab > 0 and bc < 0
+  // Then slope = -a/b < 0, y-intercept = -c/b > 0 => passes 1, 2, 4 (does NOT pass 3)
+  const mode = pick(random, ['ab>0,bc<0', 'ab<0,bc>0', 'ab>0,bc>0']);
+  let slopeSign, yIntSign, missingQuad, condText;
+  if (mode === 'ab>0,bc<0') {
+    condText = 'ab > 0, \\; bc < 0';
+    slopeSign = -1; // -a/b < 0
+    yIntSign = 1;   // -c/b > 0 since c/b < 0
+    missingQuad = '3';
+  } else if (mode === 'ab<0,bc>0') {
+    condText = 'ab < 0, \\; bc > 0';
+    slopeSign = 1;  // -a/b > 0
+    yIntSign = -1;  // -c/b < 0 since c/b > 0
+    missingQuad = '2';
+  } else {
+    condText = 'ab > 0, \\; bc > 0';
+    slopeSign = -1; // -a/b < 0
+    yIntSign = -1;  // -c/b < 0
+    missingQuad = '1';
+  }
+
+  return {
+    prompt: `일차방정식 ax + by + c = 0 에 대하여 ${condText} 일 때, 이 그래프가 지나지 않는 사분면은 제 몇 사분면인지 구하시오. (숫자만 입력)`,
+    promptEn: `Given ${condText} for ax + by + c = 0, which quadrant does its graph NOT pass through? (Enter digit 1-4)`,
+    expression: condText,
+    answer: missingQuad,
+    answerSuffix: '사분면',
+    explanation: `ax + by + c = 0 을 y에 대하여 정리하면 y = -a/b x - c/b 입니다. ${condText} 이므로 기울기 -a/b는 ${slopeSign > 0 ? '양수' : '음수'}이고, y절편 -c/b는 ${yIntSign > 0 ? '양수' : '음수'}입니다. 따라서 그래프는 제${missingQuad}사분면을 지나지 않습니다.`,
+    explanationEn: `Solving for y gives slope ${slopeSign > 0 ? '> 0' : '< 0'} and y-intercept ${yIntSign > 0 ? '> 0' : '< 0'}. It avoids quadrant ${missingQuad}.`
+  };
+}
+
+// 04. [직선의 방정식 유형 04] 좌표축에 평행한 직선의 방정식 (x = p, y = q) (#1017~#1020)
+export function rpmLineEqnParallelToAxes(random) {
+  const p = ri(random, -6, 6);
+  const q = ri(random, -6, 6);
+  const axis = pick(random, ['x-axis', 'y-axis']);
+
+  if (axis === 'x-axis') {
+    // parallel to x-axis => y = q
+    return {
+      prompt: `점 (${p}, ${q})를 지나고 x축에 평행한(y축에 수직인) 직선의 방정식을 구하시오.`,
+      promptEn: `Find the equation of the line passing through (${p}, ${q}) and parallel to the x-axis.`,
+      expression: `(${p}, ${q})`,
+      answer: `y = ${q}`,
+      explanation: `x축에 평행한 직선 위의 모든 점은 y좌표가 일정하므로 y = q 꼴입니다. 점 (${p}, ${q})를 지나므로 구하는 직선의 방정식은 y = ${q} 입니다.`,
+      explanationEn: `A line parallel to the x-axis has constant y: y = ${q}.`
+    };
+  } else {
+    // parallel to y-axis => x = p
+    return {
+      prompt: `점 (${p}, ${q})를 지나고 y축에 평행한(x축에 수직인) 직선의 방정식을 구하시오.`,
+      promptEn: `Find the equation of the line passing through (${p}, ${q}) and parallel to the y-axis.`,
+      expression: `(${p}, ${q})`,
+      answer: `x = ${p}`,
+      explanation: `y축에 평행한 직선 위의 모든 점은 x좌표가 일정하므로 x = p 꼴입니다. 점 (${p}, ${q})를 지나므로 구하는 직선의 방정식은 x = ${p} 입니다.`,
+      explanationEn: `A line parallel to the y-axis has constant x: x = ${p}.`
+    };
+  }
+}
+
+// 05. [직선의 방정식 유형 05] 좌표축에 평행한 네 직선으로 둘러싸인 도형의 넓이 (#1021~#1027)
+export function rpmLineEqnFourLinesRectArea(random) {
+  const x1 = ri(random, -5, -1);
+  const x2 = ri(random, 1, 6);
+  const y1 = ri(random, -5, -1);
+  const y2 = ri(random, 1, 6);
+  const width = x2 - x1;
+  const height = y2 - y1;
+  const area = width * height;
+
+  return {
+    prompt: `네 직선 x = ${x1}, x = ${x2}, y = ${y1}, y = ${y2} 로 둘러싸인 도형의 넓이를 구하시오.`,
+    promptEn: `Find the area of the rectangle bounded by x = ${x1}, x = ${x2}, y = ${y1}, and y = ${y2}.`,
+    expression: `x = ${x1}, \\; x = ${x2}, \\; y = ${y1}, \\; y = ${y2}`,
+    answer: String(area),
+    explanation: `네 직선으로 둘러싸인 도형은 직사각형입니다. 가로의 길이는 ${x2} - (${x1}) = ${width} 이고, 세로의 길이는 ${y2} - (${y1}) = ${height} 입니다. 따라서 넓이는 ${width} × ${height} = ${area} 입니다.`,
+    explanationEn: `The rectangle has width ${x2} - (${x1}) = ${width} and height ${y2} - (${y1}) = ${height}. Area = ${width} × ${height} = ${area}.`
+  };
+}
+
+// 06. [직선의 방정식 유형 06] 직선의 방정식 구하기 - 기울기와 y절편 (#1028~#1030)
+export function rpmLineEqnFromSlopeYint(random) {
+  const m = pick(random, [-4, -3, -2, 2, 3, 4]);
+  const n = ri(random, -6, 6);
+  const px = ri(random, 1, 4);
+  const py = m * px + n;
+
+  return {
+    prompt: `기울기가 ${m}이고 y절편이 ${n}인 직선이 점 (${px}, k)를 지날 때, 상수 k의 값을 구하시오.`,
+    promptEn: `A line with slope ${m} and y-intercept ${n} passes through (${px}, k). Find k.`,
+    expression: `y = ${formatLinear(m, n)}`,
+    answer: String(py),
+    explanation: `기울기가 ${m}이고 y절편이 ${n}인 직선의 방정식은 y = ${formatLinear(m, n)} 입니다. 점 (${px}, k)를 대입하면 k = ${m} × (${px}) + (${n}) = ${py} 입니다.`,
+    explanationEn: `The line equation is y = ${formatLinear(m, n)}. Substituting (${px}, k) gives k = ${py}.`
+  };
+}
+
+// 07. [직선의 방정식 유형 07] 직선의 방정식 구하기 - 기울기와 한 점 (#1031~#1035)
+export function rpmLineEqnFromSlopePoint(random) {
+  const m = pick(random, [-3, -2, 2, 3]);
+  const px = ri(random, -3, 3);
+  const py = ri(random, -4, 4);
+  // y - py = m(x - px) => y = mx - m*px + py
+  const yInt = -m * px + py;
+
+  return {
+    prompt: `기울기가 ${m}이고 점 (${px}, ${py})를 지나는 직선의 방정식을 y = ax + b 라 할 때, a + b의 값을 구하시오.`,
+    promptEn: `The line with slope ${m} passing through (${px}, ${py}) is y = ax + b. Find a + b.`,
+    expression: `y - (${py}) = ${m}(x - (${px}))`,
+    answer: String(m + yInt),
+    explanation: `직선의 방정식은 y - (${py}) = ${m}(x - (${px})) 에서 y = ${m}x - ${m * px} + (${py}) = ${formatLinear(m, yInt)} 입니다. a = ${m}, b = ${yInt} 이므로 a + b = ${m} + (${yInt}) = ${m + yInt} 입니다.`,
+    explanationEn: `The equation is y = ${formatLinear(m, yInt)}. So a = ${m}, b = ${yInt}, and a + b = ${m + yInt}.`
+  };
+}
+
+// 08. [직선의 방정식 유형 08] 직선의 방정식 구하기 - 서로 다른 두 점 (#1036~#1039)
+export function rpmLineEqnFromTwoPoints(random) {
+  const x1 = ri(random, -3, 1);
+  const diffX = pick(random, [2, 3, 4]);
+  const x2 = x1 + diffX;
+  const m = pick(random, [-3, -2, 1, 2, 3]);
+  const y1 = ri(random, -4, 4);
+  const y2 = y1 + m * diffX;
+  // yInt = y1 - m * x1
+  const yInt = y1 - m * x1;
+
+  return {
+    prompt: `두 점 (${x1}, ${y1}), (${x2}, ${y2})를 지나는 직선의 방정식을 y = ax + b 라 할 때, a - b의 값을 구하시오.`,
+    promptEn: `The line through (${x1}, ${y1}) and (${x2}, ${y2}) is y = ax + b. Find a - b.`,
+    expression: `(${x1}, ${y1}), \\; (${x2}, ${y2})`,
+    answer: String(m - yInt),
+    explanation: `기울기 a = (${y2} - (${y1})) / (${x2} - (${x1})) = ${y2 - y1} / ${diffX} = ${m} 입니다. y = ${m}x + b 에 점 (${x1}, ${y1})을 대입하면 ${y1} = ${m} × (${x1}) + b 에서 b = ${yInt} 입니다. 따라서 a - b = ${m} - (${yInt}) = ${m - yInt} 입니다.`,
+    explanationEn: `Slope a = ${m}. Substituting gives y-intercept b = ${yInt}. Then a - b = ${m - yInt}.`
+  };
+}
+
+// 09. [직선의 방정식 유형 09] 직선의 방정식 구하기 - x절편과 y절편 (#1040~#1043)
+export function rpmLineEqnFromIntercepts(random) {
+  const a = pick(random, [-6, -4, -3, -2, 2, 3, 4, 6]);
+  const b = pick(random, [-6, -4, -3, -2, 2, 3, 4, 6]);
+  // slope = -b / a
+  // y = -b/a x + b
+  const px = ri(random, 1, 3);
+  // Ask for y value when x = px or ask for a, b
+  const slopeStr = fracStr(-b, a);
+
+  return {
+    prompt: `x절편이 ${a}이고 y절편이 ${b}인 직선의 기울기를 기약분수로 구하시오. (예: 2/3 또는 -1/2)`,
+    promptEn: `Find the slope of the line with x-intercept ${a} and y-intercept ${b} as a simplified fraction.`,
+    expression: `(${a}, 0), \\; (0, ${b})`,
+    answer: slopeStr,
+    explanation: `x절편이 ${a}이면 점 (${a}, 0)을 지나고, y절편이 ${b}이면 점 (0, ${b})를 지납니다. 따라서 기울기는 (0 - (${b})) / (${a} - 0) = -${b} / ${a} = ${slopeStr} 입니다.`,
+    explanationEn: `The line passes through (${a}, 0) and (0, ${b}). Slope = (${b} - 0) / (0 - ${a}) = ${slopeStr}.`
+  };
+}
+
+// 10. [직선의 방정식 유형 10] 연립방정식의 해와 두 직선의 교점 (#1044~#1047)
+export function rpmLineEqnIntersectionAsSolution(random) {
+  const x = ri(random, 1, 4);
+  const y = ri(random, 1, 4);
+  const a1 = ri(random, 1, 3);
+  const b1 = ri(random, 1, 3);
+  const c1 = a1 * x + b1 * y;
+  const a2 = ri(random, 1, 3);
+  const b2 = -ri(random, 1, 3);
+  const c2 = a2 * x + b2 * y;
+
+  return {
+    prompt: `두 직선 ${a1}x + ${b1}y = ${c1} 과 ${a2}x ${b2 > 0 ? '+ ' + b2 : '- ' + Math.abs(b2)}y = ${c2} 의 교점의 좌표 (p, q)에 대하여 p + q의 값을 구하시오.`,
+    promptEn: `Find p + q where (p, q) is the intersection of ${a1}x + ${b1}y = ${c1} and ${a2}x ${b2 > 0 ? '+ ' + b2 : '- ' + Math.abs(b2)}y = ${c2}.`,
+    expression: `\\begin{cases} ${a1}x + ${b1}y = ${c1} \\\\ ${a2}x ${b2 > 0 ? '+ ' + b2 : '- ' + Math.abs(b2)}y = ${c2} \\end{cases}`,
+    answer: String(x + y),
+    explanation: `두 직선의 교점의 좌표는 두 일차방정식을 연립하여 푼 해와 같습니다. 연립방정식을 풀면 x = ${x}, y = ${y} 이므로 교점은 (${x}, ${y})입니다. 따라서 p + q = ${x} + ${y} = ${x + y} 입니다.`,
+    explanationEn: `The intersection equals the system solution: x = ${x}, y = ${y}. Thus p + q = ${x + y}.`
+  };
+}
+
+// 11. [직선의 방정식 유형 11] 두 직선의 교점의 좌표를 이용하여 미지수 구하기 (#1048~#1050)
+export function rpmLineEqnIntersectionFindConst(random) {
+  const p = ri(random, 1, 4);
+  const q = ri(random, -3, 3);
+  // Line 1: 2x + y = c1
+  const c1 = 2 * p + q;
+  // Line 2: a x - y = 5 => a * p - q = 5 => a = (5 + q) / p
+  const a = ri(random, 1, 4);
+  const c2 = a * p - q;
+
+  return {
+    prompt: `두 직선 2x + y = ${c1} 과 ax - y = ${c2} 의 교점의 x좌표가 ${p}일 때, 상수 a의 값을 구하시오.`,
+    promptEn: `If the x-coordinate of the intersection of 2x + y = ${c1} and ax - y = ${c2} is ${p}, find a.`,
+    expression: `x = ${p}`,
+    answer: String(a),
+    explanation: `교점의 x좌표가 ${p}이므로 첫 번째 식에 x = ${p}를 대입하면 2 × (${p}) + y = ${c1} 에서 y = ${q} 입니다. 교점 (${p}, ${q})를 두 번째 식에 대입하면 a × (${p}) - (${q}) = ${c2} 에서 ${p}a = ${c2 + q}, a = ${a} 입니다.`,
+    explanationEn: `Substituting x = ${p} into line 1 gives y = ${q}. Substituting (${p}, ${q}) into line 2 gives a = ${a}.`
+  };
+}
+
+// 12. [직선의 방정식 유형 12] 두 직선의 교점을 지나는 직선의 방정식 (#1051~#1052)
+export function rpmLineEqnLineThroughIntersection(random) {
+  const px = ri(random, 1, 3);
+  const py = ri(random, 1, 3);
+  // Two simple lines intersecting at (px, py): x + y = px + py, x - y = px - py
+  const c1 = px + py;
+  const c2 = px - py;
+  // New line is parallel to y = m x (e.g. 2x)
+  const m = pick(random, [2, 3, -2, -3]);
+  const newYint = py - m * px;
+
+  return {
+    prompt: `두 직선 x + y = ${c1} 과 x - y = ${c2} 의 교점을 지나고 직선 y = ${m}x 에 평행한 직선의 방정식을 y = ax + b 라 할 때, a + b의 값을 구하시오.`,
+    promptEn: `A line passes through the intersection of x + y = ${c1} and x - y = ${c2}, and is parallel to y = ${m}x. If its equation is y = ax + b, find a + b.`,
+    expression: `y = ax + b`,
+    answer: String(m + newYint),
+    explanation: `두 식을 연립하여 풀면 교점의 좌표는 (${px}, ${py})입니다. 직선 y = ${m}x 에 평행하므로 기울기 a = ${m} 입니다. 점 (${px}, ${py})를 대입하면 ${py} = ${m} × (${px}) + b 에서 b = ${newYint} 입니다. 따라서 a + b = ${m} + (${newYint}) = ${m + newYint} 입니다.`,
+    explanationEn: `Intersection is (${px}, ${py}). Parallel to y = ${m}x gives a = ${m}. Then b = ${newYint}, so a + b = ${m + newYint}.`
+  };
+}
+
+// 13. [직선의 방정식 유형 13] 세 직선이 한 점에서 만날 조건 (#1053~#1055)
+export function rpmLineEqnThreeLinesOnePoint(random) {
+  const x = ri(random, 1, 3);
+  const y = ri(random, 1, 3);
+  // Line 1: x + y = x + y
+  const c1 = x + y;
+  // Line 2: 2x - y = 2x - y
+  const c2 = 2 * x - y;
+  // Line 3: a x + 2y = 8 => a * x = 8 - 2y
+  const a = ri(random, 1, 4);
+  const c3 = a * x + 2 * y;
+
+  return {
+    prompt: `세 직선 x + y = ${c1}, 2x - y = ${c2}, ax + 2y = ${c3} 이 한 점에서 만날 때, 상수 a의 값을 구하시오.`,
+    promptEn: `The three lines x + y = ${c1}, 2x - y = ${c2}, and ax + 2y = ${c3} meet at a single point. Find a.`,
+    expression: `\\begin{cases} x + y = ${c1} \\\\ 2x - y = ${c2} \\end{cases}`,
+    answer: String(a),
+    explanation: `상수가 없는 앞의 두 직선을 연립하여 풀면 x = ${x}, y = ${y} 입니다. 세 직선이 한 점에서 만나므로 교점 (${x}, ${y})가 세 번째 직선 ax + 2y = ${c3} 위의 점이어야 합니다. 대입하면 a × (${x}) + 2 × (${y}) = ${c3}, ${x}a = ${c3 - 2 * y}, a = ${a} 입니다.`,
+    explanationEn: `The first two lines intersect at (${x}, ${y}). Substituting into the third line yields ${x}a + 2(${y}) = ${c3} => a = ${a}.`
+  };
+}
+
+// 14. [직선의 방정식 유형 14] 연립방정식의 해의 개수와 두 직선의 위치 관계 (#1056~#1059)
+export function rpmLineEqnSystemSolutionTypes(random) {
+  const mode = pick(random, ['parallel-no-sol', 'coincident-inf-sol']);
+  const k = pick(random, [2, 3]);
+  const a = ri(random, 2, 4);
+  const b = ri(random, 1, 3);
+  const c = ri(random, 4, 8);
+
+  if (mode === 'parallel-no-sol') {
+    // Line 1: a x + b y = c
+    // Line 2: (k * a) x + m y = c * k + 2 (different c)
+    const mAns = k * b;
+    return {
+      prompt: `두 일차방정식 ${a}x + ${b}y = ${c} 과 ${k * a}x + my = ${c * k + 3} 의 그래프의 교점이 존재하지 않을 때(해가 없을 때), 상수 m의 값을 구하시오.`,
+      promptEn: `If the system ${a}x + ${b}y = ${c} and ${k * a}x + my = ${c * k + 3} has no solution (parallel lines), find m.`,
+      expression: `\\frac{${a}}{${k * a}} = \\frac{${b}}{m} \\neq \\frac{${c}}{${c * k + 3}}`,
+      answer: String(mAns),
+      explanation: `두 직선의 교점이 존재하지 않으려면 서로 평행해야 합니다. 따라서 계수의 비에서 ${a} / (${k * a}) = ${b} / m ≠ ${c} / (${c * k + 3}) 이어야 하므로 1/${k} = ${b} / m 에서 m = ${mAns} 입니다.`,
+      explanationEn: `For parallel lines (no solution), ${a}/(${k * a}) = ${b}/m => m = ${mAns}.`
+    };
+  } else {
+    // Line 1: a x - b y = c
+    // Line 2: (k * a) x + m y = k * c (same c => inf sol)
+    const mAns = -k * b;
+    return {
+      prompt: `두 직선 ${a}x - ${b}y = ${c} 과 ${k * a}x + my = ${k * c} 의 그래프가 일치할 때(해가 무수히 많을 때), 상수 m의 값을 구하시오.`,
+      promptEn: `If the lines ${a}x - ${b}y = ${c} and ${k * a}x + my = ${k * c} are coincident (infinitely many solutions), find m.`,
+      expression: `\\frac{${a}}{${k * a}} = \\frac{-${b}}{m} = \\frac{${c}}{${k * c}}`,
+      answer: String(mAns),
+      explanation: `두 직선이 일치하려면 모든 계수와 상수항의 비가 같아야 합니다. 따라서 ${a} / (${k * a}) = -${b} / m = ${c} / (${k * c}) = 1/${k} 에서 m = ${mAns} 입니다.`,
+      explanationEn: `For coincident lines, ${a}/(${k * a}) = -${b}/m => m = ${mAns}.`
+    };
+  }
+}
+
+// 15. [직선의 방정식 유형 15] 두 직선과 좌표축으로 둘러싸인 도형의 넓이 (#1060~#1063)
+export function rpmLineEqnEnclosedTriangleArea(random) {
+  // Two lines intersecting at (px, py) with shared or distinct intercepts
+  // Line 1: y = -x + 4 (x-int = 4)
+  // Line 2: y = 2x - 2 (x-int = 1)
+  // Intersection: 2x - 2 = -x + 4 => 3x = 6 => x = 2, y = 2
+  // Base on x-axis = 4 - 1 = 3, height = 2, area = 1/2 * 3 * 2 = 3
+  const xInt1 = pick(random, [4, 6]);
+  const xInt2 = pick(random, [1, 2]);
+  const py = ri(random, 2, 4);
+  const base = xInt1 - xInt2;
+  const area = (base * py) / 2;
+
+  return {
+    prompt: `두 직선과 x축으로 둘러싸인 삼각형의 밑변이 두 x절편 ${xInt2}와 ${xInt1} 사이에 있고, 두 직선의 교점의 y좌표가 ${py}일 때, 이 삼각형의 넓이를 구하시오.`,
+    promptEn: `A triangle is formed by two lines and the x-axis. The x-intercepts are ${xInt2} and ${xInt1}, and the intersection's y-coordinate is ${py}. Find the area.`,
+    expression: `\\text{Base} = ${xInt1} - ${xInt2} = ${base}, \\quad \\text{Height} = ${py}`,
+    answer: String(area),
+    explanation: `x축 위에 있는 밑변의 길이는 ${xInt1} - ${xInt2} = ${base} 이고, 교점의 y좌표가 높이가 되므로 높이는 ${py} 입니다. 따라서 삼각형의 넓이는 1/2 × ${base} × ${py} = ${area} 입니다.`,
+    explanationEn: `Base along the x-axis = ${base}, height = ${py}. Area = 1/2 × ${base} × ${py} = ${area}.`
+  };
+}
+
+// 16. [직선의 방정식 활용 유형 16] 직선의 방정식의 실생활 활용 (#1064~#1065)
+export function rpmLineEqnAppsRealLife(random) {
+  // Two water tanks:
+  // Tank A: starts with A0 L, leaks at a L/min: y = A0 - ax
+  // Tank B: starts with B0 L, leaks at b L/min: y = B0 - bx
+  // Meet at x minutes
+  const xMin = pick(random, [10, 15, 20]);
+  const yWater = pick(random, [30, 40, 50]);
+  const aRate = ri(random, 2, 3);
+  const bRate = aRate + ri(random, 1, 2);
+  const a0 = yWater + aRate * xMin;
+  const b0 = yWater + bRate * xMin;
+
+  return {
+    prompt: `물탱크 A에는 ${a0} L, 물탱크 B에는 ${b0} L의 물이 들어 있다. 두 물탱크에서 각각 1분에 ${aRate} L, ${bRate} L씩 물을 빼낼 때, 두 물탱크에 남아 있는 물의 양이 같아지는 것은 몇 분 후인지 구하시오.`,
+    promptEn: `Tank A has ${a0} L of water and leaks at ${aRate} L/min. Tank B has ${b0} L and leaks at ${bRate} L/min. After how many minutes will both tanks have equal water?`,
+    expression: `${a0} - ${aRate}x = ${b0} - ${bRate}x`,
+    answer: String(xMin),
+    answerSuffix: '분 후',
+    explanation: `x분 후 남아 있는 물의 양을 y L라 하면 A: y = ${a0} - ${aRate}x, B: y = ${b0} - ${bRate}x 입니다. 두 식을 연립하면 ${a0} - ${aRate}x = ${b0} - ${bRate}x 에서 (${bRate} - ${aRate})x = ${b0 - a0}, x = ${xMin} 분 후입니다.`,
+    explanationEn: `Setting ${a0} - ${aRate}x = ${b0} - ${bRate}x yields (${bRate - aRate})x = ${b0 - a0} => x = ${xMin}.`
+  };
+}
+
+// 17. [유형 UP] 직선과 선분이 만날 조건 (#1066~#1068)
+export function rpmLineEqnUpLineMeetsSegment(random) {
+  // Line y = a x - b (fixed y-intercept (0, -b))
+  // Segment AB with A(x1, y1), B(x2, y2)
+  // Slope through A: (y1 + b) / x1
+  // Slope through B: (y2 + b) / x2
+  const b = ri(random, 1, 3);
+  const x1 = 1;
+  const y1 = ri(random, 4, 6);
+  const x2 = ri(random, 3, 4);
+  const y2 = ri(random, 1, 2);
+
+  const slopeA = (y1 + b) / x1;
+  const slopeB = (y2 + b) / x2;
+  const minSlope = Math.min(slopeA, slopeB);
+  const maxSlope = Math.max(slopeA, slopeB);
+
+  return {
+    prompt: `직선 y = ax - ${b} 가 두 점 A(${x1}, ${y1}), B(${x2}, ${y2})를 이은 선분 AB와 만나도록 하는 상수 a의 최댓값을 구하시오.`,
+    promptEn: `Find the maximum value of a such that y = ax - ${b} intersects the line segment AB connecting A(${x1}, ${y1}) and B(${x2}, ${y2}).`,
+    expression: `y = ax - ${b}`,
+    answer: fracStr(y1 + b, x1),
+    explanation: `직선 y = ax - ${b} 는 항상 점 (0, -${b})를 지납니다. 선분 AB와 만나려면 직선이 점 A를 지날 때와 점 B를 지날 때의 기울기 사이에 있어야 합니다. 점 A(${x1}, ${y1})을 지날 때 기울기 a = (${y1} - (-${b})) / (${x1} - 0) = ${fracStr(y1 + b, x1)} 이고, 점 B(${x2}, ${y2})를 지날 때 기울기 a = (${y2} - (-${b})) / (${x2} - 0) = ${fracStr(y2 + b, x2)} 입니다. 따라서 최댓값은 ${fracStr(y1 + b, x1)} 입니다.`,
+    explanationEn: `The line passes through (0, -${b}). At point A, a = ${fracStr(y1 + b, x1)}; at B, a = ${fracStr(y2 + b, x2)}. Max slope is ${fracStr(y1 + b, x1)}.`
+  };
+}
+
+// 18. [유형 UP] 삼각형의 넓이를 이등분하는 직선 (#1069~#1071)
+export function rpmLineEqnUpBisectTriangleArea(random) {
+  // Triangle formed by line ax + by = c and axes
+  // e.g. 4x + 3y = 12 => (3, 0) and (0, 4)
+  // Line y = mx through origin (0, 0) bisects the area
+  // Midpoint of opposite segment or bisecting the y-axis intercept:
+  // If line y = mx cuts hypotenuse, it bisects triangle if it passes through midpoint of (3, 0) and (0, 4) => (3/2, 2)
+  // m = 2 / (3/2) = 4/3
+  const xInt = pick(random, [4, 6]);
+  const yInt = pick(random, [4, 6]);
+  // Midpoint = (xInt / 2, yInt / 2)
+  // Slope m = (yInt / 2) / (xInt / 2) = yInt / xInt
+  const ansSlope = fracStr(yInt, xInt);
+
+  return {
+    prompt: `일차방정식 ${fracStr(yInt, gcd(xInt, yInt))}x + ${fracStr(xInt, gcd(xInt, yInt))}y = ${fracStr(xInt * yInt, gcd(xInt, yInt))} 의 그래프와 x축 및 y축으로 둘러싸인 직각삼각형의 넓이를 원점을 지나는 직선 y = ax 가 이등분할 때, 상수 a의 값을 기약분수로 구하시오.`,
+    promptEn: `The line y = ax passes through the origin and bisects the area of the triangle bounded by the axes and the line with intercepts (${xInt}, 0) and (0, ${yInt}). Find a as a simplified fraction.`,
+    expression: `y = ax`,
+    answer: ansSlope,
+    explanation: `직각삼각형의 두 꼭짓점은 (${xInt}, 0)과 (0, ${yInt})입니다. 원점을 지나는 직선 y = ax가 이 삼각형의 넓이를 이등분하려면 빗변의 중점 (${xInt}/2, ${yInt}/2) = (${xInt / 2}, ${yInt / 2})를 지나야 합니다. 대입하면 ${yInt / 2} = a × (${xInt / 2}) 에서 a = ${yInt} / ${xInt} = ${ansSlope} 입니다.`,
+    explanationEn: `To bisect the triangle, the line through origin must pass through the midpoint (${xInt/2}, ${yInt/2}). Slope a = ${ansSlope}.`
+  };
+}
+
+// 19. [단원 실전 다지기] 일차함수와 일차방정식의 관계 전 유형 실전 종합 (#1072~#1086)
+export function rpmLineEqnAllTypesMixed(random) {
+  const subTypes = [
+    rpmLineEqnFormAxByC,
+    rpmLineEqnPointOnLine,
+    rpmLineEqnSignsProperties,
+    rpmLineEqnParallelToAxes,
+    rpmLineEqnFourLinesRectArea,
+    rpmLineEqnFromSlopeYint,
+    rpmLineEqnFromSlopePoint,
+    rpmLineEqnFromTwoPoints,
+    rpmLineEqnFromIntercepts,
+    rpmLineEqnIntersectionAsSolution,
+    rpmLineEqnIntersectionFindConst,
+    rpmLineEqnLineThroughIntersection,
+    rpmLineEqnThreeLinesOnePoint,
+    rpmLineEqnSystemSolutionTypes,
+    rpmLineEqnEnclosedTriangleArea,
+    rpmLineEqnAppsRealLife
+  ];
+  const chosen = pick(random, subTypes);
+  return chosen(random);
+}
+
+// 20. [단원 최고수준] 일차함수와 일차방정식의 관계 실력 UP (#1087~#1092)
+export function rpmLineEqnAdvancedSkillUp(random) {
+  // Three lines: 2x + y = 2, x - y = 4, and ax + y = 6 do not form a triangle
+  // Three lines do NOT form a triangle if:
+  // 1) Two lines are parallel, OR
+  // 2) All three lines meet at a single point
+  const a1 = 2, b1 = 1, c1 = 2; // y = -2x + 2
+  const a2 = 1, b2 = -1, c2 = 4; // y = x - 4
+  // Intersection of line 1 & 2:
+  // -2x + 2 = x - 4 => 3x = 6 => x = 2, y = -2
+  // Line 3: ax + y = 6 => y = -ax + 6
+  // Parallel to line 1 => -a = -2 => a = 2
+  // Parallel to line 2 => -a = 1 => a = -1
+  // Passes (2, -2) => 2a + (-2) = 6 => 2a = 8 => a = 4
+  const mode = pick(random, ['concurrent', 'parallel']);
+  if (mode === 'concurrent') {
+    return {
+      prompt: `세 직선 2x + y = 2, x - y = 4, ax + y = 6 이 한 점에서 만날 때, 상수 a의 값을 구하시오.`,
+      promptEn: `The three lines 2x + y = 2, x - y = 4, and ax + y = 6 meet at a single point. Find a.`,
+      expression: `\\begin{cases} 2x + y = 2 \\\\ x - y = 4 \\end{cases}`,
+      answer: '4',
+      explanation: `앞의 두 식을 연립하여 풀면 교점의 좌표는 (2, -2)입니다. 세 직선이 한 점에서 만나므로 점 (2, -2)를 세 번째 직선 ax + y = 6 에 대입하면 2a + (-2) = 6 에서 2a = 8, a = 4 입니다.`,
+      explanationEn: `Intersection of first two lines is (2, -2). Substituting into ax + y = 6 yields 2a - 2 = 6 => a = 4.`
+    };
+  } else {
+    return {
+      prompt: `세 직선 2x + y = 2, x - y = 4, ax + y = 6 에 의하여 삼각형이 만들어지지 않도록 하는 양수 a의 값 중, 두 직선이 평행하여 삼각형이 만들어지지 않을 때의 a의 값을 구하시오.`,
+      promptEn: `Find the positive value of a such that the lines do not form a triangle due to two lines being parallel.`,
+      expression: `y = -2x + 2, \\; y = x - 4, \\; y = -ax + 6`,
+      answer: '2',
+      explanation: `각 직선의 기울기는 -2, 1, -a 입니다. 두 직선이 평행하면 삼각형이 만들어지지 않으므로 -a = -2 에서 a = 2 또는 -a = 1 에서 a = -1 입니다. 문제에서 양수 a의 값을 구하라고 하였으므로 a = 2 입니다.`,
+      explanationEn: `The slopes are -2, 1, and -a. For parallel lines, -a = -2 => a = 2 (positive).`
+    };
+  }
+}
+
+// 21. [중2-1 최종총괄] 중학 2-1 전 범위 최종 실전 총괄 모의고사 (RPM p.152~167)
+export function rpmGrade8SemesterOneFinalExam(random) {
+  // Comprehensive review problem drawing from the 9 main themes of Grade 2-1:
+  // 1. 유리수와 순환소수
+  // 2. 단항식의 계산
+  // 3. 다항식의 계산
+  // 4. 일차부등식
+  // 5. 일차부등식의 활용
+  // 6. 연립일차방정식
+  // 7. 연립일차방정식의 활용
+  // 8. 일차함수와 그 그래프
+  // 9. 일차함수와 일차방정식의 관계
+  const theme = pick(random, ['rat-dec', 'mono', 'poly', 'ineq', 'ineq-app', 'sys', 'sys-app', 'linear-func', 'line-eqn']);
+
+  if (theme === 'rat-dec') {
+    const den = pick(random, [12, 18, 24, 30, 45, 60]);
+    const num = ri(random, 1, 11);
+    // irreducible check
+    const g = gcd(num, den);
+    const redDen = den / g;
+    // Check prime factors of redDen
+    let temp = redDen;
+    while (temp % 2 === 0) temp /= 2;
+    while (temp % 5 === 0) temp /= 5;
+    const isTerminating = temp === 1;
+    return {
+      prompt: `분수 ${num}/${den} 을(를) 소수로 나타낼 때 유한소수가 되는지 순환소수가 되는지 판별하시오.`,
+      promptEn: `Determine if ${num}/${den} is a terminating decimal or a repeating decimal.`,
+      expression: `\\frac{${num}}{${den}}`,
+      choices: [
+        { value: '1', label: '유한소수', labelEn: 'Terminating decimal' },
+        { value: '2', label: '순환소수', labelEn: 'Repeating decimal' },
+        { value: '3', label: '정수', labelEn: 'Integer' },
+        { value: '4', label: '무리수', labelEn: 'Irrational number' },
+        { value: '5', label: '알 수 없음', labelEn: 'Cannot be determined' },
+      ],
+      answer: isTerminating ? '1' : '2',
+      explanation: `기약분수로 나타내면 ${fracStr(num, den)} 입니다. 분모의 소인수가 2와 5뿐이면 유한소수이고, 그 외의 소인수가 있으면 순환소수가 됩니다. 분모의 소인수를 분석하면 ${isTerminating ? '2와 5뿐이므로 유한소수' : '2 또는 5 이외의 소인수가 존재하므로 순환소수'}입니다.`,
+      explanationEn: `Simplifying gives ${fracStr(num, den)}. The prime factorization of denominator shows it is a ${isTerminating ? 'terminating' : 'repeating'} decimal.`
+    };
+  } else if (theme === 'mono') {
+    const a = ri(random, 2, 4);
+    const b = ri(random, 2, 3);
+    const ans = a * b;
+    return {
+      prompt: `(x^${a})^${b} = x^□ 일 때, □ 안에 알맞은 자연수를 구하시오.`,
+      promptEn: `Find the exponent in (x^${a})^${b} = x^□.`,
+      expression: `(x^{${a}})^{${b}} = x^□`,
+      answer: String(ans),
+      explanation: `지수법칙 (a^m)^n = a^{mn} 에 의하여 (x^${a})^${b} = x^{${a} × ${b}} = x^${ans} 입니다.`,
+      explanationEn: `By power of a power rule, (x^${a})^${b} = x^{${a * b}} = x^${ans}.`
+    };
+  } else if (theme === 'poly') {
+    const a = ri(random, 2, 4);
+    const b = ri(random, 2, 4);
+    return {
+      prompt: `(${a}x + 3) + (2x - ${b}) 를 간단히 하였을 때, x의 계수와 상수항의 합을 구하시오.`,
+      promptEn: `Simplify (${a}x + 3) + (2x - ${b}). Find the sum of the x coefficient and the constant term.`,
+      expression: `(${a}x + 3) + (2x - ${b})`,
+      answer: String(a + 2 + (3 - b)),
+      explanation: `동류항끼리 모아 계산하면 (${a} + 2)x + (3 - ${b}) = ${a + 2}x + (${3 - b}) 입니다. x의 계수는 ${a + 2}, 상수항은 ${3 - b}이므로 합은 ${a + 2} + (${3 - b}) = ${a + 2 + 3 - b} 입니다.`,
+      explanationEn: `Combining like terms gives ${a + 2}x + (${3 - b}). Sum of coefficient and constant = ${a + 2 + 3 - b}.`
+    };
+  } else if (theme === 'ineq') {
+    const a = ri(random, 2, 4);
+    const b = ri(random, 2, 6);
+    // a x - b > x + 3 => (a - 1)x > b + 3
+    const ansBound = Math.floor((b + 3) / (a - 1)) + 1;
+    return {
+      prompt: `일차부등식 ${a}x - ${b} > x + 3 을 만족하는 가장 작은 정수 x의 값을 구하시오.`,
+      promptEn: `Find the smallest integer x satisfying ${a}x - ${b} > x + 3.`,
+      expression: `${a}x - ${b} > x + 3`,
+      answer: String(ansBound),
+      explanation: `이항하여 정리하면 (${a} - 1)x > ${b + 3}, x > ${fracStr(b + 3, a - 1)} 입니다. ${fracStr(b + 3, a - 1)} = ${(b + 3) / (a - 1)} 보다 큰 가장 작은 정수는 ${ansBound} 입니다.`,
+      explanationEn: `Solving gives x > ${fracStr(b + 3, a - 1)}. The smallest integer is ${ansBound}.`
+    };
+  } else if (theme === 'sys') {
+    const x = ri(random, 1, 3);
+    const y = ri(random, 1, 3);
+    const c1 = x + y;
+    const c2 = 2 * x - y;
+    return {
+      prompt: `연립방정식 x + y = ${c1}, 2x - y = ${c2} 의 해가 x = a, y = b일 때, a × b의 값을 구하시오.`,
+      promptEn: `Solve x + y = ${c1}, 2x - y = ${c2}. Let x = a, y = b. Find a × b.`,
+      expression: `\\begin{cases} x + y = ${c1} \\\\ 2x - y = ${c2} \\end{cases}`,
+      answer: String(x * y),
+      explanation: `두 식을 더하면 3x = ${c1 + c2} 에서 x = ${x} 이고, 첫 식에 대입하면 y = ${y} 입니다. 따라서 a × b = ${x} × ${y} = ${x * y} 입니다.`,
+      explanationEn: `Adding equations gives 3x = ${c1 + c2} => x = ${x}, y = ${y}. Product a × b = ${x * y}.`
+    };
+  } else if (theme === 'linear-func') {
+    const a = pick(random, [-3, -2, 2, 3]);
+    const b = ri(random, -5, 5);
+    const px = ri(random, 1, 4);
+    const py = a * px + b;
+    return {
+      prompt: `일차함수 y = ${formatLinear(a, b)} 의 그래프가 점 (${px}, k)를 지날 때, 상수 k의 값을 구하시오.`,
+      promptEn: `If y = ${formatLinear(a, b)} passes through (${px}, k), find k.`,
+      expression: `y = ${formatLinear(a, b)}`,
+      answer: String(py),
+      explanation: `x = ${px}를 대입하면 y = ${a} × (${px}) + (${b}) = ${py} 입니다. 따라서 k = ${py} 입니다.`,
+      explanationEn: `Substituting x = ${px} gives y = ${py}, so k = ${py}.`
+    };
+  } else {
+    return rpmLineEqnIntersectionAsSolution(random);
+  }
+}
+
 export const RPM_APPLIED_GENERATORS = {
   // 01 소인수분해 RPM 세부 유형 (RPM 1-1 Pages 10~15)
   'rpm-prime-prop-closest': rpmPrimePropClosest,
@@ -13927,6 +15070,62 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-sys-app-cost-price-profit': rpmSysAppCostPriceProfit,
   'rpm-sys-app-all-types-mixed': rpmSysAppAllTypesMixed,
   'rpm-sys-app-advanced-skill-up': rpmSysAppAdvancedSkillUp,
+  // -------------------------------------------------------------
+  // [중2-1] 08 일차함수와 그 그래프 세부 응용 유형 (RPM 2-1 p.118~133)
+  // -------------------------------------------------------------
+  'rpm-linear-func-concept': rpmLinearFuncConcept,
+  'rpm-linear-func-eval-value': rpmLinearFuncEvalValue,
+  'rpm-linear-func-identify-linear': rpmLinearFuncIdentifyLinear,
+  'rpm-linear-func-point-on-graph': rpmLinearFuncPointOnGraph,
+  'rpm-linear-func-translation-y': rpmLinearFuncTranslationY,
+  'rpm-linear-func-intercepts': rpmLinearFuncIntercepts,
+  'rpm-linear-func-slope-definition': rpmLinearFuncSlopeDefinition,
+  'rpm-linear-func-slope-two-points': rpmLinearFuncSlopeTwoPoints,
+  'rpm-linear-func-draw-quadrants': rpmLinearFuncDrawQuadrants,
+  'rpm-linear-func-axis-triangle-area': rpmLinearFuncAxisTriangleArea,
+  'rpm-linear-func-sign-properties': rpmLinearFuncSignProperties,
+  'rpm-linear-func-parallel-lines': rpmLinearFuncParallelLines,
+  'rpm-linear-func-coincident-lines': rpmLinearFuncCoincidentLines,
+  'rpm-linear-func-comprehensive-properties': rpmLinearFuncComprehensiveProperties,
+  'rpm-linear-func-app-temperature': rpmLinearFuncAppTemperature,
+  'rpm-linear-func-app-water-tank': rpmLinearFuncAppWaterTank,
+  'rpm-linear-func-app-speed-distance': rpmLinearFuncAppSpeedDistance,
+  'rpm-linear-func-app-moving-point': rpmLinearFuncAppMovingPoint,
+  'rpm-linear-func-app-graph-modeling': rpmLinearFuncAppGraphModeling,
+  'rpm-linear-func-up-two-lines-area': rpmLinearFuncUpTwoLinesArea,
+  'rpm-linear-func-up-quadrant-condition': rpmLinearFuncUpQuadrantCondition,
+  'rpm-linear-func-all-types-mixed': rpmLinearFuncAllTypesMixed,
+  'rpm-linear-func-advanced-skill-up': rpmLinearFuncAdvancedSkillUp,
+
+  // -------------------------------------------------------------
+  // [중2-1] 09 일차함수와 일차방정식의 관계 세부 응용 유형 (RPM 2-1 p.138~149)
+  // -------------------------------------------------------------
+  'rpm-line-eqn-form-ax-by-c': rpmLineEqnFormAxByC,
+  'rpm-line-eqn-point-on-line': rpmLineEqnPointOnLine,
+  'rpm-line-eqn-signs-properties': rpmLineEqnSignsProperties,
+  'rpm-line-eqn-parallel-to-axes': rpmLineEqnParallelToAxes,
+  'rpm-line-eqn-four-lines-rect-area': rpmLineEqnFourLinesRectArea,
+  'rpm-line-eqn-from-slope-yint': rpmLineEqnFromSlopeYint,
+  'rpm-line-eqn-from-slope-point': rpmLineEqnFromSlopePoint,
+  'rpm-line-eqn-from-two-points': rpmLineEqnFromTwoPoints,
+  'rpm-line-eqn-from-intercepts': rpmLineEqnFromIntercepts,
+  'rpm-line-eqn-intersection-as-solution': rpmLineEqnIntersectionAsSolution,
+  'rpm-line-eqn-intersection-find-const': rpmLineEqnIntersectionFindConst,
+  'rpm-line-eqn-line-through-intersection': rpmLineEqnLineThroughIntersection,
+  'rpm-line-eqn-three-lines-one-point': rpmLineEqnThreeLinesOnePoint,
+  'rpm-line-eqn-system-solution-types': rpmLineEqnSystemSolutionTypes,
+  'rpm-line-eqn-enclosed-triangle-area': rpmLineEqnEnclosedTriangleArea,
+  'rpm-line-eqn-apps-real-life': rpmLineEqnAppsRealLife,
+  'rpm-line-eqn-up-line-meets-segment': rpmLineEqnUpLineMeetsSegment,
+  'rpm-line-eqn-up-bisect-triangle-area': rpmLineEqnUpBisectTriangleArea,
+  'rpm-line-eqn-all-types-mixed': rpmLineEqnAllTypesMixed,
+  'rpm-line-eqn-advanced-skill-up': rpmLineEqnAdvancedSkillUp,
+
+  // -------------------------------------------------------------
+  // [중2-1 최종총괄] 중학 2-1 전 범위 최종 실전 총괄 모의고사 (RPM p.152~167)
+  // -------------------------------------------------------------
+  'rpm-grade8-semester-one-final-exam': rpmGrade8SemesterOneFinalExam,
+
 
 
 };
