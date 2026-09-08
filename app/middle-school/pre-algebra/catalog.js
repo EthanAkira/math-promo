@@ -235,6 +235,38 @@ import {
   rpmG8PythagoreanSemicircleHippocrates,
   rpmG8PythagoreanAllTypesMixed,
   rpmG8PythagoreanAdvancedSkillUp,
+  // Middle School 2-2 Chapter 09 and 10 & Capstone
+  rpmG8CasesDiceSumDiff,
+  rpmG8CasesCoinsPayment,
+  rpmG8CasesAdditionRule,
+  rpmG8CasesMultiplicationRule,
+  rpmG8CasesSimultaneousTrials,
+  rpmG8CasesLineUpPermutation,
+  rpmG8CasesAdjacentLineUp,
+  rpmG8CasesMakingNumbersNoZero,
+  rpmG8CasesMakingNumbersWithZero,
+  rpmG8CasesDifferentRepresentatives,
+  rpmG8CasesSameRepresentatives,
+  rpmG8CasesGeometryCombinations,
+  rpmG8CasesColoringRegions,
+  rpmG8CasesGridShortestPath,
+  rpmG8CasesAllTypesMixed,
+  rpmG8CasesAdvancedSkillUp,
+  rpmG8ProbBasicDefinition,
+  rpmG8ProbDiceEquations,
+  rpmG8ProbPropertiesAndComplement,
+  rpmG8ProbAtLeastOne,
+  rpmG8ProbAdditionRule,
+  rpmG8ProbMultiplicationRule,
+  rpmG8ProbIndependentEventsApps,
+  rpmG8ProbDrawingWithReplacement,
+  rpmG8ProbDrawingWithoutReplacement,
+  rpmG8ProbTargetAndMeeting,
+  rpmG8ProbRockPaperScissors,
+  rpmG8ProbGeometricAndPointMotion,
+  rpmG8ProbAllTypesMixed,
+  rpmG8ProbAdvancedSkillUp,
+  rpmGrade8SemesterTwoFinalExam,
 } from '../rpmAppliedEngine';
 
 
@@ -717,6 +749,46 @@ export const RPM_PYTHAGOREAN_APPLIED_UNITS = [
   { id: 'rpm-g8-pythagorean-advanced-skill-up', label: '[단원 최고수준] 피타고라스 정리 실력 UP', description: '직각삼각형을 접었을 때 빗변에 내린 수선과 피타고라스 방정식을 이용한 넓이 (RPM p.154)', en: ['Pythagorean Advanced Challenge', 'Top challenge: right triangle folding along hypotenuse and quadratic Pythagorean solving'], make: (random) => rpmG8PythagoreanAdvancedSkillUp(random) },
 ];
 
+export const RPM_CASES_APPLIED_UNITS = [
+  { id: 'rpm-g8-cases-dice-sum-diff', label: '[경우의 수 01] 주사위의 눈의 합과 차', description: '서로 다른 두 개의 주사위를 던질 때 나오는 두 눈의 수의 합 또는 차의 경우의 수 계산', en: ['Number of Cases Type 01: Dice Sum and Difference', 'Calculate number of outcomes for sum or difference when rolling two dice'], make: (random) => rpmG8CasesDiceSumDiff(random) },
+  { id: 'rpm-g8-cases-coins-payment', label: '[경우의 수 02] 동전으로 금액을 지불하는 방법의 수', description: '액수가 큰 동전부터 경우를 나누어 주어진 금액을 지불하는 방법의 수 계산', en: ['Number of Cases Type 02: Coin Payment Combinations', 'Determine ways to pay a specified amount using various coin denominations'], make: (random) => rpmG8CasesCoinsPayment(random) },
+  { id: 'rpm-g8-cases-addition-rule', label: '[경우의 수 03] 합의 법칙과 배수의 경우의 수', description: '동시에 일어나지 않는 두 사건에서 또는(or) 조건의 경우의 수 합의 법칙 적용', en: ['Number of Cases Type 03: Addition Rule of Counting', 'Apply addition rule for mutually exclusive events such as multiple conditions'], make: (random) => rpmG8CasesAdditionRule(random) },
+  { id: 'rpm-g8-cases-multiplication-rule', label: '[경우의 수 04] 곱의 법칙과 경로의 수', description: 'A에서 B를 거쳐 C로 가는 경로 및 상하의 선택 등 연달아 일어나는 사건의 곱의 법칙', en: ['Number of Cases Type 04: Multiplication Rule & Paths', 'Calculate total paths via intermediate points using the product rule'], make: (random) => rpmG8CasesMultiplicationRule(random) },
+  { id: 'rpm-g8-cases-simultaneous-trials', label: '[경우의 수 05] 동전과 주사위의 동시 시행', description: '동전 여러 개와 주사위 여러 개를 동시에 던질 때 일어나는 모든 경우의 수 계산', en: ['Number of Cases Type 05: Simultaneous Coins and Dice', 'Compute total outcomes when tossing multiple coins and rolling dice together'], make: (random) => rpmG8CasesSimultaneousTrials(random) },
+  { id: 'rpm-g8-cases-line-up-permutation', label: '[경우의 수 06] n명을 한 줄로 세우는 순열', description: 'n명 중 r명을 뽑아 한 줄로 세우거나 특정 위치가 지정된 줄 세우기 경우의 수', en: ['Number of Cases Type 06: Permutations and Line-ups', 'Calculate permutations of r people chosen from n arranged in a line'], make: (random) => rpmG8CasesLineUpPermutation(random) },
+  { id: 'rpm-g8-cases-adjacent-line-up', label: '[경우의 수 07] 이웃하여 줄을 서는 경우의 수', description: '이웃하는 대상을 한 묶음으로 묶어 배열하고 묶음 내부의 자리바꿈을 곱하여 계산', en: ['Number of Cases Type 07: Adjacent Permutations', 'Solve line-up problems where specified members must stand next to each other'], make: (random) => rpmG8CasesAdjacentLineUp(random) },
+  { id: 'rpm-g8-cases-making-numbers-no-zero', label: '[경우의 수 08] 자연수 만들기 (0을 포함하지 않는 경우)', description: '0이 없는 숫자 카드로 두 자리 또는 세 자리 자연수 및 짝수/홀수 만들기', en: ['Number of Cases Type 08: Forming Integers without Zero', 'Determine number of 2-digit or 3-digit even/odd integers from nonzero digit cards'], make: (random) => rpmG8CasesMakingNumbersNoZero(random) },
+  { id: 'rpm-g8-cases-making-numbers-with-zero', label: '[경우의 수 09] 자연수 만들기 (0을 포함하는 경우)', description: '최고 자리 수에 0이 올 수 없음을 고려한 두 자리 또는 세 자리 자연수 만들기', en: ['Number of Cases Type 09: Forming Integers with Zero', 'Form integers with digits containing 0 where leading zero is disallowed'], make: (random) => rpmG8CasesMakingNumbersWithZero(random) },
+  { id: 'rpm-g8-cases-different-representatives', label: '[경우의 수 10] 대표 뽑기 (자격이 다른 경우)', description: '회장, 부회장, 총무 등 직책과 자격이 서로 다른 대표를 뽑는 순열 계산', en: ['Number of Cases Type 10: Electing Distinct Officeholders', 'Count outcomes for electing distinct roles (e.g., President, Vice President)'], make: (random) => rpmG8CasesDifferentRepresentatives(random) },
+  { id: 'rpm-g8-cases-same-representatives', label: '[경우의 수 11] 대표 뽑기 (자격이 같은 경우)', description: '자격이 같은 대표 2명 n(n-1)/2 또는 3명 n(n-1)(n-2)/6 을 선출하는 조합 계산', en: ['Number of Cases Type 11: Choosing Equal Committee Members', 'Compute combinations for choosing equal-status committee representatives'], make: (random) => rpmG8CasesSameRepresentatives(random) },
+  { id: 'rpm-g8-cases-geometry-combinations', label: '[경우의 수 12] 점과 도형의 개수', description: '원 위의 점들을 연결하여 만들 수 있는 선분 및 삼각형의 개수 계산', en: ['Number of Cases Type 12: Points and Geometric Figures', 'Find the number of line segments and triangles formed by points on a circle'], make: (random) => rpmG8CasesGeometryCombinations(random) },
+  { id: 'rpm-g8-cases-coloring-regions', label: '[경우의 수 13] 영역에 색을 칠하는 방법의 수', description: '이웃한 영역은 서로 다른 색을 칠하는 조건에서 색칠하는 방법의 수 계산', en: ['Number of Cases Type 13: Map Coloring Problems', 'Determine valid colorings of adjacent regions using given colors'], make: (random) => rpmG8CasesColoringRegions(random) },
+  { id: 'rpm-g8-cases-grid-shortest-path', label: '[경우의 수 14] 최단 거리로 가는 길찾기', description: '격자판 도로망에서 합의 법칙을 이용하여 A에서 B까지 최단 경로의 수 계산', en: ['Number of Cases Type 14: Grid Shortest Paths', 'Find the number of shortest grid paths using recursive addition rule'], make: (random) => rpmG8CasesGridShortestPath(random) },
+  { id: 'rpm-g8-cases-all-types-mixed', label: '[단원 실전 다지기] 경우의 수 전 유형 종합', description: '주사위, 동전, 줄 세우기, 자연수, 대표 뽑기, 길찾기 전 유형 실전 종합', en: ['Number of Cases Comprehensive Practice', 'Mixed practice across all counting principles, permutations, and combinations'], make: (random) => rpmG8CasesAllTypesMixed(random) },
+  { id: 'rpm-g8-cases-advanced-skill-up', label: '[단원 최고수준] 경우의 수 실력 UP', description: '연립방정식이 해를 갖지 않는 주사위 눈 순서쌍 (a, b)의 개수 추론 (RPM p.155~156)', en: ['Number of Cases Advanced Challenge', 'Top challenge: ordered dice pairs yielding no solution in a 2x2 linear system'], make: (random) => rpmG8CasesAdvancedSkillUp(random) },
+];
+
+export const RPM_PROBABILITY_APPLIED_UNITS = [
+  { id: 'rpm-g8-prob-basic-definition', label: '[확률 01] 확률의 기본 개념과 계산', description: '어떤 사건이 일어날 확률을 전체 경우의 수에 대한 사건의 경우의 수의 비로 계산', en: ['Probability Type 01: Classical Probability Definition', 'Calculate probability as favorable outcomes over total equally likely outcomes'], make: (random) => rpmG8ProbBasicDefinition(random) },
+  { id: 'rpm-g8-prob-dice-equations', label: '[확률 02] 주사위와 일차방정식·부등식의 확률', description: '두 주사위의 눈 (a, b)에 대하여 일차방정식 ax + by = c 를 만족할 확률 계산', en: ['Probability Type 02: Dice Outcomes and Linear Equations', 'Determine probability that dice rolls satisfy linear equations or inequalities'], make: (random) => rpmG8ProbDiceEquations(random) },
+  { id: 'rpm-g8-prob-properties-and-complement', label: '[확률 03] 확률의 성질과 어떤 사건이 일어나지 않을 확률', description: '0 <= p <= 1 및 어떤 사건이 일어나지 않을 여사건 확률 1 - p 의 성질 적용', en: ['Probability Type 03: Complementary Event Probability', 'Apply basic bounds 0 <= p <= 1 and complement probability 1 - p'], make: (random) => rpmG8ProbPropertiesAndComplement(random) },
+  { id: 'rpm-g8-prob-at-least-one', label: '[확률 04] 적어도 하나는 ~일 여사건 확률', description: '적어도 하나가 일어날 확률을 1 - (모두 일어나지 않을 확률) 로 계산', en: ['Probability Type 04: At Least One Event (Complement Rule)', 'Solve at-least-one probability problems using 1 minus the probability of none'], make: (random) => rpmG8ProbAtLeastOne(random) },
+  { id: 'rpm-g8-prob-addition-rule', label: '[확률 05] 확률의 합의 법칙 (또는 사건의 확률)', description: '동시에 일어나지 않는 두 배반사건에 대하여 P(A 또는 B) = P(A) + P(B) 계산', en: ['Probability Type 05: Addition Rule of Probability', 'Calculate P(A or B) = P(A) + P(B) for mutually exclusive events'], make: (random) => rpmG8ProbAdditionRule(random) },
+  { id: 'rpm-g8-prob-multiplication-rule', label: '[확률 06] 확률의 곱의 법칙 (동시에 일어날 확률)', description: '서로 영향을 미치지 않는 독립시행에서 두 사건이 동시에 일어날 확률 P(A) * P(B) 계산', en: ['Probability Type 06: Multiplication Rule of Probability', 'Calculate P(A and B) = P(A) * P(B) for independent sequential events'], make: (random) => rpmG8ProbMultiplicationRule(random) },
+  { id: 'rpm-g8-prob-independent-events-apps', label: '[확률 07] 독립시행의 응용 (자유투 및 명중률)', description: '두 선수가 자유투를 던질 때 한 명만 성공할 확률 등 독립시행 복합 확률', en: ['Probability Type 07: Independent Trials & Success Rates', 'Compute composite probabilities such as exactly one player hitting a target'], make: (random) => rpmG8ProbIndependentEventsApps(random) },
+  { id: 'rpm-g8-prob-drawing-with-replacement', label: '[확률 08] 연속하여 뽑는 확률 (복원추출)', description: '꺼낸 것을 다시 넣고 뽑을 때 처음과 나중의 확률이 독립임을 이용한 계산', en: ['Probability Type 08: Drawing with Replacement', 'Solve sequential probability problems where items are replaced after each draw'], make: (random) => rpmG8ProbDrawingWithReplacement(random) },
+  { id: 'rpm-g8-prob-drawing-without-replacement', label: '[확률 09] 연속하여 뽑는 확률 (비복원추출)', description: '꺼낸 것을 다시 넣지 않을 때 두 번째 시행의 전체 수가 줄어듦을 반영한 확률 계산', en: ['Probability Type 09: Drawing without Replacement', 'Calculate probability of sequential draws when items are not replaced'], make: (random) => rpmG8ProbDrawingWithoutReplacement(random) },
+  { id: 'rpm-g8-prob-target-and-meeting', label: '[확률 10] 적어도 한 명의 명중/합격 및 약속 확률', description: '세 사람 중 적어도 한 명이 명중할 확률 1 - (모두 빗맞힐 확률) 계산', en: ['Probability Type 10: Target Hitting & Meeting Probability', 'Calculate probability that at least one person hits a target or keeps an appointment'], make: (random) => rpmG8ProbTargetAndMeeting(random) },
+  { id: 'rpm-g8-prob-rock-paper-scissors', label: '[확률 11] 가위바위보 게임과 승패 확률', description: '두 사람 또는 세 사람이 가위바위보를 할 때 비길 확률 및 특정인이 이길 확률', en: ['Probability Type 11: Rock-Paper-Scissors Probabilities', 'Determine probabilities of ties and specific wins in Rock-Paper-Scissors'], make: (random) => rpmG8ProbRockPaperScissors(random) },
+  { id: 'rpm-g8-prob-geometric-and-point-motion', label: '[확률 12] 도형에서의 확률과 점의 이동', description: '주사위 눈의 합만큼 정사각형 꼭짓점을 시계 반대 방향으로 이동할 때 특정 위치 도달 확률', en: ['Probability Type 12: Geometric Probability & Token Motion', 'Find the probability of a moving token landing on a target vertex on a polygon'], make: (random) => rpmG8ProbGeometricAndPointMotion(random) },
+  { id: 'rpm-g8-prob-all-types-mixed', label: '[단원 실전 다지기] 확률과 그 계산 전 유형 종합', description: '기본 정의, 주사위 방정식, 합/곱의 법칙, 복원/비복원 추출 전 유형 종합', en: ['Probability Comprehensive Practice', 'Mixed practice across classical probability, addition, multiplication, and sampling'], make: (random) => rpmG8ProbAllTypesMixed(random) },
+  { id: 'rpm-g8-prob-advanced-skill-up', label: '[단원 최고수준] 확률과 그 계산 실력 UP', description: '분모 n을 택할 때 기약분수 7/n이 순환소수가 될 확률 계산 (RPM p.157~158)', en: ['Probability Advanced Challenge', 'Top challenge: probability that fraction 7/n forms a repeating decimal'], make: (random) => rpmG8ProbAdvancedSkillUp(random) },
+];
+
+export const RPM_GRADE8_SEMESTER_TWO_FINAL_MOCK_UNITS = [
+  { id: 'rpm-grade8-semester-two-final-exam', label: '[중2-2 총괄 모의고사] 중2-2 전 범위 최종 실전 총괄 모의고사', description: '이등변삼각형, 외심/내심, 평행사변형, 사각형, 닮음, 평행선분비, 무게중심, 피타고라스, 경우의 수, 확률 전 10단원 25문항 실전 모의고사 (RPM 2-2 전 범위)', en: ['Grade 8 Semester 2 Final Comprehensive Mock Exam', 'Comprehensive mock exam covering all 10 chapters of Korean Grade 8-2 (Geometry, Similarity, Pythagorean, Counting & Probability)'], make: (random) => rpmGrade8SemesterTwoFinalExam(random) },
+];
+
 
 
 
@@ -744,6 +816,9 @@ const SOURCE_GROUPS = [
   ['평행선과 선분의 길이의 비', ['pre-algebra', 'kr-middle-2'], RPM_PARALLEL_SEGMENTS_APPLIED_UNITS],
   ['삼각형의 무게중심', ['pre-algebra', 'kr-middle-2'], RPM_CENTROID_APPLIED_UNITS],
   ['피타고라스 정리', ['pre-algebra', 'kr-middle-2'], RPM_PYTHAGOREAN_APPLIED_UNITS],
+  ['경우의 수', ['pre-algebra', 'kr-middle-2'], RPM_CASES_APPLIED_UNITS],
+  ['확률과 그 계산', ['pre-algebra', 'kr-middle-2'], RPM_PROBABILITY_APPLIED_UNITS],
+  ['중2-2 총괄 모의고사', ['pre-algebra', 'kr-middle-2'], RPM_GRADE8_SEMESTER_TWO_FINAL_MOCK_UNITS],
   ['문자와 식', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], [...ALGEBRA_UNITS, ...RPM_ALGEBRA_APPLIED_UNITS]],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], COORDINATE_UNITS],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'algebra-1'], PROPORTION_UNITS],
@@ -1117,6 +1192,19 @@ const UNIT_TIERS = {
   'rpm-prop-all-types-mixed': 'advanced',
   // 중학 1-1 전 범위 총괄 실전 모의고사 (RPM 1-1 p.152~173)
   'rpm-semester-one-mock-exam': 'advanced',
+  // Grade 8 Semester 2 Chapters 09 and 10 & Final Capstone
+  'rpm-g8-cases-dice-sum-diff': 'advanced', 'rpm-g8-cases-coins-payment': 'advanced', 'rpm-g8-cases-addition-rule': 'advanced',
+  'rpm-g8-cases-multiplication-rule': 'advanced', 'rpm-g8-cases-simultaneous-trials': 'advanced', 'rpm-g8-cases-line-up-permutation': 'advanced',
+  'rpm-g8-cases-adjacent-line-up': 'advanced', 'rpm-g8-cases-making-numbers-no-zero': 'advanced', 'rpm-g8-cases-making-numbers-with-zero': 'advanced',
+  'rpm-g8-cases-different-representatives': 'advanced', 'rpm-g8-cases-same-representatives': 'advanced', 'rpm-g8-cases-geometry-combinations': 'advanced',
+  'rpm-g8-cases-coloring-regions': 'advanced', 'rpm-g8-cases-grid-shortest-path': 'advanced', 'rpm-g8-cases-all-types-mixed': 'advanced',
+  'rpm-g8-cases-advanced-skill-up': 'advanced',
+  'rpm-g8-prob-basic-definition': 'advanced', 'rpm-g8-prob-dice-equations': 'advanced', 'rpm-g8-prob-properties-and-complement': 'advanced',
+  'rpm-g8-prob-at-least-one': 'advanced', 'rpm-g8-prob-addition-rule': 'advanced', 'rpm-g8-prob-multiplication-rule': 'advanced',
+  'rpm-g8-prob-independent-events-apps': 'advanced', 'rpm-g8-prob-drawing-with-replacement': 'advanced', 'rpm-g8-prob-drawing-without-replacement': 'advanced',
+  'rpm-g8-prob-target-and-meeting': 'advanced', 'rpm-g8-prob-rock-paper-scissors': 'advanced', 'rpm-g8-prob-geometric-and-point-motion': 'advanced',
+  'rpm-g8-prob-all-types-mixed': 'advanced', 'rpm-g8-prob-advanced-skill-up': 'advanced',
+  'rpm-grade8-semester-two-final-exam': 'advanced',
   // NEW_UNITS (this file)
   'order-of-operations': 'basic', 'decimal-operations': 'basic', 'fraction-operations': 'basic',
   'fraction-decimal-percent': 'basic', 'ratio-rate-table': 'basic', 'percent-problems': 'basic',

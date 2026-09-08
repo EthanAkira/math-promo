@@ -16383,6 +16383,1021 @@ export function rpmG8PythagoreanAdvancedSkillUp(random) {
 }
 
 
+// RPM Middle School 2-2: Chapter 09 경우의 수 (Counting) & Chapter 10 확률 (Probability)
+// Plus Capstone: 중2-2 전 범위 최종 실전 총괄 모의고사
+
+
+
+function fmtFrac(num, den) {
+  if (den === 0) return '0';
+  const g = gcd(Math.abs(num), Math.abs(den));
+  const n = num / g;
+  const d = den / g;
+  if (d === 1) return `${n}`;
+  return `${n}/${d}`;
+}
+
+
+
+function makeNumChoices(random, correctVal, formatKo = (v) => `${v}가지`, formatEn = (v) => `${v}`) {
+  const set = new Set([correctVal]);
+  const deltas = [-3, -2, -1, 1, 2, 3, 4, 5, -4, 6, -5];
+  for (const d of deltas) {
+    if (correctVal + d > 0) set.add(correctVal + d);
+    if (set.size >= 5) break;
+  }
+  let step = 1;
+  while (set.size < 5) {
+    set.add(correctVal + step * 2 + 1);
+    step++;
+  }
+  const arr = Array.from(set).slice(0, 5);
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  const correctIdx = arr.indexOf(correctVal) + 1;
+  return {
+    choicesKo: arr.map(formatKo),
+    choicesEn: arr.map(formatEn),
+    answer: String(correctIdx)
+  };
+}
+
+function makeFracChoices(random, correctNum, correctDen) {
+  const g = gcd(correctNum, correctDen);
+  const cn = correctNum / g;
+  const cd = correctDen / g;
+  const correctStr = cd === 1 ? `${cn}` : `${cn}/${cd}`;
+
+  const set = new Set([correctStr]);
+  const candidates = [
+    fmtFrac(Math.max(1, cn - 1), cd),
+    fmtFrac(cn + 1, cd),
+    fmtFrac(cn, cd + 1),
+    fmtFrac(cn, Math.max(2, cd - 1)),
+    fmtFrac(Math.max(1, cn - 2), cd),
+    fmtFrac(cn + 2, cd),
+    fmtFrac(1, 2),
+    fmtFrac(1, 3),
+    fmtFrac(1, 4),
+    fmtFrac(1, 6),
+    fmtFrac(2, 3),
+    fmtFrac(3, 4),
+    fmtFrac(5, 6),
+    fmtFrac(1, 12),
+    fmtFrac(5, 12),
+    fmtFrac(7, 12),
+  ];
+  for (const cand of candidates) {
+    if (cand && !set.has(cand)) set.add(cand);
+    if (set.size >= 5) break;
+  }
+  const arr = Array.from(set).slice(0, 5);
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  const correctIdx = arr.indexOf(correctStr) + 1;
+  return {
+    choicesKo: arr,
+    choicesEn: arr,
+    answer: String(correctIdx)
+  };
+}
+
+// ============================================================================
+// Chapter 09 경우의 수 (Number of Cases)
+// ============================================================================
+
+// 1. [경우의 수 01] 주사위의 눈의 합과 차
+export function rpmG8CasesDiceSumDiff(random) {
+  const mode = ri(random, 0, 1);
+  let target, count = 0, pairs = [];
+
+  if (mode === 0) {
+    target = ri(random, 5, 10);
+    for (let a = 1; a <= 6; a++) {
+      for (let b = 1; b <= 6; b++) {
+        if (a + b === target) {
+          count++;
+          pairs.push(`(${a}, ${b})`);
+        }
+      }
+    }
+  } else {
+    target = ri(random, 2, 4);
+    for (let a = 1; a <= 6; a++) {
+      for (let b = 1; b <= 6; b++) {
+        if (Math.abs(a - b) === target) {
+          count++;
+          pairs.push(`(${a}, ${b})`);
+        }
+      }
+    }
+  }
+
+  const promptKo = mode === 0
+    ? `서로 다른 두 개의 주사위를 동시에 던질 때, 나오는 두 눈의 수의 합이 ${target}인 경우의 수를 구하시오.`
+    : `서로 다른 두 개의 주사위를 동시에 던질 때, 나오는 두 눈의 수의 차가 ${target}인 경우의 수를 구하시오.`;
+  const promptEn = mode === 0
+    ? `When rolling two distinguishable dice simultaneously, find the number of outcomes where the sum of the two numbers is ${target}.`
+    : `When rolling two distinguishable dice simultaneously, find the number of outcomes where the positive difference between the two numbers is ${target}.`;
+
+  const choicesData = makeNumChoices(random, count, (c) => `${c}가지`, (c) => `${c}`);
+  const pairStr = pairs.join(', ');
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: mode === 0
+      ? `두 눈의 수의 순서쌍 (a, b)에서 a + b = ${target}인 경우는 ${pairStr}로 총 ${count}가지입니다.`
+      : `두 눈의 수의 순서쌍 (a, b)에서 |a - b| = ${target}인 경우는 ${pairStr}로 총 ${count}가지입니다.`,
+    explanationEn: mode === 0
+      ? `The ordered pairs (a, b) satisfying a + b = ${target} are ${pairStr}, giving a total of ${count} outcomes.`
+      : `The ordered pairs (a, b) satisfying |a - b| = ${target} are ${pairStr}, giving a total of ${count} outcomes.`,
+  };
+}
+
+// 2. [경우의 수 02] 동전으로 금액을 지불하는 방법의 수
+export function rpmG8CasesCoinsPayment(random) {
+  const total = ri(random, 2, 3) * 500;
+  const max500 = Math.floor(total / 500);
+  const atLeastOne = ri(random, 0, 1) === 1;
+  let ways = 0;
+  const validCombos = [];
+
+  const start500 = atLeastOne ? 1 : 0;
+  const start100 = atLeastOne ? 1 : 0;
+  const start50 = atLeastOne ? 1 : 0;
+
+  for (let c500 = start500; c500 <= Math.min(max500, 3); c500++) {
+    for (let c100 = start100; c100 <= 10; c100++) {
+      const rem = total - (500 * c500 + 100 * c100);
+      if (rem >= 0 && rem % 50 === 0) {
+        const c50 = rem / 50;
+        if (c50 >= start50 && c50 <= 10) {
+          ways++;
+          validCombos.push(`(500원 ${c500}개, 100원 ${c100}개, 50원 ${c50}개)`);
+        }
+      }
+    }
+  }
+
+  const condKo = atLeastOne ? '각 동전을 적어도 한 개 이상 사용하여' : '동전을 사용하여';
+  const condEn = atLeastOne ? 'using at least one coin of each denomination,' : 'using the coins,';
+
+  const promptKo = `500원짜리 동전 3개, 100원짜리 동전 10개, 50원짜리 동전 10개를 가지고 있을 때, ${condKo} ${total}원을 지불하는 방법의 수를 구하시오.`;
+  const promptEn = `You have three 500-won coins, ten 100-won coins, and ten 50-won coins. Find the number of ways to pay ${total} won ${condEn}.`;
+
+  const choicesData = makeNumChoices(random, ways, (c) => `${c}가지`, (c) => `${c}`);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `액수가 큰 500원 동전의 개수를 기준으로 나누어 생각합니다. ${total}원을 지불하는 방법은 ${validCombos.slice(0, 4).join(', ')}${validCombos.length > 4 ? ' 등' : ''}으로 총 ${ways}가지입니다.`,
+    explanationEn: `Analyze cases based on the number of 500-won coins. There are ${ways} valid combinations.`,
+  };
+}
+
+// 3. [경우의 수 03] 합의 법칙 (또는 사건의 경우의 수)
+export function rpmG8CasesAdditionRule(random) {
+  const totalCards = ri(random, 3, 5) * 10;
+  const m1 = ri(random, 3, 4);
+  let m2 = ri(random, 5, 7);
+  while (m2 % m1 === 0 || m1 % m2 === 0) m2++;
+
+  let countM1 = 0, countM2 = 0, countBoth = 0;
+  for (let i = 1; i <= totalCards; i++) {
+    if (i % m1 === 0) countM1++;
+    if (i % m2 === 0) countM2++;
+    if (i % m1 === 0 && i % m2 === 0) countBoth++;
+  }
+  const ans = countM1 + countM2 - countBoth;
+
+  const promptKo = `1부터 ${totalCards}까지의 자연수가 각각 적힌 ${totalCards}장의 카드 중에서 한 장을 뽑을 때, ${m1}의 배수 또는 ${m2}의 배수가 적힌 카드가 나오는 경우의 수를 구하시오.`;
+  const promptEn = `From ${totalCards} cards numbered 1 to ${totalCards}, one card is drawn at random. Find the number of outcomes where the card is a multiple of ${m1} or a multiple of ${m2}.`;
+
+  const choicesData = makeNumChoices(random, ans, (c) => `${c}가지`, (c) => `${c}`);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `${m1}의 배수는 ${countM1}개, ${m2}의 배수는 ${countM2}개이고 공배수는 ${countBoth}개입니다. 따라서 합의 법칙에 의해 ${countM1} + ${countM2} - ${countBoth} = ${ans}가지입니다.`,
+    explanationEn: `There are ${countM1} multiples of ${m1} and ${countM2} multiples of ${m2}, with ${countBoth} common multiples. Total = ${countM1} + ${countM2} - ${countBoth} = ${ans}.`,
+  };
+}
+
+// 4. [경우의 수 04] 곱의 법칙과 경로의 수
+export function rpmG8CasesMultiplicationRule(random) {
+  const routesAB = ri(random, 2, 4);
+  const routesBC = ri(random, 2, 4);
+  const hasDirectAC = ri(random, 0, 1) === 1;
+  const routesDirect = hasDirectAC ? ri(random, 1, 2) : 0;
+
+  const viaB = routesAB * routesBC;
+  const total = viaB + routesDirect;
+
+  const directKo = hasDirectAC ? ` 또한 A에서 C로 곧바로 가는 직통로는 ${routesDirect}가지가 있다.` : '';
+  const directEn = hasDirectAC ? ` There are also ${routesDirect} direct routes connecting A to C without passing through B.` : '';
+
+  const promptKo = `A 지점에서 B 지점으로 가는 길은 ${routesAB}가지이고, B 지점에서 C 지점으로 가는 길은 ${routesBC}가지이다.${directKo} A 지점에서 출발하여 C 지점으로 가는 모든 방법의 수를 구하시오.`;
+  const promptEn = `There are ${routesAB} paths from A to B, and ${routesBC} paths from B to C.${directEn} Find the total number of ways to travel from A to C.`;
+
+  const choicesData = makeNumChoices(random, total, (c) => `${c}가지`, (c) => `${c}`);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `B를 거쳐서 가는 길의 수는 곱의 법칙에 의해 ${routesAB} × ${routesBC} = ${viaB}가지입니다.${hasDirectAC ? ` 직통로 ${routesDirect}가지를 더하면 ${viaB} + ${routesDirect} = ${total}가지입니다.` : ` 따라서 총 ${total}가지입니다.`}`,
+    explanationEn: `Paths via B = ${routesAB} × ${routesBC} = ${viaB}.${hasDirectAC ? ` Adding direct routes gives ${viaB} + ${routesDirect} = ${total}.` : ` Total = ${total}.`}`,
+  };
+}
+
+// 5. [경우의 수 05] 동전과 주사위의 동시 시행
+export function rpmG8CasesSimultaneousTrials(random) {
+  const coins = ri(random, 2, 3);
+  const dice = ri(random, 1, 2);
+  const total = Math.pow(2, coins) * Math.pow(6, dice);
+
+  const promptKo = `서로 다른 동전 ${coins}개와 서로 다른 주사위 ${dice}개를 동시에 던질 때, 일어날 수 있는 모든 경우의 수를 구하시오.`;
+  const promptEn = `When tossing ${coins} distinguishable coins and rolling ${dice} distinguishable dice simultaneously, find the total number of possible outcomes.`;
+
+  const choicesData = makeNumChoices(random, total, (c) => `${c}가지`, (c) => `${c}`);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `동전 ${coins}개에서 일어나는 경우는 2^${coins} = ${Math.pow(2, coins)}가지이고, 주사위 ${dice}개에서 일어나는 경우는 6^${dice} = ${Math.pow(6, dice)}가지입니다. 곱의 법칙에 의해 ${Math.pow(2, coins)} × ${Math.pow(6, dice)} = ${total}가지입니다.`,
+    explanationEn: `Coins give 2^${coins} = ${Math.pow(2, coins)} outcomes, and dice give 6^${dice} = ${Math.pow(6, dice)}. By the product rule, ${Math.pow(2, coins)} × ${Math.pow(6, dice)} = ${total}.`,
+  };
+}
+
+// 6. [경우의 수 06] n명을 한 줄로 세우는 순열
+export function rpmG8CasesLineUpPermutation(random) {
+  const n = ri(random, 4, 6);
+  const mode = ri(random, 0, 1);
+  let ans, promptKo, promptEn, expKo, expEn;
+
+  if (mode === 0) {
+    const r = ri(random, 2, 3);
+    let p = 1;
+    for (let i = 0; i < r; i++) p *= (n - i);
+    ans = p;
+    promptKo = `${n}명의 학생 중에서 ${r}명을 뽑아 한 줄로 세우는 경우의 수를 구하시오.`;
+    promptEn = `Find the number of ways to choose ${r} students out of ${n} students and arrange them in a line.`;
+    expKo = `${n}명 중 첫 번째 자리에 ${n}명, 두 번째 자리에 ${n - 1}명${r === 3 ? `, 세 번째 자리에 ${n - 2}명` : ''}이 올 수 있으므로 ${p}가지입니다.`;
+    expEn = `Selecting and arranging ${r} students out of ${n} gives ${p} ways.`;
+  } else {
+    let fact = 1;
+    for (let i = 1; i <= n - 1; i++) fact *= i;
+    ans = fact;
+    promptKo = `A, B를 포함한 ${n}명의 학생을 한 줄로 세울 때, A가 맨 앞에 서는 경우의 수를 구하시오.`;
+    promptEn = `When arranging ${n} students including A in a line, find the number of ways where A stands at the very front.`;
+    expKo = `A를 맨 앞에 고정하고 나머지 ${n - 1}명을 줄 세우므로 (${n - 1})! = ${ans}가지입니다.`;
+    expEn = `Fixing A at the front leaves (${n - 1})! = ${ans} arrangements.`;
+  }
+
+  const choicesData = makeNumChoices(random, ans, (c) => `${c}가지`, (c) => `${c}`);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: expKo,
+    explanationEn: expEn,
+  };
+}
+
+// 7. [경우의 수 07] 이웃하여 줄을 서는 경우의 수
+export function rpmG8CasesAdjacentLineUp(random) {
+  const n = ri(random, 4, 6);
+  const adjCount = ri(random, 2, 3);
+  const blockTotal = n - adjCount + 1;
+  let factBlock = 1;
+  for (let i = 1; i <= blockTotal; i++) factBlock *= i;
+  let factInside = 1;
+  for (let i = 1; i <= adjCount; i++) factInside *= i;
+  const ans = factBlock * factInside;
+
+  const names = ['A', 'B', 'C', 'D', 'E', 'F'].slice(0, n);
+  const adjNames = names.slice(0, adjCount).join(', ');
+
+  const promptKo = `${names.join(', ')} ${n}명의 학생을 한 줄로 세울 때, ${adjNames}가 서로 이웃하여 서는 경우의 수를 구하시오.`;
+  const promptEn = `When arranging ${n} students (${names.join(', ')}) in a line, find the number of ways where ${adjNames} stand adjacent to each other.`;
+
+  const choicesData = makeNumChoices(random, ans, (c) => `${c}가지`, (c) => `${c}`);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `이웃하는 ${adjCount}명을 한 묶음으로 보면 ${blockTotal}명을 줄 세우는 것이므로 ${factBlock}가지입니다. 묶음 내부에서 자리를 바꾸는 ${factInside}가지를 곱하면 ${factBlock} × ${factInside} = ${ans}가지입니다.`,
+    explanationEn: `Treating adjacent students as a single block gives ${factBlock} arrangements, and internal order gives ${factInside} ways, totaling ${ans}.`,
+  };
+}
+
+// 8. [경우의 수 08] 자연수 만들기 (0을 포함하지 않는 경우)
+export function rpmG8CasesMakingNumbersNoZero(random) {
+  const totalDigits = ri(random, 4, 5);
+  const digits = [1, 2, 3, 4, 5].slice(0, totalDigits);
+  const mode = ri(random, 0, 1);
+
+  let ans, promptKo, promptEn, expKo, expEn;
+  if (mode === 0) {
+    const evenDigits = digits.filter(d => d % 2 === 0);
+    ans = evenDigits.length * (totalDigits - 1);
+    promptKo = `${digits.join(', ')}의 숫자가 각각 적힌 ${totalDigits}장의 카드 중에서 서로 다른 2장을 뽑아 만들 수 있는 두 자리 자연수 중 짝수의 개수를 구하시오.`;
+    promptEn = `From ${totalDigits} cards numbered ${digits.join(', ')}, two distinct cards are drawn to form a 2-digit integer. How many of these are even?`;
+    expKo = `일의 자리에 올 수 있는 짝수는 ${evenDigits.join(', ')}의 ${evenDigits.length}가지이고, 십의 자리에는 남은 ${totalDigits - 1}가지가 올 수 있으므로 ${totalDigits - 1} × ${evenDigits.length} = ${ans}개입니다.`;
+    expEn = `Units digit has ${evenDigits.length} even options, and tens has ${totalDigits - 1} options, giving ${ans} even numbers.`;
+  } else {
+    ans = totalDigits * (totalDigits - 1) * (totalDigits - 2);
+    promptKo = `${digits.join(', ')}의 숫자가 각각 적힌 ${totalDigits}장의 카드 중에서 서로 다른 3장을 뽑아 만들 수 있는 세 자리 자연수의 개수를 구하시오.`;
+    promptEn = `From ${totalDigits} cards numbered ${digits.join(', ')}, three distinct cards are chosen to form a 3-digit integer. Find the total count.`;
+    expKo = `백의 자리에 ${totalDigits}가지, 십의 자리에 ${totalDigits - 1}가지, 일의 자리에 ${totalDigits - 2}가지이므로 ${totalDigits} × ${totalDigits - 1} × ${totalDigits - 2} = ${ans}개입니다.`;
+    expEn = `Hundreds has ${totalDigits}, tens has ${totalDigits - 1}, and units has ${totalDigits - 2}, yielding ${ans} integers.`;
+  }
+
+  const choicesData = makeNumChoices(random, ans, (c) => `${c}개`, (c) => `${c}`);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: expKo,
+    explanationEn: expEn,
+  };
+}
+
+// 9. [경우의 수 09] 자연수 만들기 (0을 포함하는 경우)
+export function rpmG8CasesMakingNumbersWithZero(random) {
+  const maxD = ri(random, 4, 5);
+  const digits = [];
+  for (let i = 0; i <= maxD; i++) digits.push(i);
+  const totalCards = digits.length;
+  const mode = ri(random, 0, 1);
+  let ans, promptKo, promptEn, expKo, expEn;
+
+  if (mode === 0) {
+    const odds = digits.filter(d => d % 2 !== 0);
+    const tensChoices = maxD - 1;
+    ans = odds.length * tensChoices;
+    promptKo = `${digits.join(', ')}의 숫자가 각각 적힌 ${totalCards}장의 카드 중에서 서로 다른 2장을 뽑아 만들 수 있는 두 자리 자연수 중 홀수의 개수를 구하시오.`;
+    promptEn = `From ${totalCards} cards numbered ${digits.join(', ')}, two distinct cards are drawn to form a 2-digit integer. Find the number of odd integers.`;
+    expKo = `일의 자리에 올 수 있는 홀수는 ${odds.join(', ')}의 ${odds.length}가지입니다. 십의 자리에는 0과 일의 자리를 제외한 ${tensChoices}가지가 올 수 있으므로 ${tensChoices} × ${odds.length} = ${ans}개입니다.`;
+    expEn = `Units digit has ${odds.length} odd choices, and tens digit has ${tensChoices} choices (excluding 0 and units digit), giving ${ans} odd integers.`;
+  } else {
+    ans = maxD * maxD * (maxD - 1);
+    promptKo = `${digits.join(', ')}의 숫자가 각각 적힌 ${totalCards}장의 카드 중에서 서로 다른 3장을 뽑아 만들 수 있는 세 자리 자연수의 개수를 구하시오.`;
+    promptEn = `From ${totalCards} cards numbered ${digits.join(', ')}, three distinct cards are drawn to form a 3-digit integer. Find the total count.`;
+    expKo = `백의 자리에는 0을 제외한 ${maxD}가지, 십의 자리에는 0을 포함한 ${maxD}가지, 일의 자리에는 ${maxD - 1}가지이므로 ${maxD} × ${maxD} × ${maxD - 1} = ${ans}개입니다.`;
+    expEn = `Hundreds has ${maxD} choices (no 0), tens has ${maxD}, units has ${maxD - 1}, yielding ${ans} integers.`;
+  }
+
+  const choicesData = makeNumChoices(random, ans, (c) => `${c}개`, (c) => `${c}`);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: expKo,
+    explanationEn: expEn,
+  };
+}
+
+// 10. [경우의 수 10] 대표 뽑기 (자격이 다른 경우)
+export function rpmG8CasesDifferentRepresentatives(random) {
+  const n = ri(random, 5, 8);
+  const mode = ri(random, 0, 1);
+  let ans, promptKo, promptEn, expKo, expEn;
+
+  if (mode === 0) {
+    ans = n * (n - 1);
+    promptKo = `${n}명의 후보 중에서 회장 1명, 부회장 1명을 각각 선출하는 경우의 수를 구하시오.`;
+    promptEn = `From ${n} candidates, find the number of ways to elect 1 President and 1 Vice President.`;
+    expKo = `회장 후보 ${n}명, 부회장 후보 ${n - 1}명이므로 ${n} × ${n - 1} = ${ans}가지입니다.`;
+    expEn = `President has ${n} choices and Vice President has ${n - 1}, giving ${ans} ways.`;
+  } else {
+    ans = n * (n - 1) * (n - 2);
+    promptKo = `${n}명의 학생 중에서 반장, 부반장, 총무를 각각 1명씩 뽑는 경우의 수를 구하시오.`;
+    promptEn = `From ${n} students, find the number of ways to select 1 Class President, 1 Vice President, and 1 Treasurer.`;
+    expKo = `반장 ${n}명, 부반장 ${n - 1}명, 총무 ${n - 2}명이므로 ${n} × ${n - 1} × ${n - 2} = ${ans}가지입니다.`;
+    expEn = `Selecting 3 distinct roles gives ${n} × ${n - 1} × ${n - 2} = ${ans} ways.`;
+  }
+
+  const choicesData = makeNumChoices(random, ans, (c) => `${c}가지`, (c) => `${c}`);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: expKo,
+    explanationEn: expEn,
+  };
+}
+
+// 11. [경우의 수 11] 대표 뽑기 (자격이 같은 경우)
+export function rpmG8CasesSameRepresentatives(random) {
+  const n = ri(random, 5, 8);
+  const r = ri(random, 2, 3);
+  let ans, promptKo, promptEn, expKo, expEn;
+
+  if (r === 2) {
+    ans = (n * (n - 1)) / 2;
+    promptKo = `${n}명의 학생 중에서 대표 2명을 뽑는 경우의 수를 구하시오.`;
+    promptEn = `From ${n} students, find the number of ways to choose 2 representatives.`;
+    expKo = `자격이 같은 대표 2명이므로 순서와 관계없이 (${n} × ${n - 1}) / 2 = ${ans}가지입니다.`;
+    expEn = `Two equal representatives give (${n} × ${n - 1}) / 2 = ${ans} combinations.`;
+  } else {
+    ans = (n * (n - 1) * (n - 2)) / 6;
+    promptKo = `${n}명의 회원 중에서 동등한 자격의 대표 3명을 선출하는 경우의 수를 구하시오.`;
+    promptEn = `From ${n} members, find the number of ways to elect 3 equal representatives.`;
+    expKo = `자격이 같은 대표 3명이므로 (${n} × ${n - 1} × ${n - 2}) / 6 = ${ans}가지입니다.`;
+    expEn = `Three equal representatives give (${n} × ${n - 1} × ${n - 2}) / 6 = ${ans} combinations.`;
+  }
+
+  const choicesData = makeNumChoices(random, ans, (c) => `${c}가지`, (c) => `${c}`);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: expKo,
+    explanationEn: expEn,
+  };
+}
+
+// 12. [경우의 수 12] 점과 도형의 개수
+export function rpmG8CasesGeometryCombinations(random) {
+  const n = ri(random, 5, 7);
+  const mode = ri(random, 0, 1);
+  let ans, promptKo, promptEn, expKo, expEn;
+
+  if (mode === 0) {
+    ans = (n * (n - 1)) / 2;
+    promptKo = `원 위에 서로 다른 ${n}개의 점이 있다. 이 중 두 점을 연결하여 만들 수 있는 선분의 개수를 구하시오.`;
+    promptEn = `There are ${n} distinct points on a circle. Find the number of distinct line segments formed by connecting any two points.`;
+    expKo = `원 위의 어떤 세 점도 일직선 위에 있지 않으므로 선분의 개수는 (${n} × ${n - 1}) / 2 = ${ans}개입니다.`;
+    expEn = `Connecting any pair gives (${n} × ${n - 1}) / 2 = ${ans} line segments.`;
+  } else {
+    ans = (n * (n - 1) * (n - 2)) / 6;
+    promptKo = `원 위에 서로 다른 ${n}개의 점이 있다. 이 중 세 점을 꼭짓점으로 하여 만들 수 있는 삼각형의 개수를 구하시오.`;
+    promptEn = `There are ${n} distinct points on a circle. Find the number of distinct triangles formed using any three points as vertices.`;
+    expKo = `세 점을 택하면 하나의 삼각형이 결정되므로 (${n} × ${n - 1} × ${n - 2}) / 6 = ${ans}개입니다.`;
+    expEn = `Choosing any 3 points gives (${n} × ${n - 1} × ${n - 2}) / 6 = ${ans} triangles.`;
+  }
+
+  const choicesData = makeNumChoices(random, ans, (c) => `${c}개`, (c) => `${c}`);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: expKo,
+    explanationEn: expEn,
+  };
+}
+
+// 13. [경우의 수 13] 영역에 색을 칠하는 방법의 수
+export function rpmG8CasesColoringRegions(random) {
+  const numColors = ri(random, 4, 5);
+  const mode = ri(random, 0, 1);
+  let ans, promptKo, promptEn, expKo, expEn;
+
+  if (mode === 0) {
+    ans = numColors * (numColors - 1) * (numColors - 2);
+    promptKo = `서로 인접한 세 영역 A, B, C가 있다. 각 영역에 인접한 부분은 서로 다른 색이 되도록 ${numColors}가지 색 중 일부 또는 전부를 사용하여 칠하는 방법의 수를 구하시오. (A, B, C는 서로 모두 인접해 있음)`;
+    promptEn = `Three regions A, B, C are mutually adjacent. Find the number of ways to color them using ${numColors} colors so adjacent regions have different colors.`;
+    expKo = `A에 ${numColors}가지, B에 ${numColors - 1}가지, C에 ${numColors - 2}가지이므로 ${numColors} × ${numColors - 1} × ${numColors - 2} = ${ans}가지입니다.`;
+    expEn = `A has ${numColors}, B has ${numColors - 1}, C has ${numColors - 2}, giving ${ans} ways.`;
+  } else {
+    ans = numColors * (numColors - 1) * (numColors - 1) * (numColors - 1);
+    promptKo = `일렬로 연결된 4개의 영역 A, B, C, D가 있다. 이웃한 영역끼리는 서로 다른 색으로 칠할 때, ${numColors}가지 색을 사용하여 칠하는 방법의 수를 구하시오.`;
+    promptEn = `Four sequential regions A, B, C, D are arranged in a row. Find the number of ways to color them with ${numColors} colors such that neighboring regions differ.`;
+    expKo = `A에 ${numColors}가지, B에 ${numColors - 1}가지, C에 ${numColors - 1}가지, D에 ${numColors - 1}가지이므로 ${numColors} × (${numColors - 1})³ = ${ans}가지입니다.`;
+    expEn = `A has ${numColors}, B has ${numColors - 1}, C has ${numColors - 1}, D has ${numColors - 1}, giving ${ans} ways.`;
+  }
+
+  const choicesData = makeNumChoices(random, ans, (c) => `${c}가지`, (c) => `${c}`);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: expKo,
+    explanationEn: expEn,
+  };
+}
+
+// 14. [경우의 수 14] 최단 거리로 가는 길찾기
+export function rpmG8CasesGridShortestPath(random) {
+  const w = ri(random, 2, 3);
+  const h = ri(random, 2, 3);
+  function nCr(n, r) {
+    let num = 1, den = 1;
+    for (let i = 0; i < r; i++) {
+      num *= (n - i);
+      den *= (i + 1);
+    }
+    return Math.round(num / den);
+  }
+  const ans = nCr(w + h, w);
+
+  const promptKo = `가로 ${w}칸, 세로 ${h}칸의 바둑판 모양의 도로망이 있다. A 지점에서 B 지점까지 도로를 따라 최단 거리로 가는 방법의 수를 구하시오.`;
+  const promptEn = `Consider a rectangular grid network of width ${w} and height ${h}. Find the number of shortest paths from corner A to corner B.`;
+
+  const choicesData = makeNumChoices(random, ans, (c) => `${c}가지`, (c) => `${c}`);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `가로 ${w}칸, 세로 ${h}칸을 이동하는 최단 경로의 수는 (${w} + ${h})! / (${w}! × ${h}!) = ${ans}가지입니다.`,
+    explanationEn: `Traversing ${w} horizontal and ${h} vertical steps gives (${w} + ${h})! / (${w}! × ${h}!) = ${ans} shortest paths.`,
+  };
+}
+
+// 15. [단원 실전 다지기] 경우의 수 전 유형 종합
+export function rpmG8CasesAllTypesMixed(random) {
+  const sub = ri(random, 0, 4);
+  if (sub === 0) return rpmG8CasesDiceSumDiff(random);
+  if (sub === 1) return rpmG8CasesAdditionRule(random);
+  if (sub === 2) return rpmG8CasesAdjacentLineUp(random);
+  if (sub === 3) return rpmG8CasesMakingNumbersWithZero(random);
+  return rpmG8CasesSameRepresentatives(random);
+}
+
+// 16. [단원 최고수준] 경우의 수 실력 UP
+export function rpmG8CasesAdvancedSkillUp(random) {
+  const pairs = [];
+  for (let a = 1; a <= 6; a++) {
+    const b = 2 * a - 2;
+    if (b >= 1 && b <= 6) {
+      pairs.push(`(${a}, ${b})`);
+    }
+  }
+  const ans = pairs.length; // 3
+
+  const promptKo = `한 개의 주사위를 두 번 던져서 나오는 눈의 수를 차례대로 a, b라 하자. 연립방정식 \\begin{cases} ax + (b+2)y = 5 \\\\ 2x + 4y = 3 \\end{cases} 이 해를 갖지 않도록 하는 순서쌍 (a, b)의 개수를 구하시오.`;
+  const promptEn = `A fair die is rolled twice with outcomes a and b. Find the number of pairs (a, b) such that the linear system \\begin{cases} ax + (b+2)y = 5 \\\\ 2x + 4y = 3 \\end{cases} has no solution.`;
+
+  const choicesData = makeNumChoices(random, ans, (c) => `${c}개`, (c) => `${c}`);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `연립방정식이 해를 갖지 않으려면 계수의 비에서 a/2 = (b+2)/4 ≠ 5/3 이어야 합니다. 4a = 2(b+2) 에서 b = 2a - 2 입니다. 주사위 눈 1 ≤ a, b ≤ 6 에 대하여 가능한 순서쌍은 (2, 2), (3, 4), (4, 6)으로 총 ${ans}개입니다.`,
+    explanationEn: `For no solution, lines must be parallel: a/2 = (b+2)/4 ≠ 5/3. This yields b = 2a - 2. For 1 ≤ a, b ≤ 6, the valid pairs are (2, 2), (3, 4), and (4, 6), totaling ${ans} pairs.`,
+  };
+}
+
+
+// ============================================================================
+// Chapter 10 확률과 그 계산 (Probability & Calculation)
+// ============================================================================
+
+// 1. [확률 01] 확률의 기본 개념과 계산
+export function rpmG8ProbBasicDefinition(random) {
+  const red = ri(random, 3, 5);
+  const blue = ri(random, 4, 6);
+  const yellow = ri(random, 2, 4);
+  const total = red + blue + yellow;
+
+  const colorChoice = ri(random, 0, 2);
+  const colorName = ['빨간 공', '파란 공', '노란 공'][colorChoice];
+  const colorNameEn = ['red ball', 'blue ball', 'yellow ball'][colorChoice];
+  const numFav = [red, blue, yellow][colorChoice];
+
+  const fracStr = fmtFrac(numFav, total);
+
+  const promptKo = `주머니 속에 빨간 공 ${red}개, 파란 공 ${blue}개, 노란 공 ${yellow}개가 들어 있다. 이 주머니에서 임의로 한 개의 공을 꺼낼 때, ${colorName}이 나올 확률을 구하시오.`;
+  const promptEn = `A bag contains ${red} red balls, ${blue} blue balls, and ${yellow} yellow balls. If one ball is drawn at random, find the probability that it is a ${colorNameEn}.`;
+
+  const choicesData = makeFracChoices(random, numFav, total);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `모든 공의 개수는 ${red} + ${blue} + ${yellow} = ${total}개입니다. ${colorName}은 ${numFav}개이므로 확률은 ${numFav}/${total} = ${fracStr}입니다.`,
+    explanationEn: `Total balls = ${total}. Favorable = ${numFav}. Probability = ${numFav}/${total} = ${fracStr}.`,
+  };
+}
+
+// 2. [확률 02] 주사위와 일차방정식·부등식의 확률
+export function rpmG8ProbDiceEquations(random) {
+  const target = ri(random, 7, 10);
+  let count = 0;
+  const pairs = [];
+  for (let a = 1; a <= 6; a++) {
+    for (let b = 1; b <= 6; b++) {
+      if (2 * a + b === target) {
+        count++;
+        pairs.push(`(${a}, ${b})`);
+      }
+    }
+  }
+  const fracStr = fmtFrac(count, 36);
+
+  const promptKo = `서로 다른 두 개의 주사위를 동시에 던져서 나오는 눈의 수를 각각 a, b라 할 때, 2a + b = ${target}일 확률을 구하시오.`;
+  const promptEn = `When two fair 6-sided dice are rolled simultaneously with outcomes a and b, find the probability that 2a + b = ${target}.`;
+
+  const choicesData = makeFracChoices(random, count, 36);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `전체 경우의 수는 36가지입니다. 2a + b = ${target}을 만족하는 순서쌍은 ${pairs.join(', ')}의 ${count}가지이므로 확률은 ${count}/36 = ${fracStr}입니다.`,
+    explanationEn: `Total outcomes = 36. Favorable pairs are ${pairs.join(', ')} (${count} outcomes). Probability = ${fracStr}.`,
+  };
+}
+
+// 3. [확률 03] 확률의 성질과 어떤 사건이 일어나지 않을 확률
+export function rpmG8ProbPropertiesAndComplement(random) {
+  const total = ri(random, 15, 25);
+  const favorable = ri(random, 3, 7);
+  const pStr = fmtFrac(favorable, total);
+  const notFav = total - favorable;
+  const ansStr = fmtFrac(notFav, total);
+
+  const promptKo = `어느 시험에 응시한 학생 중 합격할 확률이 ${pStr}이라고 한다. 이 시험에 응시한 학생 한 명이 불합격할 확률을 구하시오.`;
+  const promptEn = `The probability that a candidate passes an examination is ${pStr}. Find the probability that a randomly chosen candidate fails.`;
+
+  const choicesData = makeFracChoices(random, notFav, total);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `합격할 확률이 ${pStr}이므로 여사건인 불합격할 확률은 1 - ${pStr} = ${ansStr}입니다.`,
+    explanationEn: `Complement probability = 1 - ${pStr} = ${ansStr}.`,
+  };
+}
+
+// 4. [확률 04] '적어도 하나는 ~일' 여사건 확률
+export function rpmG8ProbAtLeastOne(random) {
+  const numCoins = ri(random, 3, 4);
+  const total = Math.pow(2, numCoins);
+  const atLeastOne = total - 1;
+  const ansStr = fmtFrac(atLeastOne, total);
+
+  const promptKo = `서로 다른 동전 ${numCoins}개를 동시에 던질 때, 적어도 한 개는 앞면이 나올 확률을 구하시오.`;
+  const promptEn = `When ${numCoins} distinct coins are tossed simultaneously, find the probability of getting at least one head.`;
+
+  const choicesData = makeFracChoices(random, atLeastOne, total);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `모든 경우는 2^${numCoins} = ${total}가지이고, 모두 뒷면이 나오는 경우는 1가지입니다. 따라서 1 - 1/${total} = ${ansStr}입니다.`,
+    explanationEn: `Total outcomes = ${total}. Complement (all tails) = 1. Probability = 1 - 1/${total} = ${ansStr}.`,
+  };
+}
+
+// 5. [확률 05] 확률의 합의 법칙 (사건 A 또는 사건 B가 일어날 확률)
+export function rpmG8ProbAdditionRule(random) {
+  const totalCards = ri(random, 20, 30);
+  const m1 = 4;
+  const m2 = 9;
+  let c1 = 0, c2 = 0;
+  for (let i = 1; i <= totalCards; i++) {
+    if (i % m1 === 0) c1++;
+    if (i % m2 === 0) c2++;
+  }
+  const fav = c1 + c2;
+  const ansStr = fmtFrac(fav, totalCards);
+
+  const promptKo = `1부터 ${totalCards}까지의 자연수가 각각 적힌 ${totalCards}장의 카드 중에서 임의로 한 장을 뽑을 때, ${m1}의 배수 또는 ${m2}의 배수가 적힌 카드가 나올 확률을 구하시오.`;
+  const promptEn = `From ${totalCards} cards numbered 1 to ${totalCards}, one card is selected. Find the probability that the number is a multiple of ${m1} or ${m2}.`;
+
+  const choicesData = makeFracChoices(random, fav, totalCards);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `${m1}의 배수는 ${c1}가지, ${m2}의 배수는 ${c2}가지이고 공배수는 없습니다. 합의 법칙에 의해 ${c1}/${totalCards} + ${c2}/${totalCards} = ${ansStr}입니다.`,
+    explanationEn: `Multiples of ${m1} = ${c1}, multiples of ${m2} = ${c2}. Mutually exclusive: ${c1}/${totalCards} + ${c2}/${totalCards} = ${ansStr}.`,
+  };
+}
+
+// 6. [확률 06] 확률의 곱의 법칙 (두 사건이 동시에 일어날 확률)
+export function rpmG8ProbMultiplicationRule(random) {
+  const coinSide = ri(random, 0, 1) === 0 ? '앞면' : '뒷면';
+  const coinSideEn = coinSide === '앞면' ? 'Heads' : 'Tails';
+  const dieType = ri(random, 0, 1) === 0 ? '소수' : '짝수';
+  const dieTypeEn = dieType === '소수' ? 'a prime number (2, 3, 5)' : 'an even number (2, 4, 6)';
+
+  const promptKo = `동전 1개와 주사위 1개를 동시에 던질 때, 동전은 ${coinSide}이 나오고 주사위는 ${dieType}의 눈이 나올 확률을 구하시오.`;
+  const promptEn = `When a coin and a standard 6-sided die are tossed simultaneously, find the probability that the coin lands on ${coinSideEn} and the die shows ${dieTypeEn}.`;
+
+  const choicesData = makeFracChoices(random, 1, 4);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `동전에서 ${coinSide}이 나올 확률은 1/2이고, 주사위에서 ${dieType}의 눈이 나올 확률은 3/6 = 1/2입니다. 곱의 법칙에 의해 1/2 × 1/2 = 1/4입니다.`,
+    explanationEn: `Coin probability = 1/2, die probability = 1/2. Combined = 1/2 × 1/2 = 1/4.`,
+  };
+}
+
+// 7. [확률 07] 독립시행의 응용 (자유투 및 명중률)
+export function rpmG8ProbIndependentEventsApps(random) {
+  const denA = ri(random, 3, 5);
+  const numA = denA - 1;
+  const denB = ri(random, 4, 5);
+  const numB = 2;
+
+  const numTotal = numA * (denB - numB) + (denA - numA) * numB;
+  const denTotal = denA * denB;
+  const ansStr = fmtFrac(numTotal, denTotal);
+
+  const promptKo = `농구 선수 A, B의 자유투 성공률이 각각 ${numA}/${denA}, ${numB}/${denB}라고 한다. 두 선수가 각각 자유투를 한 번씩 던질 때, 한 명만 성공할 확률을 구하시오.`;
+  const promptEn = `Two basketball players A and B have success rates of ${numA}/${denA} and ${numB}/${denB}. If each takes one shot, find the probability that exactly one succeeds.`;
+
+  const choicesData = makeFracChoices(random, numTotal, denTotal);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `A 성공 B 실패: (${numA}/${denA}) × (${denB - numB}/${denB}) = ${numA * (denB - numB)}/${denTotal}. A 실패 B 성공: (${denA - numA}/${denA}) × (${numB}/${denB}) = ${(denA - numA) * numB}/${denTotal}. 합하면 ${ansStr}입니다.`,
+    explanationEn: `(A hits, B misses) + (A misses, B hits) = ${ansStr}.`,
+  };
+}
+
+// 8. [확률 08] 연속하여 뽑는 확률 (꺼낸 것을 다시 넣는 경우: 복원추출)
+export function rpmG8ProbDrawingWithReplacement(random) {
+  const red = ri(random, 3, 5);
+  const white = ri(random, 4, 6);
+  const total = red + white;
+
+  const num = red * red;
+  const den = total * total;
+  const ansStr = fmtFrac(num, den);
+
+  const promptKo = `주머니 속에 빨간 구슬 ${red}개, 흰 구슬 ${white}개가 들어 있다. 이 주머니에서 구슬을 한 개 꺼내어 색을 확인하고 다시 넣은 후, 다시 한 개의 구슬을 꺼낼 때 두 개 모두 빨간 구슬일 확률을 구하시오.`;
+  const promptEn = `A bag contains ${red} red and ${white} white marbles. A marble is drawn, recorded, and replaced. Then a second marble is drawn. Find the probability that both are red.`;
+
+  const choicesData = makeFracChoices(random, num, den);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `구슬을 다시 넣으므로 각 시행은 독립이며 빨간 구슬이 나올 확률은 각각 ${red}/${total}입니다. 따라서 (${red}/${total}) × (${red}/${total}) = ${ansStr}입니다.`,
+    explanationEn: `With replacement, each draw is independent with P(red) = ${red}/${total}. Combined P = (${red}/${total})² = ${ansStr}.`,
+  };
+}
+
+// 9. [확률 09] 연속하여 뽑는 확률 (꺼낸 것을 다시 넣지 않는 경우: 비복원추출)
+export function rpmG8ProbDrawingWithoutReplacement(random) {
+  const red = ri(random, 3, 5);
+  const blue = ri(random, 4, 6);
+  const total = red + blue;
+
+  const num = red * (red - 1) + blue * (blue - 1);
+  const den = total * (total - 1);
+  const ansStr = fmtFrac(num, den);
+
+  const promptKo = `상자 속에 빨간 공 ${red}개와 파란 공 ${blue}개가 들어 있다. 이 상자에서 공을 연속하여 2개 꺼낼 때, 두 공이 서로 같은 색일 확률을 구하시오. (단, 꺼낸 공은 다시 넣지 않는다.)`;
+  const promptEn = `A box contains ${red} red balls and ${blue} blue balls. Two balls are drawn sequentially without replacement. Find the probability that both balls are the same color.`;
+
+  const choicesData = makeFracChoices(random, num, den);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `모두 빨간 공: (${red}/${total}) × (${red - 1}/${total - 1}) = ${red * (red - 1)}/${den}. 모두 파란 공: (${blue}/${total}) × (${blue - 1}/${total - 1}) = ${blue * (blue - 1)}/${den}. 합하면 ${ansStr}입니다.`,
+    explanationEn: `P(both red) + P(both blue) = ${num}/${den} = ${ansStr}.`,
+  };
+}
+
+// 10. [확률 10] 적어도 한 명의 명중/합격 및 약속 확률
+export function rpmG8ProbTargetAndMeeting(random) {
+  const ansStr = '23/24';
+
+  const promptKo = `사격 선수 A, B, C의 명중률이 각각 1/2, 2/3, 3/4이라고 한다. 세 사람이 동시에 한 표적을 향해 한 발씩 쏘았을 때, 표적이 총에 맞을 확률을 구하시오.`;
+  const promptEn = `Three sharpshooters A, B, and C have accuracies of 1/2, 2/3, and 3/4. If all three fire one shot simultaneously, find the probability that the target is hit.`;
+
+  const choicesData = makeFracChoices(random, 23, 24);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `표적이 맞을 확률의 여사건은 세 사람 모두 빗맞힐 확률 (1 - 1/2)(1 - 2/3)(1 - 3/4) = 1/24 입니다. 따라서 구하는 확률은 1 - 1/24 = 23/24입니다.`,
+    explanationEn: `Complement (all miss) = (1/2)(1/3)(1/4) = 1/24. P(hit) = 1 - 1/24 = 23/24.`,
+  };
+}
+
+// 11. [확률 11] 가위바위보 게임과 승패 확률
+export function rpmG8ProbRockPaperScissors(random) {
+  const mode = ri(random, 0, 1);
+  let promptKo, promptEn, expKo, expEn;
+
+  if (mode === 0) {
+    promptKo = `두 사람 A, B가 가위바위보를 한 번 할 때, 서로 비길 확률을 구하시오.`;
+    promptEn = `When two players A and B play one round of Rock-Paper-Scissors, find the probability of a tie.`;
+    expKo = `전체 경우 9가지 중 비기는 경우는 (가위, 가위), (바위, 바위), (보, 보)의 3가지이므로 3/9 = 1/3입니다.`;
+    expEn = `Total outcomes = 9. Ties = 3. P(tie) = 3/9 = 1/3.`;
+  } else {
+    promptKo = `세 사람 A, B, C가 가위바위보를 한 번 할 때, 승부가 나지 않고 서로 비길 확률을 구하시오.`;
+    promptEn = `When three players A, B, and C play one round of Rock-Paper-Scissors, find the probability that the round ends in a tie.`;
+    expKo = `전체 27가지 중 모두 같은 것을 내는 3가지와 모두 다른 것을 내는 6가지를 합해 9가지이므로 9/27 = 1/3입니다.`;
+    expEn = `Total = 27. Tie outcomes = 3 (same) + 6 (distinct) = 9. P(tie) = 9/27 = 1/3.`;
+  }
+
+  const choicesData = makeFracChoices(random, 1, 3);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: expKo,
+    explanationEn: expEn,
+  };
+}
+
+// 12. [확률 12] 도형에서의 확률과 점의 이동
+export function rpmG8ProbGeometricAndPointMotion(random) {
+  let count = 0;
+  for (let a = 1; a <= 6; a++) {
+    for (let b = 1; b <= 6; b++) {
+      const sum = a + b;
+      if (sum === 2 || sum === 6 || sum === 10) count++;
+    }
+  }
+  const ansStr = fmtFrac(count, 36);
+
+  const promptKo = `정사각형 ABCD의 꼭짓점 A에 점 P가 있다. 주사위 1개를 두 번 던져서 나온 눈의 수의 합만큼 시계 반대 방향으로 점 P를 꼭짓점을 따라 이동시킬 때, 점 P가 꼭짓점 C에 멈출 확률을 구하시오. (A → B → C → D 순서)`;
+  const promptEn = `A token P is located at vertex A of square ABCD. A die is rolled twice, and P moves counterclockwise by the sum of rolls. Find the probability that P ends at vertex C.`;
+
+  const choicesData = makeFracChoices(random, count, 36);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `꼭짓점 C에 도착하려면 이동 거리가 2, 6, 10 중 하나이어야 합니다. 눈의 합이 2인 경우 1가지, 6인 경우 5가지, 10인 경우 3가지로 총 9가지이므로 9/36 = 1/4입니다.`,
+    explanationEn: `Arriving at C requires a sum of 2, 6, or 10. Favorable outcomes = 1 + 5 + 3 = 9. P = 9/36 = 1/4.`,
+  };
+}
+
+// 13. [단원 실전 다지기] 확률과 그 계산 전 유형 종합
+export function rpmG8ProbAllTypesMixed(random) {
+  const sub = ri(random, 0, 4);
+  if (sub === 0) return rpmG8ProbBasicDefinition(random);
+  if (sub === 1) return rpmG8ProbDiceEquations(random);
+  if (sub === 2) return rpmG8ProbAtLeastOne(random);
+  if (sub === 3) return rpmG8ProbIndependentEventsApps(random);
+  return rpmG8ProbDrawingWithoutReplacement(random);
+}
+
+// 14. [단원 최고수준] 확률과 그 계산 실력 UP
+export function rpmG8ProbAdvancedSkillUp(random) {
+  const promptKo = `2부터 10까지의 자연수 중에서 임의로 한 개를 택하여 분모 n으로 할 때, 분수 7/n이 순환소수가 될 확률을 구하시오.`;
+  const promptEn = `An integer n is chosen uniformly at random from {2, 3, 4, 5, 6, 7, 8, 9, 10}. Find the probability that the fraction 7/n is a repeating decimal.`;
+
+  const choicesData = makeFracChoices(random, 1, 3);
+
+  return {
+    prompt: promptKo,
+    promptEn,
+    kind: 'choice',
+    choicesKo: choicesData.choicesKo,
+    choicesEn: choicesData.choicesEn,
+    answer: choicesData.answer,
+    explanation: `2부터 10까지 총 9개입니다. 유한소수가 되는 n은 2, 4, 5, 7(7/7=1), 8, 10의 6개이므로, 순환소수가 되는 n은 3, 6, 9의 3개입니다. 따라서 구하는 확률은 3/9 = 1/3입니다.`,
+    explanationEn: `Total integers = 9. Terminating values = {2, 4, 5, 7, 8, 10} (6 values). Repeating = {3, 6, 9} (3 values). Probability = 3/9 = 1/3.`,
+  };
+}
+
+
+// ============================================================================
+// Phase 5 Capstone: 중2-2 전 범위 최종 실전 총괄 모의고사
+// ============================================================================
+
+export function rpmGrade8SemesterTwoFinalExam(random) {
+  const pickVal = ri(random, 1, 10);
+  switch (pickVal) {
+    case 1:
+      return rpmG8CasesDiceSumDiff(random);
+    case 2:
+      return rpmG8CasesCoinsPayment(random);
+    case 3:
+      return rpmG8CasesAdjacentLineUp(random);
+    case 4:
+      return rpmG8CasesMakingNumbersWithZero(random);
+    case 5:
+      return rpmG8CasesSameRepresentatives(random);
+    case 6:
+      return rpmG8ProbBasicDefinition(random);
+    case 7:
+      return rpmG8ProbDiceEquations(random);
+    case 8:
+      return rpmG8ProbAtLeastOne(random);
+    case 9:
+      return rpmG8ProbIndependentEventsApps(random);
+    case 10:
+    default:
+      return rpmG8ProbDrawingWithoutReplacement(random);
+  }
+}
+
+
 export const RPM_APPLIED_GENERATORS = {
   // 01 소인수분해 RPM 세부 유형 (RPM 1-1 Pages 10~15)
   'rpm-prime-prop-closest': rpmPrimePropClosest,
@@ -17147,7 +18162,50 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-g8-pythagorean-orthogonal-quad': rpmG8PythagoreanOrthogonalQuad,
   'rpm-g8-pythagorean-semicircle-hippocrates': rpmG8PythagoreanSemicircleHippocrates,
   'rpm-g8-pythagorean-all-types-mixed': rpmG8PythagoreanAllTypesMixed,
-  'rpm-g8-pythagorean-advanced-skill-up': rpmG8PythagoreanAdvancedSkillUp,
+    'rpm-g8-pythagorean-advanced-skill-up': rpmG8PythagoreanAdvancedSkillUp,
+
+  // -------------------------------------------------------------
+  // [중2-2] 09 경우의 수 세부 응용 유형 (RPM 2-2 p.116~125, 155~156)
+  // -------------------------------------------------------------
+  'rpm-g8-cases-dice-sum-diff': rpmG8CasesDiceSumDiff,
+  'rpm-g8-cases-coins-payment': rpmG8CasesCoinsPayment,
+  'rpm-g8-cases-addition-rule': rpmG8CasesAdditionRule,
+  'rpm-g8-cases-multiplication-rule': rpmG8CasesMultiplicationRule,
+  'rpm-g8-cases-simultaneous-trials': rpmG8CasesSimultaneousTrials,
+  'rpm-g8-cases-line-up-permutation': rpmG8CasesLineUpPermutation,
+  'rpm-g8-cases-adjacent-line-up': rpmG8CasesAdjacentLineUp,
+  'rpm-g8-cases-making-numbers-no-zero': rpmG8CasesMakingNumbersNoZero,
+  'rpm-g8-cases-making-numbers-with-zero': rpmG8CasesMakingNumbersWithZero,
+  'rpm-g8-cases-different-representatives': rpmG8CasesDifferentRepresentatives,
+  'rpm-g8-cases-same-representatives': rpmG8CasesSameRepresentatives,
+  'rpm-g8-cases-geometry-combinations': rpmG8CasesGeometryCombinations,
+  'rpm-g8-cases-coloring-regions': rpmG8CasesColoringRegions,
+  'rpm-g8-cases-grid-shortest-path': rpmG8CasesGridShortestPath,
+  'rpm-g8-cases-all-types-mixed': rpmG8CasesAllTypesMixed,
+  'rpm-g8-cases-advanced-skill-up': rpmG8CasesAdvancedSkillUp,
+
+  // -------------------------------------------------------------
+  // [중2-2] 10 확률과 그 계산 세부 응용 유형 (RPM 2-2 p.130~139, 157~158)
+  // -------------------------------------------------------------
+  'rpm-g8-prob-basic-definition': rpmG8ProbBasicDefinition,
+  'rpm-g8-prob-dice-equations': rpmG8ProbDiceEquations,
+  'rpm-g8-prob-properties-and-complement': rpmG8ProbPropertiesAndComplement,
+  'rpm-g8-prob-at-least-one': rpmG8ProbAtLeastOne,
+  'rpm-g8-prob-addition-rule': rpmG8ProbAdditionRule,
+  'rpm-g8-prob-multiplication-rule': rpmG8ProbMultiplicationRule,
+  'rpm-g8-prob-independent-events-apps': rpmG8ProbIndependentEventsApps,
+  'rpm-g8-prob-drawing-with-replacement': rpmG8ProbDrawingWithReplacement,
+  'rpm-g8-prob-drawing-without-replacement': rpmG8ProbDrawingWithoutReplacement,
+  'rpm-g8-prob-target-and-meeting': rpmG8ProbTargetAndMeeting,
+  'rpm-g8-prob-rock-paper-scissors': rpmG8ProbRockPaperScissors,
+  'rpm-g8-prob-geometric-and-point-motion': rpmG8ProbGeometricAndPointMotion,
+  'rpm-g8-prob-all-types-mixed': rpmG8ProbAllTypesMixed,
+  'rpm-g8-prob-advanced-skill-up': rpmG8ProbAdvancedSkillUp,
+
+  // -------------------------------------------------------------
+  // [중2-2 총괄 모의고사] Capstone Final Exam
+  // -------------------------------------------------------------
+  'rpm-grade8-semester-two-final-exam': rpmGrade8SemesterTwoFinalExam,
 
 
 

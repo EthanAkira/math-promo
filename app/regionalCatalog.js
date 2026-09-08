@@ -508,6 +508,49 @@ const zhHK = {
   'rpm-g8-pythagorean-all-types-mixed': '畢氏定理全題型實戰綜合複習',
   'rpm-g8-pythagorean-advanced-skill-up': '畢氏定理最高難度實力UP進階題（摺紙與畢氏方程，RPM p.154）',
 
+  // -------------------------------------------------------------
+  // RPM [중2-2] 09 경우의 수 (排列與組合 / 計數原理)
+  // -------------------------------------------------------------
+  'rpm-g8-cases-dice-sum-diff': '擲兩顆骰子點數之和與差的情況總數計算',
+  'rpm-g8-cases-coins-payment': '利用不同面額硬幣支付指定金額之方法數',
+  'rpm-g8-cases-addition-rule': '加法原理與倍數條件情況數計算（互斥事件）',
+  'rpm-g8-cases-multiplication-rule': '乘法原理與分步路徑總數計算（經由中間點）',
+  'rpm-g8-cases-simultaneous-trials': '硬幣與骰子同時擲出之所有可能情況數',
+  'rpm-g8-cases-line-up-permutation': 'n人選r人排成一列之排列數與固定位置問題',
+  'rpm-g8-cases-adjacent-line-up': '相鄰元素排隊問題（綁定法與內部交換）',
+  'rpm-g8-cases-making-numbers-no-zero': '不含0之數字卡組合成二位或三位整數個數',
+  'rpm-g8-cases-making-numbers-with-zero': '含0之數字卡組成整數問題（首位不可為0）',
+  'rpm-g8-cases-different-representatives': '選出不同職位代表之排列計算（如會長、副會長）',
+  'rpm-g8-cases-same-representatives': '選出同等資格代表之組合計算（n(n-1)/2等）',
+  'rpm-g8-cases-geometry-combinations': '圓周上的點連成線段與三角形之個數計算',
+  'rpm-g8-cases-coloring-regions': '地圖區域著色問題（相鄰區域塗不同顏色）',
+  'rpm-g8-cases-grid-shortest-path': '棋盤道路網捷徑走法總數計算（加法原理）',
+  'rpm-g8-cases-all-types-mixed': '計數原理與情況總數全題型實戰綜合複習',
+  'rpm-g8-cases-advanced-skill-up': '情況總數最高難度實力UP進階題（二元一次方程無解之骰子點數序對）',
+
+  // -------------------------------------------------------------
+  // RPM [중2-2] 10 확률과 그 계산 (機率及其計算)
+  // -------------------------------------------------------------
+  'rpm-g8-prob-basic-definition': '古典機率基本定義與求法（有利情況數除以總情況數）',
+  'rpm-g8-prob-dice-equations': '擲骰子結果滿足二元一次方程 ax + by = c 之機率',
+  'rpm-g8-prob-properties-and-complement': '機率基本範圍性質與對立事件（餘事件）機率 1 - p',
+  'rpm-g8-prob-at-least-one': '「至少有一個」對立事件反向求機率方法',
+  'rpm-g8-prob-addition-rule': '機率加法原理（互斥事件或情況之機率和）',
+  'rpm-g8-prob-multiplication-rule': '機率乘法原理（相互獨立事件同時發生之機率積）',
+  'rpm-g8-prob-independent-events-apps': '獨立試驗複合應用：罰球或射擊恰有一人成功之機率',
+  'rpm-g8-prob-drawing-with-replacement': '連續抽樣機率（放回抽樣：每次試驗互相獨立）',
+  'rpm-g8-prob-drawing-without-replacement': '連續抽樣機率（不放回抽樣：總數遞減）',
+  'rpm-g8-prob-target-and-meeting': '多人射擊至少一人命中目標與約定相遇之機率',
+  'rpm-g8-prob-rock-paper-scissors': '猜拳遊戲勝負與平手（和局）機率計算',
+  'rpm-g8-prob-geometric-and-point-motion': '幾何機率與沿正方形頂點依點數移動停靠頂點機率',
+  'rpm-g8-prob-all-types-mixed': '機率及其計算全題型實戰綜合複習',
+  'rpm-g8-prob-advanced-skill-up': '機率最高難度實力UP進階題（分數化為循環小數之機率）',
+
+  // -------------------------------------------------------------
+  // [중2-2 총괄 모의고사] Capstone Final Exam
+  // -------------------------------------------------------------
+  'rpm-grade8-semester-two-final-exam': '中學二年級第二學期（國二下）全範圍實戰總結測驗（RPM 2-2 全書總複習）',
+
 
 
 
