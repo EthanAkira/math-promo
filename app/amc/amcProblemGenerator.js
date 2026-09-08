@@ -1952,6 +1952,270 @@ export const GENERATORS = {
 
     return { question, choices, correctIdx, explanation };
   },
+
+  // -----------------------------------------------------------------------
+  // COMPLEX NUMBERS (The Essential Guide to Algebra 1, Topic 9: Complex Number)
+  // -----------------------------------------------------------------------
+  'complex-numbers': (lang) => {
+    const variant = pickRandom(['powers-of-i', 'real-product', 'expand-product']);
+
+    if (variant === 'powers-of-i') {
+      const n = pickRandom([randInt(50, 300), randInt(2000, 2030)]);
+      const cycle = ['1', 'i', '-1', '-i'];
+      const ans = cycle[n % 4];
+      const choices = ['1', '-1', 'i', '-i', '0'];
+      for (let idx = choices.length - 1; idx > 0; idx -= 1) {
+        const j = Math.floor(Math.random() * (idx + 1));
+        [choices[idx], choices[j]] = [choices[j], choices[idx]];
+      }
+      const correctIdx = choices.indexOf(ans);
+
+      const question = lang === 'ko'
+        ? `$i^{${n}}$의 값을 구하세요. (단, $i=\\sqrt{-1}$)`
+        : `Find the value of $i^{${n}}$. (Here $i = \\sqrt{-1}$.)`;
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 1 Topic 9.1 거듭제곱의 주기성]**\n\n$i$의 거듭제곱은 $i^1=i,\\ i^2=-1,\\ i^3=-i,\\ i^4=1$을 주기로 4번마다 반복됩니다. $${n} = 4\\times${Math.floor(n / 4)} + ${n % 4}$이므로,\n\n$$i^{${n}} = i^{${n % 4}} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Algebra 1 Topic 9.1 Periodicity of Powers of i]**\n\nPowers of $i$ repeat every 4 terms: $i^1=i,\\ i^2=-1,\\ i^3=-i,\\ i^4=1$. Since $${n} = 4\\times${Math.floor(n / 4)} + ${n % 4}$,\n\n$$i^{${n}} = i^{${n % 4}} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'real-product') {
+      const a = pickRandom([2, 3, 4, 5, 6]);
+      const A = pickRandom([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]);
+      const c = -a * A;
+
+      const { choices, correctIdx } = buildChoices(A, (i) => {
+        if (i === 1) return -A;
+        if (i === 2) return a - A;
+        if (i === 3) return A + a;
+        return A + (i % 2 === 0 ? i : -i);
+      });
+
+      const question = lang === 'ko'
+        ? `$A$가 실수이고, 곱 $(${a}+i)(${c}+Ai)$가 실수일 때, $A$의 값을 구하세요.`
+        : `Suppose $A$ is a real number, and the product $(${a}+i)(${c}+Ai)$ is a real number. Find $A$.`;
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 1 Topic 9.2 복소수의 곱셈]**\n\n$(${a}+i)(${c}+Ai) = (${a}\\times${c} - A) + (${a}A + ${c})i$이고, 이 값이 실수이려면 허수부가 $0$이어야 합니다:\n\n$$${a}A + ${c} = 0 \\implies A = ${A}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${A})** 입니다.`
+        : `**[The Essential Guide to Algebra 1 Topic 9.2 Multiplying Complex Numbers]**\n\n$(${a}+i)(${c}+Ai) = (${a}\\times${c} - A) + (${a}A + ${c})i$, and for this to be real, the imaginary part must vanish:\n\n$$${a}A + ${c} = 0 \\implies A = ${A}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${A})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // expand-product
+    const p = randInt(-6, 6) || 2;
+    const q = randInt(-6, 6) || 3;
+    const r = randInt(-6, 6) || -2;
+    const s = randInt(-6, 6) || 4;
+    const re = p * r - q * s;
+    const im = p * s + q * r;
+    const fmt = (x, y) => {
+      if (y === 0) return `${x}`;
+      const sign = y > 0 ? '+' : '-';
+      const yAbs = Math.abs(y);
+      const yTerm = yAbs === 1 ? 'i' : `${yAbs}i`;
+      return `${x} ${sign} ${yTerm}`;
+    };
+    const ans = fmt(re, im);
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return fmt(p * r + q * s, im);
+      if (i === 2) return fmt(re, p * s - q * r);
+      if (i === 3) return fmt(re + q * s * 2, im);
+      return fmt(re + (i - 3), im - (i - 3));
+    });
+
+    const p1 = fmt(p, q);
+    const p2 = fmt(r, s);
+    const question = lang === 'ko'
+      ? `다음 곱을 $a+bi$ 꼴로 나타내세요: $(${p1})(${p2})$`
+      : `Expand the following product into the form $a+bi$: $(${p1})(${p2})$`;
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 1 Topic 9.2 복소수의 곱셈]**\n\n분배법칙을 적용하고 $i^2=-1$을 사용합니다:\n\n$$(${p1})(${p2}) = (${p}\\times${r} - ${q}\\times${s}) + (${p}\\times${s} + ${q}\\times${r})i = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+      : `**[The Essential Guide to Algebra 1 Topic 9.2 Multiplying Complex Numbers]**\n\nDistribute and use $i^2=-1$:\n\n$$(${p1})(${p2}) = (${p}\\times${r} - ${q}\\times${s}) + (${p}\\times${s} + ${q}\\times${r})i = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // FUNCTION PROPERTIES (The Essential Guide to Algebra 1, Topic 12: Functions)
+  // -----------------------------------------------------------------------
+  'function-properties': (lang) => {
+    const variant = pickRandom(['composition', 'arithmetic-combo', 'solve-for-input']);
+
+    if (variant === 'composition') {
+      const a = pickRandom([2, 3, -2, -3, 4]);
+      const b = randInt(-6, 6);
+      const c = randInt(-6, 6);
+      const n = randInt(-4, 4);
+      const gVal = n * n + c;
+      const ans = a * gVal + b;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) { const fn = a * n + b; return fn * fn + c; }
+        if (i === 2) return a * (n + c) + b;
+        if (i === 3) return a * gVal - b;
+        return ans + randInt(2, 8) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? `$f(x) = ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}$이고 $g(x) = x^2 ${c >= 0 ? '+' : '-'} ${Math.abs(c)}$일 때, $f(g(${n}))$의 값을 구하세요.`
+        : `Let $f(x) = ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}$ and $g(x) = x^2 ${c >= 0 ? '+' : '-'} ${Math.abs(c)}$. Find $f(g(${n}))$.`;
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 1 Topic 12.3 합성함수]**\n\n먼저 안쪽 함수를 계산합니다: $g(${n}) = (${n})^2 ${c >= 0 ? '+' : '-'} ${Math.abs(c)} = ${gVal}$.\n\n이제 그 결과를 $f$에 대입합니다:\n\n$$f(g(${n})) = f(${gVal}) = ${a}\\times${gVal} ${b >= 0 ? '+' : '-'} ${Math.abs(b)} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Algebra 1 Topic 12.3 Composition of Functions]**\n\nFirst evaluate the inner function: $g(${n}) = (${n})^2 ${c >= 0 ? '+' : '-'} ${Math.abs(c)} = ${gVal}$.\n\nNow substitute into $f$:\n\n$$f(g(${n})) = f(${gVal}) = ${a}\\times${gVal} ${b >= 0 ? '+' : '-'} ${Math.abs(b)} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'arithmetic-combo') {
+      const a = randInt(-5, 5) || 2;
+      const b = randInt(-6, 6);
+      const c = randInt(-5, 5) || 3;
+      const d = randInt(-6, 6);
+      const n = randInt(-5, 5);
+      const fVal = a * n + b;
+      const gVal = c * n + d;
+      const op = pickRandom(['+', '-', '*']);
+      const ans = op === '+' ? fVal + gVal : op === '-' ? fVal - gVal : fVal * gVal;
+      const opLabel = { '+': '(f+g)', '-': '(f-g)', '*': '(f \\cdot g)' }[op];
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return fVal + gVal;
+        if (i === 2) return fVal - gVal;
+        if (i === 3) return fVal * gVal;
+        return ans + randInt(2, 10) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const opSym = op === '*' ? '\\times' : op;
+      const question = lang === 'ko'
+        ? `$f(x) = ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}$이고 $g(x) = ${c}x ${d >= 0 ? '+' : '-'} ${Math.abs(d)}$일 때, $${opLabel}(${n})$의 값을 구하세요.`
+        : `Let $f(x) = ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}$ and $g(x) = ${c}x ${d >= 0 ? '+' : '-'} ${Math.abs(d)}$. Find $${opLabel}(${n})$.`;
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 1 Topic 12.2 함수의 사칙연산]**\n\n$f(${n}) = ${fVal}$, $g(${n}) = ${gVal}$이므로,\n\n$$${opLabel}(${n}) = f(${n}) ${opSym} g(${n}) = ${fVal} ${opSym} ${gVal} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Algebra 1 Topic 12.2 Function Arithmetic]**\n\nSince $f(${n}) = ${fVal}$ and $g(${n}) = ${gVal}$,\n\n$$${opLabel}(${n}) = f(${n}) ${opSym} g(${n}) = ${fVal} ${opSym} ${gVal} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // solve-for-input
+    const a = pickRandom([2, 3, 4, 5, -2, -3]);
+    const xTarget = randInt(-6, 6);
+    const b = randInt(-8, 8);
+    const k = a * xTarget + b;
+
+    const { choices, correctIdx } = buildChoices(xTarget, (i) => {
+      if (i === 1) return -xTarget;
+      if (i === 2) return k;
+      if (i === 3) return xTarget + b;
+      return xTarget + (i % 2 === 0 ? i : -i);
+    });
+
+    const question = lang === 'ko'
+      ? `$f(x) = ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}$일 때, $f(x) = ${k}$를 만족하는 $x$의 값을 구하세요.`
+      : `If $f(x) = ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}$, find the value of $x$ such that $f(x) = ${k}$.`;
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 1 Topic 12.1 함수]**\n\n$${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)} = ${k}$를 $x$에 대해 풉니다:\n\n$$${a}x = ${k - b} \\implies x = ${xTarget}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${xTarget})** 입니다.`
+      : `**[The Essential Guide to Algebra 1 Topic 12.1 Functions]**\n\nSolve $${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)} = ${k}$ for $x$:\n\n$$${a}x = ${k - b} \\implies x = ${xTarget}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${xTarget})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // STATISTICS - CENTRAL TENDENCY & SPREAD (The Essential Guide to Algebra 1, Topic 15)
+  // -----------------------------------------------------------------------
+  'statistics-averages': (lang) => {
+    const variant = pickRandom(['mean-shift', 'basic-central', 'spread']);
+
+    if (variant === 'mean-shift') {
+      let N = 10; let M = 80; let M2 = 83; let H = 95; let L = 0;
+      let tries = 0;
+      do {
+        N = randInt(10, 22);
+        M = randInt(70, 88);
+        M2 = M + randInt(1, 5);
+        H = randInt(92, 99);
+        L = N * M - (N - 2) * M2 - H;
+        tries += 1;
+      } while ((L <= 0 || L >= M2 - 3 || L > H) && tries < 60);
+      if (L <= 0) { N = 10; M = 80; M2 = 83; H = 95; L = 41; }
+
+      const { choices, correctIdx } = buildChoices(L, (i) => {
+        if (i === 1) return H - (M2 - M) * 2;
+        if (i === 2) return M2 - (H - M2);
+        if (i === 3) return L + (H - M2);
+        return L + randInt(2, 9) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? `학생 $${N}$명의 시험 점수의 평균은 $${M}$점입니다. 이 중 가장 높은 점수와 가장 낮은 점수를 제외한 나머지 학생들의 평균은 $${M2}$점이 되었습니다. 가장 높은 점수가 $${H}$점이라면, 가장 낮은 점수는 몇 점입니까?`
+        : `The mean score of $${N}$ students is $${M}$. When the highest and lowest scores are removed, the mean of the remaining scores becomes $${M2}$. If the highest score is $${H}$, what is the lowest score?`;
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 1 Topic 15.1 평균]**\n\n전체 합은 $${N}\\times${M}=${N * M}$이고, 최고점·최저점을 제외한 $${N - 2}$명의 합은 $${N - 2}\\times${M2}=${(N - 2) * M2}$입니다. 따라서\n\n$$\\text{최저점} = ${N * M} - ${(N - 2) * M2} - ${H} = ${L}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${L})** 입니다.`
+        : `**[The Essential Guide to Algebra 1 Topic 15.1 Mean]**\n\nThe total sum is $${N}\\times${M}=${N * M}$, and the sum of the remaining $${N - 2}$ scores is $${N - 2}\\times${M2}=${(N - 2) * M2}$. So\n\n$$\\text{lowest score} = ${N * M} - ${(N - 2) * M2} - ${H} = ${L}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${L})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'basic-central') {
+      const base = randInt(1, 12);
+      const vals = [base, base, base + 1, base + 4, base + 10];
+      const mean = base + 3;
+      const median = base + 1;
+      const mode = base;
+      const ask = pickRandom(['mean', 'median', 'mode']);
+      const ans = ask === 'mean' ? mean : ask === 'median' ? median : mode;
+      const askLabelKo = { mean: '평균', median: '중앙값', mode: '최빈값' }[ask];
+      const askLabelEn = { mean: 'mean', median: 'median', mode: 'mode' }[ask];
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return mean;
+        if (i === 2) return median;
+        if (i === 3) return mode;
+        return ans + (i % 2 === 0 ? i : -i);
+      });
+
+      const listStr = `\\{${vals.join(', ')}\\}`;
+      const question = lang === 'ko'
+        ? `다음 자료의 ${askLabelKo}을(를) 구하세요: $${listStr}$`
+        : `Find the ${askLabelEn} of the following data set: $${listStr}$`;
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 1 Topic 15.1 대푯값]**\n\n자료 $${listStr}$에서 평균 $=${mean}$, 중앙값$=${median}$, 최빈값$=${mode}$입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Algebra 1 Topic 15.1 Measures of Central Tendency]**\n\nFor the data $${listStr}$: mean $=${mean}$, median $=${median}$, mode $=${mode}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // spread: range or IQR of an arithmetic-sequence dataset
+    const start = randInt(1, 15);
+    const d = randInt(1, 6);
+    const list = [start, start + d, start + 2 * d, start + 3 * d];
+    const ask = pickRandom(['range', 'iqr']);
+    const range = list[3] - list[0];
+    const iqr = 2 * d;
+    const ans = ask === 'range' ? range : iqr;
+    const askLabelKo = ask === 'range' ? '범위(range)' : '사분위범위(IQR)';
+    const askLabelEn = ask === 'range' ? 'range' : 'interquartile range (IQR)';
+    const q1 = (list[0] + list[1]) / 2;
+    const q3 = (list[2] + list[3]) / 2;
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return ask === 'range' ? iqr : range;
+      if (i === 2) return d;
+      if (i === 3) return ans + d;
+      return ans + randInt(1, 5) * (i % 2 === 0 ? 1 : -1);
+    });
+
+    const listStr = `\\{${list.join(', ')}\\}`;
+    const question = lang === 'ko'
+      ? `다음 자료의 ${askLabelKo}을(를) 구하세요: $${listStr}$`
+      : `Find the ${askLabelEn} of the following data set: $${listStr}$`;
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 1 Topic 15.2 산포도]**\n\n범위는 최댓값$-$최솟값$=${list[3]}-${list[0]}=${range}$입니다. 사분위범위는 상위 절반의 중앙값($Q_3=${q3}$)에서 하위 절반의 중앙값($Q_1=${q1}$)을 뺀 값으로, $\\text{IQR}=${iqr}$입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+      : `**[The Essential Guide to Algebra 1 Topic 15.2 Measures of Spread]**\n\nThe range is max $-$ min $=${list[3]}-${list[0]}=${range}$. The interquartile range is the median of the upper half ($Q_3=${q3}$) minus the median of the lower half ($Q_1=${q1}$), giving $\\text{IQR}=${iqr}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
 };
 
 /**
