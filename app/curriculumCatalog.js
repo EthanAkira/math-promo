@@ -669,7 +669,7 @@ export const CURRICULUM_COPY = {
       subject2022Notice: '2022 कोरियाई पाठ्यक्रम की आधिकारिक संरचना: अनिवार्य, ऐच्छिक व उन्नत विषय।',
       intlNotice: 'अंतरराष्ट्रीय स्कूलों के लिए स्वतंत्र पाठ्यक्रम (प्री-अल्जेब्रा, अल्जेब्रा 1-2 आदि)।',
       domainNotice: 'संख्या, बीजगणित, ज्यामिति, प्रायिकता जैसे मूल सिद्धांतों के आधार पर सीखें।',
-      eastAsiaNotice: 'मौजूदा प्रश्न बैंक को जापान, ताइवान और हॉन्ग कॉन्ग में वास्तव में उपयोग होने वाले कक्षा और विषय नामों के अनुसार पुनर्गठित किया गया है। प्रत्येक देश के वास्तविक पिछले परीक्षा प्रश्नों के विश्लेषण पर आधारित अनुप्रयोग प्रश्न बाद में जोड़े जाएंगे, जो कोरियाई उन्नत प्रश्नों जैसी ही सशुल्क सदस्यता (curriculum-advanced) के अंतर्गत उपलब्ध होंगे।',
+      eastAsiaNotice: 'मौजूदा प्रश्न बैंक को जापान, ताइवान, हॉन्ग कॉन्ग, सिंगापुर, मलेशिया और वियतनाम में वास्तव में उपयोग होने वाले कक्षा और विषय नामों के अनुसार पुनर्गठित किया गया है। प्रत्येक देश के वास्तविक पिछले परीक्षा प्रश्नों के विश्लेषण पर आधारित अनुप्रयोग प्रश्न बाद में जोड़े जाएंगे, जो कोरियाई उन्नत प्रश्नों जैसी ही सशुल्क सदस्यता (curriculum-advanced) के अंतर्गत उपलब्ध होंगे।',
       bottomNote: 'ये मार्गदर्शक रास्ते हैं; वास्तविक क्रम स्कूल, देश और कार्यक्रम के अनुसार बदल सकता है।',
     },
     labels: {
@@ -684,8 +684,8 @@ export const CURRICULUM_COPY = {
     eyebrow: 'BẢN ĐỒ CHƯƠNG TRÌNH',
     title: 'Bạn muốn khám phá toán theo cách nào?',
     description: 'Xem theo chương trình Hàn Quốc (lớp / môn 2022), lộ trình quốc tế hoặc lĩnh vực toán học.',
-    mainTabs: ['Chương trình Hàn Quốc', 'Lộ trình môn học', 'Lĩnh vực toán học', 'Chương trình Đông Á'],
-    mainTabHelp: ['Lớp 1–12 & Môn học sửa đổi 2022', 'Tiền đại số, Đại số 1–2, Tiền giải tích', 'Số học, đại số, hình học và xác suất', 'Nhật Bản · Đài Loan · Hồng Kông'],
+    mainTabs: ['Chương trình Hàn Quốc', 'Lộ trình môn học', 'Lĩnh vực toán học', 'Chương trình châu Á'],
+    mainTabHelp: ['Lớp 1–12 & Môn học sửa đổi 2022', 'Tiền đại số, Đại số 1–2, Tiền giải tích', 'Số học, đại số, hình học và xác suất', 'Nhật Bản · Đài Loan · Hồng Kông · Singapore · Malaysia · Việt Nam'],
     subViews: {
       byGrade: 'Theo lớp · Tên truyền thống',
       bySubject2022: 'Môn học sửa đổi 2022',
@@ -694,6 +694,9 @@ export const CURRICULUM_COPY = {
       japan: 'Chương trình Nhật Bản',
       taiwan: 'Chương trình Đài Loan',
       hongkong: 'Chương trình Hồng Kông',
+      singapore: 'Chương trình Singapore',
+      malaysia: 'Chương trình Malaysia',
+      vietnam: 'Chương trình Việt Nam',
     },
     schoolLevels: {
       elementary: 'Tiểu học',
@@ -718,7 +721,7 @@ export const CURRICULUM_COPY = {
       subject2022Notice: 'Cấu trúc chính thức chương trình 2022 Hàn Quốc: môn chung, tự chọn chung, định hướng nghề và nâng cao.',
       intlNotice: 'Lộ trình độc lập cho trường quốc tế (Tiền đại số, Đại số 1–2, Tiền giải tích).',
       domainNotice: 'Khám phá các khái niệm cốt lõi: số & phép tính, đại số, hình học, xác suất thống kê.',
-      eastAsiaNotice: 'Ngân hàng bài tập hiện có được sắp xếp lại theo đúng tên lớp và môn học thực tế dùng ở Nhật Bản, Đài Loan và Hồng Kông. Các bài tập ứng dụng riêng theo từng nước, dựa trên đề thi thật, sẽ được bổ sung sau và sẽ dùng chung gói trả phí (curriculum-advanced) với các bài nâng cao của Hàn Quốc.',
+      eastAsiaNotice: 'Ngân hàng bài tập hiện có được sắp xếp lại theo đúng tên lớp và môn học thực tế dùng ở Nhật Bản, Đài Loan, Hồng Kông, Singapore, Malaysia và Việt Nam. Các bài tập ứng dụng riêng theo từng nước, dựa trên đề thi thật, sẽ được bổ sung sau và sẽ dùng chung gói trả phí (curriculum-advanced) với các bài nâng cao của Hàn Quốc.',
       bottomNote: 'Đây là các lộ trình tham khảo; thứ tự cụ thể tùy trường, quốc gia và chương trình.',
     },
     labels: {
@@ -733,8 +736,8 @@ export const CURRICULUM_COPY = {
     eyebrow: 'PETA KURIKULUM',
     title: 'Bagaimana Anda ingin menjelajahi matematika?',
     description: 'Telusuri menurut kurikulum Korea (kelas / mata pelajaran 2022), urutan kursus internasional, atau bidang matematika.',
-    mainTabs: ['Kurikulum Korea', 'Urutan Kursus', 'Bidang Matematika', 'Kurikulum Asia Timur'],
-    mainTabHelp: ['Kelas 1–12 & Pelajaran Revisi 2022', 'Pra-Aljabar, Aljabar 1–2, Pra-Kalkulus', 'Bilangan, aljabar, geometri, dan data', 'Jepang · Taiwan · Hong Kong'],
+    mainTabs: ['Kurikulum Korea', 'Urutan Kursus', 'Bidang Matematika', 'Kurikulum Asia'],
+    mainTabHelp: ['Kelas 1–12 & Pelajaran Revisi 2022', 'Pra-Aljabar, Aljabar 1–2, Pra-Kalkulus', 'Bilangan, aljabar, geometri, dan data', 'Jepang · Taiwan · Hong Kong · Singapura · Malaysia · Vietnam'],
     subViews: {
       byGrade: 'Per Kelas · Nama Klasik',
       bySubject2022: 'Mata Pelajaran Revisi 2022',
@@ -743,6 +746,9 @@ export const CURRICULUM_COPY = {
       japan: 'Kurikulum Jepang',
       taiwan: 'Kurikulum Taiwan',
       hongkong: 'Kurikulum Hong Kong',
+      singapore: 'Kurikulum Singapura',
+      malaysia: 'Kurikulum Malaysia',
+      vietnam: 'Kurikulum Vietnam',
     },
     schoolLevels: {
       elementary: 'Sekolah Dasar',
@@ -767,7 +773,7 @@ export const CURRICULUM_COPY = {
       subject2022Notice: 'Struktur resmi Kurikulum Korea 2022 untuk mata pelajaran umum, pilihan, dan lanjutan.',
       intlNotice: 'Urutan independen untuk sekolah internasional (Pra-Aljabar, Aljabar 1–2, Pra-Kalkulus).',
       domainNotice: 'Pelajari konsep inti: bilangan & operasi, aljabar, geometri, peluang & statistika.',
-      eastAsiaNotice: 'Bank soal yang sudah ada disusun ulang mengikuti nama kelas dan mata pelajaran sebenarnya yang dipakai di Jepang, Taiwan, dan Hong Kong. Soal aplikasi khas tiap negara, berdasarkan analisis soal ujian asli, akan ditambahkan kemudian dan akan tersedia lewat langganan berbayar yang sama (curriculum-advanced) seperti soal lanjutan Korea.',
+      eastAsiaNotice: 'Bank soal yang sudah ada disusun ulang mengikuti nama kelas dan mata pelajaran sebenarnya yang dipakai di Jepang, Taiwan, Hong Kong, Singapura, Malaysia, dan Vietnam. Soal aplikasi khas tiap negara, berdasarkan analisis soal ujian asli, akan ditambahkan kemudian dan akan tersedia lewat langganan berbayar yang sama (curriculum-advanced) seperti soal lanjutan Korea.',
       bottomNote: 'Ini adalah jalur panduan; urutan tepat dapat berbeda menurut sekolah, negara, dan program.',
     },
     labels: {
