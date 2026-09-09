@@ -18,16 +18,18 @@ import {
 } from './curriculumCatalog';
 
 function availabilityForTopics(topics) {
-  if (topics.every((topic) => !topic.ready || topic.availability === 'planned')) return 'planned';
-  if (topics.some((topic) => topic.availability === 'partial' || !topic.ready || topic.availability === 'planned')) return 'partial';
+  const realTopics = topics.filter((topic) => !topic.isHeader);
+  if (realTopics.every((topic) => !topic.ready || topic.availability === 'planned')) return 'planned';
+  if (realTopics.some((topic) => topic.availability === 'partial' || !topic.ready || topic.availability === 'planned')) return 'partial';
   return 'ready';
 }
 
 function availabilitySummary(topics, copy) {
   const status = availabilityForTopics(topics);
   if (status === 'planned') return copy.badges.planned;
-  const availableCount = topics.filter((topic) => topic.ready && topic.availability !== 'planned').length;
-  if (status === 'partial') return `${availableCount}/${topics.length} · ${copy.badges.partial}`;
+  const realTopics = topics.filter((topic) => !topic.isHeader);
+  const availableCount = realTopics.filter((topic) => topic.ready && topic.availability !== 'planned').length;
+  if (status === 'partial') return `${availableCount}/${realTopics.length} · ${copy.badges.partial}`;
   return `${availableCount} · ${copy.badges.ready}`;
 }
 
@@ -41,28 +43,53 @@ function topicAvailabilityLabel(topic, copy) {
 // and by International Courses/수학 영역별, which never set meta at all.
 //
 // A topic can optionally carry `amc: { href }` — a matching AMC(미국수학경시대회) unit covering the
-// same concept. Rather than listing it as a separate row (confusing — user explicitly rejected that:
-// "같은 단원 안에 토글로"), the toggle below swaps THIS topic's own link/badge in place between the
-// regular practice generator and the AMC unit, so the topic stays a single row either way.
+// same concept. Shown as a plain badge-link under the topic (not a toggle — that design was tried
+// and rejected as needless complexity); the badge always points at the localized AMC variant
+// (`&variant=1`), never the raw English archive.
 function TopicItem({ topic, copy }) {
-  const [showAmc, setShowAmc] = useState(false);
+  if (topic.isHeader) {
+    return (
+      <div className="curriculum-topic-group-header">
+        <span className="group-header-label">{topic.label}</span>
+      </div>
+    );
+  }
+
   const hasAmc = Boolean(topic.amc);
-  const amcActive = hasAmc && showAmc;
-  const activeHref = amcActive ? topic.amc.href : topic.href;
+
+  const typeMatch = topic.label.match(/^\[(기본|응용|실전 총괄|통합)\]\s*/);
+  const typeTag = typeMatch ? typeMatch[1] : null;
+  const cleanLabel = typeMatch ? topic.label.slice(typeMatch[0].length) : topic.label;
+
+  const getTagClass = (tag) => {
+    switch (tag) {
+      case '기본': return 'type-basic';
+      case '응용': return 'type-applied';
+      case '실전 총괄': return 'type-exam';
+      case '통합': return 'type-integrated';
+      default: return '';
+    }
+  };
 
   return (
-    <div className="curriculum-topic-item">
+    <div className={`curriculum-topic-item ${typeTag ? getTagClass(typeTag) : ''}`.trim()}>
       {topic.ready ? (
-        <a href={activeHref} className="topic-link">
+        <a href={topic.href} className="topic-link">
           <div className="topic-link-main">
-            <span className="topic-name">{topic.label}</span>
-            {(topic.meta || amcActive) && (
+            <span className="topic-name">
+              {typeTag && (
+                <span className={`curriculum-type-badge ${getTagClass(typeTag)}`}>
+                  {typeTag}
+                </span>
+              )}
+              <span className="topic-text">{cleanLabel}</span>
+            </span>
+            {topic.meta && (
               <div className="topic-meta-badges">
                 {topic.meta?.legacy && <span className="meta-badge legacy">{copy.labels.legacyName}: {topic.meta.legacy}</span>}
                 {topic.meta?.revised2022 && <span className="meta-badge revised">{copy.labels.revised2022}: {topic.meta.revised2022}</span>}
                 {topic.meta?.officialType && <span className="meta-badge official">{topic.meta.officialType}</span>}
                 {topic.meta?.grade && <span className="meta-badge grade">{copy.labels.targetGrade}: {topic.meta.grade}</span>}
-                {amcActive && <span className="meta-badge amc-source">AMC · 미국수학경시대회</span>}
               </div>
             )}
           </div>
@@ -71,7 +98,14 @@ function TopicItem({ topic, copy }) {
       ) : (
         <div className="topic-disabled">
           <div className="topic-link-main">
-            <span className="topic-name">{topic.label}</span>
+            <span className="topic-name">
+              {typeTag && (
+                <span className={`curriculum-type-badge ${getTagClass(typeTag)}`}>
+                  {typeTag}
+                </span>
+              )}
+              <span className="topic-text">{cleanLabel}</span>
+            </span>
             {topic.meta && topic.meta.grade && (
               <div className="topic-meta-badges">
                 <span className="meta-badge grade">{copy.labels.targetGrade}: {topic.meta.grade}</span>
@@ -82,15 +116,9 @@ function TopicItem({ topic, copy }) {
         </div>
       )}
       {hasAmc && (
-        <button
-          type="button"
-          className={`amc-toggle-btn${amcActive ? ' on' : ''}`}
-          onClick={() => setShowAmc((value) => !value)}
-          aria-pressed={amcActive}
-        >
-          <span className="amc-toggle-dot" />
-          AMC 문제 {amcActive ? '끄기' : '보기'}
-        </button>
+        <a href={topic.amc.href} className="amc-inline-badge">
+          AMC · 미국수학경시대회 스타일의 문제
+        </a>
       )}
     </div>
   );
@@ -710,39 +738,22 @@ export default function CurriculumExplorer() {
           background: #dbeafe;
           color: #1d4ed8;
         }
-        .amc-toggle-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
+        .amc-inline-badge {
+          display: inline-block;
           align-self: flex-start;
           margin: 4px 10px 8px;
-          padding: 4px 10px 4px 8px;
-          border: 1px solid #bfdbfe;
-          border-radius: 999px;
-          background: #eff6ff;
-          color: #1d4ed8;
-          font-size: 11px;
-          font-weight: 700;
-          cursor: pointer;
-          transition: background 0.15s ease, border-color 0.15s ease;
-        }
-        .amc-toggle-btn:hover {
+          padding: 2px 8px;
+          border-radius: 4px;
           background: #dbeafe;
+          color: #1d4ed8;
+          font-size: 10px;
+          font-weight: 600;
+          line-height: 1.3;
+          text-decoration: none;
+          transition: background 0.15s ease;
         }
-        .amc-toggle-btn.on {
-          background: #1d4ed8;
-          border-color: #1d4ed8;
-          color: #fff;
-        }
-        .amc-toggle-dot {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          background: currentColor;
-          opacity: 0.55;
-        }
-        .amc-toggle-btn.on .amc-toggle-dot {
-          opacity: 1;
+        .amc-inline-badge:hover {
+          background: #bfdbfe;
         }
         .action-tag {
           font-size: 11px;
@@ -778,6 +789,64 @@ export default function CurriculumExplorer() {
           padding: 2px 6px;
           border-radius: 4px;
           white-space: nowrap;
+        }
+        .curriculum-topic-group-header {
+          grid-column: 1 / -1;
+          margin-top: 14px;
+          margin-bottom: 4px;
+          padding: 8px 12px;
+          background: linear-gradient(90deg, #f1f5f9 0%, rgba(241, 245, 249, 0.3) 100%);
+          border-left: 4px solid var(--chalk-green, #2f6e5c);
+          border-radius: 4px;
+        }
+        .curriculum-topic-group-header:first-child {
+          margin-top: 2px;
+        }
+        .group-header-label {
+          font-size: 13px;
+          font-weight: 800;
+          color: var(--navy-deep, #1e293b);
+          letter-spacing: -0.01em;
+        }
+        .curriculum-type-badge {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 11px;
+          font-weight: 800;
+          padding: 2px 7px;
+          border-radius: 6px;
+          margin-right: 6px;
+          line-height: 1.2;
+          white-space: nowrap;
+          letter-spacing: -0.02em;
+          flex-shrink: 0;
+        }
+        .curriculum-type-badge.type-basic {
+          background: #e0f2fe;
+          color: #0369a1;
+          border: 1px solid #bae6fd;
+        }
+        .curriculum-type-badge.type-applied {
+          background: #fef3c7;
+          color: #b45309;
+          border: 1px solid #fde68a;
+        }
+        .curriculum-type-badge.type-exam {
+          background: #ffe4e6;
+          color: #be123c;
+          border: 1px solid #fecdd3;
+        }
+        .curriculum-type-badge.type-integrated {
+          background: #f3e8ff;
+          color: #7e22ce;
+          border: 1px solid #e9d5ff;
+        }
+        .topic-name {
+          display: inline-flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 2px;
         }
         .high-stage {
           border-color: #cbd5e1;

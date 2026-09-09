@@ -172,8 +172,10 @@ export default function AmcUnitBrowser() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // A deep link with ?variant=1 (used by the curriculum-tab "AMC 문제 보기" toggle) lands
-  // directly on a freshly generated authentic English AMC competition practice problem.
+  // A deep link with ?variant=1 (used by the curriculum-tab AMC badge) should land directly on a
+  // freshly generated, language-matched practice problem — NOT the raw archived past AMC exam text,
+  // which is kept verbatim in its original English regardless of site language and would otherwise
+  // be the first thing a Korean-language visitor sees after clicking through.
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
@@ -181,8 +183,8 @@ export default function AmcUnitBrowser() {
     if (!u || params.get('variant') !== '1') return;
     const found = AMC_FINE_SUBJECTS.flatMap((subject) => subject.units).find((unit) => unit.id === u);
     if (!found) return;
-    setGeneratedVariants((prev) => ({ ...prev, [u]: generateAmcVariantProblem(found, 'en') }));
-  }, []);
+    setGeneratedVariants((prev) => ({ ...prev, [u]: generateAmcVariantProblem(found, language) }));
+  }, [language]);
 
   // Auth check
   useEffect(() => {
@@ -391,7 +393,7 @@ export default function AmcUnitBrowser() {
   }
 
   function handleGenerateVariant(openKey, unit) {
-    const variant = generateAmcVariantProblem(unit, 'en');
+    const variant = generateAmcVariantProblem(unit, language);
     setGeneratedVariants((prev) => ({ ...prev, [openKey]: variant }));
   }
 
@@ -417,7 +419,7 @@ export default function AmcUnitBrowser() {
     while (pool.length < coreCount) {
       const unit = eligibleUnits[index % eligibleUnits.length];
       index += 1;
-      pool.push(generateAmcVariantProblem(unit, 'en'));
+      pool.push(generateAmcVariantProblem(unit, language));
     }
     setCoreProblems(shuffleArray(pool));
   }
