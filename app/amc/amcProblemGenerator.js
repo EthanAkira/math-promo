@@ -3335,9 +3335,7 @@ export function generateAmcVariantProblem(unit, language = 'en') {
   const unitId = typeof unit === 'string' ? unit : unit.id;
   const unitLabel = typeof unit === 'string' ? unit : (unit.labelEn || unit.label);
   const generator = getGeneratorForUnit(unitId);
-  // AMC competition problems are inherently in English.
-  // Generate authentic English competition problem by default.
-  const result = generator('en');
+  const result = generator(language);
 
   return {
     id: `gen-variant-${unitId}-${Date.now()}-${randInt(100, 999)}`,

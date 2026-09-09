@@ -117,7 +117,8 @@ function TopicItem({ topic, copy }) {
       )}
       {hasAmc && (
         <a href={topic.amc.href} className="amc-inline-badge">
-          AMC 미국수학경시대회 스타일 문제로 연습하기
+          <span>AMC 미국수학경시대회 스타일 문제로 연습하기</span>
+          <span className="amc-inline-badge-cta">문제 풀기 →</span>
         </a>
       )}
     </div>
@@ -739,14 +740,17 @@ export default function CurriculumExplorer() {
           color: #1d4ed8;
         }
         .amc-inline-badge {
-          display: inline-block;
-          align-self: flex-start;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          align-self: stretch;
           margin: 4px 10px 8px;
-          padding: 2px 8px;
-          border-radius: 4px;
+          padding: 5px 10px;
+          border-radius: 6px;
           background: #f3e8ff;
           color: #7e22ce;
-          font-size: 10px;
+          font-size: 12px;
           font-weight: 600;
           line-height: 1.3;
           text-decoration: none;
@@ -754,6 +758,10 @@ export default function CurriculumExplorer() {
         }
         .amc-inline-badge:hover {
           background: #e9d5ff;
+        }
+        .amc-inline-badge-cta {
+          font-weight: 800;
+          white-space: nowrap;
         }
         .action-tag {
           font-size: 11px;
