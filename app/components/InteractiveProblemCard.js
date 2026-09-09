@@ -133,7 +133,7 @@ export default function InteractiveProblemCard({
         </div>
 
         {/* Action buttons: Scratchpad toggle */}
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div className="no-print" style={{ display: 'flex', gap: '8px' }}>
           <button
             type="button"
             onClick={() => setScratchpadOpen((v) => !v)}
@@ -292,6 +292,7 @@ export default function InteractiveProblemCard({
       {/* Practice Mode Instant Check Button & Feedback */}
       {!isExamMode ? (
         <div
+          className="no-print"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -384,7 +385,7 @@ export default function InteractiveProblemCard({
 
       {/* Tablet Stylus NoteCanvas Layer */}
       {scratchpadOpen ? (
-        <div style={{ marginTop: '16px' }}>
+        <div className="no-print" style={{ marginTop: '16px' }}>
           <NoteCanvas storageKey={`problem_note_${id || number}`} open={scratchpadOpen} />
         </div>
       ) : null}
