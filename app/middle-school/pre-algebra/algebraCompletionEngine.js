@@ -113,6 +113,15 @@ function twoWayTables(random) {
 }
 
 function rationalExpressions(random) {
+  if (pick(random, ['simplify', 'add-subtract']) === 'add-subtract') {
+    const denom = nz(random, -6, 6);
+    const p = nz(random, -9, 9);
+    let q = nz(random, -9, 9);
+    while (p + q === 0) q = nz(random, -9, 9);
+    const sum = p + q;
+    const secondTerm = q >= 0 ? `+ ${q}/(x${signed(denom)})` : `− ${Math.abs(q)}/(x${signed(denom)})`;
+    return make('유리식을 계산하세요.', `${p}/(x${signed(denom)}) ${secondTerm}`, `${sum}/(x${signed(denom)})`, bi({}, 'Add the rational expressions (common denominator).', `분모가 같으므로 분자끼리 더하면 (${p}+${q})/(x${signed(denom)})=${sum}/(x${signed(denom)})입니다.`, `Since the denominators match, add the numerators: ${sum}/(x${signed(denom)}).`));
+  }
   const a = nz(random, -6, 6); const b = nz(random, -6, 6);
   return make('유리식을 약분하세요.', `(x^2${signed(a + b)}x${signed(a * b)})/(x${signed(a)})`, `x${signed(b)}`, bi({}, 'Simplify the rational expression.', `분자를 (x${signed(a)})(x${signed(b)})로 인수분해하여 공통인수를 약분합니다.`, `Factor the numerator and cancel the common factor.`));
 }
@@ -240,8 +249,8 @@ export const ALGEBRA_COMPLETION_UNITS = [
   unit('exponential-modeling', '함수', '지수성장과 감소 모델', 'Exponential growth & decay', '백분율 변화와 지수모델 응용', 'Model repeated percent change', profiles(P.A1, P.A2, P.PC), exponentialModeling),
   unit('regression-modeling', '확률과 통계', '산점도와 회귀모델', 'Scatterplots & regression', '추세선으로 자료의 값을 예측', 'Use linear regression models for prediction', profiles(P.A1, P.A2), linearRegression),
   unit('two-way-tables', '확률과 통계', '이원분할표와 조건부확률', 'Two-way tables', '행·열 조건에 따른 상대도수', 'Calculate conditional relative frequencies', profiles(P.H2S, P.A1, P.A2), twoWayTables),
-  unit('rational-expressions', '문자와 식', '유리식의 연산', 'Rational expressions', '인수분해와 유리식의 약분', 'Factor and simplify rational expressions', profiles(P.A2, P.PC), rationalExpressions),
-  unit('rational-equations', '방정식과 부등식', '유리방정식', 'Rational equations', '정의역 제한과 유리방정식의 해', 'Solve rational equations and reject excluded values', profiles(P.A2), rationalEquations),
+  unit('rational-expressions', '문자와 식', '유리식의 연산', 'Rational expressions', '인수분해와 유리식의 약분, 통분하여 더하고 빼기', 'Factor/simplify rational expressions and add or subtract with a common denominator', profiles(P.A1, P.A2, P.PC), rationalExpressions),
+  unit('rational-equations', '방정식과 부등식', '유리방정식', 'Rational equations', '정의역 제한과 유리방정식의 해', 'Solve rational equations and reject excluded values', profiles(P.A1, P.A2), rationalEquations),
   unit('radical-equations', '방정식과 부등식', '무리방정식', 'Radical equations', '제곱과 검산을 이용한 무리방정식', 'Solve radical equations and check extraneous roots', profiles(P.A2), radicalEquations),
   unit('logarithmic-modeling', '지수와 로그', '지수·로그 모델링', 'Exponential & logarithmic modeling', '지수모델의 미지 지수 구하기', 'Solve for time in exponential models', profiles(P.A2), logarithmicModeling),
   unit('geometric-sequences', '수열', '등비수열과 유한급수', 'Geometric sequences & series', '등비수열의 일반항과 합', 'Find terms and finite geometric sums', profiles(P.H2A, P.A2, P.PC), geometricSequences),

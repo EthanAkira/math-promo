@@ -822,6 +822,19 @@ function compoundInequality(random) {
   return item(`연립부등식 ${a} < ${expr} < ${c}를 만족하는 ${askKo}을 구하세요.`, '', answer, withEnglish({}, `Solve the compound inequality ${a} < ${expr} < ${c} and find ${askEn}.`, `각 변에서 ${b}를 빼고 ${m}으로 나누면 ${left} < x < ${right}를 얻습니다. 따라서 답은 ${answer}입니다.`, `Subtract ${b} from each part and divide by ${m} to get ${left} < x < ${right}. So the answer is ${answer}.`));
 }
 
+// Algebra 1 Ch4.2: |x−a| < b solves to a−b < x < a+b (same lower/upper/width ask pattern as compoundInequality)
+function absoluteValueInequality(random) {
+  const a = randomInt(random, -6, 6);
+  const b = randomInt(random, 2, 9);
+  const lower = a - b;
+  const upper = a + b;
+  const ask = pick(random, ['lower', 'upper', 'width']);
+  const answer = ask === 'lower' ? lower : ask === 'upper' ? upper : upper - lower;
+  const askKo = { lower: '해의 하한(가장 작은 경계값)', upper: '해의 상한(가장 큰 경계값)', width: '해의 범위의 폭(상한−하한)' }[ask];
+  const askEn = { lower: 'the lower bound of the solution', upper: 'the upper bound of the solution', width: 'the width of the solution interval (upper minus lower bound)' }[ask];
+  return item(`절댓값 부등식 |x${signed(-a)}| < ${b}를 만족하는 ${askKo}을 구하세요.`, '', answer, withEnglish({}, `Solve the absolute value inequality |x${signed(-a)}| < ${b} and find ${askEn}.`, `|x${signed(-a)}| < ${b}는 ${lower} < x < ${upper}와 같으므로 답은 ${answer}입니다.`, `|x${signed(-a)}| < ${b} is equivalent to ${lower} < x < ${upper}, so the answer is ${answer}.`));
+}
+
 function absoluteValueFunction(random) {
   const h = randomInt(random, -8, 8);
   const k = randomInt(random, -10, 10);
@@ -896,6 +909,7 @@ export const SECONDARY_ALGEBRA_UNITS = [
   { id: 'sequences', category: '수열', label: '등차수열', description: '일반항과 첫 n항의 합', en: ['Arithmetic sequences', 'Find terms and finite sums'], profiles: profiles(P.H2A, P.A2, P.PC), make: sequences },
   { id: 'algebra-modeling', category: '수학적 모델링', label: '대수 문장제와 모델링', description: '비용·수익 관계를 식으로 세워 해결하기', en: ['Algebraic modeling', 'Build and solve equations from applied contexts'], profiles: profiles(P.M2, P.M3, P.H1, P.A1, P.A2), make: algebraModeling },
   { id: 'compound-inequality', category: '방정식과 부등식', label: '연립부등식(합성부등식)', description: 'a<mx+b<c 꼴 연립부등식의 해', en: ['Compound inequalities', 'Solve compound (conjunctive) inequalities of the form a<mx+b<c'], profiles: profiles(P.A1), make: compoundInequality },
+  { id: 'absolute-value-inequality', category: '방정식과 부등식', label: '절댓값 부등식', description: '|x−a|<b 꼴 절댓값 부등식의 해', en: ['Absolute value inequalities', 'Solve inequalities of the form |x−a|<b'], profiles: profiles(P.A1), make: absoluteValueInequality },
   { id: 'absolute-value-function', category: '함수', label: '절댓값 함수', description: 'y=|x−h|+k의 함숫값과 최솟값', en: ['Absolute value functions', 'Evaluate and find the minimum of y=|x−h|+k'], profiles: profiles(P.A1, P.A2), make: absoluteValueFunction },
   { id: 'linear-programming', category: '방정식과 부등식', label: '일차계획법', description: '실현가능영역의 꼭짓점에서 목적함수의 최대·최소', en: ['Linear programming', 'Optimize a linear objective function over a feasible region'], profiles: profiles(P.A1, P.A2), make: linearProgramming },
 ];
