@@ -882,8 +882,13 @@ export default function AmcUnitBrowser() {
                                 {unit.desc}
                               </span>
 
-                              {/* Curriculum Mapping Badges (Volume 1, Volume 2, International Math, Domains) */}
+                              {/* Curriculum Mapping Badges (AMC Level, Volume 1, Volume 2, International Math, Domains) */}
                               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8, alignItems: 'center' }}>
+                                {unit.amcLevel && (
+                                  <span style={{ fontSize: 11, fontWeight: 800, padding: '2px 9px', borderRadius: 6, background: '#111827', color: '#ffffff' }}>
+                                    🎯 {unit.amcLevel}
+                                  </span>
+                                )}
                                 {unit.vol1Chapter && (
                                   <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(217, 119, 6, 0.12)', color: '#b45309', border: '1px solid rgba(217, 119, 6, 0.25)' }}>
                                     📙 Vol 1: {unit.vol1Chapter}

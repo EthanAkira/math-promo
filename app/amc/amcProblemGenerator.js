@@ -3606,6 +3606,88 @@ export const GENERATORS = {
 
     return { question, choices, correctIdx, explanation };
   },
+
+  // -----------------------------------------------------------------------
+  // EXPRESSIONS & SUBSTITUTION (AMC10 기본서 이론편 Ch 2. Algebra — Grouping/
+  // Special Product Factoring, Difference of Squares, Algebraic Substitution)
+  // -----------------------------------------------------------------------
+  'expressions-substitution': (lang) => {
+    const variant = pickRandom(['common-exponent-fraction', 'difference-of-squares', 'substitution-value']);
+
+    if (variant === 'common-exponent-fraction') {
+      const b = pickRandom([2, 3, 4, 5, 6]);
+      const n = randInt(1000, 3000);
+      const ansNum = -1;
+      const ansDen = b + 1;
+      const ansLatex = `-\\frac{1}{${ansDen}}`;
+
+      const { choices, correctIdx } = buildChoices(ansLatex, (i) => {
+        if (i === 1) return `\\frac{1}{${ansDen}}`;
+        if (i === 2) return `-\\frac{1}{${b - 1}}`;
+        if (i === 3) return `-\\frac{${b}}{${ansDen}}`;
+        return `-\\frac{1}{${ansDen + (i - 3)}}`;
+      });
+
+      const question = lang === 'ko'
+        ? `$\\dfrac{${b}^{${n}} - ${b}^{${n + 1}}}{${b}^{${n + 2}} - ${b}^{${n}}}$ 의 값을 구하세요.`
+        : `Find the value of $\\dfrac{${b}^{${n}} - ${b}^{${n + 1}}}{${b}^{${n + 2}} - ${b}^{${n}}}$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC10 기본서 이론편 Ch 2.1 공통인수로 묶기 (Grouping)]**\n\n분자와 분모에서 공통인수 $${b}^{${n}}$ 을 묶어내면\n\n$$\\frac{${b}^{${n}}(1-${b})}{${b}^{${n}}(${b}^2-1)} = \\frac{1-${b}}{${b}^2-1} = \\frac{-(${b}-1)}{(${b}-1)(${b}+1)} = -\\frac{1}{${b}+1} = ${ansLatex}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+        : `**[AMC10 기본서 이론편 Ch 2.1 Grouping by Common Factor]**\n\nFactoring out the common power $${b}^{${n}}$ from numerator and denominator,\n\n$$\\frac{${b}^{${n}}(1-${b})}{${b}^{${n}}(${b}^2-1)} = \\frac{1-${b}}{${b}^2-1} = \\frac{-(${b}-1)}{(${b}-1)(${b}+1)} = -\\frac{1}{${b}+1} = ${ansLatex}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'difference-of-squares') {
+      const N = randInt(500, 3000);
+      const k = pickRandom([1, 2, 3, 4]);
+      const M = N - k;
+      const ans = k * (N + M);
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return N + M;
+        if (i === 2) return N * N - M * M - k;
+        if (i === 3) return ans + 2 * k;
+        return Math.max(1, ans - 2 * k * (i - 3));
+      });
+
+      const question = lang === 'ko'
+        ? `제곱의 차 공식을 이용하여 $${N}^2 - ${M}^2$ 의 값을 구하세요.`
+        : `Use the difference of squares formula to find the value of $${N}^2 - ${M}^2$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC10 기본서 이론편 Ch 2.1 곱셈공식 (Special Product): $a^2-b^2=(a+b)(a-b)$]**\n\n$$${N}^2 - ${M}^2 = (${N}+${M})(${N}-${M}) = (${N + M})(${k}) = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[AMC10 기본서 이론편 Ch 2.1 Special Product: $a^2-b^2=(a+b)(a-b)$]**\n\n$$${N}^2 - ${M}^2 = (${N}+${M})(${N}-${M}) = (${N + M})(${k}) = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // substitution-value
+    const x = randInt(-6, 6) || 1;
+    let y = randInt(-6, 6) || 1;
+    while (y === x) y = randInt(-6, 6) || 1;
+    const S = x + y;
+    const P = x * y;
+    const ans = S * S - 2 * P;
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return S * S;
+      if (i === 2) return S * S - P;
+      if (i === 3) return ans + 4;
+      return ans - 4 * (i - 3);
+    });
+
+    const question = lang === 'ko'
+      ? `$x + y = ${S}$, $xy = ${P}$ 일 때, $x^2 + y^2$ 의 값을 구하세요.`
+      : `If $x + y = ${S}$ and $xy = ${P}$, find the value of $x^2 + y^2$.`;
+
+    const explanation = lang === 'ko'
+      ? `**[AMC10 기본서 이론편 Ch 2.1 대입법과 식의 값]**\n\n$x^2+y^2 = (x+y)^2 - 2xy$ 이므로,\n\n$$x^2+y^2 = ${S}^2 - 2(${P}) = ${S * S} - ${2 * P} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+      : `**[AMC10 기본서 이론편 Ch 2.1 Substitution and Expression Values]**\n\nSince $x^2+y^2 = (x+y)^2 - 2xy$,\n\n$$x^2+y^2 = ${S}^2 - 2(${P}) = ${S * S} - ${2 * P} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
 };
 
 /**
