@@ -3292,6 +3292,320 @@ export const GENERATORS = {
 
     return { question, choices, correctIdx, explanation };
   },
+
+  // -----------------------------------------------------------------------
+  // TRIGONOMETRY (The Essential Guide to Precalculus Topic 4: Trigonometric
+  // Ratio, Topic 5: Trigonometric Functions, Topic 7.1: Law of Sines/Cosines)
+  // -----------------------------------------------------------------------
+  'trigonometry': (lang) => {
+    const variant = pickRandom(['special-angle-ratio', 'trig-equation-solve', 'law-of-cosines-side', 'heron-area']);
+
+    const ANGLE_TABLE = [
+      { deg: 0, sin: '0', cos: '1', tan: '0' },
+      { deg: 30, sin: '\\frac{1}{2}', cos: '\\frac{\\sqrt{3}}{2}', tan: '\\frac{\\sqrt{3}}{3}' },
+      { deg: 45, sin: '\\frac{\\sqrt{2}}{2}', cos: '\\frac{\\sqrt{2}}{2}', tan: '1' },
+      { deg: 60, sin: '\\frac{\\sqrt{3}}{2}', cos: '\\frac{1}{2}', tan: '\\sqrt{3}' },
+      { deg: 90, sin: '1', cos: '0', tan: null },
+      { deg: 120, sin: '\\frac{\\sqrt{3}}{2}', cos: '-\\frac{1}{2}', tan: '-\\sqrt{3}' },
+      { deg: 135, sin: '\\frac{\\sqrt{2}}{2}', cos: '-\\frac{\\sqrt{2}}{2}', tan: '-1' },
+      { deg: 150, sin: '\\frac{1}{2}', cos: '-\\frac{\\sqrt{3}}{2}', tan: '-\\frac{\\sqrt{3}}{3}' },
+      { deg: 180, sin: '0', cos: '-1', tan: '0' },
+      { deg: 210, sin: '-\\frac{1}{2}', cos: '-\\frac{\\sqrt{3}}{2}', tan: '\\frac{\\sqrt{3}}{3}' },
+      { deg: 225, sin: '-\\frac{\\sqrt{2}}{2}', cos: '-\\frac{\\sqrt{2}}{2}', tan: '1' },
+      { deg: 240, sin: '-\\frac{\\sqrt{3}}{2}', cos: '-\\frac{1}{2}', tan: '\\sqrt{3}' },
+      { deg: 270, sin: '-1', cos: '0', tan: null },
+      { deg: 300, sin: '-\\frac{\\sqrt{3}}{2}', cos: '\\frac{1}{2}', tan: '-\\sqrt{3}' },
+      { deg: 315, sin: '-\\frac{\\sqrt{2}}{2}', cos: '\\frac{\\sqrt{2}}{2}', tan: '-1' },
+      { deg: 330, sin: '-\\frac{1}{2}', cos: '\\frac{\\sqrt{3}}{2}', tan: '-\\frac{\\sqrt{3}}{3}' },
+    ];
+
+    if (variant === 'special-angle-ratio') {
+      const ratioKey = pickRandom(['sin', 'cos', 'tan']);
+      const candidates = ratioKey === 'tan' ? ANGLE_TABLE.filter((e) => e.tan !== null) : ANGLE_TABLE;
+      const entry = pickRandom(candidates);
+      const ans = entry[ratioKey];
+      const ratioName = { sin: '\\sin', cos: '\\cos', tan: '\\tan' }[ratioKey];
+
+      const uniqueDistractors = [...new Set(candidates.map((e) => e[ratioKey]).filter((v) => v !== ans))]
+        .sort(() => Math.random() - 0.5);
+      const { choices, correctIdx } = buildChoices(ans, (i) => uniqueDistractors[(i - 1) % uniqueDistractors.length]);
+
+      const question = lang === 'ko'
+        ? `$${ratioName} ${entry.deg}^\\circ$ 의 값을 구하세요.`
+        : `Find the value of $${ratioName} ${entry.deg}^\\circ$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Precalculus Topic 4.1 삼각비의 기본]**\n\n$${entry.deg}^\\circ$ 는 표준각으로, 기준각과 사분면의 부호를 이용하면\n\n$$${ratioName} ${entry.deg}^\\circ = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+        : `**[The Essential Guide to Precalculus Topic 4.1 Basic Trig Ratios]**\n\n$${entry.deg}^\\circ$ is a standard angle. Using the reference angle and the quadrant sign rule,\n\n$$${ratioName} ${entry.deg}^\\circ = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'trig-equation-solve') {
+      const ratioKey = pickRandom(['sin', 'cos']);
+      const refDeg = pickRandom([30, 45, 60]);
+      const refVal = {
+        30: { sin: '\\frac{1}{2}', cos: '\\frac{\\sqrt{3}}{2}' },
+        45: { sin: '\\frac{\\sqrt{2}}{2}', cos: '\\frac{\\sqrt{2}}{2}' },
+        60: { sin: '\\frac{\\sqrt{3}}{2}', cos: '\\frac{1}{2}' },
+      }[refDeg][ratioKey];
+      const sign = pickRandom([1, -1]);
+      const kLatex = sign === 1 ? refVal : `-${refVal}`;
+
+      let sol1;
+      let sol2;
+      let ans;
+      if (ratioKey === 'sin') {
+        if (sign === 1) { sol1 = refDeg; sol2 = 180 - refDeg; ans = 180; } else { sol1 = 180 + refDeg; sol2 = 360 - refDeg; ans = 540; }
+      } else if (sign === 1) { sol1 = refDeg; sol2 = 360 - refDeg; ans = 360; } else { sol1 = 180 - refDeg; sol2 = 180 + refDeg; ans = 360; }
+      const ratioName = ratioKey === 'sin' ? '\\sin' : '\\cos';
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return sol1;
+        if (i === 2) return sol2;
+        if (i === 3) return ans + 90;
+        return Math.max(0, ans - 90 * (i - 3));
+      });
+
+      const question = lang === 'ko'
+        ? `$0^\\circ \\le x < 360^\\circ$ 에서 방정식 $${ratioName} x = ${kLatex}$ 을 만족하는 모든 $x$ 의 합을 구하세요.`
+        : `Find the sum of all solutions $x$ with $0^\\circ \\le x < 360^\\circ$ satisfying $${ratioName} x = ${kLatex}$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Precalculus Topic 5.5 삼각방정식 풀이]**\n\n기준각은 $${refDeg}^\\circ$ 이고, ${ratioName} 값의 부호를 만족하는 사분면을 찾으면 $x = ${sol1}^\\circ$ 또는 $x = ${sol2}^\\circ$ 입니다.\n\n두 해의 합은 $${sol1} + ${sol2} = ${ans}$ 입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans}^\\circ)** 입니다.`
+        : `**[The Essential Guide to Precalculus Topic 5.5 Solving Trigonometric Equations]**\n\nThe reference angle is $${refDeg}^\\circ$. Matching the sign of ${ratioName} to the correct quadrants gives $x = ${sol1}^\\circ$ or $x = ${sol2}^\\circ$.\n\nThe sum of the solutions is $${sol1} + ${sol2} = ${ans}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans}°)**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'law-of-cosines-side') {
+      const pool = [
+        { a: 3, b: 8, C: 60, c: 7 }, { a: 5, b: 8, C: 60, c: 7 }, { a: 6, b: 16, C: 60, c: 14 }, { a: 9, b: 24, C: 60, c: 21 },
+        { a: 3, b: 5, C: 120, c: 7 }, { a: 7, b: 8, C: 120, c: 13 }, { a: 5, b: 16, C: 120, c: 19 },
+        { a: 3, b: 4, C: 90, c: 5 }, { a: 6, b: 8, C: 90, c: 10 }, { a: 5, b: 12, C: 90, c: 13 }, { a: 9, b: 12, C: 90, c: 15 }, { a: 8, b: 15, C: 90, c: 17 },
+      ];
+      const { a, b, C, c } = pickRandom(pool);
+      const ans = c;
+      const cosCLatex = { 60: '\\frac{1}{2}', 90: '0', 120: '-\\frac{1}{2}' }[C];
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return a + b - c;
+        if (i === 2) return Math.round(Math.sqrt(a * a + b * b));
+        if (i === 3) return ans + 1;
+        return Math.max(1, ans - i + 3);
+      });
+
+      const question = lang === 'ko'
+        ? `삼각형 $ABC$ 에서 $a = ${a}$, $b = ${b}$, $\\angle C = ${C}^\\circ$ 일 때, 코사인 법칙을 이용하여 변 $c$ 의 길이를 구하세요.`
+        : `In triangle $ABC$, $a = ${a}$, $b = ${b}$, and $\\angle C = ${C}^\\circ$. Use the Law of Cosines to find the length of side $c$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Precalculus Topic 7.1 코사인 법칙]**\n\n$$c^2 = a^2 + b^2 - 2ab\\cos C = ${a}^2 + ${b}^2 - 2(${a})(${b})\\left(${cosCLatex}\\right) = ${c * c}$$\n\n$$c = \\sqrt{${c * c}} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Precalculus Topic 7.1 Law of Cosines]**\n\n$$c^2 = a^2 + b^2 - 2ab\\cos C = ${a}^2 + ${b}^2 - 2(${a})(${b})\\left(${cosCLatex}\\right) = ${c * c}$$\n\n$$c = \\sqrt{${c * c}} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // heron-area
+    const pool = [
+      { a: 3, b: 4, c: 5, area: 6 }, { a: 5, b: 5, c: 6, area: 12 }, { a: 5, b: 5, c: 8, area: 12 },
+      { a: 6, b: 8, c: 10, area: 24 }, { a: 5, b: 12, c: 13, area: 30 }, { a: 9, b: 10, c: 17, area: 36 },
+      { a: 10, b: 13, c: 13, area: 60 }, { a: 13, b: 14, c: 15, area: 84 }, { a: 4, b: 13, c: 15, area: 24 },
+    ];
+    const { a, b, c, area } = pickRandom(pool);
+    const s = (a + b + c) / 2;
+    const ans = area;
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return Math.round(s);
+      if (i === 2) return Math.round((a * b) / 2);
+      if (i === 3) return ans + 6;
+      return Math.max(1, ans - 6 * (i - 3));
+    });
+
+    const question = lang === 'ko'
+      ? `세 변의 길이가 $${a}$, $${b}$, $${c}$ 인 삼각형의 넓이를 헤론의 공식을 이용하여 구하세요.`
+      : `A triangle has side lengths $${a}$, $${b}$, and $${c}$. Find its area using Heron's Formula.`;
+
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Precalculus Topic 7.1 헤론의 공식]**\n\n반둘레 $s = \\dfrac{${a}+${b}+${c}}{2} = ${s}$ 이므로,\n\n$$\\text{넓이} = \\sqrt{s(s-a)(s-b)(s-c)} = \\sqrt{${s}(${s - a})(${s - b})(${s - c})} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+      : `**[The Essential Guide to Precalculus Topic 7.1 Heron's Formula]**\n\nThe semi-perimeter is $s = \\dfrac{${a}+${b}+${c}}{2} = ${s}$, so\n\n$$\\text{Area} = \\sqrt{s(s-a)(s-b)(s-c)} = \\sqrt{${s}(${s - a})(${s - b})(${s - c})} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // TRIGONOMETRIC IDENTITIES (The Essential Guide to Precalculus Topic 6:
+  // Sum/Difference Formula, Double-Angle Formula)
+  // -----------------------------------------------------------------------
+  'trig-identities': (lang) => {
+    const variant = pickRandom(['sum-difference-value', 'double-angle-value', 'tan-double-angle']);
+
+    if (variant === 'sum-difference-value') {
+      const table = [
+        { deg: 15, ratio: 'sin', decomp: '45^\\circ - 30^\\circ', formula: '\\sin 45^\\circ\\cos 30^\\circ - \\cos 45^\\circ\\sin 30^\\circ', value: '\\frac{\\sqrt{6}-\\sqrt{2}}{4}' },
+        { deg: 15, ratio: 'cos', decomp: '45^\\circ - 30^\\circ', formula: '\\cos 45^\\circ\\cos 30^\\circ + \\sin 45^\\circ\\sin 30^\\circ', value: '\\frac{\\sqrt{6}+\\sqrt{2}}{4}' },
+        { deg: 75, ratio: 'sin', decomp: '45^\\circ + 30^\\circ', formula: '\\sin 45^\\circ\\cos 30^\\circ + \\cos 45^\\circ\\sin 30^\\circ', value: '\\frac{\\sqrt{6}+\\sqrt{2}}{4}' },
+        { deg: 75, ratio: 'cos', decomp: '45^\\circ + 30^\\circ', formula: '\\cos 45^\\circ\\cos 30^\\circ - \\sin 45^\\circ\\sin 30^\\circ', value: '\\frac{\\sqrt{6}-\\sqrt{2}}{4}' },
+        { deg: 105, ratio: 'sin', decomp: '60^\\circ + 45^\\circ', formula: '\\sin 60^\\circ\\cos 45^\\circ + \\cos 60^\\circ\\sin 45^\\circ', value: '\\frac{\\sqrt{6}+\\sqrt{2}}{4}' },
+        { deg: 105, ratio: 'cos', decomp: '60^\\circ + 45^\\circ', formula: '\\cos 60^\\circ\\cos 45^\\circ - \\sin 60^\\circ\\sin 45^\\circ', value: '\\frac{\\sqrt{2}-\\sqrt{6}}{4}' },
+      ];
+      const entry = pickRandom(table);
+      const ratioName = entry.ratio === 'sin' ? '\\sin' : '\\cos';
+      const ans = entry.value;
+
+      const basePool = [
+        '\\frac{\\sqrt{6}-\\sqrt{2}}{4}', '\\frac{\\sqrt{6}+\\sqrt{2}}{4}', '\\frac{\\sqrt{2}-\\sqrt{6}}{4}', '-\\frac{\\sqrt{6}+\\sqrt{2}}{4}',
+        '\\frac{\\sqrt{3}}{2}', '\\frac{\\sqrt{2}}{2}', '\\frac{1}{2}', '-\\frac{\\sqrt{6}-\\sqrt{2}}{4}',
+      ];
+      const distractorPool = basePool.filter((v) => v !== ans);
+      const { choices, correctIdx } = buildChoices(ans, (i) => distractorPool[(i - 1) % distractorPool.length]);
+
+      const question = lang === 'ko'
+        ? `삼각함수의 덧셈정리를 이용하여 $${ratioName} ${entry.deg}^\\circ$ 의 값을 구하세요.`
+        : `Use the sum/difference formula to find the exact value of $${ratioName} ${entry.deg}^\\circ$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Precalculus Topic 6.1 삼각함수의 덧셈정리]**\n\n$${entry.deg}^\\circ = ${entry.decomp}$ 로 분해하면,\n\n$$${ratioName} ${entry.deg}^\\circ = ${entry.formula} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+        : `**[The Essential Guide to Precalculus Topic 6.1 Sum and Difference Formulas]**\n\nDecomposing $${entry.deg}^\\circ = ${entry.decomp}$,\n\n$$${ratioName} ${entry.deg}^\\circ = ${entry.formula} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'double-angle-value') {
+      const triples = [[3, 4, 5], [5, 12, 13], [8, 15, 17], [7, 24, 25], [20, 21, 29], [9, 40, 41]];
+      const [p, q, r] = pickRandom(triples);
+      const quadrant = pickRandom(['I', 'II']);
+      const cosSign = quadrant === 'I' ? 1 : -1;
+      const ansNum = 2 * p * cosSign * q;
+      const ansDen = r * r;
+      const g = gcd(Math.abs(ansNum), ansDen);
+      const ansNumR = ansNum / g;
+      const ansDenR = ansDen / g;
+      const ansLatex = ansNumR < 0 ? `-\\frac{${-ansNumR}}{${ansDenR}}` : `\\frac{${ansNumR}}{${ansDenR}}`;
+
+      const { choices, correctIdx } = buildChoices(ansLatex, (i) => {
+        if (i === 1) return ansNumR < 0 ? `\\frac{${-ansNumR}}{${ansDenR}}` : `-\\frac{${ansNumR}}{${ansDenR}}`;
+        if (i === 2) return `\\frac{${p}}{${r}}`;
+        if (i === 3) return `\\frac{${2 * p}}{${r}}`;
+        return `\\frac{${Math.abs(ansNumR) + (i - 3)}}{${ansDenR}}`;
+      });
+
+      const quadLabel = quadrant === 'I' ? (lang === 'ko' ? '제1사분면' : 'Quadrant I') : (lang === 'ko' ? '제2사분면' : 'Quadrant II');
+      const cosSignLatex = cosSign === 1 ? '' : '-';
+
+      const question = lang === 'ko'
+        ? `$\\theta$ 가 ${quadLabel}의 각이고 $\\sin\\theta = \\frac{${p}}{${r}}$ 일 때, $\\sin 2\\theta$ 의 값을 구하세요.`
+        : `Angle $\\theta$ is in ${quadLabel} and $\\sin\\theta = \\frac{${p}}{${r}}$. Find the value of $\\sin 2\\theta$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Precalculus Topic 6.2 배각공식]**\n\n피타고라스 삼중수 $(${p},${q},${r})$ 에서 $\\cos\\theta = ${cosSignLatex}\\frac{${q}}{${r}}$ 입니다 (${quadLabel}이므로 코사인 부호에 유의).\n\n$$\\sin 2\\theta = 2\\sin\\theta\\cos\\theta = 2\\times\\frac{${p}}{${r}}\\times\\left(${cosSignLatex}\\frac{${q}}{${r}}\\right) = ${ansLatex}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+        : `**[The Essential Guide to Precalculus Topic 6.2 Double-Angle Formula]**\n\nFrom the Pythagorean triple $(${p},${q},${r})$, $\\cos\\theta = ${cosSignLatex}\\frac{${q}}{${r}}$ (mind the sign in ${quadLabel}).\n\n$$\\sin 2\\theta = 2\\sin\\theta\\cos\\theta = 2\\times\\frac{${p}}{${r}}\\times\\left(${cosSignLatex}\\frac{${q}}{${r}}\\right) = ${ansLatex}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // tan-double-angle
+    const pairs = [[1, 2], [1, 3], [2, 3], [1, 4], [3, 4], [2, 5]];
+    const [p, q] = pickRandom(pairs);
+    const numer = 2 * p * q;
+    const denom = q * q - p * p;
+    const g = gcd(Math.abs(numer), Math.abs(denom));
+    const numR = numer / g;
+    const denR = denom / g;
+    const ansLatex = `\\frac{${numR}}{${denR}}`;
+
+    const { choices, correctIdx } = buildChoices(ansLatex, (i) => {
+      if (i === 1) return `\\frac{${p}}{${q}}`;
+      if (i === 2) return `\\frac{${denR}}{${numR}}`;
+      if (i === 3) return `-\\frac{${numR}}{${denR}}`;
+      return `\\frac{${numR + (i - 3)}}{${denR}}`;
+    });
+
+    const question = lang === 'ko'
+      ? `$\\tan\\theta = \\frac{${p}}{${q}}$ 일 때, 배각공식을 이용하여 $\\tan 2\\theta$ 의 값을 구하세요.`
+      : `If $\\tan\\theta = \\frac{${p}}{${q}}$, use the double-angle formula to find $\\tan 2\\theta$.`;
+
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Precalculus Topic 6.2 탄젠트의 배각공식]**\n\n$$\\tan 2\\theta = \\frac{2\\tan\\theta}{1-\\tan^2\\theta} = \\frac{2\\times\\frac{${p}}{${q}}}{1-\\left(\\frac{${p}}{${q}}\\right)^2} = \\frac{${numer}}{${denom}} = ${ansLatex}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+      : `**[The Essential Guide to Precalculus Topic 6.2 Tangent Double-Angle Formula]**\n\n$$\\tan 2\\theta = \\frac{2\\tan\\theta}{1-\\tan^2\\theta} = \\frac{2\\times\\frac{${p}}{${q}}}{1-\\left(\\frac{${p}}{${q}}\\right)^2} = \\frac{${numer}}{${denom}} = ${ansLatex}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // COMPLEX NUMBERS — POLAR FORM & DE MOIVRE'S THEOREM (The Essential Guide
+  // to Precalculus Topic 7.7-7.9)
+  // -----------------------------------------------------------------------
+  'complex-numbers-polar': (lang) => {
+    const variant = pickRandom(['de-moivre-power', 'modulus']);
+
+    if (variant === 'de-moivre-power') {
+      const pool = [
+        { base: '1+i', r: '\\sqrt{2}', rSquared: 2, thetaDeg: 45, n: 4 },
+        { base: '1+i', r: '\\sqrt{2}', rSquared: 2, thetaDeg: 45, n: 8 },
+        { base: '1+i', r: '\\sqrt{2}', rSquared: 2, thetaDeg: 45, n: 2 },
+        { base: '1-i', r: '\\sqrt{2}', rSquared: 2, thetaDeg: -45, n: 4 },
+        { base: '1-i', r: '\\sqrt{2}', rSquared: 2, thetaDeg: -45, n: 2 },
+        { base: '\\sqrt{3}+i', r: '2', rSquared: 4, thetaDeg: 30, n: 6 },
+        { base: '\\sqrt{3}+i', r: '2', rSquared: 4, thetaDeg: 30, n: 3 },
+        { base: '-1+i', r: '\\sqrt{2}', rSquared: 2, thetaDeg: 135, n: 4 },
+        { base: '1+\\sqrt{3}i', r: '2', rSquared: 4, thetaDeg: 60, n: 3 },
+        { base: '1+\\sqrt{3}i', r: '2', rSquared: 4, thetaDeg: 60, n: 6 },
+      ];
+      const entry = pickRandom(pool);
+      const rPow = Math.round(Math.pow(entry.rSquared, entry.n / 2));
+      const angle = (((entry.thetaDeg * entry.n) % 360) + 360) % 360;
+
+      let ansLatex;
+      if (angle === 0) ansLatex = `${rPow}`;
+      else if (angle === 180) ansLatex = `${-rPow}`;
+      else if (angle === 90) ansLatex = `${rPow}i`;
+      else ansLatex = `-${rPow}i`;
+
+      const shapes = [`${rPow}`, `${-rPow}`, `${rPow}i`, `-${rPow}i`];
+      const otherShapes = shapes.filter((v) => v !== ansLatex);
+      const { choices, correctIdx } = buildChoices(ansLatex, (i) => {
+        if (i <= otherShapes.length) return otherShapes[i - 1];
+        return `${rPow + (i - otherShapes.length)}`;
+      });
+
+      const question = lang === 'ko'
+        ? `드무아브르 정리를 이용하여 $(${entry.base})^{${entry.n}}$ 의 값을 구하세요.`
+        : `Use De Moivre's Theorem to find the value of $(${entry.base})^{${entry.n}}$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Precalculus Topic 7.9 드무아브르 정리]**\n\n$${entry.base} = ${entry.r}\\left(\\cos ${entry.thetaDeg}^\\circ + i\\sin ${entry.thetaDeg}^\\circ\\right)$ 이므로, 드무아브르 정리에 의해\n\n$$(${entry.base})^{${entry.n}} = ${entry.r}^{${entry.n}}\\left(\\cos(${entry.n}\\times ${entry.thetaDeg}^\\circ) + i\\sin(${entry.n}\\times ${entry.thetaDeg}^\\circ)\\right) = ${rPow}\\left(\\cos ${angle}^\\circ + i\\sin ${angle}^\\circ\\right) = ${ansLatex}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+        : `**[The Essential Guide to Precalculus Topic 7.9 De Moivre's Theorem]**\n\nSince $${entry.base} = ${entry.r}\\left(\\cos ${entry.thetaDeg}^\\circ + i\\sin ${entry.thetaDeg}^\\circ\\right)$, De Moivre's Theorem gives\n\n$$(${entry.base})^{${entry.n}} = ${entry.r}^{${entry.n}}\\left(\\cos(${entry.n}\\times ${entry.thetaDeg}^\\circ) + i\\sin(${entry.n}\\times ${entry.thetaDeg}^\\circ)\\right) = ${rPow}\\left(\\cos ${angle}^\\circ + i\\sin ${angle}^\\circ\\right) = ${ansLatex}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // modulus
+    const triples = [[3, 4, 5], [6, 8, 10], [5, 12, 13], [8, 15, 17], [7, 24, 25], [9, 12, 15], [20, 21, 29]];
+    const [a, b, r] = pickRandom(triples);
+    const signB = pickRandom([1, -1]);
+    const ans = r;
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return a + b;
+      if (i === 2) return Math.max(1, Math.abs(a - b));
+      if (i === 3) return ans + 2;
+      return Math.max(1, ans - 2 * (i - 3));
+    });
+
+    const bLatex = signB === 1 ? `+ ${b}i` : `- ${b}i`;
+
+    const question = lang === 'ko'
+      ? `복소수 $z = ${a} ${bLatex}$ 의 절댓값 $|z|$ 를 구하세요.`
+      : `Find the modulus $|z|$ of the complex number $z = ${a} ${bLatex}$.`;
+
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Precalculus Topic 7.7 복소수의 극형식]**\n\n$$|z| = \\sqrt{${a}^2 + ${b}^2} = \\sqrt{${a * a} + ${b * b}} = \\sqrt{${a * a + b * b}} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+      : `**[The Essential Guide to Precalculus Topic 7.7 Polar Form of Complex Numbers]**\n\n$$|z| = \\sqrt{${a}^2 + ${b}^2} = \\sqrt{${a * a} + ${b * b}} = \\sqrt{${a * a + b * b}} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
 };
 
 /**

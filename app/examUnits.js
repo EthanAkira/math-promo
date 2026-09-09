@@ -367,15 +367,27 @@ export const AMC_FINE_SUBJECTS = [
     description: '삼각함수, 복소수 등 고등 경시 심화 주제',
     units: [
       {
-        id: 'trigonometry', label: '삼각함수', labelEn: 'Trigonometry', desc: 'sin, cos, tan 삼각비 및 삼각함수 성질',
-        tier: 'advanced',
+        id: 'trigonometry', label: '삼각함수', labelEn: 'Trigonometry', desc: '[AMC 10·12] 특수각의 삼각비, 삼각방정식, 사인법칙·코사인법칙, 헤론의 공식',
+        tier: 'advanced', amcLevel: 'AMC 10·12',
         intlCourse: { id: 'intl-precalculus', label: 'Precalculus', labelKo: '삼각함수 (Trigonometry)', href: '/curriculum#intl-precalculus' },
+        domain: { id: 'domain-geometry', label: 'Geometry & Measurement', labelKo: '도형과 측정 · 기하', href: '/curriculum#domain-geometry' },
+      },
+      {
+        id: 'trig-identities', label: '삼각함수의 덧셈정리', labelEn: 'Trigonometric Identities', desc: '[AMC 12] 삼각함수의 합·차공식, 배각공식을 이용한 삼각비 계산',
+        tier: 'advanced', amcLevel: 'AMC 12',
+        intlCourse: { id: 'intl-precalculus', label: 'Precalculus', labelKo: '삼각함수의 덧셈정리 (Trig Identities)', href: '/curriculum#intl-precalculus' },
         domain: { id: 'domain-geometry', label: 'Geometry & Measurement', labelKo: '도형과 측정 · 기하', href: '/curriculum#domain-geometry' },
       },
       {
         id: 'complex-numbers', label: '복소수', labelEn: 'Complex Numbers', desc: '허수 단위 i, 복소수의 연산과 켤레복소수',
         tier: 'advanced',
         intlCourse: { id: 'intl-algebra-2', label: 'Algebra 2', labelKo: '복소수 (Complex Numbers)', href: '/curriculum#intl-algebra-2' },
+        domain: { id: 'domain-numbers', label: 'Number & Operations', labelKo: '수와 연산', href: '/curriculum#domain-numbers' },
+      },
+      {
+        id: 'complex-numbers-polar', label: '복소수의 극형식과 드무아브르 정리', labelEn: 'Polar Form & De Moivre\'s Theorem', desc: '[AMC 12] 복소수의 극형식 변환, 드무아브르 정리를 이용한 거듭제곱 계산',
+        tier: 'advanced', amcLevel: 'AMC 12',
+        intlCourse: { id: 'intl-precalculus', label: 'Precalculus', labelKo: '복소수의 극형식과 드무아브르 정리', href: '/curriculum#intl-precalculus' },
         domain: { id: 'domain-numbers', label: 'Number & Operations', labelKo: '수와 연산', href: '/curriculum#domain-numbers' },
       },
       {
