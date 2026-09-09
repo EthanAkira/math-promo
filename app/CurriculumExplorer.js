@@ -117,7 +117,7 @@ function TopicItem({ topic, copy }) {
       )}
       {hasAmc && (
         <a href={topic.amc.href} className="amc-inline-badge">
-          AMC · 미국수학경시대회 스타일의 문제
+          AMC 미국수학경시대회 스타일 문제로 연습하기
         </a>
       )}
     </div>
@@ -744,8 +744,8 @@ export default function CurriculumExplorer() {
           margin: 4px 10px 8px;
           padding: 2px 8px;
           border-radius: 4px;
-          background: #dbeafe;
-          color: #1d4ed8;
+          background: #f3e8ff;
+          color: #7e22ce;
           font-size: 10px;
           font-weight: 600;
           line-height: 1.3;
@@ -753,7 +753,7 @@ export default function CurriculumExplorer() {
           transition: background 0.15s ease;
         }
         .amc-inline-badge:hover {
-          background: #bfdbfe;
+          background: #e9d5ff;
         }
         .action-tag {
           font-size: 11px;
