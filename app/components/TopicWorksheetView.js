@@ -13,6 +13,8 @@ export default function TopicWorksheetView({
   onGenerateVariant,
   variantProblem,
   onCloseVariant,
+  hideArchive = false,
+  onShowArchive,
 }) {
   // Page size (문항 수 선택): 5, 10, 15, 20, 0 (0 means All)
   const [pageSize, setPageSize] = useState(10);
@@ -336,6 +338,37 @@ export default function TopicWorksheetView({
         </div>
       )}
 
+      {/* When arriving via the curriculum-tab AMC badge, the raw archived (always-English) problem
+          list stays hidden by default — only the localized variant above is shown, plus an explicit,
+          honestly-labeled opt-in to the English archive below. */}
+      {hideArchive ? (
+        <div
+          className="no-print"
+          style={{
+            textAlign: 'center',
+            padding: '18px 20px',
+            background: 'var(--card-bg, #ffffff)',
+            border: '1px dashed var(--paper-line, #d1d5db)',
+            borderRadius: 14,
+            color: 'var(--ink-soft)',
+            fontSize: 13,
+          }}
+        >
+          <p style={{ margin: '0 0 10px' }}>
+            {language === 'ko'
+              ? '실제 AMC 기출문제 원문은 대회 당시 발표된 영어 원문 그대로 보존되어 있습니다.'
+              : 'The real archived AMC exam problems are kept exactly as originally published, in English.'}
+          </p>
+          <button
+            type="button"
+            onClick={onShowArchive}
+            style={{ background: 'none', border: 'none', color: 'var(--primary, #2563eb)', fontSize: 13, fontWeight: 700, cursor: 'pointer', padding: 0, textDecoration: 'underline' }}
+          >
+            {language === 'ko' ? `실제 기출문제 원문 보기 (영어, 총 ${totalCount}문항) →` : `View the original archived problems (English, ${totalCount} total) →`}
+          </button>
+        </div>
+      ) : (
+        <>
       {/* 3. Worksheet Controls Toolbar (문항 수 선택 & 회차별 분할 선택) */}
       <div
         className="no-print"
@@ -694,6 +727,8 @@ export default function TopicWorksheetView({
             )}
           </div>
         </div>
+      )}
+        </>
       )}
     </div>
   );

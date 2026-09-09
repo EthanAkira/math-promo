@@ -150,6 +150,7 @@ export default function AmcUnitBrowser() {
   const [openFileUnit, setOpenFileUnit] = useState(null);
   const [generatedVariants, setGeneratedVariants] = useState({});
   const [selectedUnitId, setSelectedUnitId] = useState(null);
+  const [variantOnlyMode, setVariantOnlyMode] = useState(false);
 
   // Core practice test (multi-unit, count- and difficulty-configurable) state
   const [coreSelectedUnitIds, setCoreSelectedUnitIds] = useState([]);
@@ -184,6 +185,10 @@ export default function AmcUnitBrowser() {
     const found = AMC_FINE_SUBJECTS.flatMap((subject) => subject.units).find((unit) => unit.id === u);
     if (!found) return;
     setGeneratedVariants((prev) => ({ ...prev, [u]: generateAmcVariantProblem(found, language) }));
+    // Landing here from the curriculum-tab AMC badge: keep the raw archived (always-English)
+    // worksheet list out of view by default, so a Korean-curriculum visitor only ever sees the
+    // localized variant unless they explicitly opt into the English archive below.
+    setVariantOnlyMode(true);
   }, [language]);
 
   // Auth check
@@ -426,6 +431,7 @@ export default function AmcUnitBrowser() {
 
   function handleOpenWorksheet(unitId) {
     setSelectedUnitId(unitId);
+    setVariantOnlyMode(false);
     if (typeof window !== 'undefined') {
       const url = new URL(window.location.href);
       url.searchParams.set('unit', unitId);
@@ -436,6 +442,7 @@ export default function AmcUnitBrowser() {
 
   function handleBackToCatalog() {
     setSelectedUnitId(null);
+    setVariantOnlyMode(false);
     if (typeof window !== 'undefined') {
       const url = new URL(window.location.href);
       url.searchParams.delete('unit');
@@ -471,6 +478,8 @@ export default function AmcUnitBrowser() {
           onGenerateVariant={() => handleGenerateVariant(unit.id, unit)}
           variantProblem={generatedVariants[unit.id]}
           onCloseVariant={() => handleCloseVariant(unit.id)}
+          hideArchive={variantOnlyMode}
+          onShowArchive={() => setVariantOnlyMode(false)}
         />
       </div>
     );
