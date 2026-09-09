@@ -15,6 +15,7 @@ export default function TopicWorksheetView({
   onCloseVariant,
   hideArchive = false,
   onShowArchive,
+  sheetQrDataUrl = '',
 }) {
   // Page size (문항 수 선택): 5, 10, 15, 20, 0 (0 means All)
   const [pageSize, setPageSize] = useState(10);
@@ -338,37 +339,53 @@ export default function TopicWorksheetView({
         </div>
       )}
 
-      {/* When arriving via the curriculum-tab AMC badge, the raw archived (always-English) problem
-          list stays hidden by default — only the localized variant above is shown, plus an explicit,
-          honestly-labeled opt-in to the English archive below. */}
-      {hideArchive ? (
+      {/* When arriving via the curriculum-tab AMC badge, `problems` is already the freshly
+          generated, seeded, Korean-localized worksheet — rendered below through the exact same
+          worksheet UI as any other topic. This banner just adds the QR code (scan to continue the
+          same seeded sheet elsewhere) and an honest, explicit opt-in to the raw English archive,
+          which is kept verbatim in its original published form and never shown by default here. */}
+      {(hideArchive || sheetQrDataUrl) && (
         <div
           className="no-print"
           style={{
-            textAlign: 'center',
-            padding: '18px 20px',
-            background: 'var(--card-bg, #ffffff)',
-            border: '1px dashed var(--paper-line, #d1d5db)',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 14,
+            padding: '14px 20px',
+            marginBottom: 20,
+            background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(147, 51, 234, 0.06) 100%)',
+            border: '1px dashed rgba(99, 102, 241, 0.35)',
             borderRadius: 14,
-            color: 'var(--ink-soft)',
-            fontSize: 13,
           }}
         >
-          <p style={{ margin: '0 0 10px' }}>
-            {language === 'ko'
-              ? '실제 AMC 기출문제 원문은 대회 당시 발표된 영어 원문 그대로 보존되어 있습니다.'
-              : 'The real archived AMC exam problems are kept exactly as originally published, in English.'}
-          </p>
-          <button
-            type="button"
-            onClick={onShowArchive}
-            style={{ background: 'none', border: 'none', color: 'var(--primary, #2563eb)', fontSize: 13, fontWeight: 700, cursor: 'pointer', padding: 0, textDecoration: 'underline' }}
-          >
-            {language === 'ko' ? `실제 기출문제 원문 보기 (영어, 총 ${totalCount}문항) →` : `View the original archived problems (English, ${totalCount} total) →`}
-          </button>
+          <div style={{ color: 'var(--ink-soft)', fontSize: 13, flex: '1 1 260px' }}>
+            <p style={{ margin: '0 0 6px', fontWeight: 700, color: '#4338ca' }}>
+              ✨ {language === 'ko' ? `AMC 스타일 유사 문제 ${totalCount}문항이 생성되었습니다.` : `${totalCount} AMC-style variant problems generated.`}
+            </p>
+            {hideArchive && (
+              <button
+                type="button"
+                onClick={onShowArchive}
+                style={{ background: 'none', border: 'none', color: 'var(--primary, #2563eb)', fontSize: 12, fontWeight: 700, cursor: 'pointer', padding: 0, textDecoration: 'underline' }}
+              >
+                {language === 'ko' ? '실제 기출문제 원문 보기 (영어) →' : 'View the original archived problems (English) →'}
+              </button>
+            )}
+          </div>
+          {sheetQrDataUrl && (
+            <div style={{ textAlign: 'center' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={sheetQrDataUrl} alt="QR" width={90} height={90} style={{ borderRadius: 8, border: '1px solid var(--paper-line, #e5e7eb)' }} />
+              <p style={{ margin: '4px 0 0', fontSize: 10, color: 'var(--ink-soft)' }}>
+                {language === 'ko' ? '스캔해서 이어풀기' : 'Scan to continue'}
+              </p>
+            </div>
+          )}
         </div>
-      ) : (
-        <>
+      )}
+
       {/* 3. Worksheet Controls Toolbar (문항 수 선택 & 회차별 분할 선택) */}
       <div
         className="no-print"
@@ -727,8 +744,6 @@ export default function TopicWorksheetView({
             )}
           </div>
         </div>
-      )}
-        </>
       )}
     </div>
   );

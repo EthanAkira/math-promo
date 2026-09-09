@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import QRCode from 'qrcode';
 import { useAuth } from '../../auth';
 import { useLanguage } from '../../language';
 import { AMC_UNITS, AMC_FINE_SUBJECTS } from '../../examUnits';
@@ -8,6 +9,73 @@ import InteractiveProblemCard from '../../components/InteractiveProblemCard';
 import TopicWorksheetView from '../../components/TopicWorksheetView';
 import staticAmc8Catalog from '../../data/amc8ProblemCatalog.json';
 import { generateAmcVariantProblem } from '../amcProblemGenerator';
+
+// --- Seeded worksheet generation (same pattern as the Korean-curriculum generator pages:
+// a random 8-char seed drives a deterministic PRNG so a printed/QR-scanned URL reproduces the
+// exact same problem set) ---
+const AMC_SHEET_SIZE = 20;
+
+function hashSeed(text) {
+  let hash = 2166136261;
+  for (let index = 0; index < text.length; index += 1) { hash ^= text.charCodeAt(index); hash = Math.imul(hash, 16777619); }
+  return hash >>> 0;
+}
+
+function seededRandom(seedText) {
+  let value = hashSeed(seedText);
+  return function next() {
+    value += 0x6d2b79f5;
+    let result = value;
+    result = Math.imul(result ^ (result >>> 15), result | 1);
+    result ^= result + Math.imul(result ^ (result >>> 7), result | 61);
+    return ((result ^ (result >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function createSheetSeed() {
+  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const values = new Uint32Array(8);
+  window.crypto.getRandomValues(values);
+  return Array.from(values, (value) => alphabet[value % alphabet.length]).join('');
+}
+
+// Generates up to AMC_SHEET_SIZE unique-by-question-text variant problems for a unit, driven by a
+// seeded PRNG (the AMC generators call Math.random() internally rather than accepting an injected
+// random function, so it's temporarily swapped in for the duration of this call and restored after
+// — never left patched, and never reused across concurrent calls since this runs synchronously).
+// If the generator only has a few distinct shapes, fewer than AMC_SHEET_SIZE unique problems may
+// come out — that's fine, the sheet is just shorter, never padded with duplicates.
+function makeAmcVariantSheet(seed, unit, language) {
+  const originalRandom = Math.random;
+  Math.random = seededRandom(`${seed}:${unit.id}:${language}`);
+  try {
+    const used = new Set();
+    const problems = [];
+    let guard = 0;
+    while (problems.length < AMC_SHEET_SIZE && guard < AMC_SHEET_SIZE * 15) {
+      guard += 1;
+      const item = generateAmcVariantProblem(unit, language);
+      if (used.has(item.question)) continue;
+      used.add(item.question);
+      problems.push({
+        ...item,
+        id: `${unit.id}-sheet-${problems.length + 1}`,
+        sourceLabel: language === 'ko' ? '알고리즘 유사 변형' : 'Algorithmic Variant',
+      });
+    }
+    return problems;
+  } finally {
+    Math.random = originalRandom;
+  }
+}
+
+function buildAmcSheetUrl(unitId, seed) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('unit', unitId);
+  url.searchParams.set('variant', '1');
+  url.searchParams.set('sheet', seed);
+  return url.toString();
+}
 
 const COPY = {
   ko: {
@@ -151,6 +219,8 @@ export default function AmcUnitBrowser() {
   const [generatedVariants, setGeneratedVariants] = useState({});
   const [selectedUnitId, setSelectedUnitId] = useState(null);
   const [variantOnlyMode, setVariantOnlyMode] = useState(false);
+  const [variantSheet, setVariantSheet] = useState([]);
+  const [variantSheetQr, setVariantSheetQr] = useState('');
 
   // Core practice test (multi-unit, count- and difficulty-configurable) state
   const [coreSelectedUnitIds, setCoreSelectedUnitIds] = useState([]);
@@ -174,9 +244,12 @@ export default function AmcUnitBrowser() {
   }, []);
 
   // A deep link with ?variant=1 (used by the curriculum-tab AMC badge) should land directly on a
-  // freshly generated, language-matched practice problem — NOT the raw archived past AMC exam text,
-  // which is kept verbatim in its original English regardless of site language and would otherwise
-  // be the first thing a Korean-language visitor sees after clicking through.
+  // freshly generated, language-matched 20-problem practice worksheet — like a regular Korean
+  // curriculum worksheet — NOT the raw archived past AMC exam text, which is kept verbatim in its
+  // original English regardless of site language and would otherwise be the first thing a
+  // Korean-language visitor sees after clicking through. The sheet is seeded (?sheet=) so the QR
+  // code below reproduces the exact same 20 (or fewer, if the generator ran out of unique shapes)
+  // problems when scanned.
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
@@ -184,12 +257,22 @@ export default function AmcUnitBrowser() {
     if (!u || params.get('variant') !== '1') return;
     const found = AMC_FINE_SUBJECTS.flatMap((subject) => subject.units).find((unit) => unit.id === u);
     if (!found) return;
-    setGeneratedVariants((prev) => ({ ...prev, [u]: generateAmcVariantProblem(found, language) }));
-    // Landing here from the curriculum-tab AMC badge: keep the raw archived (always-English)
-    // worksheet list out of view by default, so a Korean-curriculum visitor only ever sees the
-    // localized variant unless they explicitly opt into the English archive below.
+    const seed = (params.get('sheet') || createSheetSeed()).toUpperCase();
+    if (params.get('sheet') !== seed) {
+      window.history.replaceState({}, '', buildAmcSheetUrl(u, seed));
+    }
+    setVariantSheet(makeAmcVariantSheet(seed, found, language));
     setVariantOnlyMode(true);
   }, [language]);
+
+  // Regenerate the QR code whenever the active seeded sheet changes.
+  useEffect(() => {
+    if (typeof window === 'undefined' || !variantOnlyMode || !selectedUnitId) { setVariantSheetQr(''); return; }
+    const params = new URLSearchParams(window.location.search);
+    const seed = params.get('sheet');
+    if (!seed) return;
+    QRCode.toDataURL(buildAmcSheetUrl(selectedUnitId, seed), { width: 200, margin: 1, errorCorrectionLevel: 'M', color: { dark: '#1f2733', light: '#fffefb' } }).then(setVariantSheetQr);
+  }, [variantOnlyMode, variantSheet, selectedUnitId]);
 
   // Auth check
   useEffect(() => {
@@ -432,6 +515,8 @@ export default function AmcUnitBrowser() {
   function handleOpenWorksheet(unitId) {
     setSelectedUnitId(unitId);
     setVariantOnlyMode(false);
+    setVariantSheet([]);
+    setVariantSheetQr('');
     if (typeof window !== 'undefined') {
       const url = new URL(window.location.href);
       url.searchParams.set('unit', unitId);
@@ -443,6 +528,8 @@ export default function AmcUnitBrowser() {
   function handleBackToCatalog() {
     setSelectedUnitId(null);
     setVariantOnlyMode(false);
+    setVariantSheet([]);
+    setVariantSheetQr('');
     if (typeof window !== 'undefined') {
       const url = new URL(window.location.href);
       url.searchParams.delete('unit');
@@ -472,11 +559,12 @@ export default function AmcUnitBrowser() {
           category="amc"
           subjectLabel={language === 'en' ? subject.labelEn : subject.label}
           unit={unit}
-          problems={unitProblems}
+          problems={variantOnlyMode ? variantSheet : unitProblems}
           onBack={handleBackToCatalog}
           language={language}
           onGenerateVariant={() => handleGenerateVariant(unit.id, unit)}
-          variantProblem={generatedVariants[unit.id]}
+          variantProblem={variantOnlyMode ? null : generatedVariants[unit.id]}
+          sheetQrDataUrl={variantOnlyMode ? variantSheetQr : ''}
           onCloseVariant={() => handleCloseVariant(unit.id)}
           hideArchive={variantOnlyMode}
           onShowArchive={() => setVariantOnlyMode(false)}
