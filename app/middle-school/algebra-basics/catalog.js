@@ -213,6 +213,77 @@ function advancedEquation(random) {
   return problem('분수가 있는 일차방정식을 푸세요.', `(x ${addend >= 0 ? '−' : '+'} ${Math.abs(addend)})/${denominator} = ${root}`, root * denominator + addend, { promptEn: 'Solve the equation with fractions.' });
 }
 
+// Check Point-level basic word problems (Algebra 1 Ch 1 Application of Linear Equations,
+// one clean step each — distinct from the RPM_ALGEBRA_APPLIED_UNITS "advanced" versions below,
+// which mirror this same book's harder Review Exercise / Chapter Test Level 1-2 problems).
+function ageProblemsBasic(random) {
+  const sonAge = randomInt(random, 8, 15);
+  const multiple = randomInt(random, 3, 5);
+  const fatherAge = multiple * sonAge;
+  const sum = sonAge + fatherAge;
+  return problem(
+    `아버지의 나이는 아들의 나이의 ${multiple}배입니다. 두 사람의 나이의 합이 ${sum}살일 때, 아들의 나이를 구하세요.`,
+    `x + ${multiple}x = ${sum}`,
+    sonAge,
+    { answerSuffix: '살', promptEn: `A father's age is ${multiple} times his son's age. If the sum of their ages is ${sum}, find the son's age.` },
+  );
+}
+
+function consecutiveIntegerBasic(random) {
+  const middle = randomInt(random, 10, 60);
+  const sum = middle * 3;
+  return problem(
+    `연속하는 세 정수의 합이 ${sum}입니다. 이 중 가장 작은 정수를 구하세요.`,
+    `(x − 1) + x + (x + 1) = ${sum}`,
+    middle - 1,
+    { promptEn: `The sum of three consecutive integers is ${sum}. Find the smallest of the three.` },
+  );
+}
+
+function twoSolutionMixtureBasic(random) {
+  const q = pick(random, [5, 8, 10, 12, 15]);
+  let p = pick(random, [20, 25, 30, 35, 40]);
+  while (p <= q) p = pick(random, [20, 25, 30, 35, 40]);
+  let r = randomInt(random, q + 1, p - 1);
+  const d1 = r - q;
+  const d2 = p - r;
+  const k = randomInt(random, 2, 6);
+  const m1 = k * d2;
+  const x = k * d1;
+  return problem(
+    `${q}% 소금물 ${m1}g에 ${p}% 소금물을 섞어서 ${r}% 소금물을 만들려고 합니다. 섞어야 하는 ${p}% 소금물의 양을 구하세요.`,
+    `${q}/100 × ${m1} + ${p}/100 × x = ${r}/100 × (${m1} + x)`,
+    x,
+    { answerSuffix: 'g', promptEn: `Mix some ${p}% salt solution with ${m1} g of ${q}% salt solution to make a ${r}% solution. Find the amount of ${p}% solution needed.` },
+  );
+}
+
+function meetingPointBasic(random) {
+  const speedA = randomInt(random, 40, 90);
+  let speedB = randomInt(random, 40, 90);
+  while (speedB === speedA) speedB = randomInt(random, 40, 90);
+  const time = randomInt(random, 2, 6);
+  const distance = (speedA + speedB) * time;
+  return problem(
+    `${distance}m 떨어진 두 지점에서 두 사람이 서로를 향해 동시에 출발했습니다. 한 사람은 분속 ${speedA}m, 다른 사람은 분속 ${speedB}m로 걸을 때, 두 사람이 만나는 것은 몇 분 후입니까?`,
+    `${speedA}x + ${speedB}x = ${distance}`,
+    time,
+    { answerSuffix: '분', promptEn: `Two people start at the same time from two points ${distance} m apart and walk toward each other at ${speedA} m/min and ${speedB} m/min. After how many minutes do they meet?` },
+  );
+}
+
+function percentageBasic(random) {
+  const percent = pick(random, [10, 20, 25, 30, 40, 50]);
+  const answerValue = randomInt(random, 4, 40);
+  const total = answerValue * 100 / percent;
+  return problem(
+    `어떤 수의 ${percent}%가 ${answerValue}입니다. 어떤 수를 구하세요.`,
+    `${percent}/100 × x = ${answerValue}`,
+    total,
+    { promptEn: `${percent}% of a number is ${answerValue}. Find the number.` },
+  );
+}
+
 function equationWordProblem(random) {
   const mode = randomInt(random, 0, 3);
   if (mode === 0) {
@@ -283,6 +354,11 @@ export const ALGEBRA_UNITS = [
   { id: 'equation-word-problems', label: '일차방정식 문장제', description: '문장을 방정식으로 나타내고 미지수 구하기', en: ['Linear-equation word problems', 'Model word problems with equations'], make: equationWordProblem },
   { id: 'distance-speed-time', label: '거리·속력·시간 문제', description: '거리=속력×시간 관계를 방정식으로 해결하기', en: ['Distance, speed & time', 'Solve travel problems with linear equations'], make: distanceSpeedTime },
   { id: 'concentration', label: '농도 문제', description: '소금의 양이 일정한 관계로 농도 문제 해결하기', en: ['Concentration problems', 'Solve salt-solution problems with equations'], make: concentration },
+  { id: 'age-problems-basic', label: '나이 문제', description: '두 사람의 나이의 합과 배수 관계로 나이 구하기', tier: 'basic', en: ['Age problems', 'Find ages from a sum and a multiple relationship'], make: ageProblemsBasic },
+  { id: 'consecutive-integer-basic', label: '연속하는 정수 문제', description: '연속하는 세 정수의 합으로 각 정수 구하기', tier: 'basic', en: ['Consecutive integers', 'Find consecutive integers from their sum'], make: consecutiveIntegerBasic },
+  { id: 'two-solution-mixture-basic', label: '두 소금물 섞기 문제', description: '농도가 다른 두 소금물을 섞어 목표 농도 만들기', tier: 'basic', en: ['Mixing two solutions', 'Combine two differently-concentrated solutions to reach a target percent'], make: twoSolutionMixtureBasic },
+  { id: 'meeting-point-basic', label: '마주보고 걷기 문제', description: '두 사람이 마주 보고 걸어 만나는 시간 구하기', tier: 'basic', en: ['Meeting point problems', 'Find the time for two people walking toward each other to meet'], make: meetingPointBasic },
+  { id: 'percentage-basic', label: '백분율 문제', description: '어떤 수의 몇 %가 주어질 때 원래의 수 구하기', tier: 'basic', en: ['Percentage problems', 'Find the original number given a percent of it'], make: percentageBasic },
   { id: 'equations-review', label: '일차방정식 종합', description: '기본 풀이부터 문장제·속력·농도까지 종합', en: ['Linear equations review', 'Mixed practice from basic equations to applications'], make: (random) => pick(random, equationReview)(random) },
 ];
 
