@@ -51,6 +51,57 @@ function inverseTrigEquations(random) {
   return make('주어진 범위에서 삼각방정식의 해를 구하세요.', `sin θ=${value}, −90°≤θ≤90°`, `${angle}°`, bi('Solve the trigonometric equation on the given interval.', `arcsin(${value})=${angle}°이고 주어진 범위에서 해는 ${angle}°입니다.`, `The principal inverse-sine value is ${angle}°.`));
 }
 
+// Ch4 Analytic Trigonometry, split into one unit per technique: the existing
+// trigonometricIdentities() above only converts one ratio to another via the Pythagorean identity.
+function trigVerifyIdentity(random) {
+  const [opp, adj, hyp] = pick(random, [[3, 4, 5], [5, 12, 13], [8, 15, 17], [7, 24, 25], [20, 21, 29]]);
+  const ask = pick(random, ['sec-sin', 'csc-cos', 'one-minus-sin-sq']);
+  if (ask === 'sec-sin') {
+    const ans = frac(opp, adj);
+    return make('삼각함수의 기본 항등식을 이용하여 값을 구하세요.', `sinθ=${opp}/${hyp}, cosθ=${adj}/${hyp}일 때, secθ·sinθ`, ans, bi('Use fundamental identities to simplify and evaluate.', `secθ·sinθ=tanθ=${opp}/${adj}=${ans}입니다.`, `secθ·sinθ=tanθ=${opp}/${adj}=${ans}.`));
+  }
+  if (ask === 'csc-cos') {
+    const ans = frac(adj, opp);
+    return make('삼각함수의 기본 항등식을 이용하여 값을 구하세요.', `sinθ=${opp}/${hyp}, cosθ=${adj}/${hyp}일 때, cscθ·cosθ`, ans, bi('Use fundamental identities to simplify and evaluate.', `cscθ·cosθ=cotθ=${adj}/${opp}=${ans}입니다.`, `cscθ·cosθ=cotθ=${adj}/${opp}=${ans}.`));
+  }
+  const ans = frac(adj * adj, hyp * hyp);
+  return make('피타고라스 항등식을 이용하여 값을 구하세요.', `sinθ=${opp}/${hyp}일 때, 1−sin²θ`, ans, bi('Use the Pythagorean identity.', `1−sin²θ=cos²θ=(${adj}/${hyp})²=${ans}입니다.`, `1−sin²θ=cos²θ=(${adj}/${hyp})²=${ans}.`));
+}
+
+function trigSumDifference(random) {
+  const table = [
+    { deg: 15, label: 'sin', decomp: '45°−30°', value: '(√6−√2)/4' },
+    { deg: 15, label: 'cos', decomp: '45°−30°', value: '(√6+√2)/4' },
+    { deg: 75, label: 'sin', decomp: '45°+30°', value: '(√6+√2)/4' },
+    { deg: 75, label: 'cos', decomp: '45°+30°', value: '(√6−√2)/4' },
+    { deg: 105, label: 'sin', decomp: '60°+45°', value: '(√6+√2)/4' },
+    { deg: 105, label: 'cos', decomp: '60°+45°', value: '(√2−√6)/4' },
+  ];
+  const entry = pick(random, table);
+  return make('덧셈정리를 이용하여 삼각비의 값을 구하세요.', `${entry.label} ${entry.deg}°`, entry.value, bi('Use the sum/difference identity to find the exact value.', `${entry.deg}°=${entry.decomp}로 분해하여 덧셈정리를 적용하면 ${entry.value}입니다.`, `Decomposing ${entry.deg}°=${entry.decomp} and applying the sum/difference identity gives ${entry.value}.`));
+}
+
+function trigDoubleAngle(random) {
+  const [opp, adj, hyp] = pick(random, [[3, 4, 5], [5, 12, 13], [8, 15, 17], [7, 24, 25]]);
+  const quadrant = pick(random, ['I', 'II']);
+  const cosSign = quadrant === 'I' ? 1 : -1;
+  const ans = frac(2 * opp * cosSign * adj, hyp * hyp);
+  const quadKo = quadrant === 'I' ? '제1사분면' : '제2사분면';
+  const cosStr = `${cosSign > 0 ? '' : '−'}${adj}/${hyp}`;
+  return make('배각공식을 이용하여 sin2θ의 값을 구하세요.', `θ가 ${quadKo}의 각이고 sinθ=${opp}/${hyp}`, ans, bi('Use the double-angle formula.', `cosθ=${cosStr}이므로 sin2θ=2sinθcosθ=${ans}입니다.`, `cosθ=${cosStr}, so sin2θ=2sinθcosθ=${ans}.`));
+}
+
+function trigProductToSum(random) {
+  const table = [
+    { formula: '2sin45°cos15°', rule: '2sinAcosB=sin(A+B)+sin(A−B)', calc: 'sin60°+sin30°', value: '(√3+1)/2' },
+    { formula: '2cos45°sin15°', rule: '2cosAsinB=sin(A+B)−sin(A−B)', calc: 'sin60°−sin30°', value: '(√3−1)/2' },
+    { formula: '2cos45°cos15°', rule: '2cosAcosB=cos(A−B)+cos(A+B)', calc: 'cos30°+cos60°', value: '(√3+1)/2' },
+    { formula: '2sin45°sin15°', rule: '2sinAsinB=cos(A−B)−cos(A+B)', calc: 'cos30°−cos60°', value: '(√3−1)/2' },
+  ];
+  const entry = pick(random, table);
+  return make('곱을 합으로 바꾸는 공식을 이용하여 값을 구하세요.', entry.formula, entry.value, bi('Use the product-to-sum identity.', `${entry.rule} 공식에 의해 ${entry.formula}=${entry.calc}=${entry.value}입니다.`, `By ${entry.rule}, ${entry.formula}=${entry.calc}=${entry.value}.`));
+}
+
 function polarCoordinates(random) {
   const radius = ri(random, 2, 8); const [angle, xFactor, yFactor] = pick(random, [[0, 1, 0], [90, 0, 1], [180, -1, 0], [270, 0, -1]]);
   return make('극좌표를 직교좌표로 나타내세요.', `(r,θ)=(${radius},${angle}°)`, `${radius * xFactor},${radius * yFactor}`, bi('Convert the polar point to rectangular coordinates.', `x=r cosθ=${radius * xFactor}, y=r sinθ=${radius * yFactor}입니다.`, `Use x=r cosθ and y=r sinθ.`));
@@ -59,6 +110,56 @@ function polarCoordinates(random) {
 function parametricFunctions(random) {
   const x0 = ri(random, -5, 5); const y0 = ri(random, -5, 5); const vx = nz(random, -4, 4); const vy = nz(random, -4, 4); const time = ri(random, 1, 5);
   return make('매개변수로 나타낸 점의 좌표를 구하세요.', `x=${x0}${signed(vx)}t, y=${y0}${signed(vy)}t, t=${time}`, `${x0 + vx * time},${y0 + vy * time}`, bi('Find the point defined parametrically at the given t.', `t=${time}를 두 식에 대입하면 (${x0 + vx * time},${y0 + vy * time})입니다.`, `Substitute t=${time} into both equations.`));
+}
+
+// Ch6 Parametric Equations & Polar Coordinates, split into one unit per technique.
+function parametricEliminate(random) {
+  const h = nz(random, -4, 4); const k = nz(random, -6, 6); const a = pick(random, [1, 2, -1, -2]);
+  const xVal = nz(random, -5, 5);
+  const t = xVal - h;
+  const yVal = a * t * t + k;
+  return make('매개변수를 소거하여 직교방정식을 구하고, 주어진 x에서 y를 구하세요.', `x=t${signed(h)}, y=${a}t^2${signed(k)}, x=${xVal}일 때 y=?`, yVal, bi('Eliminate the parameter, then evaluate.', `t=x${signed(-h)}이므로 y=${a}(x${signed(-h)})^2${signed(k)}이고, x=${xVal}일 때 y=${yVal}입니다.`, `Since t=x${signed(-h)}, y=${a}(x${signed(-h)})²${signed(k)}; at x=${xVal}, y=${yVal}.`));
+}
+
+function projectileMotion(random) {
+  const g = 10;
+  const angle = pick(random, [30, 90]);
+  const sinTheta = angle === 30 ? 0.5 : 1;
+  const vSinTheta = pick(random, [10, 20, 30, 40]);
+  const v = vSinTheta / sinTheta;
+  if (random() < 0.5) {
+    const T = (2 * vSinTheta) / g;
+    return make('발사체의 비행 시간을 구하세요.', `초기 속력 v=${v}m/s, 발사각 ${angle}°, g=10m/s²`, T, bi('Find the time of flight.', `T=2v sinθ/g=2×${v}×sin${angle}°/10=${T}초입니다.`, `T=2v sinθ/g=2×${v}×sin${angle}°/10=${T} s.`));
+  }
+  const H = (vSinTheta * vSinTheta) / (2 * g);
+  return make('발사체의 최대 높이를 구하세요.', `초기 속력 v=${v}m/s, 발사각 ${angle}°, g=10m/s²`, H, bi('Find the maximum height.', `H=(v sinθ)²/(2g)=(${vSinTheta})²/20=${H}m입니다.`, `H=(v sinθ)²/(2g)=(${vSinTheta})²/20=${H} m.`));
+}
+
+function polarGraphIdentify(random) {
+  const mode = ri(random, 0, 3);
+  const labelsKo = ['원', '카디오이드', '장미 곡선', '연주형(레먼니스케이트)'];
+  const labelsEn = ['circle', 'cardioid', 'rose curve', 'lemniscate'];
+  const a = ri(random, 2, 6);
+  const k = pick(random, [2, 3, 4, 5]);
+  const equations = [`r=${a}`, `r=${a}(1+cosθ)`, `r=${a}cos(${k}θ)`, `r^2=${a * a}cos(2θ)`];
+  return make('극방정식이 나타내는 곡선의 종류를 고르세요.', equations[mode], mode + 1, bi('Identify the curve represented by the polar equation.', `극방정식의 형태를 비교하면 ${labelsKo[mode]}입니다.`, `Comparing the form of the equation identifies a ${labelsEn[mode]}.`, choice(labelsKo, labelsEn)));
+}
+
+function complexPolarDeMoivre(random) {
+  const pool = [
+    { base: '1+i', rSq: 2, thetaDeg: 45, n: 4 }, { base: '1+i', rSq: 2, thetaDeg: 45, n: 8 },
+    { base: '√3+i', rSq: 4, thetaDeg: 30, n: 6 }, { base: '√3+i', rSq: 4, thetaDeg: 30, n: 3 },
+    { base: '-1+i', rSq: 2, thetaDeg: 135, n: 4 }, { base: '1+√3i', rSq: 4, thetaDeg: 60, n: 3 },
+  ];
+  const { base, rSq, thetaDeg, n } = pick(random, pool);
+  const rPow = Math.round(rSq ** (n / 2));
+  const angle = (((thetaDeg * n) % 360) + 360) % 360;
+  let ans;
+  if (angle === 0) ans = `${rPow}`;
+  else if (angle === 180) ans = `${-rPow}`;
+  else if (angle === 90) ans = `${rPow}i`;
+  else ans = `-${rPow}i`;
+  return make('드무아브르 정리를 이용하여 값을 구하세요.', `(${base})^${n}`, ans, bi("Use De Moivre's Theorem.", `극형식으로 나타내면 r^${n}(cos${n}θ+isin${n}θ)이고 계산하면 ${ans}입니다.`, `Converting to polar form and applying De Moivre's Theorem gives ${ans}.`));
 }
 
 function conicSections(random) {
@@ -265,8 +366,16 @@ export const PRECALCULUS_UNITS = [
   unit('precalc-trig-graphs', '삼각함수', '삼각함수 그래프', 'Trigonometric graphs', '진폭·주기와 그래프 변환', 'Analyze amplitude and period', [PC, H2A], trigonometricGraphs),
   unit('precalc-trig-identities', '삼각함수', '삼각함수의 관계', 'Trigonometric identities', '기본 항등식과 삼각비 사이의 관계', 'Use fundamental trigonometric identities', [PC, H2A], trigonometricIdentities),
   unit('precalc-inverse-trig', '삼각함수', '역삼각함수와 삼각방정식', 'Inverse trigonometry', '역삼각함수로 삼각방정식 해결', 'Solve equations using inverse trigonometric functions', [PC], inverseTrigEquations),
+  unit('precalc-trig-verify-identity', '삼각함수', '삼각함수의 기본 항등식 활용', 'Fundamental identity applications', '역수·몫·피타고라스 항등식으로 식 간단히 하기', 'Simplify expressions using reciprocal, quotient and Pythagorean identities', [PC], trigVerifyIdentity),
+  unit('precalc-trig-sum-difference', '삼각함수', '삼각함수의 덧셈정리', 'Sum & difference identities', '각을 분해하여 삼각비의 정확한 값 구하기', 'Decompose angles to find exact trigonometric values', [PC], trigSumDifference),
+  unit('precalc-trig-double-angle', '삼각함수', '배각공식', 'Double-angle identities', '사분면 조건에서 sin2θ의 값 구하기', 'Find sin2θ given a ratio and quadrant condition', [PC], trigDoubleAngle),
+  unit('precalc-trig-product-sum', '삼각함수', '곱을 합으로 바꾸는 공식', 'Product-to-sum identities', '곱 형태의 삼각함수 값을 합으로 바꾸어 계산', 'Convert products of trig functions to sums to evaluate', [PC], trigProductToSum),
   unit('precalc-polar-coordinates', '극좌표와 매개변수', '극좌표', 'Polar coordinates', '극좌표와 직교좌표의 변환', 'Convert between polar and rectangular coordinates', [PC], polarCoordinates),
   unit('precalc-parametric-functions', '극좌표와 매개변수', '매개변수함수', 'Parametric functions', '매개변수로 나타낸 위치와 변화', 'Evaluate parametric functions', [PC], parametricFunctions),
+  unit('precalc-parametric-eliminate', '극좌표와 매개변수', '매개변수의 소거', 'Eliminating the parameter', '매개변수를 소거해 직교방정식으로 나타내기', 'Eliminate the parameter to get a rectangular equation', [PC], parametricEliminate),
+  unit('precalc-projectile-motion', '극좌표와 매개변수', '매개변수를 이용한 발사체 운동', 'Projectile motion (parametric)', '비행 시간과 최대 높이 구하기', 'Find time of flight and maximum height', [PC], projectileMotion),
+  unit('precalc-polar-graph-identify', '극좌표와 매개변수', '극방정식의 그래프', 'Special polar graphs', '카디오이드·장미곡선·연주형 등 극그래프 식별', 'Identify cardioids, rose curves and lemniscates from their equations', [PC], polarGraphIdentify),
+  unit('precalc-complex-polar-demoivre', '극좌표와 매개변수', '복소수의 극형식과 드무아브르 정리', 'Complex numbers in polar form', '드무아브르 정리를 이용한 거듭제곱 계산', "Use De Moivre's Theorem to compute powers of complex numbers", [PC], complexPolarDeMoivre),
   unit('precalc-conic-sections', '이차곡선', '원뿔곡선', 'Conic sections', '포물선·타원·쌍곡선의 표준형', 'Identify conic sections from standard equations', [PC, H3G], conicSections),
   unit('precalc-parabola-features', '이차곡선', '포물선의 성질', 'Parabola features', '평행이동된 포물선의 꼭짓점·초점·준선', 'Find the vertex, focus and directrix of a translated parabola', [PC, H3G], parabolaFeatures),
   unit('precalc-ellipse-features', '이차곡선', '타원의 성질', 'Ellipse features', '평행이동된 타원의 초점·꼭짓점·이심률', 'Find the foci, vertices and eccentricity of a translated ellipse', [PC, H3G], ellipseFeaturesTranslated),
