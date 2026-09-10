@@ -8,8 +8,8 @@ export const CURRICULUM_COPY = {
     eyebrow: 'CURRICULUM MAP',
     title: '어떤 순서로 수학을 찾아볼까요?',
     description: '한국 교육과정(학년별/2022 개정 과목별), 국제학교 과정, 수학 영역별의 관점으로 체계적으로 탐색할 수 있습니다.',
-    mainTabs: ['한국 교육과정', '국제학교 과정', '수학 영역별', '동아시아 교육과정', '동남아시아 교육과정', '남아시아 교육과정'],
-    mainTabHelp: ['초1~고3 학년별 및 2022 개정 과목별', 'Pre-Algebra · Algebra 1·2 · Precalculus', '수와 연산, 대수, 기하, 확률·통계 등 개념 지도', '일본 · 대만 · 홍콩', '싱가포르 · 말레이시아 · 베트남', '인도'],
+    mainTabs: ['한국 교육과정', '국제학교 과정', '수학 영역별', '동아시아 교육과정', '동남아시아 교육과정', '남아시아 교육과정', '영어권 국가 교육과정'],
+    mainTabHelp: ['초1~고3 학년별 및 2022 개정 과목별', 'Pre-Algebra · Algebra 1·2 · Precalculus', '수와 연산, 대수, 기하, 확률·통계 등 개념 지도', '일본 · 대만 · 홍콩', '싱가포르 · 말레이시아 · 베트남', '인도', '미국 · 호주 · 영국 · 캐나다 · 뉴질랜드'],
     subViews: {
       byGrade: '학년별 보기 · 기존 분류',
       bySubject2022: '2022 개정 과목별 보기',
@@ -26,6 +26,9 @@ export const CURRICULUM_COPY = {
     },
     southAsiaCountries: {
       india: '인도 교육과정',
+    },
+    englishSpeakingCountries: {
+      usa: '미국 교육과정', australia: '호주 교육과정', uk: '영국 교육과정', canada: '캐나다 교육과정', newzealand: '뉴질랜드 교육과정',
     },
     schoolLevels: {
       elementary: '초등학교',
@@ -53,6 +56,7 @@ export const CURRICULUM_COPY = {
       eastAsiaNotice: '일본·대만·홍콩 교육과정의 실제 학년·과목 명칭에 맞춰 기존 문제 은행을 재구성해 보여드립니다. 각국 기출문제를 분석한 실제 응용문제는 추후 추가될 예정이며, 추가되면 한국 심화 문제와 동일하게 유료 구독(curriculum-advanced)으로 열람할 수 있습니다.',
       southeastAsiaNotice: '싱가포르·말레이시아·베트남 교육과정의 실제 학년·과목 명칭에 맞춰 기존 문제 은행을 재구성해 보여드립니다. 각국 기출문제를 분석한 실제 응용문제는 추후 추가될 예정이며, 추가되면 한국 심화 문제와 동일하게 유료 구독(curriculum-advanced)으로 열람할 수 있습니다.',
       southAsiaNotice: '인도(CBSE) 교육과정의 실제 학년·과목 명칭에 맞춰 기존 문제 은행을 재구성해 보여드립니다. 실제 기출문제를 분석한 응용문제는 추후 추가될 예정이며, 추가되면 한국 심화 문제와 동일하게 유료 구독(curriculum-advanced)으로 열람할 수 있습니다.',
+      englishSpeakingNotice: '미국·호주·영국·캐나다·뉴질랜드의 대표 교육과정 단계와 과목 명칭에 맞춰 기존 영어 문제 은행을 재구성했습니다. 미국은 주별, 호주·캐나다는 주/준주별 차이가 있으므로 대표 국가·주 교육과정 경로로 안내합니다.',
       bottomNote: '표시된 학년·과목은 탐색을 위한 대표 경로이며, 학교와 국가에 따라 단원 순서가 달라질 수 있습니다.',
     },
     labels: {
@@ -67,8 +71,8 @@ export const CURRICULUM_COPY = {
     eyebrow: 'CURRICULUM MAP',
     title: 'Choose how you want to explore math',
     description: 'Browse by Korean curriculum (grades / 2022 subjects), international course sequence, or mathematical domain.',
-    mainTabs: ['Korean Curriculum', 'Course Sequence', 'Math Domains', 'East Asia Curricula', 'Southeast Asia Curricula', 'South Asia Curricula'],
-    mainTabHelp: ['Grades 1–12 & 2022 Revised Subjects', 'Pre-Algebra, Algebra 1–2, Precalculus', 'Concept strands across systems', 'Japan · Taiwan · Hong Kong', 'Singapore · Malaysia · Vietnam', 'India'],
+    mainTabs: ['Korean Curriculum', 'Course Sequence', 'Math Domains', 'East Asia Curricula', 'Southeast Asia Curricula', 'South Asia Curricula', 'English-speaking Countries'],
+    mainTabHelp: ['Grades 1–12 & 2022 Revised Subjects', 'Pre-Algebra, Algebra 1–2, Precalculus', 'Concept strands across systems', 'Japan · Taiwan · Hong Kong', 'Singapore · Malaysia · Vietnam', 'India', 'United States · Australia · United Kingdom · Canada · New Zealand'],
     subViews: {
       byGrade: 'By Grade · Classic Names',
       bySubject2022: '2022 Revised Subjects',
@@ -85,6 +89,9 @@ export const CURRICULUM_COPY = {
     },
     southAsiaCountries: {
       india: 'India Curriculum',
+    },
+    englishSpeakingCountries: {
+      usa: 'United States', australia: 'Australia', uk: 'United Kingdom', canada: 'Canada', newzealand: 'New Zealand',
     },
     schoolLevels: {
       elementary: 'Elementary School',
@@ -112,6 +119,7 @@ export const CURRICULUM_COPY = {
       eastAsiaNotice: 'The existing problem bank is reorganized to match the real grade and subject names used in Japan, Taiwan, and Hong Kong. Country-specific applied problems drawn from real past exams will be added later, gated behind the same paid subscription (curriculum-advanced) as the Korean advanced-tier problems.',
       southeastAsiaNotice: 'The existing problem bank is reorganized to match the real grade and subject names used in Singapore, Malaysia, and Vietnam. Country-specific applied problems drawn from real past exams will be added later, gated behind the same paid subscription (curriculum-advanced) as the Korean advanced-tier problems.',
       southAsiaNotice: 'The existing problem bank is reorganized to match the real grade and subject names used in India (CBSE). Country-specific applied problems drawn from real past exams will be added later, gated behind the same paid subscription (curriculum-advanced) as the Korean advanced-tier problems.',
+      englishSpeakingNotice: 'The English problem bank is organised around representative pathways in the United States, Australia, the United Kingdom, Canada, and New Zealand. The US, Australian, and Canadian pathways are representative because requirements vary by state, province, or territory.',
       bottomNote: 'These are reference pathways. Exact topic sequences vary by school, country, and syllabus.',
     },
     labels: {
@@ -1418,10 +1426,44 @@ const INTERNATIONAL_COURSE_STAGE_SEEDS = [
     subtitle: 'Advanced functions, trigonometry and vectors',
     availability: 'ready',
     topics: [
-      { label: 'Polynomial & Rational Functions', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-rational-features', ready: true, availability: 'ready' },
-      { label: 'Trigonometric Functions & Identities', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-trig-graphs', ready: true, availability: 'ready' },
-      { label: 'Polar & Parametric Functions', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-polar-coordinates', ready: true, availability: 'ready' },
-      { label: 'Vectors & Matrices', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-vectors', ready: true, availability: 'ready' },
+      { isHeader: true, label: 'Polynomial & Rational Functions' },
+      { label: 'Polynomial End Behavior', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-polynomial-end-behavior', ready: true, availability: 'ready' },
+      { label: 'Rational Function Features', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-rational-features', ready: true, availability: 'ready' },
+      { label: 'Remainder & Factor Theorems', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-polynomial-theorems', ready: true, availability: 'ready' },
+      { isHeader: true, label: 'Exponential & Logarithmic Functions' },
+      { label: 'Exponential & Logarithmic Transformations', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-exp-log-transformations', ready: true, availability: 'ready' },
+      { label: 'Exponential & Logarithmic Equations', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-exponential-equations', ready: true, availability: 'ready' },
+      { isHeader: true, label: 'Trigonometry' },
+      { label: 'Trigonometric Graphs', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-trig-graphs', ready: true, availability: 'ready' },
+      { label: 'Trigonometric Identities', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-trig-identities', ready: true, availability: 'ready' },
+      { label: 'Inverse Trigonometry', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-inverse-trig', ready: true, availability: 'ready' },
+      { label: 'Fundamental Identity Applications', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-trig-verify-identity', ready: true, availability: 'ready' },
+      { label: 'Sum & Difference Identities', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-trig-sum-difference', ready: true, availability: 'ready' },
+      { label: 'Double-Angle Identities', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-trig-double-angle', ready: true, availability: 'ready' },
+      { label: 'Product-to-Sum Identities', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-trig-product-sum', ready: true, availability: 'ready' },
+      { label: 'Law of Sines & Cosines', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-law-of-sines-cosines', ready: true, availability: 'ready' },
+      { isHeader: true, label: 'Polar & Parametric Functions' },
+      { label: 'Polar Coordinates', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-polar-coordinates', ready: true, availability: 'ready' },
+      { label: 'Parametric Functions', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-parametric-functions', ready: true, availability: 'ready' },
+      { label: 'Eliminating the Parameter', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-parametric-eliminate', ready: true, availability: 'ready' },
+      { label: 'Projectile Motion (Parametric)', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-projectile-motion', ready: true, availability: 'ready' },
+      { label: 'Special Polar Graphs', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-polar-graph-identify', ready: true, availability: 'ready' },
+      { label: 'Complex Numbers in Polar Form', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-complex-polar-demoivre', ready: true, availability: 'ready' },
+      { isHeader: true, label: 'Analytic Geometry (Conic Sections)' },
+      { label: 'Conic Sections', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-conic-sections', ready: true, availability: 'ready' },
+      { label: 'Parabola Features', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-parabola-features', ready: true, availability: 'ready' },
+      { label: 'Ellipse Features', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-ellipse-features', ready: true, availability: 'ready' },
+      { label: 'Hyperbola Features', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-hyperbola-features', ready: true, availability: 'ready' },
+      { label: 'Conics: General to Standard Form', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-conic-general-form', ready: true, availability: 'ready' },
+      { isHeader: true, label: 'Discrete Mathematics' },
+      { label: 'Recursively Defined Sequences', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-sequence-recursive', ready: true, availability: 'ready' },
+      { label: 'Arithmetic Series: Solve for n', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-arithmetic-series-find-n', ready: true, availability: 'ready' },
+      { label: 'Infinite Geometric Series', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-infinite-geometric-series', ready: true, availability: 'ready' },
+      { label: 'Counting Principle & Permutations', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-counting-permutations', ready: true, availability: 'ready' },
+      { label: 'Probability With/Without Replacement', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-probability-events', ready: true, availability: 'ready' },
+      { isHeader: true, label: 'Vectors & Matrices' },
+      { label: 'Vector Operations', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-vectors', ready: true, availability: 'ready' },
+      { label: 'Transformation Matrices', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-transformation-matrices', ready: true, availability: 'ready' },
     ],
   },
   {
@@ -1946,6 +1988,47 @@ const INDIA_STAGE_SEEDS = [
   },
 ];
 
+// Representative English-speaking national/state pathways. Links reuse the
+// existing English-language generators while labels follow each system's
+// commonly used official stage/course names.
+const ENGLISH_CORE_MIDDLE_TOPICS = [
+  { label: 'Ratios, Proportions & Percentages', href: '/middle-school/pre-algebra?profile=pre-algebra&unit=proportion-application', ready: true, availability: 'ready' },
+  { label: 'Expressions & Linear Equations', href: '/middle-school/pre-algebra?profile=algebra-1&unit=linear-equations', ready: true, availability: 'ready' },
+  { label: 'Functions & Coordinate Graphs', href: '/middle-school/pre-algebra?profile=algebra-1&unit=linear-functions-2', ready: true, availability: 'ready' },
+  { label: 'Geometry, Congruence & Similarity', href: '/middle-school/basic-figures?profile=international&unit=triangle-congruence-similarity', ready: true, availability: 'ready' },
+  { label: "Pythagoras' Theorem", href: '/middle-school/basic-figures?profile=international&unit=pythagorean-applications', ready: true, availability: 'ready' },
+  { label: 'Statistics & Probability', href: '/middle-school/pre-algebra?profile=algebra-1&unit=probability-2', ready: true, availability: 'ready' },
+];
+
+const ENGLISH_CORE_HIGH_TOPICS = [
+  { label: 'Algebra & Quadratic Functions', href: '/middle-school/pre-algebra?profile=algebra-1&unit=quadratic-functions', ready: true, availability: 'ready' },
+  { label: 'Polynomial, Rational & Radical Functions', href: '/middle-school/pre-algebra?profile=algebra-2&unit=polynomial-functions', ready: true, availability: 'ready' },
+  { label: 'Exponential & Logarithmic Functions', href: '/middle-school/pre-algebra?profile=algebra-2&unit=exponential-equations', ready: true, availability: 'ready' },
+  { label: 'Trigonometry', href: '/middle-school/pre-algebra?profile=precalculus&unit=algebra2-trigonometry', ready: true, availability: 'ready' },
+  { label: 'Sequences & Series', href: '/middle-school/pre-algebra?profile=algebra-2&unit=sequences', ready: true, availability: 'ready' },
+  { label: 'Probability & Statistics', href: '/middle-school/pre-algebra?profile=algebra-2&unit=conditional-probability', ready: true, availability: 'ready' },
+];
+
+function englishStages(prefix, middleTitle, middleSubtitle, highTitle, highSubtitle, seniorTitle, seniorSubtitle) {
+  return [
+    { id: `${prefix}-middle`, title: middleTitle, subtitle: middleSubtitle, availability: 'ready', topics: ENGLISH_CORE_MIDDLE_TOPICS },
+    { id: `${prefix}-high`, title: highTitle, subtitle: highSubtitle, availability: 'ready', topics: ENGLISH_CORE_HIGH_TOPICS },
+    { id: `${prefix}-senior`, title: seniorTitle, subtitle: seniorSubtitle, availability: 'ready', topics: [
+      { label: 'Advanced Functions & Precalculus', href: '/middle-school/pre-algebra?profile=precalculus', ready: true, availability: 'ready' },
+      { label: 'Calculus: Limits & Differentiation', href: '/middle-school/pre-algebra?profile=ap-calc-ab&unit=h2-derivative-rules', ready: true, availability: 'ready' },
+      { label: 'Calculus: Integration & Applications', href: '/middle-school/pre-algebra?profile=ap-calc-ab&unit=h2-definite-integrals', ready: true, availability: 'ready' },
+      { label: 'Vectors & Three-Dimensional Geometry', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-vectors', ready: true, availability: 'ready' },
+      { label: 'Advanced Probability & Statistics', href: '/middle-school/pre-algebra?profile=kr-high-2-probability-statistics', ready: true, availability: 'ready' },
+    ] },
+  ];
+}
+
+const USA_STAGE_SEEDS = englishStages('us', 'Middle School Mathematics (Grades 6–8)', 'Common Core representative pathway', 'High School Mathematics', 'Algebra I · Geometry · Algebra II', 'College-Ready & Advanced Placement', 'Precalculus · AP Calculus · AP Statistics');
+const AUSTRALIA_STAGE_SEEDS = englishStages('au', 'Australian Curriculum Mathematics (Years 7–8)', 'Version 9.0 · Number, Algebra, Measurement, Space, Statistics & Probability', 'Australian Curriculum Mathematics (Years 9–10)', 'Version 9.0 · preparation for senior pathways', 'Senior Secondary Mathematics', 'General Mathematics · Mathematical Methods · Specialist Mathematics');
+const UK_STAGE_SEEDS = englishStages('uk', 'Key Stage 3 Mathematics (Years 7–9)', 'England National Curriculum', 'GCSE Mathematics (Key Stage 4)', 'Foundation & Higher content', 'Sixth Form Mathematics', 'A Level Mathematics · Further Mathematics');
+const CANADA_STAGE_SEEDS = englishStages('ca', 'Junior/Intermediate Mathematics (Grades 6–9)', 'Representative provincial pathway', 'Secondary Mathematics (Grades 10–11)', 'Foundations · Pre-calculus · Workplace pathways', 'Grade 12 Mathematics', 'Pre-calculus · Calculus · Statistics');
+const NEW_ZEALAND_STAGE_SEEDS = englishStages('nz', 'Mathematics & Statistics (Years 7–10)', 'NZ Curriculum 2025 · Phases 3–4', 'Senior Secondary Mathematics (Year 11)', 'Mathematics & Statistics learning area', 'Senior Qualifications (Years 12–13)', 'NCEA transition · Mathematics & Statistics');
+
 /**
  * 4. 수학 영역별 인덱스 (Math Domains)
  */
@@ -2062,6 +2145,11 @@ const VIEW_DEFINITIONS = [
   { id: 'my-course', system: null, stages: MALAYSIA_STAGE_SEEDS },
   { id: 'vn-course', system: null, stages: VIETNAM_STAGE_SEEDS },
   { id: 'in-course', system: null, stages: INDIA_STAGE_SEEDS },
+  { id: 'us-course', system: null, stages: USA_STAGE_SEEDS },
+  { id: 'au-course', system: null, stages: AUSTRALIA_STAGE_SEEDS },
+  { id: 'uk-course', system: null, stages: UK_STAGE_SEEDS },
+  { id: 'ca-course', system: null, stages: CANADA_STAGE_SEEDS },
+  { id: 'nz-course', system: null, stages: NEW_ZEALAND_STAGE_SEEDS },
   { id: 'domain', system: null, stages: DOMAIN_STAGE_SEEDS },
 ];
 
@@ -2265,4 +2353,9 @@ export const SINGAPORE_STAGES = projectStages('sg-course', SINGAPORE_STAGE_SEEDS
 export const MALAYSIA_STAGES = projectStages('my-course', MALAYSIA_STAGE_SEEDS);
 export const VIETNAM_STAGES = projectStages('vn-course', VIETNAM_STAGE_SEEDS);
 export const INDIA_STAGES = projectStages('in-course', INDIA_STAGE_SEEDS);
+export const USA_STAGES = projectStages('us-course', USA_STAGE_SEEDS);
+export const AUSTRALIA_STAGES = projectStages('au-course', AUSTRALIA_STAGE_SEEDS);
+export const UK_STAGES = projectStages('uk-course', UK_STAGE_SEEDS);
+export const CANADA_STAGES = projectStages('ca-course', CANADA_STAGE_SEEDS);
+export const NEW_ZEALAND_STAGES = projectStages('nz-course', NEW_ZEALAND_STAGE_SEEDS);
 export const DOMAIN_STAGES = projectStages('domain', DOMAIN_STAGE_SEEDS);
