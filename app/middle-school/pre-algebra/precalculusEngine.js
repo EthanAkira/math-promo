@@ -81,12 +81,61 @@ function transformationMatrices(random) {
   return make('행렬로 점을 변환한 결과를 구하세요.', `${matrices[mode]}[${x};${y}]`, `${results[mode][0]},${results[mode][1]}`, bi('Apply the transformation matrix to the point.', `행과 열의 내적을 계산하면 (${results[mode][0]},${results[mode][1]})입니다.`, `Row-column multiplication gives (${results[mode][0]},${results[mode][1]}).`));
 }
 
+// Ch1 Polynomial & Rational Functions: Remainder Theorem (evaluate f(a) without direct long
+// division) and Factor Theorem (find the coefficient making (x-a) a factor).
+function polynomialTheorems(random) {
+  const a = nz(random, -4, 4);
+  if (random() < 0.5) {
+    const b = nz(random, -5, 5); const c = nz(random, -5, 5); const d = nz(random, -5, 5);
+    const remainder = a ** 3 + b * a ** 2 + c * a + d;
+    return make('나머지 정리를 이용하여 다항식을 (x−a) 꼴로 나눈 나머지를 구하세요.', `f(x)=x^3${signed(b)}x^2${signed(c)}x${signed(d)}, (x${signed(-a)})로 나눈 나머지는?`, remainder, bi('Use the Remainder Theorem to find the remainder.', `나머지 정리에 의해 나머지는 f(${a})=${remainder}입니다.`, `By the Remainder Theorem, the remainder equals f(${a})=${remainder}.`));
+  }
+  const b = nz(random, -5, 5); const k = nz(random, -6, 6);
+  const d = -(a ** 3 + b * a ** 2 + k * a);
+  return make('인수정리를 이용하여 (x−a)가 다항식의 인수가 되도록 하는 상수 k를 구하세요.', `f(x)=x^3${signed(b)}x^2+kx${signed(d)}, (x${signed(-a)})가 f(x)의 인수`, k, bi('Use the Factor Theorem to find k.', `인수정리에 의해 f(${a})=0이어야 하므로 방정식을 풀면 k=${k}입니다.`, `By the Factor Theorem, f(${a})=0, which solves to k=${k}.`));
+}
+
+// Ch5 Applications of Trigonometry: Law of Cosines (SAS -> missing side) and the ½ab·sinC area
+// formula (kept to angles with a clean rational sine so the area is exact).
+function lawOfSinesCosines(random) {
+  if (random() < 0.5) {
+    const pool = [
+      { a: 3, b: 8, C: 60, c: 7 }, { a: 5, b: 8, C: 60, c: 7 }, { a: 3, b: 5, C: 120, c: 7 }, { a: 7, b: 8, C: 120, c: 13 },
+      { a: 3, b: 4, C: 90, c: 5 }, { a: 6, b: 8, C: 90, c: 10 }, { a: 5, b: 12, C: 90, c: 13 }, { a: 9, b: 12, C: 90, c: 15 },
+    ];
+    const { a, b, C, c } = pick(random, pool);
+    return make('코사인 법칙을 이용하여 변의 길이를 구하세요.', `삼각형에서 a=${a}, b=${b}, ∠C=${C}°, c=?`, c, bi('Use the Law of Cosines to find side c.', `c²=a²+b²−2ab·cosC 공식에 대입하면 c=${c}입니다.`, `Substitute into c²=a²+b²−2ab·cosC to get c=${c}.`));
+  }
+  const a = ri(random, 4, 12); const b = ri(random, 4, 12);
+  const [angle, denom] = pick(random, [[30, 4], [90, 2]]);
+  const area = frac(a * b, denom);
+  return make('사인법칙의 넓이 공식을 이용하여 삼각형의 넓이를 구하세요.', `삼각형에서 a=${a}, b=${b}, ∠C=${angle}°`, area, bi('Find the area using ½ab·sinC.', `넓이=½ab sinC 공식에 대입하면 ${area}입니다.`, `Using Area=½ab·sinC gives ${area}.`));
+}
+
+// Ch2 Exponential & Logarithmic Functions: solving by matching bases, and rewriting a log
+// equation in exponential form.
+function exponentialEquationSolving(random) {
+  const base = pick(random, [2, 3, 5]);
+  if (random() < 0.5) {
+    const x = nz(random, -5, 5);
+    const m = nz(random, -3, 3);
+    const c1 = nz(random, -6, 6);
+    const c2 = m * x + c1;
+    return make('밑을 같게 하여 지수방정식을 푸세요.', `${base}^(${m}x${signed(c1)})=${base}^${c2}`, x, bi('Solve by equating exponents (same base).', `밑이 같으므로 지수를 비교하면 ${m}x${signed(c1)}=${c2}이고, 이를 풀면 x=${x}입니다.`, `Since the bases match, equate exponents: ${m}x${signed(c1)}=${c2}, giving x=${x}.`));
+  }
+  const k = ri(random, 1, 4);
+  const x = base ** k;
+  return make('로그방정식을 지수형으로 바꾸어 푸세요.', `log_${base}(x)=${k}`, x, bi('Rewrite in exponential form and solve.', `log_${base}(x)=${k}는 x=${base}^${k}=${x}와 같습니다.`, `log_${base}(x)=${k} means x=${base}^${k}=${x}.`));
+}
+
 const unit = (id, category, label, enLabel, description, enDescription, profiles, generator) => ({ id, category, label, description, en: [enLabel, enDescription], profiles, make: generator });
 
 export const PRECALCULUS_UNITS = [
   unit('precalc-polynomial-end-behavior', '함수', '다항함수의 끝 행동', 'Polynomial end behavior', '차수와 최고차항으로 그래프의 끝 행동 판단', 'Analyze polynomial end behavior', [PC], polynomialEndBehavior),
   unit('precalc-rational-features', '함수', '유리함수의 점근선과 구멍', 'Rational function features', '수직·수평점근선과 제거 가능한 불연속', 'Find asymptotes and holes', [PC], rationalFeatures),
+  unit('precalc-polynomial-theorems', '함수', '나머지정리와 인수정리', 'Remainder & Factor Theorems', '직접 나눗셈 없이 나머지와 인수 조건 구하기', 'Apply the Remainder and Factor Theorems', [PC], polynomialTheorems),
   unit('precalc-exp-log-transformations', '지수와 로그', '지수·로그함수의 그래프 변환', 'Exponential & logarithmic transformations', '평행이동과 점근선', 'Analyze transformations and asymptotes', [PC, H2A], exponentialLogTransformations),
+  unit('precalc-exponential-equations', '지수와 로그', '지수방정식과 로그방정식', 'Exponential & logarithmic equations', '밑을 같게 하거나 지수형으로 바꾸어 풀기', 'Solve by matching bases or rewriting in exponential form', [PC, H2A], exponentialEquationSolving),
   unit('precalc-trig-graphs', '삼각함수', '삼각함수 그래프', 'Trigonometric graphs', '진폭·주기와 그래프 변환', 'Analyze amplitude and period', [PC, H2A], trigonometricGraphs),
   unit('precalc-trig-identities', '삼각함수', '삼각함수의 관계', 'Trigonometric identities', '기본 항등식과 삼각비 사이의 관계', 'Use fundamental trigonometric identities', [PC, H2A], trigonometricIdentities),
   unit('precalc-inverse-trig', '삼각함수', '역삼각함수와 삼각방정식', 'Inverse trigonometry', '역삼각함수로 삼각방정식 해결', 'Solve equations using inverse trigonometric functions', [PC], inverseTrigEquations),
@@ -94,5 +143,6 @@ export const PRECALCULUS_UNITS = [
   unit('precalc-parametric-functions', '극좌표와 매개변수', '매개변수함수', 'Parametric functions', '매개변수로 나타낸 위치와 변화', 'Evaluate parametric functions', [PC], parametricFunctions),
   unit('precalc-conic-sections', '이차곡선', '원뿔곡선', 'Conic sections', '포물선·타원·쌍곡선의 표준형', 'Identify conic sections from standard equations', [PC, H3G], conicSections),
   unit('precalc-vectors', '벡터', '벡터의 연산', 'Vector operations', '벡터의 크기와 내적', 'Calculate vector magnitudes and dot products', [PC, H3G], vectorOperations),
+  unit('precalc-law-of-sines-cosines', '삼각함수', '사인법칙과 코사인법칙', 'Law of Sines & Cosines', '변의 길이와 삼각형의 넓이 구하기', 'Find missing sides and triangle areas', [PC], lawOfSinesCosines),
   unit('precalc-transformation-matrices', '행렬', '변환행렬', 'Transformation matrices', '행렬을 이용한 평면도형의 변환', 'Apply transformation matrices', [PC], transformationMatrices),
 ];
