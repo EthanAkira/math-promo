@@ -187,7 +187,27 @@ function tokenizeMath(input) {
       }
     }
 
-    // 6. Plain character
+    // 6. Radical (√): √(...) or √123 (bare numeric radicand only, to avoid swallowing trailing units/text)
+    if (text[index] === '√') {
+      const radStart = index + 1;
+      if (text[radStart] === '(') {
+        const group = readGrouped(text, radStart, '(', ')');
+        if (group) {
+          tokens.push({ type: 'radical', value: group.value, raw: text.slice(index, group.end) });
+          index = group.end;
+          continue;
+        }
+      } else {
+        const numMatch = sub.slice(1).match(/^\d+(\.\d+)?/);
+        if (numMatch && numMatch[0]) {
+          tokens.push({ type: 'radical', value: numMatch[0], raw: `√${numMatch[0]}` });
+          index += 1 + numMatch[0].length;
+          continue;
+        }
+      }
+    }
+
+    // 7. Plain character
     if (tokens.length > 0 && typeof tokens[tokens.length - 1] === 'string') {
       tokens[tokens.length - 1] += text[index];
     } else {
@@ -204,6 +224,7 @@ function tokenizeMath(input) {
  * 1. Fractions: rendered as stacked vertical fractions with horizontal bar (never a bare slash '/').
  * 2. Powers/Exponents: rendered as superscript (never a bare caret '^').
  * 3. Permutations & Combinations (nPr, nCr, nHr, nΠr): rendered with small subscript n and r flanking the operator.
+ * 4. Radicals (√): rendered with a horizontal vinculum over the radicand (never a bare '√' glyph with no bar).
  */
 export default function MathText({ value }) {
   if (value === null || value === undefined || value === '') return null;
@@ -243,6 +264,14 @@ export default function MathText({ value }) {
               <sub className="math-perm-sub-left"><MathText value={tok.left} /></sub>
               <span className="math-perm-op">{tok.op}</span>
               <sub className="math-perm-sub-right"><MathText value={tok.right} /></sub>
+            </span>
+          );
+        }
+        if (tok.type === 'radical') {
+          return (
+            <span className="math-radical" key={idx}>
+              <span className="radical-symbol">√</span>
+              <span className="radical-radicand"><MathText value={tok.value} /></span>
             </span>
           );
         }

@@ -1756,6 +1756,27 @@ html[dir="rtl"] .language-picker-academic select {
   font-size: 0.88em;
   line-height: 1;
 }
+.math-radical {
+  display: inline-flex;
+  align-items: flex-end;
+  margin: 0 0.04em;
+  white-space: nowrap;
+}
+.radical-symbol {
+  display: inline-block;
+  font-size: 1em;
+  line-height: 1;
+  transform: scaleY(1.15);
+  position: relative;
+  bottom: -0.03em;
+  margin-right: 0.02em;
+}
+.radical-radicand {
+  display: inline-block;
+  border-top: 0.08em solid currentColor;
+  padding: 0.03em 0.1em 0 0.08em;
+  line-height: 1.15;
+}
 .math-perm-comb {
   display: inline-flex;
   align-items: baseline;
