@@ -68,6 +68,70 @@ function conicSections(random) {
   return make('방정식이 나타내는 이차곡선을 고르세요.', equations[mode], mode + 1, bi('Identify the conic represented by the equation.', `표준형을 비교하면 ${labelsKo[mode]}입니다.`, `Comparing with standard forms identifies a ${labelsEn[mode]}.`, choice(labelsKo, labelsEn)));
 }
 
+// Ch7 Analytic Geometry, split into one unit per conic (translated standard forms) plus a
+// general-to-standard-form (completing the square) unit — the existing conicSections() above only
+// identifies the conic TYPE from an origin-centered equation, none of these read off actual
+// features (vertex/focus/directrix, foci/vertices/eccentricity, foci/vertices/asymptotes) or
+// require completing the square.
+function parabolaFeatures(random) {
+  const h = nz(random, -5, 5); const k = nz(random, -5, 5); const p = pick(random, [-3, -2, -1, 1, 2, 3]);
+  const vertical = random() < 0.5;
+  const eq = vertical ? `(x${signed(-h)})^2=${4 * p}(y${signed(-k)})` : `(y${signed(-k)})^2=${4 * p}(x${signed(-h)})`;
+  const ask = pick(random, ['vertex', 'focus', 'directrix']);
+  if (ask === 'vertex') {
+    return make('포물선의 꼭짓점을 구하세요.', eq, `${h},${k}`, bi('Find the vertex of the parabola.', `표준형에서 꼭짓점은 (${h},${k})입니다.`, `From the standard form, the vertex is (${h},${k}).`));
+  }
+  if (ask === 'focus') {
+    const focus = vertical ? `${h},${k + p}` : `${h + p},${k}`;
+    return make('포물선의 초점을 구하세요.', eq, focus, bi('Find the focus of the parabola.', `p=${p}이므로 초점은 (${focus})입니다.`, `Since p=${p}, the focus is (${focus}).`));
+  }
+  const directrix = vertical ? `y=${k - p}` : `x=${h - p}`;
+  return make('포물선의 준선을 구하세요.', eq, directrix, bi('Find the directrix of the parabola.', `p=${p}이므로 준선은 ${directrix}입니다.`, `Since p=${p}, the directrix is ${directrix}.`));
+}
+
+function ellipseFeaturesTranslated(random) {
+  const h = nz(random, -5, 5); const k = nz(random, -5, 5);
+  const [a, b, c] = pick(random, [[5, 4, 3], [13, 12, 5], [10, 8, 6], [15, 12, 9], [17, 15, 8]]);
+  const eq = `(x${signed(-h)})^2/${a * a}+(y${signed(-k)})^2/${b * b}=1`;
+  const ask = pick(random, ['foci', 'vertices', 'eccentricity']);
+  if (ask === 'foci') {
+    return make('타원의 두 초점을 구하세요.', eq, `(${h - c},${k}),(${h + c},${k})`, bi('Find the two foci of the ellipse.', `c²=a²−b²=${a * a}−${b * b}=${c * c}이므로 c=${c}, 초점은 (${h - c},${k})와 (${h + c},${k})입니다.`, `c²=a²−b²=${c * c}, so c=${c}; the foci are (${h - c},${k}) and (${h + c},${k}).`));
+  }
+  if (ask === 'vertices') {
+    return make('타원의 장축 위의 두 꼭짓점을 구하세요.', eq, `(${h - a},${k}),(${h + a},${k})`, bi('Find the two vertices on the major axis.', `장축의 반이 a=${a}이므로 꼭짓점은 (${h - a},${k})와 (${h + a},${k})입니다.`, `The semi-major axis is a=${a}, so the vertices are (${h - a},${k}) and (${h + a},${k}).`));
+  }
+  const e = frac(c, a);
+  return make('타원의 이심률을 구하세요.', eq, e, bi('Find the eccentricity of the ellipse.', `c²=a²−b²=${c * c}이므로 c=${c}이고, 이심률 e=c/a=${e}입니다.`, `c²=a²−b²=${c * c} gives c=${c}, so the eccentricity is e=c/a=${e}.`));
+}
+
+function hyperbolaFeaturesTranslated(random) {
+  const h = nz(random, -5, 5); const k = nz(random, -5, 5);
+  const [a, b, c] = pick(random, [[3, 4, 5], [5, 12, 13], [8, 15, 17], [6, 8, 10], [9, 12, 15]]);
+  const eq = `(x${signed(-h)})^2/${a * a}−(y${signed(-k)})^2/${b * b}=1`;
+  const ask = pick(random, ['foci', 'vertices', 'asymptotes']);
+  if (ask === 'foci') {
+    return make('쌍곡선의 두 초점을 구하세요.', eq, `(${h - c},${k}),(${h + c},${k})`, bi('Find the two foci of the hyperbola.', `c²=a²+b²=${a * a}+${b * b}=${c * c}이므로 c=${c}, 초점은 (${h - c},${k})와 (${h + c},${k})입니다.`, `c²=a²+b²=${c * c}, so c=${c}; the foci are (${h - c},${k}) and (${h + c},${k}).`));
+  }
+  if (ask === 'vertices') {
+    return make('쌍곡선의 두 꼭짓점을 구하세요.', eq, `(${h - a},${k}),(${h + a},${k})`, bi('Find the two vertices of the hyperbola.', `a=${a}이므로 꼭짓점은 (${h - a},${k})와 (${h + a},${k})입니다.`, `Since a=${a}, the vertices are (${h - a},${k}) and (${h + a},${k}).`));
+  }
+  const slope = frac(b, a);
+  return make('쌍곡선의 점근선을 구하세요.', eq, `y${signed(-k)}=±${slope}(x${signed(-h)})`, bi('Find the asymptotes of the hyperbola.', `점근선은 y−k=±(b/a)(x−h) 꼴이므로 y${signed(-k)}=±${slope}(x${signed(-h)})입니다.`, `The asymptotes have the form y−k=±(b/a)(x−h): y${signed(-k)}=±${slope}(x${signed(-h)}).`));
+}
+
+function conicGeneralForm(random) {
+  const h = nz(random, -4, 4); const k = nz(random, -4, 4);
+  const a = ri(random, 2, 5); let b = ri(random, 2, 5);
+  while (b === a) b = ri(random, 2, 5);
+  const A = b * b; const C = a * a;
+  const D = -2 * b * b * h; const E = -2 * a * a * k; const F = b * b * h * h + a * a * k * k - a * a * b * b;
+  const eq = `${A}x^2+${C}y^2${signed(D)}x${signed(E)}y${signed(F)}=0`;
+  if (random() < 0.5) {
+    return make('완전제곱식으로 고쳐 타원의 중심을 구하세요.', eq, `${h},${k}`, bi('Complete the square to find the center of the ellipse.', `x, y에 대해 완전제곱식으로 고치면 (x${signed(-h)})²/${a * a}+(y${signed(-k)})²/${b * b}=1이 되어 중심은 (${h},${k})입니다.`, `Completing the square gives (x${signed(-h)})²/${a * a}+(y${signed(-k)})²/${b * b}=1, so the center is (${h},${k}).`));
+  }
+  return make('완전제곱식으로 고쳐 장축 반지름의 제곱(a²)을 구하세요.', eq, a * a, bi('Complete the square to find a² (semi-major axis squared).', `완전제곱식으로 고치면 (x${signed(-h)})²/${a * a}+(y${signed(-k)})²/${b * b}=1이 되므로 a²=${a * a}입니다.`, `Completing the square gives (x${signed(-h)})²/${a * a}+(y${signed(-k)})²/${b * b}=1, so a²=${a * a}.`));
+}
+
 function vectorOperations(random) {
   const [x, y, magnitude] = pick(random, [[3, 4, 5], [5, 12, 13], [8, 15, 17], [7, 24, 25]]); const signX = pick(random, [-1, 1]); const signY = pick(random, [-1, 1]);
   if (random() < 0.5) return make('벡터의 크기를 구하세요.', `v=⟨${signX * x},${signY * y}⟩`, magnitude, bi('Find the magnitude of the vector.', `|v|=√(${x}²+${y}²)=${magnitude}입니다.`, `Use |v|=√(x²+y²)=${magnitude}.`));
@@ -142,6 +206,10 @@ export const PRECALCULUS_UNITS = [
   unit('precalc-polar-coordinates', '극좌표와 매개변수', '극좌표', 'Polar coordinates', '극좌표와 직교좌표의 변환', 'Convert between polar and rectangular coordinates', [PC], polarCoordinates),
   unit('precalc-parametric-functions', '극좌표와 매개변수', '매개변수함수', 'Parametric functions', '매개변수로 나타낸 위치와 변화', 'Evaluate parametric functions', [PC], parametricFunctions),
   unit('precalc-conic-sections', '이차곡선', '원뿔곡선', 'Conic sections', '포물선·타원·쌍곡선의 표준형', 'Identify conic sections from standard equations', [PC, H3G], conicSections),
+  unit('precalc-parabola-features', '이차곡선', '포물선의 성질', 'Parabola features', '평행이동된 포물선의 꼭짓점·초점·준선', 'Find the vertex, focus and directrix of a translated parabola', [PC, H3G], parabolaFeatures),
+  unit('precalc-ellipse-features', '이차곡선', '타원의 성질', 'Ellipse features', '평행이동된 타원의 초점·꼭짓점·이심률', 'Find the foci, vertices and eccentricity of a translated ellipse', [PC, H3G], ellipseFeaturesTranslated),
+  unit('precalc-hyperbola-features', '이차곡선', '쌍곡선의 성질', 'Hyperbola features', '평행이동된 쌍곡선의 초점·꼭짓점·점근선', 'Find the foci, vertices and asymptotes of a translated hyperbola', [PC, H3G], hyperbolaFeaturesTranslated),
+  unit('precalc-conic-general-form', '이차곡선', '이차곡선의 일반형과 표준형', 'Conics: general to standard form', '완전제곱식으로 일반형을 표준형으로 바꾸기', 'Complete the square to convert a general conic equation to standard form', [PC, H3G], conicGeneralForm),
   unit('precalc-vectors', '벡터', '벡터의 연산', 'Vector operations', '벡터의 크기와 내적', 'Calculate vector magnitudes and dot products', [PC, H3G], vectorOperations),
   unit('precalc-law-of-sines-cosines', '삼각함수', '사인법칙과 코사인법칙', 'Law of Sines & Cosines', '변의 길이와 삼각형의 넓이 구하기', 'Find missing sides and triangle areas', [PC], lawOfSinesCosines),
   unit('precalc-transformation-matrices', '행렬', '변환행렬', 'Transformation matrices', '행렬을 이용한 평면도형의 변환', 'Apply transformation matrices', [PC], transformationMatrices),
