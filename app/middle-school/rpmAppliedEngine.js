@@ -48,10 +48,10 @@ function factorText(factors) {
 
 // -------------------------------------------------------------
 // -------------------------------------------------------------
-// CHAPTER 01: 소인수분해 응용 (RPM 1-1 Pages 10 ~ 15)
+// CHAPTER 01: 소인수분해 응용
 // -------------------------------------------------------------
 
-// [유형 01] 소수와 합성수의 성질 및 추론 (RPM #36, #37, #38, #39, #71, #75)
+// [유형 01] 소수와 합성수의 성질 및 추론
 export function rpmPrimePropClosest(random) {
   const variant = pick(random, ['closest', 'countInList', 'lessThanCount']);
   if (variant === 'closest') {
@@ -110,7 +110,7 @@ export function rpmPrimePropClosest(random) {
   }
 }
 
-// [유형 02] 거듭제곱의 성질과 일의 자리 규칙 (RPM #40, #41, #42, #43, #68, #74, #83)
+// [유형 02] 거듭제곱의 성질과 일의 자리 규칙
 export function rpmPrimePowerRules(random) {
   const variant = pick(random, ['unitsDigit', 'powerEquation', 'combinedPower']);
   if (variant === 'unitsDigit') {
@@ -174,7 +174,7 @@ export function rpmPrimePowerRules(random) {
   }
 }
 
-// [유형 03] 소인수분해와 지수 연산 (RPM #44, #45, #46, #47, #69)
+// [유형 03] 소인수분해와 지수 연산
 export function rpmPrimeFactorizeExponents(random) {
   const variant = pick(random, ['solveLinearFactors', 'orderedPrimes', 'correctFactorization']);
   if (variant === 'solveLinearFactors') {
@@ -236,7 +236,7 @@ export function rpmPrimeFactorizeExponents(random) {
   }
 }
 
-// [유형 04] 소인수의 합과 소인수 분석 (RPM #48, #49, #50, #51, #72)
+// [유형 04] 소인수의 합과 소인수 분석
 export function rpmPrimeFactorAnalysis(random) {
   const variant = pick(random, ['sumOfFactors', 'compositeExam', 'oddFactorSet']);
   if (variant === 'sumOfFactors') {
@@ -280,7 +280,7 @@ export function rpmPrimeFactorAnalysis(random) {
   }
 }
 
-// [유형 05] 약수와 거듭제곱 약수의 성질 (RPM #52, #53, #54, #55, #73, #77)
+// [유형 05] 약수와 거듭제곱 약수의 성질
 export function rpmPrimeDivisorProperties(random) {
   const variant = pick(random, ['squareDivisors', 'secondRankedDivisors', 'invalidDivisor']);
   if (variant === 'squareDivisors') {
@@ -340,7 +340,7 @@ export function rpmPrimeDivisorProperties(random) {
   }
 }
 
-// [유형 06] 약수의 개수 공식과 미지수 지수 (RPM #56, #57, #58, #59, #70, #80)
+// [유형 06] 약수의 개수 공식과 미지수 지수
 export function rpmPrimeDivisorCountReverse(random) {
   const variant = pick(random, ['findExponent', 'equalDivisors', 'unknownPrimeSquare']);
   if (variant === 'findExponent') {
@@ -377,7 +377,7 @@ export function rpmPrimeDivisorCountReverse(random) {
   }
 }
 
-// [유형 07] 제곱인 수 만들기 (RPM #60, #61, #62, #63, #76, #81)
+// [유형 07] 제곱인 수 만들기
 export function rpmPrimeMakeSquare(random) {
   const variant = pick(random, ['multiplySquare', 'divideSquare', 'secondSmallestMultiplier']);
   if (variant === 'multiplySquare') {
@@ -438,7 +438,7 @@ export function rpmPrimeMakeSquare(random) {
   }
 }
 
-// [유형 08] 약수의 개수가 주어질 때 □ 구하기 (RPM #64, #65, #78)
+// [유형 08] 약수의 개수가 주어질 때 □ 구하기
 export function rpmPrimeUnknownInDivisorCount(random) {
   const variant = pick(random, ['selectBox', 'smallestBox', 'cannotBeBox']);
   if (variant === 'smallestBox') {
@@ -485,7 +485,7 @@ export function rpmPrimeUnknownInDivisorCount(random) {
   }
 }
 
-// [유형 09] 약수의 개수가 n개인 자연수 추론 (RPM #66, #67, #79, #82)
+// [유형 09] 약수의 개수가 n개인 자연수 추론
 export function rpmPrimeDivisorCountReverseDeduce(random) {
   const variant = pick(random, ['functionProduct', 'countExactSix', 'conditionSmallest']);
   if (variant === 'functionProduct') {
@@ -523,7 +523,7 @@ export function rpmPrimeDivisorCountReverseDeduce(random) {
   }
 }
 
-// [응용 실전 종합] RPM 소인수분해 실전 종합 (RPM 유형 01~09 및 중단원/실력UP)
+// [응용 실전 종합] RPM 소인수분해 실전 종합
 export function rpmPrimeAllTypesMixed(random) {
   const allEngines = [
     rpmPrimePropClosest,
@@ -540,7 +540,7 @@ export function rpmPrimeAllTypesMixed(random) {
 }
 
 // -------------------------------------------------------------
-// CHAPTER 02: 최대공약수와 최소공배수 응용 (RPM 1-1 Pages 18 ~ 31)
+// CHAPTER 02: 최대공약수와 최소공배수 응용
 // -------------------------------------------------------------
 
 function gcdAll(arr) {
@@ -559,7 +559,7 @@ function divisorsOf(n) {
   return res;
 }
 
-// [유형 01·02] 최대공약수와 서로소 (RPM #109~#115, #181, #184, #185)
+// [유형 01·02] 최대공약수와 서로소
 export function rpmGcdBasicCoprime(random) {
   const variant = pick(random, ['deduceExpSum', 'coprimeCount', 'findCoprimeChoice', 'unknownBox']);
   if (variant === 'deduceExpSum') {
@@ -650,7 +650,7 @@ export function rpmGcdBasicCoprime(random) {
   }
 }
 
-// [유형 03] 공약수와 최대공약수의 성질 (RPM #116~#119, #183, #197)
+// [유형 03] 공약수와 최대공약수의 성질
 export function rpmGcdCommonDivisorProp(random) {
   const variant = pick(random, ['notCommonDivisor', 'countCommonDivisors', 'chainGcd']);
   if (variant === 'notCommonDivisor') {
@@ -710,7 +710,7 @@ export function rpmGcdCommonDivisorProp(random) {
   }
 }
 
-// [유형 04·05] 최소공배수와 공배수의 성질 (RPM #120~#127)
+// [유형 04·05] 최소공배수와 공배수의 성질
 export function rpmLcmCommonMultipleProp(random) {
   const variant = pick(random, ['lcmExpSum', 'countLimit', 'closestMultiple']);
   if (variant === 'lcmExpSum') {
@@ -753,7 +753,7 @@ export function rpmLcmCommonMultipleProp(random) {
   }
 }
 
-// [유형 06] 소인수분해 지수와 최대공약수·최소공배수 역추적 (RPM #128~#134, #186)
+// [유형 06] 소인수분해 지수와 최대공약수·최소공배수 역추적
 export function rpmGcdLcmExponentDeduce(random) {
   const variant = pick(random, ['twoNumDeduce', 'threeNumLcmSum', 'deduceDivisorsA']);
   if (variant === 'twoNumDeduce') {
@@ -792,7 +792,7 @@ export function rpmGcdLcmExponentDeduce(random) {
   }
 }
 
-// [유형 07] 두 수의 곱과 최대공약수·최소공배수의 관계 (RPM #135~#138, #187, #193, #211)
+// [유형 07] 두 수의 곱과 최대공약수·최소공배수의 관계
 export function rpmGcdLcmProductRelation(random) {
   const variant = pick(random, ['productLcm', 'productGcd', 'twoDigitReverse']);
   if (variant === 'productLcm') {
@@ -839,7 +839,7 @@ export function rpmGcdLcmProductRelation(random) {
   }
 }
 
-// [유형 08] 미지수 x를 포함한 세 수의 최소공배수 (RPM #139~#142, #196, #207)
+// [유형 08] 미지수 x를 포함한 세 수의 최소공배수
 export function rpmLcmThreeNumbersRatio(random) {
   const variant = pick(random, ['unknownX', 'ratioLargest', 'ratioSum']);
   if (variant === 'unknownX') {
@@ -877,7 +877,7 @@ export function rpmLcmThreeNumbersRatio(random) {
   }
 }
 
-// [유형 09] 최대공약수 활용 — 남김없이 똑같이 나누어주기 (RPM #143~#145, #204)
+// [유형 09] 최대공약수 활용 — 남김없이 똑같이 나누어주기
 export function rpmGcdWordDistribute(random) {
   const variant = pick(random, ['pencilsErasers', 'threeFruits', 'groupsSum']);
   if (variant === 'pencilsErasers') {
@@ -925,7 +925,7 @@ export function rpmGcdWordDistribute(random) {
   }
 }
 
-// [유형 10·11] 최대공약수 활용 — 직사각형 채우기 및 둘레에 일정한 간격 놓기 (RPM #146~#151, #206)
+// [유형 10·11] 최대공약수 활용 — 직사각형 채우기 및 둘레에 일정한 간격 놓기
 export function rpmGcdWordTileFence(random) {
   const variant = pick(random, ['tileFill', 'fencePosts']);
   if (variant === 'tileFill') {
@@ -964,7 +964,7 @@ export function rpmGcdWordTileFence(random) {
   }
 }
 
-// [유형 12] 최대공약수 활용 — 나누었을 때 나머지가 남거나 부족한 수 (RPM #152~#155, #194, #200)
+// [유형 12] 최대공약수 활용 — 나누었을 때 나머지가 남거나 부족한 수
 export function rpmGcdWordRemainder(random) {
   const variant = pick(random, ['twoRemainders', 'deficitAndRemainder', 'sumMaxMin']);
   if (variant === 'twoRemainders') {
@@ -1012,7 +1012,7 @@ export function rpmGcdWordRemainder(random) {
   }
 }
 
-// [유형 13] 최소공배수 활용 — 정사각형 타일 붙이기 및 정육면체 벽돌 쌓기 (RPM #156~#158, #208)
+// [유형 13] 최소공배수 활용 — 정사각형 타일 붙이기 및 정육면체 벽돌 쌓기
 export function rpmLcmWordBrickCube(random) {
   const variant = pick(random, ['rectToSquare', 'brickToCube']);
   if (variant === 'rectToSquare') {
@@ -1043,7 +1043,7 @@ export function rpmLcmWordBrickCube(random) {
   }
 }
 
-// [유형 14·15] 최소공배수 활용 — 톱니바퀴 회전 및 주기성(동시 출발) (RPM #159~#165, #201, #203, #205)
+// [유형 14·15] 최소공배수 활용 — 톱니바퀴 회전 및 주기성(동시 출발)
 export function rpmLcmWordGearTrackCycle(random) {
   const variant = pick(random, ['gearRotations', 'threeGears', 'departInterval', 'neonCycle']);
   if (variant === 'gearRotations') {
@@ -1099,7 +1099,7 @@ export function rpmLcmWordGearTrackCycle(random) {
   }
 }
 
-// [유형 16] 최소공배수 활용 — 어떤 자연수를 나누었을 때 나머지 조건 (RPM #166~#169, #195, #199)
+// [유형 16] 최소공배수 활용 — 어떤 자연수를 나누었을 때 나머지 조건
 export function rpmLcmWordRemainderDeficit(random) {
   const variant = pick(random, ['sameRemainder', 'constantDeficit']);
   if (variant === 'sameRemainder') {
@@ -1135,7 +1135,7 @@ export function rpmLcmWordRemainderDeficit(random) {
   }
 }
 
-// [유형 17] 두 개 이상의 분수를 자연수로 만드는 가장 작은 기약분수 (RPM #170~#173, #192, #202)
+// [유형 17] 두 개 이상의 분수를 자연수로 만드는 가장 작은 기약분수
 export function rpmGcdLcmFractionMultiplier(random) {
   const variant = pick(random, ['twoFractions', 'threeMixedFractions', 'integerFractionsCount']);
   if (variant === 'twoFractions') {
@@ -1181,7 +1181,7 @@ export function rpmGcdLcmFractionMultiplier(random) {
   }
 }
 
-// [유형 18·19·20 & 실력UP] 최소공배수 역추적, 합/차 조건, 종합 실력 (RPM #174~#180, #209, #210, #212)
+// [유형 18·19·20 & 실력UP] 최소공배수 역추적, 합/차 조건, 종합 실력
 export function rpmGcdLcmAdvancedDeduce(random) {
   const variant = pick(random, ['lcmCandidatesSum', 'gcdLcmDifference', 'extremeValueUnknown']);
   if (variant === 'lcmCandidatesSum') {
@@ -1245,7 +1245,7 @@ export const rpmGcdRemainder = rpmGcdWordRemainder;
 // CHAPTER 03: 정수와 유리수 응용 (Integers & Rationals Applied)
 // -------------------------------------------------------------
 
-// 1. 수직선 위의 점 내분점 (RPM p.67 #513) + SVG NumberLine Diagram
+// 1. 수직선 위의 점 내분점 + SVG NumberLine Diagram
 export function rpmRationalLineDivision(random) {
   const leftVal = pick(random, [-4, -3, -2, -1]);
   const rightVal = pick(random, [2, 3, 4, 5, 6]);
@@ -1295,7 +1295,7 @@ function fracStr(n, d) {
   return `${num}/${den}`;
 }
 
-// 1. 부호를 사용하여 나타내기 (RPM 유형 01, #0270, #0271, #0272, #0324)
+// 1. 부호를 사용하여 나타내기
 export function rpmIrSignSituation(random) {
   const isMultipleChoice = random() < 0.6;
   if (isMultipleChoice) {
@@ -1371,7 +1371,7 @@ export function rpmIrSignSituation(random) {
   };
 }
 
-// 2. 정수의 분류 및 약분 분수 (RPM 유형 02, #0273, #0274, #0275, #0276)
+// 2. 정수의 분류 및 약분 분수
 export function rpmIrClassifyIntegers(random) {
   const mode = pick(random, ['find-all', 'count-non-negative', 'multiple-choice']);
   if (mode === 'multiple-choice') {
@@ -1449,7 +1449,7 @@ export function rpmIrClassifyIntegers(random) {
   };
 }
 
-// 3. 유리수의 분류 및 체계 (RPM 유형 03, #0277, #0278, #0279, #0326, #0329)
+// 3. 유리수의 분류 및 체계
 export function rpmIrClassifyRationals(random) {
   const mode = pick(random, ['formula-xyz', 'box-fill', 'true-false']);
   if (mode === 'formula-xyz') {
@@ -1527,7 +1527,7 @@ export function rpmIrClassifyRationals(random) {
   };
 }
 
-// 4. 수직선 위의 점과 가장 가까운 정수 (RPM 유형 04, #0280~0285, #0325, #0348)
+// 4. 수직선 위의 점과 가장 가까운 정수
 export function rpmIrNumberLineRead(random) {
   const mode = pick(random, ['read-point', 'extremum-positions', 'closest-integers']);
   if (mode === 'read-point') {
@@ -1613,7 +1613,7 @@ export function rpmIrNumberLineRead(random) {
   };
 }
 
-// 5. 수직선 위 같은 거리(중점)와 양 끝점 역추론 (RPM 유형 05, #0286~0288, #0333, #0349, #0350)
+// 5. 수직선 위 같은 거리(중점)와 양 끝점 역추론
 export function rpmIrMidpointDistance(random) {
   const mode = pick(random, ['midpoint-basic', 'distance-midpoint', 'abs-two-answers']);
   if (mode === 'midpoint-basic') {
@@ -1682,7 +1682,7 @@ export function rpmIrMidpointDistance(random) {
   };
 }
 
-// 6. 절댓값의 계산과 최대·최소 (RPM 유형 06, #0289~0292, #0344)
+// 6. 절댓값의 계산과 최대·최소
 export function rpmIrAbsBasicExtremum(random) {
   const mode = pick(random, ['max-sum', 'reverse-x', 'range-diff']);
   if (mode === 'max-sum') {
@@ -1730,7 +1730,7 @@ export function rpmIrAbsBasicExtremum(random) {
   };
 }
 
-// 7. 절댓값의 성질과 참·거짓 (RPM 유형 07, #0293~0295, #0338, #0339, #0340)
+// 7. 절댓값의 성질과 참·거짓
 export function rpmIrAbsProperties(random) {
   const mode = pick(random, ['farthest-closest', 'multiple-choice']);
   if (mode === 'farthest-closest') {
@@ -1784,7 +1784,7 @@ export function rpmIrAbsProperties(random) {
   };
 }
 
-// 8. 절댓값 범위와 조건을 만족하는 정수 개수 (RPM 유형 08, #0296~0299, #0331, #0342, #0347)
+// 8. 절댓값 범위와 조건을 만족하는 정수 개수
 export function rpmIrAbsRangeCount(random) {
   const mode = pick(random, ['less-fraction', 'annulus-integers', 'fraction-less-1']);
   if (mode === 'less-fraction') {
@@ -1832,7 +1832,7 @@ export function rpmIrAbsRangeCount(random) {
   };
 }
 
-// 9. 절댓값이 같고 부호가 반대인 두 수 (RPM 유형 09, #0300~0303, #0341, #0345)
+// 9. 절댓값이 같고 부호가 반대인 두 수
 export function rpmIrOppositeSignsAbs(random) {
   const isFraction = random() < 0.5;
   if (isFraction) {
@@ -1893,7 +1893,7 @@ export function rpmIrOppositeSignsAbs(random) {
   };
 }
 
-// 10. 유리수와 절댓값의 대소 관계 및 순서 (RPM 유형 10, #0304~0310, #0328, #0330, #0337)
+// 10. 유리수와 절댓값의 대소 관계 및 순서
 export function rpmIrCompareOrder(random) {
   const mode = pick(random, ['order-kth', 'compare-multiple-choice', 'abs-kth']);
   if (mode === 'order-kth') {
@@ -1974,7 +1974,7 @@ export function rpmIrCompareOrder(random) {
   };
 }
 
-// 11. 문장 조건의 부등호 표현 ('작지 않다'·'크지 않다') (RPM 유형 11, #0311~0313, #0327, #0332)
+// 11. 문장 조건의 부등호 표현 ('작지 않다'·'크지 않다')
 export function rpmIrInequalityPhrasing(random) {
   const isMultipleChoice = random() < 0.5;
   if (isMultipleChoice) {
@@ -2018,7 +2018,7 @@ export function rpmIrInequalityPhrasing(random) {
   };
 }
 
-// 12. 두 유리수 사이의 정수 및 기약분수 개수 (RPM 유형 12, #0314~0317, #0335, #0336, #0346)
+// 12. 두 유리수 사이의 정수 및 기약분수 개수
 export function rpmIrBetweenIntegersFractions(random) {
   const mode = pick(random, ['count-between-integers', 'closest-endpoints', 'irreducible-fractions']);
   if (mode === 'count-between-integers') {
@@ -2083,7 +2083,7 @@ export function rpmIrBetweenIntegersFractions(random) {
   };
 }
 
-// 13. 절댓값 조건 응용 및 순서쌍 / 거리 비율 (RPM 유형 13, #0318~0320, #0351, #0353, #0355)
+// 13. 절댓값 조건 응용 및 순서쌍 / 거리 비율
 export function rpmIrAbsPairsRatio(random) {
   const mode = pick(random, ['pairs-count', 'ratio-distance', 'system-conditions']);
   if (mode === 'pairs-count') {
@@ -2170,7 +2170,7 @@ export function rpmIrAbsPairsRatio(random) {
   };
 }
 
-// 14. 다중 수의 조건과 수직선 대소 추론 (RPM 유형 14, #0321~0323, #0354)
+// 14. 다중 수의 조건과 수직선 대소 추론
 export function rpmIrDeduceMultiOrder(random) {
   const mode = pick(random, ['three-pivot', 'four-extremum']);
   if (mode === 'three-pivot') {
@@ -2256,7 +2256,7 @@ export const rpmRationalEquidistant = rpmIrMidpointDistance;
 export const rpmRationalAbsoluteCount = rpmIrAbsRangeCount;
 
 // -------------------------------------------------------------
-// CHAPTER 04: 정수와 유리수의 계산 응용 (RPM 1-1 Pages 54 ~ 71)
+// CHAPTER 04: 정수와 유리수의 계산 응용
 // -------------------------------------------------------------
 
 function fracObj(n, d = 1) {
@@ -2286,7 +2286,7 @@ function parenSignedFrac(f) {
   return `(${fracSignedStr(f)})`;
 }
 
-// 1. 유리수의 덧셈과 계산 법칙 (RPM 유형 01·02, #0419~0424, #0517)
+// 1. 유리수의 덧셈과 계산 법칙
 export function rpmIrcAdditionLaws(random) {
   const mode = pick(random, ['law-identity', 'two-fractions', 'three-fractions']);
   if (mode === 'law-identity') {
@@ -2341,7 +2341,7 @@ export function rpmIrcAdditionLaws(random) {
   };
 }
 
-// 2. 유리수의 뺄셈 (RPM 유형 03, #0425~0427)
+// 2. 유리수의 뺄셈
 export function rpmIrcSubtractionBasic(random) {
   const d1 = pick(random, [3, 4, 5, 6]);
   const d2 = pick(random, [2, 3, 4, 5]);
@@ -2358,7 +2358,7 @@ export function rpmIrcSubtractionBasic(random) {
   };
 }
 
-// 3. 정수의 덧셈과 뺄셈의 혼합 계산 (RPM 유형 04, #0428~0431)
+// 3. 정수의 덧셈과 뺄셈의 혼합 계산
 export function rpmIrcAddSubIntegers(random) {
   const a = ri(random, 3, 9);
   const b = -ri(random, 2, 8);
@@ -2374,7 +2374,7 @@ export function rpmIrcAddSubIntegers(random) {
   };
 }
 
-// 4. 유리수의 덧셈과 뺄셈의 혼합 계산 (RPM 유형 05, #0432~0434, #0516)
+// 4. 유리수의 덧셈과 뺄셈의 혼합 계산
 export function rpmIrcAddSubRationals(random) {
   const isDecimalMix = random() < 0.4;
   if (isDecimalMix) {
@@ -2405,7 +2405,7 @@ export function rpmIrcAddSubRationals(random) {
   };
 }
 
-// 5. 부호가 생략된 수의 덧셈과 뺄셈 (RPM 유형 06, #0435~0438)
+// 5. 부호가 생략된 수의 덧셈과 뺄셈
 export function rpmIrcOmittedSigns(random) {
   const isFraction = random() < 0.5;
   if (isFraction) {
@@ -2436,7 +2436,7 @@ export function rpmIrcOmittedSigns(random) {
   };
 }
 
-// 6. 어떤 수보다 □만큼 큰 수·작은 수 (RPM 유형 07, #0439~0442, #0538)
+// 6. 어떤 수보다 □만큼 큰 수·작은 수
 export function rpmIrcRelativeDifference(random) {
   const n1 = ri(random, 3, 5);
   const fA_base = fracObj(-n1 * 2 - 1, 2);
@@ -2465,7 +2465,7 @@ export function rpmIrcRelativeDifference(random) {
   };
 }
 
-// 7. □ 안에 알맞은 수 구하기 (1) 덧셈·뺄셈 (RPM 유형 08, #0443~0445)
+// 7. □ 안에 알맞은 수 구하기 (1) 덧셈·뺄셈
 export function rpmIrcUnknownAddSub(random) {
   const d1 = pick(random, [3, 4, 5]);
   const d2 = pick(random, [2, 3, 4]);
@@ -2482,7 +2482,7 @@ export function rpmIrcUnknownAddSub(random) {
   };
 }
 
-// 8. 절댓값이 주어진 두 수의 덧셈과 뺄셈 (RPM 유형 09, #0446~0449, #0540)
+// 8. 절댓값이 주어진 두 수의 덧셈과 뺄셈
 export function rpmIrcAbsExtremumAddSub(random) {
   const d1 = pick(random, [2, 3, 4]);
   const d2 = pick(random, [3, 4, 5]);
@@ -2502,7 +2502,7 @@ export function rpmIrcAbsExtremumAddSub(random) {
   };
 }
 
-// 9. 덧셈·뺄셈의 활용 (마방진 및 게임 점수) (RPM 유형 10 & 유형UP, #0450~0452, #0509~0511, #0531)
+// 9. 덧셈·뺄셈의 활용 (마방진 및 게임 점수)
 export function rpmIrcMagicSquareGame(random) {
   const winPts = ri(random, 3, 5);
   const losePts = -ri(random, 1, 2);
@@ -2526,7 +2526,7 @@ export function rpmIrcMagicSquareGame(random) {
   };
 }
 
-// 10. 유리수의 곱셈과 곱셈의 계산 법칙 (RPM 유형 11·13, #0453~0456, #0460~0461)
+// 10. 유리수의 곱셈과 곱셈의 계산 법칙
 export function rpmIrcMultiplicationBasic(random) {
   const f1 = fracObj(-ri(random, 2, 5), pick(random, [2, 3]));
   const f2 = fracObj(ri(random, 2, 6), pick(random, [5, 7]));
@@ -2542,7 +2542,7 @@ export function rpmIrcMultiplicationBasic(random) {
   };
 }
 
-// 11. 네 수 중 세 수를 뽑아 곱하기 (RPM 유형 12, #0457~0459, #0541)
+// 11. 네 수 중 세 수를 뽑아 곱하기
 export function rpmIrcPickThreeProduct(random) {
   const nums = [
     fracObj(-2, 3),
@@ -2569,7 +2569,7 @@ export function rpmIrcPickThreeProduct(random) {
   };
 }
 
-// 12. 거듭제곱의 계산 (RPM 유형 14, #0462~0465)
+// 12. 거듭제곱의 계산
 export function rpmIrcPowersSigns(random) {
   const a = ri(random, 2, 4);
   const b = ri(random, 2, 3);
@@ -2585,7 +2585,7 @@ export function rpmIrcPowersSigns(random) {
   };
 }
 
-// 13. (-1)^n의 계산 (RPM 유형 15, #0466~0469, #0524)
+// 13. (-1)^n의 계산
 export function rpmIrcNegOnePower(random) {
   const isOdd = random() < 0.5;
   const promptKo = `n이 ${isOdd ? '홀수' : '짝수'}일 때, (-1)^n - (-1)^(n+1) + (-1)^(2n) 의 값을 구하시오.`;
@@ -2600,7 +2600,7 @@ export function rpmIrcNegOnePower(random) {
   };
 }
 
-// 14. 분배법칙의 활용 (RPM 유형 16, #0470~0476, #0518)
+// 14. 분배법칙의 활용
 export function rpmIrcDistributiveLaw(random) {
   const common = ri(random, 15, 35) + 0.3;
   const k1 = ri(random, 12, 35);
@@ -2615,7 +2615,7 @@ export function rpmIrcDistributiveLaw(random) {
   };
 }
 
-// 15. 역수의 정의와 미지수 역수 방정식 (RPM 유형 17, #0477~0478, #0539)
+// 15. 역수의 정의와 미지수 역수 방정식
 export function rpmIrcReciprocalEquation(random) {
   const a = -15;
   const b = -4;
@@ -2629,7 +2629,7 @@ export function rpmIrcReciprocalEquation(random) {
   };
 }
 
-// 16. 정수와 유리수의 나눗셈 (RPM 유형 18·19, #0479~0484)
+// 16. 정수와 유리수의 나눗셈
 export function rpmIrcDivisionBasic(random) {
   const f1 = fracObj(-ri(random, 8, 20), pick(random, [3, 4, 6]));
   const f2 = fracObj(-ri(random, 2, 7), pick(random, [2, 5]));
@@ -2644,7 +2644,7 @@ export function rpmIrcDivisionBasic(random) {
   };
 }
 
-// 17. 곱셈과 나눗셈의 혼합 계산 (RPM 유형 20, #0485~0487)
+// 17. 곱셈과 나눗셈의 혼합 계산
 export function rpmIrcMultDivMixed(random) {
   const f2 = fracObj(-9, 4);
   const f3 = fracObj(-2, 3);
@@ -2660,7 +2660,7 @@ export function rpmIrcMultDivMixed(random) {
   };
 }
 
-// 18. 사칙 혼합 계산 (RPM 유형 21, #0488~0493, #0519, #0525)
+// 18. 사칙 혼합 계산
 export function rpmIrcFourOperationsOrder(random) {
   const base = ri(random, 4, 7);
   const mult = ri(random, 2, 3);
@@ -2675,7 +2675,7 @@ export function rpmIrcFourOperationsOrder(random) {
   };
 }
 
-// 19. □ 안에 알맞은 수 구하기 (2) 곱셈·나눗셈 (RPM 유형 22, #0494~0496)
+// 19. □ 안에 알맞은 수 구하기 (2) 곱셈·나눗셈
 export function rpmIrcUnknownMultDiv(random) {
   const fA = fracObj(-3, 4);
   const fC = fracObj(-2, 3);
@@ -2691,7 +2691,7 @@ export function rpmIrcUnknownMultDiv(random) {
   };
 }
 
-// 20. 바르게 계산한 답 구하기 (RPM 유형 23, #0497~0500, #0523)
+// 20. 바르게 계산한 답 구하기
 export function rpmIrcCorrectAnswer(random) {
   const mode = pick(random, ['add-sub', 'mult-div']);
   if (mode === 'add-sub') {
@@ -2722,7 +2722,7 @@ export function rpmIrcCorrectAnswer(random) {
   };
 }
 
-// 21. 유리수의 부호 결정 (RPM 유형 24, #0501~0504, #0530, #0543, #0544)
+// 21. 유리수의 부호 결정
 export function rpmIrcSignDetermination(random) {
   const choices = [
     { value: '1', label: 'a > 0, b > 0, c > 0', labelEn: 'a > 0, b > 0, c > 0', isRight: false },
@@ -2741,7 +2741,7 @@ export function rpmIrcSignDetermination(random) {
   };
 }
 
-// 22. 문자로 주어진 수의 대소 관계 (RPM 유형 25, #0505~0508)
+// 22. 문자로 주어진 수의 대소 관계
 export function rpmIrcVariableMagnitude(random) {
   const choices = [
     { value: '1', label: 'a', labelEn: 'a', isRight: false },
@@ -2760,7 +2760,7 @@ export function rpmIrcVariableMagnitude(random) {
   };
 }
 
-// 23. 수직선 선분의 m:n 비례분할 내분점 (RPM 유형UP 26, #0512~0514)
+// 23. 수직선 선분의 m:n 비례분할 내분점
 export function rpmIrcLineSectionRatio(random) {
   const m = ri(random, 1, 3);
   const n = ri(random, 1, 3);
@@ -2797,7 +2797,7 @@ export function rpmIrcLineSectionRatio(random) {
   };
 }
 
-// 24. 부분분수 분해와 망원급수 계산 (RPM 실력UP 27, #0542)
+// 24. 부분분수 분해와 망원급수 계산
 export function rpmIrcTelescopingFractions(random) {
   const start = pick(random, [2, 3, 4, 5]);
   const len = pick(random, [4, 5, 6]);
@@ -2813,7 +2813,7 @@ export function rpmIrcTelescopingFractions(random) {
   };
 }
 
-// 25. 새로운 연산 기호 약속과 방정식 (RPM 실력UP 28, #0545)
+// 25. 새로운 연산 기호 약속과 방정식
 export function rpmIrcCustomOperator(random) {
   const ans = '18';
   return {
@@ -2867,7 +2867,7 @@ export const rpmOpsTelescoping = rpmIrcTelescopingFractions;
 // CHAPTER 05: 문자의 사용과 식의 계산 응용 (Expressions Applied)
 // -------------------------------------------------------------
 
-// Chapter 05: 문자의 사용과 식의 계산 (RPM 1-1 Pages 78 ~ 91)
+// Chapter 05: 문자의 사용과 식의 계산
 // Client-side Generators for Applied Tier
 
 // 1. [문자와 식 유형 01] 곱셈과 나눗셈 기호의 생략과 거듭제곱
@@ -4899,7 +4899,7 @@ export const rpmEqExcessDeficit = rpmAppExcessDeficitBenches;
 export const rpmEqCatchupTravel = rpmAppSpeedCatchupDelay;
 
 // -------------------------------------------------------------
-// CHAPTER 08: 좌표평면과 그래프 세부 응용 유형 (RPM 1-1 p.122~129)
+// CHAPTER 08: 좌표평면과 그래프 세부 응용 유형
 // -------------------------------------------------------------
 
 // -------------------------------------------------------------
@@ -5999,10 +5999,10 @@ export function rpmSemesterOneMockExam(random, profile = 'ko') {
 // const pick = (random, values) => values[ri(random, 0, values.length - 1)];
 
 // =============================================================
-// CHAPTER 01: 기본도형 응용 (RPM 1-2 Pages 12 ~ 19)
+// CHAPTER 01: 기본도형 응용
 // =============================================================
 
-// [유형 01] 입체도형에서의 교점과 교선의 개수 (RPM #50, #51, #93)
+// [유형 01] 입체도형에서의 교점과 교선의 개수
 export function rpmGeoBasicIntersections(random) {
   const solids = [
     { name: '삼각뿔', nameEn: 'triangular pyramid', vertices: 4, edges: 6, faces: 4 },
@@ -6057,7 +6057,7 @@ export function rpmGeoBasicIntersections(random) {
   };
 }
 
-// [유형 02] 직선, 반직선, 선분의 구별과 일치 판별 (RPM #52, #53, #94)
+// [유형 02] 직선, 반직선, 선분의 구별과 일치 판별
 export function rpmGeoBasicLineRays(random) {
   const statements = [
     { text: '직선 AB와 직선 BA는 같은 직선이다.', ans: 1, expl: '직선은 양방향으로 한없이 뻗어나가므로 직선 AB와 직선 BA는 일치합니다.' },
@@ -6083,7 +6083,7 @@ export function rpmGeoBasicLineRays(random) {
   };
 }
 
-// [유형 03] 점의 개수와 직선, 반직선, 선분의 개수 (RPM #54, #55, #56, #57, #96, #104)
+// [유형 03] 점의 개수와 직선, 반직선, 선분의 개수
 export function rpmGeoBasicPointsToLines(random) {
   const variant = pick(random, ['circle_points', 'line_and_outside']);
   if (variant === 'circle_points') {
@@ -6155,7 +6155,7 @@ export function rpmGeoBasicPointsToLines(random) {
   }
 }
 
-// [유형 04] 선분의 중점과 배수 관계를 이용한 길이 계산 (RPM #58~#64, #97, #106)
+// [유형 04] 선분의 중점과 배수 관계를 이용한 길이 계산
 export function rpmGeoBasicMidpointSegment(random) {
   const variant = pick(random, ['midpoints_sum', 'ratio_midpoint', 'three_segments']);
   if (variant === 'midpoints_sum') {
@@ -6206,7 +6206,7 @@ export function rpmGeoBasicMidpointSegment(random) {
   }
 }
 
-// [유형 05] 각의 분류와 개수 세기 (RPM #98)
+// [유형 05] 각의 분류와 개수 세기
 export function rpmGeoBasicAngleClassify(random) {
   const acutePool = [15, 30, 45, 60, 75, 80, 89];
   const rightPool = [90];
@@ -6247,7 +6247,7 @@ export function rpmGeoBasicAngleClassify(random) {
   };
 }
 
-// [유형 06] 평각을 이용한 미지각 일차방정식 (RPM #65~#68)
+// [유형 06] 평각을 이용한 미지각 일차방정식
 export function rpmGeoBasicStraightAngleEq(random) {
   // (a*x + b) + (c*x + d) = 180
   const a = ri(random, 2, 4);
@@ -6284,7 +6284,7 @@ export function rpmGeoBasicStraightAngleEq(random) {
   }
 }
 
-// [유형 07] 각의 비례배분 (RPM #73~#75, #99)
+// [유형 07] 각의 비례배분
 export function rpmGeoBasicAngleRatio(random) {
   const variant = pick(random, ['straight_three', 'right_two', 'fraction_given']);
   if (variant === 'straight_three') {
@@ -6351,7 +6351,7 @@ export function rpmGeoBasicAngleRatio(random) {
   }
 }
 
-// [유형 08] 각의 배수 조건과 수직선이 주어진 각도 계산 (RPM #69~#72, #100, #105)
+// [유형 08] 각의 배수 조건과 수직선이 주어진 각도 계산
 export function rpmGeoBasicAngleMultipleCond(random) {
   // ∠AOB = 2∠BOC, ∠DOE = 2∠COD, 평각 AOE = 180°
   // ∠BOD = ∠BOC + ∠COD = 180° / 3 = 60°
@@ -6371,7 +6371,7 @@ export function rpmGeoBasicAngleMultipleCond(random) {
   };
 }
 
-// [유형 09] 맞꼭지각의 성질과 미지각 (RPM #76~#80, #101)
+// [유형 09] 맞꼭지각의 성질과 미지각
 export function rpmGeoBasicVerticalAngles(random) {
   // 두 직선이 한 점에서 만날 때 맞꼭지각의 크기는 서로 같다.
   // a*x + b = c*x - d (or similar)
@@ -6404,7 +6404,7 @@ export function rpmGeoBasicVerticalAngles(random) {
   }
 }
 
-// [유형 10] 한 점에서 만나는 n개 직선의 맞꼭지각의 쌍의 개수 (RPM #81, #82)
+// [유형 10] 한 점에서 만나는 n개 직선의 맞꼭지각의 쌍의 개수
 export function rpmGeoBasicVerticalAnglePairs(random) {
   const n = pick(random, [3, 4, 5, 6, 7]);
   const pairs = n * (n - 1);
@@ -6419,7 +6419,7 @@ export function rpmGeoBasicVerticalAnglePairs(random) {
   };
 }
 
-// [유형 11] 수직과 수선, 점과 직선 사이의 거리 (RPM #83~#85, #103)
+// [유형 11] 수직과 수선, 점과 직선 사이의 거리
 export function rpmGeoBasicPerpendicularDist(random) {
   // 직사각형 ABCD에서 가로 w, 세로 h
   const w = ri(random, 6, 14);
@@ -6457,7 +6457,7 @@ export function rpmGeoBasicPerpendicularDist(random) {
   }
 }
 
-// [유형 12 (유형 UP)] 복합 교차 직선에서의 맞꼭지각과 평각 계산 (RPM #86~#88, #102)
+// [유형 12 (유형 UP)] 복합 교차 직선에서의 맞꼭지각과 평각 계산
 export function rpmGeoBasicVerticalMultiLines(random) {
   // 세 직선이 한 점에서 만남. 세 각 a, b, c가 일직선 한쪽에 있고 맞은편에 맞꼭지각 배치
   // ∠a : ∠b = p : q, 수직 조건 또는 직각 포함
@@ -6478,7 +6478,7 @@ export function rpmGeoBasicVerticalMultiLines(random) {
   };
 }
 
-// [유형 13 (유형 UP)] 시계의 시침과 분침이 이루는 각의 크기 (RPM #89~#91, #107)
+// [유형 13 (유형 UP)] 시계의 시침과 분침이 이루는 각의 크기
 export function rpmGeoBasicClockAngle(random) {
   const times = [
     { h: 3, m: 30 },
@@ -6531,11 +6531,11 @@ export function rpmGeoBasicAllTypesMixed(random) {
 
 
 // =============================================================
-// CHAPTER 02: 위치 관계 응용 (RPM 1-2 Pages 26 ~ 43)
+// CHAPTER 02: 위치 관계 응용
 // =============================================================
 
 
-// [유형 01] 점과 직선, 점과 평면의 위치 관계 (RPM #163~#165, #246)
+// [유형 01] 점과 직선, 점과 평면의 위치 관계
 export function rpmPosPointLinePlane(random) {
   const statements = [
     { text: '직선 l 위의 점 P는 "점 P는 직선 l 위에 있다" 또는 "직선 l은 점 P를 지난다"고 한다.', ans: 1, expl: '점이 직선 위에 있는 것은 직선이 그 점을 지나는 것과 같은 표현입니다.' },
@@ -6558,7 +6558,7 @@ export function rpmPosPointLinePlane(random) {
   };
 }
 
-// [유형 02] 평면에서 두 직선의 위치 관계 (RPM #166~#168, #248)
+// [유형 02] 평면에서 두 직선의 위치 관계
 export function rpmPosPlaneTwoLines(random) {
   const polygon = pick(random, [
     { name: '정육각형 ABCDEF', sides: 6, diagLines: 9 },
@@ -6602,7 +6602,7 @@ export function rpmPosPlaneTwoLines(random) {
   }
 }
 
-// [유형 03] 입체도형에서 꼬인 위치에 있는 모서리의 개수 (RPM #175~#182, #250, #252, #271)
+// [유형 03] 입체도형에서 꼬인 위치에 있는 모서리의 개수
 export function rpmPosSolidSkewEdges(random) {
   // 공간에서 두 직선이 만나지도 않고 평행하지도 않은 위치 관계 = 꼬인 위치 (한 평면 위에 있지 않음)
   const solids = [
@@ -6671,7 +6671,7 @@ export function rpmPosSolidSkewEdges(random) {
   };
 }
 
-// [유형 04] 입체도형에서 모서리와 면, 면과 면의 위치 관계 (RPM #189~#194, #255, #256)
+// [유형 04] 입체도형에서 모서리와 면, 면과 면의 위치 관계
 export function rpmPosSolidEdgePlaneRelations(random) {
   // 직육면체에서:
   // 면과 수직인 모서리 개수: 4개
@@ -6715,7 +6715,7 @@ export function rpmPosSolidEdgePlaneRelations(random) {
   };
 }
 
-// [유형 05] 전개도를 접어 만든 입체도형에서의 위치 관계 (RPM #253, #254, #275)
+// [유형 05] 전개도를 접어 만든 입체도형에서의 위치 관계
 export function rpmPosSolidNetRelations(random) {
   // 정육면체 전개도를 접었을 때:
   // 마주 보는 면(평행한 면) 쌍, 만나는 모서리
@@ -6744,7 +6744,7 @@ export function rpmPosSolidNetRelations(random) {
   };
 }
 
-// [유형 06] 동위각과 엇각의 위치 및 크기 판별 (RPM #208~#213, #258)
+// [유형 06] 동위각과 엇각의 위치 및 크기 판별
 export function rpmPosCorrespondingAlternate(random) {
   // 두 직선 l, m이 다른 한 직선 n과 만날 때 생기는 8개 각
   const anglePairs = [
@@ -6766,7 +6766,7 @@ export function rpmPosCorrespondingAlternate(random) {
   };
 }
 
-// [유형 07] 평행선에서의 미지각 계산 (l // m) (RPM #214~#220, #259, #260)
+// [유형 07] 평행선에서의 미지각 계산 (l // m)
 export function rpmPosParallelAngleSolve(random) {
   // l // m 일 때 동위각이나 엇각을 이용한 일차방정식
   // (a*x + b)° = (c*x - d)° (동위각/엇각 같음)
@@ -6786,7 +6786,7 @@ export function rpmPosParallelAngleSolve(random) {
   };
 }
 
-// [유형 08] 두 직선이 평행하기 위한 조건 판별 (RPM #221~#223, #261)
+// [유형 08] 두 직선이 평행하기 위한 조건 판별
 export function rpmPosParallelCondition(random) {
   const isParallel = random() < 0.5;
   const ang1 = ri(random, 60, 85);
@@ -6805,7 +6805,7 @@ export function rpmPosParallelCondition(random) {
   };
 }
 
-// [유형 09] 평행선 사이에 꺾인 점이 1개 있는 경우 (보조선 긋기) (RPM #224~#226, #264)
+// [유형 09] 평행선 사이에 꺾인 점이 1개 있는 경우 (보조선 긋기)
 export function rpmPosParallelBentLineSingle(random) {
   // l // m 사이에 꺾인 점 P가 있고, 위쪽 각 a°, 아래쪽 각 b°
   // 꺾인 각 ∠P = a + b (꺾인 점 P를 지나며 l, m에 평행한 보조선을 그음)
@@ -6823,7 +6823,7 @@ export function rpmPosParallelBentLineSingle(random) {
   };
 }
 
-// [유형 10] 평행선 사이에 꺾인 점이 2개 이상 있는 경우 (지그재그 각) (RPM #227~#232, #266)
+// [유형 10] 평행선 사이에 꺾인 점이 2개 이상 있는 경우 (지그재그 각)
 export function rpmPosParallelBentLineMulti(random) {
   // l // m, 왼쪽으로 꺾인 각들의 합 = 오른쪽으로 꺾인 각들의 합
   // 왼쪽 각: a, b  / 오른쪽 각: x, c
@@ -6843,7 +6843,7 @@ export function rpmPosParallelBentLineMulti(random) {
   };
 }
 
-// [유형 11] 평행선과 삼각형/정다각형이 결합된 각 (RPM #273, #277)
+// [유형 11] 평행선과 삼각형/정다각형이 결합된 각
 export function rpmPosParallelWithPolygon(random) {
   // l // m 사이에 정삼각형 ABC가 놓여 있을 때
   // 정삼각형의 한 내각은 60°
@@ -6862,7 +6862,7 @@ export function rpmPosParallelWithPolygon(random) {
   };
 }
 
-// [유형 12] 평행선과 각의 이등분선 (RPM #233~#235, #268)
+// [유형 12] 평행선과 각의 이등분선
 export function rpmPosParallelAngleBisector(random) {
   // l // m, ∠BAC의 이등분선과 ∠ABC의 이등분선이 만나는 각
   // 두 내각의 합이 180°인 동측내각의 이등분선 교각은 90°
@@ -6882,7 +6882,7 @@ export function rpmPosParallelAngleBisector(random) {
   };
 }
 
-// [유형 13] 종이 테이프를 접었을 때 생기는 각 (RPM #236~#239, #269, #270)
+// [유형 13] 종이 테이프를 접었을 때 생기는 각
 export function rpmPosPaperFoldAngles(random) {
   // 직사각형 모양의 종이 테이프를 접었을 때:
   // 접은 각 = 원래 각 (같음), 평행선 엇각 = 접은 각
@@ -6913,7 +6913,7 @@ export function rpmPosPaperFoldAngles(random) {
   }
 }
 
-// [유형 14] 두 쌍의 평행선이 교차할 때의 각 (RPM #243, #244, #277)
+// [유형 14] 두 쌍의 평행선이 교차할 때의 각
 export function rpmPosParallelTwoPairs(random) {
   // l // m 이고 p // q 일 때
   const given = ri(random, 65, 115);
@@ -6929,7 +6929,7 @@ export function rpmPosParallelTwoPairs(random) {
   };
 }
 
-// [유형 15 (유형 UP)] 공간에서 위치 관계 참/거짓 명제 판별 (RPM #240~#242, #276)
+// [유형 15 (유형 UP)] 공간에서 위치 관계 참/거짓 명제 판별
 export function rpmPosSpaceLogicStatements(random) {
   const statements = [
     { text: '한 직선에 평행한 서로 다른 두 직선은 평행하다. (l // m, l // n => m // n)', ans: 1, expl: '평행선 공리에 의해 한 직선에 평행한 두 직선은 항상 서로 평행합니다.' },
@@ -6977,11 +6977,11 @@ export function rpmPosAllTypesMixed(random) {
 
 
 // =============================================================
-// CHAPTER 03: 작도와 합동 응용 (RPM 1-2 Pages 47 ~ 59)
+// CHAPTER 03: 작도와 합동 응용
 // =============================================================
 
 
-// [유형 01] 작도의 도구와 길이가 같은 선분의 작도 (RPM #309, #310, #357, #358)
+// [유형 01] 작도의 도구와 길이가 같은 선분의 작도
 export function rpmCongConstructSegment(random) {
   const toolsQuestions = [
     { text: '눈금 없는 자는 두 점을 잇는 선분을 그리거나 선분을 연장할 때 사용한다.', ans: 1, expl: '눈금 없는 자는 길이를 재는 것이 아니라 선을 긋거나 연장하는 데만 사용합니다.' },
@@ -7003,7 +7003,7 @@ export function rpmCongConstructSegment(random) {
   };
 }
 
-// [유형 02] 크기가 같은 각의 작도와 평행선 작도 (RPM #311~#314, #359, #360)
+// [유형 02] 크기가 같은 각의 작도와 평행선 작도
 export function rpmCongConstructAngleParallel(random) {
   const questions = [
     {
@@ -7041,7 +7041,7 @@ export function rpmCongConstructAngleParallel(random) {
   };
 }
 
-// [유형 03] 삼각형의 대변과 대각 (RPM #291~#293, #361)
+// [유형 03] 삼각형의 대변과 대각
 export function rpmCongTriangleOpposite(random) {
   const ask = pick(random, ['opp_side', 'opp_angle']);
 
@@ -7088,7 +7088,7 @@ export function rpmCongTriangleOpposite(random) {
   }
 }
 
-// [유형 04] 삼각형의 세 변의 길이의 조건 (삼각형의 성립 조건) (RPM #294~#296, #315~#317, #362, #363)
+// [유형 04] 삼각형의 세 변의 길이의 조건 (삼각형의 성립 조건)
 export function rpmCongTriangleInequality(random) {
   const variant = pick(random, ['possible_check', 'count_triangles']);
   if (variant === 'possible_check') {
@@ -7145,7 +7145,7 @@ export function rpmCongTriangleInequality(random) {
   }
 }
 
-// [유형 05] 미지수 변이 주어졌을 때 삼각형 성립 범위 (RPM #318, #319, #381)
+// [유형 05] 미지수 변이 주어졌을 때 삼각형 성립 범위
 export function rpmCongTriangleParamRange(random) {
   // 두 변이 a, b (a <= b)로 주어지고 세 번째 변이 x
   // 조건: b - a < x < b + a
@@ -7165,7 +7165,7 @@ export function rpmCongTriangleParamRange(random) {
   };
 }
 
-// [유형 06] 삼각형이 하나로 정해지는 조건 판별 (RPM #323~#326, #365, #366, #382)
+// [유형 06] 삼각형이 하나로 정해지는 조건 판별
 export function rpmCongTriangleDeterminedCond(random) {
   const scenarios = [
     {
@@ -7213,7 +7213,7 @@ export function rpmCongTriangleDeterminedCond(random) {
   };
 }
 
-// [유형 07] 도형의 합동 성질과 대응변/대응각 (RPM #300~#303, #327~#330, #367, #368)
+// [유형 07] 도형의 합동 성질과 대응변/대응각
 export function rpmCongFigureCongruenceProps(random) {
   // △ABC ≡ △DEF
   const sideAB = ri(random, 5, 12);
@@ -7262,7 +7262,7 @@ export function rpmCongFigureCongruenceProps(random) {
   }
 }
 
-// [유형 08] 삼각형의 합동 조건 (SSS, SAS, ASA) 판별 (RPM #304~#308, #331~#336, #369, #370)
+// [유형 08] 삼각형의 합동 조건 (SSS, SAS, ASA) 판별
 export function rpmCongTriangleSssSasAsa(random) {
   const conditions = [
     {
@@ -7301,7 +7301,7 @@ export function rpmCongTriangleSssSasAsa(random) {
   };
 }
 
-// [유형 09] 합동이 되기 위한 추가 조건 찾기 (RPM #337, #338, #371)
+// [유형 09] 합동이 되기 위한 추가 조건 찾기
 export function rpmCongTriangleAddCondition(random) {
   const problems = [
     {
@@ -7333,7 +7333,7 @@ export function rpmCongTriangleAddCondition(random) {
   };
 }
 
-// [유형 10] 정삼각형 및 정사각형에서 회전 합동의 활용 (RPM #351, #354, #377, #379, #386)
+// [유형 10] 정삼각형 및 정사각형에서 회전 합동의 활용
 export function rpmCongRotationEquilateralSquare(random) {
   const variant = pick(random, ['equilateral_rotation', 'square_rotation']);
   if (variant === 'equilateral_rotation') {
@@ -7363,7 +7363,7 @@ export function rpmCongRotationEquilateralSquare(random) {
   }
 }
 
-// [유형 11 (실력 UP)] 직각이등변삼각형의 꼭짓점을 지나는 직선과 합동 (RPM #387)
+// [유형 11 (실력 UP)] 직각이등변삼각형의 꼭짓점을 지나는 직선과 합동
 export function rpmCongRightIsoscelesAltitude(random) {
   // 직각이등변삼각형 ABC (∠A = 90°, AB = AC)의 꼭짓점 A를 지나는 직선 l
   // 점 B, C에서 직선 l에 내린 수선의 발을 D, E라 함
@@ -7396,7 +7396,7 @@ export function rpmCongRightIsoscelesAltitude(random) {
   }
 }
 
-// [유형 12 (실력 UP)] 정사각형 겹침에서의 합동과 넓이 (RPM #384)
+// [유형 12 (실력 UP)] 정사각형 겹침에서의 합동과 넓이
 export function rpmCongSquareOverlapArea(random) {
   // 한 변의 길이가 L인 두 정사각형. 한 정사각형의 대각선의 교점 O에 다른 정사각형의 한 꼭짓점이 위치
   // 두 정사각형이 겹치는 사각 영역의 넓이는 회전각도에 관계없이 항상 원래 정사각형 넓이의 1/4!
@@ -7474,11 +7474,11 @@ export function rpmGeoSemesterOneMockExam(random) {
 
 
 // =============================================================
-// CHAPTER 04: 다각형 응용 (RPM 1-2 Pages 66 ~ 81)
+// CHAPTER 04: 다각형 응용
 // =============================================================
 
 
-// [유형 01] 다각형과 정다각형의 정의, 내각과 외각 (RPM #434~#438, #535)
+// [유형 01] 다각형과 정다각형의 정의, 내각과 외각
 export function rpmPolyConceptInteriorExterior(random) {
   const polygonNames = [
     { n: 3, kor: '정삼각형', eng: 'equilateral triangle' },
@@ -7558,7 +7558,7 @@ export function rpmPolyConceptInteriorExterior(random) {
   }
 }
 
-// [유형 02] 다각형의 대각선의 개수 공식 (RPM #439~#447)
+// [유형 02] 다각형의 대각선의 개수 공식
 // 한 꼭짓점에서 그을 수 있는 대각선: n - 3
 // 그로 인해 생기는 삼각형의 개수: n - 2
 // 총 대각선의 개수: n(n - 3) / 2
@@ -7602,7 +7602,7 @@ export function rpmPolyDiagonalCountFormula(random) {
   }
 }
 
-// [유형 03] 대각선의 개수가 주어졌을 때 다각형 구하기 (RPM #448~#455)
+// [유형 03] 대각선의 개수가 주어졌을 때 다각형 구하기
 export function rpmPolyFindPolygonFromDiagonals(random) {
   // n = 5, 6, 7, 8, 9, 10, 11, 12, 14, 15
   const nList = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
@@ -7641,7 +7641,7 @@ export function rpmPolyFindPolygonFromDiagonals(random) {
   }
 }
 
-// [유형 04] 삼각형의 세 내각의 크기의 합과 비례배분 (RPM #456~#462)
+// [유형 04] 삼각형의 세 내각의 크기의 합과 비례배분
 export function rpmPolyTriangleAngleSumRatio(random) {
   const mode = ri(random, 1, 3);
   if (mode === 1) {
@@ -7718,7 +7718,7 @@ export function rpmPolyTriangleAngleSumRatio(random) {
   }
 }
 
-// [유형 05] 삼각형의 내각과 외각의 성질 (RPM #463~#470)
+// [유형 05] 삼각형의 내각과 외각의 성질
 // 한 외각은 이웃하지 않는 두 내각의 크기의 합과 같다: ∠ACD = ∠A + ∠B
 // 이등변삼각형이 연속으로 이어지는 뿔 모양 각도 추적
 export function rpmPolyTriangleExteriorAngleProp(random) {
@@ -7751,7 +7751,7 @@ export function rpmPolyTriangleExteriorAngleProp(random) {
   }
 }
 
-// [유형 06] 삼각형의 내각과 외각의 성질의 활용 (부메랑/오목다각형 모형) (RPM #471~#477)
+// [유형 06] 삼각형의 내각과 외각의 성질의 활용 (부메랑/오목다각형 모형)
 // ∠x = a + b + c
 export function rpmPolyBoomerangConcaveAngle(random) {
   const a = ri(random, 25, 45);
@@ -7781,7 +7781,7 @@ export function rpmPolyBoomerangConcaveAngle(random) {
   }
 }
 
-// [유형 07] 삼각형의 두 내각의 이등분선의 교각 (RPM #478~#483)
+// [유형 07] 삼각형의 두 내각의 이등분선의 교각
 // ∠BIC = 90° + (1/2)∠A
 export function rpmPolyIncenterAngleBisector(random) {
   const angleA = ri(random, 20, 55) * 2; // 짝수로 설정 (40 ~ 110)
@@ -7809,7 +7809,7 @@ export function rpmPolyIncenterAngleBisector(random) {
   }
 }
 
-// [유형 08] 한 내각의 이등분선과 한 외각의 이등분선의 교각 (RPM #484~#489)
+// [유형 08] 한 내각의 이등분선과 한 외각의 이등분선의 교각
 // ∠D = (1/2)∠A
 export function rpmPolyExteriorInteriorBisector(random) {
   const angleA = ri(random, 18, 50) * 2; // 36 ~ 100 짝수
@@ -7835,7 +7835,7 @@ export function rpmPolyExteriorInteriorBisector(random) {
   }
 }
 
-// [유형 09] 다각형의 내각의 크기의 합 공식 (RPM #490~#497)
+// [유형 09] 다각형의 내각의 크기의 합 공식
 // S = 180° × (n - 2)
 export function rpmPolyInteriorAngleSumFormula(random) {
   const n = ri(random, 5, 12);
@@ -7881,7 +7881,7 @@ export function rpmPolyInteriorAngleSumFormula(random) {
   }
 }
 
-// [유형 10] 다각형의 외각의 크기의 합 (RPM #498~#505)
+// [유형 10] 다각형의 외각의 크기의 합
 // 모든 다각형의 외각의 크기의 합은 항상 360°이다.
 export function rpmPolyExteriorAngleSumConst(random) {
   const n = ri(random, 5, 8);
@@ -7904,7 +7904,7 @@ export function rpmPolyExteriorAngleSumConst(random) {
   };
 }
 
-// [유형 11] 정다각형의 한 내각과 한 외각의 크기 (RPM #506~#511)
+// [유형 11] 정다각형의 한 내각과 한 외각의 크기
 // 한 외각 = 360 / n, 한 내각 = 180 - (360 / n)
 export function rpmPolyRegularInteriorExterior(random) {
   const regularPolys = [
@@ -7952,7 +7952,7 @@ export function rpmPolyRegularInteriorExterior(random) {
   }
 }
 
-// [유형 12] 정다각형의 한 내각과 한 외각의 크기의 비 (RPM #512~#515)
+// [유형 12] 정다각형의 한 내각과 한 외각의 크기의 비
 // 내각 : 외각 = a : b => 한 외각 = 180 * b / (a + b) => n = 360 / 외각
 export function rpmPolyRegularRatioAngle(random) {
   const polyList = [
@@ -7987,7 +7987,7 @@ export function rpmPolyRegularRatioAngle(random) {
   }
 }
 
-// [유형 13] 정다각형의 대각선과 각의 크기 (RPM #516~#519)
+// [유형 13] 정다각형의 대각선과 각의 크기
 // 정오각형 대각선 교각, 정육각형 대각선 각도 등
 export function rpmPolyRegularDiagonalAngle(random) {
   const mode = ri(random, 1, 2);
@@ -8017,7 +8017,7 @@ export function rpmPolyRegularDiagonalAngle(random) {
   }
 }
 
-// [유형 14] 변의 길이가 같은 두 정다각형이 한 변에서 만날 때의 각 (RPM #520~#523)
+// [유형 14] 변의 길이가 같은 두 정다각형이 한 변에서 만날 때의 각
 // 정오각형 + 정삼각형, 정오각형 + 정사각형, 정사각형 + 정삼각형
 export function rpmPolyTwoPolygonsSharedSide(random) {
   const pairs = [
@@ -8071,7 +8071,7 @@ export function rpmPolyTwoPolygonsSharedSide(random) {
   }
 }
 
-// [유형 15] 다각형의 꼭짓점 각의 합 (별 모양 다각형 / 맞꼭지각 보조선) (RPM #524~#526)
+// [유형 15] 다각형의 꼭짓점 각의 합 (별 모양 다각형 / 맞꼭지각 보조선)
 // 5각별 ∠A + ∠B + ∠C + ∠D + ∠E = 180°
 export function rpmPolyStarPolygonAngleSum(random) {
   const mode = ri(random, 1, 2);
@@ -8103,7 +8103,7 @@ export function rpmPolyStarPolygonAngleSum(random) {
   }
 }
 
-// [유형 16] 평행선 종이 테이프 접기와 다각형 융합 (실력 UP) (RPM #527~#534, #547~#550)
+// [유형 16] 평행선 종이 테이프 접기와 다각형 융합 (실력 UP)
 export function rpmPolyPaperFoldParallelAngle(random) {
   // 폭이 일정한 직사각형 종이를 접었을 때:
   // 접은 각 = 원래 각, 평행선의 엇각
@@ -8156,11 +8156,11 @@ export function rpmPolyAllTypesMixed(random) {
 }
 
 // =============================================================
-// CHAPTER 05: 원과 부채꼴 응용 (RPM 1-2 Pages 86 ~ 98)
+// CHAPTER 05: 원과 부채꼴 응용
 // =============================================================
 
 
-// [유형 01] 원과 부채꼴의 기본 개념과 용어 (RPM #590~#596, #665)
+// [유형 01] 원과 부채꼴의 기본 개념과 용어
 // 호, 현, 할선, 활꼴, 중심각, 반원 특징
 export function rpmCircleSectorConceptTerms(random) {
   const statements = [
@@ -8209,7 +8209,7 @@ export function rpmCircleSectorConceptTerms(random) {
   };
 }
 
-// [유형 02] 중심각의 크기와 호의 길이의 정비례 관계 (RPM #597~#602, #666)
+// [유형 02] 중심각의 크기와 호의 길이의 정비례 관계
 // 호의 길이는 중심각의 크기에 정비례한다.
 export function rpmCircleCentralAngleArcProp(random) {
   const mode = ri(random, 1, 3);
@@ -8264,7 +8264,7 @@ export function rpmCircleCentralAngleArcProp(random) {
   }
 }
 
-// [유형 03] 평행선과 보조선을 이용한 호의 길이 구하기 (RPM #603~#604)
+// [유형 03] 평행선과 보조선을 이용한 호의 길이 구하기
 // AB // CD, OA = OC = OB (이등변삼각형 밑각과 엇각/동위각)
 export function rpmCircleParallelChordArc(random) {
   // 원 O에서 현 AB와 지름 CD(또는 다른 현)가 평행할 때
@@ -8285,7 +8285,7 @@ export function rpmCircleParallelChordArc(random) {
   };
 }
 
-// [유형 04] 중심각의 크기와 부채꼴의 넓이의 정비례 관계 (RPM #605~#607)
+// [유형 04] 중심각의 크기와 부채꼴의 넓이의 정비례 관계
 export function rpmCircleCentralAngleAreaProp(random) {
   const theta1 = pick(random, [30, 40, 45, 60]);
   const factor = ri(random, 2, 4);
@@ -8315,7 +8315,7 @@ export function rpmCircleCentralAngleAreaProp(random) {
   }
 }
 
-// [유형 05] 중심각의 크기와 현의 길이 관계 (RPM #608~#612)
+// [유형 05] 중심각의 크기와 현의 길이 관계
 // 중심각이 같으면 현의 길이도 같지만, 현의 길이는 중심각에 정비례하지 않는다.
 export function rpmCircleChordNotProportional(random) {
   const mode = ri(random, 1, 2);
@@ -8377,7 +8377,7 @@ export function rpmCircleChordNotProportional(random) {
   }
 }
 
-// [유형 06] 원의 둘레의 길이와 넓이 (RPM #613~#620)
+// [유형 06] 원의 둘레의 길이와 넓이
 // l = 2πr, S = πr²
 export function rpmCircleCircumferenceAndArea(random) {
   const r = ri(random, 3, 15);
@@ -8416,7 +8416,7 @@ export function rpmCircleCircumferenceAndArea(random) {
   }
 }
 
-// [유형 07] 부채꼴의 호의 길이와 넓이 (기본 공식) (RPM #621~#628)
+// [유형 07] 부채꼴의 호의 길이와 넓이 (기본 공식)
 // l = 2πr × (x / 360), S = πr² × (x / 360)
 export function rpmSectorArcLengthAndArea(random) {
   const rList = [4, 6, 8, 9, 10, 12];
@@ -8451,7 +8451,7 @@ export function rpmSectorArcLengthAndArea(random) {
   }
 }
 
-// [유형 08] 호의 길이와 넓이의 관계 (S = 1/2 * r * l) (RPM #629~#636)
+// [유형 08] 호의 길이와 넓이의 관계 (S = 1/2 * r * l)
 export function rpmSectorAreaFromArcRadius(random) {
   const r = ri(random, 4, 14);
   const arcCoeff = ri(random, 2, 8) * 2; // 짝수로 설정
@@ -8479,7 +8479,7 @@ export function rpmSectorAreaFromArcRadius(random) {
   }
 }
 
-// [유형 09] 색칠한 부분의 둘레의 길이 (RPM #637~#644)
+// [유형 09] 색칠한 부분의 둘레의 길이
 // 도넛 고리, 사분원과 직각삼각형 결합, 반원 2개 접합 등
 export function rpmShadedRegionPerimeter(random) {
   const mode = ri(random, 1, 2);
@@ -8516,7 +8516,7 @@ export function rpmShadedRegionPerimeter(random) {
   }
 }
 
-// [유형 10] 색칠한 부분의 넓이 (정사각형 안 나뭇잎 모양, 활꼴) (RPM #645~#651)
+// [유형 10] 색칠한 부분의 넓이 (정사각형 안 나뭇잎 모양, 활꼴)
 export function rpmShadedRegionAreaDiff(random) {
   const mode = ri(random, 1, 2);
   if (mode === 1) {
@@ -8551,7 +8551,7 @@ export function rpmShadedRegionAreaDiff(random) {
   }
 }
 
-// [유형 11] 도형의 이동 및 회전으로 생기는 영역의 넓이 (RPM #652~#657, #674)
+// [유형 11] 도형의 이동 및 회전으로 생기는 영역의 넓이
 // 직각삼각형의 회전, 히포크라테스의 초승달, 잘라서 붙이기
 export function rpmFigureRotationSweptArea(random) {
   const mode = ri(random, 1, 2);
@@ -8586,7 +8586,7 @@ export function rpmFigureRotationSweptArea(random) {
   }
 }
 
-// [유형 12] 끈으로 묶인 가축의 풀 뜯는 영역 및 도형 굴리기 궤적 (RPM #658~#664)
+// [유형 12] 끈으로 묶인 가축의 풀 뜯는 영역 및 도형 굴리기 궤적
 export function rpmTetheredAnimalPastureArea(random) {
   // 직사각형 울타리(가로 a, 세로 b)의 한 꼭짓점에 끈의 길이 L로 묶인 염소
   // a = 6, b = 4, L = 8
@@ -8608,7 +8608,7 @@ export function rpmTetheredAnimalPastureArea(random) {
   };
 }
 
-// [유형 13] 다각형 둘레를 굴러가는 원의 중심 궤적 거리 및 지나간 자리의 넓이 (RPM #682~#683)
+// [유형 13] 다각형 둘레를 굴러가는 원의 중심 궤적 거리 및 지나간 자리의 넓이
 export function rpmRollingCircleTrackArea(random) {
   // 한 변이 a인 정삼각형 또는 정사각형의 둘레를 따라 반지름 r인 원이 한 바퀴 굴러감
   // 1) 원의 중심이 움직인 거리 = 다각형의 둘레 + 원의 둘레(2πr)
@@ -8691,11 +8691,11 @@ export function rpmPlaneFiguresSemesterMockExam(random) {
 
 
 // =============================================================
-// CHAPTER 06: 다면체와 회전체 응용 (RPM 1-2 Pages 104 ~ 117)
+// CHAPTER 06: 다면체와 회전체 응용
 // =============================================================
 
 
-// [유형 01] 다면체의 뜻과 판별 (RPM #750~#755, #830)
+// [유형 01] 다면체의 뜻과 판별
 // 다각형인 면으로만 둘러싸인 입체도형
 export function rpmPolyhedronConceptClassification(random) {
   const mode = ri(random, 1, 2);
@@ -8757,7 +8757,7 @@ export function rpmPolyhedronConceptClassification(random) {
   }
 }
 
-// [유형 02] 각기둥, 각뿔, 각뿔대의 구성요소 (RPM #756~#762)
+// [유형 02] 각기둥, 각뿔, 각뿔대의 구성요소
 // n각기둥: 면 n+2, 꼭짓점 2n, 모서리 3n
 // n각뿔: 면 n+1, 꼭짓점 n+1, 모서리 2n
 // n각뿔대: 면 n+2, 꼭짓점 2n, 모서리 3n
@@ -8811,7 +8811,7 @@ export function rpmPolyhedronPrismPyramidElements(random) {
   }
 }
 
-// [유형 03] 조건을 만족시키는 다면체 구하기 (RPM #763~#769)
+// [유형 03] 조건을 만족시키는 다면체 구하기
 export function rpmPolyhedronIdentifyFromConditions(random) {
   const n = ri(random, 5, 10);
   const koreanNums = ['', '', '', '삼', '사', '오', '육', '칠', '팔', '구', '십'];
@@ -8850,7 +8850,7 @@ export function rpmPolyhedronIdentifyFromConditions(random) {
   }
 }
 
-// [유형 04] 오일러 공식 (v - e + f = 2) (RPM #770~#774)
+// [유형 04] 오일러 공식 (v - e + f = 2)
 export function rpmPolyhedronEulerFormula(random) {
   const n = ri(random, 5, 12);
   // v - e + f = 2
@@ -8882,7 +8882,7 @@ export function rpmPolyhedronEulerFormula(random) {
   }
 }
 
-// [유형 05] 정다면체의 뜻과 종류 (5가지) (RPM #775~#781)
+// [유형 05] 정다면체의 뜻과 종류 (5가지)
 // 정다면체가 5가지뿐인 이유 (입체각 < 360°)
 export function rpmRegularPolyhedraTypesConditions(random) {
   const statements = [
@@ -8925,7 +8925,7 @@ export function rpmRegularPolyhedraTypesConditions(random) {
   };
 }
 
-// [유형 06] 정다면체의 면의 모양과 한 꼭짓점에 모인 면의 개수 (RPM #782~#787)
+// [유형 06] 정다면체의 면의 모양과 한 꼭짓점에 모인 면의 개수
 export function rpmRegularPolyhedraFaceShapes(random) {
   const regulars = [
     { name: '정사면체', face: '정삼각형', count: 3, v: 4, e: 6, f: 4 },
@@ -8964,7 +8964,7 @@ export function rpmRegularPolyhedraFaceShapes(random) {
   }
 }
 
-// [유형 07] 정다면체의 꼭짓점, 모서리, 면의 개수 (RPM #788~#795)
+// [유형 07] 정다면체의 꼭짓점, 모서리, 면의 개수
 export function rpmRegularPolyhedraElementsCount(random) {
   const regulars = [
     { name: '정사면체', v: 4, e: 6, f: 4 },
@@ -9007,7 +9007,7 @@ export function rpmRegularPolyhedraElementsCount(random) {
   }
 }
 
-// [유형 08] 정다면체의 전개도와 마주보는 면 (RPM #796~#802)
+// [유형 08] 정다면체의 전개도와 마주보는 면
 export function rpmCubeNetOppositeFaces(random) {
   // 정육면체 주사위 눈 마주보는 합 = 7, 또는 전개도에서 마주보는 면 찾기
   // 주사위 1..6 마주보는 쌍: (1, 6), (2, 5), (3, 4)
@@ -9023,7 +9023,7 @@ export function rpmCubeNetOppositeFaces(random) {
   };
 }
 
-// [유형 09] 다면체의 단면의 모양 (RPM #803~#808)
+// [유형 09] 다면체의 단면의 모양
 // 정육면체를 한 평면으로 자를 때 생기는 단면 (삼각형, 사각형, 오각형, 육각형 등)
 export function rpmPolyhedronCrossSectionShapes(random) {
   return {
@@ -9041,7 +9041,7 @@ export function rpmPolyhedronCrossSectionShapes(random) {
   };
 }
 
-// [유형 10] 정다면체의 각 면의 중심을 연결하여 만든 입체도형 (쌍대다면체) (RPM #809~#813)
+// [유형 10] 정다면체의 각 면의 중심을 연결하여 만든 입체도형 (쌍대다면체)
 export function rpmDualPolyhedraConnections(random) {
   const dualPairs = [
     { orig: '정육면체', inner: '정팔면체', origF: 6, innerV: 6 },
@@ -9061,7 +9061,7 @@ export function rpmDualPolyhedraConnections(random) {
   };
 }
 
-// [유형 11] 회전체의 뜻과 종류 (RPM #814~#819)
+// [유형 11] 회전체의 뜻과 종류
 // 원기둥, 원뿔, 원뿔대, 구
 export function rpmSolidsOfRevolutionTypes(random) {
   return {
@@ -9079,7 +9079,7 @@ export function rpmSolidsOfRevolutionTypes(random) {
   };
 }
 
-// [유형 12] 회전체와 평면도형의 관계 (회전시켜 생기는 입체도형) (RPM #820~#824)
+// [유형 12] 회전체와 평면도형의 관계 (회전시켜 생기는 입체도형)
 export function rpmPlanarFigureToRevolutionSolid(random) {
   const pairs = [
     { shape: '직각삼각형의 한 직각변', solid: '원뿔', expl: '직각삼각형을 한 직각변을 회전축으로 1회전 시키면 원뿔이 생깁니다.' },
@@ -9098,7 +9098,7 @@ export function rpmPlanarFigureToRevolutionSolid(random) {
   };
 }
 
-// [유형 13] 회전체의 단면의 모양 (RPM #825~#829)
+// [유형 13] 회전체의 단면의 모양
 // 회전축에 수직인 평면 -> 항상 원
 // 회전축을 포함하는 평면 -> 선대칭도형 (원기둥: 직사각형, 원뿔: 이등변삼각형, 원뿔대: 등변사다리꼴, 구: 원)
 export function rpmRevolutionCrossSectionProperty(random) {
@@ -9136,7 +9136,7 @@ export function rpmRevolutionCrossSectionProperty(random) {
   }
 }
 
-// [유형 14] 회전체의 단면의 넓이 계산 (RPM #830~#835)
+// [유형 14] 회전체의 단면의 넓이 계산
 export function rpmRevolutionCrossSectionAreaCalc(random) {
   const mode = ri(random, 1, 2);
   if (mode === 1) {
@@ -9168,7 +9168,7 @@ export function rpmRevolutionCrossSectionAreaCalc(random) {
   }
 }
 
-// [유형 15] 원뿔 전개도 부채꼴의 중심각 크기 (RPM #836~#842)
+// [유형 15] 원뿔 전개도 부채꼴의 중심각 크기
 // x = 360° × (r / l)
 export function rpmConeNetSectorCentralAngle(random) {
   // r, l such that 360 * r / l is integer
@@ -9208,7 +9208,7 @@ export function rpmConeNetSectorCentralAngle(random) {
   }
 }
 
-// [유형 16] 회전체의 성질 심화 판별 (실력 UP) (RPM #843~#849)
+// [유형 16] 회전체의 성질 심화 판별 (실력 UP)
 export function rpmRevolutionSolidsAdvancedProperties(random) {
   const items = [
     {
@@ -9274,11 +9274,11 @@ export function rpmPolyhedronRevolutionAllMixed(random) {
 }
 
 // =============================================================
-// CHAPTER 07: 입체도형의 겉넓이와 부피 응용 (RPM 1-2 Pages 122 ~ 138)
+// CHAPTER 07: 입체도형의 겉넓이와 부피 응용
 // =============================================================
 
 
-// [유형 01] 각기둥의 겉넓이 (RPM #880~#885, #953)
+// [유형 01] 각기둥의 겉넓이
 // 겉넓이 = 2 * (밑넓이) + (옆넓이)
 export function rpmPrismSurfaceAreaCalc(random) {
   const mode = ri(random, 1, 2);
@@ -9321,7 +9321,7 @@ export function rpmPrismSurfaceAreaCalc(random) {
   }
 }
 
-// [유형 02] 원기둥의 겉넓이 (RPM #886~#891)
+// [유형 02] 원기둥의 겉넓이
 // S = 2πr² + 2πrh = 2πr(r + h)
 export function rpmCylinderSurfaceAreaCalc(random) {
   const r = ri(random, 3, 8);
@@ -9337,7 +9337,7 @@ export function rpmCylinderSurfaceAreaCalc(random) {
   };
 }
 
-// [유형 03] 기둥(각기둥, 원기둥)의 부피 (RPM #892~#899)
+// [유형 03] 기둥(각기둥, 원기둥)의 부피
 // V = (밑넓이) * h
 export function rpmPrismCylinderVolumeCalc(random) {
   const mode = ri(random, 1, 2);
@@ -9372,7 +9372,7 @@ export function rpmPrismCylinderVolumeCalc(random) {
   }
 }
 
-// [유형 04] 구멍이 뚫린 기둥의 겉넓이와 부피 (RPM #900~#905)
+// [유형 04] 구멍이 뚫린 기둥의 겉넓이와 부피
 export function rpmHollowPrismSurfaceVolume(random) {
   // 바깥 반지름 R, 안쪽 구멍 반지름 r, 높이 h인 원기둥 관
   const r = 3;
@@ -9409,7 +9409,7 @@ export function rpmHollowPrismSurfaceVolume(random) {
   }
 }
 
-// [유형 05] 각뿔의 겉넓이와 부피 (RPM #906~#913)
+// [유형 05] 각뿔의 겉넓이와 부피
 // 겉넓이 = 밑넓이 + 옆넓이, 부피 = (1/3) * 밑넓이 * 높이
 export function rpmPyramidSurfaceAreaVolume(random) {
   const mode = ri(random, 1, 2);
@@ -9444,7 +9444,7 @@ export function rpmPyramidSurfaceAreaVolume(random) {
   }
 }
 
-// [유형 06] 원뿔의 겉넓이 (RPM #914~#918)
+// [유형 06] 원뿔의 겉넓이
 // S = πr² + πrl
 export function rpmConeSurfaceAreaCalc(random) {
   const r = ri(random, 3, 8);
@@ -9462,7 +9462,7 @@ export function rpmConeSurfaceAreaCalc(random) {
   };
 }
 
-// [유형 07] 원뿔의 부피 (RPM #919~#923)
+// [유형 07] 원뿔의 부피
 // V = (1/3)πr²h
 export function rpmConeVolumeCalc(random) {
   const r = ri(random, 3, 9);
@@ -9478,7 +9478,7 @@ export function rpmConeVolumeCalc(random) {
   };
 }
 
-// [유형 08] 정육면체/직육면체에서 삼각뿔 잘라내기 (RPM #924~#925)
+// [유형 08] 정육면체/직육면체에서 삼각뿔 잘라내기
 // 한 모퉁이를 잘라낸 삼각뿔의 부피 = (1/6) * a * b * c
 export function rpmTruncatedCornerPyramidVolume(random) {
   const a = ri(random, 4, 10); // 정육면체 한 모서리
@@ -9516,7 +9516,7 @@ export function rpmTruncatedCornerPyramidVolume(random) {
   }
 }
 
-// [유형 09] 뿔대의 겉넓이와 부피 (RPM #926~#929)
+// [유형 09] 뿔대의 겉넓이와 부피
 // 부피 = 큰 뿔 - 작은 뿔
 export function rpmFrustumSurfaceAreaVolume(random) {
   // 원뿔대: 아랫 밑면 반지름 R = 6, 윗 밑면 반지름 r = 3
@@ -9540,7 +9540,7 @@ export function rpmFrustumSurfaceAreaVolume(random) {
   };
 }
 
-// [유형 10] 회전체의 겉넓이와 부피 (RPM #930~#933)
+// [유형 10] 회전체의 겉넓이와 부피
 // 직각삼각형 1회전 -> 원뿔
 export function rpmRevolutionSolidSurfaceVolume(random) {
   const triples = [
@@ -9574,7 +9574,7 @@ export function rpmRevolutionSolidSurfaceVolume(random) {
   }
 }
 
-// [유형 11] 구와 반구의 겉넓이 (RPM #934~#937)
+// [유형 11] 구와 반구의 겉넓이
 // 구: S = 4πr², 반구: S = 3πr²
 export function rpmSphereSurfaceAreaCalc(random) {
   const r = ri(random, 3, 10);
@@ -9603,7 +9603,7 @@ export function rpmSphereSurfaceAreaCalc(random) {
   }
 }
 
-// [유형 12] 구와 반구의 부피 (RPM #938~#941)
+// [유형 12] 구와 반구의 부피
 // 구: V = (4/3)πr³, 반구: V = (2/3)πr³
 export function rpmSphereVolumeCalc(random) {
   const rList = [3, 6, 9];
@@ -9633,7 +9633,7 @@ export function rpmSphereVolumeCalc(random) {
   }
 }
 
-// [유형 13] 구의 일부분(1/8 조각 등)을 잘라낸 입체도형 (RPM #942~#945)
+// [유형 13] 구의 일부분(1/8 조각 등)을 잘라낸 입체도형
 export function rpmTruncatedSpherePartSurfaceVolume(random) {
   // 반지름 r인 구의 1/8을 잘라낸 입체도형 (남은 부분 7/8 또는 잘라낸 1/8 조각)
   // 반지름 r = 6
@@ -9666,7 +9666,7 @@ export function rpmTruncatedSpherePartSurfaceVolume(random) {
   }
 }
 
-// [유형 14] 원기둥, 구, 원뿔의 부피의 비 (1 : 2 : 3) (RPM #946~#952)
+// [유형 14] 원기둥, 구, 원뿔의 부피의 비 (1 : 2 : 3)
 export function rpmConeSphereCylinderRatio(random) {
   // 밑면의 지름과 높이가 모두 2r로 같은 원기둥 안에 구와 원뿔이 꼭 맞게 들어감
   // 원뿔 : 구 : 원기둥 = 1 : 2 : 3
@@ -9696,7 +9696,7 @@ export function rpmConeSphereCylinderRatio(random) {
   }
 }
 
-// [유형 15] 그릇에 담긴 물의 부피와 높이 (RPM #964~#966)
+// [유형 15] 그릇에 담긴 물의 부피와 높이
 export function rpmContainerWaterLevelVolume(random) {
   // 높이가 H인 원뿔 모양 그릇에 깊이가 H/2 또는 H/3 만큼 물이 차 있을 때
   // 닮음비 1 : 2 => 부피비 1 : 8
@@ -9714,7 +9714,7 @@ export function rpmContainerWaterLevelVolume(random) {
   };
 }
 
-// [유형 16] 입체도형 표면 위의 최단 거리 (실력 UP) (RPM #967, #980~#983)
+// [유형 16] 입체도형 표면 위의 최단 거리 (실력 UP)
 export function rpmSolidSurfaceShortestPath(random) {
   // 원기둥 옆면을 한 바퀴 돌아 A에서 B(A 바로 위 꼭짓점)까지의 최단거리
   // 전개도 직사각형에서 가로 = 2πr, 세로 = h
@@ -9805,11 +9805,11 @@ export function rpmSolidFiguresSemesterMockExam(random) {
 
 
 // =============================================================
-// CHAPTER 08 & 09: 자료의 정리와 해석 응용 (RPM 1-2 Pages 144 ~ 158 & 160 ~ 175)
+// CHAPTER 08 & 09: 자료의 정리와 해석 응용
 // =============================================================
 
 
-// [유형 01] 줄기와 잎 그림의 해석 (RPM #1000~#1005, #1073)
+// [유형 01] 줄기와 잎 그림의 해석
 // 전체 자료의 수, k번째로 큰/작은 값, 특정 값 이상/이하의 백분율
 export function rpmDataStemAndLeafPlot(random) {
   // 줄기 1, 2, 3, 4
@@ -9862,7 +9862,7 @@ export function rpmDataStemAndLeafPlot(random) {
   }
 }
 
-// [유형 02] 찢어진 줄기와 잎 그림의 미지수 추적 (RPM #1006~#1010, #1074)
+// [유형 02] 찢어진 줄기와 잎 그림의 미지수 추적
 export function rpmDataTornStemLeafPlot(random) {
   // 전체 학생 수 20명, 줄기 1, 2, 3, 4
   // 줄기 1에 4명, 줄기 3에 6명, 줄기 4에 3명, 줄기 2가 찢어져서 보이지 않음
@@ -9881,7 +9881,7 @@ export function rpmDataTornStemLeafPlot(random) {
   };
 }
 
-// [유형 03] 도수분포표의 기본 용어 및 계급값 (RPM #1011~#1016)
+// [유형 03] 도수분포표의 기본 용어 및 계급값
 // 계급, 계급의 크기, 계급값
 export function rpmDataFrequencyTableBasicTerms(random) {
   const width = pick(random, [5, 10]);
@@ -9911,7 +9911,7 @@ export function rpmDataFrequencyTableBasicTerms(random) {
   }
 }
 
-// [유형 04] 도수분포표에서 미지수 도수 구하기 (RPM #1017~#1022, #1075)
+// [유형 04] 도수분포표에서 미지수 도수 구하기
 export function rpmDataFrequencyTableMissingFreq(random) {
   const total = pick(random, [25, 30, 40, 50]);
   const f1 = ri(random, 3, 6);
@@ -9939,7 +9939,7 @@ export function rpmDataFrequencyTableMissingFreq(random) {
   };
 }
 
-// [유형 05] 히스토그램의 이해 및 직사각형의 넓이 (RPM #1023~#1028, #1077)
+// [유형 05] 히스토그램의 이해 및 직사각형의 넓이
 // 직사각형 넓이의 합 = (계급의 크기) * (도수의 총합)
 export function rpmDataHistogramRectangleArea(random) {
   const width = pick(random, [5, 10]);
@@ -9955,7 +9955,7 @@ export function rpmDataHistogramRectangleArea(random) {
   };
 }
 
-// [유형 06] 일부가 찢어진 히스토그램 (RPM #1029~#1035, #1078)
+// [유형 06] 일부가 찢어진 히스토그램
 export function rpmDataTornHistogram(random) {
   // 전체 학생 수 40명, 찢어진 계급의 도수 구하기
   const total = 40;
@@ -9974,7 +9974,7 @@ export function rpmDataTornHistogram(random) {
   };
 }
 
-// [유형 07] 도수분포다각형의 작성과 성질 (RPM #1036~#1040)
+// [유형 07] 도수분포다각형의 작성과 성질
 export function rpmDataFrequencyPolygonStructure(random) {
   const statements = [
     {
@@ -10016,7 +10016,7 @@ export function rpmDataFrequencyPolygonStructure(random) {
   };
 }
 
-// [유형 08] 도수분포다각형과 가로축으로 둘러싸인 부분의 넓이 (RPM #1041~#1045, #1079)
+// [유형 08] 도수분포다각형과 가로축으로 둘러싸인 부분의 넓이
 // 넓이 = (계급의 크기) * (도수의 총합)
 export function rpmDataFrequencyPolygonArea(random) {
   const width = pick(random, [5, 10, 2]);
@@ -10032,7 +10032,7 @@ export function rpmDataFrequencyPolygonArea(random) {
   };
 }
 
-// [유형 09] 일부가 보이지 않는 도수분포다각형 (RPM #1046~#1050, #1080)
+// [유형 09] 일부가 보이지 않는 도수분포다각형
 export function rpmDataTornFrequencyPolygon(random) {
   const total = 50;
   const f1 = 6;
@@ -10050,7 +10050,7 @@ export function rpmDataTornFrequencyPolygon(random) {
   };
 }
 
-// [유형 10] 두 집단의 도수분포다각형 비교 (RPM #1051~#1054)
+// [유형 10] 두 집단의 도수분포다각형 비교
 export function rpmDataTwoGroupsPolygonCompare(random) {
   return {
     prompt: `A반과 B반 학생들의 영어 점수를 나타낸 도수분포다각형을 비교하였더니, A반의 그래프가 B반의 그래프보다 전체적으로 오른쪽으로 치우쳐 있었다. 이에 대한 올바른 해석을 고르시오.`,
@@ -10067,7 +10067,7 @@ export function rpmDataTwoGroupsPolygonCompare(random) {
   };
 }
 
-// [유형 11] 상대도수의 뜻과 성질 (RPM #1055~#1059)
+// [유형 11] 상대도수의 뜻과 성질
 // 상대도수 = 도수 / 총합, 합 = 1, 도수에 정비례
 export function rpmDataRelativeFrequencyConcept(random) {
   const total = 50;
@@ -10096,7 +10096,7 @@ export function rpmDataRelativeFrequencyConcept(random) {
   }
 }
 
-// [유형 12] 도수분포표에서 상대도수 계산 및 도수 역추적 (RPM #1060~#1063, #1083)
+// [유형 12] 도수분포표에서 상대도수 계산 및 도수 역추적
 // 도수 = 총합 * 상대도수, 총합 = 도수 / 상대도수
 export function rpmDataRelativeFrequencyTableCalc(random) {
   const total = pick(random, [40, 50, 80, 100]);
@@ -10125,7 +10125,7 @@ export function rpmDataRelativeFrequencyTableCalc(random) {
   }
 }
 
-// [유형 13] 일부가 찢어진 상대도수 분포표 (RPM #1064~#1068, #1084)
+// [유형 13] 일부가 찢어진 상대도수 분포표
 export function rpmDataTornRelativeFrequencyTable(random) {
   // 상대도수 총합 1
   // rel1 = 0.1, rel2 = 0.25, rel4 = 0.2, rel5 = 0.15 => rel3 = 1 - 0.7 = 0.3
@@ -10146,7 +10146,7 @@ export function rpmDataTornRelativeFrequencyTable(random) {
   };
 }
 
-// [유형 14] 도수의 총합이 다른 두 집단의 상대도수 비교 (RPM #1069~#1072, #1085)
+// [유형 14] 도수의 총합이 다른 두 집단의 상대도수 비교
 // A반과 B반의 총도수 비 m:n, 특정 계급 도수 비 p:q => 상대도수의 비 (p/m) : (q/n)
 export function rpmDataTwoGroupsRelativeFreqRatio(random) {
   const cases = [
@@ -10173,7 +10173,7 @@ export function rpmDataTwoGroupsRelativeFreqRatio(random) {
   };
 }
 
-// [유형 15] 상대도수의 분포를 나타낸 그래프의 넓이 (RPM #1086~#1090)
+// [유형 15] 상대도수의 분포를 나타낸 그래프의 넓이
 // 둘러싸인 넓이 = (계급의 크기) * 1 = 계급의 크기
 export function rpmDataRelativeFrequencyGraphArea(random) {
   const width = pick(random, [2, 5, 10]);
@@ -10187,7 +10187,7 @@ export function rpmDataRelativeFrequencyGraphArea(random) {
   };
 }
 
-// [유형 16] 두 집단의 상대도수 그래프 비교 (실력 UP) (RPM #1091~#1096)
+// [유형 16] 두 집단의 상대도수 그래프 비교 (실력 UP)
 export function rpmDataTwoGroupsRelativeFreqCompare(random) {
   return {
     prompt: `도수의 총합이 서로 다른 두 집단 A, B의 분포 상태를 비교하려고 할 때 가장 적절한 방법을 고르시오.`,
@@ -10228,7 +10228,7 @@ export function rpmDataStatisticsAllMixed(random) {
 }
 
 // [중1-2 전 범위 최종 실전 모의고사 (Pages 160 ~ 175)]
-// [중1-2 전 범위 최종 실전 총괄 모의고사 (RPM 1-2 Pages 160 ~ 175)]
+// [중1-2 전 범위 최종 실전 총괄 모의고사]
 export function rpmGrade7SemesterTwoFinalExam(random) {
   const examPool = [
     // 01 기본도형
@@ -10289,7 +10289,7 @@ export function rpmGrade7SemesterTwoFinalExam(random) {
 
 
 
-// [유형 01] 10의 거듭제곱을 이용하여 분수를 유한소수로 나타내기 (RPM #0056~#0058, #0117)
+// [유형 01] 10의 거듭제곱을 이용하여 분수를 유한소수로 나타내기
 export function rpmRatDecPowersOfTen(random) {
   const pairs = [
     { num: 3, p2: 3, p5: 1, name: '3/40' },
@@ -10331,7 +10331,7 @@ export function rpmRatDecPowersOfTen(random) {
   }
 }
 
-// [유형 02] 유한소수로 나타낼 수 있는 분수 판별 (RPM #0059~#0062, #0118)
+// [유형 02] 유한소수로 나타낼 수 있는 분수 판별
 export function rpmRatDecTerminatingCondition(random) {
   const fractions = [
     { text: '\\frac{7}{25}', term: true, expl: '25 = 5^2 (분모 소인수 5뿐)' },
@@ -10382,7 +10382,7 @@ export function rpmRatDecTerminatingCondition(random) {
   }
 }
 
-// [유형 03] a/b * x가 유한소수가 되도록 하는 x의 값 (RPM #0063~#0065, #0125)
+// [유형 03] a/b * x가 유한소수가 되도록 하는 x의 값
 export function rpmRatDecMultiplyToTerminatingSingle(random) {
   const problems = [
     { a: 7, b: 120, k: 3, bFact: '2^3 \\times 3 \\times 5' },
@@ -10419,7 +10419,7 @@ export function rpmRatDecMultiplyToTerminatingSingle(random) {
   }
 }
 
-// [유형 04] 두 분수에 각각 x를 곱하여 모두 유한소수가 되도록 하기 (RPM #0066~#0068, #0131)
+// [유형 04] 두 분수에 각각 x를 곱하여 모두 유한소수가 되도록 하기
 export function rpmRatDecMultiplyToTerminatingBoth(random) {
   const configs = [
     { a1: 7, b1: 180, k1: 9, a2: 5, b2: 84, k2: 21, lcmK: 63 },
@@ -10452,7 +10452,7 @@ export function rpmRatDecMultiplyToTerminatingBoth(random) {
   }
 }
 
-// [유형 05] 분모에 미지수가 있는 분수가 유한소수가 되도록 하기 (RPM #0069~#0072, #0119)
+// [유형 05] 분모에 미지수가 있는 분수가 유한소수가 되도록 하기
 export function rpmRatDecDenominatorVariable(random) {
   // Fraction 21 / (2^2 * 5 * x)
   // 21 = 3 * 7. So x can contain 2, 5, and at most one factor of 3 and at most one factor of 7.
@@ -10482,7 +10482,7 @@ export function rpmRatDecDenominatorVariable(random) {
   };
 }
 
-// [유형 06] 유한소수가 되도록 하는 미지수 조건과 기약분수 약분 (RPM #0073~#0075, #0120)
+// [유형 06] 유한소수가 되도록 하는 미지수 조건과 기약분수 약분
 export function rpmRatDecTerminatingAndIrreducible(random) {
   // Fraction a / 280 = a / (2^3 * 5 * 7)
   // For it to be terminating, a must be a multiple of 7.
@@ -10505,7 +10505,7 @@ export function rpmRatDecTerminatingAndIrreducible(random) {
   };
 }
 
-// [유형 07] 순환마디와 순환소수의 표현 (RPM #0076~#0079, #0121)
+// [유형 07] 순환마디와 순환소수의 표현
 export function rpmRatDecPeriodAndNotation(random) {
   const cases = [
     { raw: '2.828282…', period: '82', notation: '2.\\dot{8}\\dot{2}', wrongNote: '2.8\\dot{2}', wrongPer: '28' },
@@ -10544,7 +10544,7 @@ export function rpmRatDecPeriodAndNotation(random) {
   }
 }
 
-// [유형 08] 순환소수의 소수점 아래 n번째 자리의 숫자 구하기 (RPM #0080~#0083, #0122, #0134)
+// [유형 08] 순환소수의 소수점 아래 n번째 자리의 숫자 구하기
 export function rpmRatDecNthDigitOfRepeating(random) {
   const problems = [
     { num: 5, den: 7, digits: [7, 1, 4, 2, 8, 5], nonRep: [], name: '5/7' },
@@ -10578,7 +10578,7 @@ export function rpmRatDecNthDigitOfRepeating(random) {
   };
 }
 
-// [유형 09] 순환소수(무한소수)로만 나타내어지는 분수 및 미지수 (RPM #0084~#0086)
+// [유형 09] 순환소수(무한소수)로만 나타내어지는 분수 및 미지수
 export function rpmRatDecRepeatingOnlyCondition(random) {
   // Fraction x / (2^2 * 3 * 5) = x / 60
   // To be repeating decimal ONLY, x CANNOT be a multiple of 3.
@@ -10604,7 +10604,7 @@ export function rpmRatDecRepeatingOnlyCondition(random) {
   };
 }
 
-// [유형 10] 순환소수를 분수로 나타내기 (1) — 10^n x - 10^m x (RPM #0087~#0089, #0123, #0124)
+// [유형 10] 순환소수를 분수로 나타내기 (1) — 10^n x - 10^m x
 export function rpmRatDecFractionEquationMethod(random) {
   const problems = [
     { text: '1.5\\dot{3}\\dot{7}', n: 1000, m: 10, nonRep: 1, rep: 2 },
@@ -10644,7 +10644,7 @@ export function rpmRatDecFractionEquationMethod(random) {
   };
 }
 
-// [유형 11] 순환소수를 분수로 나타내기 (2) — 공식 활용 및 기약분수 (RPM #0090~#0093, #0132)
+// [유형 11] 순환소수를 분수로 나타내기 (2) — 공식 활용 및 기약분수
 export function rpmRatDecFractionFormulaMethod(random) {
   const problems = [
     { dec: '0.\\dot{4}', num: 4, den: 9 },
@@ -10679,7 +10679,7 @@ export function rpmRatDecFractionFormulaMethod(random) {
   }
 }
 
-// [유형 12] 순환소수에 자연수를 곱하여 유한소수 만들기 (RPM #0094~#0097)
+// [유형 12] 순환소수에 자연수를 곱하여 유한소수 만들기
 export function rpmRatDecRepeatingToTerminating(random) {
   const problems = [
     { dec: '1.9\\dot{3}', num: 174, den: 90, rNum: 29, rDen: 15, k: 3 }, // 15 = 3 * 5 => k = 3
@@ -10712,7 +10712,7 @@ export function rpmRatDecRepeatingToTerminating(random) {
   }
 }
 
-// [유형 13] 분모 또는 분자를 잘못 보고 소수로 나타낸 문제 (RPM #0098~#0100)
+// [유형 13] 분모 또는 분자를 잘못 보고 소수로 나타낸 문제
 export function rpmRatDecFaultyObservation(random) {
   // Student A mistakenly read the denominator => numerator is correct.
   // Student B mistakenly read the numerator => denominator is correct.
@@ -10747,7 +10747,7 @@ export function rpmRatDecFaultyObservation(random) {
   };
 }
 
-// [유형 14] 순환소수를 포함한 부등식 (RPM #0101~#0103, #0126)
+// [유형 14] 순환소수를 포함한 부등식
 export function rpmRatDecRepeatingInequality(random) {
   // 1/3 < 0.\dot{a} < 2/3 => 1/3 < a/9 < 2/3 => 3 < a < 6 => a in {4, 5}
   const configs = [
@@ -10781,7 +10781,7 @@ export function rpmRatDecRepeatingInequality(random) {
   }
 }
 
-// [유형 15] 순환소수를 포함한 식의 기본 계산 (RPM #0104~#0107, #0127, #0128)
+// [유형 15] 순환소수를 포함한 식의 기본 계산
 export function rpmRatDecArithmeticOperations(random) {
   const mode = ri(random, 1, 3);
   if (mode === 1) {
@@ -10830,7 +10830,7 @@ export function rpmRatDecArithmeticOperations(random) {
   }
 }
 
-// [유형 16] 유리수와 소수의 관계 정오 판별 (RPM #0108~#0110, #0129)
+// [유형 16] 유리수와 소수의 관계 정오 판별
 export function rpmRatDecNumberSystemTrueFalse(random) {
   const statements = [
     { q: '모든 순환소수는 유리수이다.', qEn: 'All repeating decimals are rational numbers.', ans: true, expl: '순환소수는 모두 분수 a/b (b!=0) 꼴로 나타낼 수 있으므로 유리수입니다.' },
@@ -10855,7 +10855,7 @@ export function rpmRatDecNumberSystemTrueFalse(random) {
   };
 }
 
-// [유형 17] 두 분수 사이에 있는 유한소수의 개수 (RPM #0111~#0113)
+// [유형 17] 두 분수 사이에 있는 유한소수의 개수
 export function rpmRatDecBetweenFractionsTerminating(random) {
   // Between 1/5 and 4/5 with denominator 35?
   // Let's use: Between 1/6 and 5/6 with denominator 30.
@@ -10880,7 +10880,7 @@ export function rpmRatDecBetweenFractionsTerminating(random) {
   };
 }
 
-// [유형 18] 순환소수 오차 방정식 및 자릿수 식 (RPM #0114~#0116)
+// [유형 18] 순환소수 오차 방정식 및 자릿수 식
 export function rpmRatDecMistakeEquationApplication(random) {
   const mode = ri(random, 1, 2);
   if (mode === 1) {
@@ -10917,7 +10917,7 @@ export function rpmRatDecMistakeEquationApplication(random) {
   }
 }
 
-// [단원 종합] 유리수와 순환소수 전 유형 실전 혼합 (RPM #0117~#0130)
+// [단원 종합] 유리수와 순환소수 전 유형 실전 혼합
 export function rpmRatDecAllTypesMixed(random) {
   const generators = [
     rpmRatDecPowersOfTen,
@@ -10942,7 +10942,7 @@ export function rpmRatDecAllTypesMixed(random) {
   return pick(random, generators)(random);
 }
 
-// [최고수준 실력 UP] 유리수와 순환소수 최고난도 심화 (RPM #0131~#0136)
+// [최고수준 실력 UP] 유리수와 순환소수 최고난도 심화
 export function rpmRatDecAdvancedSkillUp(random) {
   const mode = ri(random, 1, 3);
   if (mode === 1) {
@@ -14363,7 +14363,7 @@ export function rpmLineEqnAdvancedSkillUp(random) {
   }
 }
 
-// 21. [중2-1 최종총괄] 중학 2-1 전 범위 최종 실전 총괄 모의고사 (RPM p.152~167)
+// 21. [중2-1 최종총괄] 중학 2-1 전 범위 최종 실전 총괄 모의고사
 export function rpmGrade8SemesterOneFinalExam(random) {
   // Comprehensive review problem drawing from the 9 main themes of Grade 2-1:
   // 1. 유리수와 순환소수
@@ -14475,8 +14475,8 @@ export function rpmGrade8SemesterOneFinalExam(random) {
 // [중2-2] 01 이등변삼각형 & 02 외심과 내심
 // =============================================================
 // RPM Middle School 2-2 Applied Problem Generators
-// CHAPTER 01: 이등변삼각형 (RPM 2-2 Pages 10 ~ 21)
-// CHAPTER 02: 삼각형의 외심과 내심 (RPM 2-2 Pages 26 ~ 35)
+// CHAPTER 01: 이등변삼각형
+// CHAPTER 02: 삼각형의 외심과 내심
 // Fully compliant with app/middle-school/rpmAppliedEngine.js and curriculumValidation.js
 
 function shuffle(random, arr) {
@@ -15047,8 +15047,8 @@ export function rpmG8CirclesAdvancedSkillUp(random) {
 // [중2-2] 03 평행사변형 & 04 여러 가지 사각형
 // =============================================================
 // RPM Middle School 2-2 Applied Problem Generators
-// CHAPTER 03: 평행사변형 (RPM 2-2 Pages 38 ~ 47)
-// CHAPTER 04: 여러 가지 사각형 (RPM 2-2 Pages 52 ~ 65)
+// CHAPTER 03: 평행사변형
+// CHAPTER 04: 여러 가지 사각형
 
 // ----------------------------------------------------
 // CHAPTER 03: 평행사변형 (Parallelogram)
@@ -15558,10 +15558,10 @@ export function rpmG8SpecialQuadsAdvancedSkillUp(random) {
 // =============================================================
 // [중2-2] 05 닮음, 06 평행선과 선분비, 07 무게중심, 08 피타고라스 정리
 // =============================================================
-// CHAPTER 05: 도형의 닮음 (RPM 2-2 Pages 70 ~ 79)
-// CHAPTER 06: 평행선과 선분의 길이의 비 (RPM 2-2 Pages 82 ~ 89)
-// CHAPTER 07: 삼각형의 무게중심 (RPM 2-2 Pages 92 ~ 99)
-// CHAPTER 08: 피타고라스 정리 (RPM 2-2 Pages 104 ~ 111)
+// CHAPTER 05: 도형의 닮음
+// CHAPTER 06: 평행선과 선분의 길이의 비
+// CHAPTER 07: 삼각형의 무게중심
+// CHAPTER 08: 피타고라스 정리
 
 // Note: helper functions ri, pick, gcd, shuffle, makeChoices are already declared in engine files.
 // For local testing in this file, we define local helpers if not in module environment.
@@ -17399,7 +17399,7 @@ export function rpmGrade8SemesterTwoFinalExam(random) {
 
 
 export const RPM_APPLIED_GENERATORS = {
-  // 01 소인수분해 RPM 세부 유형 (RPM 1-1 Pages 10~15)
+  // 01 소인수분해 RPM 세부 유형
   'rpm-prime-prop-closest': rpmPrimePropClosest,
   'rpm-prime-power-rules': rpmPrimePowerRules,
   'rpm-prime-factorize-exponents': rpmPrimeFactorizeExponents,
@@ -17420,7 +17420,7 @@ export const RPM_APPLIED_GENERATORS = {
   'divisor-count': rpmPrimeDivisorCountReverse,
   'prime-mixed': rpmPrimeAllTypesMixed,
 
-  // 02 최대공약수와 최소공배수 RPM 세부 유형 (RPM 1-1 Pages 18~31)
+  // 02 최대공약수와 최소공배수 RPM 세부 유형
   'rpm-gcd-coprime': rpmGcdBasicCoprime,
   'rpm-gcd-common-divisor-prop': rpmGcdCommonDivisorProp,
   'rpm-lcm-common-multiple-prop': rpmLcmCommonMultipleProp,
@@ -17449,7 +17449,7 @@ export const RPM_APPLIED_GENERATORS = {
   'gcd-lcm-application': rpmGcdWordTileFence,
   'gcd-lcm-mixed': rpmGcdLcmAllTypesMixed,
 
-  // 03 정수와 유리수 응용단원 (RPM 1-1 p.38~49)
+  // 03 정수와 유리수 응용단원
   'rpm-ir-sign-situation': rpmIrSignSituation,
   'rpm-ir-classify-integers': rpmIrClassifyIntegers,
   'rpm-ir-classify-rationals': rpmIrClassifyRationals,
@@ -17477,7 +17477,7 @@ export const RPM_APPLIED_GENERATORS = {
   'integer-solutions': rpmIrBetweenIntegersFractions,
   'integer-rational-mixed': rpmIrAllTypesMixed,
 
-  // 04 정수와 유리수의 계산 응용단원 (RPM 1-1 p.54~71)
+  // 04 정수와 유리수의 계산 응용단원
   'rpm-irc-addition-laws': rpmIrcAdditionLaws,
   'rpm-irc-subtraction-basic': rpmIrcSubtractionBasic,
   'rpm-irc-add-sub-integers': rpmIrcAddSubIntegers,
@@ -17514,7 +17514,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rational-four-operations': rpmIrcFourOperationsOrder,
   'rational-operations-review': rpmIrcAllTypesMixed,
 
-  // 05 문자의 사용과 식의 계산 세부 응용 유형 (RPM 1-1 p.78~91)
+  // 05 문자의 사용과 식의 계산 세부 응용 유형
   'rpm-alg-notation-signs': rpmAlgNotationSigns,
   'rpm-alg-verbal-units-cost': rpmAlgVerbalUnitsCost,
   'rpm-alg-verbal-figures': rpmAlgVerbalFigures,
@@ -17548,7 +17548,7 @@ export const RPM_APPLIED_GENERATORS = {
   'monomial-multiply-divide': rpmAlgMonomialMultDiv,
   'simplify-linear': rpmAlgLinearAddSub,
   'expressions-review': rpmAlgAllTypesMixed,
-  // 06 일차방정식의 풀이 세부 응용 유형 (RPM 1-1 p.94~103)
+  // 06 일차방정식의 풀이 세부 응용 유형
   'rpm-eq-identity-equation': rpmEqIdentityEquation,
   'rpm-eq-root-substitute': rpmEqRootSubstitute,
   'rpm-eq-identity-distinguish': rpmEqIdentityDistinguish,
@@ -17576,7 +17576,7 @@ export const RPM_APPLIED_GENERATORS = {
   'equality-properties': rpmEqPropertiesEquality,
   'linear-equations': rpmEqBracketsExpand,
   'advanced-linear-equations': rpmEqMixedDecimalFraction,
-  // 07 일차방정식의 활용 세부 응용 유형 (RPM 1-1 p.106~117)
+  // 07 일차방정식의 활용 세부 응용 유형
   'rpm-app-number-relations': rpmAppNumberRelations,
   'rpm-app-consecutive-numbers': rpmAppConsecutiveNumbers,
   'rpm-app-digit-values': rpmAppDigitValues,
@@ -17610,7 +17610,7 @@ export const RPM_APPLIED_GENERATORS = {
   'concentration': rpmAppSaltTwoSolutionsMix,
   'equations-review': rpmAppAllTypesMixed,
 
-  // 08 좌표평면과 그래프 세부 응용 유형 (RPM 1-1 p.122~129)
+  // 08 좌표평면과 그래프 세부 응용 유형
   'rpm-coord-ordered-pair-equality': rpmCoordOrderedPairEquality,
   'rpm-coord-axis-points': rpmCoordAxisPoints,
   'rpm-coord-triangle-area': rpmCoordTriangleArea,
@@ -17637,7 +17637,7 @@ export const RPM_APPLIED_GENERATORS = {
   'trip-graph': rpmCoordGraphDistanceTime,
   'coordinate-mixed': rpmCoordAllTypesMixed,
 
-  // 09 정비례와 반비례 세부 응용 유형 (RPM 1-1 p.134~149)
+  // 09 정비례와 반비례 세부 응용 유형
   'rpm-prop-direct-identify': rpmPropDirectIdentify,
   'rpm-prop-direct-table': rpmPropDirectTable,
   'rpm-prop-direct-graph-properties': rpmPropDirectGraphProperties,
@@ -17678,11 +17678,11 @@ export const RPM_APPLIED_GENERATORS = {
   'proportion-application': rpmPropInverseWordTankVolume,
   'proportion-mixed': rpmPropAllTypesMixed,
 
-  // 중학 1-1 전 범위 총괄 실전 모의고사 (RPM 1-1 p.152~173)
+  // 중학 1-1 전 범위 총괄 실전 모의고사
   'rpm-semester-one-mock-exam': rpmSemesterOneMockExam,
 
   // -------------------------------------------------------------
-  // 01 기본도형 세부 응용 유형 (RPM 1-2 p.12~19)
+  // 01 기본도형 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-geo-basic-intersections': rpmGeoBasicIntersections,
   'rpm-geo-basic-line-rays': rpmGeoBasicLineRays,
@@ -17700,7 +17700,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-geo-basic-all-mixed': rpmGeoBasicAllTypesMixed,
 
   // -------------------------------------------------------------
-  // 02 위치 관계 세부 응용 유형 (RPM 1-2 p.26~43)
+  // 02 위치 관계 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-pos-point-line-plane': rpmPosPointLinePlane,
   'rpm-pos-plane-two-lines': rpmPosPlaneTwoLines,
@@ -17720,7 +17720,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-pos-all-mixed': rpmPosAllTypesMixed,
 
   // -------------------------------------------------------------
-  // 03 작도와 합동 세부 응용 유형 (RPM 1-2 p.47~59)
+  // 03 작도와 합동 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-cong-construct-segment': rpmCongConstructSegment,
   'rpm-cong-construct-angle-parallel': rpmCongConstructAngleParallel,
@@ -17741,7 +17741,7 @@ export const RPM_APPLIED_GENERATORS = {
   // -------------------------------------------------------------
   
   // -------------------------------------------------------------
-  // 04 다각형 세부 응용 유형 (RPM 1-2 p.66~81)
+  // 04 다각형 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-poly-concept-interior-exterior': rpmPolyConceptInteriorExterior,
   'rpm-poly-diagonal-count-formula': rpmPolyDiagonalCountFormula,
@@ -17762,7 +17762,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-poly-all-mixed': rpmPolyAllTypesMixed,
 
   // -------------------------------------------------------------
-  // 05 원과 부채꼴 세부 응용 유형 (RPM 1-2 p.86~98)
+  // 05 원과 부채꼴 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-circle-sector-concept-terms': rpmCircleSectorConceptTerms,
   'rpm-circle-central-angle-arc-prop': rpmCircleCentralAngleArcProp,
@@ -17785,7 +17785,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-plane-figures-semester-mock-exam': rpmPlaneFiguresSemesterMockExam,
 
   // -------------------------------------------------------------
-  // 06 다면체와 회전체 세부 응용 유형 (RPM 1-2 p.104~117)
+  // 06 다면체와 회전체 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-polyhedra-concept-classification': rpmPolyhedronConceptClassification,
   'rpm-polyhedra-prism-pyramid-elements': rpmPolyhedronPrismPyramidElements,
@@ -17806,7 +17806,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-polyhedra-revolution-all-mixed': rpmPolyhedronRevolutionAllMixed,
 
   // -------------------------------------------------------------
-  // 07 입체도형의 겉넓이와 부피 세부 응용 유형 (RPM 1-2 p.122~138)
+  // 07 입체도형의 겉넓이와 부피 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-solids-prism-surface-area': rpmPrismSurfaceAreaCalc,
   'rpm-solids-cylinder-surface-area': rpmCylinderSurfaceAreaCalc,
@@ -17832,7 +17832,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-solid-figures-semester-mock-exam': rpmSolidFiguresSemesterMockExam,
 
   // -------------------------------------------------------------
-  // 08 자료의 정리와 해석 세부 응용 유형 (RPM 1-2 p.144~158)
+  // 08 자료의 정리와 해석 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-data-stem-and-leaf-plot': rpmDataStemAndLeafPlot,
   'rpm-data-torn-stem-leaf-plot': rpmDataTornStemLeafPlot,
@@ -17853,12 +17853,12 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-data-statistics-all-mixed': rpmDataStatisticsAllMixed,
 
   // -------------------------------------------------------------
-  // 중 1-2 전 범위 최종 실전 총괄 모의고사 (RPM 1-2 p.160~175)
+  // 중 1-2 전 범위 최종 실전 총괄 모의고사
   // -------------------------------------------------------------
   'rpm-grade7-semester-two-final-exam': rpmGrade7SemesterTwoFinalExam,
 
   // -------------------------------------------------------------
-  // [중2-1] 01 유리수와 순환소수 세부 응용 유형 (RPM 2-1 p.12~23)
+  // [중2-1] 01 유리수와 순환소수 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-rat-dec-powers-of-ten': rpmRatDecPowersOfTen,
   'rpm-rat-dec-terminating-condition': rpmRatDecTerminatingCondition,
@@ -17881,7 +17881,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-rat-dec-all-mixed': rpmRatDecAllTypesMixed,
   'rpm-rat-dec-advanced-skill-up': rpmRatDecAdvancedSkillUp,
   // -------------------------------------------------------------
-  // [중2-1] 02 단항식의 계산 세부 응용 유형 (RPM 2-1 p.30~41)
+  // [중2-1] 02 단항식의 계산 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-mono-exponent-sum': rpmMonoExponentSum,
   'rpm-mono-exponent-product': rpmMonoExponentProduct,
@@ -17903,7 +17903,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-mono-advanced-skill-up': rpmMonoAdvancedSkillUp,
 
   // -------------------------------------------------------------
-  // [중2-1] 03 다항식의 계산 세부 응용 유형 (RPM 2-1 p.44~51)
+  // [중2-1] 03 다항식의 계산 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-poly-calc-add-sub-basic': rpmPolyCalcAddSubBasic,
   'rpm-poly-calc-quadratic-add-sub': rpmPolyCalcQuadraticAddSub,
@@ -17919,7 +17919,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-poly-calc-all-mixed': rpmPolyCalcAllMixed,
   'rpm-poly-calc-advanced-skill-up': rpmPolyCalcAdvancedSkillUp,
   // -------------------------------------------------------------
-  // [중2-1] 04 일차부등식 세부 응용 유형 (RPM 2-1 p.58~67)
+  // [중2-1] 04 일차부등식 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-linear-ineq-concept-identify': rpmLinearIneqConceptIdentify,
   'rpm-linear-ineq-truth-value': rpmLinearIneqTruthValue,
@@ -17938,7 +17938,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-linear-ineq-advanced-skill-up': rpmLinearIneqAdvancedSkillUp,
 
   // -------------------------------------------------------------
-  // [중2-1] 05 일차부등식의 활용 세부 응용 유형 (RPM 2-1 p.70~79)
+  // [중2-1] 05 일차부등식의 활용 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-ineq-app-numbers': rpmIneqAppNumbers,
   'rpm-ineq-app-cost-count': rpmIneqAppCostCount,
@@ -17957,7 +17957,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-ineq-app-advanced-skill-up': rpmIneqAppAdvancedSkillUp,
 
   // -------------------------------------------------------------
-  // [중2-1] 06 연립일차방정식 세부 응용 유형 (RPM 2-1 p.84~97)
+  // [중2-1] 06 연립일차방정식 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-sys-linear-two-vars-identify': rpmSysLinearTwoVarsIdentify,
   'rpm-sys-linear-natural-pairs': rpmSysLinearNaturalPairs,
@@ -17980,7 +17980,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-sys-linear-advanced-skill-up': rpmSysLinearAdvancedSkillUp,
 
   // -------------------------------------------------------------
-  // [중2-1] 07 연립일차방정식의 활용 세부 응용 유형 (RPM 2-1 p.100~111)
+  // [중2-1] 07 연립일차방정식의 활용 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-sys-app-two-digit-numbers': rpmSysAppTwoDigitNumbers,
   'rpm-sys-app-ages': rpmSysAppAges,
@@ -17999,7 +17999,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-sys-app-all-types-mixed': rpmSysAppAllTypesMixed,
   'rpm-sys-app-advanced-skill-up': rpmSysAppAdvancedSkillUp,
   // -------------------------------------------------------------
-  // [중2-1] 08 일차함수와 그 그래프 세부 응용 유형 (RPM 2-1 p.118~133)
+  // [중2-1] 08 일차함수와 그 그래프 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-linear-func-concept': rpmLinearFuncConcept,
   'rpm-linear-func-eval-value': rpmLinearFuncEvalValue,
@@ -18026,7 +18026,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-linear-func-advanced-skill-up': rpmLinearFuncAdvancedSkillUp,
 
   // -------------------------------------------------------------
-  // [중2-1] 09 일차함수와 일차방정식의 관계 세부 응용 유형 (RPM 2-1 p.138~149)
+  // [중2-1] 09 일차함수와 일차방정식의 관계 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-line-eqn-form-ax-by-c': rpmLineEqnFormAxByC,
   'rpm-line-eqn-point-on-line': rpmLineEqnPointOnLine,
@@ -18050,11 +18050,11 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-line-eqn-advanced-skill-up': rpmLineEqnAdvancedSkillUp,
 
   // -------------------------------------------------------------
-  // [중2-1 최종총괄] 중학 2-1 전 범위 최종 실전 총괄 모의고사 (RPM p.152~167)
+  // [중2-1 최종총괄] 중학 2-1 전 범위 최종 실전 총괄 모의고사
   // -------------------------------------------------------------
   'rpm-grade8-semester-one-final-exam': rpmGrade8SemesterOneFinalExam,
   // -------------------------------------------------------------
-  // [중2-2] 01 이등변삼각형 세부 응용 유형 (RPM 2-2 p.10~21)
+  // [중2-2] 01 이등변삼각형 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-g8-iso-tri-angles': rpmG8IsoTriAngles,
   'rpm-g8-iso-tri-angle-bisector': rpmG8IsoTriAngleBisector,
@@ -18070,7 +18070,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-g8-iso-tri-advanced-skill-up': rpmG8IsoTriAdvancedSkillUp,
 
   // -------------------------------------------------------------
-  // [중2-2] 02 삼각형의 외심과 내심 세부 응용 유형 (RPM 2-2 p.26~35)
+  // [중2-2] 02 삼각형의 외심과 내심 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-g8-circumcenter-properties': rpmG8CircumcenterProperties,
   'rpm-g8-right-tri-circumcenter': rpmG8RightTriCircumcenter,
@@ -18087,7 +18087,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-g8-circles-all-types-mixed': rpmG8CirclesAllTypesMixed,
   'rpm-g8-circles-advanced-skill-up': rpmG8CirclesAdvancedSkillUp,
   // -------------------------------------------------------------
-  // [중2-2] 03 평행사변형 세부 응용 유형 (RPM 2-2 p.38~47)
+  // [중2-2] 03 평행사변형 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-g8-parallelogram-sides': rpmG8ParallelogramSides,
   'rpm-g8-parallelogram-angles': rpmG8ParallelogramAngles,
@@ -18102,7 +18102,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-g8-parallelogram-advanced-skill-up': rpmG8ParallelogramAdvancedSkillUp,
 
   // -------------------------------------------------------------
-  // [중2-2] 04 여러 가지 사각형 세부 응용 유형 (RPM 2-2 p.52~65)
+  // [중2-2] 04 여러 가지 사각형 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-g8-rectangle-properties': rpmG8RectangleProperties,
   'rpm-g8-rhombus-properties': rpmG8RhombusProperties,
@@ -18116,7 +18116,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-g8-special-quads-all-types-mixed': rpmG8SpecialQuadsAllTypesMixed,
   'rpm-g8-special-quads-advanced-skill-up': rpmG8SpecialQuadsAdvancedSkillUp,
   // -------------------------------------------------------------
-  // [중2-2] 05 도형의 닮음 세부 응용 유형 (RPM 2-2 p.70~79)
+  // [중2-2] 05 도형의 닮음 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-g8-similarity-concept-ratio': rpmG8SimilarityConceptRatio,
   'rpm-g8-similarity-solid-figures': rpmG8SimilaritySolidFigures,
@@ -18129,7 +18129,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-g8-similarity-advanced-skill-up': rpmG8SimilarityAdvancedSkillUp,
 
   // -------------------------------------------------------------
-  // [중2-2] 06 평행선과 선분의 길이의 비 세부 응용 유형 (RPM 2-2 p.82~89)
+  // [중2-2] 06 평행선과 선분의 길이의 비 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-g8-parallel-segment-ratio': rpmG8ParallelSegmentRatio,
   'rpm-g8-parallel-segment-ratio-converse': rpmG8ParallelSegmentRatioConverse,
@@ -18141,7 +18141,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-g8-parallel-segments-skill-up': rpmG8ParallelSegmentsSkillUp,
 
   // -------------------------------------------------------------
-  // [중2-2] 07 삼각형의 무게중심 세부 응용 유형 (RPM 2-2 p.92~99)
+  // [중2-2] 07 삼각형의 무게중심 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-g8-midpoint-connector-theorem': rpmG8MidpointConnectorTheorem,
   'rpm-g8-trapezoid-midpoint-connector': rpmG8TrapezoidMidpointConnector,
@@ -18152,7 +18152,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-g8-centroid-advanced-skill-up': rpmG8CentroidAdvancedSkillUp,
 
   // -------------------------------------------------------------
-  // [중2-2] 08 피타고라스 정리 세부 응용 유형 (RPM 2-2 p.104~111)
+  // [중2-2] 08 피타고라스 정리 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-g8-pythagorean-theorem-basic': rpmG8PythagoreanTheoremBasic,
   'rpm-g8-pythagorean-proof-euclid': rpmG8PythagoreanProofEuclid,
@@ -18165,7 +18165,7 @@ export const RPM_APPLIED_GENERATORS = {
     'rpm-g8-pythagorean-advanced-skill-up': rpmG8PythagoreanAdvancedSkillUp,
 
   // -------------------------------------------------------------
-  // [중2-2] 09 경우의 수 세부 응용 유형 (RPM 2-2 p.116~125, 155~156)
+  // [중2-2] 09 경우의 수 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-g8-cases-dice-sum-diff': rpmG8CasesDiceSumDiff,
   'rpm-g8-cases-coins-payment': rpmG8CasesCoinsPayment,
@@ -18185,7 +18185,7 @@ export const RPM_APPLIED_GENERATORS = {
   'rpm-g8-cases-advanced-skill-up': rpmG8CasesAdvancedSkillUp,
 
   // -------------------------------------------------------------
-  // [중2-2] 10 확률과 그 계산 세부 응용 유형 (RPM 2-2 p.130~139, 157~158)
+  // [중2-2] 10 확률과 그 계산 세부 응용 유형
   // -------------------------------------------------------------
   'rpm-g8-prob-basic-definition': rpmG8ProbBasicDefinition,
   'rpm-g8-prob-dice-equations': rpmG8ProbDiceEquations,

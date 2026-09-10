@@ -391,7 +391,7 @@ const zhHK = {
   'rpm-line-eqn-advanced-skill-up': '一次函數與直線方程式最高難度實力UP進階題',
 
   // -------------------------------------------------------------
-  // [중2-1 최종총괄] 중학 2-1 전 범위 최종 실전 총괄 모의고사 (RPM p.152~167)
+  // [중2-1 최종총괄] 중학 2-1 전 범위 최종 실전 총괄 모의고사
   // -------------------------------------------------------------
   'rpm-grade8-semester-one-final-exam': '中學八年級上學期全範圍最終實戰總括模擬測驗（有理數、式之運算、不等式、聯立方程、一次函數全單元）',
 
@@ -442,7 +442,7 @@ const zhHK = {
   'rpm-g8-parallelogram-area-point-p': '平行四邊形內部點P相對兩三角形面積和為一半',
   'rpm-g8-parallelogram-moving-points': '邊上兩動點P、Q運動構成平行四邊形時間計算',
   'rpm-g8-parallelogram-all-types-mixed': '平行四邊形全題型實戰綜合複習',
-  'rpm-g8-parallelogram-advanced-skill-up': '平行四邊形最高難度實力UP進階題（RPM p.144~145）',
+  'rpm-g8-parallelogram-advanced-skill-up': '平行四邊形最高難度實力UP進階題',
 
   // -------------------------------------------------------------
   // RPM [중2-2] 04 여러 가지 사각형 (特殊四邊形與面積)
@@ -457,7 +457,7 @@ const zhHK = {
   'rpm-g8-triangle-base-ratio-area': '等高三角形面積比等於底邊長度比',
   'rpm-g8-trapezoid-diagonal-areas': '梯形對角線交點分割四三角形面積綜合計算',
   'rpm-g8-special-quads-all-types-mixed': '特殊四邊形全題型實戰綜合複習',
-  'rpm-g8-special-quads-advanced-skill-up': '特殊四邊形最高難度實力UP進階題（RPM p.146~147）',
+  'rpm-g8-special-quads-advanced-skill-up': '特殊四邊形最高難度實力UP進階題',
 
   // -------------------------------------------------------------
   // RPM [중2-2] 05 도형의 닮음 (圖形相似)
@@ -470,7 +470,7 @@ const zhHK = {
   'rpm-g8-similarity-area-volume-ratio': '相似比與面積比（平方比）、體積比（立方比）關係',
   'rpm-g8-similarity-shadow-tree': '相似生活實際應用：利用影子長度測量樹木高度',
   'rpm-g8-similarity-all-types-mixed': '圖形相似全題型實戰綜合複習',
-  'rpm-g8-similarity-advanced-skill-up': '圖形相似最高難度實力UP進階題（RPM p.148~149）',
+  'rpm-g8-similarity-advanced-skill-up': '圖形相似最高難度實力UP進階題',
 
   // -------------------------------------------------------------
   // RPM [중2-2] 06 평행선과 선분의 길이의 비 (平行線與線段比)
@@ -482,7 +482,7 @@ const zhHK = {
   'rpm-g8-parallel-lines-transversal': '多條平行線截兩直線截線段成比例計算',
   'rpm-g8-trapezoid-parallel-middle-segment': '梯形平行截線線段長度計算（比例分割）',
   'rpm-g8-parallel-segments-all-mixed': '平行線與線段比全題型實戰綜合複習',
-  'rpm-g8-parallel-segments-skill-up': '平行線與線段比最高難度實力UP進階題（RPM p.150~151）',
+  'rpm-g8-parallel-segments-skill-up': '平行線與線段比最高難度實力UP進階題',
 
   // -------------------------------------------------------------
   // RPM [중2-2] 07 삼각형의 무게중심 (三角形的重心)
@@ -493,7 +493,7 @@ const zhHK = {
   'rpm-g8-centroid-area-six-divisions': '三角形三中線分割六個等面積三角形性質',
   'rpm-g8-parallelogram-centroid-application': '平行四邊形對角線三等分點與雙重心面積應用',
   'rpm-g8-centroid-all-types-mixed': '三角形重心全題型實戰綜合複習',
-  'rpm-g8-centroid-advanced-skill-up': '三角形重心最高難度實力UP進階題（雙重重心，RPM p.152~153）',
+  'rpm-g8-centroid-advanced-skill-up': '三角形重心最高難度實力UP進階題（雙重重心）',
 
   // -------------------------------------------------------------
   // RPM [중2-2] 08 피타고라스 정리 (畢氏定理 / 勾股定理)
@@ -506,7 +506,7 @@ const zhHK = {
   'rpm-g8-pythagorean-orthogonal-quad': '對角線互相垂直四邊形對邊平方和相等性質',
   'rpm-g8-pythagorean-semicircle-hippocrates': '希波克拉底新月形面積定理（兩月形面積和等於直角三角形）',
   'rpm-g8-pythagorean-all-types-mixed': '畢氏定理全題型實戰綜合複習',
-  'rpm-g8-pythagorean-advanced-skill-up': '畢氏定理最高難度實力UP進階題（摺紙與畢氏方程，RPM p.154）',
+  'rpm-g8-pythagorean-advanced-skill-up': '畢氏定理最高難度實力UP進階題（摺紙與畢氏方程）',
 
   // -------------------------------------------------------------
   // RPM [중2-2] 09 경우의 수 (排列與組合 / 計數原理)
@@ -549,7 +549,7 @@ const zhHK = {
   // -------------------------------------------------------------
   // [중2-2 총괄 모의고사] Capstone Final Exam
   // -------------------------------------------------------------
-  'rpm-grade8-semester-two-final-exam': '中學二年級第二學期（國二下）全範圍實戰總結測驗（RPM 2-2 全書總複習）',
+  'rpm-grade8-semester-two-final-exam': '中學二年級第二學期（國二下）全範圍實戰總結測驗',
 
 
 

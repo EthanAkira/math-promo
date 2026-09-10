@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import LatexMath from './LatexMath';
 import NoteCanvas from './NoteCanvas';
+import { sanitizePublicText } from '../publicText';
 
 const CHOICE_SYMBOLS = ['①', '②', '③', '④', '⑤'];
 const CHOICE_LETTERS = ['(A)', '(B)', '(C)', '(D)', '(E)'];
@@ -99,7 +100,7 @@ export default function InteractiveProblemCard({
               title="출제 정보 (기출 연도 및 번호)"
             >
               <span>📌</span>
-              <span>{sourceLabel}</span>
+              <span>{sanitizePublicText(sourceLabel)}</span>
             </span>
           ) : null}
           {points ? (
@@ -127,7 +128,7 @@ export default function InteractiveProblemCard({
                 borderRadius: '6px',
               }}
             >
-              {unit}
+              {sanitizePublicText(unit)}
             </span>
           ) : null}
         </div>

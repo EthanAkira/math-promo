@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useLanguage } from './language';
+import { sanitizePublicText } from './publicText';
 import {
   CURRICULUM_COPY,
   KOREAN_GRADE_STAGES,
@@ -14,6 +15,11 @@ import {
   MALAYSIA_STAGES,
   VIETNAM_STAGES,
   INDIA_STAGES,
+  USA_STAGES,
+  AUSTRALIA_STAGES,
+  UK_STAGES,
+  CANADA_STAGES,
+  NEW_ZEALAND_STAGES,
   DOMAIN_STAGES,
 } from './curriculumCatalog';
 
@@ -47,19 +53,20 @@ function topicAvailabilityLabel(topic, copy) {
 // and rejected as needless complexity); the badge always points at the localized AMC variant
 // (`&variant=1`), never the raw English archive.
 function TopicItem({ topic, copy }) {
+  const displayLabel = sanitizePublicText(topic.label);
   if (topic.isHeader) {
     return (
       <div className="curriculum-topic-group-header">
-        <span className="group-header-label">{topic.label}</span>
+        <span className="group-header-label">{displayLabel}</span>
       </div>
     );
   }
 
   const hasAmc = Boolean(topic.amc);
 
-  const typeMatch = topic.label.match(/^\[(기본|응용|실전 총괄|통합)\]\s*/);
+  const typeMatch = displayLabel.match(/^\[(기본|응용|실전 총괄|통합)\]\s*/);
   const typeTag = typeMatch ? typeMatch[1] : null;
-  const cleanLabel = typeMatch ? topic.label.slice(typeMatch[0].length) : topic.label;
+  const cleanLabel = typeMatch ? displayLabel.slice(typeMatch[0].length) : displayLabel;
 
   const getTagClass = (tag) => {
     switch (tag) {
@@ -131,15 +138,15 @@ function renderStage(stage, copy, { openByDefault = false, extraClassName = '' }
     <details className={`curriculum-stage ${extraClassName}`.trim()} key={stage.id} open={openByDefault}>
       <summary>
         <span>
-          <strong>{stage.title}</strong>
-          <small>{stage.subtitle}</small>
+          <strong>{sanitizePublicText(stage.title)}</strong>
+          <small>{sanitizePublicText(stage.subtitle)}</small>
         </span>
         <span className={`curriculum-count ${stageStatus}`}>{availabilitySummary(stage.topics, copy)}</span>
         <span className="sr-only">{copy.badges.open}</span>
       </summary>
       {stage.notice && (
         <div className="stage-mini-notice">
-          <span>ℹ️</span> {stage.notice}
+          <span>ℹ️</span> {sanitizePublicText(stage.notice)}
         </div>
       )}
       <div className="curriculum-topic-list">{stage.topics.map((topic) => <TopicItem key={topic.catalogId || topic.label} topic={topic} copy={copy} />)}</div>
@@ -154,13 +161,14 @@ export default function CurriculumExplorer() {
   const [eastAsiaCountry, setEastAsiaCountry] = useState('japan'); // 'japan' | 'taiwan' | 'hongkong'
   const [southeastAsiaCountry, setSoutheastAsiaCountry] = useState('singapore'); // 'singapore' | 'malaysia' | 'vietnam'
   const [southAsiaCountry, setSouthAsiaCountry] = useState('india'); // 'india'
+  const [englishSpeakingCountry, setEnglishSpeakingCountry] = useState('usa');
 
   // If user has not manually changed tab on first load, adjust to language default once
   useEffect(() => {
     // A direct link (e.g. the top-nav "동아시아 교육과정" item) takes priority over both
     // sessionStorage and the language default, so it reliably lands on the right tab.
     const requestedTab = new URLSearchParams(window.location.search).get('curriculumTab');
-    if (requestedTab && ['korea', 'courses', 'domains', 'eastasia', 'southeastasia', 'southasia'].includes(requestedTab)) {
+    if (requestedTab && ['korea', 'courses', 'domains', 'eastasia', 'southeastasia', 'southasia', 'englishspeaking'].includes(requestedTab)) {
       setActiveTab(requestedTab);
       try { window.sessionStorage.setItem('math-curriculum-tab', requestedTab); } catch {}
       return;
@@ -192,6 +200,7 @@ export default function CurriculumExplorer() {
       { id: 'eastasia', label: copy.mainTabs[3], help: copy.mainTabHelp[3] },
       { id: 'southeastasia', label: copy.mainTabs[4], help: copy.mainTabHelp[4] },
       { id: 'southasia', label: copy.mainTabs[5], help: copy.mainTabHelp[5] },
+      { id: 'englishspeaking', label: copy.mainTabs[6] || 'English-speaking Countries', help: copy.mainTabHelp[6] || 'United States · Australia · United Kingdom · Canada · New Zealand' },
     ],
     [copy]
   );
@@ -199,6 +208,8 @@ export default function CurriculumExplorer() {
   const EAST_ASIA_STAGES = { japan: JAPAN_STAGES, taiwan: TAIWAN_STAGES, hongkong: HONGKONG_STAGES };
   const SOUTHEAST_ASIA_STAGES = { singapore: SINGAPORE_STAGES, malaysia: MALAYSIA_STAGES, vietnam: VIETNAM_STAGES };
   const SOUTH_ASIA_STAGES = { india: INDIA_STAGES };
+  const ENGLISH_SPEAKING_STAGES = { usa: USA_STAGES, australia: AUSTRALIA_STAGES, uk: UK_STAGES, canada: CANADA_STAGES, newzealand: NEW_ZEALAND_STAGES };
+  const englishSpeakingLabels = copy.englishSpeakingCountries || CURRICULUM_COPY.en.englishSpeakingCountries;
 
   const koreanSchoolGroups = useMemo(
     () => [
@@ -379,8 +390,8 @@ export default function CurriculumExplorer() {
                   <details className="curriculum-stage" key={stage.id} open={index < 3}>
                     <summary>
                       <span>
-                        <strong>{stage.title}</strong>
-                        <small>{stage.subtitle}</small>
+                        <strong>{sanitizePublicText(stage.title)}</strong>
+                        <small>{sanitizePublicText(stage.subtitle)}</small>
                       </span>
                       <span className={`curriculum-count ${stageStatus}`}>{availabilitySummary(stage.topics, copy)}</span>
                       <span className="sr-only">{copy.badges.open}</span>
@@ -391,12 +402,12 @@ export default function CurriculumExplorer() {
                         <div key={topic.label} className="curriculum-topic-item">
                           {topic.ready ? (
                             <a href={topic.href} className="topic-link">
-                              <span className="topic-name">{topic.label}</span>
+                              <span className="topic-name">{sanitizePublicText(topic.label)}</span>
                               <span className={`action-tag ${topic.availability || 'ready'}`}>{topicAvailabilityLabel(topic, copy)} →</span>
                             </a>
                           ) : (
                             <div className="topic-disabled">
-                              <span className="topic-name">{topic.label}</span>
+                              <span className="topic-name">{sanitizePublicText(topic.label)}</span>
                               <small className="planned-tag">{copy.badges.planned}</small>
                             </div>
                           )}
@@ -425,8 +436,8 @@ export default function CurriculumExplorer() {
                   <details className="curriculum-stage" key={stage.id} open={index < 2}>
                     <summary>
                       <span>
-                        <strong>{stage.title}</strong>
-                        <small>{stage.subtitle}</small>
+                        <strong>{sanitizePublicText(stage.title)}</strong>
+                        <small>{sanitizePublicText(stage.subtitle)}</small>
                       </span>
                       <span className={`curriculum-count ${stageStatus}`}>{availabilitySummary(stage.topics, copy)}</span>
                       <span className="sr-only">{copy.badges.open}</span>
@@ -437,12 +448,12 @@ export default function CurriculumExplorer() {
                         <div key={topic.label} className="curriculum-topic-item">
                           {topic.ready ? (
                             <a href={topic.href} className="topic-link">
-                              <span className="topic-name">{topic.label}</span>
+                              <span className="topic-name">{sanitizePublicText(topic.label)}</span>
                               <span className={`action-tag ${topic.availability || 'ready'}`}>{topicAvailabilityLabel(topic, copy)} →</span>
                             </a>
                           ) : (
                             <div className="topic-disabled">
-                              <span className="topic-name">{topic.label}</span>
+                              <span className="topic-name">{sanitizePublicText(topic.label)}</span>
                               <small className="planned-tag">{copy.badges.planned}</small>
                             </div>
                           )}
@@ -539,6 +550,27 @@ export default function CurriculumExplorer() {
 
             <div className="curriculum-stage-grid">
               {SOUTH_ASIA_STAGES[southAsiaCountry].map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'englishspeaking' && (
+          <div className="eastasia-curriculum-wrap">
+            <div className="curriculum-subview-bar">
+              <div className="subview-toggle-group country-toggle-group" role="group" aria-label="영어권 국가 교육과정 선택">
+                {['usa', 'australia', 'uk', 'canada', 'newzealand'].map((country) => (
+                  <button type="button" key={country} className={`subview-btn ${englishSpeakingCountry === country ? 'active' : ''}`} onClick={() => setEnglishSpeakingCountry(country)}>
+                    <strong>{englishSpeakingLabels[country]}</strong>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="curriculum-notice-banner official">
+              <span className="notice-icon">🌐</span>
+              <p>{copy.notices.englishSpeakingNotice || CURRICULUM_COPY.en.notices.englishSpeakingNotice}</p>
+            </div>
+            <div className="curriculum-stage-grid">
+              {ENGLISH_SPEAKING_STAGES[englishSpeakingCountry].map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
             </div>
           </div>
         )}

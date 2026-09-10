@@ -911,17 +911,17 @@ const UNIT_META = {
 };
 
 export const UNIT_CATEGORY_LABELS = {
-  'rpm-basic-figures-applied': { label: '[RPM 세부응용] 01 기본도형', labelEn: '[Applied] 01 Basic Figures' },
-  'rpm-position-relations-applied': { label: '[RPM 세부응용] 02 위치 관계', labelEn: '[Applied] 02 Position Relations' },
-  'rpm-construction-congruence-applied': { label: '[RPM 세부응용] 03 작도와 합동', labelEn: '[Applied] 03 Constructions & Congruence' },
+  'rpm-basic-figures-applied': { label: '[세부응용] 01 기본도형', labelEn: '[Applied] 01 Basic Figures' },
+  'rpm-position-relations-applied': { label: '[세부응용] 02 위치 관계', labelEn: '[Applied] 02 Position Relations' },
+  'rpm-construction-congruence-applied': { label: '[세부응용] 03 작도와 합동', labelEn: '[Applied] 03 Constructions & Congruence' },
   'rpm-geo-mock': { label: '[총괄평가] 중학 1-2 기하 실전 모의고사', labelEn: '[Mock Exam] Grade 7-2 Geometry Comprehensive' },
-  'rpm-polygons-applied': { label: '[RPM 세부응용] 04 다각형', labelEn: '[Applied] 04 Polygons' },
-  'rpm-circles-sectors-applied': { label: '[RPM 세부응용] 05 원과 부채꼴', labelEn: '[Applied] 05 Circles & Sectors' },
+  'rpm-polygons-applied': { label: '[세부응용] 04 다각형', labelEn: '[Applied] 04 Polygons' },
+  'rpm-circles-sectors-applied': { label: '[세부응용] 05 원과 부채꼴', labelEn: '[Applied] 05 Circles & Sectors' },
   'rpm-plane-mock': { label: '[총괄평가] 중학 1-2 평면도형 종합 모의고사', labelEn: '[Mock Exam] Grade 7-2 Plane Figures Comprehensive' },
-  'rpm-polyhedra-revolution-applied': { label: '[RPM 세부응용] 06 다면체와 회전체', labelEn: '[Applied] 06 Polyhedra & Revolution' },
-  'rpm-solids-measures-applied': { label: '[RPM 세부응용] 07 입체도형의 겉넓이와 부피', labelEn: '[Applied] 07 Solids Surface & Volume' },
+  'rpm-polyhedra-revolution-applied': { label: '[세부응용] 06 다면체와 회전체', labelEn: '[Applied] 06 Polyhedra & Revolution' },
+  'rpm-solids-measures-applied': { label: '[세부응용] 07 입체도형의 겉넓이와 부피', labelEn: '[Applied] 07 Solids Surface & Volume' },
   'rpm-solid-mock': { label: '[총괄평가] 중학 1-2 입체도형 종합 모의고사', labelEn: '[Mock Exam] Grade 7-2 Solid Figures Comprehensive' },
-  'rpm-data-stats-applied': { label: '[RPM 세부응용] 08 자료의 정리와 해석', labelEn: '[Applied] 08 Data & Statistics' },
+  'rpm-data-stats-applied': { label: '[세부응용] 08 자료의 정리와 해석', labelEn: '[Applied] 08 Data & Statistics' },
   'rpm-grade7-final-mock': { label: '[최종총괄] 중학 1-2 전 범위 최종 실전 모의고사', labelEn: '[Final Exam] Grade 7-2 Comprehensive' },
 
 
@@ -1110,7 +1110,7 @@ export const RPM_DATA_STATISTICS_APPLIED_UNITS = [
 ];
 
 export const RPM_GRADE7_FINAL_MOCK_UNITS = [
-  { id: 'rpm-grade7-semester-two-final-exam', label: '[중1-2 최종총괄] 중학 1-2 전 범위 최종 실전 모의고사', description: '기본도형, 위치관계, 작도합동, 평면도형, 입체도형, 통계 등 중학 1-2 전 범위 총괄 실전 모의고사 (RPM p.160~175)', en: ['Grade 7-2 Comprehensive Final Examination', 'Ultimate comprehensive mock exam covering all chapters of Grade 7 Semester 2 (Basic Figures, Relations, Congruence, Polygons, Circles, Solids, Statistics)'], make: rpmGrade7SemesterTwoFinalExam },
+  { id: 'rpm-grade7-semester-two-final-exam', label: '[중1-2 최종총괄] 중학 1-2 전 범위 최종 실전 모의고사', description: '기본도형, 위치관계, 작도합동, 평면도형, 입체도형, 통계 등 중학 1-2 전 범위 총괄 실전 모의고사', en: ['Grade 7-2 Comprehensive Final Examination', 'Ultimate comprehensive mock exam covering all chapters of Grade 7 Semester 2 (Basic Figures, Relations, Congruence, Polygons, Circles, Solids, Statistics)'], make: rpmGrade7SemesterTwoFinalExam },
 ];
 
 

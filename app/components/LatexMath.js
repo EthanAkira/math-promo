@@ -3,6 +3,7 @@
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import MathText from './MathText';
+import { sanitizePublicText } from '../publicText';
 
 export function transformLatexMath(latex) {
   if (!latex) return latex;
@@ -60,7 +61,7 @@ export function tokenizeLatex(text) {
 
 export default function LatexMath({ text, style, className }) {
   if (!text) return null;
-  const tokens = tokenizeLatex(String(text));
+  const tokens = tokenizeLatex(sanitizePublicText(text));
 
   return (
     <span className={className} style={{ display: 'inline', ...style }}>

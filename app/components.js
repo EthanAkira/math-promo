@@ -41,6 +41,7 @@ export function SiteHeader() {
           <a href="/?curriculumTab=eastasia#curriculum-title" className="nav-item">{tr(language, 'navEastAsia')}</a>
           <a href="/?curriculumTab=southeastasia#curriculum-title" className="nav-item">{tr(language, 'navSoutheastAsia')}</a>
           <a href="/?curriculumTab=southasia#curriculum-title" className="nav-item">{tr(language, 'navSouthAsia')}</a>
+          <a href="/?curriculumTab=englishspeaking#curriculum-title" className="nav-item">{language === 'ko' ? '영어권 국가' : 'English-speaking'}</a>
           {user ? <a href="/dashboard" className="nav-item">{tr(language, 'authMyStats')}</a> : null}
         </nav>
 

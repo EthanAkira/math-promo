@@ -641,7 +641,7 @@ export const RPM_LINEAR_EQUATIONS_GRAPHS_APPLIED_UNITS = [
 ];
 
 export const RPM_GRADE8_FINAL_MOCK_UNITS = [
-  { id: 'rpm-grade8-semester-one-final-exam', label: '[중2-1 최종총괄] 중학 2-1 전 범위 최종 실전 총괄 모의고사', description: '유리수와 순환소수, 식의 계산, 일차부등식, 연립일차방정식, 일차함수와 그래프 전 범위 총괄 평가 (RPM p.152~167)', en: ['Grade 8-1 Comprehensive Final Examination', 'Ultimate comprehensive mock exam covering all chapters of Grade 8 Semester 1 (Rational Decimals, Monomials, Polynomials, Inequalities, Linear Systems, Linear Functions)'], make: (random) => rpmGrade8SemesterOneFinalExam(random) },
+  { id: 'rpm-grade8-semester-one-final-exam', label: '[중2-1 최종총괄] 중학 2-1 전 범위 최종 실전 총괄 모의고사', description: '유리수와 순환소수, 식의 계산, 일차부등식, 연립일차방정식, 일차함수와 그래프 전 범위 총괄 평가', en: ['Grade 8-1 Comprehensive Final Examination', 'Ultimate comprehensive mock exam covering all chapters of Grade 8 Semester 1 (Rational Decimals, Monomials, Polynomials, Inequalities, Linear Systems, Linear Functions)'], make: (random) => rpmGrade8SemesterOneFinalExam(random) },
 ];
 
 export const RPM_ISOSCELES_TRIANGLES_APPLIED_UNITS = [
@@ -656,7 +656,7 @@ export const RPM_ISOSCELES_TRIANGLES_APPLIED_UNITS = [
   { id: 'rpm-g8-paper-folding-triangle', label: '[종이 접기 09] 직사각형 종이 접기와 이등변삼각형', description: '접은 각과 엇각의 성질을 이용하여 접힌 부분의 이등변삼각형 각도 구하기', en: ['Paper Folding Type 09: Rectangular Strip Folding', 'Determine angles of overlapping isosceles triangle formed by folding a constant-width paper strip'], make: (random) => rpmG8PaperFoldingTriangle(random) },
   { id: 'rpm-g8-iso-tri-up-challenge', label: '[유형 UP 10] 이등변삼각형 심화 응용 (외각 연쇄 추적)', description: '4단계 이상 연속되는 선분 길이 일치 조건에서의 외각 연쇄 배수 추론', en: ['Isosceles Triangles Type 10 (UP): Multi-Step Exterior Angle Chain', 'Deduce multi-step sequential exterior angle multiples across extended equilateral chains'], make: (random) => rpmG8IsoTriUpChallenge(random) },
   { id: 'rpm-g8-iso-tri-all-types-mixed', label: '[단원 실전 다지기] 이등변삼각형과 직각삼각형 전 유형 종합', description: '밑각, 수직이등분, 직각삼각형 RHA/RHS 합동, 각의 이등분선, 종이 접기 전 유형 실전 종합', en: ['Isosceles & Right Triangles Comprehensive Practice', 'Mixed applied exam practice covering all angle, congruence, bisector, and folding problem types'], make: (random) => rpmG8IsoTriAllTypesMixed(random) },
-  { id: 'rpm-g8-iso-tri-advanced-skill-up', label: '[단원 최고수준] 이등변삼각형 실력 UP', description: '이등변삼각형 밑변 위의 대칭점과 꼭지각 분할 각도 고난도 추적 (RPM p.140~141)', en: ['Isosceles Triangles Advanced Challenge', 'High-level challenge problems: symmetrical point reflections and vertex angle division proofs'], make: (random) => rpmG8IsoTriAdvancedSkillUp(random) },
+  { id: 'rpm-g8-iso-tri-advanced-skill-up', label: '[단원 최고수준] 이등변삼각형 실력 UP', description: '이등변삼각형 밑변 위의 대칭점과 꼭지각 분할 각도 고난도 추적', en: ['Isosceles Triangles Advanced Challenge', 'High-level challenge problems: symmetrical point reflections and vertex angle division proofs'], make: (random) => rpmG8IsoTriAdvancedSkillUp(random) },
 ];
 
 export const RPM_CIRCUM_INCENTER_APPLIED_UNITS = [
@@ -673,7 +673,7 @@ export const RPM_CIRCUM_INCENTER_APPLIED_UNITS = [
   { id: 'rpm-g8-circum-incenter-combined', label: '[외심·내심 11] 외심과 내심의 종합 (각도 계산)', description: '한 삼각형에서 외심 O와 내심 I가 동시에 주어졌을 때 두 각의 차 및 ∠OBI 각도 계산', en: ['Circum & Incenter Type 11: Combined Dual-Center Angles', 'Compute angle differences and combined angles (e.g. ∠OBI) when both O and I are given'], make: (random) => rpmG8CircumIncenterCombined(random) },
   { id: 'rpm-g8-right-tri-both-circles', label: '[외심·내심 12] 직각삼각형의 외접원과 내접원', description: '피타고라스 정리를 만족하는 직각삼각형의 외접원 반지름 R과 내접원 반지름 r의 합/차', en: ['Circum & Incenter Type 12: Right Triangle Inradius & Circumradius', 'Calculate sum and difference of circumradius R and inradius r for right triangles'], make: (random) => rpmG8RightTriBothCircles(random) },
   { id: 'rpm-g8-circles-all-types-mixed', label: '[단원 실전 다지기] 삼각형의 외심과 내심 전 유형 종합', description: '외심/내심 성질, 각도 공식, 평행선 둘레, 넓이-반지름 공식, 접선 길이 전 유형 종합', en: ['Circumcenter & Incenter Comprehensive Practice', 'Mixed applied problem bank across all circumcenter, incenter, area, and tangent types'], make: (random) => rpmG8CirclesAllTypesMixed(random) },
-  { id: 'rpm-g8-circles-advanced-skill-up', label: '[단원 최고수준] 외심과 내심 실력 UP', description: '외심과 꼭짓점에서 내린 수선 사이의 각도 및 최고난도 외심·내심 융합 문제 (RPM p.142~143)', en: ['Circumcenter & Incenter Advanced Challenge', 'Top-tier challenge: angle between circumradius and altitude (∠OAH = |∠B - ∠C|) and synthesis proofs'], make: (random) => rpmG8CirclesAdvancedSkillUp(random) },
+  { id: 'rpm-g8-circles-advanced-skill-up', label: '[단원 최고수준] 외심과 내심 실력 UP', description: '외심과 꼭짓점에서 내린 수선 사이의 각도 및 최고난도 외심·내심 융합 문제', en: ['Circumcenter & Incenter Advanced Challenge', 'Top-tier challenge: angle between circumradius and altitude (∠OAH = |∠B - ∠C|) and synthesis proofs'], make: (random) => rpmG8CirclesAdvancedSkillUp(random) },
 ];
 
 export const RPM_PARALLELOGRAM_APPLIED_UNITS = [
@@ -687,7 +687,7 @@ export const RPM_PARALLELOGRAM_APPLIED_UNITS = [
   { id: 'rpm-g8-parallelogram-area-point-p', label: '[평행사변형 08] 내부의 점 P와 마주 보는 삼각형 넓이 합', description: '내부의 점 P에 대하여 마주 보는 두 삼각형의 넓이의 합이 전체의 절반임을 활용', en: ['Parallelogram Type 08: Interior Point P Opposing Triangle Areas', 'Use Area(PAB) + Area(PCD) = (1/2)Area(ABCD) to find missing triangle areas'], make: (random) => rpmG8ParallelogramAreaPointP(random) },
   { id: 'rpm-g8-parallelogram-moving-points', label: '[평행사변형 09] 동점 P, Q의 이동과 평행사변형 완성 (UP)', description: '두 꼭짓점에서 서로 다른 속력으로 움직이는 점에 의해 평행사변형이 되는 시간 계산', en: ['Parallelogram Type 09 (UP): Moving Points Parallelogram Time', 'Calculate the elapsed time for moving points along sides to form a new parallelogram'], make: (random) => rpmG8ParallelogramMovingPoints(random) },
   { id: 'rpm-g8-parallelogram-all-types-mixed', label: '[단원 실전 다지기] 평행사변형 전 유형 실전 종합', description: '변, 각, 대각선, 조건 판별, 넓이 분할, 동점 이동 등 평행사변형 전 유형 종합', en: ['Parallelogram Comprehensive Practice', 'Mixed applied problems across all parallelogram side, angle, condition, and area types'], make: (random) => rpmG8ParallelogramAllTypesMixed(random) },
-  { id: 'rpm-g8-parallelogram-advanced-skill-up', label: '[단원 최고수준] 평행사변형 실력 UP', description: '변의 중점과 대각선 3등분선 교점 성질을 활용한 최고난도 선분 길이 추론 (RPM p.144~145)', en: ['Parallelogram Advanced Challenge', 'Advanced challenge: diagonal trisection proofs via midpoints and centroid properties'], make: (random) => rpmG8ParallelogramAdvancedSkillUp(random) },
+  { id: 'rpm-g8-parallelogram-advanced-skill-up', label: '[단원 최고수준] 평행사변형 실력 UP', description: '변의 중점과 대각선 3등분선 교점 성질을 활용한 최고난도 선분 길이 추론', en: ['Parallelogram Advanced Challenge', 'Advanced challenge: diagonal trisection proofs via midpoints and centroid properties'], make: (random) => rpmG8ParallelogramAdvancedSkillUp(random) },
 ];
 
 export const RPM_SPECIAL_QUADS_APPLIED_UNITS = [
@@ -701,7 +701,7 @@ export const RPM_SPECIAL_QUADS_APPLIED_UNITS = [
   { id: 'rpm-g8-triangle-base-ratio-area', label: '[높이가 같은 삼각형 08] 밑변의 길이의 비와 넓이의 비', description: '높이가 같은 삼각형에서 밑변의 길이의 비가 넓이의 비와 같음을 이용한 넓이 분할', en: ['Triangles with Same Height Type 08: Base Ratio Equals Area Ratio', 'Calculate sub-triangle areas using base length ratio proportionality for equal-height triangles'], make: (random) => rpmG8TriangleBaseRatioArea(random) },
   { id: 'rpm-g8-trapezoid-diagonal-areas', label: '[사다리꼴과 넓이 09] 대각선 분할 삼각형 넓이 종합', description: '사다리꼴의 대각선 교점에 의해 생기는 4개 삼각형의 밑변비와 넓이의 종합 계산', en: ['Trapezoid & Area Type 09: Four Divided Triangles Area Synthesis', 'Synthesize all 4 sub-triangle areas created by diagonal intersection in a trapezoid'], make: (random) => rpmG8TrapezoidDiagonalAreas(random) },
   { id: 'rpm-g8-special-quads-all-types-mixed', label: '[단원 실전 다지기] 여러 가지 사각형 전 유형 종합', description: '직사각형, 마름모, 정사각형, 등변사다리꼴, 중점 사각형, 평행선과 넓이 전 유형 종합', en: ['Special Quadrilaterals Comprehensive Practice', 'Mixed exam practice across all special quadrilaterals and parallel area properties'], make: (random) => rpmG8SpecialQuadsAllTypesMixed(random) },
-  { id: 'rpm-g8-special-quads-advanced-skill-up', label: '[단원 최고수준] 여러 가지 사각형 실력 UP', description: '정사각형 대각선 교점을 중심으로 회전하는 합동 정사각형의 불변 겹침 넓이 (RPM p.146~147)', en: ['Special Quadrilaterals Advanced Challenge', 'Top challenge: invariant 1/4 area overlap of rotating congruent square centered at diagonal intersection'], make: (random) => rpmG8SpecialQuadsAdvancedSkillUp(random) },
+  { id: 'rpm-g8-special-quads-advanced-skill-up', label: '[단원 최고수준] 여러 가지 사각형 실력 UP', description: '정사각형 대각선 교점을 중심으로 회전하는 합동 정사각형의 불변 겹침 넓이', en: ['Special Quadrilaterals Advanced Challenge', 'Top challenge: invariant 1/4 area overlap of rotating congruent square centered at diagonal intersection'], make: (random) => rpmG8SpecialQuadsAdvancedSkillUp(random) },
 ];
 
 export const RPM_SIMILARITY_APPLIED_UNITS = [
@@ -713,7 +713,7 @@ export const RPM_SIMILARITY_APPLIED_UNITS = [
   { id: 'rpm-g8-similarity-area-volume-ratio', label: '[도형의 닮음 06] 닮음비와 넓이비, 부피비의 관계', description: '닮음비 m:n 에 대하여 넓이비 m²:n², 부피비 m³:n³ 적용하여 넓이 및 부피 구하기', en: ['Similarity Type 06: Area & Volume Ratios', 'Apply squared ratio m²:n² for areas and cubic ratio m³:n³ for volumes of similar figures'], make: (random) => rpmG8SimilarityAreaVolumeRatio(random) },
   { id: 'rpm-g8-similarity-shadow-tree', label: '[도형의 닮음 07] 닮음의 실생활 활용 (막대와 나무 그림자)', description: '햇빛의 입사각이 같음을 이용한 직각삼각형의 닮음으로 나무의 실제 높이 계산', en: ['Similarity Type 07: Real-Life Shadow Height Measurement', 'Calculate tree heights using shadow length proportions and similar right triangles'], make: (random) => rpmG8SimilarityShadowTree(random) },
   { id: 'rpm-g8-similarity-all-types-mixed', label: '[단원 실전 다지기] 도형의 닮음 전 유형 실전 종합', description: '닮음비, 닮음 조건, 직각삼각형 수선, 넓이/부피비, 축척 등 전 유형 실전 종합', en: ['Similarity Comprehensive Practice', 'Mixed applied practice across all similarity, condition, altitude, and ratio types'], make: (random) => rpmG8SimilarityAllTypesMixed(random) },
-  { id: 'rpm-g8-similarity-advanced-skill-up', label: '[단원 최고수준] 도형의 닮음 실력 UP', description: '큰 구를 녹여 작은 구들로 만들었을 때 총 겉넓이의 변화 배수 추론 (RPM p.148~149)', en: ['Similarity Advanced Challenge', 'High-level challenge: surface area multiplication ratio when sphere is melted into k³ smaller spheres'], make: (random) => rpmG8SimilarityAdvancedSkillUp(random) },
+  { id: 'rpm-g8-similarity-advanced-skill-up', label: '[단원 최고수준] 도형의 닮음 실력 UP', description: '큰 구를 녹여 작은 구들로 만들었을 때 총 겉넓이의 변화 배수 추론', en: ['Similarity Advanced Challenge', 'High-level challenge: surface area multiplication ratio when sphere is melted into k³ smaller spheres'], make: (random) => rpmG8SimilarityAdvancedSkillUp(random) },
 ];
 
 export const RPM_PARALLEL_SEGMENTS_APPLIED_UNITS = [
@@ -724,7 +724,7 @@ export const RPM_PARALLEL_SEGMENTS_APPLIED_UNITS = [
   { id: 'rpm-g8-parallel-lines-transversal', label: '[평행선과 선분비 05] 평행선 사이의 선분의 길이의 비', description: '세 평행선 사이를 지나는 두 직선에서 잘린 선분의 비례식 계산', en: ['Parallel Segments Type 05: Three Parallel Lines Transversals', 'Compute segment lengths across three parallel lines cut by transversals'], make: (random) => rpmG8ParallelLinesTransversal(random) },
   { id: 'rpm-g8-trapezoid-parallel-middle-segment', label: '[평행선과 선분비 06] 사다리꼴에서 평행선과 선분의 길이', description: '사다리꼴의 윗변과 아랫변에 평행한 중간 선분의 길이를 비례식 또는 대각선으로 계산', en: ['Parallel Segments Type 06: Trapezoid Parallel Middle Segment', 'Determine parallel line segment length inside trapezoid using proportional division'], make: (random) => rpmG8TrapezoidParallelMiddleSegment(random) },
   { id: 'rpm-g8-parallel-segments-all-mixed', label: '[단원 실전 다지기] 평행선과 선분의 길이의 비 전 유형 종합', description: '삼각형 평행선, 내각/외각 이등분선, 평행선 사이의 비, 사다리꼴 전 유형 종합', en: ['Parallel Segments Comprehensive Practice', 'Mixed practice across all parallel segment ratios, angle bisectors, and trapezoids'], make: (random) => rpmG8ParallelSegmentsAllMixed(random) },
-  { id: 'rpm-g8-parallel-segments-skill-up', label: '[단원 최고수준] 평행선과 선분비 실력 UP', description: '중점과 밑변 비례 분할점에서 평행 보조선을 그어 교점 선분비 추론 (RPM p.150~151)', en: ['Parallel Segments Advanced Challenge', 'Advanced challenge: auxiliary parallel lines through midpoint and base ratio partition points'], make: (random) => rpmG8ParallelSegmentsSkillUp(random) },
+  { id: 'rpm-g8-parallel-segments-skill-up', label: '[단원 최고수준] 평행선과 선분비 실력 UP', description: '중점과 밑변 비례 분할점에서 평행 보조선을 그어 교점 선분비 추론', en: ['Parallel Segments Advanced Challenge', 'Advanced challenge: auxiliary parallel lines through midpoint and base ratio partition points'], make: (random) => rpmG8ParallelSegmentsSkillUp(random) },
 ];
 
 export const RPM_CENTROID_APPLIED_UNITS = [
@@ -734,7 +734,7 @@ export const RPM_CENTROID_APPLIED_UNITS = [
   { id: 'rpm-g8-centroid-area-six-divisions', label: '[무게중심 04] 무게중심과 삼각형의 넓이 분할 (6등분)', description: '세 중선에 의해 삼각형의 넓이가 6개의 동일한 넓이로 분할됨을 이용한 넓이 계산', en: ['Centroid Type 04: Six Equal Area Triangles Division', 'Solve area problems using the 6 equal-area triangles formed by the three medians'], make: (random) => rpmG8CentroidAreaSixDivisions(random) },
   { id: 'rpm-g8-parallelogram-centroid-application', label: '[무게중심 05] 평행사변형에서 대각선과 무게중심의 응용', description: '평행사변형의 대각선 3등분선 교점이 두 삼각형의 무게중심임을 활용한 넓이 계산', en: ['Centroid Type 05: Parallelogram Centroid Diagonal Trisection', 'Apply centroid properties on parallelogram diagonals to find triangle areas'], make: (random) => rpmG8ParallelogramCentroidApplication(random) },
   { id: 'rpm-g8-centroid-all-types-mixed', label: '[단원 실전 다지기] 삼각형의 무게중심 전 유형 종합', description: '중점 연결 정리, 사다리꼴 중점선, 2:1 분할, 6등분 넓이, 평행사변형 응용 전 유형 종합', en: ['Centroid Comprehensive Practice', 'Mixed practice across midpoint theorems, 2:1 median ratio, and area divisions'], make: (random) => rpmG8CentroidAllTypesMixed(random) },
-  { id: 'rpm-g8-centroid-advanced-skill-up', label: '[단원 최고수준] 삼각형의 무게중심 실력 UP', description: "삼각형의 무게중심 G와 부분삼각형의 무게중심 G'의 이중 무게중심 넓이 (RPM p.152~153)", en: ["Centroid Advanced Challenge", "Top challenge: nested dual centroids (G of ABC and G' of GBC) area calculation"], make: (random) => rpmG8CentroidAdvancedSkillUp(random) },
+  { id: 'rpm-g8-centroid-advanced-skill-up', label: '[단원 최고수준] 삼각형의 무게중심 실력 UP', description: "삼각형의 무게중심 G와 부분삼각형의 무게중심 G'의 이중 무게중심 넓이", en: ["Centroid Advanced Challenge", "Top challenge: nested dual centroids (G of ABC and G' of GBC) area calculation"], make: (random) => rpmG8CentroidAdvancedSkillUp(random) },
 ];
 
 export const RPM_PYTHAGOREAN_APPLIED_UNITS = [
@@ -746,7 +746,7 @@ export const RPM_PYTHAGOREAN_APPLIED_UNITS = [
   { id: 'rpm-g8-pythagorean-orthogonal-quad', label: '[피타고라스 06] 대각선이 직교하는 사각형의 성질', description: '두 대각선이 직교할 때 마주 보는 대변의 제곱합 AB² + CD² = AD² + BC² 계산', en: ['Pythagorean Type 06: Orthogonal Diagonals Quadrilateral', 'Apply opposite side squared equality AB² + CD² = AD² + BC² for orthogonal diagonals'], make: (random) => rpmG8PythagoreanOrthogonalQuad(random) },
   { id: 'rpm-g8-pythagorean-semicircle-hippocrates', label: '[피타고라스 07] 히포크라테스의 초승달 넓이', description: '직각삼각형의 세 변을 지름으로 하는 반원에 의해 생기는 두 초승달 넓이의 합 계산', en: ['Pythagorean Type 07: Hippocrates Crescents Area', 'Calculate the area of Hippocrates crescents equal to the right triangle area'], make: (random) => rpmG8PythagoreanSemicircleHippocrates(random) },
   { id: 'rpm-g8-pythagorean-all-types-mixed', label: '[단원 실전 다지기] 피타고라스 정리 전 유형 종합', description: '변의 길이, 유클리드 넓이, 판별 조건, 직교 사각형, 히포크라테스 초승달 전 유형 종합', en: ['Pythagorean Comprehensive Practice', 'Mixed applied practice across all Pythagorean side, area, proof, and figure types'], make: (random) => rpmG8PythagoreanAllTypesMixed(random) },
-  { id: 'rpm-g8-pythagorean-advanced-skill-up', label: '[단원 최고수준] 피타고라스 정리 실력 UP', description: '직각삼각형을 접었을 때 빗변에 내린 수선과 피타고라스 방정식을 이용한 넓이 (RPM p.154)', en: ['Pythagorean Advanced Challenge', 'Top challenge: right triangle folding along hypotenuse and quadratic Pythagorean solving'], make: (random) => rpmG8PythagoreanAdvancedSkillUp(random) },
+  { id: 'rpm-g8-pythagorean-advanced-skill-up', label: '[단원 최고수준] 피타고라스 정리 실력 UP', description: '직각삼각형을 접었을 때 빗변에 내린 수선과 피타고라스 방정식을 이용한 넓이', en: ['Pythagorean Advanced Challenge', 'Top challenge: right triangle folding along hypotenuse and quadratic Pythagorean solving'], make: (random) => rpmG8PythagoreanAdvancedSkillUp(random) },
 ];
 
 export const RPM_CASES_APPLIED_UNITS = [
@@ -765,7 +765,7 @@ export const RPM_CASES_APPLIED_UNITS = [
   { id: 'rpm-g8-cases-coloring-regions', label: '[경우의 수 13] 영역에 색을 칠하는 방법의 수', description: '이웃한 영역은 서로 다른 색을 칠하는 조건에서 색칠하는 방법의 수 계산', en: ['Number of Cases Type 13: Map Coloring Problems', 'Determine valid colorings of adjacent regions using given colors'], make: (random) => rpmG8CasesColoringRegions(random) },
   { id: 'rpm-g8-cases-grid-shortest-path', label: '[경우의 수 14] 최단 거리로 가는 길찾기', description: '격자판 도로망에서 합의 법칙을 이용하여 A에서 B까지 최단 경로의 수 계산', en: ['Number of Cases Type 14: Grid Shortest Paths', 'Find the number of shortest grid paths using recursive addition rule'], make: (random) => rpmG8CasesGridShortestPath(random) },
   { id: 'rpm-g8-cases-all-types-mixed', label: '[단원 실전 다지기] 경우의 수 전 유형 종합', description: '주사위, 동전, 줄 세우기, 자연수, 대표 뽑기, 길찾기 전 유형 실전 종합', en: ['Number of Cases Comprehensive Practice', 'Mixed practice across all counting principles, permutations, and combinations'], make: (random) => rpmG8CasesAllTypesMixed(random) },
-  { id: 'rpm-g8-cases-advanced-skill-up', label: '[단원 최고수준] 경우의 수 실력 UP', description: '연립방정식이 해를 갖지 않는 주사위 눈 순서쌍 (a, b)의 개수 추론 (RPM p.155~156)', en: ['Number of Cases Advanced Challenge', 'Top challenge: ordered dice pairs yielding no solution in a 2x2 linear system'], make: (random) => rpmG8CasesAdvancedSkillUp(random) },
+  { id: 'rpm-g8-cases-advanced-skill-up', label: '[단원 최고수준] 경우의 수 실력 UP', description: '연립방정식이 해를 갖지 않는 주사위 눈 순서쌍 (a, b)의 개수 추론', en: ['Number of Cases Advanced Challenge', 'Top challenge: ordered dice pairs yielding no solution in a 2x2 linear system'], make: (random) => rpmG8CasesAdvancedSkillUp(random) },
 ];
 
 export const RPM_PROBABILITY_APPLIED_UNITS = [
@@ -782,11 +782,11 @@ export const RPM_PROBABILITY_APPLIED_UNITS = [
   { id: 'rpm-g8-prob-rock-paper-scissors', label: '[확률 11] 가위바위보 게임과 승패 확률', description: '두 사람 또는 세 사람이 가위바위보를 할 때 비길 확률 및 특정인이 이길 확률', en: ['Probability Type 11: Rock-Paper-Scissors Probabilities', 'Determine probabilities of ties and specific wins in Rock-Paper-Scissors'], make: (random) => rpmG8ProbRockPaperScissors(random) },
   { id: 'rpm-g8-prob-geometric-and-point-motion', label: '[확률 12] 도형에서의 확률과 점의 이동', description: '주사위 눈의 합만큼 정사각형 꼭짓점을 시계 반대 방향으로 이동할 때 특정 위치 도달 확률', en: ['Probability Type 12: Geometric Probability & Token Motion', 'Find the probability of a moving token landing on a target vertex on a polygon'], make: (random) => rpmG8ProbGeometricAndPointMotion(random) },
   { id: 'rpm-g8-prob-all-types-mixed', label: '[단원 실전 다지기] 확률과 그 계산 전 유형 종합', description: '기본 정의, 주사위 방정식, 합/곱의 법칙, 복원/비복원 추출 전 유형 종합', en: ['Probability Comprehensive Practice', 'Mixed practice across classical probability, addition, multiplication, and sampling'], make: (random) => rpmG8ProbAllTypesMixed(random) },
-  { id: 'rpm-g8-prob-advanced-skill-up', label: '[단원 최고수준] 확률과 그 계산 실력 UP', description: '분모 n을 택할 때 기약분수 7/n이 순환소수가 될 확률 계산 (RPM p.157~158)', en: ['Probability Advanced Challenge', 'Top challenge: probability that fraction 7/n forms a repeating decimal'], make: (random) => rpmG8ProbAdvancedSkillUp(random) },
+  { id: 'rpm-g8-prob-advanced-skill-up', label: '[단원 최고수준] 확률과 그 계산 실력 UP', description: '분모 n을 택할 때 기약분수 7/n이 순환소수가 될 확률 계산', en: ['Probability Advanced Challenge', 'Top challenge: probability that fraction 7/n forms a repeating decimal'], make: (random) => rpmG8ProbAdvancedSkillUp(random) },
 ];
 
 export const RPM_GRADE8_SEMESTER_TWO_FINAL_MOCK_UNITS = [
-  { id: 'rpm-grade8-semester-two-final-exam', label: '[중2-2 총괄 모의고사] 중2-2 전 범위 최종 실전 총괄 모의고사', description: '이등변삼각형, 외심/내심, 평행사변형, 사각형, 닮음, 평행선분비, 무게중심, 피타고라스, 경우의 수, 확률 전 10단원 25문항 실전 모의고사 (RPM 2-2 전 범위)', en: ['Grade 8 Semester 2 Final Comprehensive Mock Exam', 'Comprehensive mock exam covering all 10 chapters of Korean Grade 8-2 (Geometry, Similarity, Pythagorean, Counting & Probability)'], make: (random) => rpmGrade8SemesterTwoFinalExam(random) },
+  { id: 'rpm-grade8-semester-two-final-exam', label: '[중2-2 총괄 모의고사] 중2-2 전 범위 최종 실전 총괄 모의고사', description: '이등변삼각형, 외심/내심, 평행사변형, 사각형, 닮음, 평행선분비, 무게중심, 피타고라스, 경우의 수, 확률 전 10단원 25문항 실전 모의고사', en: ['Grade 8 Semester 2 Final Comprehensive Mock Exam', 'Comprehensive mock exam covering all 10 chapters of Korean Grade 8-2 (Geometry, Similarity, Pythagorean, Counting & Probability)'], make: (random) => rpmGrade8SemesterTwoFinalExam(random) },
 ];
 
 
@@ -1151,7 +1151,7 @@ const UNIT_TIERS = {
   'rpm-alg-substitute-expression': 'advanced', 'rpm-alg-unknown-box-poly': 'advanced', 'rpm-alg-correct-poly-calc': 'advanced',
   'rpm-alg-geometry-shaded-area': 'advanced', 'rpm-alg-neg-power-linear': 'advanced', 'rpm-alg-magic-square-pyramid': 'advanced',
   'rpm-alg-cost-profit-complex': 'advanced', 'rpm-alg-multi-var-complex-eval': 'advanced', 'rpm-alg-all-types-mixed': 'advanced',
-  // 06 일차방정식의 풀이 세부 응용 유형 (RPM 1-1 p.94~103)
+  // 06 일차방정식의 풀이 세부 응용 유형
   'rpm-eq-identity-equation': 'advanced', 'rpm-eq-root-substitute': 'advanced', 'rpm-eq-identity-distinguish': 'advanced',
   'rpm-eq-identity-condition': 'advanced', 'rpm-eq-properties-equality': 'advanced', 'rpm-eq-solve-using-properties': 'advanced',
   'rpm-eq-transposition-rule': 'advanced', 'rpm-eq-linear-def-identify': 'advanced', 'rpm-eq-brackets-expand': 'advanced',
@@ -1159,7 +1159,7 @@ const UNIT_TIERS = {
   'rpm-eq-proportion-cross-mult': 'advanced', 'rpm-eq-root-given-param': 'advanced', 'rpm-eq-two-eqs-same-root': 'advanced',
   'rpm-eq-special-roots': 'advanced', 'rpm-eq-root-integer-natural': 'advanced', 'rpm-eq-root-ratio-multiple': 'advanced',
   'rpm-eq-mistaken-coef': 'advanced', 'rpm-eq-common-root-systems': 'advanced', 'rpm-eq-all-types-mixed': 'advanced',
-  // 07 일차방정식의 활용 세부 응용 유형 (RPM 1-1 p.106~117)
+  // 07 일차방정식의 활용 세부 응용 유형
   'rpm-app-number-relations': 'advanced', 'rpm-app-consecutive-numbers': 'advanced', 'rpm-app-digit-values': 'advanced',
   'rpm-app-age-problems': 'advanced', 'rpm-app-savings-allowance': 'advanced', 'rpm-app-fixed-total-count': 'advanced',
   'rpm-app-geometry-figures': 'advanced', 'rpm-app-excess-deficit-items': 'advanced', 'rpm-app-percent-change-students': 'advanced',
@@ -1190,7 +1190,7 @@ const UNIT_TIERS = {
   'rpm-prop-inverse-rect-area': 'advanced', 'rpm-prop-direct-word-candle-gear': 'advanced', 'rpm-prop-inverse-word-tank-volume': 'advanced',
   'rpm-prop-inverse-word-work-boyle': 'advanced', 'rpm-prop-two-travelers-graph': 'advanced', 'rpm-prop-chain-proportion': 'advanced',
   'rpm-prop-all-types-mixed': 'advanced',
-  // 중학 1-1 전 범위 총괄 실전 모의고사 (RPM 1-1 p.152~173)
+  // 중학 1-1 전 범위 총괄 실전 모의고사
   'rpm-semester-one-mock-exam': 'advanced',
   // Grade 8 Semester 2 Chapters 09 and 10 & Final Capstone
   'rpm-g8-cases-dice-sum-diff': 'advanced', 'rpm-g8-cases-coins-payment': 'advanced', 'rpm-g8-cases-addition-rule': 'advanced',

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import LatexMath from './LatexMath';
 import InteractiveProblemCard from './InteractiveProblemCard';
 import { getExamFullText, clearCustomExams } from '../data/sampleExams';
+import { sanitizePublicText } from '../publicText';
 
 const CHOICE_SYMBOLS = ['①', '②', '③', '④', '⑤'];
 
@@ -46,6 +47,59 @@ export async function extractTextFromPdf(pdfSource) {
     fullText += `\n\n--- [Page ${pageNum}] ---\n` + pageStrings.join(' ');
   }
   return fullText;
+}
+
+// Browser-side OCR for screenshots and cropped page images. The OCR library is
+// loaded only when an image is selected, so normal page loads stay lightweight.
+export async function extractTextFromImage(imageFile, onProgress) {
+  if (typeof window === 'undefined' || !imageFile) return '';
+  if (!window.Tesseract) {
+    await new Promise((resolve, reject) => {
+      const existing = document.querySelector('script[data-exam-ocr="tesseract"]');
+      if (existing) {
+        existing.addEventListener('load', resolve, { once: true });
+        existing.addEventListener('error', () => reject(new Error('OCR 모듈을 불러오지 못했습니다.')), { once: true });
+        return;
+      }
+      const script = document.createElement('script');
+      script.dataset.examOcr = 'tesseract';
+      script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+      script.onload = resolve;
+      script.onerror = () => reject(new Error('OCR 모듈을 불러오지 못했습니다.'));
+      document.head.appendChild(script);
+    });
+  }
+  const result = await window.Tesseract.recognize(imageFile, 'eng+kor', {
+    logger: (message) => {
+      if (message.status === 'recognizing text' && onProgress) onProgress(Math.round((message.progress || 0) * 100));
+    },
+  });
+  return result?.data?.text || '';
+}
+
+function prepareForReview(problems, source = 'text') {
+  return problems.map((problem) => ({
+    ...problem,
+    unit: sanitizePublicText(problem.unit),
+    question: sanitizePublicText(problem.question),
+    choices: (problem.choices || []).map((choice) => sanitizePublicText(choice)),
+    explanation: sanitizePublicText(problem.explanation),
+    sourceLabel: sanitizePublicText(problem.sourceLabel),
+    reviewStatus: 'needs-review',
+    importSource: source,
+  }));
+}
+
+function problemIssues(problem) {
+  const issues = [];
+  if (!String(problem.question || '').trim()) issues.push('문제 내용 없음');
+  if (problem.type === 'multiple_choice') {
+    if (!Array.isArray(problem.choices) || problem.choices.length !== 5) issues.push(`선택지 ${problem.choices?.length || 0}개`);
+    if ((problem.choices || []).some((choice) => !String(choice || '').trim())) issues.push('빈 선택지');
+    const answer = Number(problem.correctAnswer);
+    if (!Number.isInteger(answer) || answer < 0 || answer >= (problem.choices?.length || 0)) issues.push('정답 확인 필요');
+  }
+  return issues;
 }
 
 // Intelligent parser recognizing entire 1~30 question exams at once
@@ -328,6 +382,86 @@ export function parseExamText(rawText) {
   return parsedProblems;
 }
 
+function ProblemReviewEditor({ problem, onChange, onReview, onRemove, language }) {
+  const issues = problemIssues(problem);
+  const fieldStyle = {
+    width: '100%', padding: '9px 10px', borderRadius: '8px', border: '1px solid var(--paper-line, #d8c9a8)',
+    boxSizing: 'border-box', fontSize: '14px', background: '#fff', color: 'var(--ink, #1f2733)',
+  };
+  const changeChoice = (index, value) => {
+    const choices = [...(problem.choices || [])];
+    choices[index] = value;
+    onChange({ choices });
+  };
+
+  return (
+    <section style={{ border: `2px solid ${problem.reviewStatus === 'reviewed' ? '#2f6e5c' : issues.length ? '#c23b32' : '#d8c9a8'}`, borderRadius: 14, padding: 18, background: '#fff' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap', alignItems: 'center', marginBottom: 14 }}>
+        <strong style={{ fontSize: 18 }}>문제 {problem.number}</strong>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+          {issues.length ? <span style={{ color: '#a82828', fontSize: 12, fontWeight: 700 }}>확인: {issues.join(' · ')}</span> : null}
+          <label style={{ fontSize: 13, fontWeight: 800, color: problem.reviewStatus === 'reviewed' ? '#2f6e5c' : '#8f2a24' }}>
+            <input type="checkbox" checked={problem.reviewStatus === 'reviewed'} onChange={(event) => onReview(event.target.checked)} /> 검수 완료
+          </label>
+          <button type="button" onClick={onRemove} style={{ border: '1px solid #d99', background: '#fff5f5', color: '#a22', borderRadius: 7, padding: '5px 9px', cursor: 'pointer' }}>삭제</button>
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(140px, 1fr) minmax(100px, 160px) minmax(90px, 120px)', gap: 10, marginBottom: 10 }}>
+        <label style={{ fontSize: 12, fontWeight: 700 }}>단원
+          <input value={problem.unit || ''} onChange={(event) => onChange({ unit: event.target.value })} style={fieldStyle} />
+        </label>
+        <label style={{ fontSize: 12, fontWeight: 700 }}>문제 유형
+          <select value={problem.type} onChange={(event) => onChange({ type: event.target.value, choices: event.target.value === 'multiple_choice' ? (problem.choices?.length ? problem.choices : ['', '', '', '', '']) : [] })} style={fieldStyle}>
+            <option value="multiple_choice">객관식</option>
+            <option value="subjective">주관식</option>
+          </select>
+        </label>
+        <label style={{ fontSize: 12, fontWeight: 700 }}>배점
+          <input type="number" min="0" value={problem.points || 0} onChange={(event) => onChange({ points: Number(event.target.value) })} style={fieldStyle} />
+        </label>
+      </div>
+
+      <label style={{ display: 'grid', gap: 5, fontSize: 12, fontWeight: 700, marginBottom: 10 }}>문제 내용
+        <textarea rows={5} value={problem.question || ''} onChange={(event) => onChange({ question: event.target.value })} style={{ ...fieldStyle, resize: 'vertical', fontFamily: 'inherit' }} />
+      </label>
+
+      {problem.type === 'multiple_choice' ? (
+        <div style={{ display: 'grid', gap: 7, marginBottom: 10 }}>
+          {(problem.choices || []).map((choice, index) => (
+            <div key={index} style={{ display: 'grid', gridTemplateColumns: '28px 1fr 34px', gap: 6, alignItems: 'center' }}>
+              <b>{String.fromCharCode(65 + index)}</b>
+              <input value={choice || ''} onChange={(event) => changeChoice(index, event.target.value)} style={fieldStyle} />
+              <button type="button" onClick={() => onChange({ choices: problem.choices.filter((_, choiceIndex) => choiceIndex !== index) })} aria-label={`${index + 1}번 선택지 삭제`} style={{ border: 'none', background: '#f4efe6', borderRadius: 6, height: 34, cursor: 'pointer' }}>−</button>
+            </div>
+          ))}
+          <button type="button" onClick={() => onChange({ choices: [...(problem.choices || []), ''] })} style={{ justifySelf: 'start', border: '1px solid #b9ad97', background: '#fbf8f2', borderRadius: 7, padding: '6px 10px', cursor: 'pointer' }}>+ 선택지 추가</button>
+          <label style={{ fontSize: 12, fontWeight: 700, maxWidth: 220 }}>정답
+            <select value={Number(problem.correctAnswer) || 0} onChange={(event) => onChange({ correctAnswer: Number(event.target.value) })} style={fieldStyle}>
+              {(problem.choices || []).map((_, index) => <option key={index} value={index}>{String.fromCharCode(65 + index)}</option>)}
+            </select>
+          </label>
+        </div>
+      ) : (
+        <label style={{ display: 'grid', gap: 5, fontSize: 12, fontWeight: 700, marginBottom: 10 }}>정답
+          <input value={problem.correctAnswer ?? ''} onChange={(event) => onChange({ correctAnswer: event.target.value })} style={fieldStyle} />
+        </label>
+      )}
+
+      <label style={{ display: 'grid', gap: 5, fontSize: 12, fontWeight: 700 }}>해설
+        <textarea rows={3} value={problem.explanation || ''} onChange={(event) => onChange({ explanation: event.target.value })} style={{ ...fieldStyle, resize: 'vertical', fontFamily: 'inherit' }} />
+      </label>
+
+      <details style={{ marginTop: 12 }}>
+        <summary style={{ cursor: 'pointer', fontWeight: 700, fontSize: 13 }}>학생 화면 미리보기</summary>
+        <div style={{ marginTop: 10 }}>
+          <InteractiveProblemCard problem={problem} userAnswer={null} onSelectAnswer={() => {}} isExamMode showResult={false} language={language} />
+        </div>
+      </details>
+    </section>
+  );
+}
+
 export default function AiExamParser({ initialText = '', onSaveToArchive, examType = 'csat', language = 'ko', defaultLevel = '10' }) {
   const [level, setLevel] = useState(defaultLevel || (examType === 'amc' ? '10' : 'csat'));
   const [inputText, setInputText] = useState(initialText || '');
@@ -336,6 +470,7 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
   const [statusMsg, setStatusMsg] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [loadingFile, setLoadingFile] = useState(false);
+  const [partialQuestionNumber, setPartialQuestionNumber] = useState(1);
 
   const getSampleText = (lvl) => getExamFullText(examType, lvl || level);
 
@@ -344,7 +479,7 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
       setInputText(initialText);
       const res = parseExamText(initialText);
       if (res.length > 0) {
-        setParsedProblems(res);
+        setParsedProblems(prepareForReview(res, 'initial'));
         setPreviewActive(true);
         setStatusMsg(`⚡ 전체 파일에서 총 ${res.length}개 문제를 일괄 인식하여 변환했습니다.`);
       }
@@ -358,7 +493,7 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
       setStatusMsg('문제를 인식하지 못했습니다. 형식(1., 2., Problem 1, [문제 1])을 확인해주세요.');
       return;
     }
-    setParsedProblems(result);
+    setParsedProblems(prepareForReview(result));
     setPreviewActive(true);
     setStatusMsg(`🎉 전체 파일에서 총 ${result.length}개 문제를 한 번에 성공적으로 분리·변환했습니다!`);
   };
@@ -369,7 +504,7 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
     const text = getExamFullText(examType, lvl);
     setInputText(text);
     const result = parseExamText(text);
-    setParsedProblems(result);
+    setParsedProblems(prepareForReview(result, 'sample'));
     setPreviewActive(true);
     setStatusMsg(`📝 ${examType.toUpperCase()}${lvl ? ` (${lvl})` : ''} 전체 ${result.length}문항 일괄 샘플 세트가 로드 및 변환되었습니다.`);
   };
@@ -379,7 +514,7 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
     const text = getExamFullText(examType, level);
     setInputText(text);
     const result = parseExamText(text);
-    setParsedProblems(result);
+    setParsedProblems(prepareForReview(result, 'sample'));
     setPreviewActive(true);
     setStatusMsg(`🔄 공식 ${examType.toUpperCase()} 기본 ${result.length}문항 원본 세트로 복원되었습니다.`);
   };
@@ -394,25 +529,14 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
     try {
       if (file.name.toLowerCase().endsWith('.pdf') || file.type === 'application/pdf') {
         const extracted = await extractTextFromPdf(file);
-        let result = [];
-        if (extracted && extracted.trim()) {
-          result = parseExamText(extracted);
-        }
-        if (result.length >= 10) {
-          setInputText(extracted);
-          setParsedProblems(result);
-          setPreviewActive(true);
-          setStatusMsg(`📄 PDF 전체 페이지에서 총 ${result.length}개 문제를 성공적으로 일괄 추출·변환했습니다!`);
-        } else {
-          // If extracted text has fewer than 10 problems (e.g. scanned image PDF or failed OCR),
-          // automatically fill with the full 25/30 question template so user gets all questions!
-          const fallbackText = getExamFullText(examType, level);
-          setInputText(fallbackText);
-          result = parseExamText(fallbackText);
-          setParsedProblems(result);
-          setPreviewActive(true);
-          setStatusMsg(`📄 스캔 이미지 PDF 감지: 공식 ${examType.toUpperCase()} ${result.length}문항 전체 세트로 자동 복원 및 생성되었습니다!`);
-        }
+        const result = extracted?.trim() ? parseExamText(extracted) : [];
+        const expected = examType === 'amc' ? 25 : 30;
+        setInputText(extracted || '');
+        setParsedProblems(prepareForReview(result, 'pdf'));
+        setPreviewActive(result.length > 0);
+        setStatusMsg(result.length
+          ? `PDF에서 ${result.length}/${expected}문항을 인식했습니다. 누락·선택지를 확인한 뒤 문제별로 수정하세요.`
+          : 'PDF에서 텍스트를 인식하지 못했습니다. 스캔본이면 아래 이미지 부분 OCR을 사용하세요.');
       } else {
         const reader = new FileReader();
         reader.onload = (event) => {
@@ -420,7 +544,7 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
           setInputText(content);
           const result = parseExamText(content);
           if (result.length > 0) {
-            setParsedProblems(result);
+            setParsedProblems(prepareForReview(result, 'text-file'));
             setPreviewActive(true);
             setStatusMsg(`📁 파일 "${file.name}" 에서 총 ${result.length}개 문제를 일괄 변환했습니다!`);
           } else {
@@ -438,25 +562,117 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
     }
   };
 
+  const handleImageUpload = async (event) => {
+    const files = Array.from(event.target.files || []);
+    if (files.length === 0) return;
+    setLoadingFile(true);
+    let nextNumber = Math.max(1, Number(partialQuestionNumber) || 1);
+    const additions = [];
+    try {
+      for (let index = 0; index < files.length; index += 1) {
+        const file = files[index];
+        setStatusMsg(`이미지 OCR ${index + 1}/${files.length}: ${file.name}`);
+        const text = await extractTextFromImage(file, (progress) => {
+          setStatusMsg(`이미지 OCR ${index + 1}/${files.length}: ${progress}%`);
+        });
+        const parsed = parseExamText(text);
+        const imported = parsed.length > 0 ? parsed : [{
+          id: `partial-p${nextNumber}`,
+          number: nextNumber,
+          points: 0,
+          unit: '',
+          type: 'multiple_choice',
+          question: text.trim(),
+          choices: ['', '', '', '', ''],
+          correctAnswer: 0,
+          explanation: '',
+        }];
+        prepareForReview(imported, 'image-ocr').forEach((problem, offset) => {
+          additions.push({
+            ...problem,
+            id: `partial-p${nextNumber + offset}`,
+            number: nextNumber + offset,
+          });
+        });
+        nextNumber += imported.length;
+      }
+      setParsedProblems((current) => {
+        const replacementNumbers = new Set(additions.map((item) => item.number));
+        return [...current.filter((item) => !replacementNumbers.has(item.number)), ...additions].sort((a, b) => a.number - b.number);
+      });
+      setPreviewActive(true);
+      setPartialQuestionNumber(nextNumber);
+      setStatusMsg(`${files.length}개 이미지에서 ${additions.length}개 문제를 부분 인식했습니다. 각 문제를 확인하고 수정하세요.`);
+    } catch (error) {
+      setStatusMsg(`이미지 OCR 오류: ${error.message}`);
+    } finally {
+      setLoadingFile(false);
+      event.target.value = '';
+    }
+  };
+
+  const updateProblem = (problemNumber, patch) => {
+    setParsedProblems((current) => current.map((problem) => (
+      problem.number === problemNumber ? { ...problem, ...patch, reviewStatus: 'needs-review' } : problem
+    )));
+  };
+
+  const markReviewed = (problemNumber, reviewed) => {
+    setParsedProblems((current) => current.map((problem) => (
+      problem.number === problemNumber ? { ...problem, reviewStatus: reviewed ? 'reviewed' : 'needs-review' } : problem
+    )));
+  };
+
+  const addBlankProblem = () => {
+    const used = new Set(parsedProblems.map((problem) => problem.number));
+    let number = 1;
+    while (used.has(number)) number += 1;
+    setParsedProblems((current) => [...current, {
+      id: `manual-p${number}`,
+      number,
+      points: 0,
+      unit: '',
+      type: 'multiple_choice',
+      question: '',
+      choices: ['', '', '', '', ''],
+      correctAnswer: 0,
+      explanation: '',
+      reviewStatus: 'needs-review',
+      importSource: 'manual',
+    }].sort((a, b) => a.number - b.number));
+    setPreviewActive(true);
+    setTimeout(() => scrollToProblem(number), 0);
+  };
+
+  const removeProblem = (problemNumber) => {
+    setParsedProblems((current) => current.filter((problem) => problem.number !== problemNumber));
+  };
+
   const handleSave = () => {
     if (parsedProblems.length === 0) {
       setStatusMsg('저장할 문제가 없습니다.');
       return;
     }
+    const invalidNumbers = parsedProblems.filter((problem) => problemIssues(problem).length > 0).map((problem) => problem.number);
+    if (invalidNumbers.length > 0) {
+      setStatusMsg(`저장 전 수정이 필요한 문제: ${invalidNumbers.join(', ')}번`);
+      return;
+    }
+    const savedProblems = parsedProblems.map(({ reviewStatus, importSource, ...problem }) => problem);
     if (typeof window !== 'undefined') {
       try {
-        localStorage.setItem(`custom_exam_${examType}`, JSON.stringify(parsedProblems));
+        localStorage.setItem(`custom_exam_${examType}`, JSON.stringify(savedProblems));
         if (examType === 'amc') {
-          localStorage.setItem(`custom_exam_amc_${level}`, JSON.stringify(parsedProblems));
-          localStorage.setItem(`custom_exam_${level}`, JSON.stringify(parsedProblems));
+          localStorage.setItem(`custom_exam_amc_${level}`, JSON.stringify(savedProblems));
+          localStorage.setItem(`custom_exam_${level}`, JSON.stringify(savedProblems));
         } else {
-          localStorage.setItem(`custom_exam_csat_${level}`, JSON.stringify(parsedProblems));
-          localStorage.setItem(`custom_exam_csat_csat`, JSON.stringify(parsedProblems));
+          localStorage.setItem(`custom_exam_csat_${level}`, JSON.stringify(savedProblems));
+          localStorage.setItem(`custom_exam_csat_csat`, JSON.stringify(savedProblems));
         }
       } catch (e) {}
     }
     if (onSaveToArchive) {
-      onSaveToArchive(parsedProblems);
+      onSaveToArchive(savedProblems);
     }
     setStatusMsg(`🎉 전체 ${parsedProblems.length}개 문제가 웹/태블릿 인터랙티브 시험 세트로 즉시 등록되었습니다!`);
   };
@@ -473,6 +689,10 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
     if (filterType === 'subjective') return p.type === 'subjective';
     return true;
   });
+  const expectedProblemCount = examType === 'amc' ? 25 : 30;
+  const recognizedNumbers = new Set(parsedProblems.map((problem) => Number(problem.number)));
+  const missingNumbers = Array.from({ length: expectedProblemCount }, (_, index) => index + 1).filter((number) => !recognizedNumbers.has(number));
+  const needsAttentionCount = parsedProblems.filter((problem) => problem.reviewStatus !== 'reviewed' || problemIssues(problem).length > 0).length;
 
   return (
     <div
@@ -513,6 +733,15 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
             {loadingFile ? '⏳ 추출 중...' : '📂 전체 파일 불러오기 (.pdf, .txt, .tex)'}
             <input type="file" accept=".pdf,.txt,.tex,.latex,.md,.json" onChange={handleFileUpload} disabled={loadingFile} style={{ display: 'none' }} />
           </label>
+          <div style={{ display: 'inline-flex', gap: 6, alignItems: 'center', padding: '5px 8px', border: '1px solid var(--paper-line, #d8c9a8)', borderRadius: 8, background: '#f8fbff' }}>
+            <label style={{ fontSize: 12, fontWeight: 700 }}>시작 번호
+              <input type="number" min="1" max="30" value={partialQuestionNumber} onChange={(event) => setPartialQuestionNumber(event.target.value)} style={{ width: 48, marginLeft: 5, padding: 4 }} />
+            </label>
+            <label style={{ fontSize: 13, fontWeight: 800, color: '#1d4ed8', cursor: loadingFile ? 'wait' : 'pointer' }}>
+              📷 문제별·부분 캡처 OCR
+              <input type="file" accept="image/*" multiple onChange={handleImageUpload} disabled={loadingFile} style={{ display: 'none' }} />
+            </label>
+          </div>
           {examType === 'amc' ? (
             <div style={{ display: 'flex', gap: '5px', alignItems: 'center', flexWrap: 'wrap' }}>
               <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--ink-soft)' }}>표준 25문항:</span>
@@ -696,6 +925,10 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
               <p style={{ fontSize: '13px', color: 'var(--ink-soft, #718096)', margin: '4px 0 0' }}>
                 객관식 {parsedProblems.filter((p) => p.type === 'multiple_choice').length}문항 · 주관식 {parsedProblems.filter((p) => p.type === 'subjective').length}문항 인식됨
               </p>
+              <p style={{ fontSize: '13px', color: missingNumbers.length ? '#a82828' : '#2f6e5c', margin: '4px 0 0', fontWeight: 700 }}>
+                {parsedProblems.length}/{expectedProblemCount}문항 · 확인 필요 {needsAttentionCount}개
+                {missingNumbers.length ? ` · 누락 번호: ${missingNumbers.join(', ')}` : ' · 번호 누락 없음'}
+              </p>
             </div>
 
             {/* Filter Tabs */}
@@ -751,6 +984,10 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
             </div>
           </div>
 
+          <button type="button" onClick={addBlankProblem} style={{ marginBottom: 14, border: '1px solid #2f6e5c', background: '#eef8f3', color: '#215845', borderRadius: 8, padding: '8px 12px', fontWeight: 800, cursor: 'pointer' }}>
+            + 누락 문제 직접 추가
+          </button>
+
           {/* Quick Jump Number Palette */}
           <div
             style={{
@@ -792,13 +1029,12 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
           <div style={{ display: 'grid', gap: '20px' }}>
             {displayedProblems.map((p) => (
               <div key={p.id || p.number} id={`problem-card-${p.number}`}>
-                <InteractiveProblemCard
+                <ProblemReviewEditor
                   problem={p}
-                  userAnswer={null}
-                  onSelectAnswer={() => {}}
-                  isExamMode={false}
-                  showResult={false}
                   language={language}
+                  onChange={(patch) => updateProblem(p.number, patch)}
+                  onReview={(reviewed) => markReviewed(p.number, reviewed)}
+                  onRemove={() => removeProblem(p.number)}
                 />
               </div>
             ))}

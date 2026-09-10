@@ -473,7 +473,7 @@ export const RPM_ALGEBRA_APPLIED_UNITS = [
   { id: 'rpm-alg-multi-var-complex-eval', label: '[문자와 식 발전 23] 다중 문자 분수식의 고난도 대입 식의 값', description: '문자가 여러 개인 분수식에서 역수 또는 비례식을 변형하여 식의 값 구하기', en: ['Expressions Challenge 23: Multi-Variable Complex Fraction Evaluation', 'Evaluate advanced fractional expressions with reciprocal substitutions'], make: rpmAlgMultiVarComplexEval },
   { id: 'rpm-alg-all-types-mixed', label: '[단원 실전 다지기] 매일 문자와 식 종합', description: '문자의 사용과 식의 계산 전 유형을 아우르는 매일 실전 종합 모의평가', en: ['Daily Expressions Comprehensive', 'Comprehensive mixed practice covering all expression types'], make: rpmAlgAllTypesMixed },
 
-  // 06 일차방정식의 풀이 세부 응용 유형 (RPM 1-1 p.94~103)
+  // 06 일차방정식의 풀이 세부 응용 유형
   { id: 'rpm-eq-identity-equation', label: '[방정식 풀이 유형 01] 등식과 방정식의 판별', description: '등식의 뜻과 기호 = 사용 여부 판별 및 문장제 등식 세우기', en: ['Equations Type 01: Identifying Equations', 'Identify equations and translate verbal statements into equations'], make: rpmEqIdentityEquation },
   { id: 'rpm-eq-root-substitute', label: '[방정식 풀이 유형 02] 방정식의 해 판별과 수 대입', description: '주어진 수가 일차방정식의 참인 해인지 대입하여 판별하기', en: ['Equations Type 02: Checking Solutions by Substitution', 'Determine whether a given number is a solution by substitution'], make: rpmEqRootSubstitute },
   { id: 'rpm-eq-identity-distinguish', label: '[방정식 풀이 유형 03] 방정식과 항등식의 구분', description: '미지수의 값에 따라 참/거짓이 갈리는 방정식과 항상 참인 항등식 구분하기', en: ['Equations Type 03: Equations vs Identities', 'Distinguish conditional linear equations from algebraic identities'], make: rpmEqIdentityDistinguish },
@@ -496,7 +496,7 @@ export const RPM_ALGEBRA_APPLIED_UNITS = [
   { id: 'rpm-eq-common-root-systems', label: '[방정식 풀이 발전 20] 공통해를 공유하는 복합 일차방정식 시스템', description: '여러 미지수를 포함한 복수 방정식들이 동일한 해를 공유할 때 복합 연계 풀이', en: ['Equations Challenge 20: Complex Equations Sharing Common Roots', 'Solve multi-parameter linear systems sharing an identical common root'], make: rpmEqCommonRootSystems },
   { id: 'rpm-eq-all-types-mixed', label: '[단원 실전 다지기] 매일 일차방정식 풀이 종합', description: '등식의 성질부터 특수해·심화 조건까지 일차방정식 풀이 전 유형 실전 평가', en: ['Daily Linear Equations Comprehensive', 'Comprehensive mixed evaluation covering all linear equation solving types'], make: rpmEqAllTypesMixed },
 
-  // 07 일차방정식의 활용 세부 응용 유형 (RPM 1-1 p.106~117)
+  // 07 일차방정식의 활용 세부 응용 유형
   { id: 'rpm-app-number-relations', label: '[방정식 활용 유형 01] 수량 관계와 잘못 계산한 수', description: '어떤 수의 배수와 합차 관계식 및 잘못 계산한 식에서 바른 수 구하기', en: ['Word Problems Type 01: Number Relations & Errors', 'Solve number relation problems and find original numbers from erroneous calculations'], make: rpmAppNumberRelations },
   { id: 'rpm-app-consecutive-numbers', label: '[방정식 활용 유형 02] 연속하는 세 자연수·홀수·짝수', description: '연속하는 세 수의 합과 대소 비교 조건을 이용한 수 구하기', en: ['Word Problems Type 02: Consecutive Integers', 'Solve for consecutive integers, odd numbers, or even numbers from sums and conditions'], make: rpmAppConsecutiveNumbers },
   { id: 'rpm-app-digit-values', label: '[방정식 활용 유형 03] 자릿수와 두 자리 자연수', description: '십의 자리와 일의 자리 숫자를 바꾼 수와 처음 수의 관계식', en: ['Word Problems Type 03: Two-Digit Numbers & Reversals', 'Equations relating original two-digit numbers and reversed digit numbers'], make: rpmAppDigitValues },

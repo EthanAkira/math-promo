@@ -1,5 +1,7 @@
 'use client';
 
+import { sanitizePublicText } from '../publicText';
+
 const NON_FRACTIONS = new Set(['and/or', 'either/or', 'true/false', 'yes/no', 'input/output', 'km/h', 'm/s', 'cm/s', 'm/s^2']);
 
 function isMathFraction(num, den, raw) {
@@ -205,7 +207,7 @@ function tokenizeMath(input) {
  */
 export default function MathText({ value }) {
   if (value === null || value === undefined || value === '') return null;
-  const tokens = tokenizeMath(String(value));
+  const tokens = tokenizeMath(sanitizePublicText(value));
 
   return (
     <>
