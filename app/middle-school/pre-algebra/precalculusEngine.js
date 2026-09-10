@@ -132,6 +132,68 @@ function conicGeneralForm(random) {
   return make('완전제곱식으로 고쳐 장축 반지름의 제곱(a²)을 구하세요.', eq, a * a, bi('Complete the square to find a² (semi-major axis squared).', `완전제곱식으로 고치면 (x${signed(-h)})²/${a * a}+(y${signed(-k)})²/${b * b}=1이 되므로 a²=${a * a}입니다.`, `Completing the square gives (x${signed(-h)})²/${a * a}+(y${signed(-k)})²/${b * b}=1, so a²=${a * a}.`));
 }
 
+// Ch8 Discrete Mathematics, split into one unit per sub-topic. The existing arithmetic/geometric
+// sequence units (secondaryAlgebraEngine.js `sequences`, algebraCompletionEngine.js
+// `geometric-sequences`) already cover the precalculus profile for basic term/finite-sum
+// questions, so these focus on techniques those don't touch: recursive definitions, solving the
+// series formula for n, infinite geometric series, counting principle/permutations, and
+// probability with/without replacement (permutations-combinations and conditional-probability
+// exist elsewhere but aren't on the precalculus profile).
+function sequenceRecursive(random) {
+  const a1 = nz(random, -8, 8);
+  if (random() < 0.5) {
+    const k = ri(random, 4, 8);
+    const d = nz(random, -5, 5);
+    const ak = a1 + (k - 1) * d;
+    return make('점화식으로 정의된 수열의 항을 구하세요.', `a_1=${a1}, a_n=a_(n-1)${signed(d)} (n≥2)일 때 a_${k}`, ak, bi('Find the term defined by the recursive rule.', `등차수열이므로 a_${k}=a_1+${k - 1}×(${d})=${ak}입니다.`, `This is arithmetic, so a_${k}=a_1+${k - 1}×(${d})=${ak}.`));
+  }
+  const k = ri(random, 3, 5);
+  const r = pick(random, [-3, -2, 2, 3]);
+  const ak = a1 * r ** (k - 1);
+  return make('점화식으로 정의된 수열의 항을 구하세요.', `a_1=${a1}, a_n=${r}×a_(n-1) (n≥2)일 때 a_${k}`, ak, bi('Find the term defined by the recursive rule.', `등비수열이므로 a_${k}=a_1×${r}^${k - 1}=${ak}입니다.`, `This is geometric, so a_${k}=a_1×${r}^${k - 1}=${ak}.`));
+}
+
+function arithmeticSeriesFindN(random) {
+  const a1 = nz(random, -6, 6);
+  const d = ri(random, 1, 5);
+  const n = ri(random, 5, 15);
+  const Sn = n * (2 * a1 + (n - 1) * d) / 2;
+  return make('등차수열의 합을 이용하여 항의 개수 n을 구하세요.', `첫째항 ${a1}, 공차 ${d}인 등차수열의 첫 n항의 합이 ${Sn}`, n, bi('Use the arithmetic series sum formula to find n.', `S_n=n/2(2a_1+(n-1)d) 공식에 대입해 정리하면 n=${n}입니다.`, `Substituting into S_n=n/2(2a_1+(n-1)d) and solving gives n=${n}.`));
+}
+
+function infiniteGeometricSeries(random) {
+  const [rNum, rDen] = pick(random, [[1, 2], [1, 3], [2, 3], [1, 4], [3, 4], [-1, 2], [-1, 3], [-2, 3]]);
+  const a1 = nz(random, -6, 6);
+  const S = frac(a1 * rDen, rDen - rNum);
+  const rStr = frac(rNum, rDen);
+  return make('무한등비급수의 합을 구하세요.', `첫째항 ${a1}, 공비 ${rStr}인 무한등비급수`, S, bi('Find the sum of the infinite geometric series.', `|r|<1이므로 S=a_1/(1−r)=${a1}/(1−(${rStr}))=${S}입니다.`, `Since |r|<1, S=a_1/(1−r)=${a1}/(1−(${rStr}))=${S}.`));
+}
+
+function countingPermutations(random) {
+  if (random() < 0.5) {
+    const counts = [ri(random, 2, 4), ri(random, 2, 5), ri(random, 2, 4)];
+    const total = counts[0] * counts[1] * counts[2];
+    return make('곱의 법칙을 이용하여 전체 경우의 수를 구하세요.', `각 단계에서 ${counts[0]}가지, ${counts[1]}가지, ${counts[2]}가지 선택이 가능할 때 전체 경우의 수`, total, bi('Use the Fundamental Counting Principle.', `각 단계의 경우의 수를 곱하면 ${counts[0]}×${counts[1]}×${counts[2]}=${total}입니다.`, `Multiply the choices at each stage: ${counts[0]}×${counts[1]}×${counts[2]}=${total}.`));
+  }
+  const n = ri(random, 4, 8);
+  const r = ri(random, 2, n - 1);
+  let nPr = 1;
+  for (let i = 0; i < r; i += 1) nPr *= (n - i);
+  return make('순열의 수를 구하세요.', `_${n}P_${r}`, nPr, bi('Find the number of permutations.', `_${n}P_${r}=${n}!/(${n}−${r})!=${nPr}입니다.`, `_${n}P_${r}=${n}!/(${n}-${r})!=${nPr}.`));
+}
+
+function probabilityEvents(random) {
+  const red = ri(random, 3, 6);
+  const blue = ri(random, 3, 6);
+  const total = red + blue;
+  if (random() < 0.5) {
+    const p = frac(red * (red - 1), total * (total - 1));
+    return make('비복원추출로 공을 2개 꺼낼 때 확률을 구하세요.', `빨간 공 ${red}개, 파란 공 ${blue}개 중 2개를 비복원으로 꺼낼 때, 둘 다 빨간 공일 확률`, p, bi('Find the probability without replacement.', `P=${red}/${total}×${red - 1}/${total - 1}=${p}입니다.`, `P=${red}/${total}×${red - 1}/${total - 1}=${p}.`));
+  }
+  const p = frac(red * red, total * total);
+  return make('복원추출로 공을 2번 꺼낼 때 확률을 구하세요.', `빨간 공 ${red}개, 파란 공 ${blue}개 중 복원으로 2번 꺼낼 때, 둘 다 빨간 공일 확률`, p, bi('Find the probability with replacement (independent events).', `P=(${red}/${total})²=${p}입니다.`, `P=(${red}/${total})²=${p}.`));
+}
+
 function vectorOperations(random) {
   const [x, y, magnitude] = pick(random, [[3, 4, 5], [5, 12, 13], [8, 15, 17], [7, 24, 25]]); const signX = pick(random, [-1, 1]); const signY = pick(random, [-1, 1]);
   if (random() < 0.5) return make('벡터의 크기를 구하세요.', `v=⟨${signX * x},${signY * y}⟩`, magnitude, bi('Find the magnitude of the vector.', `|v|=√(${x}²+${y}²)=${magnitude}입니다.`, `Use |v|=√(x²+y²)=${magnitude}.`));
@@ -210,6 +272,11 @@ export const PRECALCULUS_UNITS = [
   unit('precalc-ellipse-features', '이차곡선', '타원의 성질', 'Ellipse features', '평행이동된 타원의 초점·꼭짓점·이심률', 'Find the foci, vertices and eccentricity of a translated ellipse', [PC, H3G], ellipseFeaturesTranslated),
   unit('precalc-hyperbola-features', '이차곡선', '쌍곡선의 성질', 'Hyperbola features', '평행이동된 쌍곡선의 초점·꼭짓점·점근선', 'Find the foci, vertices and asymptotes of a translated hyperbola', [PC, H3G], hyperbolaFeaturesTranslated),
   unit('precalc-conic-general-form', '이차곡선', '이차곡선의 일반형과 표준형', 'Conics: general to standard form', '완전제곱식으로 일반형을 표준형으로 바꾸기', 'Complete the square to convert a general conic equation to standard form', [PC, H3G], conicGeneralForm),
+  unit('precalc-sequence-recursive', '수열', '점화식으로 정의된 수열', 'Recursively defined sequences', '점화식에서 특정 항의 값 구하기', 'Find a specific term from a recursive rule', [PC], sequenceRecursive),
+  unit('precalc-arithmetic-series-find-n', '수열', '등차수열의 합과 항의 개수', 'Arithmetic series: solve for n', '급수 공식을 이용해 항의 개수 구하기', 'Use the series sum formula to find the number of terms', [PC], arithmeticSeriesFindN),
+  unit('precalc-infinite-geometric-series', '수열', '무한등비급수', 'Infinite geometric series', '수렴하는 무한등비급수의 합 구하기', 'Find the sum of a convergent infinite geometric series', [PC], infiniteGeometricSeries),
+  unit('precalc-counting-permutations', '경우의 수', '경우의 수와 순열', 'Counting principle & permutations', '곱의 법칙과 순열의 수 구하기', 'Apply the counting principle and count permutations', [PC], countingPermutations),
+  unit('precalc-probability-events', '확률과 통계', '복원·비복원추출과 확률', 'Probability with/without replacement', '독립·종속시행의 확률 구하기', 'Find probabilities for independent and dependent events', [PC], probabilityEvents),
   unit('precalc-vectors', '벡터', '벡터의 연산', 'Vector operations', '벡터의 크기와 내적', 'Calculate vector magnitudes and dot products', [PC, H3G], vectorOperations),
   unit('precalc-law-of-sines-cosines', '삼각함수', '사인법칙과 코사인법칙', 'Law of Sines & Cosines', '변의 길이와 삼각형의 넓이 구하기', 'Find missing sides and triangle areas', [PC], lawOfSinesCosines),
   unit('precalc-transformation-matrices', '행렬', '변환행렬', 'Transformation matrices', '행렬을 이용한 평면도형의 변환', 'Apply transformation matrices', [PC], transformationMatrices),
