@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../../auth';
 import { useLanguage } from '../../language';
-import { CSAT_SUBJECTS, csatUnitTagLabel } from '../../examUnits';
+import { CSAT_SUBJECTS, csatUnitTagLabel, COMMON_MATH_SUBJECTS, commonMathUnitTagLabel } from '../../examUnits';
 import TopicWorksheetView from '../../components/TopicWorksheetView';
 import staticCsatCatalog from '../../data/csatProblemCatalog.json';
 
@@ -67,6 +67,7 @@ const FILE_TYPE_LABELS = {
 
 const EXAM_TYPE_LABELS = { june: '6월 모의고사', sept: '9월 모의고사', nov: '수능', 'city-mock': '학력평가' };
 const EXAM_TYPES = ['june', 'sept', 'nov', 'city-mock'];
+const GRADE_LABELS = { g1: '고1', g2: '고2', g3: '고3' };
 
 function fileTypeLabel(type, language) {
   const labels = FILE_TYPE_LABELS[language] || FILE_TYPE_LABELS.en;
@@ -209,11 +210,15 @@ export default function CsatUnitBrowser() {
     return counts;
   }, [problemsByUnit]);
 
-  // Manifest items by tag
+  // Manifest items by tag (both the 고3 CSAT_SUBJECTS taxonomy and the 고1 COMMON_MATH_SUBJECTS one
+  // share this map — a file's unit_tag string only ever matches one or the other).
   const itemsByTag = useMemo(() => {
     const map = new Map();
     for (const subject of CSAT_SUBJECTS) {
       for (const unit of subject.units) map.set(csatUnitTagLabel(subject, unit), []);
+    }
+    for (const subject of COMMON_MATH_SUBJECTS) {
+      for (const unit of subject.units) map.set(commonMathUnitTagLabel(subject, unit), []);
     }
     if (!manifest) return map;
     for (const examType of EXAM_TYPES) {
@@ -231,6 +236,14 @@ export default function CsatUnitBrowser() {
     for (const list of map.values()) list.sort((a, b) => b.year - a.year);
     return map;
   }, [manifest]);
+
+  // 고1/고2 업로드는 /csat/june·/csat/sept가 아니라 각자의 학년별 아카이브 페이지로 연결해야 한다.
+  function fileHref(examType, year, variant, file) {
+    const grade = file.meta?.grade;
+    if (grade === 'g1') return `/csat/grade1?examType=${examType}&year=${year}&variant=${variant.id}`;
+    if (grade === 'g2') return `/csat/grade2?examType=${examType}&year=${year}&variant=${variant.id}`;
+    return `/csat/${examType}?year=${year}&variant=${variant.id}`;
+  }
 
   function toggleCoreUnit(unitId) {
     setCoreSelectedUnitIds((current) => (current.includes(unitId) ? current.filter((id) => id !== unitId) : [...current, unitId]));
@@ -693,7 +706,54 @@ export default function CsatUnitBrowser() {
                                 items.map(({ examType, year, variant, fileType, file }) => (
                                   <a
                                     key={`${examType}-${year}-${variant.id}-${fileType}`}
-                                    href={`/csat/${examType}?year=${year}&variant=${variant.id}`}
+                                    href={fileHref(examType, year, variant, file)}
+                                    onClick={handleItemClick}
+                                    style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'var(--paper)', borderRadius: 8, textDecoration: 'none', color: 'var(--ink)' }}
+                                  >
+                                    <span>{!entitled || file.meta?.accessTier === 'premium' ? '🔒 ' : ''}{year} {EXAM_TYPE_LABELS[examType]} · {variant.label}{file.meta?.grade === 'g1' || file.meta?.grade === 'g2' ? ` · ${GRADE_LABELS[file.meta.grade]}` : ''}</span>
+                                    <span style={{ fontSize: 13, color: 'var(--ink-soft)' }}>{fileTypeLabel(fileType, language)} →</span>
+                                  </a>
+                                ))
+                              )}
+                            </div>
+                          ) : null}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
+              ))}
+
+              {/* 고1 공통수학1·2: 고3 CSAT_SUBJECTS(수학Ⅰ·Ⅱ·확통·미적분·기하)와 출제 범위가 달라 별도 섹션으로 둔다. */}
+              {COMMON_MATH_SUBJECTS.map((subject) => (
+                <section key={subject.id}>
+                  <h2 style={{ fontSize: 18, margin: '0 0 4px' }}>{subject.label} <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--ink-soft)' }}>({language === 'ko' ? '고1 공통 과목' : 'Grade 10 Common Subject'})</span></h2>
+                  <p style={{ fontSize: 12, color: 'var(--ink-soft)', margin: '0 0 10px' }}>2022개정: {subject.revised2022}</p>
+                  <div style={{ display: 'grid', gap: 10 }}>
+                    {subject.units.map((unit) => {
+                      const tag = commonMathUnitTagLabel(subject, unit);
+                      const items = itemsByTag.get(tag) || [];
+                      const openKey = `${subject.id}-${unit.id}`;
+                      const open = openFileUnit === openKey;
+                      return (
+                        <div key={unit.id} style={{ background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', overflow: 'hidden' }}>
+                          <button
+                            type="button"
+                            onClick={() => setOpenFileUnit(open ? null : openKey)}
+                            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '14px 20px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', font: 'inherit' }}
+                          >
+                            <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)' }}>{unit.label}</span>
+                            <span style={{ fontSize: 12, color: 'var(--ink-soft)', whiteSpace: 'nowrap' }}>{words.fileCount(items.length)} {open ? '▲' : '▼'}</span>
+                          </button>
+                          {open ? (
+                            <div style={{ padding: '0 20px 16px', display: 'grid', gap: 8 }}>
+                              {items.length === 0 ? (
+                                <p style={{ color: 'var(--ink-soft)', fontSize: 14, margin: 0 }}>{words.emptyFiles}</p>
+                              ) : (
+                                items.map(({ examType, year, variant, fileType, file }) => (
+                                  <a
+                                    key={`${examType}-${year}-${variant.id}-${fileType}`}
+                                    href={fileHref(examType, year, variant, file)}
                                     onClick={handleItemClick}
                                     style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'var(--paper)', borderRadius: 8, textDecoration: 'none', color: 'var(--ink)' }}
                                   >

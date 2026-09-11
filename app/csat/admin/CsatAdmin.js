@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { CSAT_SUBJECTS } from '../../examUnits';
+import { CSAT_SUBJECTS, COMMON_MATH_SUBJECTS } from '../../examUnits';
 import AiExamParser, { extractTextFromPdf, parseExamText } from '../../components/AiExamParser';
 import SubscriptionAdmin from '../../components/SubscriptionAdmin';
 import { getExamFullText } from '../../data/sampleExams';
@@ -236,6 +236,12 @@ export default function CsatAdmin() {
     setStatus(`${entryYear} ${EXAM_TYPE_LABELS[entryExamType] || entryExamType} 전체 30문항 표준 세트가 로드되었습니다.`);
   }
 
+  // 학년별로 출제 범위가 다르므로 단원 태그 선택지도 학년에 맞춰 바꾼다:
+  // 고1은 공통수학1·2, 고2는 수학Ⅰ·Ⅱ만(확통/미적분/기하는 고3 선택과목), 고3은 5과목 전체.
+  const unitTagSubjects = grade === 'g1' ? COMMON_MATH_SUBJECTS
+    : grade === 'g2' ? CSAT_SUBJECTS.filter((subject) => subject.id === 'math1' || subject.id === 'math2')
+    : CSAT_SUBJECTS;
+
   const fieldStyle = { padding: '10px 12px', border: '1px solid var(--paper-line)', borderRadius: 8, font: 'inherit', background: '#fff' };
   const labelStyle = { fontSize: 13, fontWeight: 700, color: 'var(--chalk-green)' };
 
@@ -391,7 +397,7 @@ export default function CsatAdmin() {
           <span style={labelStyle}>단원 태그 (선택)</span>
           <select value={unitTag} onChange={(event) => setUnitTag(event.target.value)} style={fieldStyle}>
             <option value="">단원 없음</option>
-            {CSAT_SUBJECTS.map((subject) => <optgroup key={subject.id} label={`${subject.label} (2022개정: ${subject.revised2022})`}>
+            {unitTagSubjects.map((subject) => <optgroup key={subject.id} label={`${subject.label} (2022개정: ${subject.revised2022})`}>
               {subject.units.map((unit) => <option key={unit.id} value={`${subject.label} · ${unit.label}`}>{unit.label}</option>)}
             </optgroup>)}
           </select>

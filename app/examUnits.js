@@ -514,3 +514,39 @@ export function flattenCsatUnits() {
     unitLabel: unit.label,
   })));
 }
+
+// 고1 공통 과목(2022개정 공통수학1·공통수학2, 구 수학(상)·수학(하)) 단원 태그.
+// 고1 학력평가(6월·9월)는 CSAT_SUBJECTS(수학Ⅰ·Ⅱ 등 고2~3 선택과목)가 아니라 이 범위를 출제하므로 별도 목록으로 둔다.
+export const COMMON_MATH_SUBJECTS = [
+  {
+    id: 'common-math-1', label: '공통수학1', labelEn: 'Common Mathematics 1', revised2022: '공통수학1',
+    units: [
+      { id: 'polynomial-ops', label: '다항식의 연산', labelEn: 'Polynomial Operations', tier: 'basic' },
+      { id: 'equations-inequalities', label: '방정식과 부등식', labelEn: 'Equations & Inequalities', tier: 'intermediate' },
+      { id: 'common-math-counting', label: '경우의 수', labelEn: 'Counting Principles', tier: 'intermediate' },
+      { id: 'matrices-intro', label: '행렬', labelEn: 'Matrices', tier: 'basic' },
+    ],
+  },
+  {
+    id: 'common-math-2', label: '공통수학2', labelEn: 'Common Mathematics 2', revised2022: '공통수학2',
+    units: [
+      { id: 'coordinate-geometry-equations', label: '도형의 방정식', labelEn: 'Equations of Figures', tier: 'intermediate' },
+      { id: 'sets-propositions', label: '집합과 명제', labelEn: 'Sets & Propositions', tier: 'basic' },
+      { id: 'functions-graphs', label: '함수와 그래프', labelEn: 'Functions & Graphs', tier: 'intermediate' },
+    ],
+  },
+];
+
+export function commonMathUnitTagLabel(subject, unit) {
+  return `${subject.label} · ${unit.label}`;
+}
+
+export function flattenCommonMathUnits() {
+  return COMMON_MATH_SUBJECTS.flatMap((subject) => subject.units.map((unit) => ({
+    value: commonMathUnitTagLabel(subject, unit),
+    subjectId: subject.id,
+    subjectLabel: subject.label,
+    unitId: unit.id,
+    unitLabel: unit.label,
+  })));
+}

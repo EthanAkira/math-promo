@@ -136,7 +136,18 @@ function ExamSection({ typeLabel, fileEntry, words }) {
   </section>;
 }
 
-export default function CsatExamArchive({ examType, label, description }) {
+// A variant "belongs" to gradeFilter if at least one of its files was tagged with that grade.
+// Older/未태그 entries (no grade set on any file) are treated as 고3 so the existing 수능 pages
+// keep showing everything they always have.
+function variantMatchesGrade(variant, gradeFilter) {
+  if (!gradeFilter) return true;
+  const files = Object.values(variant.files || {});
+  const taggedGrades = files.map((file) => file.meta?.grade).filter(Boolean);
+  if (taggedGrades.length === 0) return gradeFilter === 'g3';
+  return taggedGrades.includes(gradeFilter);
+}
+
+export default function CsatExamArchive({ examType, label, description, gradeFilter = null }) {
   const { language } = useLanguage();
   const words = COPY[language] || COPY.en;
   const [manifest, setManifest] = useState(null);
@@ -182,7 +193,12 @@ export default function CsatExamArchive({ examType, label, description }) {
     return () => { cancelled = true; };
   }, []);
 
-  const years = manifest ? [...(manifest[examType] || [])].sort((a, b) => b.year - a.year) : [];
+  const years = manifest
+    ? [...(manifest[examType] || [])]
+      .map((entry) => ({ ...entry, variants: entry.variants.filter((variant) => variantMatchesGrade(variant, gradeFilter)) }))
+      .filter((entry) => entry.variants.length > 0)
+      .sort((a, b) => b.year - a.year)
+    : [];
 
   function openEntry(year, variantId) {
     setSelectedKey(`${year}:${variantId}`);
@@ -260,7 +276,8 @@ export default function CsatExamArchive({ examType, label, description }) {
   }, [examType, selectedEntry?.year, selectedVariant?.id, selectedVariant?.files?.problems?.key]);
 
   if (status === 'ready' && selectedEntry && selectedVariant) {
-    const allTypes = Object.keys(selectedVariant.files);
+    const variantFiles = selectedVariant.files || {};
+    const allTypes = Object.keys(variantFiles);
     const fileTypes = [
       ...FILE_ORDER.filter((type) => allTypes.includes(type)),
       ...allTypes.filter((type) => type.startsWith('solutions__')),
@@ -356,7 +373,9 @@ export default function CsatExamArchive({ examType, label, description }) {
     { year: 2023, variant: { id: 'odd', label: '홀수형 (공통+선택)', files: {} } },
   ];
   const manifestSessions = years.flatMap((entry) => entry.variants.map((variant) => ({ year: entry.year, variant })));
-  const sessions = manifestSessions.length > 0 ? manifestSessions : defaultSessions;
+  // The 고3-shaped placeholder session only makes sense on the ungated 수능 pages — a 고1/고2
+  // archive with nothing uploaded yet should say so honestly rather than show a fake 수능 demo.
+  const sessions = manifestSessions.length > 0 ? manifestSessions : (gradeFilter ? [] : defaultSessions);
 
   return <>
     <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 6 }}>
