@@ -551,6 +551,27 @@ const zhHK = {
   // -------------------------------------------------------------
   'applied-grade8-semester-two-final-exam': '中學二年級第二學期（國二下）全範圍實戰總結測驗',
 
+  // -------------------------------------------------------------
+  // [중3-2 삼각비·원의 성질·통계] Grade 9 Semester 2 Basics & Applied
+  // -------------------------------------------------------------
+  'applied-g9s2-trig-concept': '直角三角形中的銳角三角比',
+  'applied-g9s2-trig-special-angles': '特殊角的三角比',
+  'applied-g9s2-trig-apps-length': '三角比的應用（求邊長與距離）',
+  'applied-g9s2-trig-apps-height': '三角比的應用（高度與仰角俯角）',
+  'applied-g9s2-trig-apps-tri-area': '三角形面積與正弦定理基礎',
+  'applied-g9s2-circle-chord-bisector': '圓心至弦之垂線與垂直平分線',
+  'applied-g9s2-circle-chord-distance': '等弦與弦心距性質',
+  'applied-g9s2-circle-tangent-length': '圓外一點至圓之切線長',
+  'applied-g9s2-circle-circum-quad': '圓外切四邊形之對邊和',
+  'applied-g9s2-angle-central-ratio': '圓心角與圓周角關係',
+  'applied-g9s2-angle-diameter-right': '直徑所對之圓周角與直角',
+  'applied-g9s2-angle-cyclic-quad': '圓內接四邊形對角互補',
+  'applied-g9s2-angle-tangent-chord': '弦切角與圓周角',
+  'applied-g9s2-stats-mean-median-mode': '集中趨勢之度量（平均數、中位數、眾數）',
+  'applied-g9s2-stats-variance-deviation': '離差之度量（方差與標準差）',
+  'applied-g9s2-scatter-direction': '散布圖之分布與相關方向',
+  'applied-g9s2-scatter-region-analysis': '散布圖區域計數與相關性分析',
+
 
 
 

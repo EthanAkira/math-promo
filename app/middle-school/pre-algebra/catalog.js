@@ -845,8 +845,8 @@ const SOURCE_GROUPS = [
   ['문자와 식', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], [...ALGEBRA_UNITS, ...RPM_ALGEBRA_APPLIED_UNITS]],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], COORDINATE_UNITS],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'algebra-1'], PROPORTION_UNITS],
-  ['중3-1 실전 응용', ['pre-algebra', 'kr-middle-3'], ALL_GRADE9_ALGEBRA_APPLIED_UNITS],
-  ['중3-2 실전 응용', ['pre-algebra', 'kr-middle-3'], ALL_GRADE9_SEMESTER2_APPLIED_UNITS],
+  ['중3-1 실전 응용', ['pre-algebra', 'kr-middle-3', 'algebra-1'], ALL_GRADE9_ALGEBRA_APPLIED_UNITS],
+  ['중3-2 실전 응용', ['pre-algebra', 'kr-middle-3', 'algebra-1'], ALL_GRADE9_SEMESTER2_APPLIED_UNITS],
 ];
 
 const IMPORTED_UNITS = SOURCE_GROUPS.flatMap(([category, profiles, units]) => units.map((unit) => ({ ...unit, category, profiles })));
