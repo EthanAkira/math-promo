@@ -154,8 +154,18 @@ function renderStage(stage, copy, { openByDefault = false, extraClassName = '' }
   );
 }
 
+// When a user picks a country-specific curriculum, default the site language to that
+// country's language so problem/label text matches what they'd expect — they can still
+// switch to any other language afterward via the language switcher at any time.
+const COUNTRY_LANGUAGE = {
+  japan: 'ja', taiwan: 'zh-TW', hongkong: 'zh-HK',
+  singapore: 'en-SG', malaysia: 'en', vietnam: 'vi',
+  india: 'en',
+  usa: 'en', australia: 'en', uk: 'en', canada: 'en', newzealand: 'en',
+};
+
 export default function CurriculumExplorer() {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const [activeTab, setActiveTab] = useState(() => (language === 'ko' ? 'korea' : 'courses'));
   const [krSubView, setKrSubView] = useState('grade'); // 'grade' | 'subject2022'
   const [eastAsiaCountry, setEastAsiaCountry] = useState('japan'); // 'japan' | 'taiwan' | 'hongkong'
@@ -190,6 +200,7 @@ export default function CurriculumExplorer() {
     try {
       window.sessionStorage.setItem('math-curriculum-tab', tabId);
     } catch {}
+    if (tabId === 'korea') setLanguage('ko');
   };
 
   const tabs = useMemo(
@@ -477,7 +488,7 @@ export default function CurriculumExplorer() {
                     type="button"
                     key={country}
                     className={`subview-btn ${eastAsiaCountry === country ? 'active' : ''}`}
-                    onClick={() => setEastAsiaCountry(country)}
+                    onClick={() => { setEastAsiaCountry(country); setLanguage(COUNTRY_LANGUAGE[country]); }}
                   >
                     <strong>{copy.eastAsiaCountries[country]}</strong>
                   </button>
@@ -506,7 +517,7 @@ export default function CurriculumExplorer() {
                     type="button"
                     key={country}
                     className={`subview-btn ${southeastAsiaCountry === country ? 'active' : ''}`}
-                    onClick={() => setSoutheastAsiaCountry(country)}
+                    onClick={() => { setSoutheastAsiaCountry(country); setLanguage(COUNTRY_LANGUAGE[country]); }}
                   >
                     <strong>{copy.southeastAsiaCountries[country]}</strong>
                   </button>
@@ -535,7 +546,7 @@ export default function CurriculumExplorer() {
                     type="button"
                     key={country}
                     className={`subview-btn ${southAsiaCountry === country ? 'active' : ''}`}
-                    onClick={() => setSouthAsiaCountry(country)}
+                    onClick={() => { setSouthAsiaCountry(country); setLanguage(COUNTRY_LANGUAGE[country]); }}
                   >
                     <strong>{copy.southAsiaCountries[country]}</strong>
                   </button>
@@ -559,7 +570,7 @@ export default function CurriculumExplorer() {
             <div className="curriculum-subview-bar">
               <div className="subview-toggle-group country-toggle-group" role="group" aria-label="영어권 국가 교육과정 선택">
                 {['usa', 'australia', 'uk', 'canada', 'newzealand'].map((country) => (
-                  <button type="button" key={country} className={`subview-btn ${englishSpeakingCountry === country ? 'active' : ''}`} onClick={() => setEnglishSpeakingCountry(country)}>
+                  <button type="button" key={country} className={`subview-btn ${englishSpeakingCountry === country ? 'active' : ''}`} onClick={() => { setEnglishSpeakingCountry(country); setLanguage(COUNTRY_LANGUAGE[country]); }}>
                     <strong>{englishSpeakingLabels[country]}</strong>
                   </button>
                 ))}
