@@ -24,6 +24,7 @@ export default function TopicWorksheetView({
   const [userAnswers, setUserAnswers] = useState({});
   const [gradedRounds, setGradedRounds] = useState({});
   const [expandAllSolutions, setExpandAllSolutions] = useState(false);
+  const [allScratchpadOpen, setAllScratchpadOpen] = useState(false);
 
   const totalCount = problems.length;
 
@@ -477,6 +478,27 @@ export default function TopicWorksheetView({
             >
               📖 {language === 'ko' ? '해설 함께 보기' : 'Study with Solutions'}
             </button>
+            <button
+              type="button"
+              onClick={() => setAllScratchpadOpen((v) => !v)}
+              style={{
+                padding: '6px 12px',
+                borderRadius: 8,
+                fontSize: 12,
+                fontWeight: 700,
+                border: '1.5px solid var(--gold, #c99a3e)',
+                background: allScratchpadOpen ? 'var(--gold, #c99a3e)' : 'transparent',
+                color: allScratchpadOpen ? '#ffffff' : 'var(--ink, #374151)',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 5,
+              }}
+              title={language === 'ko' ? '태블릿 연습장 전체 열기/닫기' : 'Toggle scratchpads on all problems'}
+            >
+              <span>✍️</span>
+              <span>{allScratchpadOpen ? (language === 'ko' ? '연습장 전체 닫기' : 'Hide Notes') : (language === 'ko' ? '태블릿 연습장' : 'Scratchpad')}</span>
+            </button>
           </div>
         </div>
 
@@ -656,6 +678,7 @@ export default function TopicWorksheetView({
                   showResult={isRoundGraded}
                   language={language}
                   forceSolutionOpen={expandAllSolutions || mode === 'study'}
+                  forceScratchpadOpen={allScratchpadOpen}
                 />
               </div>
             );

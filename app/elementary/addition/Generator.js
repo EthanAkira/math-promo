@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
+import ProblemScratchpad from '../../components/ProblemScratchpad';
 
 const LEVELS = [
   {
@@ -92,6 +93,7 @@ export default function Generator() {
   const [checked, setChecked] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState('');
   const [ready, setReady] = useState(false);
+  const [tabletMode, setTabletMode] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -154,6 +156,14 @@ export default function Generator() {
           <p>{level.description}</p>
         </div>
         <div className="control-actions">
+          <button
+            type="button"
+            className={`button button-secondary tablet-toggle-btn${tabletMode ? ' active' : ''}`}
+            onClick={() => setTabletMode((v) => !v)}
+            title="태블릿 연습장 모드"
+          >
+            ✍️ {tabletMode ? '태블릿 모드 ON' : '태블릿 연습장'}
+          </button>
           <button className="button button-secondary" onClick={() => window.print()}>인쇄 / PDF</button>
           <button className="button button-secondary" onClick={() => changeView(view === 'problems' ? 'answers' : 'problems')}>
             {view === 'problems' ? '답지 보기' : '문제지 보기'}
@@ -196,6 +206,7 @@ export default function Generator() {
                   </span>
                 </div>
                 {checked && view === 'problems' && hasAnswer ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{isCorrect ? '맞았어요' : '다시 풀기'}</span> : null}
+                <ProblemScratchpad problemId={problem.id} seed={seed} language="ko" forceOpen={tabletMode} />
               </article>
             );
           })}
@@ -205,8 +216,17 @@ export default function Generator() {
       </div>
 
       {view === 'problems' ? <section className="grading-panel no-print">
-        <div><strong>태블릿으로 바로 풀기</strong><p>답 칸을 누르면 숫자 키보드가 열립니다. Apple Pencil의 손글씨 입력도 사용할 수 있어요.</p></div>
-        <button className="button button-primary" onClick={() => setChecked(true)}>채점하기</button>
+        <div><strong>태블릿으로 바로 풀기</strong><p>답 칸을 누르면 숫자 키보드가 열립니다. 펜슬 및 스타일러스로 각 문제의 ✍️ 연습장에 풀이할 수 있어요.</p></div>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <button
+            type="button"
+            className={`button button-secondary tablet-toggle-btn${tabletMode ? ' active' : ''}`}
+            onClick={() => setTabletMode((v) => !v)}
+          >
+            ✍️ {tabletMode ? '연습장 전체 닫기' : '연습장 전체 열기'}
+          </button>
+          <button className="button button-primary" onClick={() => setChecked(true)}>채점하기</button>
+        </div>
         {checked ? <strong className="score">{PROBLEM_COUNT}문제 중 {correctCount}문제 정답</strong> : null}
       </section> : null}
     </div>

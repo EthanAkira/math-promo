@@ -7,7 +7,7 @@ import { hasProblemVisual, ProblemVisual } from './ElementaryVisuals';
 import { useLanguage } from '../../language';
 import { useAuth } from '../../auth';
 import { isNonKorean, tr } from '../../i18n';
-import NoteCanvas from '../../components/NoteCanvas';
+import ProblemScratchpad from '../../components/ProblemScratchpad';
 import MathText from '../../components/MathText';
 import { recordAttempts } from '../../lib/submissions';
 
@@ -110,7 +110,7 @@ export default function PracticeGenerator() {
   const [checked, setChecked] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState('');
   const [ready, setReady] = useState(false);
-  const [openNotes, setOpenNotes] = useState(() => new Set());
+  const [tabletMode, setTabletMode] = useState(false);
 
   const toggleNote = useCallback((problemId) => {
     setOpenNotes((current) => {
@@ -149,7 +149,7 @@ export default function PracticeGenerator() {
   }, []);
 
   function resetWork(nextSeed, nextGrade = gradeId, nextUnit = unitId) {
-    setSeed(nextSeed); setGradeId(nextGrade); setUnitId(nextUnit); setView('problems'); setAnswers({}); setChecked(false); setOpenNotes(new Set());
+    setSeed(nextSeed); setGradeId(nextGrade); setUnitId(nextUnit); setView('problems'); setAnswers({}); setChecked(false);
     replaceUrl(nextSeed, nextGrade, nextUnit, 'problems');
   }
 
@@ -186,7 +186,19 @@ export default function PracticeGenerator() {
 
     <section className="worksheet-controls no-print" aria-label={tr(language, 'worksheetSettings')}>
       <div><label htmlFor="practice-unit">{en ? `${gradeLabel} topic` : `${gradeLabel} 단원`}</label><select id="practice-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>{grade.units.map((item) => <option key={item.id} value={item.id}>{localizeUnit(item, language)}</option>)}</select><p>{unitDescription}</p></div>
-      <div className="control-actions"><button className="button button-secondary" onClick={() => window.print()}>{tr(language, 'printPdf')}</button><button className="button button-secondary" onClick={() => changeView(view === 'problems' ? 'answers' : 'problems')}>{tr(language, view === 'problems' ? 'answerKey' : 'worksheet')}</button><button className="button button-primary" onClick={() => resetWork(createSeed())}>{tr(language, 'newWorksheet')}</button></div>
+      <div className="control-actions">
+        <button
+          type="button"
+          className={`button button-secondary tablet-toggle-btn${tabletMode ? ' active' : ''}`}
+          onClick={() => setTabletMode((v) => !v)}
+          title={en ? 'Toggle tablet scratchpad mode' : '태블릿 연습장 모드'}
+        >
+          ✍️ {tabletMode ? (en ? 'Tablet Mode ON' : '태블릿 모드 ON') : (en ? 'Tablet Scratchpad' : '태블릿 연습장')}
+        </button>
+        <button className="button button-secondary" onClick={() => window.print()}>{tr(language, 'printPdf')}</button>
+        <button className="button button-secondary" onClick={() => changeView(view === 'problems' ? 'answers' : 'problems')}>{tr(language, view === 'problems' ? 'answerKey' : 'worksheet')}</button>
+        <button className="button button-primary" onClick={() => resetWork(createSeed())}>{tr(language, 'newWorksheet')}</button>
+      </div>
     </section>
 
     <div className={`worksheet-paper ${view === 'answers' ? 'answer-sheet' : ''}`}>
@@ -196,24 +208,37 @@ export default function PracticeGenerator() {
         {problems.map((problem) => {
           const isCorrect = normalizeAnswer(answers[problem.id]) === normalizeAnswer(problem.answer);
           const hasAnswer = answers[problem.id] !== undefined && answers[problem.id] !== '';
-          const noteOpen = view === 'problems' && openNotes.has(problem.id);
-          const noteKey = `dll-note:${seed}:${unit.id}:${problem.id}`;
           return (
-            <Fragment key={problem.id}>
-              <article className={`vertical-problem ${problem.kind === 'inline' ? 'inline-problem' : ''} ${problem.kind === 'word' ? 'word-problem' : ''} ${hasProblemVisual(problem) ? 'graphic-problem' : ''}`}>
-                <span className="problem-number">{problem.id}</span>
-                <ProblemBody problem={problem} view={view} value={answers[problem.id]} checked={checked} onChange={handleAnswer} language={language} />
-                {checked && view === 'problems' && hasAnswer ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{isCorrect ? (en ? 'Correct' : '맞았어요') : (en ? 'Try again' : '다시 풀기')}</span> : null}
-                {view === 'problems' ? <button type="button" className="note-toggle no-print" onClick={() => toggleNote(problem.id)}>{tr(language, noteOpen ? 'noteToggleClose' : 'noteToggleOpen')}</button> : null}
-              </article>
-              {noteOpen ? <div className="note-canvas-slot no-print"><NoteCanvas storageKey={noteKey} open={noteOpen} /></div> : null}
-            </Fragment>
+            <article className={`vertical-problem ${problem.kind === 'inline' ? 'inline-problem' : ''} ${problem.kind === 'word' ? 'word-problem' : ''} ${hasProblemVisual(problem) ? 'graphic-problem' : ''}`} key={problem.id}>
+              <span className="problem-number">{problem.id}</span>
+              <ProblemBody problem={problem} view={view} value={answers[problem.id]} checked={checked} onChange={handleAnswer} language={language} />
+              {checked && view === 'problems' && hasAnswer ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{isCorrect ? (en ? 'Correct' : '맞았어요') : (en ? 'Try again' : '다시 풀기')}</span> : null}
+              {view === 'problems' ? (
+                <ProblemScratchpad problemId={problem.id} seed={`${gradeId}:${unitId}:${seed}`} language={language} forceOpen={tabletMode} />
+              ) : null}
+            </article>
           );
         })}
       </section>
       <footer className="worksheet-footer"><span className="worksheet-signature">Built &amp; Designed by Chae</span><span>{tr(language, 'dailyLab')}</span><span>{seed} · {gradeLabel} · {unitLabel}</span></footer>
     </div>
 
-    {view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{en ? 'Enter fractions as 7/3 or 2 1/3. Use R for a remainder.' : '분수는 7/3 또는 2 1/3, 나머지는 R로 입력하세요.'}</p></div><button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
+    {view === 'problems' ? <section className="grading-panel no-print">
+      <div>
+        <strong>{tr(language, 'solveTablet')}</strong>
+        <p>{en ? 'Enter fractions as 7/3 or 2 1/3. Use R for a remainder. Use scratchpad for calculations.' : '분수는 7/3 또는 2 1/3, 나머지는 R로 입력하세요. 태블릿 ✍️ 연습장에 풀이할 수 있습니다.'}</p>
+      </div>
+      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <button
+          type="button"
+          className={`button button-secondary tablet-toggle-btn${tabletMode ? ' active' : ''}`}
+          onClick={() => setTabletMode((v) => !v)}
+        >
+          ✍️ {tabletMode ? (en ? 'Hide All Scratchpads' : '연습장 전체 닫기') : (en ? 'Open All Scratchpads' : '연습장 전체 열기')}
+        </button>
+        <button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>
+      </div>
+      {checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}
+    </section> : null}
   </div>;
 }

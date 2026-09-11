@@ -1,3 +1,5 @@
+import { ALL_GRADE9_ALGEBRA_APPLIED_UNITS } from './grade9AlgebraEngine.js';
+import { ALL_GRADE9_SEMESTER2_APPLIED_UNITS } from './grade9Semester2Engine.js';
 import { PRIME_BASIC_UNITS } from '../prime-factorization/catalog';
 import { GCD_LCM_BASIC_UNITS } from '../gcd-lcm/catalog';
 import { INTEGER_RATIONAL_UNITS, RPM_RATIONAL_DECIMALS_APPLIED_UNITS } from '../integers-rationals/catalog';
@@ -794,34 +796,57 @@ export const RPM_GRADE8_SEMESTER_TWO_FINAL_MOCK_UNITS = [
 
 
 
+export const APPLIED_MONOMIALS_APPLIED_UNITS = RPM_MONOMIALS_APPLIED_UNITS;
+export const APPLIED_POLYNOMIALS_APPLIED_UNITS = RPM_POLYNOMIALS_APPLIED_UNITS;
+export const APPLIED_LINEAR_INEQUALITIES_APPLIED_UNITS = RPM_LINEAR_INEQUALITIES_APPLIED_UNITS;
+export const APPLIED_INEQUALITY_APPS_APPLIED_UNITS = RPM_INEQUALITY_APPS_APPLIED_UNITS;
+export const APPLIED_SYSTEMS_LINEAR_APPLIED_UNITS = RPM_SYSTEMS_LINEAR_APPLIED_UNITS;
+export const APPLIED_SYSTEMS_APPS_APPLIED_UNITS = RPM_SYSTEMS_APPS_APPLIED_UNITS;
+export const APPLIED_LINEAR_FUNCTIONS_APPLIED_UNITS = RPM_LINEAR_FUNCTIONS_APPLIED_UNITS;
+export const APPLIED_LINEAR_EQUATIONS_GRAPHS_APPLIED_UNITS = RPM_LINEAR_EQUATIONS_GRAPHS_APPLIED_UNITS;
+export const APPLIED_GRADE8_FINAL_MOCK_UNITS = RPM_GRADE8_FINAL_MOCK_UNITS;
+export const APPLIED_ISOSCELES_TRIANGLES_APPLIED_UNITS = RPM_ISOSCELES_TRIANGLES_APPLIED_UNITS;
+export const APPLIED_CIRCUM_INCENTER_APPLIED_UNITS = RPM_CIRCUM_INCENTER_APPLIED_UNITS;
+export const APPLIED_PARALLELOGRAM_APPLIED_UNITS = RPM_PARALLELOGRAM_APPLIED_UNITS;
+export const APPLIED_SPECIAL_QUADS_APPLIED_UNITS = RPM_SPECIAL_QUADS_APPLIED_UNITS;
+export const APPLIED_SIMILARITY_APPLIED_UNITS = RPM_SIMILARITY_APPLIED_UNITS;
+export const APPLIED_PARALLEL_SEGMENTS_APPLIED_UNITS = RPM_PARALLEL_SEGMENTS_APPLIED_UNITS;
+export const APPLIED_CENTROID_APPLIED_UNITS = RPM_CENTROID_APPLIED_UNITS;
+export const APPLIED_PYTHAGOREAN_APPLIED_UNITS = RPM_PYTHAGOREAN_APPLIED_UNITS;
+export const APPLIED_CASES_APPLIED_UNITS = RPM_CASES_APPLIED_UNITS;
+export const APPLIED_PROBABILITY_APPLIED_UNITS = RPM_PROBABILITY_APPLIED_UNITS;
+export const APPLIED_GRADE8_SEMESTER_TWO_FINAL_MOCK_UNITS = RPM_GRADE8_SEMESTER_TWO_FINAL_MOCK_UNITS;
+
 const SOURCE_GROUPS = [
   ['수와 연산', ['pre-algebra', 'kr-middle-1'], PRIME_BASIC_UNITS],
   ['수와 연산', ['pre-algebra', 'kr-middle-1'], GCD_LCM_BASIC_UNITS],
   ['수와 연산', ['pre-algebra', 'kr-middle-1'], INTEGER_RATIONAL_UNITS],
   ['유리수와 순환소수', ['pre-algebra', 'kr-middle-2'], RPM_RATIONAL_DECIMALS_APPLIED_UNITS],
-  ['단항식의 계산', ['pre-algebra', 'kr-middle-2', 'algebra-1'], RPM_MONOMIALS_APPLIED_UNITS],
-  ['다항식의 계산', ['pre-algebra', 'kr-middle-2', 'algebra-1'], RPM_POLYNOMIALS_APPLIED_UNITS],
-  ['일차부등식', ['pre-algebra', 'kr-middle-2', 'algebra-1'], RPM_LINEAR_INEQUALITIES_APPLIED_UNITS],
-  ['일차부등식의 활용', ['pre-algebra', 'kr-middle-2', 'algebra-1'], RPM_INEQUALITY_APPS_APPLIED_UNITS],
-  ['연립일차방정식', ['pre-algebra', 'kr-middle-2', 'algebra-1'], RPM_SYSTEMS_LINEAR_APPLIED_UNITS],
-  ['연립일차방정식의 활용', ['pre-algebra', 'kr-middle-2', 'algebra-1'], RPM_SYSTEMS_APPS_APPLIED_UNITS],
-  ['일차함수와 그래프', ['pre-algebra', 'kr-middle-2', 'algebra-1'], RPM_LINEAR_FUNCTIONS_APPLIED_UNITS],
-  ['일차함수와 일차방정식', ['pre-algebra', 'kr-middle-2', 'algebra-1'], RPM_LINEAR_EQUATIONS_GRAPHS_APPLIED_UNITS],
-  ['중2-1 총괄 모의고사', ['pre-algebra', 'kr-middle-2'], RPM_GRADE8_FINAL_MOCK_UNITS],
-  ['이등변삼각형', ['pre-algebra', 'kr-middle-2'], RPM_ISOSCELES_TRIANGLES_APPLIED_UNITS],
-  ['삼각형의 외심과 내심', ['pre-algebra', 'kr-middle-2'], RPM_CIRCUM_INCENTER_APPLIED_UNITS],
-  ['평행사변형', ['pre-algebra', 'kr-middle-2'], RPM_PARALLELOGRAM_APPLIED_UNITS],
-  ['여러 가지 사각형', ['pre-algebra', 'kr-middle-2'], RPM_SPECIAL_QUADS_APPLIED_UNITS],
-  ['도형의 닮음', ['pre-algebra', 'kr-middle-2'], RPM_SIMILARITY_APPLIED_UNITS],
-  ['평행선과 선분의 길이의 비', ['pre-algebra', 'kr-middle-2'], RPM_PARALLEL_SEGMENTS_APPLIED_UNITS],
-  ['삼각형의 무게중심', ['pre-algebra', 'kr-middle-2'], RPM_CENTROID_APPLIED_UNITS],
-  ['피타고라스 정리', ['pre-algebra', 'kr-middle-2'], RPM_PYTHAGOREAN_APPLIED_UNITS],
-  ['경우의 수', ['pre-algebra', 'kr-middle-2'], RPM_CASES_APPLIED_UNITS],
-  ['확률과 그 계산', ['pre-algebra', 'kr-middle-2'], RPM_PROBABILITY_APPLIED_UNITS],
-  ['중2-2 총괄 모의고사', ['pre-algebra', 'kr-middle-2'], RPM_GRADE8_SEMESTER_TWO_FINAL_MOCK_UNITS],
+  ['단항식의 계산', ['pre-algebra', 'kr-middle-2', 'algebra-1'], APPLIED_MONOMIALS_APPLIED_UNITS],
+  ['다항식의 계산', ['pre-algebra', 'kr-middle-2', 'algebra-1'], APPLIED_POLYNOMIALS_APPLIED_UNITS],
+  ['일차부등식', ['pre-algebra', 'kr-middle-2', 'algebra-1'], APPLIED_LINEAR_INEQUALITIES_APPLIED_UNITS],
+  ['일차부등식의 활용', ['pre-algebra', 'kr-middle-2', 'algebra-1'], APPLIED_INEQUALITY_APPS_APPLIED_UNITS],
+  ['연립일차방정식', ['pre-algebra', 'kr-middle-2', 'algebra-1'], APPLIED_SYSTEMS_LINEAR_APPLIED_UNITS],
+  ['연립일차방정식의 활용', ['pre-algebra', 'kr-middle-2', 'algebra-1'], APPLIED_SYSTEMS_APPS_APPLIED_UNITS],
+  ['일차함수와 그래프', ['pre-algebra', 'kr-middle-2', 'algebra-1'], APPLIED_LINEAR_FUNCTIONS_APPLIED_UNITS],
+  ['일차함수와 일차방정식', ['pre-algebra', 'kr-middle-2', 'algebra-1'], APPLIED_LINEAR_EQUATIONS_GRAPHS_APPLIED_UNITS],
+  ['중2-1 총괄 모의고사', ['pre-algebra', 'kr-middle-2'], APPLIED_GRADE8_FINAL_MOCK_UNITS],
+  ['이등변삼각형', ['pre-algebra', 'kr-middle-2'], APPLIED_ISOSCELES_TRIANGLES_APPLIED_UNITS],
+  ['삼각형의 외심과 내심', ['pre-algebra', 'kr-middle-2'], APPLIED_CIRCUM_INCENTER_APPLIED_UNITS],
+  ['평행사변형', ['pre-algebra', 'kr-middle-2'], APPLIED_PARALLELOGRAM_APPLIED_UNITS],
+  ['여러 가지 사각형', ['pre-algebra', 'kr-middle-2'], APPLIED_SPECIAL_QUADS_APPLIED_UNITS],
+  ['도형의 닮음', ['pre-algebra', 'kr-middle-2'], APPLIED_SIMILARITY_APPLIED_UNITS],
+  ['평행선과 선분의 길이의 비', ['pre-algebra', 'kr-middle-2'], APPLIED_PARALLEL_SEGMENTS_APPLIED_UNITS],
+  ['삼각형의 무게중심', ['pre-algebra', 'kr-middle-2'], APPLIED_CENTROID_APPLIED_UNITS],
+  ['피타고라스 정리', ['pre-algebra', 'kr-middle-2'], APPLIED_PYTHAGOREAN_APPLIED_UNITS],
+  ['경우의 수', ['pre-algebra', 'kr-middle-2'], APPLIED_CASES_APPLIED_UNITS],
+  ['확률과 그 계산', ['pre-algebra', 'kr-middle-2'], APPLIED_PROBABILITY_APPLIED_UNITS],
+  ['중2-2 총괄 모의고사', ['pre-algebra', 'kr-middle-2'], APPLIED_GRADE8_SEMESTER_TWO_FINAL_MOCK_UNITS],
   ['문자와 식', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], [...ALGEBRA_UNITS, ...RPM_ALGEBRA_APPLIED_UNITS]],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'kr-middle-2', 'algebra-1'], COORDINATE_UNITS],
   ['좌표와 관계', ['pre-algebra', 'kr-middle-1', 'algebra-1'], PROPORTION_UNITS],
+  ['중3-1 실전 응용', ['pre-algebra', 'kr-middle-3'], ALL_GRADE9_ALGEBRA_APPLIED_UNITS],
+  ['중3-2 실전 응용', ['pre-algebra', 'kr-middle-3'], ALL_GRADE9_SEMESTER2_APPLIED_UNITS],
 ];
 
 const IMPORTED_UNITS = SOURCE_GROUPS.flatMap(([category, profiles, units]) => units.map((unit) => ({ ...unit, category, profiles })));
@@ -1107,6 +1132,82 @@ const UNIT_TIERS = {
   'rpm-g8-pythagorean-semicircle-hippocrates': 'intermediate',
   'rpm-g8-pythagorean-all-types-mixed': 'advanced',
   'rpm-g8-pythagorean-advanced-skill-up': 'advanced',
+
+  // Middle School 3-1 (Grade 9 Semester 1)
+  'applied-g9-radicals-real-concept': 'basic',
+  'applied-g9-radicals-real-sign': 'intermediate',
+  'applied-g9-radicals-real-natural': 'intermediate',
+  'applied-g9-radicals-real-compare': 'basic',
+  'applied-g9-radicals-real-approx': 'intermediate',
+  'applied-g9-radicals-real-all-mixed': 'advanced',
+  'applied-g9-radical-ops-mult-div': 'basic',
+  'applied-g9-radical-ops-rationalize': 'basic',
+  'applied-g9-radical-ops-add-sub': 'basic',
+  'applied-g9-radical-ops-geometry': 'intermediate',
+  'applied-g9-radical-ops-all-mixed': 'advanced',
+  'applied-g9-poly-mult-square': 'basic',
+  'applied-g9-poly-mult-diff-squares': 'basic',
+  'applied-g9-poly-mult-num-calc': 'intermediate',
+  'applied-g9-poly-mult-transform': 'intermediate',
+  'applied-g9-poly-mult-all-mixed': 'advanced',
+  'applied-g9-factor-perfect-square': 'basic',
+  'applied-g9-factor-trinomial': 'basic',
+  'applied-g9-factor-num-calc': 'intermediate',
+  'applied-g9-factor-sub-val': 'intermediate',
+  'applied-g9-factorization-all-mixed': 'advanced',
+  'applied-g9-quad-given-root': 'basic',
+  'applied-g9-quad-double-root': 'basic',
+  'applied-g9-quad-square-root-form': 'basic',
+  'applied-g9-quad-formula': 'intermediate',
+  'applied-g9-quad-solve-all-mixed': 'advanced',
+  'applied-g9-quad-app-numbers': 'intermediate',
+  'applied-g9-quad-app-geometry': 'intermediate',
+  'applied-g9-quad-app-road': 'intermediate',
+  'applied-g9-quad-app-projectile': 'intermediate',
+  'applied-g9-quad-app-all-mixed': 'advanced',
+  'applied-g9-quad-func-basic-props': 'basic',
+  'applied-g9-quad-func-translation': 'intermediate',
+  'applied-g9-quad-func-signs': 'intermediate',
+  'applied-g9-quad-func-graph-all-mixed': 'advanced',
+  'applied-g9-quad-func-standard-form': 'basic',
+  'applied-g9-quad-func-find-eqn': 'intermediate',
+  'applied-g9-quad-func-triangle-area': 'advanced',
+  'applied-g9-quad-func-std-all-mixed': 'advanced',
+  'applied-g9-advanced-skill-up': 'advanced',
+  'applied-grade9-semester-one-final-exam': 'advanced',
+
+  // Middle School 3-2 (Grade 9 Semester 2)
+  'applied-g9s2-trig-concept': 'basic',
+  'applied-g9s2-trig-similarity': 'intermediate',
+  'applied-g9s2-trig-linear-eqn': 'intermediate',
+  'applied-g9s2-trig-special-angles': 'basic',
+  'applied-g9s2-trig-quadrant-table': 'intermediate',
+  'applied-g9s2-trig-compare-roots': 'advanced',
+  'applied-g9s2-trig-ratios-all-mixed': 'advanced',
+  'applied-g9s2-trig-apps-length': 'basic',
+  'applied-g9s2-trig-apps-height': 'intermediate',
+  'applied-g9s2-trig-apps-tri-area': 'intermediate',
+  'applied-g9s2-trig-apps-quad-area': 'intermediate',
+  'applied-g9s2-trig-apps-all-mixed': 'advanced',
+  'applied-g9s2-circle-chord-bisector': 'basic',
+  'applied-g9s2-circle-chord-distance': 'basic',
+  'applied-g9s2-circle-tangent-length': 'intermediate',
+  'applied-g9s2-circle-circum-quad': 'intermediate',
+  'applied-g9s2-circle-lines-all-mixed': 'advanced',
+  'applied-g9s2-angle-central-ratio': 'basic',
+  'applied-g9s2-angle-diameter-right': 'basic',
+  'applied-g9s2-angle-cyclic-quad': 'intermediate',
+  'applied-g9s2-angle-tangent-chord': 'intermediate',
+  'applied-g9s2-inscribed-angles-all-mixed': 'advanced',
+  'applied-g9s2-stats-mean-median-mode': 'basic',
+  'applied-g9s2-stats-variance-deviation': 'intermediate',
+  'applied-g9s2-stats-sum-of-squares': 'advanced',
+  'applied-g9s2-stats-variation-all-mixed': 'advanced',
+  'applied-g9s2-scatter-direction': 'basic',
+  'applied-g9s2-scatter-region-analysis': 'intermediate',
+  'applied-g9s2-scatter-correlation-all-mixed': 'advanced',
+  'applied-g9s2-advanced-skill-up': 'advanced',
+  'applied-grade9-semester-two-final-exam': 'advanced',
 
 
 

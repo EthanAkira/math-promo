@@ -16,8 +16,17 @@ export default function InteractiveProblemCard({
   showResult = false,
   language = 'ko',
   forceSolutionOpen = false,
+  forceScratchpadOpen = undefined,
 }) {
-  const [scratchpadOpen, setScratchpadOpen] = useState(false);
+  const [userToggledScratchpad, setUserToggledScratchpad] = useState(null);
+
+  useEffect(() => {
+    setUserToggledScratchpad(null);
+  }, [forceScratchpadOpen]);
+
+  const scratchpadOpen = userToggledScratchpad !== null
+    ? userToggledScratchpad
+    : (forceScratchpadOpen !== undefined ? forceScratchpadOpen : false);
   const [solutionOpen, setSolutionOpen] = useState(false);
   const [checkedInPractice, setCheckedInPractice] = useState(false);
 
@@ -137,7 +146,7 @@ export default function InteractiveProblemCard({
         <div className="no-print" style={{ display: 'flex', gap: '8px' }}>
           <button
             type="button"
-            onClick={() => setScratchpadOpen((v) => !v)}
+            onClick={() => setUserToggledScratchpad(!scratchpadOpen)}
             style={{
               display: 'flex',
               alignItems: 'center',

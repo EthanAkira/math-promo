@@ -7,6 +7,7 @@ import { useAuth } from '../../auth';
 import { isNonKorean, tr } from '../../i18n';
 import { finalizeGeneratedProblem, findPreAlgebraProfile, findPreAlgebraUnit, localizePreAlgebraUnit, unitsForProfile } from './catalog';
 import { recordAttempts } from '../../lib/submissions';
+import ProblemScratchpad from '../../components/ProblemScratchpad';
 import { preAlgebraCategory, preAlgebraCopy, preAlgebraProfileLabel } from './localization';
 import { hasProblemVisual, MathText, ProblemVisual } from './PreAlgebraVisuals';
 
@@ -129,6 +130,7 @@ export default function PreAlgebraGenerator() {
   const [unitId, setUnitId] = useState('prime-composite');
   const [seed, setSeed] = useState('PREVIEW1');
   const [view, setView] = useState('problems');
+  const [tabletMode, setTabletMode] = useState(false);
   const [answers, setAnswers] = useState({});
   const [checked, setChecked] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState('');
@@ -289,7 +291,15 @@ export default function PreAlgebraGenerator() {
         <input id="core-count" type="number" min={5} max={100} value={coreCount} onChange={(event) => { const next = Number(event.target.value) || 20; setCoreCount(Math.min(100, Math.max(5, next))); setCoreChecked(false); }} />
       </div> : null}
       <div className="control-actions">
-        <button className="button button-secondary" onClick={() => window.print()}>{tr(language, 'printPdf')}</button>
+                <button
+          type="button"
+          className={`button button-secondary tablet-toggle-btn${tabletMode ? ' active' : ''}`}
+          onClick={() => setTabletMode((v) => !v)}
+          title={foreign ? 'Toggle tablet scratchpad mode' : '태블릿 연습장 모드'}
+        >
+          ✍️ {tabletMode ? (foreign ? 'Tablet Mode ON' : '태블릿 모드 ON') : (foreign ? 'Tablet Scratchpad' : '태블릿 연습장')}
+        </button>
+<button className="button button-secondary" onClick={() => window.print()}>{tr(language, 'printPdf')}</button>
         {mode === 'single' ? <>
           <button className="button button-secondary" onClick={() => changeView(view === 'problems' ? 'answers' : 'problems')}>{tr(language, view === 'problems' ? 'answerKey' : 'worksheet')}</button>
           <button className="button button-primary" onClick={() => reset(createSeed())}>{tr(language, 'newWorksheet')}</button>
@@ -343,6 +353,7 @@ export default function PreAlgebraGenerator() {
               <div className="word-answer"><span>{tr(language, 'answer')}</span>{item.kind === 'choice' && choices ? <div className="choice-answer">{view === 'answers' ? <strong><MathText value={choices[Number(item.answer) - 1]} /></strong> : choices.map((choice, index) => <button type="button" key={`${choice}-${index}`} className={value === String(index + 1) ? 'selected' : ''} onClick={() => changeAnswer(item.id, String(index + 1))}><MathText value={choice} /></button>)}</div> : <span className="inline-answer">{view === 'answers' ? <strong><MathText value={item.answer} /></strong> : <><input aria-label={`${tr(language, 'answer')} ${item.id}`} value={value} onChange={(event) => changeAnswer(item.id, event.target.value)} className={checked && value ? (isCorrect ? 'correct' : 'wrong') : ''} /><span className="print-answer-space" aria-hidden="true" /></>}</span>}{item.answerSuffix && !foreign ? <em>{item.answerSuffix}</em> : null}</div>
               {view === 'answers' ? <p className="generated-explanation"><strong>{foreign ? 'Why: ' : '풀이: '}</strong><MathText value={foreign ? item.explanationEn : item.explanation} /></p> : null}
             </div>{checked && view === 'problems' && value ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{tr(language, isCorrect ? 'correct' : 'tryAgain')}</span> : null}
+            <ProblemScratchpad problemId={item.id} seed={seed} language={language} forceOpen={tabletMode} />
           </article>;
         })}
       </section>
@@ -370,14 +381,33 @@ export default function PreAlgebraGenerator() {
               <div className="word-answer"><span>{tr(language, 'answer')}</span>{item.kind === 'choice' && choices ? <div className="choice-answer">{coreView === 'answers' ? <strong><MathText value={choices[Number(item.answer) - 1]} /></strong> : choices.map((choice, index) => <button type="button" key={`${choice}-${index}`} className={value === String(index + 1) ? 'selected' : ''} onClick={() => changeCoreAnswer(item.id, String(index + 1))}><MathText value={choice} /></button>)}</div> : <span className="inline-answer">{coreView === 'answers' ? <strong><MathText value={item.answer} /></strong> : <><input aria-label={`${tr(language, 'answer')} ${item.id}`} value={value} onChange={(event) => changeCoreAnswer(item.id, event.target.value)} className={coreChecked && value ? (isCorrect ? 'correct' : 'wrong') : ''} /><span className="print-answer-space" aria-hidden="true" /></>}</span>}{item.answerSuffix && !foreign ? <em>{item.answerSuffix}</em> : null}</div>
               {coreView === 'answers' ? <p className="generated-explanation"><strong>{foreign ? 'Why: ' : '풀이: '}</strong><MathText value={foreign ? item.explanationEn : item.explanation} /></p> : null}
             </div>{coreChecked && coreView === 'problems' && value ? <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{tr(language, isCorrect ? 'correct' : 'tryAgain')}</span> : null}
+            <ProblemScratchpad problemId={item.id} seed={coreSeed} language={language} forceOpen={tabletMode} />
           </article>;
         })}
       </section>
       <footer className="worksheet-footer"><span className="worksheet-signature">Built &amp; Designed by Chae</span><span>{tr(language, 'dailyLab')}</span><span>{coreSeed} · {profileLabel}</span></footer>
     </div>) : null}
 
-    {mode === 'single' && view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Fractions: 3/4 · Coordinates: 2,-3 · Inequalities: x<=4' : '분수는 3/4, 좌표는 2,-3, 부등식은 x<=4처럼 입력할 수 있습니다.'}</p></div><button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
-    {mode === 'core' && coreView === 'problems' && coreProblems.length > 0 ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Fractions: 3/4 · Coordinates: 2,-3 · Inequalities: x<=4' : '분수는 3/4, 좌표는 2,-3, 부등식은 x<=4처럼 입력할 수 있습니다.'}</p></div><button className="button button-primary" onClick={checkCoreAnswers}>{tr(language, 'checkAnswers')}</button>{coreChecked ? <strong className="score">{tr(language, 'score', { count: coreCorrectCount })}</strong> : null}</section> : null}
+    {mode === 'single' && view === 'problems' ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Fractions: 3/4 · Coordinates: 2,-3 · Inequalities: x<=4' : '분수는 3/4, 좌표는 2,-3, 부등식은 x<=4처럼 입력할 수 있습니다.'}</p></div><div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <button
+          type="button"
+          className={`button button-secondary tablet-toggle-btn${tabletMode ? ' active' : ''}`}
+          onClick={() => setTabletMode((v) => !v)}
+        >
+          ✍️ {tabletMode ? (foreign ? 'Hide All Scratchpads' : '연습장 전체 닫기') : (foreign ? 'Open All Scratchpads' : '연습장 전체 열기')}
+        </button>
+        <button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>
+      </div>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
+    {mode === 'core' && coreView === 'problems' && coreProblems.length > 0 ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Fractions: 3/4 · Coordinates: 2,-3 · Inequalities: x<=4' : '분수는 3/4, 좌표는 2,-3, 부등식은 x<=4처럼 입력할 수 있습니다.'}</p></div><div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <button
+          type="button"
+          className={`button button-secondary tablet-toggle-btn${tabletMode ? ' active' : ''}`}
+          onClick={() => setTabletMode((v) => !v)}
+        >
+          ✍️ {tabletMode ? (foreign ? 'Hide All Scratchpads' : '연습장 전체 닫기') : (foreign ? 'Open All Scratchpads' : '연습장 전체 열기')}
+        </button>
+        <button className="button button-primary" onClick={checkCoreAnswers}>{tr(language, 'checkAnswers')}</button>
+      </div>{coreChecked ? <strong className="score">{tr(language, 'score', { count: coreCorrectCount })}</strong> : null}</section> : null}
 
     <style jsx global>{`
       .pre-algebra-controls { display: flex; align-items: flex-start; gap: 16px; }

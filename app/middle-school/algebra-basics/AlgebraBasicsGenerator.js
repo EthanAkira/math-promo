@@ -11,6 +11,7 @@ import { useAuth } from '../../auth';
 import { isNonKorean, tr } from '../../i18n';
 import MathText from '../../components/MathText';
 import { recordAttempts } from '../../lib/submissions';
+import ProblemScratchpad from '../../components/ProblemScratchpad';
 
 const PROBLEM_COUNT = 20;
 
@@ -108,6 +109,7 @@ export default function AlgebraBasicsGenerator() {
   const [seed, setSeed] = useState('PREVIEW1');
   const [tier, setTier] = useState('basic');
   const [view, setView] = useState('problems');
+  const [tabletMode, setTabletMode] = useState(false);
   const [answers, setAnswers] = useState({});
   const [checked, setChecked] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState('');
@@ -207,7 +209,15 @@ export default function AlgebraBasicsGenerator() {
         <p>{unitDescription}</p>
       </div>
       <div className="control-actions">
-        <button className="button button-secondary" onClick={() => window.print()}>{tr(language, 'printPdf')}</button>
+                <button
+          type="button"
+          className={`button button-secondary tablet-toggle-btn${tabletMode ? ' active' : ''}`}
+          onClick={() => setTabletMode((v) => !v)}
+          title={foreign ? 'Toggle tablet scratchpad mode' : '태블릿 연습장 모드'}
+        >
+          ✍️ {tabletMode ? (foreign ? 'Tablet Mode ON' : '태블릿 모드 ON') : (foreign ? 'Tablet Scratchpad' : '태블릿 연습장')}
+        </button>
+<button className="button button-secondary" onClick={() => window.print()}>{tr(language, 'printPdf')}</button>
         <button className="button button-secondary" onClick={() => changeView(view === 'problems' ? 'answers' : 'problems')}>{tr(language, view === 'problems' ? 'answerKey' : 'worksheet')}</button>
         <button className="button button-primary" onClick={() => reset(createSeed())}>{tr(language, 'newWorksheet')}</button>
       </div>
@@ -303,6 +313,7 @@ export default function AlgebraBasicsGenerator() {
             {checked && view === 'problems' && value ? (
               <span className={`result-mark ${isCorrect ? 'correct' : 'wrong'}`}>{tr(language, isCorrect ? 'correct' : 'tryAgain')}</span>
             ) : null}
+            <ProblemScratchpad problemId={item.id} seed={seed} language={language} forceOpen={tabletMode} />
           </article>;
         })}
       </section>
@@ -319,7 +330,16 @@ export default function AlgebraBasicsGenerator() {
           <strong>{tr(language, 'solveTablet')}</strong>
           <p>{foreign ? 'Use x for variables and / for fractions. Equivalent numerical answers are accepted.' : '문자는 x, 분수는 /를 사용해 입력하세요. 값이 같은 수는 정답으로 인정됩니다.'}</p>
         </div>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <button
+          type="button"
+          className={`button button-secondary tablet-toggle-btn${tabletMode ? ' active' : ''}`}
+          onClick={() => setTabletMode((v) => !v)}
+        >
+          ✍️ {tabletMode ? (foreign ? 'Hide All Scratchpads' : '연습장 전체 닫기') : (foreign ? 'Open All Scratchpads' : '연습장 전체 열기')}
+        </button>
         <button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>
+      </div>
         {checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}
       </section>
     ) : null}

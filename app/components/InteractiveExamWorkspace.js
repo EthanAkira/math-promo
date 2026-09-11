@@ -15,6 +15,7 @@ export default function InteractiveExamWorkspace({
   const [submitted, setSubmitted] = useState(false);
   const [secondsElapsed, setSecondsElapsed] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(true);
+  const [allScratchpadOpen, setAllScratchpadOpen] = useState(false);
 
   // Timer effect
   useEffect(() => {
@@ -198,6 +199,30 @@ export default function InteractiveExamWorkspace({
             <span style={{ color: 'var(--blue, #2a5c8a)' }}>{answeredCount}</span> / {problems.length}
           </div>
 
+          {/* Master Tablet Scratchpad Toggle */}
+          <button
+            type="button"
+            onClick={() => setAllScratchpadOpen((v) => !v)}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '13px',
+              fontWeight: '700',
+              padding: '6px 14px',
+              borderRadius: '8px',
+              border: '1.5px solid var(--gold, #c99a3e)',
+              background: allScratchpadOpen ? 'var(--gold, #c99a3e)' : 'transparent',
+              color: allScratchpadOpen ? '#ffffff' : 'var(--ink, #1f2733)',
+              cursor: 'pointer',
+              transition: 'all 0.15s ease',
+            }}
+            title={language === 'ko' ? '모든 문제의 태블릿 필기장 열기/닫기' : 'Toggle all scratchpads'}
+          >
+            <span>✍️</span>
+            <span>{allScratchpadOpen ? (language === 'ko' ? '필기장 전체 닫기' : 'Hide All Notes') : (language === 'ko' ? '태블릿 필기장 전체 열기' : 'Open All Notes')}</span>
+          </button>
+
           {mode === 'exam' && !submitted ? (
             <button
               type="button"
@@ -294,6 +319,7 @@ export default function InteractiveExamWorkspace({
               isExamMode={mode === 'exam'}
               showResult={submitted}
               language={language}
+              forceScratchpadOpen={allScratchpadOpen}
             />
           ))}
         </div>

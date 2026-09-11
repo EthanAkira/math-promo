@@ -1591,6 +1591,39 @@ html[dir="rtl"] .language-picker-academic select {
   background-color: var(--card-bg);
 }
 .note-canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+
+/* Problem Scratchpad (문제별 태블릿 연습장) */
+.problem-scratchpad-wrap { margin-top: 10px; }
+.problem-scratchpad-toggle { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border: 1px solid var(--paper-line, #d8c9a8); border-radius: 999px; background: var(--card-bg, #fff); color: var(--ink-soft, #718096); font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.15s ease; }
+.problem-scratchpad-toggle:hover, .problem-scratchpad-toggle.open { border-color: #c99a3e; color: #a87926; background: rgba(201,154,62,0.08); }
+.problem-scratchpad-panel { margin-top: 8px; border: 1.5px solid var(--paper-line, #e2d9c8); border-radius: 10px; overflow: hidden; background: var(--card-bg, #fff); box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+.problem-scratchpad-panel .note-canvas-wrap { height: 220px; }
+.problem-scratchpad-memo { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-top: 1px solid var(--paper-line, #e2d9c8); background: var(--paper, #fdfaf4); }
+.problem-scratchpad-memo-label { font-size: 12px; font-weight: 700; color: var(--ink-soft, #718096); white-space: nowrap; }
+.problem-scratchpad-memo-input { flex: 1; padding: 5px 10px; border: 1.5px solid var(--paper-line, #d8c9a8); border-radius: 8px; font: inherit; font-size: 14px; font-weight: 700; color: var(--ink, #1f2733); background: #fff; outline: none; }
+.problem-scratchpad-memo-input:focus { border-color: #c99a3e; box-shadow: 0 0 0 2px rgba(201,154,62,0.15); }
+@media (max-width: 600px) { .problem-scratchpad-panel .note-canvas-wrap { height: 180px; } }
+@media print { .problem-scratchpad-wrap { display: none !important; } }
+
+.tablet-toggle-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  border: 1.5px solid var(--gold, #c99a3e) !important;
+  font-weight: 700 !important;
+  transition: all 0.15s ease !important;
+}
+.tablet-toggle-btn:hover {
+  border-color: #a87926 !important;
+  background: rgba(201,154,62,0.1) !important;
+}
+.tablet-toggle-btn.active {
+  background: linear-gradient(135deg, #c99a3e 0%, #a87926 100%) !important;
+  color: #ffffff !important;
+  border-color: #8c631a !important;
+  box-shadow: 0 2px 8px rgba(201,154,62,0.3) !important;
+}
+
 .problem-number { position: absolute; top: 15px; left: 2px; display: grid; place-items: center; width: 25px; height: 25px; border: 1.5px solid var(--ink); border-radius: 50%; font-size: 11px; font-weight: 700; }
 .calculation { width: 118px; margin: 10px auto 0; text-align: right; font-size: 32px; line-height: 1.25; font-variant-numeric: tabular-nums; }
 .calculation > span { display: block; }
