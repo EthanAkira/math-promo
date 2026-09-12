@@ -100,7 +100,7 @@ export default function CsatAdmin() {
             parsed = parseExamText(extractedText);
           }
 
-          if (!parsed || parsed.length < 10) {
+          if (!parsed || parsed.length < 25) {
             const fallbackTemplate = getExamFullText('csat', examType);
             parsed = parseExamText(fallbackTemplate);
           }
@@ -218,7 +218,7 @@ export default function CsatAdmin() {
             const extracted = await extractTextFromPdf(arrayBuffer);
             if (extracted && extracted.trim()) {
               const testParsed = parseExamText(extracted);
-              if (testParsed.length >= 10) {
+              if (testParsed.length >= 25) {
                 setParserInitialText(extracted);
                 setStatus(`PDF 전체 페이지에서 ${testParsed.length}개 전 문항을 성공적으로 추출하여 일괄 변환했습니다.`);
                 return;

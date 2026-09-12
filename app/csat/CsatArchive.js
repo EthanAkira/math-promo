@@ -170,7 +170,7 @@ export default function CsatExamArchive({ examType, label, description, gradeFil
   }, []);
 
   useEffect(() => {
-    // Automatically purge any stale snippets with < 10 problems or corrupted tofu characters from previous test sessions
+    // Automatically purge any stale snippets with < 25 problems or corrupted tofu characters from previous test sessions
     try {
       const keysToScan = [];
       for (let i = 0; i < localStorage.length; i++) {
@@ -182,10 +182,9 @@ export default function CsatExamArchive({ examType, label, description, gradeFil
         if (item) {
           try {
             const parsed = JSON.parse(item);
-            const isCorrupted = Array.isArray(parsed) && (
-              parsed.length < 10 ||
-              parsed.some((p) => /[\uE000-\uF8FF\uFFFD□]/.test(String(p.question || '')) || String(p.question || '').includes('한국교육과정평가원'))
-            );
+            const isCorrupted = !Array.isArray(parsed) ||
+              parsed.length < 25 ||
+              parsed.some((p) => /[\uE000-\uF8FF\uFFFD□]/.test(String(p.question || '')) || String(p.question || '').includes('한국교육과정평가원'));
             if (isCorrupted) {
               localStorage.removeItem(k);
             }
@@ -270,12 +269,17 @@ export default function CsatExamArchive({ examType, label, description, gradeFil
             parsed = parseExamText(extracted);
           }
           if (!cancelled) {
-            if (parsed.length >= 10) {
+            if (parsed.length >= 25) {
               try {
                 localStorage.setItem(sessionKey, JSON.stringify(parsed));
                 localStorage.setItem(`custom_exam_csat_${examType}`, JSON.stringify(parsed));
               } catch (e) {}
               setInteractiveProblems(parsed);
+            } else {
+              const fallback = getInteractiveProblems('csat', examType, selectedEntry?.year, selectedVariant?.id);
+              if (fallback && fallback.length > 0) {
+                setInteractiveProblems(fallback);
+              }
             }
             setLoadingInteractive(false);
           }

@@ -1812,9 +1812,10 @@ export function getInteractiveProblems(category, levelOrType, year, variantId) {
               return /[\uE000-\uF8FF\uFFFD]/.test(q) || q.includes('한국교육과정평가원') || q.includes('홀수형') || q.includes('□');
             });
 
-            if (hasCorrupted || (Array.isArray(parsed) && parsed.length < 10)) {
+            const minExpected = category === 'csat' ? 25 : 20;
+            if (hasCorrupted || !Array.isArray(parsed) || parsed.length < minExpected) {
               localStorage.removeItem(k);
-            } else if (Array.isArray(parsed) && parsed.length >= 10) {
+            } else {
               return parsed.map((p) => ({
                 ...p,
                 question: cleanCsatProblemText(p.question),

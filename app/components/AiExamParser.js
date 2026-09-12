@@ -48,8 +48,21 @@ export async function extractTextFromPdf(pdfSource) {
   for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
     const page = await pdf.getPage(pageNum);
     const textContent = await page.getTextContent();
-    const pageStrings = textContent.items.map((item) => decodeHwpPua(item.str));
-    fullText += `\n\n--- [Page ${pageNum}] ---\n` + pageStrings.join(' ');
+    let pageText = '';
+    let lastY = null;
+    for (const item of (textContent.items || [])) {
+      const currentY = item.transform ? Math.round(item.transform[5]) : null;
+      if (lastY !== null && currentY !== null && Math.abs(currentY - lastY) > 5) {
+        pageText += '\n';
+      } else if (item.hasEOL) {
+        pageText += '\n';
+      } else if (pageText && !pageText.endsWith('\n') && !pageText.endsWith(' ')) {
+        pageText += ' ';
+      }
+      pageText += decodeHwpPua(item.str || '');
+      lastY = currentY;
+    }
+    fullText += `\n\n--- [Page ${pageNum}] ---\n` + pageText;
   }
   return decodeHwpPua(fullText);
 }
@@ -175,8 +188,8 @@ export function parseExamText(rawText) {
   }
 
   // 4. Match all problem starts across the entire exam file
-  const dottedRegex = /(?:^|\n)\s*(?:\[\s*문제\s*(\d{1,2})\s*\]|【\s*문제\s*(\d{1,2})\s*】|\bProblem\s+(\d{1,2})[\.:]?|\bProb\s*(\d{1,2})[\.:]?|\b문\s*(\d{1,2})[\.:]|\b문제\s*(\d{1,2})[\.:]?|(\d{1,2})\s*번[\.:]?|(\d{1,2})\s*[\.\)]\s+)/gi;
-  const combinedRegex = /(?:^|\n)\s*(?:\[\s*문제\s*(\d{1,2})\s*\]|【\s*문제\s*(\d{1,2})\s*】|\bProblem\s+(\d{1,2})[\.:]?|\bProb\s*(\d{1,2})[\.:]?|\b문\s*(\d{1,2})[\.:]|\b문제\s*(\d{1,2})[\.:]?|(\d{1,2})\s*번[\.:]?|(\d{1,2})\s*[\.\)]\s+|(?<=^|\n)\s*([1-9]|[12]\d|30)\s+(?=[A-Z가-힣\"“\$\\\(]))/gi;
+  const dottedRegex = /(?:^|\n|\s{2,})\s*(?:\[\s*문제\s*(\d{1,2})\s*\]|【\s*문제\s*(\d{1,2})\s*】|\bProblem\s+(\d{1,2})[\.:]?|\bProb\s*(\d{1,2})[\.:]?|\b문\s*(\d{1,2})[\.:]|\b문제\s*(\d{1,2})[\.:]?|(\d{1,2})\s*번[\.:]?|(\d{1,2})\s*[\.\)]\s+)/gi;
+  const combinedRegex = /(?:^|\n|\s{2,})\s*(?:\[\s*문제\s*(\d{1,2})\s*\]|【\s*문제\s*(\d{1,2})\s*】|\bProblem\s+(\d{1,2})[\.:]?|\bProb\s*(\d{1,2})[\.:]?|\b문\s*(\d{1,2})[\.:]|\b문제\s*(\d{1,2})[\.:]?|(\d{1,2})\s*번[\.:]?|(\d{1,2})\s*[\.\)]\s+|(?<=^|\n|\s{2,})\s*([1-9]|[12]\d|30)\s+(?=[A-Z가-힣\"“\$\\\(]))/gi;
 
   const INSTRUCTION_KEYWORDS = [
     'DO NOT OPEN', 'twenty-five question', 'answer form', 'penalty for guessing',
