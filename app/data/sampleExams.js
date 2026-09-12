@@ -1,5 +1,16 @@
 // Complete Interactive Math Exam Datasets for CSAT & AMC (Full 25/30 Problem Sets)
 import amc8Catalog from './amc8ProblemCatalog.json';
+import csat2025Catalog from './csat2025ProblemCatalog.json';
+import { decodeHwpPua, cleanCsatProblemText } from '../utils/hwpPuaDecoder';
+
+export const SAMPLE_CSAT_2025 = {
+  id: 'csat-2025-math-full',
+  title: '2025/2026학년도 대학수학능력시험 수학영역 (30문항 전체)',
+  subtitle: '공통문항(1~22번) 및 미적분 선택문항(23~30번) 전체 인터랙티브 실전/연습 세트',
+  examType: 'csat',
+  year: 2025,
+  problems: csat2025Catalog,
+};
 
 export const SAMPLE_CSAT_2024 = {
   id: 'csat-2024-math-full',
@@ -1794,12 +1805,22 @@ export function getInteractiveProblems(category, levelOrType, year, variantId) {
         if (customData) {
           try {
             const parsed = JSON.parse(customData);
-            // If stored custom exam has fewer than 10 problems while standard exam has 25/30,
-            // it is an outdated fallback snippet from older builds — discard & purge it!
-            if (Array.isArray(parsed) && parsed.length >= 10) {
-              return parsed;
-            } else if (Array.isArray(parsed) && parsed.length < 10) {
+            // If stored custom exam has tofu characters (□), PUA codes, or KICE banners,
+            // or is fewer than 10 problems, discard and purge it!
+            const hasCorrupted = Array.isArray(parsed) && parsed.some((p) => {
+              const q = String(p.question || '');
+              return /[\uE000-\uF8FF\uFFFD]/.test(q) || q.includes('한국교육과정평가원') || q.includes('홀수형') || q.includes('□');
+            });
+
+            if (hasCorrupted || (Array.isArray(parsed) && parsed.length < 10)) {
               localStorage.removeItem(k);
+            } else if (Array.isArray(parsed) && parsed.length >= 10) {
+              return parsed.map((p) => ({
+                ...p,
+                question: cleanCsatProblemText(p.question),
+                choices: Array.isArray(p.choices) ? p.choices.map(decodeHwpPua) : [],
+                explanation: cleanCsatProblemText(p.explanation || ''),
+              }));
             }
           } catch (pe) {
             localStorage.removeItem(k);
@@ -1832,6 +1853,13 @@ export function getInteractiveProblems(category, levelOrType, year, variantId) {
     }
     if (String(levelOrType) === '12') return SAMPLE_AMC_12_FULL.problems;
     return SAMPLE_AMC_10_2023.problems;
+  }
+
+  if (category === 'csat') {
+    if (year && (parseInt(year, 10) === 2025 || parseInt(year, 10) === 2026)) {
+      return SAMPLE_CSAT_2025.problems;
+    }
+    return SAMPLE_CSAT_2024.problems;
   }
 
   return SAMPLE_CSAT_2024.problems;
@@ -1901,6 +1929,9 @@ export function getExamFullText(category, levelOrType) {
     if (String(levelOrType) === '8') return formatExamAsText(SAMPLE_AMC_8_FULL);
     if (String(levelOrType) === '12') return formatExamAsText(SAMPLE_AMC_12_FULL);
     return formatExamAsText(SAMPLE_AMC_10_2023);
+  }
+  if (levelOrType && (String(levelOrType).includes('2025') || String(levelOrType).includes('2026'))) {
+    return formatExamAsText(SAMPLE_CSAT_2025);
   }
   return formatExamAsText(SAMPLE_CSAT_2024);
 }

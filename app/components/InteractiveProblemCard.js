@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import LatexMath from './LatexMath';
 import NoteCanvas from './NoteCanvas';
 import { sanitizePublicText } from '../publicText';
+import { cleanCsatProblemText, decodeHwpPua } from '../utils/hwpPuaDecoder';
 
 const CHOICE_SYMBOLS = ['①', '②', '③', '④', '⑤'];
 const CHOICE_LETTERS = ['(A)', '(B)', '(C)', '(D)', '(E)'];
@@ -181,7 +182,7 @@ export default function InteractiveProblemCard({
           fontFamily: "'Gowun Batang', serif",
         }}
       >
-        <LatexMath text={question} />
+        <LatexMath text={cleanCsatProblemText(question)} />
       </div>
 
       {/* SVG / Graphic Figure if available */}
@@ -273,7 +274,7 @@ export default function InteractiveProblemCard({
                   {symbols[idx] || `(${idx + 1})`}
                 </span>
                 <span style={{ flex: 1, lineHeight: 1.4 }}>
-                  <LatexMath text={choiceText} />
+                  <LatexMath text={decodeHwpPua(choiceText)} />
                 </span>
               </button>
             );
@@ -393,7 +394,7 @@ export default function InteractiveProblemCard({
           <div style={{ fontWeight: '800', color: 'var(--gold, #a87926)', marginBottom: '6px' }}>
             💡 {language === 'ko' ? '상세 해설' : 'Step-by-step Solution'}
           </div>
-          <LatexMath text={explanation} />
+          <LatexMath text={cleanCsatProblemText(explanation)} />
         </div>
       ) : null}
 

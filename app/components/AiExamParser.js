@@ -5,6 +5,7 @@ import LatexMath from './LatexMath';
 import InteractiveProblemCard from './InteractiveProblemCard';
 import { getExamFullText, clearCustomExams } from '../data/sampleExams';
 import { sanitizePublicText } from '../publicText';
+import { decodeHwpPua, cleanCsatProblemText } from '../utils/hwpPuaDecoder';
 
 const CHOICE_SYMBOLS = ['①', '②', '③', '④', '⑤'];
 
@@ -40,13 +41,17 @@ export async function extractTextFromPdf(pdfSource) {
 
   const pdf = await docPromise;
   let fullText = '';
-  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+  // CSAT booklets often have 40 pages where pages 21-40 are duplicate 짝수형 booklet.
+  // If the PDF has >= 36 pages and starts with 홀수형, we limit to the primary 20 pages
+  // (common 1-22 + elective 23-30) to avoid duplicates overwriting earlier questions.
+  const maxPages = pdf.numPages >= 36 ? 20 : pdf.numPages;
+  for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
     const page = await pdf.getPage(pageNum);
     const textContent = await page.getTextContent();
-    const pageStrings = textContent.items.map((item) => item.str);
+    const pageStrings = textContent.items.map((item) => decodeHwpPua(item.str));
     fullText += `\n\n--- [Page ${pageNum}] ---\n` + pageStrings.join(' ');
   }
-  return fullText;
+  return decodeHwpPua(fullText);
 }
 
 // Browser-side OCR for screenshots and cropped page images. The OCR library is
@@ -107,7 +112,7 @@ export function parseExamText(rawText) {
   if (!rawText || !rawText.trim()) return [];
 
   // 1. Normalize line endings and remove page header/footer markers
-  let text = rawText.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  let text = decodeHwpPua(rawText).replace(/\r\n/g, '\n').replace(/\r/g, '\n');
   text = text.replace(/---\s*\[Page\s*\d+\]\s*---/gi, '\n');
 
   // Clean noise and headers common in competition PDFs (AoPS, MAA headers, page numbers)
@@ -115,6 +120,14 @@ export function parseExamText(rawText) {
   text = text.replace(/This\s+f\S+le\s+was\s+downloaded[^\n]*/gi, '');
   text = text.replace(/(?:^|\n)\s*USA\s*\n\s*AMC\s*(?:8|10|12)[^\n]*\n\s*\d{4}\s*(?=\n)/gi, '\n');
   text = text.replace(/(?:^|\n)\s*\d{4}\s*AMC\s*(?:8|10|12)[A-B]?\s*Problems\s*\d*\s*(?=\n)/gi, '\n');
+
+  // Clean KICE CSAT copyright/exam headers
+  text = text.replace(/이\s*문제(?:지)?에\s*관한\s*저작권은\s*한국교육과정평가원에\s*있습니다\.?/gi, '');
+  text = text.replace(/(?:^|\n)\s*(?:홀수형|짝수형)[^\n]*/gi, '\n');
+  text = text.replace(/(?:^|\n)\s*\d{4}학년도\s*대학수학능력시험[^\n]*/gi, '\n');
+  text = text.replace(/(?:^|\n)\s*제\s*2\s*교시\s*수학\s*영역[^\n]*/gi, '\n');
+  text = text.replace(/(?:^|\n)\s*5\s*지선다형[^\n]*/gi, '\n');
+  text = text.replace(/(?:^|\n)\s*단답형[^\n]*/gi, '\n');
 
   // 2. Global Answer Key table detection (e.g., [정답표], Answer Key:)
   const answerMap = new Map();
@@ -370,11 +383,11 @@ export function parseExamText(rawText) {
         points: points,
         unit: unit || (rawText.includes('AMC') ? 'AMC Competition' : (problemNumber <= 15 ? '수학 I · II' : '선택과목')),
         type: isSubjective ? 'subjective' : 'multiple_choice',
-        question: qText || `문제 ${problemNumber}`,
-        choices: isSubjective ? [] : choices,
+        question: cleanCsatProblemText(qText) || `문제 ${problemNumber}`,
+        choices: isSubjective ? [] : choices.map((c) => decodeHwpPua(c)),
         correctAnswer: correctAnswer,
         figureSvg: figureSvg,
-        explanation: explanation || '정답 및 상세 풀이가 등록되어 있습니다.',
+        explanation: cleanCsatProblemText(explanation) || '정답 및 상세 풀이가 등록되어 있습니다.',
       });
     }
   });

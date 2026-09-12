@@ -170,13 +170,26 @@ export default function CsatExamArchive({ examType, label, description, gradeFil
   }, []);
 
   useEffect(() => {
-    // Automatically purge any stale snippets with < 10 problems from previous test sessions
+    // Automatically purge any stale snippets with < 10 problems or corrupted tofu characters from previous test sessions
     try {
-      ['custom_exam_8', 'custom_exam_10', 'custom_exam_12', 'custom_exam_amc', 'custom_exam_csat'].forEach((k) => {
+      const keysToScan = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith('custom_exam_')) keysToScan.push(k);
+      }
+      keysToScan.forEach((k) => {
         const item = localStorage.getItem(k);
         if (item) {
-          const parsed = JSON.parse(item);
-          if (Array.isArray(parsed) && parsed.length < 10) {
+          try {
+            const parsed = JSON.parse(item);
+            const isCorrupted = Array.isArray(parsed) && (
+              parsed.length < 10 ||
+              parsed.some((p) => /[\uE000-\uF8FF\uFFFD□]/.test(String(p.question || '')) || String(p.question || '').includes('한국교육과정평가원'))
+            );
+            if (isCorrupted) {
+              localStorage.removeItem(k);
+            }
+          } catch (pe) {
             localStorage.removeItem(k);
           }
         }
