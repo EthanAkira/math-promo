@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LatexMath from './LatexMath';
 import NoteCanvas from './NoteCanvas';
 import { sanitizePublicText } from '../publicText';
@@ -30,22 +30,26 @@ export default function InteractiveProblemCard({
   const [solutionOpen, setSolutionOpen] = useState(false);
   const [checkedInPractice, setCheckedInPractice] = useState(false);
 
+  if (!problem) return null;
+
   const {
     id,
-    number,
+    number = 1,
     points,
     type = 'multiple_choice', // 'multiple_choice' | 'subjective'
-    question,
+    question = '',
     choices = [],
     figureSvg,
     figureUrl,
     correctAnswer, // 0-based index or string number
-    explanation,
+    explanation = '',
     unit,
     sourceLabel,
     choiceMarkerType,
     examType,
   } = problem;
+
+  const safeChoices = Array.isArray(choices) ? choices : [];
 
   const isAnswered = userAnswer !== undefined && userAnswer !== null && userAnswer !== '';
   const isCorrect = isAnswered && String(userAnswer) === String(correctAnswer);
@@ -208,16 +212,16 @@ export default function InteractiveProblemCard({
       ) : null}
 
       {/* Multiple Choice Options or Subjective Input */}
-      {type === 'multiple_choice' ? (
+      {type === 'multiple_choice' && safeChoices.length > 0 ? (
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: choices.length <= 5 ? 'repeat(auto-fit, minmax(140px, 1fr))' : '1fr',
+            gridTemplateColumns: safeChoices.length <= 5 ? 'repeat(auto-fit, minmax(140px, 1fr))' : '1fr',
             gap: '10px',
             margin: '20px 0 14px',
           }}
         >
-          {choices.map((choiceText, idx) => {
+          {safeChoices.map((choiceText, idx) => {
             const isSelected = String(userAnswer) === String(idx);
             let btnBg = 'rgba(255, 255, 255, 0.85)';
             let btnBorder = '1px solid var(--paper-line, #d8c9a8)';
@@ -346,7 +350,7 @@ export default function InteractiveProblemCard({
               >
                 {isCorrect
                   ? (language === 'ko' ? '🎉 정답입니다!' : '🎉 Correct!')
-                  : (language === 'ko' ? `❌ 오답입니다. (정답: ${type === 'multiple_choice' ? symbols[correctAnswer] || correctAnswer + 1 : correctAnswer})` : `❌ Incorrect (Answer: ${correctAnswer})`)}
+                  : (language === 'ko' ? `❌ 오답입니다. (정답: ${type === 'multiple_choice' ? symbols[correctAnswer] || (typeof correctAnswer === 'number' ? correctAnswer + 1 : correctAnswer ?? '') : correctAnswer ?? ''})` : `❌ Incorrect (Answer: ${type === 'multiple_choice' ? symbols[correctAnswer] || (typeof correctAnswer === 'number' ? correctAnswer + 1 : correctAnswer ?? '') : correctAnswer ?? ''})`)}
               </span>
             ) : null}
           </div>

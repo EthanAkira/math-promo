@@ -38,26 +38,28 @@ export default function InteractiveExamWorkspace({
     setAnswers((prev) => ({ ...prev, [problemId]: answerIdx }));
   };
 
+  const safeProblems = Array.isArray(problems) ? problems.filter(Boolean) : [];
+
   const answeredCount = Object.keys(answers).filter(
     (k) => answers[k] !== undefined && answers[k] !== null && answers[k] !== ''
   ).length;
 
-  const totalPoints = problems.reduce((acc, p) => acc + (p.points || 4), 0);
-  const earnedPoints = problems.reduce((acc, p) => {
-    const userAns = answers[p.id || p.number];
-    return String(userAns) === String(p.correctAnswer) ? acc + (p.points || 4) : acc;
+  const totalPoints = safeProblems.reduce((acc, p) => acc + (p?.points || 4), 0);
+  const earnedPoints = safeProblems.reduce((acc, p) => {
+    const userAns = answers[p?.id || p?.number];
+    return String(userAns) === String(p?.correctAnswer) ? acc + (p?.points || 4) : acc;
   }, 0);
 
-  const correctCount = problems.filter(
-    (p) => String(answers[p.id || p.number]) === String(p.correctAnswer)
+  const correctCount = safeProblems.filter(
+    (p) => String(answers[p?.id || p?.number]) === String(p?.correctAnswer)
   ).length;
 
   const handleSubmitExam = () => {
-    if (answeredCount < problems.length) {
+    if (answeredCount < safeProblems.length) {
       const confirmSubmit = window.confirm(
         language === 'ko'
-          ? `아직 풀지 않은 문제가 있습니다 (${answeredCount}/${problems.length} 완료). 제출하시겠습니까?`
-          : `You have unanswered questions (${answeredCount}/${problems.length}). Submit anyway?`
+          ? `아직 풀지 않은 문제가 있습니다 (${answeredCount}/${safeProblems.length} 완료). 제출하시겠습니까?`
+          : `You have unanswered questions (${answeredCount}/${safeProblems.length}). Submit anyway?`
       );
       if (!confirmSubmit) return;
     }
@@ -196,7 +198,7 @@ export default function InteractiveExamWorkspace({
           {/* Progress / Status */}
           <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--ink, #1f2733)' }}>
             {language === 'ko' ? '진행도:' : 'Progress:'}{' '}
-            <span style={{ color: 'var(--blue, #2a5c8a)' }}>{answeredCount}</span> / {problems.length}
+            <span style={{ color: 'var(--blue, #2a5c8a)' }}>{answeredCount}</span> / {safeProblems.length}
           </div>
 
           {/* Master Tablet Scratchpad Toggle */}
@@ -285,7 +287,7 @@ export default function InteractiveExamWorkspace({
                 {language === 'ko' ? '정답률' : 'Accuracy'}
               </div>
               <div style={{ fontSize: '32px', fontWeight: '900', color: 'var(--blue, #2a5c8a)' }}>
-                {Math.round((correctCount / (problems.length || 1)) * 100)}%
+                {Math.round((correctCount / (safeProblems.length || 1)) * 100)}%
               </div>
             </div>
             <div style={{ width: '1px', height: '40px', background: 'var(--paper-line, #d8c9a8)' }} />
@@ -310,11 +312,11 @@ export default function InteractiveExamWorkspace({
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 110px', gap: '24px', alignItems: 'start' }}>
         {/* Left: Problems List */}
         <div>
-          {problems.map((problem) => (
+          {safeProblems.map((problem, idx) => (
             <InteractiveProblemCard
-              key={problem.id || problem.number}
+              key={problem?.id || problem?.number || idx}
               problem={problem}
-              userAnswer={answers[problem.id || problem.number]}
+              userAnswer={answers[problem?.id || problem?.number]}
               onSelectAnswer={handleSelectAnswer}
               isExamMode={mode === 'exam'}
               showResult={submitted}
@@ -341,9 +343,11 @@ export default function InteractiveExamWorkspace({
             OMR 빠른 이동
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
-            {problems.map((p) => {
-              const isAns = answers[p.id || p.number] !== undefined && answers[p.id || p.number] !== null && answers[p.id || p.number] !== '';
-              const isCorr = submitted && String(answers[p.id || p.number]) === String(p.correctAnswer);
+            {safeProblems.map((p, idx) => {
+              const num = p?.number || (idx + 1);
+              const pKey = p?.id || num;
+              const isAns = answers[pKey] !== undefined && answers[pKey] !== null && answers[pKey] !== '';
+              const isCorr = submitted && String(answers[pKey]) === String(p?.correctAnswer);
               const isWrong = submitted && isAns && !isCorr;
 
               let btnBg = isAns ? 'var(--blue, #2a5c8a)' : '#f3ede2';
@@ -361,9 +365,9 @@ export default function InteractiveExamWorkspace({
 
               return (
                 <button
-                  key={p.number}
+                  key={pKey}
                   type="button"
-                  onClick={() => scrollToProblem(p.number)}
+                  onClick={() => scrollToProblem(num)}
                   style={{
                     padding: '6px 0',
                     borderRadius: '6px',
@@ -375,9 +379,9 @@ export default function InteractiveExamWorkspace({
                     cursor: 'pointer',
                     transition: 'transform 0.1s ease',
                   }}
-                  title={`문제 ${p.number}번으로 이동`}
+                  title={`문제 ${num}번으로 이동`}
                 >
-                  {p.number}
+                  {num}
                 </button>
               );
             })}

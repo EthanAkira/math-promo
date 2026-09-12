@@ -260,7 +260,8 @@ export default function AmcLevelArchive({ level, label, description }) {
   }, [level, selectedEntry?.year, selectedVariant?.id, selectedVariant?.files?.problems?.key]);
 
   if (status === 'ready' && selectedEntry && selectedVariant) {
-    const allTypes = Object.keys(selectedVariant.files);
+    const variantFiles = selectedVariant.files || {};
+    const allTypes = Object.keys(variantFiles);
     const fileTypes = [
       ...FILE_ORDER.filter((type) => allTypes.includes(type)),
       ...allTypes.filter((type) => type.startsWith('solutions__')),
