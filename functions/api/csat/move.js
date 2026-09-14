@@ -36,15 +36,21 @@ export async function onRequestPost({ request, env }) {
   const yearEntry = examYears && examYears.find((entry) => entry.year === Number(year));
   const variant = yearEntry && yearEntry.variants.find((item) => item.id === variantId);
   const sourceFile = variant && variant.files[fileType];
-  if (!sourceFile) return jsonResponse({ error: 'Source file not found.' }, { status: 404 });
 
-  const oldKey = sourceFile.key || fileKey(examType, year, variantId, fileType);
+  // The admin list (see manifest.js) is built primarily from D1, which can't lose an
+  // entry to the KV manifest blob's read-modify-write race — so fall back to the
+  // deterministic key and the D1 row when the blob doesn't know about this file.
+  const oldKey = (sourceFile && sourceFile.key) || fileKey(examType, year, variantId, fileType);
   const newKey = fileKey(toExamType, toYear, toVariantId, toFileType);
 
   if (oldKey === newKey) return jsonResponse({ error: 'Source and destination are identical.' }, { status: 400 });
 
   const stored = await env.AMC_FILES.getWithMetadata(oldKey, 'arrayBuffer');
   if (!stored || !stored.value) return jsonResponse({ error: 'Stored file is missing.' }, { status: 404 });
+
+  const sourceTagForFallback = sourceFile ? null : await getArchiveItemByFileKey(env.DB, oldKey);
+  const sourceLabel = sourceFile ? sourceFile.label : (sourceTagForFallback?.filename || fileType);
+  const sourceFilename = sourceFile ? sourceFile.filename : (sourceTagForFallback?.filename || null);
 
   const destExamYears = manifest[toExamType];
   let destYearEntry = destExamYears.find((entry) => entry.year === Number(toYear));
@@ -69,14 +75,16 @@ export async function onRequestPost({ request, env }) {
   await env.AMC_FILES.put(newKey, stored.value, { metadata: stored.metadata || {} });
   await env.AMC_FILES.delete(oldKey);
 
-  destVariant.files[toFileType] = { key: newKey, label: sourceFile.label, filename: sourceFile.filename };
+  destVariant.files[toFileType] = { key: newKey, label: sourceLabel, filename: sourceFilename };
 
-  delete variant.files[fileType];
-  if (Object.keys(variant.files).length === 0) {
-    yearEntry.variants = yearEntry.variants.filter((item) => item.id !== variantId);
-  }
-  if (yearEntry.variants.length === 0) {
-    manifest[String(examType)] = examYears.filter((entry) => entry.year !== Number(year));
+  if (variant && variant.files[fileType]) {
+    delete variant.files[fileType];
+    if (Object.keys(variant.files).length === 0) {
+      yearEntry.variants = yearEntry.variants.filter((item) => item.id !== variantId);
+    }
+    if (yearEntry.variants.length === 0) {
+      manifest[String(examType)] = examYears.filter((entry) => entry.year !== Number(year));
+    }
   }
 
   await writeManifest(env.AMC_FILES, manifest);
@@ -97,7 +105,7 @@ export async function onRequestPost({ request, env }) {
     accessTier: existingTag ? existingTag.access_tier : 'free',
     title: existingTag ? existingTag.title : (toVariantLabel || toVariantId),
     fileKey: newKey,
-    filename: sourceFile.filename,
+    filename: sourceFilename,
   });
 
   return jsonResponse({ ok: true, key: newKey });
