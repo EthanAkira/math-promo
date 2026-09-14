@@ -101,7 +101,13 @@ const SUBJECT_COLORS = {
   'prob-stats': { bg: 'rgba(168, 85, 247, 0.08)', border: '#a855f7', text: '#7e22ce' },
   calculus: { bg: 'rgba(245, 158, 11, 0.08)', border: '#f59e0b', text: '#b45309' },
   geometry: { bg: 'rgba(236, 72, 153, 0.08)', border: '#ec4899', text: '#be185d' },
+  'common-math-1': { bg: 'rgba(20, 184, 166, 0.08)', border: '#14b8a6', text: '#0f766e' },
+  'common-math-2': { bg: 'rgba(99, 102, 241, 0.08)', border: '#6366f1', text: '#4338ca' },
 };
+
+// 고3 CSAT_SUBJECTS(수학Ⅰ·Ⅱ·확통·미적분·기하)와 고1 COMMON_MATH_SUBJECTS(공통수학1·2)를
+// 세부 단원별 문항 풀기 탭에서 함께 보여준다 — 서로 unit id가 겹치지 않아 하나의 맵으로 합칠 수 있다.
+const ALL_SUBJECT_GROUPS = [...CSAT_SUBJECTS, ...COMMON_MATH_SUBJECTS];
 
 export default function CsatUnitBrowser() {
   const { language } = useLanguage();
@@ -111,6 +117,7 @@ export default function CsatUnitBrowser() {
   const [manifest, setManifest] = useState(null);
   const [status, setStatus] = useState('loading');
   const [activeTab, setActiveTab] = useState('problems'); // 'problems' | 'files'
+  const [problems, setProblems] = useState(staticCsatCatalog);
   const [selectedSubject, setSelectedSubject] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [openFileUnit, setOpenFileUnit] = useState(null);
@@ -182,25 +189,52 @@ export default function CsatUnitBrowser() {
     return () => { cancelled = true; };
   }, []);
 
+  // Fetch classified problems from D1 (see functions/api/csat/problems.js) and merge with
+  // the static catalog, so the ~12 years of already-uploaded exam papers that the admin's
+  // "단원별 문제은행 자동 분류" tool classified actually show up here instead of only the
+  // hand-curated static seed.
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/csat/problems')
+      .then((res) => { if (!res.ok) throw new Error('bad response'); return res.json(); })
+      .then((data) => {
+        if (cancelled) return;
+        const apiList = data.problems || [];
+        if (apiList.length === 0) return;
+
+        const getProblemKey = (p) => `${p.examType || 'nov'}-${p.year}-${(p.variant || '').toLowerCase()}-${Number(p.problemNumber || p.number || 0)}`;
+        const mergedMap = new Map();
+        for (const p of staticCsatCatalog) mergedMap.set(getProblemKey(p), p);
+        for (const p of apiList) {
+          const key = getProblemKey(p);
+          const existing = mergedMap.get(key);
+          mergedMap.set(key, existing ? { ...existing, ...p, id: existing.id || p.id } : p);
+        }
+        setProblems(Array.from(mergedMap.values()));
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+
   // Group problems by unit
   const problemsByUnit = useMemo(() => {
     const map = new Map();
-    for (const subject of CSAT_SUBJECTS) {
+    for (const subject of ALL_SUBJECT_GROUPS) {
       for (const unit of subject.units) {
         map.set(unit.id, []);
       }
     }
-    for (const p of staticCsatCatalog) {
+    for (const p of problems) {
       if (p.unitId && map.has(p.unitId)) {
         map.get(p.unitId).push(p);
       }
     }
     return map;
-  }, []);
+  }, [problems]);
 
   const subjectCounts = useMemo(() => {
     const counts = {};
-    for (const subject of CSAT_SUBJECTS) {
+    for (const subject of ALL_SUBJECT_GROUPS) {
       let sum = 0;
       for (const unit of subject.units) {
         sum += (problemsByUnit.get(unit.id) || []).length;
@@ -262,7 +296,7 @@ export default function CsatUnitBrowser() {
   function generateCoreTest() {
     const eligibleUnits = allUnitsFlat.filter((unit) => coreSelectedUnitIds.includes(unit.id) && tierWithin(unit.tier, coreTierCeiling));
     const eligibleUnitIds = new Set(eligibleUnits.map((unit) => unit.id));
-    const matching = staticCsatCatalog.filter((problem) => eligibleUnitIds.has(problem.unitId));
+    const matching = problems.filter((problem) => eligibleUnitIds.has(problem.unitId));
     setCoreProblems(shuffleArray(matching).slice(0, coreCount));
   }
 
@@ -276,7 +310,7 @@ export default function CsatUnitBrowser() {
   // Active Subject & Unit when worksheet is open
   const activeSubjectAndUnit = useMemo(() => {
     if (!selectedUnitId) return null;
-    for (const subject of CSAT_SUBJECTS) {
+    for (const subject of ALL_SUBJECT_GROUPS) {
       for (const unit of subject.units) {
         if (unit.id === selectedUnitId) {
           return { subject, unit };
@@ -348,7 +382,7 @@ export default function CsatUnitBrowser() {
             transition: 'all 0.15s ease',
           }}
         >
-          {words.tabProblems} <span style={{ fontSize: 12, fontWeight: 500, opacity: 0.85 }}>({staticCsatCatalog.length})</span>
+          {words.tabProblems} <span style={{ fontSize: 12, fontWeight: 500, opacity: 0.85 }}>({problems.length})</span>
         </button>
         <button
           type="button"
@@ -500,9 +534,9 @@ export default function CsatUnitBrowser() {
                 cursor: 'pointer',
               }}
             >
-              {words.allSubjects} ({staticCsatCatalog.length})
+              {words.allSubjects} ({problems.length})
             </button>
-            {CSAT_SUBJECTS.map((subject) => {
+            {ALL_SUBJECT_GROUPS.map((subject) => {
               const active = selectedSubject === subject.id;
               const count = subjectCounts[subject.id] || 0;
               const styleMeta = SUBJECT_COLORS[subject.id] || SUBJECT_COLORS.math1;
@@ -552,7 +586,7 @@ export default function CsatUnitBrowser() {
 
           {/* Subject Sections */}
           <div style={{ display: 'grid', gap: 24 }}>
-            {CSAT_SUBJECTS.filter((subject) => {
+            {ALL_SUBJECT_GROUPS.filter((subject) => {
               if (selectedSubject !== 'all' && selectedSubject !== subject.id) return false;
               return true;
             }).map((subject) => {

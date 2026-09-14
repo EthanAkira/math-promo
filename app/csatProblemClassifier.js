@@ -1,0 +1,56 @@
+// Rule-based (keyword/regex) topic classifier for individual CSAT math problems.
+// Deterministic heuristic over the parsed question+explanation text, ordered from most
+// specific to most generic pattern so problems land in the appropriate sub-unit.
+// Mirrors app/amcProblemClassifier.js. Grade decides which taxonomy applies:
+// 고1(g1) -> COMMON_MATH_SUBJECTS (공통수학1·2), 고2/고3/unset -> CSAT_SUBJECTS (5 선택과목),
+// since 고2 6월/9월 모의고사 also draws only from 수학Ⅰ·Ⅱ but shares that taxonomy with 고3.
+
+const CSAT_RULES = [
+  // 기하 (매우 특징적인 용어라 가장 먼저 검사)
+  { subjectId: 'geometry', unitId: 'conic-sections', test: /포물선|타원|쌍곡선|이차곡선|준선|장축|단축|주축/ },
+  { subjectId: 'geometry', unitId: 'space-geometry', test: /공간좌표|공간벡터|이면각|정사영|공간도형|삼수선의\s*정리|평면과\s*직선이\s*이루는/ },
+  { subjectId: 'geometry', unitId: 'plane-vectors', test: /벡터|내적|시점과\s*종점|단위벡터|영벡터/ },
+
+  // 미적분 (수열의 극한 · 여러 가지 미분법·적분법)
+  { subjectId: 'calculus', unitId: 'sequence-limits', test: /수열의\s*극한|무한급수|등비급수|급수의\s*합|\\sum[_{]*n.*\\infty/ },
+  { subjectId: 'calculus', unitId: 'advanced-integration', test: /치환적분|부분적분|정적분으로\s*정의된\s*함수|삼각함수의\s*적분/ },
+  { subjectId: 'calculus', unitId: 'advanced-differentiation', test: /합성함수의\s*미분|매개변수로\s*나타내어진|음함수의\s*미분|로그미분법|이계도함수|자연로그|\\ln\b/ },
+
+  // 확률과 통계
+  { subjectId: 'prob-stats', unitId: 'statistics', test: /정규분포|표준편차|모평균|표본평균|신뢰구간|이항분포|모표준편차|표본표준편차/ },
+  { subjectId: 'prob-stats', unitId: 'probability', test: /조건부확률|독립사건|배반사건|여사건|확률변수|기댓값|확률의\s*값/ },
+  { subjectId: 'prob-stats', unitId: 'counting', test: /순열|조합|중복순열|중복조합|이항정리|경우의\s*수|\\binom/ },
+
+  // 수학Ⅰ
+  { subjectId: 'math1', unitId: 'trig', test: /삼각함수|사인법칙|코사인법칙|라디안|주기함수|\\sin\b|\\cos\b|\\tan\b/ },
+  { subjectId: 'math1', unitId: 'sequences', test: /등차수열|등비수열|수열의\s*합|점화식|귀납적으로\s*정의|첫째항이/ },
+  { subjectId: 'math1', unitId: 'exp-log', test: /로그함수|지수함수|상용로그|지수법칙|로그의\s*성질|밑과\s*진수|\\log\b/ },
+
+  // 수학Ⅱ
+  { subjectId: 'math2', unitId: 'limits-continuity', test: /함수의\s*극한|좌극한|우극한|연속함수|불연속|극한값/ },
+  { subjectId: 'math2', unitId: 'differentiation', test: /미분계수|도함수|접선의\s*방정식|극댓값|극솟값|증가와\s*감소|변곡점|평균값\s*정리/ },
+  { subjectId: 'math2', unitId: 'integration', test: /부정적분|정적분|구분구적법|넓이를\s*구하|\\int/ },
+];
+
+const COMMON_MATH_RULES = [
+  { subjectId: 'common-math-1', unitId: 'polynomial-ops', test: /다항식의\s*연산|인수분해|나머지정리|조립제법|항등식/ },
+  { subjectId: 'common-math-2', unitId: 'coordinate-geometry-equations', test: /직선의\s*방정식|원의\s*방정식|두\s*점\s*사이의\s*거리|대칭이동|평행이동/ },
+  { subjectId: 'common-math-1', unitId: 'equations-inequalities', test: /이차방정식|이차부등식|판별식|근과\s*계수|복소수|연립방정식/ },
+  { subjectId: 'common-math-1', unitId: 'matrices-intro', test: /행렬|역행렬/ },
+  { subjectId: 'common-math-1', unitId: 'common-math-counting', test: /순열|조합|경우의\s*수/ },
+  { subjectId: 'common-math-2', unitId: 'sets-propositions', test: /집합|명제|부분집합|진리집합|필요충분조건/ },
+  { subjectId: 'common-math-2', unitId: 'functions-graphs', test: /합성함수|역함수|함수의\s*그래프|함수\b/ },
+];
+
+// Returns { subjectId, unitId } — falls back to 'uncategorized' if nothing matches.
+// grade: 'g1' | 'g2' | 'g3' | null/undefined (null/g2/g3 all use the CSAT_SUBJECTS taxonomy).
+export function classifyCsatProblem(questionText, explanationText, grade) {
+  const text = `${questionText || ''} ${explanationText || ''}`;
+  const rules = grade === 'g1' ? COMMON_MATH_RULES : CSAT_RULES;
+  for (const rule of rules) {
+    if (rule.test.test(text)) {
+      return { subjectId: rule.subjectId, unitId: rule.unitId };
+    }
+  }
+  return { subjectId: 'uncategorized', unitId: 'uncategorized' };
+}

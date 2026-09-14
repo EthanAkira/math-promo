@@ -5,6 +5,7 @@ import { CSAT_SUBJECTS, COMMON_MATH_SUBJECTS } from '../../examUnits';
 import AiExamParser, { extractTextFromPdf, parseExamText } from '../../components/AiExamParser';
 import SubscriptionAdmin from '../../components/SubscriptionAdmin';
 import { getExamFullText } from '../../data/sampleExams';
+import { classifyCsatProblem } from '../../csatProblemClassifier';
 
 const FILE_TYPE_LABELS = {
   problems: '문제지', solutions: '해설지', answers: '정답지',
@@ -115,7 +116,32 @@ export default function CsatAdmin() {
                 localStorage.setItem('custom_exam_csat', JSON.stringify(parsed));
               } catch (e) {}
             }
-            convertedMsg = ` 및 전체 ${parsed.length}개 전 문항 인터랙티브 시험 세트 자동 변환·배포 완료!`;
+
+            // Real-time synchronization to Cloudflare D1 archive_problems (unit-by-unit catalog)
+            try {
+              const items = parsed.map((p) => {
+                const cls = classifyCsatProblem(p.question, p.explanation, grade);
+                return {
+                  problemNumber: p.number,
+                  subjectId: cls.subjectId,
+                  unitId: cls.unitId,
+                  question: p.question,
+                  choices: p.choices,
+                  answer: p.correctAnswer,
+                  explanation: p.explanation,
+                  points: p.points,
+                };
+              });
+              await fetch('/api/csat/problems', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password, grade, examType, year: parseInt(year, 10), variant: variantId, sourceFileKey: data.key, items }),
+              });
+            } catch (d1Err) {
+              console.warn('D1 problem sync warning:', d1Err);
+            }
+
+            convertedMsg = ` 및 전체 ${parsed.length}개 전 문항 인터랙티브 시험 세트 & 세부 단원 자동 분류·동기화 완료!`;
           }
         } catch (convErr) {
           console.warn('Auto convert warning:', convErr);
@@ -234,6 +260,73 @@ export default function CsatAdmin() {
     const template = getExamFullText('csat', entryExamType);
     setParserInitialText(template);
     setStatus(`${entryYear} ${EXAM_TYPE_LABELS[entryExamType] || entryExamType} 전체 30문항 표준 세트가 로드되었습니다.`);
+  }
+
+  // Retroactively classifies every already-uploaded 문제지/변형문제 file of one exam type
+  // (across every year, track and grade) into fine-grained units — for files uploaded
+  // before this auto-classify-on-upload pipeline existed.
+  async function handleClassifyExamType(targetExamType) {
+    if (!password) { setStatus('분류하려면 먼저 비밀번호를 입력해주세요.'); return; }
+    const entries = manifest?.[targetExamType] || [];
+    const files = [];
+    for (const entry of entries) {
+      for (const variant of entry.variants) {
+        for (const [type, fileEntry] of Object.entries(variant.files)) {
+          if (type === 'problems' || type === 'variant_problem') {
+            files.push({ year: entry.year, variantId: variant.id, grade: fileEntry.meta?.grade || 'g3', fileEntry });
+          }
+        }
+      }
+    }
+    if (files.length === 0) { setStatus(`${EXAM_TYPE_LABELS[targetExamType]}에 등록된 문제지 파일이 없습니다.`); return; }
+
+    setBusy(true);
+    let totalSaved = 0;
+    for (let i = 0; i < files.length; i += 1) {
+      const f = files[i];
+      setStatus(`(${i + 1}/${files.length}) ${f.year} ${EXAM_TYPE_LABELS[targetExamType]} ${f.variantId} 분석 중...`);
+      try {
+        const res = await fetch(`/api/csat/file?key=${encodeURIComponent(f.fileEntry.key)}`);
+        if (!res.ok) continue;
+        const contentType = res.headers.get('content-type') || '';
+        let text = '';
+        if (contentType.includes('pdf') || (f.fileEntry.filename || '').toLowerCase().endsWith('.pdf')) {
+          text = await extractTextFromPdf(await res.arrayBuffer());
+        } else {
+          text = await res.text();
+        }
+        if (!text || !text.trim()) continue;
+
+        const parsed = parseExamText(text);
+        if (!parsed.length) continue;
+
+        const items = parsed.map((p) => {
+          const cls = classifyCsatProblem(p.question, p.explanation, f.grade);
+          return {
+            problemNumber: p.number,
+            subjectId: cls.subjectId,
+            unitId: cls.unitId,
+            question: p.question,
+            choices: p.choices,
+            answer: p.correctAnswer,
+            explanation: p.explanation,
+            points: p.points,
+          };
+        });
+
+        const saveRes = await fetch('/api/csat/problems', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password, grade: f.grade, examType: targetExamType, year: f.year, variant: f.variantId, sourceFileKey: f.fileEntry.key, items }),
+        });
+        const saveData = await saveRes.json();
+        if (saveRes.ok) totalSaved += saveData.saved || 0;
+      } catch (e) {
+        console.warn('CSAT problem classify error:', f.year, e);
+      }
+    }
+    setBusy(false);
+    setStatus(`✅ ${EXAM_TYPE_LABELS[targetExamType]} 전체 ${files.length}개 문제지 분석 완료 — 총 ${totalSaved}개 문제를 단원별로 자동 분류·저장했습니다.`);
   }
 
   // 학년별로 출제 범위가 다르므로 단원 태그 선택지도 학년에 맞춰 바꾼다:
@@ -425,6 +518,24 @@ export default function CsatAdmin() {
       <button type="submit" className="button button-primary" disabled={busy} style={{ justifySelf: 'start' }}>업로드</button>
       {status ? <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: status.includes('완료') || status.includes('삭제') ? 'var(--chalk-green)' : 'var(--red-pen)' }}>{status}</p> : null}
     </form>
+
+    <div style={{ padding: 20, background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)', marginBottom: 24, display: 'grid', gap: 12 }}>
+      <div>
+        <strong style={{ fontSize: 15 }}>🗂️ 단원별 문제은행 자동 분류</strong>
+        <p style={{ fontSize: 13, color: 'var(--ink-soft)', margin: '4px 0 0' }}>
+          시험 종류를 선택하면 등록된 모든 문제지(문제/변형문제) 파일을 학년·연도·트랙 구분 없이 전부 읽어 문항별로 분리하고,
+          키워드 기반 규칙으로 세부 단원을 자동 태깅해 저장합니다. 진짜 AI(LLM) 판독이 아닌 규칙 기반 분류이므로 완벽하지
+          않을 수 있습니다 — 다시 실행하면 해당 파일의 분류가 갱신됩니다.
+        </p>
+      </div>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        {EXAM_TYPES.map((type) => (
+          <button key={type} type="button" className="button button-secondary" disabled={busy} onClick={() => handleClassifyExamType(type)}>
+            {EXAM_TYPE_LABELS[type]} 전체 문제 분류 실행
+          </button>
+        ))}
+      </div>
+    </div>
 
     <h2 style={{ fontSize: 18, margin: '0 0 12px' }}>현재 등록된 자료</h2>
     <div style={{ display: 'grid', gap: 10 }}>
