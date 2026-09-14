@@ -52,6 +52,8 @@ function topicAvailabilityLabel(topic, copy) {
 // same concept. Shown as a plain badge-link under the topic (not a toggle — that design was tried
 // and rejected as needless complexity); the badge always points at the localized AMC variant
 // (`&variant=1`), never the raw English archive.
+// A topic can likewise carry `csat: { href }` — a matching CSAT(수능) unit in /csat/units, shown as
+// its own badge-link the same way (both can appear together on one topic).
 function TopicItem({ topic, copy }) {
   const displayLabel = sanitizePublicText(topic.label);
   if (topic.isHeader) {
@@ -63,6 +65,7 @@ function TopicItem({ topic, copy }) {
   }
 
   const hasAmc = Boolean(topic.amc);
+  const hasCsat = Boolean(topic.csat);
 
   const typeMatch = displayLabel.match(/^\[(기본|응용|실전 총괄|통합)\]\s*/);
   const typeTag = typeMatch ? typeMatch[1] : null;
@@ -126,6 +129,12 @@ function TopicItem({ topic, copy }) {
         <a href={topic.amc.href} className="amc-inline-badge">
           <span>AMC 미국수학경시대회 스타일 문제로 연습하기</span>
           <span className="amc-inline-badge-cta">문제 풀기 →</span>
+        </a>
+      )}
+      {hasCsat && (
+        <a href={topic.csat.href} className="csat-inline-badge">
+          <span>수능 기출문제로 응용 연습하기</span>
+          <span className="csat-inline-badge-cta">문제 풀기 →</span>
         </a>
       )}
     </div>
@@ -803,6 +812,30 @@ export default function CurriculumExplorer() {
           background: #e9d5ff;
         }
         .amc-inline-badge-cta {
+          font-weight: 800;
+          white-space: nowrap;
+        }
+        .csat-inline-badge {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          align-self: stretch;
+          margin: 4px 10px 8px;
+          padding: 5px 10px;
+          border-radius: 6px;
+          background: #fee2e2;
+          color: #b91c1c;
+          font-size: 12px;
+          font-weight: 600;
+          line-height: 1.3;
+          text-decoration: none;
+          transition: background 0.15s ease;
+        }
+        .csat-inline-badge:hover {
+          background: #fecaca;
+        }
+        .csat-inline-badge-cta {
           font-weight: 800;
           white-space: nowrap;
         }

@@ -1083,6 +1083,7 @@ const KOREAN_GRADE_STAGE_SEEDS = [
         ready: true,
         availability: 'partial',
         meta: { legacy: '수학(상)', revised2022: '공통수학1', officialType: '공통 과목' },
+        csat: { href: '/csat/units?unit=polynomial-ops' },
       },
       {
         label: '수학(하) · 공통수학2 (도형의 방정식·집합과 명제·함수)',
@@ -1091,6 +1092,7 @@ const KOREAN_GRADE_STAGE_SEEDS = [
         availability: 'partial',
         amc: { href: '/amc/units?unit=venn-sets&variant=1' },
         meta: { legacy: '수학(하)', revised2022: '공통수학2', officialType: '공통 과목' },
+        csat: { href: '/csat/units?unit=coordinate-geometry-equations' },
       },
       {
         label: '고등 기하 기초 (좌표와 도형)',
@@ -1127,15 +1129,15 @@ const KOREAN_GRADE_STAGE_SEEDS = [
         meta: { legacy: '수학Ⅰ', revised2022: '대수', officialType: '일반 선택' },
       },
       { label: '지수법칙과 지수함수·지수방정식', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=exponential-equations', ready: true, availability: 'ready' },
-      { label: '지수·로그함수의 관계와 그래프', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-exponential-log-functions', ready: true, availability: 'ready' },
+      { label: '지수·로그함수의 관계와 그래프', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-exponential-log-functions', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=exp-log' } },
       { label: '지수·로그함수 그래프의 평행이동과 대칭이동', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=precalc-exp-log-transformations', ready: true, availability: 'ready' },
       { label: '로그의 정의와 성질', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=logarithms', ready: true, availability: 'ready' },
       { label: '일반각과 호도법', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-radians-trig', ready: true, availability: 'ready' },
-      { label: '삼각함수의 값과 성질', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=algebra2-trigonometry', ready: true, availability: 'ready' },
+      { label: '삼각함수의 값과 성질', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=algebra2-trigonometry', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=trig' } },
       { label: '삼각함수의 그래프', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=precalc-trig-graphs', ready: true, availability: 'ready' },
       { label: '삼각함수의 상호관계와 삼각방정식', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=precalc-trig-identities', ready: true, availability: 'ready' },
       { label: '사인법칙과 코사인법칙', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-sine-cosine-laws', ready: true, availability: 'ready' },
-      { label: '등차수열의 뜻과 일반항', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=sequences', ready: true, availability: 'ready', amc: { href: '/amc/units?unit=sequences-patterns&variant=1' } },
+      { label: '등차수열의 뜻과 일반항', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=sequences', ready: true, availability: 'ready', amc: { href: '/amc/units?unit=sequences-patterns&variant=1' }, csat: { href: '/csat/units?unit=sequences' } },
       { label: '등비수열과 그 합', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=geometric-sequences', ready: true, availability: 'ready' },
       { label: '수열의 합과 수학적 귀납법', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-sequence-sums-induction', ready: true, availability: 'ready' },
       {
@@ -1144,6 +1146,7 @@ const KOREAN_GRADE_STAGE_SEEDS = [
         ready: true,
         availability: 'partial',
         meta: { legacy: '수학Ⅱ', revised2022: '미적분Ⅰ', officialType: '일반 선택' },
+        csat: { href: '/csat/units?unit=differentiation' },
       },
       {
         label: '확률과 통계 (2015·2022 개정 동일 — 경우의 수, 확률, 통계적 추정)',
@@ -1151,6 +1154,7 @@ const KOREAN_GRADE_STAGE_SEEDS = [
         ready: true,
         availability: 'partial',
         meta: { legacy: '확률과 통계', revised2022: '확률과 통계', officialType: '일반 선택' },
+        csat: { href: '/csat/units?unit=probability' },
       },
     ],
   },
@@ -1172,6 +1176,7 @@ const KOREAN_GRADE_STAGE_SEEDS = [
         ready: true,
         availability: 'partial',
         meta: { legacy: '미적분', revised2022: '미적분Ⅱ', officialType: '진로 선택' },
+        csat: { href: '/csat/units?unit=sequence-limits' },
       },
       {
         label: '기하 (2022 개정: 기하 — 이차곡선, 평면벡터, 공간도형과 공간좌표)',
@@ -1179,6 +1184,7 @@ const KOREAN_GRADE_STAGE_SEEDS = [
         ready: true,
         availability: 'partial',
         meta: { legacy: '기하', revised2022: '기하', officialType: '진로 선택' },
+        csat: { href: '/csat/units?unit=conic-sections' },
       },
       {
         label: '수능 수학 종합 연습 (실전 모의)',
