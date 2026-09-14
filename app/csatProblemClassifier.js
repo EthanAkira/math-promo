@@ -34,7 +34,7 @@ const CSAT_RULES = [
   // 수학Ⅱ
   { subjectId: 'math2', unitId: 'limits-continuity', test: /함수의\s*극한|좌극한|우극한|연속함수|불연속|극한값|연속인|연속일\s*때|\blim\b/ },
   { subjectId: 'math2', unitId: 'differentiation', test: /미분계수|도함수|접선의\s*방정식|극댓값|극솟값|증가와\s*감소|변곡점|평균값\s*정리|f\s*['′]|미분가능/ },
-  { subjectId: 'math2', unitId: 'integration', test: /부정적분|정적분|구분구적법|넓이를\s*구하|∫/ },
+  { subjectId: 'math2', unitId: 'integration', test: /부정적분|정적분|구분구적법|넓이를\s*구하|둘러싸인\s*부분의\s*넓이|∫|속도|가속도|움직인\s*거리/ },
 ];
 
 const COMMON_MATH_RULES = [

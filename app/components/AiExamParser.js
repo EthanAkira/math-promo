@@ -273,9 +273,22 @@ export function parseExamText(rawText) {
   const bookletDotted = extractBookletAwareProblems(rawDotted);
   const bookletCombined = extractBookletAwareProblems(rawCombined);
 
+  // dottedRegex only matches explicit, low-ambiguity problem markers (번호+period/번/bracket).
+  // combinedRegex adds one more alternative — a bare 1-30 number followed by whitespace then a
+  // letter/한글/quote — meant for English AMC layouts where problems aren't always punctuated.
+  // Against real CSAT PDF text that bare-number rule is disastrous: text extraction inserts a
+  // newline wherever the vertical position jumps (fraction stacks, super/subscripts), so almost
+  // any small integer in the middle of a problem (exponents, counts, "...1 인 상수이다") ends up
+  // as the first token on a "line" and gets misread as a new problem start, splitting a real
+  // problem into fragments (the tail half, cut off mid-sentence, then wins the slot for that
+  // number if it happens to be longer or has the choice markers). Prefer the unambiguous dotted
+  // matches whenever they already found a workable set; only fall back to the noisier combined
+  // regex when dottedRegex alone couldn't find enough problems at all.
   let problemBlocks = [];
-  if (bookletCombined.length >= 10 || bookletDotted.length >= 10) {
-    problemBlocks = bookletCombined.length >= bookletDotted.length ? bookletCombined : bookletDotted;
+  if (bookletDotted.length >= 10) {
+    problemBlocks = bookletDotted;
+  } else if (bookletCombined.length >= 10) {
+    problemBlocks = bookletCombined;
   } else {
     const seq = extractBestSequence(rawCombined.length >= rawDotted.length ? rawCombined : rawDotted, 30);
     if (seq.length > 0) {
