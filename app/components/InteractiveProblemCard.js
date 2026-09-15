@@ -96,6 +96,8 @@ export default function InteractiveProblemCard({
     sourceRatePart = '';
   }
 
+  const hasRateInSource = Boolean(sourceRatePart);
+
   return (
     <div
       id={`problem-${number}`}
@@ -199,27 +201,27 @@ export default function InteractiveProblemCard({
               {sanitizePublicText(unit)}
             </span>
           ) : null}
-          {!isExamMode && !hasRateInSource && correctRate !== undefined && correctRate !== null ? (
+          {!isExamMode && !hasRateInSource && effectiveCorrectRate !== undefined && effectiveCorrectRate !== null ? (
             <span
               style={{
                 fontSize: '12px',
                 fontWeight: '700',
                 padding: '2px 9px',
                 borderRadius: '6px',
-                background: correctRate >= 70
+                background: effectiveCorrectRate >= 70
                   ? 'rgba(16, 185, 129, 0.10)'
-                  : correctRate >= 40
+                  : effectiveCorrectRate >= 40
                     ? 'rgba(245, 158, 11, 0.12)'
                     : 'rgba(239, 68, 68, 0.12)',
-                color: correctRate >= 70
+                color: effectiveCorrectRate >= 70
                   ? '#047857'
-                  : correctRate >= 40
+                  : effectiveCorrectRate >= 40
                     ? '#b45309'
                     : '#b91c1c',
                 border: `1px solid ${
-                  correctRate >= 70
+                  effectiveCorrectRate >= 70
                     ? 'rgba(16, 185, 129, 0.3)'
-                    : correctRate >= 40
+                    : effectiveCorrectRate >= 40
                       ? 'rgba(245, 158, 11, 0.35)'
                       : 'rgba(239, 68, 68, 0.35)'
                 }`,
@@ -228,14 +230,14 @@ export default function InteractiveProblemCard({
                 gap: '4px',
               }}
               title={language === 'ko'
-                ? `정답률: ${correctRate}%, 오답률: ${errorRate ?? (100 - correctRate).toFixed(1)}%`
-                : `Accuracy: ${correctRate}%, Error: ${errorRate ?? (100 - correctRate).toFixed(1)}%`}
+                ? `정답률: ${effectiveCorrectRate}%, 오답률: ${effectiveErrorRate ?? (100 - effectiveCorrectRate).toFixed(1)}%`
+                : `Accuracy: ${effectiveCorrectRate}%, Error: ${effectiveErrorRate ?? (100 - effectiveCorrectRate).toFixed(1)}%`}
             >
               <span>📊</span>
               <span>
-                {language === 'ko' ? `정답률 ${correctRate}%` : `Accuracy ${correctRate}%`}
+                {language === 'ko' ? `정답률 ${effectiveCorrectRate}%` : `Accuracy ${effectiveCorrectRate}%`}
                 <span style={{ opacity: 0.75, fontSize: '11px', marginLeft: '4px' }}>
-                  ({language === 'ko' ? `오답률 ${errorRate ?? (100 - correctRate).toFixed(1)}%` : `Err ${errorRate ?? (100 - correctRate).toFixed(1)}%`})
+                  ({language === 'ko' ? `오답률 ${effectiveErrorRate ?? (100 - effectiveCorrectRate).toFixed(1)}%` : `Err ${effectiveErrorRate ?? (100 - effectiveCorrectRate).toFixed(1)}%`})
                 </span>
               </span>
             </span>
