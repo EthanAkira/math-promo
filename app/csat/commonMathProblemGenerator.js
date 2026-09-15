@@ -545,6 +545,499 @@ function genLinearEquation(rng) {
   };
 }
 
+/**
+ * 12. 원의 방정식: 일반형에서 중심과 반지름 구하기
+ */
+function genCircleEquation(rng) {
+  const a = randNonZero(-4, 4, rng);
+  const b = randNonZero(-4, 4, rng);
+  const r = randInt(2, 6, rng);
+  const rSq = r * r;
+  const c = a * a + b * b - rSq;
+  const aTerm = -2 * a;
+  const bTerm = -2 * b;
+
+  const eqStr = `x^2 + y^2 ${aTerm >= 0 ? `+ ${aTerm}` : `- ${Math.abs(aTerm)}`}x ${bTerm >= 0 ? `+ ${bTerm}` : `- ${Math.abs(bTerm)}`}y ${c >= 0 ? `+ ${c}` : `- ${Math.abs(c)}`} = 0`;
+
+  const ask = pickRandom(['centerSum', 'radius'], rng);
+  if (ask === 'radius') {
+    const question = `원 $${eqStr}$의 반지름의 길이는?`;
+    const explanation = `원의 방정식을 표준형으로 정리하면\n` +
+      `$$(x ${-a >= 0 ? `+ ${-a}` : `- ${a}`})^2 + (y ${-b >= 0 ? `+ ${-b}` : `- ${b}`})^2 = ${rSq}$$\n` +
+      `따라서 원의 중심은 $(${a}, ${b})$이고, 반지름의 길이는 $\\sqrt{${rSq}} = ${r}$입니다.`;
+    const { choices, correctIndex } = buildChoices(
+      r,
+      (v, rG) => Math.max(1, v + pickRandom([-2, -1, 1, 2, 3], rG)),
+      rng
+    );
+    return {
+      unitId: 'coordinate-geometry-equations',
+      subjectId: 'common-math-2',
+      chapterName: '원의 방정식',
+      question,
+      choices,
+      correctAnswer: correctIndex,
+      explanation,
+    };
+  } else {
+    const val = a + b;
+    const question = `원 $${eqStr}$의 중심의 좌표를 $(a, b)$라 할 때, $a + b$의 값은?`;
+    const explanation = `원의 방정식을 표준형으로 정리하면\n` +
+      `$$(x ${-a >= 0 ? `+ ${-a}` : `- ${a}`})^2 + (y ${-b >= 0 ? `+ ${-b}` : `- ${b}`})^2 = ${rSq}$$\n` +
+      `따라서 원의 중심의 좌표는 $(a, b) = (${a}, ${b})$이므로\n` +
+      `$$a + b = (${a}) + (${b}) = ${val}$$입니다.`;
+    const { choices, correctIndex } = buildChoices(
+      val,
+      (v, rG) => v + pickRandom([-4, -3, -2, -1, 1, 2, 3, 4], rG),
+      rng
+    );
+    return {
+      unitId: 'coordinate-geometry-equations',
+      subjectId: 'common-math-2',
+      chapterName: '원의 방정식',
+      question,
+      choices,
+      correctAnswer: correctIndex,
+      explanation,
+    };
+  }
+}
+
+/**
+ * 13. 원과 직선의 위치관계 (접선 및 중심 거리)
+ */
+function genCircleLineDistance(rng) {
+  const r = randInt(2, 5, rng);
+  const k = 5 * r;
+  const question = `원 $x^2 + y^2 = ${r * r}$과 직선 $3x + 4y - k = 0$이 서로 접할 때, 양수 $k$의 값은?`;
+  const explanation = `원의 중심 $(0, 0)$과 직선 $3x + 4y - k = 0$ 사이의 거리 $d$는\n` +
+    `$$d = \\frac{|3 \\times 0 + 4 \\times 0 - k|}{\\sqrt{3^2 + 4^2}} = \\frac{|-k|}{\\sqrt{9 + 16}} = \\frac{|k|}{5}$$\n` +
+    `원과 직선이 접하므로 $d = r = ${r}$이어야 합니다.\n` +
+    `$$\\frac{|k|}{5} = ${r} \\implies |k| = ${k}$$\n` +
+    `$k > 0$이므로 $k = ${k}$입니다.`;
+  const { choices, correctIndex } = buildChoices(
+    k,
+    (v, rG) => Math.max(1, v + pickRandom([-10, -5, 5, 10, 15], rG)),
+    rng
+  );
+  return {
+    unitId: 'coordinate-geometry-equations',
+    subjectId: 'common-math-2',
+    chapterName: '원과 직선',
+    question,
+    choices,
+    correctAnswer: correctIndex,
+    explanation,
+  };
+}
+
+/**
+ * 14. 점의 평행이동
+ */
+function genTranslationPoint(rng) {
+  const x1 = randInt(-4, 5, rng);
+  const y1 = randInt(-4, 5, rng);
+  const a = randNonZero(-4, 4, rng);
+  const b = randNonZero(-4, 4, rng);
+  const x2 = x1 + a;
+  const y2 = y1 + b;
+  const val = a + b;
+
+  const question = `점 $A(${x1}, ${y1})$을 $x$축의 방향으로 $a$만큼, $y$축의 방향으로 $b$만큼 평행이동한 점의 좌표가 $(${x2}, ${y2})$일 때, $a + b$의 값은?`;
+  const explanation = `점 $A(${x1}, ${y1})$을 $x$축 방향으로 $a$, $y$축 방향으로 $b$만큼 평행이동한 점의 좌표는\n` +
+    `$$(${x1} + a, ${y1} + b)$$\n` +
+    `이 점이 $(${x2}, ${y2})$와 같으므로\n` +
+    `$$${x1} + a = ${x2} \\implies a = ${a}$$\n` +
+    `$$${y1} + b = ${y2} \\implies b = ${b}$$\n` +
+    `따라서 $$a + b = (${a}) + (${b}) = ${val}$$입니다.`;
+
+  const { choices, correctIndex } = buildChoices(
+    val,
+    (v, rG) => v + pickRandom([-4, -3, -2, -1, 1, 2, 3, 4], rG),
+    rng
+  );
+  return {
+    unitId: 'coordinate-geometry-equations',
+    subjectId: 'common-math-2',
+    chapterName: '도형의 이동',
+    question,
+    choices,
+    correctAnswer: correctIndex,
+    explanation,
+  };
+}
+
+/**
+ * 15. 집합의 포함관계와 부분집합의 개수
+ */
+function genSubsetCount(rng) {
+  const n = randInt(4, 7, rng);
+  const k = randInt(1, 2, rng);
+  const elements = Array.from({ length: n }, (_, i) => i + 1);
+  const mustHave = elements.slice(0, k);
+  const val = Math.pow(2, n - k);
+
+  const mustHaveStr = mustHave.join(', ');
+  const question = `집합 $A = \\{${elements.join(', ')}\\}$의 부분집합 중에서 원소 $${mustHaveStr}$을 반드시 포함하는 부분집합의 개수는?`;
+  const explanation = `집합 $A$의 전체 원소의 개수는 $n = ${n}$개입니다.\n` +
+    `특정한 $${k}$개의 원소 $\\{${mustHaveStr}\\}$을 반드시 포함하는 부분집합의 개수는\n` +
+    `$$2^{${n} - ${k}} = 2^{${n - k}} = ${val}$$입니다.`;
+
+  const { choices, correctIndex } = buildChoices(
+    val,
+    (v, rG) => pickRandom([Math.max(1, v / 2), v * 2, v - 2, v + 2, v + 4], rG),
+    rng
+  );
+  return {
+    unitId: 'sets-propositions',
+    subjectId: 'common-math-2',
+    chapterName: '집합의 포함관계',
+    question,
+    choices,
+    correctAnswer: correctIndex,
+    explanation,
+  };
+}
+
+/**
+ * 16. 집합의 연산 (합집합, 교집합)
+ */
+function genSetOperations(rng) {
+  const nA = randInt(10, 25, rng);
+  const nB = randInt(8, 20, rng);
+  const nCap = randInt(3, Math.min(nA, nB) - 2, rng);
+  const nCup = nA + nB - nCap;
+
+  const question = `두 집합 $A, B$에 대하여 $n(A) = ${nA}$, $n(B) = ${nB}$, $n(A \\cap B) = ${nCap}$일 때, $n(A \\cup B)$의 값은?`;
+  const explanation = `합집합의 원소의 개수 공식에 의하여\n` +
+    `$$n(A \\cup B) = n(A) + n(B) - n(A \\cap B)$$\n` +
+    `$$= ${nA} + ${nB} - ${nCap} = ${nA + nB} - ${nCap} = ${nCup}$$입니다.`;
+
+  const { choices, correctIndex } = buildChoices(
+    nCup,
+    (v, rG) => v + pickRandom([-4, -3, -2, -1, 1, 2, 3, 4], rG),
+    rng
+  );
+  return {
+    unitId: 'sets-propositions',
+    subjectId: 'common-math-2',
+    chapterName: '집합의 연산',
+    question,
+    choices,
+    correctAnswer: correctIndex,
+    explanation,
+  };
+}
+
+/**
+ * 17. 충분조건과 필요조건
+ */
+function genLogicCondition(rng) {
+  const k = randInt(2, 6, rng);
+  const question = `두 조건 $p, q$가\n` +
+    `$$p: x \\ge a$$, $$q: x \\ge ${k}$$\n` +
+    `일 때, $p$가 $q$이기 위한 필요조건이 되도록 하는 실수 $a$의 최댓값은?`;
+  const explanation = `$p$가 $q$이기 위한 필요조건이 되려면 명제 $q \\implies p$가 참이어야 합니다.\n` +
+    `진리집합으로 나타내면 $Q \\subset P$이어야 하므로\n` +
+    `$$\\{x \\mid x \\ge ${k}\\} \\subset \\{x \\mid x \\ge a\\}$$\n` +
+    `수직선 위에서 확인하면 $a \\le ${k}$이어야 합니다.\n` +
+    `따라서 실수 $a$의 최댓값은 $${k}$입니다.`;
+
+  const { choices, correctIndex } = buildChoices(
+    k,
+    (v, rG) => v + pickRandom([-3, -2, -1, 1, 2, 3], rG),
+    rng
+  );
+  return {
+    unitId: 'sets-propositions',
+    subjectId: 'common-math-2',
+    chapterName: '충분조건과 필요조건',
+    question,
+    choices,
+    correctAnswer: correctIndex,
+    explanation,
+  };
+}
+
+/**
+ * 18. 합성함수
+ */
+function genCompositeFunction(rng) {
+  const a = randNonZero(-3, 3, rng);
+  const b = randNonZero(-4, 4, rng);
+  const c = randNonZero(-3, 3, rng);
+  const d = randNonZero(-4, 4, rng);
+  const x0 = randInt(1, 4, rng);
+
+  const gx0 = c * x0 + d;
+  const fgx0 = a * gx0 + b;
+
+  const fStr = `${a === 1 ? '' : a === -1 ? '-' : a}x ${b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`}`;
+  const gStr = `${c === 1 ? '' : c === -1 ? '-' : c}x ${d >= 0 ? `+ ${d}` : `- ${Math.abs(d)}`}`;
+
+  const question = `두 함수 $f(x) = ${fStr}$, $g(x) = ${gStr}$에 대하여 $(f \\circ g)(${x0})$의 값은?`;
+  const explanation = `합성함수의 정의에 의하여\n` +
+    `$$(f \\circ g)(${x0}) = f(g(${x0}))$$\n` +
+    `먼저 $g(${x0})$을 구하면\n` +
+    `$$g(${x0}) = ${c} \\times ${x0} ${d >= 0 ? `+ ${d}` : `- ${Math.abs(d)}`} = ${gx0}$$\n` +
+    `따라서\n` +
+    `$$f(g(${x0})) = f(${gx0}) = ${a} \\times (${gx0}) ${b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`} = ${fgx0}$$입니다.`;
+
+  const { choices, correctIndex } = buildChoices(
+    fgx0,
+    (v, rG) => v + pickRandom([-5, -3, -2, -1, 1, 2, 3, 5], rG),
+    rng
+  );
+  return {
+    unitId: 'functions-graphs',
+    subjectId: 'common-math-2',
+    chapterName: '합성함수와 역함수',
+    question,
+    choices,
+    correctAnswer: correctIndex,
+    explanation,
+  };
+}
+
+/**
+ * 19. 역함수의 함숫값
+ */
+function genInverseFunction(rng) {
+  const a = pickRandom([2, 3, 4, -2, -3], rng);
+  const b = randNonZero(-5, 5, rng);
+  const targetAns = randInt(-4, 5, rng);
+  const k = a * targetAns + b;
+
+  const fStr = `${a === 1 ? '' : a === -1 ? '-' : a}x ${b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`}`;
+
+  const question = `함수 $f(x) = ${fStr}$의 역함수를 $f^{-1}$이라 할 때, $f^{-1}(${k})$의 값은?`;
+  const explanation = `역함수의 성질에 의하여 $f^{-1}(${k}) = k'$라 두면\n` +
+    `$$f(k') = ${k}$$\n` +
+    `$$${a}k' ${b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`} = ${k}$$\n` +
+    `$$${a}k' = ${k - b}$$\n` +
+    `$$k' = ${targetAns}$$\n` +
+    `따라서 $f^{-1}(${k}) = ${targetAns}$입니다.`;
+
+  const { choices, correctIndex } = buildChoices(
+    targetAns,
+    (v, rG) => v + pickRandom([-3, -2, -1, 1, 2, 3], rG),
+    rng
+  );
+  return {
+    unitId: 'functions-graphs',
+    subjectId: 'common-math-2',
+    chapterName: '합성함수와 역함수',
+    question,
+    choices,
+    correctAnswer: correctIndex,
+    explanation,
+  };
+}
+
+/**
+ * 20. 유리함수의 점근선
+ */
+function genRationalFunction(rng) {
+  const p = randNonZero(-4, 4, rng);
+  const q = randNonZero(-4, 4, rng);
+  const k = randInt(1, 4, rng);
+
+  const denomStr = p > 0 ? `x - ${p}` : `x + ${Math.abs(p)}`;
+  const qStr = q > 0 ? `+ ${q}` : `- ${Math.abs(q)}`;
+
+  const question = `유리함수 $y = \\frac{${k}}{${denomStr}} ${qStr}$의 그래프의 두 점근선의 교점의 좌표는?`;
+  const explanation = `유리함수 $y = \\frac{k}{x - p} + q$의 점근선의 방정식은\n` +
+    `$$x = p, \\quad y = q$$\n` +
+    `주어진 식에서 $p = ${p}$, $q = ${q}$이므로\n` +
+    `두 점근선은 $x = ${p}$, $y = ${q}$입니다.\n` +
+    `따라서 두 점근선의 교점의 좌표는 $$(${p}, ${q})$$입니다.`;
+
+  const correctPoint = `(${p}, ${q})`;
+  const { choices, correctIndex } = buildChoices(
+    correctPoint,
+    (_, rG) => `(${p + pickRandom([-2, -1, 1, 2], rG)}, ${q + pickRandom([-2, -1, 1, 2], rG)})`,
+    rng
+  );
+  return {
+    unitId: 'functions-graphs',
+    subjectId: 'common-math-2',
+    chapterName: '유리함수',
+    question,
+    choices,
+    correctAnswer: correctIndex,
+    explanation,
+  };
+}
+
+/**
+ * 21. 무리함수의 함숫값
+ */
+function genRadicalFunction(rng) {
+  const a = randInt(1, 3, rng);
+  const c = randNonZero(-4, 4, rng);
+  const innerSq = pickRandom([4, 9, 16], rng);
+  const x0 = randInt(1, 5, rng);
+  const b = innerSq - a * x0;
+
+  const bStr = b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
+  const cStr = c >= 0 ? `+ ${c}` : `- ${Math.abs(c)}`;
+  const fx0 = Math.round(Math.sqrt(innerSq)) + c;
+
+  const question = `무리함수 $f(x) = \\sqrt{${a === 1 ? '' : a}x ${bStr}} ${cStr}$에 대하여 $f(${x0})$의 값은?`;
+  const explanation = `$x = ${x0}$을 $f(x)$에 대입하면\n` +
+    `$$f(${x0}) = \\sqrt{${a} \\times ${x0} ${bStr}} ${cStr}$$\n` +
+    `$$= \\sqrt{${innerSq}} ${cStr} = ${Math.round(Math.sqrt(innerSq))} ${cStr} = ${fx0}$$입니다.`;
+
+  const { choices, correctIndex } = buildChoices(
+    fx0,
+    (v, rG) => v + pickRandom([-3, -2, -1, 1, 2, 3], rG),
+    rng
+  );
+  return {
+    unitId: 'functions-graphs',
+    subjectId: 'common-math-2',
+    chapterName: '무리함수',
+    question,
+    choices,
+    correctAnswer: correctIndex,
+    explanation,
+  };
+}
+
+/**
+ * 22. 순열의 계산
+ */
+function genPermutationBasic(rng) {
+  const n = randInt(4, 7, rng);
+  const r = randInt(2, 3, rng);
+
+  let val = 1;
+  const factors = [];
+  for (let i = 0; i < r; i++) {
+    val *= (n - i);
+    factors.push(n - i);
+  }
+
+  const question = `순열의 수 $_${n}P_${r}$의 값은?`;
+  const explanation = `순열의 수 공식 $_nP_r = n(n-1)\\cdots(n-r+1)$에 의하여\n` +
+    `$$_^{${n}}P_{${r}} = ${factors.join(' \\times ')} = ${val}$$입니다.`;
+
+  const { choices, correctIndex } = buildChoices(
+    val,
+    (v, rG) => Math.max(1, v + pickRandom([-12, -6, -2, 2, 6, 12], rG)),
+    rng
+  );
+  return {
+    unitId: 'common-math-counting',
+    subjectId: 'common-math-1',
+    chapterName: '순열',
+    question,
+    choices,
+    correctAnswer: correctIndex,
+    explanation,
+  };
+}
+
+/**
+ * 23. 조합의 계산
+ */
+function genCombinationBasic(rng) {
+  const n = randInt(4, 8, rng);
+  const r = randInt(2, 3, rng);
+
+  let num = 1;
+  let denom = 1;
+  const numFactors = [];
+  const denomFactors = [];
+  for (let i = 0; i < r; i++) {
+    num *= (n - i);
+    denom *= (i + 1);
+    numFactors.push(n - i);
+    denomFactors.push(i + 1);
+  }
+  const val = Math.round(num / denom);
+
+  const question = `조합의 수 $_${n}C_${r}$의 값은?`;
+  const explanation = `조합의 수 공식 $_nC_r = \\frac{_nP_r}{r!} = \\frac{n(n-1)\\cdots(n-r+1)}{r!}$에 의하여\n` +
+    `$$_^{${n}}C_{${r}} = \\frac{${numFactors.join(' \\times ')}}{${denomFactors.join(' \\times ')}} = \\frac{${num}}{${denom}} = ${val}$$입니다.`;
+
+  const { choices, correctIndex } = buildChoices(
+    val,
+    (v, rG) => Math.max(1, v + pickRandom([-6, -3, -2, -1, 1, 2, 3, 6], rG)),
+    rng
+  );
+  return {
+    unitId: 'common-math-counting',
+    subjectId: 'common-math-1',
+    chapterName: '조합',
+    question,
+    choices,
+    correctAnswer: correctIndex,
+    explanation,
+  };
+}
+
+/**
+ * 24. 이웃하는 순열
+ */
+function genArrangementAdjacent(rng) {
+  const m = randInt(2, 3, rng);
+  const w = randInt(2, 3, rng);
+  const fact = (k) => (k <= 1 ? 1 : k * fact(k - 1));
+  const val = fact(m + 1) * fact(w);
+
+  const question = `남학생 $${m}$명과 여학생 $${w}$명이 일렬로 설 때, 여학생 $${w}$명이 서로 이웃하여 서는 경우의 수는?`;
+  const explanation = `여학생 $${w}$명을 한 묶음으로 생각하면 전체 묶음의 수는 남학생 $${m}$명과 묶음 1개로 총 $${m + 1}$개입니다.\n` +
+    `1. $${m + 1}$개의 묶음을 일렬로 나열하는 경우의 수: $$(${m} + 1)! = ${m + 1}! = ${fact(m + 1)}$$\n` +
+    `2. 묶음 안에서 여학생 $${w}$명이 자리를 바꾸는 경우의 수: $$${w}! = ${fact(w)}$$\n` +
+    `곱의 법칙에 의하여 구하는 경우의 수는\n` +
+    `$$(${m + 1}!) \\times ${w}! = ${fact(m + 1)} \\times ${fact(w)} = ${val}$$입니다.`;
+
+  const { choices, correctIndex } = buildChoices(
+    val,
+    (v, rG) => Math.max(1, v + pickRandom([-12, -6, 6, 12, 24], rG)),
+    rng
+  );
+  return {
+    unitId: 'common-math-counting',
+    subjectId: 'common-math-1',
+    chapterName: '순열',
+    question,
+    choices,
+    correctAnswer: correctIndex,
+    explanation,
+  };
+}
+
+/**
+ * 25. 대표 선출 (조합의 실생활 응용)
+ */
+function genSelectionRepresentatives(rng) {
+  const n = randInt(5, 8, rng);
+  const r = randInt(2, 3, rng);
+  const fact = (k) => (k <= 1 ? 1 : k * fact(k - 1));
+  const val = Math.round(fact(n) / (fact(r) * fact(n - r)));
+
+  const question = `어느 동아리 회원 $${n}$명 중에서 대표 $${r}$명을 선출하는 경우의 수는?`;
+  const explanation = `$${n}$명 중에서 순서에 상관없이 $${r}$명을 택하는 조합의 수이므로\n` +
+    `$$_^{${n}}C_{${r}} = \\frac{${n}!}{${r}!(${n}-${r})!} = ${val}$$입니다.`;
+
+  const { choices, correctIndex } = buildChoices(
+    val,
+    (v, rG) => Math.max(1, v + pickRandom([-5, -3, -1, 1, 3, 5], rG)),
+    rng
+  );
+  return {
+    unitId: 'common-math-counting',
+    subjectId: 'common-math-1',
+    chapterName: '경우의 수와 조합',
+    question,
+    choices,
+    correctAnswer: correctIndex,
+    explanation,
+  };
+}
+
 // -------------------------------------------------------------
 // Public Engine API
 // -------------------------------------------------------------
@@ -566,6 +1059,26 @@ const GENERATORS_BY_UNIT = {
   'coordinate-geometry-equations': [
     genDistancePoints,
     genLinearEquation,
+    genCircleEquation,
+    genCircleLineDistance,
+    genTranslationPoint,
+  ],
+  'sets-propositions': [
+    genSubsetCount,
+    genSetOperations,
+    genLogicCondition,
+  ],
+  'functions-graphs': [
+    genCompositeFunction,
+    genInverseFunction,
+    genRationalFunction,
+    genRadicalFunction,
+  ],
+  'common-math-counting': [
+    genPermutationBasic,
+    genCombinationBasic,
+    genArrangementAdjacent,
+    genSelectionRepresentatives,
   ],
 };
 
@@ -581,6 +1094,20 @@ const ALL_GENERATORS = [
   genQuadraticInequality,
   genDistancePoints,
   genLinearEquation,
+  genCircleEquation,
+  genCircleLineDistance,
+  genTranslationPoint,
+  genSubsetCount,
+  genSetOperations,
+  genLogicCondition,
+  genCompositeFunction,
+  genInverseFunction,
+  genRationalFunction,
+  genRadicalFunction,
+  genPermutationBasic,
+  genCombinationBasic,
+  genArrangementAdjacent,
+  genSelectionRepresentatives,
 ];
 
 /**

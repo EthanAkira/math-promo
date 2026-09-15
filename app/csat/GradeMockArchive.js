@@ -63,23 +63,32 @@ export default function GradeMockArchive({ grade, label, description }) {
     <div className="no-print" style={{ background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.06) 0%, rgba(99, 102, 241, 0.08) 100%)', border: '1px solid rgba(37, 99, 235, 0.2)', borderRadius: 12, padding: '14px 18px', marginBottom: 20, display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
       <div>
         <p style={{ margin: '0 0 4px', fontWeight: 700, fontSize: 14, color: '#1d4ed8' }}>
-          ✍️ {grade === 'g1' ? '고1 공통수학1(수학(상)) 단원별 기본 기출문제 바로 풀기' : '고2 모의고사 대비 필수 기본기 단원별 문제 바로 풀기'}
+          ✍️ {grade === 'g1' ? '고1 공통수학1·2(수학(상)·수학(하)) 단원별 기본 문제 748문항 바로 풀기' : '고2 모의고사 대비 필수 기본기 단원별 문제 바로 풀기'}
         </p>
         <p style={{ margin: 0, fontSize: 12.5, color: 'var(--ink-soft)' }}>
           {grade === 'g1'
-            ? '다항식의 연산, 방정식과 부등식, 도형의 방정식 365문항을 단원별 실전 학습지로 풀어보세요.'
+            ? '다항식의 연산, 방정식과 부등식, 도형의 방정식, 집합과 명제, 함수와 그래프, 경우의 수 전 단원 학습지를 풀어보세요.'
             : '수학Ⅰ, 수학Ⅱ 및 공통수학 전 단원 핵심 기출문제를 단원별로 학습할 수 있습니다.'}
         </p>
       </div>
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-        <a href="/csat/units?unit=polynomial-ops" className="button button-secondary" style={{ textDecoration: 'none', fontSize: 12, padding: '6px 12px' }}>
+        <a href="/csat/units?unit=polynomial-ops" className="button button-secondary" style={{ textDecoration: 'none', fontSize: 12, padding: '6px 10px' }}>
           다항식의 연산 →
         </a>
-        <a href="/csat/units?unit=equations-inequalities" className="button button-secondary" style={{ textDecoration: 'none', fontSize: 12, padding: '6px 12px' }}>
+        <a href="/csat/units?unit=equations-inequalities" className="button button-secondary" style={{ textDecoration: 'none', fontSize: 12, padding: '6px 10px' }}>
           방정식과 부등식 →
         </a>
-        <a href="/csat/units?unit=coordinate-geometry-equations" className="button button-secondary" style={{ textDecoration: 'none', fontSize: 12, padding: '6px 12px' }}>
+        <a href="/csat/units?unit=coordinate-geometry-equations" className="button button-secondary" style={{ textDecoration: 'none', fontSize: 12, padding: '6px 10px' }}>
           도형의 방정식 →
+        </a>
+        <a href="/csat/units?unit=sets-propositions" className="button button-secondary" style={{ textDecoration: 'none', fontSize: 12, padding: '6px 10px' }}>
+          집합과 명제 →
+        </a>
+        <a href="/csat/units?unit=functions-graphs" className="button button-secondary" style={{ textDecoration: 'none', fontSize: 12, padding: '6px 10px' }}>
+          함수와 그래프 →
+        </a>
+        <a href="/csat/units?unit=common-math-counting" className="button button-secondary" style={{ textDecoration: 'none', fontSize: 12, padding: '6px 10px' }}>
+          경우의 수 →
         </a>
       </div>
     </div>
