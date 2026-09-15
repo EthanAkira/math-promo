@@ -6,7 +6,11 @@ import { useLanguage } from '../../language';
 import { CSAT_SUBJECTS, csatUnitTagLabel, COMMON_MATH_SUBJECTS, commonMathUnitTagLabel } from '../../examUnits';
 import TopicWorksheetView from '../../components/TopicWorksheetView';
 import staticCsatCatalog from '../../data/csatProblemCatalog.json';
+import csatCommonMathCatalog from '../../data/csatCommonMathProblemCatalog.json';
 import { enrichProblemsListWithRates } from '../../utils/csatRates';
+import { generateCommonMathVariant } from '../commonMathProblemGenerator';
+
+const combinedStaticCatalog = [...staticCsatCatalog, ...csatCommonMathCatalog];
 
 const COPY = {
   ko: {
@@ -118,7 +122,15 @@ export default function CsatUnitBrowser() {
   const [manifest, setManifest] = useState(null);
   const [status, setStatus] = useState('loading');
   const [activeTab, setActiveTab] = useState('problems'); // 'problems' | 'files'
-  const [problems, setProblems] = useState(() => enrichProblemsListWithRates(staticCsatCatalog));
+  const [problems, setProblems] = useState(() => enrichProblemsListWithRates(combinedStaticCatalog));
+  const [variantProblem, setVariantProblem] = useState(null);
+
+  function handleGenerateVariant(unitId) {
+    const candidate = problems.find((p) => p.unitId === unitId) || { unitId };
+    const generated = generateCommonMathVariant(candidate);
+    setVariantProblem(generated);
+  }
+
   const [selectedSubject, setSelectedSubject] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [openFileUnit, setOpenFileUnit] = useState(null);
@@ -203,9 +215,9 @@ export default function CsatUnitBrowser() {
         const apiList = data.problems || [];
         if (apiList.length === 0) return;
 
-        const getProblemKey = (p) => `${p.examType || 'nov'}-${p.year}-${(p.variant || '').toLowerCase()}-${Number(p.problemNumber || p.number || 0)}`;
+        const getProblemKey = (p) => p.id || `${p.examType || 'nov'}-${p.year}-${(p.variant || '').toLowerCase()}-${Number(p.problemNumber || p.number || 0)}`;
         const mergedMap = new Map();
-        for (const p of staticCsatCatalog) mergedMap.set(getProblemKey(p), p);
+        for (const p of combinedStaticCatalog) mergedMap.set(getProblemKey(p), p);
         for (const p of apiList) {
           const key = getProblemKey(p);
           const existing = mergedMap.get(key);
@@ -337,6 +349,9 @@ export default function CsatUnitBrowser() {
           problems={unitProblems}
           onBack={handleBackToCatalog}
           language={language}
+          onGenerateVariant={() => handleGenerateVariant(unit.id)}
+          variantProblem={variantProblem}
+          onCloseVariant={() => setVariantProblem(null)}
         />
       </div>
     );
