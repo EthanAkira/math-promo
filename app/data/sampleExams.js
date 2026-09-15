@@ -34,7 +34,10 @@ export const SAMPLE_CSAT_2024 = {
       "$10$"
     ],
     "correctAnswer": 0,
-    "explanation": "$$\\sqrt[3]{24} \\times 3^{\\frac{2}{3}} = 2 \\times 3^{\\frac{1}{3}} \\times 3^{\\frac{2}{3}} = 2 \\times 3 = 6$$"
+    "explanation": "$$\\sqrt[3]{24} \\times 3^{\\frac{2}{3}} = 2 \\times 3^{\\frac{1}{3}} \\times 3^{\\frac{2}{3}} = 2 \\times 3 = 6$$",
+    "correctRate": 82.6,
+    "errorRate": 17.4,
+    "choiceRatios": [82.6, 2.3, 7.4, 6.5, 1.3]
   },
   {
     "id": "csat-2024-02",
@@ -51,7 +54,10 @@ export const SAMPLE_CSAT_2024 = {
       "$23$"
     ],
     "correctAnswer": 2,
-    "explanation": "$$f'(2) = 6(2)^2 - 5 = 19$$"
+    "explanation": "$$f'(2) = 6(2)^2 - 5 = 19$$",
+    "correctRate": 83.8,
+    "errorRate": 16.2,
+    "choiceRatios": [2.8, 4.3, 7.1, 83.8, 2.0]
   },
   {
     "id": "csat-2024-03",
@@ -68,7 +74,10 @@ export const SAMPLE_CSAT_2024 = {
       "$\\frac{2\\sqrt{2}}{3}$"
     ],
     "correctAnswer": 2,
-    "explanation": "$$\\cos\\theta \\times \\tan\\theta = \\sin\\theta = \\frac{1}{3}$$"
+    "explanation": "$$\\cos\\theta \\times \\tan\\theta = \\sin\\theta = \\frac{1}{3}$$",
+    "correctRate": 68.7,
+    "errorRate": 31.3,
+    "choiceRatios": [5.4, 68.7, 7.8, 5.8, 12.4]
   },
   {
     "id": "csat-2024-04",
@@ -85,7 +94,10 @@ export const SAMPLE_CSAT_2024 = {
       "$35$"
     ],
     "correctAnswer": 1,
-    "explanation": "$$2d = 6 \\implies d = 3 \\implies a_{10} = 2 + 9(3) = 29$$"
+    "explanation": "$$2d = 6 \\implies d = 3 \\implies a_{10} = 2 + 9(3) = 29$$",
+    "correctRate": 80.7,
+    "errorRate": 19.3,
+    "choiceRatios": [80.7, 4.2, 6.2, 5.7, 3.1]
   },
   {
     "id": "csat-2024-05",
@@ -102,7 +114,10 @@ export const SAMPLE_CSAT_2024 = {
       "$6$"
     ],
     "correctAnswer": 2,
-    "explanation": "$f'(x) = 3(x-3)(x+1) = 0 \\implies a = -1, b = 3 \\implies b - a = 4$."
+    "explanation": "$f'(x) = 3(x-3)(x+1) = 0 \\implies a = -1, b = 3 \\implies b - a = 4$.",
+    "correctRate": 85.7,
+    "errorRate": 14.3,
+    "choiceRatios": [1.3, 3.8, 6.6, 85.7, 2.6]
   },
   {
     "id": "csat-2024-06",
@@ -119,7 +134,10 @@ export const SAMPLE_CSAT_2024 = {
       "$5$"
     ],
     "correctAnswer": 2,
-    "explanation": "$$\\log_2(120/15) = \\log_2 8 = 3$$"
+    "explanation": "$$\\log_2(120/15) = \\log_2 8 = 3$$",
+    "correctRate": 75.4,
+    "errorRate": 24.6,
+    "choiceRatios": [2.5, 7.7, 10.9, 75.4, 3.4]
   },
   {
     "id": "csat-2024-07",
@@ -136,7 +154,10 @@ export const SAMPLE_CSAT_2024 = {
       "$5$"
     ],
     "correctAnswer": 1,
-    "explanation": "$$\\left[ x^3 - 2x^2 + x \\right]_0^2 = 8 - 8 + 2 = 2$$"
+    "explanation": "$$\\left[ x^3 - 2x^2 + x \\right]_0^2 = 8 - 8 + 2 = 2$$",
+    "correctRate": 79.2,
+    "errorRate": 20.8,
+    "choiceRatios": [3.2, 4.4, 7.2, 6.0, 79.2]
   },
   {
     "id": "csat-2024-08",
@@ -153,7 +174,10 @@ export const SAMPLE_CSAT_2024 = {
       "$130$"
     ],
     "correctAnswer": 2,
-    "explanation": "$$2(55) + 10 = 120$$"
+    "explanation": "$$2(55) + 10 = 120$$",
+    "correctRate": 64.1,
+    "errorRate": 35.9,
+    "choiceRatios": [5.6, 64.1, 11.9, 13.2, 5.2]
   },
   {
     "id": "csat-2024-09",
@@ -170,7 +194,10 @@ export const SAMPLE_CSAT_2024 = {
       "$5$"
     ],
     "correctAnswer": 1,
-    "explanation": "$f'(1) = 2+a = 2 \\implies a = 0$. $1+0+3 = 2+b \\implies b = 2$. $a+b = 2$."
+    "explanation": "$f'(1) = 2+a = 2 \\implies a = 0$. $1+0+3 = 2+b \\implies b = 2$. $a+b = 2$.",
+    "correctRate": 55.1,
+    "errorRate": 44.9,
+    "choiceRatios": [3.6, 10.6, 24.1, 55.1, 6.6]
   },
   {
     "id": "csat-2024-10",
@@ -187,7 +214,10 @@ export const SAMPLE_CSAT_2024 = {
       "$8\\sqrt{3}$"
     ],
     "correctAnswer": 2,
-    "explanation": "$$a = 2R \\sin A = 8 \\times \\frac{\\sqrt{3}}{2} = 4\\sqrt{3}$$"
+    "explanation": "$$a = 2R \\sin A = 8 \\times \\frac{\\sqrt{3}}{2} = 4\\sqrt{3}$$",
+    "correctRate": 45.5,
+    "errorRate": 54.5,
+    "choiceRatios": [6.2, 45.5, 27.7, 11.8, 8.9]
   },
   {
     "id": "csat-2024-11",
@@ -204,7 +234,10 @@ export const SAMPLE_CSAT_2024 = {
       "$26$"
     ],
     "correctAnswer": 2,
-    "explanation": "$$\\int_0^2 (12 - 3t^2)dt + \\int_2^3 (3t^2 - 12)dt = 16 + 7 = 23$$"
+    "explanation": "$$\\int_0^2 (12 - 3t^2)dt + \\int_2^3 (3t^2 - 12)dt = 16 + 7 = 23$$",
+    "correctRate": 47.1,
+    "errorRate": 52.9,
+    "choiceRatios": [47.1, 10.1, 20.6, 13.7, 8.6]
   },
   {
     "id": "csat-2024-12",
@@ -221,7 +254,10 @@ export const SAMPLE_CSAT_2024 = {
       "$8$"
     ],
     "correctAnswer": 1,
-    "explanation": "$a_1=1, a_2=2, a_3=4, a_4=8, a_5=5, a_6=2$."
+    "explanation": "$a_1=1, a_2=2, a_3=4, a_4=8, a_5=5, a_6=2$.",
+    "correctRate": 55.0,
+    "errorRate": 45.0,
+    "choiceRatios": [5.0, 13.5, 55.0, 12.4, 14.0]
   },
   {
     "id": "csat-2024-13",
@@ -238,7 +274,10 @@ export const SAMPLE_CSAT_2024 = {
       "$5\\pi$"
     ],
     "correctAnswer": 1,
-    "explanation": "$2(1-\\cos^2 x) - 3\\cos x = 0 \\implies 2\\cos^2 x + 3\\cos x - 2 = 0 \\implies \\cos x = 1/2$. 근: $\\pi/3, 5\\pi/3$. 합 $= 2\\pi$."
+    "explanation": "$2(1-\\cos^2 x) - 3\\cos x = 0 \\implies 2\\cos^2 x + 3\\cos x - 2 = 0 \\implies \\cos x = 1/2$. 근: $\\pi/3, 5\\pi/3$. 합 $= 2\\pi$.",
+    "correctRate": 41.2,
+    "errorRate": 58.8,
+    "choiceRatios": [41.2, 10.1, 25.8, 10.6, 12.2]
   },
   {
     "id": "csat-2024-14",
@@ -255,7 +294,10 @@ export const SAMPLE_CSAT_2024 = {
       "$24$"
     ],
     "correctAnswer": 4,
-    "explanation": "$x=1$ 대입: $1+a-4 = 0 \\implies a=3$. 양변 미분: $f(x) = 3x^2 + 6x \\implies f(2) = 12 + 12 = 24$. (Let ans be choice E: 24)."
+    "explanation": "$x=1$ 대입: $1+a-4 = 0 \\implies a=3$. 양변 미분: $f(x) = 3x^2 + 6x \\implies f(2) = 12 + 12 = 24$. (Let ans be choice E: 24).",
+    "correctRate": 15.5,
+    "errorRate": 84.5,
+    "choiceRatios": [15.5, 11.6, 36.6, 15.9, 20.4]
   },
   {
     "id": "csat-2024-15",
@@ -272,7 +314,10 @@ export const SAMPLE_CSAT_2024 = {
       "$27$"
     ],
     "correctAnswer": 0,
-    "explanation": "$f(x) = x(x^2 - 3k^2)$. 극댓값 $2k^3 = 4 \\implies k = 2^{1/3}$. $f(3) = 3(9 - 3k^2) = 15$."
+    "explanation": "$f(x) = x(x^2 - 3k^2)$. 극댓값 $2k^3 = 4 \\implies k = 2^{1/3}$. $f(3) = 3(9 - 3k^2) = 15$.",
+    "correctRate": 54.2,
+    "errorRate": 45.8,
+    "choiceRatios": [6.0, 12.3, 54.2, 12.2, 15.3]
   },
   {
     "id": "csat-2024-16",
@@ -283,7 +328,9 @@ export const SAMPLE_CSAT_2024 = {
     "question": "방정식 $3^{2x-4} = \\frac{1}{27}$ 을 만족시키는 실수 $x$ 의 값을 구하시오.",
     "choices": [],
     "correctAnswer": 0.5,
-    "explanation": "$$2x - 4 = -3 \\implies 2x = 1 \\implies x = 0.5$$"
+    "explanation": "$$2x - 4 = -3 \\implies 2x = 1 \\implies x = 0.5$$",
+    "correctRate": 82.5,
+    "errorRate": 17.5
   },
   {
     "id": "csat-2024-17",
@@ -294,7 +341,9 @@ export const SAMPLE_CSAT_2024 = {
     "question": "함수 $f(x)$ 에 대하여 $f'(x) = 3x^2 + 4x - 2$ 이고 $f(1) = 5$ 일 때, $f(2)$ 의 값을 구하시오.",
     "choices": [],
     "correctAnswer": 16,
-    "explanation": "$$f(x) = x^3 + 2x^2 - 2x + 4 \\implies f(2) = 8 + 8 - 4 + 4 = 16$$"
+    "explanation": "$$f(x) = x^3 + 2x^2 - 2x + 4 \\implies f(2) = 8 + 8 - 4 + 4 = 16$$",
+    "correctRate": 84.2,
+    "errorRate": 15.8
   },
   {
     "id": "csat-2024-18",
@@ -305,7 +354,9 @@ export const SAMPLE_CSAT_2024 = {
     "question": "부등식 $\\log_3(x - 1) \\le 2$ 를 만족시키는 모든 자연수 $x$ 의 개수를 구하시오.",
     "choices": [],
     "correctAnswer": 9,
-    "explanation": "$$0 < x - 1 \\le 9 \\implies 1 < x \\le 10 \\implies x \\in \\{2, 3, \\dots, 10\\} \\quad (9\\text{개})$$"
+    "explanation": "$$0 < x - 1 \\le 9 \\implies 1 < x \\le 10 \\implies x \\in \\{2, 3, \\dots, 10\\} \\quad (9\\text{개})$$",
+    "correctRate": 78.4,
+    "errorRate": 21.6
   },
   {
     "id": "csat-2024-19",
@@ -316,7 +367,9 @@ export const SAMPLE_CSAT_2024 = {
     "question": "삼각형 $ABC$ 에서 $b = 5, c = 8, \\angle A = 60^\\circ$ 일 때, $a^2$ 의 값을 구하시오.",
     "choices": [],
     "correctAnswer": 49,
-    "explanation": "$$a^2 = 5^2 + 8^2 - 2(5)(8)\\cos 60^\\circ = 25 + 64 - 40 = 49$$"
+    "explanation": "$$a^2 = 5^2 + 8^2 - 2(5)(8)\\cos 60^\\circ = 25 + 64 - 40 = 49$$",
+    "correctRate": 24.8,
+    "errorRate": 75.2
   },
   {
     "id": "csat-2024-20",
@@ -327,7 +380,9 @@ export const SAMPLE_CSAT_2024 = {
     "question": "곡선 $y = x^3 - 3x + 4$ 위의 점 $(2, 6)$ 에서의 접선의 $y$절편을 구하시오.",
     "choices": [],
     "correctAnswer": -12,
-    "explanation": "$$y' = 3x^2 - 3 \\implies m = 9. \\quad y - 6 = 9(x - 2) \\implies y = 9x - 12$$"
+    "explanation": "$$y' = 3x^2 - 3 \\implies m = 9. \\quad y - 6 = 9(x - 2) \\implies y = 9x - 12$$",
+    "correctRate": 15.3,
+    "errorRate": 84.7
   },
   {
     "id": "csat-2024-21",
@@ -338,7 +393,9 @@ export const SAMPLE_CSAT_2024 = {
     "question": "등차수열 $\\{a_n\\}$ 의 첫째항부터 제 $n$ 항까지의 합 $S_n$ 이 $S_n = 2n^2 + 3n$ 일 때, $a_{10}$ 의 값을 구하시오.",
     "choices": [],
     "correctAnswer": 41,
-    "explanation": "$$a_{10} = S_{10} - S_9 = (200 + 30) - (162 + 27) = 230 - 189 = 41$$"
+    "explanation": "$$a_{10} = S_{10} - S_9 = (200 + 30) - (162 + 27) = 230 - 189 = 41$$",
+    "correctRate": 21.9,
+    "errorRate": 78.1
   },
   {
     "id": "csat-2024-22",
@@ -349,7 +406,9 @@ export const SAMPLE_CSAT_2024 = {
     "question": "곡선 $y = x^2 - 4x$ 와 $x$축으로 둘러싸인 부분의 넓이를 $S$ 라 할 때, $3S$ 의 값을 구하시오.",
     "choices": [],
     "correctAnswer": 32,
-    "explanation": "$$S = \\frac{1}{6}(4 - 0)^3 = \\frac{64}{6} = \\frac{32}{3} \\implies 3S = 32$$"
+    "explanation": "$$S = \\frac{1}{6}(4 - 0)^3 = \\frac{64}{6} = \\frac{32}{3} \\implies 3S = 32$$",
+    "correctRate": 1.8,
+    "errorRate": 98.2
   },
   {
     "id": "csat-2024-23",
@@ -366,7 +425,10 @@ export const SAMPLE_CSAT_2024 = {
       "$3$"
     ],
     "correctAnswer": 1,
-    "explanation": "$$\\lim_{n \\to \\infty} \\frac{3 + 5/n}{2 - 1/n^2} = \\frac{3}{2}$$"
+    "explanation": "$$\\lim_{n \\to \\infty} \\frac{3 + 5/n}{2 - 1/n^2} = \\frac{3}{2}$$",
+    "correctRate": 89.4,
+    "errorRate": 10.6,
+    "choiceRatios": [1.4, 2.2, 89.4, 3.4, 3.7]
   },
   {
     "id": "csat-2024-24",
@@ -383,7 +445,10 @@ export const SAMPLE_CSAT_2024 = {
       "$e^2 + 2$"
     ],
     "correctAnswer": 1,
-    "explanation": "$$f'(x) = 2e^{2x} + \\frac{1}{x} \\implies f'(1) = 2e^2 + 1$$"
+    "explanation": "$$f'(x) = 2e^{2x} + \\frac{1}{x} \\implies f'(1) = 2e^2 + 1$$",
+    "correctRate": 74.4,
+    "errorRate": 25.6,
+    "choiceRatios": [6.1, 74.4, 7.7, 9.3, 2.5]
   },
   {
     "id": "csat-2024-25",
@@ -400,7 +465,10 @@ export const SAMPLE_CSAT_2024 = {
       "$5$"
     ],
     "correctAnswer": 0,
-    "explanation": "$$\\tan(\\alpha + \\beta) = \\frac{2 + 3}{1 - 6} = \\frac{5}{-5} = -1$$"
+    "explanation": "$$\\tan(\\alpha + \\beta) = \\frac{2 + 3}{1 - 6} = \\frac{5}{-5} = -1$$",
+    "correctRate": 63.0,
+    "errorRate": 37.0,
+    "choiceRatios": [7.2, 8.2, 10.0, 63.0, 11.5]
   },
   {
     "id": "csat-2024-26",
@@ -417,7 +485,10 @@ export const SAMPLE_CSAT_2024 = {
       "$2e$"
     ],
     "correctAnswer": 0,
-    "explanation": "$$\\left[ e^{x^2} \\right]_0^1 = e^1 - e^0 = e - 1$$"
+    "explanation": "$$\\left[ e^{x^2} \\right]_0^1 = e^1 - e^0 = e - 1$$",
+    "correctRate": 61.6,
+    "errorRate": 38.4,
+    "choiceRatios": [7.8, 6.8, 61.6, 13.1, 10.7]
   },
   {
     "id": "csat-2024-27",
@@ -434,7 +505,10 @@ export const SAMPLE_CSAT_2024 = {
       "$2$"
     ],
     "correctAnswer": 0,
-    "explanation": "$$\\left[ x\\ln x - x \\right]_1^e = (e - e) - (0 - 1) = 1$$"
+    "explanation": "$$\\left[ x\\ln x - x \\right]_1^e = (e - e) - (0 - 1) = 1$$",
+    "correctRate": 23.4,
+    "errorRate": 76.6,
+    "choiceRatios": [23.4, 12.8, 20.2, 12.4, 31.3]
   },
   {
     "id": "csat-2024-28",
@@ -451,7 +525,10 @@ export const SAMPLE_CSAT_2024 = {
       "$4$"
     ],
     "correctAnswer": 2,
-    "explanation": "$$S = \\frac{2}{1 - 1/3} = \\frac{2}{2/3} = 3$$"
+    "explanation": "$$S = \\frac{2}{1 - 1/3} = \\frac{2}{2/3} = 3$$",
+    "correctRate": 15.3,
+    "errorRate": 84.7,
+    "choiceRatios": [15.6, 15.3, 13.8, 18.0, 37.4]
   },
   {
     "id": "csat-2024-29",
@@ -462,7 +539,9 @@ export const SAMPLE_CSAT_2024 = {
     "question": "함수 $f(x) = x^3 + 2x + 1$ 의 역함수를 $g(x)$ 라 할 때, $10 \\times g'(4)$ 의 값을 구하시오.",
     "choices": [],
     "correctAnswer": 2,
-    "explanation": "$f(1) = 4 \\implies g(4) = 1$. $f'(x) = 3x^2 + 2 \\implies f'(1) = 5$. $g'(4) = 1/5 \\implies 10 g'(4) = 2$."
+    "explanation": "$f(1) = 4 \\implies g(4) = 1$. $f'(x) = 3x^2 + 2 \\implies f'(1) = 5$. $g'(4) = 1/5 \\implies 10 g'(4) = 2$.",
+    "correctRate": 6.8,
+    "errorRate": 93.2
   },
   {
     "id": "csat-2024-30",
@@ -473,7 +552,9 @@ export const SAMPLE_CSAT_2024 = {
     "question": "함수 $f(x) = (x^2 - 2x + 2)e^x$ 의 극솟값을 $m$, 극댓값을 $M$ 이라 할 때, $m + M$ 의 값을 구하시오 (단, 정수값으로 계산).",
     "choices": [],
     "correctAnswer": 2,
-    "explanation": "$f'(x) = (2x - 2)e^x + (x^2 - 2x + 2)e^x = x^2 e^x \\ge 0$. $f(0) = 2$."
+    "explanation": "$f'(x) = (2x - 2)e^x + (x^2 - 2x + 2)e^x = x^2 e^x \\ge 0$. $f(0) = 2$.",
+    "correctRate": 3.7,
+    "errorRate": 96.3
   }
 ]
 };

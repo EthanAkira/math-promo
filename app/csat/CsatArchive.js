@@ -8,6 +8,7 @@ import { getInteractiveProblems, clearCustomExams } from '../data/sampleExams';
 import { extractTextFromPdf, parseExamText } from '../components/AiExamParser';
 import MathText from '../components/MathText';
 import { transformLatexMath } from '../components/LatexMath';
+import { enrichProblemsListWithRates } from '../utils/csatRates';
 
 const COPY = {
   ko: {
@@ -241,7 +242,8 @@ export default function CsatExamArchive({ examType, label, description, gradeFil
 
     // 1. Initial check: cached session problems in localStorage or fallback 30 problems
     const current = getInteractiveProblems('csat', examType, selectedEntry.year, selectedVariant.id);
-    setInteractiveProblems(current);
+    const rateContext = { year: selectedEntry.year, examType, variant: selectedVariant.id };
+    setInteractiveProblems(enrichProblemsListWithRates(current, rateContext));
 
     // 2. If problem file exists in session and not yet cached for this session, extract & parse
     const problemFile = selectedVariant.files?.problems || selectedVariant.files?.variant_problem;
@@ -270,15 +272,16 @@ export default function CsatExamArchive({ examType, label, description, gradeFil
           }
           if (!cancelled) {
             if (parsed.length >= 25) {
+              const enriched = enrichProblemsListWithRates(parsed, rateContext);
               try {
-                localStorage.setItem(sessionKey, JSON.stringify(parsed));
-                localStorage.setItem(`custom_exam_csat_${examType}`, JSON.stringify(parsed));
+                localStorage.setItem(sessionKey, JSON.stringify(enriched));
+                localStorage.setItem(`custom_exam_csat_${examType}`, JSON.stringify(enriched));
               } catch (e) {}
-              setInteractiveProblems(parsed);
+              setInteractiveProblems(enriched);
             } else {
               const fallback = getInteractiveProblems('csat', examType, selectedEntry?.year, selectedVariant?.id);
               if (fallback && fallback.length > 0) {
-                setInteractiveProblems(fallback);
+                setInteractiveProblems(enrichProblemsListWithRates(fallback, rateContext));
               }
             }
             setLoadingInteractive(false);

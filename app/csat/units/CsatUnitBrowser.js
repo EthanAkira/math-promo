@@ -6,6 +6,7 @@ import { useLanguage } from '../../language';
 import { CSAT_SUBJECTS, csatUnitTagLabel, COMMON_MATH_SUBJECTS, commonMathUnitTagLabel } from '../../examUnits';
 import TopicWorksheetView from '../../components/TopicWorksheetView';
 import staticCsatCatalog from '../../data/csatProblemCatalog.json';
+import { enrichProblemsListWithRates } from '../../utils/csatRates';
 
 const COPY = {
   ko: {
@@ -117,7 +118,7 @@ export default function CsatUnitBrowser() {
   const [manifest, setManifest] = useState(null);
   const [status, setStatus] = useState('loading');
   const [activeTab, setActiveTab] = useState('problems'); // 'problems' | 'files'
-  const [problems, setProblems] = useState(staticCsatCatalog);
+  const [problems, setProblems] = useState(() => enrichProblemsListWithRates(staticCsatCatalog));
   const [selectedSubject, setSelectedSubject] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [openFileUnit, setOpenFileUnit] = useState(null);
@@ -210,7 +211,8 @@ export default function CsatUnitBrowser() {
           const existing = mergedMap.get(key);
           mergedMap.set(key, existing ? { ...existing, ...p, id: existing.id || p.id } : p);
         }
-        setProblems(Array.from(mergedMap.values()));
+        const mergedList = Array.from(mergedMap.values());
+        setProblems(enrichProblemsListWithRates(mergedList));
       })
       .catch(() => {});
     return () => { cancelled = true; };

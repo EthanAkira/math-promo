@@ -14,7 +14,17 @@
       "$9$"
     ],
     "correctAnswer": 0,
-    "explanation": "$$9^{\\frac{1}{4}} \\times 3^{-\\frac{1}{2}} = (3^2)^{\\frac{1}{4}} \\times 3^{-\\frac{1}{2}} = 3^{\\frac{1}{2}} \\times 3^{-\\frac{1}{2}} = 3^0 = 1$$"
+    "explanation": "$$9^{\\frac{1}{4}} \\times 3^{-\\frac{1}{2}} = (3^2)^{\\frac{1}{4}} \\times 3^{-\\frac{1}{2}} = 3^{\\frac{1}{2}} \\times 3^{-\\frac{1}{2}} = 3^0 = 1$$",
+    "correctRate": 83.6,
+    "errorRate": 16.4,
+    "choiceRatios": [
+      83.6,
+      2.6,
+      8.2,
+      4.1,
+      1.5
+    ],
+    "sourceLabel": "2025학년도 수능 · 1번 ; 정답률 83.6% (오답률 16.4%)"
   },
   {
     "id": "csat-2025-02",
@@ -31,7 +41,17 @@
       "$15$"
     ],
     "correctAnswer": 3,
-    "explanation": "$$f'(1) = \\lim_{h \\to 0} \\frac{f(1+h)-f(1)}{h}$$\n$$f'(x) = 9x^2 + 4 \\implies f'(1) = 9(1)^2 + 4 = 13$$"
+    "explanation": "$$f'(1) = \\lim_{h \\to 0} \\frac{f(1+h)-f(1)}{h}$$\n$$f'(x) = 9x^2 + 4 \\implies f'(1) = 9(1)^2 + 4 = 13$$",
+    "correctRate": 88.6,
+    "errorRate": 11.4,
+    "choiceRatios": [
+      1.8,
+      4.1,
+      4.3,
+      88.6,
+      1.2
+    ],
+    "sourceLabel": "2025학년도 수능 · 2번 ; 정답률 88.6% (오답률 11.4%)"
   },
   {
     "id": "csat-2025-03",
@@ -48,7 +68,17 @@
       "$5$"
     ],
     "correctAnswer": 4,
-    "explanation": "$$2\\sum_{k=1}^4 a_k - \\sum_{k=1}^4 k = 0 \\implies 2\\sum_{k=1}^4 a_k = \\frac{4 \\times 5}{2} = 10 \\implies \\sum_{k=1}^4 a_k = 5$$"
+    "explanation": "$$2\\sum_{k=1}^4 a_k - \\sum_{k=1}^4 k = 0 \\implies 2\\sum_{k=1}^4 a_k = \\frac{4 \\times 5}{2} = 10 \\implies \\sum_{k=1}^4 a_k = 5$$",
+    "correctRate": 72.1,
+    "errorRate": 27.9,
+    "choiceRatios": [
+      1.4,
+      14.4,
+      5.0,
+      7.1,
+      72.1
+    ],
+    "sourceLabel": "2025학년도 수능 · 3번 ; 정답률 72.1% (오답률 27.9%)"
   },
   {
     "id": "csat-2025-04",
@@ -65,7 +95,17 @@
       "$5$"
     ],
     "correctAnswer": 2,
-    "explanation": "$x=1$ 에서 연속이어야 하므로 좌극한과 우극한이 일치해야 합니다.\n$$\\lim_{x \\to 1^-} (3x-2) = 1$$\n$$1^2 - 3(1) + a = a - 2 = 1 \\implies a = 3$$"
+    "explanation": "$x=1$ 에서 연속이어야 하므로 좌극한과 우극한이 일치해야 합니다.\n$$\\lim_{x \\to 1^-} (3x-2) = 1$$\n$$1^2 - 3(1) + a = a - 2 = 1 \\implies a = 3$$",
+    "correctRate": 87.2,
+    "errorRate": 12.8,
+    "choiceRatios": [
+      1.9,
+      4.6,
+      87.2,
+      4.5,
+      1.9
+    ],
+    "sourceLabel": "2025학년도 수능 · 4번 ; 정답률 87.2% (오답률 12.8%)"
   },
   {
     "id": "csat-2025-05",
@@ -82,7 +122,17 @@
       "$10$"
     ],
     "correctAnswer": 2,
-    "explanation": "곱의 미분법을 적용합니다.\n$$f'(x) = 1 \\cdot (2x^2-x-2) + (x+2)(4x-1)$$\n$$f'(1) = (2-1-2) + (3)(3) = -1 + 9 = 8$$"
+    "explanation": "곱의 미분법을 적용합니다.\n$$f'(x) = 1 \\cdot (2x^2-x-2) + (x+2)(4x-1)$$\n$$f'(1) = (2-1-2) + (3)(3) = -1 + 9 = 8$$",
+    "correctRate": 87.0,
+    "errorRate": 13.0,
+    "choiceRatios": [
+      2.5,
+      3.5,
+      87.0,
+      4.8,
+      2.2
+    ],
+    "sourceLabel": "2025학년도 수능 · 5번 ; 정답률 87.0% (오답률 13.0%)"
   },
   {
     "id": "csat-2025-06",
@@ -99,7 +149,17 @@
       "$\\frac{7}{8}$"
     ],
     "correctAnswer": 4,
-    "explanation": "밑 변환 공식과 로그 성질을 이용합니다.\n$$\\log_b a = \\frac{1}{3} \\implies b^{\\frac{1}{3}} = a$$\n$$\\log_{\\frac{3}{a}} b = \\frac{1}{2} \\implies b = \\left(\\frac{3}{a}\\right)^{\\frac{1}{2}} \\implies b^2 = \\frac{3}{a}$$\n$$a = b^{\\frac{1}{3}} \\implies b^2 = \\frac{3}{b^{\\frac{1}{3}}} \\implies b^{\\frac{7}{3}} = 3$$\n$$a = 3^{\\frac{1}{7}}, \\quad b = 3^{\\frac{3}{7}} \\implies ab = 3^{\\frac{4}{7}}$$\n$$\\log_9 ab = \\log_{3^2} 3^{\\frac{4}{7}} = \\frac{1}{2} \\times \\frac{4}{7} = \\frac{2}{7}$$"
+    "explanation": "밑 변환 공식과 로그 성질을 이용합니다.\n$$\\log_b a = \\frac{1}{3} \\implies b^{\\frac{1}{3}} = a$$\n$$\\log_{\\frac{3}{a}} b = \\frac{1}{2} \\implies b = \\left(\\frac{3}{a}\\right)^{\\frac{1}{2}} \\implies b^2 = \\frac{3}{a}$$\n$$a = b^{\\frac{1}{3}} \\implies b^2 = \\frac{3}{b^{\\frac{1}{3}}} \\implies b^{\\frac{7}{3}} = 3$$\n$$a = 3^{\\frac{1}{7}}, \\quad b = 3^{\\frac{3}{7}} \\implies ab = 3^{\\frac{4}{7}}$$\n$$\\log_9 ab = \\log_{3^2} 3^{\\frac{4}{7}} = \\frac{1}{2} \\times \\frac{4}{7} = \\frac{2}{7}$$",
+    "correctRate": 74.4,
+    "errorRate": 25.6,
+    "choiceRatios": [
+      5.0,
+      74.4,
+      5.5,
+      11.4,
+      3.8
+    ],
+    "sourceLabel": "2025학년도 수능 · 6번 ; 정답률 74.4% (오답률 25.6%)"
   },
   {
     "id": "csat-2025-07",
@@ -116,7 +176,17 @@
       "$\\frac{16}{5}$"
     ],
     "correctAnswer": 0,
-    "explanation": "두 곡선은 $x=0$ 에서 만납니다.\n$$S = \\int_0^2 \\left((x^2+3) - \\left(-\\frac{1}{5}x^2+3\\right)\\right) dx = \\int_0^2 \\frac{6}{5}x^2 dx = \\left[ \\frac{2}{5}x^3 \\right]_0^2 = \\frac{16}{5}$$"
+    "explanation": "두 곡선은 $x=0$ 에서 만납니다.\n$$S = \\int_0^2 \\left((x^2+3) - \\left(-\\frac{1}{5}x^2+3\\right)\\right) dx = \\int_0^2 \\frac{6}{5}x^2 dx = \\left[ \\frac{2}{5}x^3 \\right]_0^2 = \\frac{16}{5}$$",
+    "correctRate": 73.0,
+    "errorRate": 27.0,
+    "choiceRatios": [
+      5.6,
+      5.3,
+      7.4,
+      8.7,
+      73.0
+    ],
+    "sourceLabel": "2025학년도 수능 · 7번 ; 정답률 73.0% (오답률 27.0%)"
   },
   {
     "id": "csat-2025-08",
@@ -133,7 +203,17 @@
       "$-\\frac{3\\sqrt{10}}{10}$"
     ],
     "correctAnswer": 0,
-    "explanation": "$$\\cos(\\pi-\\theta) = -\\cos\\theta > 0 \\implies \\cos\\theta < 0$$\n$$\\sin\\theta = -3\\cos\\theta > 0 \\implies \\tan\\theta = -3$$\n$$\\sin\\theta = \\frac{3}{\\sqrt{1+(-3)^2}} = \\frac{3\\sqrt{10}}{10}$$"
+    "explanation": "$$\\cos(\\pi-\\theta) = -\\cos\\theta > 0 \\implies \\cos\\theta < 0$$\n$$\\sin\\theta = -3\\cos\\theta > 0 \\implies \\tan\\theta = -3$$\n$$\\sin\\theta = \\frac{3}{\\sqrt{1+(-3)^2}} = \\frac{3\\sqrt{10}}{10}$$",
+    "correctRate": 63.0,
+    "errorRate": 37.0,
+    "choiceRatios": [
+      63.0,
+      7.2,
+      4.9,
+      9.9,
+      15.0
+    ],
+    "sourceLabel": "2025학년도 수능 · 8번 ; 정답률 63.0% (오답률 37.0%)"
   },
   {
     "id": "csat-2025-09",
@@ -150,7 +230,17 @@
       "$15$"
     ],
     "correctAnswer": 3,
-    "explanation": "$$f'(x) = 3(x+3a)(x-a) = 0$$\n극댓값 $f(-3a) = 27a^3 + 4 = 5 \\implies 27a^3 = 1 \\implies a = \\frac{1}{3}$.\n$$f(x) = x^3 + x^2 - x + 4$$\n$$f(2) = 8 + 4 - 2 + 4 = 14$$"
+    "explanation": "$$f'(x) = 3(x+3a)(x-a) = 0$$\n극댓값 $f(-3a) = 27a^3 + 4 = 5 \\implies 27a^3 = 1 \\implies a = \\frac{1}{3}$.\n$$f(x) = x^3 + x^2 - x + 4$$\n$$f(2) = 8 + 4 - 2 + 4 = 14$$",
+    "correctRate": 72.8,
+    "errorRate": 27.2,
+    "choiceRatios": [
+      2.9,
+      12.7,
+      7.0,
+      72.8,
+      4.6
+    ],
+    "sourceLabel": "2025학년도 수능 · 9번 ; 정답률 72.8% (오답률 27.2%)"
   },
   {
     "id": "csat-2025-10",
@@ -167,7 +257,17 @@
       "$2^{\\frac{17}{6}}$"
     ],
     "correctAnswer": 1,
-    "explanation": "점 $\\mathrm{A}$ 의 좌표를 $(k, a^{k-2})$ 라 하면 $\\mathrm{B}(k, 0)$, $\\mathrm{C}(k, -2)$ 로부터 삼각형의 넓이 및 $a$ 값을 구합니다."
+    "explanation": "점 $\\mathrm{A}$ 의 좌표를 $(k, a^{k-2})$ 라 하면 $\\mathrm{B}(k, 0)$, $\\mathrm{C}(k, -2)$ 로부터 삼각형의 넓이 및 $a$ 값을 구합니다.",
+    "correctRate": 61.1,
+    "errorRate": 38.9,
+    "choiceRatios": [
+      4.4,
+      11.4,
+      61.1,
+      16.2,
+      6.8
+    ],
+    "sourceLabel": "2025학년도 수능 · 10번 ; 정답률 61.1% (오답률 38.9%)"
   },
   {
     "id": "csat-2025-11",
@@ -184,7 +284,17 @@
       "ㄱ, ㄴ, ㄷ"
     ],
     "correctAnswer": 2,
-    "explanation": "ㄱ: $x(1) = \\int_0^1 (t^2+4)dt = \\frac{13}{3}$ (참).\nㄴ: 판별식 $D = 9 - 16 < 0$ 이므로 속도의 부호가 바뀌지 않음 (거짓).\nㄷ: $v(t) = (t-1)(t-4)$ 이므로 $t \\in [0, 1]$ 에서 전진, $t \\in [1, 2]$ 에서 후진. 총 이동 거리는 $3$ (참).\n따라서 옳은 것은 ㄱ, ㄷ."
+    "explanation": "ㄱ: $x(1) = \\int_0^1 (t^2+4)dt = \\frac{13}{3}$ (참).\nㄴ: 판별식 $D = 9 - 16 < 0$ 이므로 속도의 부호가 바뀌지 않음 (거짓).\nㄷ: $v(t) = (t-1)(t-4)$ 이므로 $t \\in [0, 1]$ 에서 전진, $t \\in [1, 2]$ 에서 후진. 총 이동 거리는 $3$ (참).\n따라서 옳은 것은 ㄱ, ㄷ.",
+    "correctRate": 50.0,
+    "errorRate": 50.0,
+    "choiceRatios": [
+      16.8,
+      13.4,
+      50.0,
+      8.6,
+      11.2
+    ],
+    "sourceLabel": "2025학년도 수능 · 11번 ; 정답률 50.0% (오답률 50.0%)"
   },
   {
     "id": "csat-2025-12",
@@ -201,7 +311,17 @@
       "$\\frac{32}{7}$"
     ],
     "correctAnswer": 1,
-    "explanation": "$$r^3(a_1+a_4+a_7) = 6 \\implies r^3(3) = 6 \\implies r^3 = 2$$\n$$a_1(1+r^3+r^6) = a_1(1+2+4) = 7a_1 = 3 \\implies a_1 = \\frac{3}{7}$$\n$$a_{10} = a_1 r^9 = \\frac{3}{7} \\times (r^3)^3 = \\frac{3}{7} \\times 8 = \\frac{24}{7}$$"
+    "explanation": "$$r^3(a_1+a_4+a_7) = 6 \\implies r^3(3) = 6 \\implies r^3 = 2$$\n$$a_1(1+r^3+r^6) = a_1(1+2+4) = 7a_1 = 3 \\implies a_1 = \\frac{3}{7}$$\n$$a_{10} = a_1 r^9 = \\frac{3}{7} \\times (r^3)^3 = \\frac{3}{7} \\times 8 = \\frac{24}{7}$$",
+    "correctRate": 71.4,
+    "errorRate": 28.6,
+    "choiceRatios": [
+      4.1,
+      71.4,
+      7.9,
+      10.9,
+      5.7
+    ],
+    "sourceLabel": "2025학년도 수능 · 12번 ; 정답률 71.4% (오답률 28.6%)"
   },
   {
     "id": "csat-2025-13",
@@ -218,7 +338,17 @@
       "$49$"
     ],
     "correctAnswer": 3,
-    "explanation": "두 접선의 $y$ 절편 차이와 교점의 $x$ 좌표를 곱하여 삼각형의 넓이 $42$ 를 구합니다."
+    "explanation": "두 접선의 $y$ 절편 차이와 교점의 $x$ 좌표를 곱하여 삼각형의 넓이 $42$ 를 구합니다.",
+    "correctRate": 57.4,
+    "errorRate": 42.6,
+    "choiceRatios": [
+      5.2,
+      9.4,
+      9.7,
+      18.3,
+      57.4
+    ],
+    "sourceLabel": "2025학년도 수능 · 13번 ; 정답률 57.4% (오답률 42.6%)"
   },
   {
     "id": "csat-2025-14",
@@ -235,7 +365,17 @@
       "$\\frac{8\\sqrt{10}}{5}$"
     ],
     "correctAnswer": 3,
-    "explanation": "코사인법칙과 원주각의 성질을 연립하여 선분 $\\overline{\\mathrm{GH}}$ 의 길이를 계산합니다."
+    "explanation": "코사인법칙과 원주각의 성질을 연립하여 선분 $\\overline{\\mathrm{GH}}$ 의 길이를 계산합니다.",
+    "correctRate": 47.0,
+    "errorRate": 53.0,
+    "choiceRatios": [
+      12.4,
+      14.5,
+      14.6,
+      47.0,
+      11.5
+    ],
+    "sourceLabel": "2025학년도 수능 · 14번 ; 정답률 47.0% (오답률 53.0%)"
   },
   {
     "id": "csat-2025-15",
@@ -252,7 +392,17 @@
       "$\\frac{17}{2}$"
     ],
     "correctAnswer": 1,
-    "explanation": "$h'(x) = g(x)-f(x)$ 의 부호 변화 횟수가 $1$ 이어야 하므로 $a$ 의 경곗값을 판별합니다."
+    "explanation": "$h'(x) = g(x)-f(x)$ 의 부호 변화 횟수가 $1$ 이어야 하므로 $a$ 의 경곗값을 판별합니다.",
+    "correctRate": 38.1,
+    "errorRate": 61.9,
+    "choiceRatios": [
+      14.8,
+      23.7,
+      12.4,
+      38.1,
+      11.1
+    ],
+    "sourceLabel": "2025학년도 수능 · 15번 ; 정답률 38.1% (오답률 61.9%)"
   },
   {
     "id": "csat-2025-16",
@@ -263,7 +413,10 @@
     "question": "수열 $\\{a_n\\}$ 은 $a_1=1$ 이고, 모든 자연수 $n$ 에 대하여 $$a_{n+1} = n^2 a_n + 1$$ 을 만족시킨다. $a_3$ 의 값을 구하시오.",
     "choices": [],
     "correctAnswer": 9,
-    "explanation": "$$a_2 = 1^2 \\cdot 1 + 1 = 2$$\n$$a_3 = 2^2 \\cdot 2 + 1 = 9$$"
+    "explanation": "$$a_2 = 1^2 \\cdot 1 + 1 = 2$$\n$$a_3 = 2^2 \\cdot 2 + 1 = 9$$",
+    "correctRate": 83.2,
+    "errorRate": 16.8,
+    "sourceLabel": "2025학년도 수능 · 16번 ; 정답률 83.2% (오답률 16.8%)"
   },
   {
     "id": "csat-2025-17",
@@ -274,7 +427,10 @@
     "question": "함수 $f(x)=4x^3-2x$ 의 한 부정적분 $F(x)$ 에 대하여 $F(0)=4$ 일 때, $F(2)$ 의 값을 구하시오.",
     "choices": [],
     "correctAnswer": 16,
-    "explanation": "$$F(x) = x^4 - x^2 + 4 \\implies F(2) = 16 - 4 + 4 = 16$$"
+    "explanation": "$$F(x) = x^4 - x^2 + 4 \\implies F(2) = 16 - 4 + 4 = 16$$",
+    "correctRate": 85.5,
+    "errorRate": 14.5,
+    "sourceLabel": "2025학년도 수능 · 17번 ; 정답률 85.5% (오답률 14.5%)"
   },
   {
     "id": "csat-2025-18",
@@ -285,7 +441,10 @@
     "question": "$\\overline{\\mathrm{AB}}=5, \\overline{\\mathrm{AC}}=6$ 이고 $\\cos(\\angle\\mathrm{BAC}) = -\\frac{3}{5}$ 인 삼각형 $\\mathrm{ABC}$ 의 넓이를 구하시오.",
     "choices": [],
     "correctAnswer": 12,
-    "explanation": "$$\\sin(\\angle\\mathrm{BAC}) = \\sqrt{1 - \\frac{9}{25}} = \\frac{4}{5}$$\n$$S = \\frac{1}{2} \\times 5 \\times 6 \\times \\frac{4}{5} = 12$$"
+    "explanation": "$$\\sin(\\angle\\mathrm{BAC}) = \\sqrt{1 - \\frac{9}{25}} = \\frac{4}{5}$$\n$$S = \\frac{1}{2} \\times 5 \\times 6 \\times \\frac{4}{5} = 12$$",
+    "correctRate": 61.7,
+    "errorRate": 38.3,
+    "sourceLabel": "2025학년도 수능 · 18번 ; 정답률 61.7% (오답률 38.3%)"
   },
   {
     "id": "csat-2025-19",
@@ -296,7 +455,10 @@
     "question": "$-2 \\le x \\le 2$ 인 모든 실수 $x$ 에 대하여 부등식 $$-k \\le 2x^3+3x^2-12x-8 \\le k$$ 가 성립하도록 하는 양수 $k$ 의 최솟값을 구하시오.",
     "choices": [],
     "correctAnswer": 15,
-    "explanation": "$f(x) = 2x^3+3x^2-12x-8$ 의 극댓값 $f(-2)=12$, 극솟값 $f(1)=-15$, $f(2)=-4$ 이므로 최솟값 $k=15$ 입니다."
+    "explanation": "$f(x) = 2x^3+3x^2-12x-8$ 의 극댓값 $f(-2)=12$, 극솟값 $f(1)=-15$, $f(2)=-4$ 이므로 최솟값 $k=15$ 입니다.",
+    "correctRate": 48.7,
+    "errorRate": 51.3,
+    "sourceLabel": "2025학년도 수능 · 19번 ; 정답률 48.7% (오답률 51.3%)"
   },
   {
     "id": "csat-2025-20",
@@ -307,7 +469,10 @@
     "question": "수열 $\\{a_n\\}$ 이 다음 조건을 만족시킨다.\n∙ $a_1=7$\n∙ $2$ 이상의 자연수 $n$ 에 대하여 $$\\sum_{k=1}^n a_k = \\frac{2}{3}a_n + \\frac{1}{6}n^2 - \\frac{1}{6}n + 10$$ 이다.\n과정에서 얻은 빈칸 식 $f(n)$ 및 수 $p, q$ 에 대하여 $\\frac{p \\times q}{f(12)}$ 의 값을 구하시오.",
     "choices": [],
     "correctAnswer": 64,
-    "explanation": "빈칸 추론 단계에 따라 $f(n) = \\frac{1}{3}n$, $p=a_2$, $q$ 값을 계산합니다."
+    "explanation": "빈칸 추론 단계에 따라 $f(n) = \\frac{1}{3}n$, $p=a_2$, $q$ 값을 계산합니다.",
+    "correctRate": 29.9,
+    "errorRate": 70.1,
+    "sourceLabel": "2025학년도 수능 · 20번 ; 정답률 29.9% (오답률 70.1%)"
   },
   {
     "id": "csat-2025-21",
@@ -318,7 +483,10 @@
     "question": "최고차항의 계수가 양수인 삼차함수 $f(x)$ 와 실수 $t$ 에 대하여 함수 $$g(x) = \\begin{cases} -f(x) & (x < t) \\\\ f(x) & (x \\ge t) \\end{cases}$$ 는 실수 전체의 집합에서 연속이고 다음 조건을 만족시킨다.\n(가) 모든 실수 $a$ 에 대하여 $\\lim_{x \\to a^+} \\frac{g(x)}{x(x-2)}$ 의 값이 존재한다.\n(나) $\\lim_{x \\to m^+} \\frac{g(x)}{x(x-2)}$ 의 값이 음수가 되도록 하는 자연수 $m$ 의 집합은 $\\{g(-1), -\\frac{7}{2}g(1)\\}$ 이다.\n$g(-5)$ 의 값을 구하시오. (단, $g(-1) \\ne -\\frac{7}{2}g(1)$)",
     "choices": [],
     "correctAnswer": 180,
-    "explanation": "연속성과 분모 $x(x-2)$ 에 의한 영점 조건 해석을 통해 함수 $g(x)$ 를 결정하고 $g(-5)=180$ 을 구합니다."
+    "explanation": "연속성과 분모 $x(x-2)$ 에 의한 영점 조건 해석을 통해 함수 $g(x)$ 를 결정하고 $g(-5)=180$ 을 구합니다.",
+    "correctRate": 2.4,
+    "errorRate": 97.6,
+    "sourceLabel": "2025학년도 수능 · 21번 ; 정답률 2.4% (오답률 97.6%)"
   },
   {
     "id": "csat-2025-22",
@@ -329,7 +497,10 @@
     "question": "곡선 $y=\\log_{16}(8x+2)$ 위의 점 $\\mathrm{A}(a, b)$ 와 곡선 $y=4^{x-1}-\\frac{1}{2}$ 위의 점 $\\mathrm{B}$ 가 제$1$사분면에 있다. 점 $\\mathrm{A}$ 를 직선 $y=x$ 에 대하여 대칭이동한 점이 직선 $\\mathrm{OB}$ 위에 있고 선분 $\\mathrm{AB}$ 의 중점의 좌표가 $\\left(\\frac{77}{8}, \\frac{133}{8}\\right)$ 일 때, $a \\times b = \\frac{q}{p}$ 이다. $p+q$ 의 값을 구하시오. (단, $\\mathrm{O}$ 는 원점이고, $p$ 와 $q$ 는 서로소인 자연수이다.)",
     "choices": [],
     "correctAnswer": 45,
-    "explanation": "역함수 대칭점과 중점 관계를 연립하여 $a, b$ 의 곱을 도출합니다."
+    "explanation": "역함수 대칭점과 중점 관계를 연립하여 $a, b$ 의 곱을 도출합니다.",
+    "correctRate": 3.3,
+    "errorRate": 96.7,
+    "sourceLabel": "2025학년도 수능 · 22번 ; 정답률 3.3% (오답률 96.7%)"
   },
   {
     "id": "csat-2025-23",
@@ -346,7 +517,17 @@
       "$5$"
     ],
     "correctAnswer": 2,
-    "explanation": "$$\\lim_{x \\to 0} \\frac{\\tan 6x}{2x} = \\lim_{x \\to 0} \\left( \\frac{\\tan 6x}{6x} \\times 3 \\right) = 3$$"
+    "explanation": "$$\\lim_{x \\to 0} \\frac{\\tan 6x}{2x} = \\lim_{x \\to 0} \\left( \\frac{\\tan 6x}{6x} \\times 3 \\right) = 3$$",
+    "correctRate": 91.2,
+    "errorRate": 8.8,
+    "choiceRatios": [
+      1.7,
+      3.5,
+      91.2,
+      2.8,
+      0.8
+    ],
+    "sourceLabel": "2025학년도 수능 · 23번 ; 정답률 91.2% (오답률 8.8%)"
   },
   {
     "id": "csat-2025-24",
@@ -363,7 +544,17 @@
       "$\\frac{5}{6}$"
     ],
     "correctAnswer": 3,
-    "explanation": "$$\\int_0^{\\frac{\\pi}{2}} \\sqrt{\\sin x(1-\\sin^2 x)} dx = \\int_0^{\\frac{\\pi}{2}} \\sqrt{\\sin x} \\cos x dx = \\left[ \\frac{2}{3}(\\sin x)^{\\frac{3}{2}} \\right]_0^{\\frac{\\pi}{2}} = \\frac{2}{3}$$"
+    "explanation": "$$\\int_0^{\\frac{\\pi}{2}} \\sqrt{\\sin x(1-\\sin^2 x)} dx = \\int_0^{\\frac{\\pi}{2}} \\sqrt{\\sin x} \\cos x dx = \\left[ \\frac{2}{3}(\\sin x)^{\\frac{3}{2}} \\right]_0^{\\frac{\\pi}{2}} = \\frac{2}{3}$$",
+    "correctRate": 69.5,
+    "errorRate": 30.5,
+    "choiceRatios": [
+      4.4,
+      11.6,
+      11.0,
+      69.5,
+      3.6
+    ],
+    "sourceLabel": "2025학년도 수능 · 24번 ; 정답률 69.5% (오답률 30.5%)"
   },
   {
     "id": "csat-2025-25",
@@ -380,7 +571,17 @@
       "$\\frac{9}{2}$"
     ],
     "correctAnswer": 2,
-    "explanation": "$$\\lim_{n \\to \\infty} \\frac{a_n}{n} = 5$$\n$$\\lim_{n \\to \\infty} \\frac{(a_n+2)^2}{n a_n + 5n^2 - 2} = \\frac{5^2}{5+5} = \\frac{25}{10} = \\frac{5}{2}$$"
+    "explanation": "$$\\lim_{n \\to \\infty} \\frac{a_n}{n} = 5$$\n$$\\lim_{n \\to \\infty} \\frac{(a_n+2)^2}{n a_n + 5n^2 - 2} = \\frac{5^2}{5+5} = \\frac{25}{10} = \\frac{5}{2}$$",
+    "correctRate": 79.4,
+    "errorRate": 20.6,
+    "choiceRatios": [
+      3.1,
+      7.0,
+      79.4,
+      6.2,
+      4.3
+    ],
+    "sourceLabel": "2025학년도 수능 · 25번 ; 정답률 79.4% (오답률 20.6%)"
   },
   {
     "id": "csat-2025-26",
@@ -397,7 +598,17 @@
       "$\\frac{\\sqrt{3}(1+9\\ln 2)}{12}$"
     ],
     "correctAnswer": 0,
-    "explanation": "$$V = \\frac{\\sqrt{3}}{4} \\int_1^2 (x + x\\ln x)dx = \\frac{\\sqrt{3}(3+8\\ln 2)}{16}$$"
+    "explanation": "$$V = \\frac{\\sqrt{3}}{4} \\int_1^2 (x + x\\ln x)dx = \\frac{\\sqrt{3}(3+8\\ln 2)}{16}$$",
+    "correctRate": 66.2,
+    "errorRate": 33.8,
+    "choiceRatios": [
+      66.2,
+      8.3,
+      6.8,
+      14.2,
+      4.5
+    ],
+    "sourceLabel": "2025학년도 수능 · 26번 ; 정답률 66.2% (오답률 33.8%)"
   },
   {
     "id": "csat-2025-27",
@@ -414,7 +625,17 @@
       "$\\frac{3\\pi+4}{\\pi+12}$"
     ],
     "correctAnswer": 0,
-    "explanation": "매개변수 미분을 통해 교점 $\\mathrm{P}$ 에서의 접선 기울기 $\\frac{3\\pi-4}{\\pi+4}$ 를 구합니다."
+    "explanation": "매개변수 미분을 통해 교점 $\\mathrm{P}$ 에서의 접선 기울기 $\\frac{3\\pi-4}{\\pi+4}$ 를 구합니다.",
+    "correctRate": 63.2,
+    "errorRate": 36.8,
+    "choiceRatios": [
+      6.6,
+      63.2,
+      7.6,
+      12.7,
+      10.0
+    ],
+    "sourceLabel": "2025학년도 수능 · 27번 ; 정답률 63.2% (오답률 36.8%)"
   },
   {
     "id": "csat-2025-28",
@@ -431,7 +652,17 @@
       "$\\frac{157}{12}+\\ln 2$"
     ],
     "correctAnswer": 0,
-    "explanation": "접선의 $y$ 절편 차이로부터 역함수 관계를 세워 정적분을 계산합니다."
+    "explanation": "접선의 $y$ 절편 차이로부터 역함수 관계를 세워 정적분을 계산합니다.",
+    "correctRate": 28.0,
+    "errorRate": 72.0,
+    "choiceRatios": [
+      10.5,
+      33.7,
+      8.5,
+      19.3,
+      28.0
+    ],
+    "sourceLabel": "2025학년도 수능 · 28번 ; 정답률 28.0% (오답률 72.0%)"
   },
   {
     "id": "csat-2025-29",
@@ -442,7 +673,10 @@
     "question": "첫째항과 공차가 같은 등차수열 $\\{a_n\\}$ 과 등비수열 $\\{b_n\\}$ 이 다음 조건을 만족시킨다.\n어떤 자연수 $k$ 에 대하여 $$b_{k+i} = \\frac{1}{a_i} - 1 \\quad (i=1, 2, 3)$$ 이다.\n부등식 $$0 < \\sum_{n=1}^\\infty \\left( b_n - \\frac{1}{a_n a_{n+1}} \\right) < 30$$ 이 성립할 때, $a_2 \\times \\sum_{n=1}^\\infty b_{2n} = \\frac{q}{p}$ 이다. $p+q$ 의 값을 구하시오. (단, $a_1 \\ne 0$ 이고, $p$ 와 $q$ 는 서로소인 자연수이다.)",
     "choices": [],
     "correctAnswer": 35,
-    "explanation": "등비수열의 공비와 등차수열의 공차를 구하여 급수의 합을 계산합니다."
+    "explanation": "등비수열의 공비와 등차수열의 공차를 구하여 급수의 합을 계산합니다.",
+    "correctRate": 18.4,
+    "errorRate": 81.6,
+    "sourceLabel": "2025학년도 수능 · 29번 ; 정답률 18.4% (오답률 81.6%)"
   },
   {
     "id": "csat-2025-30",
@@ -453,6 +687,9 @@
     "question": "실수 전체의 집합에서 증가하는 연속함수 $f(x)$ 의 역함수 $f^{-1}(x)$ 가 다음 조건을 만족시킨다.\n(가) $|x| \\le 1$ 일 때, $4(f^{-1}(x))^2 = x^2(x^2-5)^2$ 이다.\n(나) $|x| > 1$ 일 때, $|f^{-1}(x)| = e^{|x|-1}+1$ 이다.\n실수 $m$ 에 대하여 기울기가 $m$ 이고 점 $(1, 0)$ 을 지나는 직선이 곡선 $y=f(x)$ 와 만나는 점의 개수를 $g(m)$ 이라 하자. 함수 $g(m)$ 이 $m=a, m=b(a<b)$ 에서 불연속일 때, $$g(a) \\times \\left(\\lim_{m \\to a^+} g(m)\\right) + g(b) \\times \\left(\\frac{\\ln b}{b}\\right)^2$$ 의 값을 구하시오. (단, $\\lim_{x \\to \\infty} \\frac{\\ln x}{x} = 0$)",
     "choices": [],
     "correctAnswer": 8,
-    "explanation": "접선의 기울기에 따른 교점 개수 $g(m)$ 의 불연속점을 분석하여 값을 구합니다."
+    "explanation": "접선의 기울기에 따른 교점 개수 $g(m)$ 의 불연속점을 분석하여 값을 구합니다.",
+    "correctRate": 3.1,
+    "errorRate": 96.9,
+    "sourceLabel": "2025학년도 수능 · 30번 ; 정답률 3.1% (오답률 96.9%)"
   }
 ]

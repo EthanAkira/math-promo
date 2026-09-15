@@ -48,6 +48,9 @@ export default function InteractiveProblemCard({
     sourceLabel,
     choiceMarkerType,
     examType,
+    correctRate,
+    errorRate,
+    choiceRatios,
   } = problem;
 
   const safeChoices = Array.isArray(choices) ? choices : [];
@@ -59,6 +62,39 @@ export default function InteractiveProblemCard({
   const isLetterChoices = choiceMarkerType === 'letters' || examType === 'amc';
   const symbols = isLetterChoices ? CHOICE_LETTERS : CHOICE_SYMBOLS;
   const isSolutionVisible = solutionOpen || forceSolutionOpen || (isExamMode && showResult && explanation);
+
+  const effectiveCorrectRate = correctRate ?? problem.correctRate;
+  const effectiveErrorRate = errorRate ?? problem.errorRate ?? (effectiveCorrectRate != null ? Math.round((100 - effectiveCorrectRate) * 10) / 10 : null);
+
+  let rawSource = sourceLabel || problem.sourceLabel || '';
+  if (!rawSource && problem.year && (problem.problemNumber || problem.number)) {
+    const yr = problem.year;
+    const num = problem.problemNumber || problem.number;
+    const et = problem.examType === 'sept' ? '9월 모의평가' : (problem.examType === 'june' ? '6월 모의평가' : '수능');
+    rawSource = `${yr}학년도 ${et} · ${num}번`;
+  }
+
+  let sourceBase = '';
+  let sourceRatePart = '';
+
+  if (rawSource) {
+    if (rawSource.includes(';')) {
+      const parts = rawSource.split(';').map((s) => s.trim());
+      sourceBase = parts[0];
+      if (!isExamMode) {
+        sourceRatePart = parts.slice(1).join('; ');
+      }
+    } else {
+      sourceBase = rawSource.trim();
+      if (!isExamMode && effectiveCorrectRate != null) {
+        sourceRatePart = `정답률 ${effectiveCorrectRate}% (오답률 ${effectiveErrorRate}%)`;
+      }
+    }
+  }
+
+  if (isExamMode) {
+    sourceRatePart = '';
+  }
 
   return (
     <div
@@ -97,24 +133,42 @@ export default function InteractiveProblemCard({
           >
             {language === 'ko' ? `[문제 ${number}]` : `[Problem ${number}]`}
           </span>
-          {sourceLabel ? (
+          {(sourceBase || sourceRatePart) ? (
             <span
               style={{
-                fontSize: '12px',
+                fontSize: '12.5px',
                 fontWeight: '700',
-                padding: '3px 10px',
-                borderRadius: '6px',
+                padding: '4px 11px',
+                borderRadius: '7px',
                 background: 'rgba(37, 99, 235, 0.08)',
                 color: '#1d4ed8',
                 border: '1px solid rgba(37, 99, 235, 0.22)',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '4px',
+                gap: '5px',
+                flexWrap: 'wrap',
               }}
-              title="출제 정보 (기출 연도 및 번호)"
+              title="출제 정보 (기출 연도 및 번호, 정답률)"
             >
               <span>📌</span>
-              <span>{sanitizePublicText(sourceLabel)}</span>
+              <span>{sanitizePublicText(sourceBase)}</span>
+              {sourceRatePart ? (
+                <>
+                  <span style={{ color: 'var(--ink-soft, #6b7280)', fontWeight: 800 }}>;</span>
+                  <span
+                    style={{
+                      fontWeight: 800,
+                      color: effectiveCorrectRate != null && effectiveCorrectRate < 40
+                        ? '#b91c1c'
+                        : effectiveCorrectRate != null && effectiveCorrectRate < 70
+                          ? '#b45309'
+                          : '#047857',
+                    }}
+                  >
+                    {sanitizePublicText(sourceRatePart)}
+                  </span>
+                </>
+              ) : null}
             </span>
           ) : null}
           {points ? (
@@ -143,6 +197,47 @@ export default function InteractiveProblemCard({
               }}
             >
               {sanitizePublicText(unit)}
+            </span>
+          ) : null}
+          {!isExamMode && !hasRateInSource && correctRate !== undefined && correctRate !== null ? (
+            <span
+              style={{
+                fontSize: '12px',
+                fontWeight: '700',
+                padding: '2px 9px',
+                borderRadius: '6px',
+                background: correctRate >= 70
+                  ? 'rgba(16, 185, 129, 0.10)'
+                  : correctRate >= 40
+                    ? 'rgba(245, 158, 11, 0.12)'
+                    : 'rgba(239, 68, 68, 0.12)',
+                color: correctRate >= 70
+                  ? '#047857'
+                  : correctRate >= 40
+                    ? '#b45309'
+                    : '#b91c1c',
+                border: `1px solid ${
+                  correctRate >= 70
+                    ? 'rgba(16, 185, 129, 0.3)'
+                    : correctRate >= 40
+                      ? 'rgba(245, 158, 11, 0.35)'
+                      : 'rgba(239, 68, 68, 0.35)'
+                }`,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}
+              title={language === 'ko'
+                ? `정답률: ${correctRate}%, 오답률: ${errorRate ?? (100 - correctRate).toFixed(1)}%`
+                : `Accuracy: ${correctRate}%, Error: ${errorRate ?? (100 - correctRate).toFixed(1)}%`}
+            >
+              <span>📊</span>
+              <span>
+                {language === 'ko' ? `정답률 ${correctRate}%` : `Accuracy ${correctRate}%`}
+                <span style={{ opacity: 0.75, fontSize: '11px', marginLeft: '4px' }}>
+                  ({language === 'ko' ? `오답률 ${errorRate ?? (100 - correctRate).toFixed(1)}%` : `Err ${errorRate ?? (100 - correctRate).toFixed(1)}%`})
+                </span>
+              </span>
             </span>
           ) : null}
         </div>
@@ -395,6 +490,43 @@ export default function InteractiveProblemCard({
             💡 {language === 'ko' ? '상세 해설' : 'Step-by-step Solution'}
           </div>
           <LatexMath text={cleanCsatProblemText(explanation)} />
+          {Array.isArray(choiceRatios) && choiceRatios.length === 5 ? (
+            <div
+              style={{
+                marginTop: '14px',
+                padding: '10px 14px',
+                background: 'rgba(0, 0, 0, 0.03)',
+                borderRadius: '8px',
+                fontSize: '13px',
+                border: '1px dashed var(--paper-line, #d8c9a8)',
+              }}
+            >
+              <div style={{ fontWeight: '800', marginBottom: '6px', color: 'var(--ink, #1f2733)' }}>
+                📊 {language === 'ko' ? '수험생 선택지별 응답률 (정답률 분석)' : 'Choice Selection Distribution'}
+              </div>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                {choiceRatios.map((ratio, cIdx) => {
+                  const isAns = (typeof correctAnswer === 'number' && cIdx === correctAnswer) ||
+                    (typeof correctAnswer === 'string' && String(cIdx) === String(correctAnswer));
+                  return (
+                    <span
+                      key={cIdx}
+                      style={{
+                        padding: '2px 8px',
+                        borderRadius: '4px',
+                        background: isAns ? 'rgba(16, 185, 129, 0.15)' : 'rgba(0, 0, 0, 0.04)',
+                        color: isAns ? '#047857' : 'var(--ink-soft, #718096)',
+                        fontWeight: isAns ? '800' : '500',
+                        border: isAns ? '1px solid rgba(16, 185, 129, 0.35)' : 'none',
+                      }}
+                    >
+                      {symbols[cIdx]} {ratio}%{isAns ? (language === 'ko' ? ' (정답)' : ' (Ans)') : ''}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          ) : null}
         </div>
       ) : null}
 

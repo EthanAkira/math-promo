@@ -28,6 +28,9 @@ export async function onRequestGet({ request, env }) {
     explanation: row.explanation,
     points: row.points,
     sourceFileKey: row.source_file_key,
+    correctRate: row.correct_rate != null ? Number(row.correct_rate) : null,
+    errorRate: row.error_rate != null ? Number(row.error_rate) : null,
+    choiceRatios: row.choice_ratios_json ? JSON.parse(row.choice_ratios_json) : null,
   }));
   return jsonResponse({ problems });
 }
@@ -79,6 +82,9 @@ export async function onRequestPost({ request, env }) {
       answer: item.answer != null ? String(item.answer) : null,
       explanation: item.explanation || null,
       points: Number.isFinite(Number(item.points)) ? Number(item.points) : null,
+      correctRate: item.correctRate != null ? Number(item.correctRate) : null,
+      errorRate: item.errorRate != null ? Number(item.errorRate) : null,
+      choiceRatiosJson: Array.isArray(item.choiceRatios) && item.choiceRatios.length ? JSON.stringify(item.choiceRatios) : null,
       sourceFileKey,
       classifyMethod: 'auto-keyword',
     });

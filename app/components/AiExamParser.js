@@ -6,6 +6,7 @@ import InteractiveProblemCard from './InteractiveProblemCard';
 import { getExamFullText, clearCustomExams } from '../data/sampleExams';
 import { sanitizePublicText } from '../publicText';
 import { decodeHwpPua, cleanCsatProblemText } from '../utils/hwpPuaDecoder';
+import { enrichProblemWithRates } from '../utils/csatRates';
 
 const CHOICE_SYMBOLS = ['①', '②', '③', '④', '⑤'];
 
@@ -95,17 +96,20 @@ export async function extractTextFromImage(imageFile, onProgress) {
   return result?.data?.text || '';
 }
 
-function prepareForReview(problems, source = 'text') {
-  return problems.map((problem) => ({
-    ...problem,
-    unit: sanitizePublicText(problem.unit),
-    question: sanitizePublicText(problem.question),
-    choices: (problem.choices || []).map((choice) => sanitizePublicText(choice)),
-    explanation: sanitizePublicText(problem.explanation),
-    sourceLabel: sanitizePublicText(problem.sourceLabel),
-    reviewStatus: 'needs-review',
-    importSource: source,
-  }));
+function prepareForReview(problems, source = 'text', examType = 'csat') {
+  return problems.map((problem) => {
+    const sanitized = {
+      ...problem,
+      unit: sanitizePublicText(problem.unit),
+      question: sanitizePublicText(problem.question),
+      choices: (problem.choices || []).map((choice) => sanitizePublicText(choice)),
+      explanation: sanitizePublicText(problem.explanation),
+      sourceLabel: sanitizePublicText(problem.sourceLabel),
+      reviewStatus: 'needs-review',
+      importSource: source,
+    };
+    return examType === 'csat' ? enrichProblemWithRates(sanitized) : sanitized;
+  });
 }
 
 function problemIssues(problem) {
@@ -494,7 +498,7 @@ function ProblemReviewEditor({ problem, onChange, onReview, onRemove, language }
       <details style={{ marginTop: 12 }}>
         <summary style={{ cursor: 'pointer', fontWeight: 700, fontSize: 13 }}>학생 화면 미리보기</summary>
         <div style={{ marginTop: 10 }}>
-          <InteractiveProblemCard problem={problem} userAnswer={null} onSelectAnswer={() => {}} isExamMode showResult={false} language={language} />
+          <InteractiveProblemCard problem={problem} userAnswer={null} onSelectAnswer={() => {}} isExamMode={false} showResult={false} language={language} />
         </div>
       </details>
     </section>
@@ -518,12 +522,12 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
       setInputText(initialText);
       const res = parseExamText(initialText);
       if (res.length > 0) {
-        setParsedProblems(prepareForReview(res, 'initial'));
+        setParsedProblems(prepareForReview(res, 'initial', examType));
         setPreviewActive(true);
         setStatusMsg(`⚡ 전체 파일에서 총 ${res.length}개 문제를 일괄 인식하여 변환했습니다.`);
       }
     }
-  }, [initialText]);
+  }, [initialText, examType]);
 
   const handleParse = () => {
     const text = inputText.trim() || getSampleText(level);
@@ -532,7 +536,7 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
       setStatusMsg('문제를 인식하지 못했습니다. 형식(1., 2., Problem 1, [문제 1])을 확인해주세요.');
       return;
     }
-    setParsedProblems(prepareForReview(result));
+    setParsedProblems(prepareForReview(result, 'text', examType));
     setPreviewActive(true);
     setStatusMsg(`🎉 전체 파일에서 총 ${result.length}개 문제를 한 번에 성공적으로 분리·변환했습니다!`);
   };
@@ -543,7 +547,7 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
     const text = getExamFullText(examType, lvl);
     setInputText(text);
     const result = parseExamText(text);
-    setParsedProblems(prepareForReview(result, 'sample'));
+    setParsedProblems(prepareForReview(result, 'sample', examType));
     setPreviewActive(true);
     setStatusMsg(`📝 ${examType.toUpperCase()}${lvl ? ` (${lvl})` : ''} 전체 ${result.length}문항 일괄 샘플 세트가 로드 및 변환되었습니다.`);
   };
@@ -697,7 +701,8 @@ export default function AiExamParser({ initialText = '', onSaveToArchive, examTy
       setStatusMsg(`저장 전 수정이 필요한 문제: ${invalidNumbers.join(', ')}번`);
       return;
     }
-    const savedProblems = parsedProblems.map(({ reviewStatus, importSource, ...problem }) => problem);
+    const rawSaved = parsedProblems.map(({ reviewStatus, importSource, ...problem }) => problem);
+    const savedProblems = examType === 'csat' ? enrichProblemsListWithRates(rawSaved, { examType: 'nov', variant: level }) : rawSaved;
     if (typeof window !== 'undefined') {
       try {
         localStorage.setItem(`custom_exam_${examType}`, JSON.stringify(savedProblems));

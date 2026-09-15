@@ -126,23 +126,28 @@ export async function upsertArchiveProblem(db, fields) {
     subject, level = null, grade = null, examType = null, year, variant = null, problemNumber,
     subjectId = null, unitId = null, questionText = null, choicesJson = null, answer = null,
     explanation = null, points = null, sourceFileKey, classifyMethod = 'auto-keyword',
+    correctRate = null, errorRate = null, choiceRatiosJson = null,
   } = fields;
   const now = Date.now();
   await db.prepare(
     `INSERT INTO archive_problems (
        id, subject, level, grade, exam_type, year, variant, problem_number, subject_id, unit_id,
        question_text, choices_json, answer, explanation, points, source_file_key, classify_method,
+       correct_rate, error_rate, choice_ratios_json,
        created_at, updated_at
-     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT(subject, level, year, variant, problem_number) DO UPDATE SET
        grade = excluded.grade, exam_type = excluded.exam_type, subject_id = excluded.subject_id,
        unit_id = excluded.unit_id, question_text = excluded.question_text, choices_json = excluded.choices_json,
        answer = excluded.answer, explanation = excluded.explanation, points = excluded.points,
        source_file_key = excluded.source_file_key, classify_method = excluded.classify_method,
+       correct_rate = excluded.correct_rate, error_rate = excluded.error_rate,
+       choice_ratios_json = excluded.choice_ratios_json,
        updated_at = excluded.updated_at`
   ).bind(
     genId(), subject, level, grade, examType, year, variant, problemNumber, subjectId, unitId,
-    questionText, choicesJson, answer, explanation, points, sourceFileKey, classifyMethod, now, now
+    questionText, choicesJson, answer, explanation, points, sourceFileKey, classifyMethod,
+    correctRate, errorRate, choiceRatiosJson, now, now
   ).run();
 }
 

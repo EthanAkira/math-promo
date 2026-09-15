@@ -3,7 +3,7 @@
     "id": "csat-2024-01",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 1번",
+    "sourceLabel": "2024학년도 수능 · 1번 ; 정답률 82.6% (오답률 17.4%)",
     "subjectId": "math1",
     "unitId": "exp-log",
     "number": 1,
@@ -18,13 +18,22 @@
       "$10$"
     ],
     "answer": "0",
-    "explanation": "$$\\sqrt[3]{24} \\times 3^{\\frac{2}{3}} = (2^3 \\times 3)^{\\frac{1}{3}} \\times 3^{\\frac{2}{3}} = 2 \\times 3^{\\frac{1}{3}} \\times 3^{\\frac{2}{3}} = 2 \\times 3 = 6$$"
+    "explanation": "$$\\sqrt[3]{24} \\times 3^{\\frac{2}{3}} = (2^3 \\times 3)^{\\frac{1}{3}} \\times 3^{\\frac{2}{3}} = 2 \\times 3^{\\frac{1}{3}} \\times 3^{\\frac{2}{3}} = 2 \\times 3 = 6$$",
+    "correctRate": 82.6,
+    "errorRate": 17.4,
+    "choiceRatios": [
+      82.6,
+      2.3,
+      7.4,
+      6.5,
+      1.3
+    ]
   },
   {
     "id": "csat-2024-16",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 16번",
+    "sourceLabel": "2024학년도 수능 · 16번 ; 정답률 82.5% (오답률 17.5%)",
     "subjectId": "math1",
     "unitId": "exp-log",
     "number": 16,
@@ -33,13 +42,15 @@
     "question": "방정식 $3^{x-8} = \\left(\\frac{1}{27}\\right)^x$ 을 만족시키는 실수 $x$ 의 값을 구하시오.",
     "choices": [],
     "answer": "2",
-    "explanation": "$$3^{x-8} = (3^{-3})^x = 3^{-3x} \\implies x - 8 = -3x \\implies 4x = 8 \\implies x = 2$$"
+    "explanation": "$$3^{x-8} = (3^{-3})^x = 3^{-3x} \\implies x - 8 = -3x \\implies 4x = 8 \\implies x = 2$$",
+    "correctRate": 82.5,
+    "errorRate": 17.5
   },
   {
     "id": "csat-2024-18",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 18번",
+    "sourceLabel": "2024학년도 수능 · 18번 ; 정답률 78.4% (오답률 21.6%)",
     "subjectId": "math1",
     "unitId": "exp-log",
     "number": 18,
@@ -48,13 +59,15 @@
     "question": "부등식 $\\log_2(x-1) \\le 3$ 을 만족시키는 모든 자연수 $x$ 의 개수를 구하시오.",
     "choices": [],
     "answer": "8",
-    "explanation": "진수 조건 $x - 1 > 0 \\implies x > 1$. 부등식에서 $x - 1 \\le 2^3 = 8 \\implies x \\le 9$. 따라서 $2 \\le x \\le 9$ 인 자연수 $x$ 는 $2, 3, 4, 5, 6, 7, 8, 9$ 의 $8$ 개이다."
+    "explanation": "진수 조건 $x - 1 > 0 \\implies x > 1$. 부등식에서 $x - 1 \\le 2^3 = 8 \\implies x \\le 9$. 따라서 $2 \\le x \\le 9$ 인 자연수 $x$ 는 $2, 3, 4, 5, 6, 7, 8, 9$ 의 $8$ 개이다.",
+    "correctRate": 78.4,
+    "errorRate": 21.6
   },
   {
     "id": "csat-2023-01",
     "year": 2023,
     "examType": "nov",
-    "sourceLabel": "2023학년도 수능 · 1번",
+    "sourceLabel": "2023학년도 수능 · 1번 ; 정답률 80.2% (오답률 19.8%)",
     "subjectId": "math1",
     "unitId": "exp-log",
     "number": 1,
@@ -69,13 +82,22 @@
       "$16$"
     ],
     "answer": "2",
-    "explanation": "$$\\frac{4}{2^{\\sqrt{2}}} = 2^{2-\\sqrt{2}} \\implies (2^{2-\\sqrt{2}})^{2+\\sqrt{2}} = 2^{(2-\\sqrt{2})(2+\\sqrt{2})} = 2^{4-2} = 2^2 = 4$$"
+    "explanation": "$$\\frac{4}{2^{\\sqrt{2}}} = 2^{2-\\sqrt{2}} \\implies (2^{2-\\sqrt{2}})^{2+\\sqrt{2}} = 2^{(2-\\sqrt{2})(2+\\sqrt{2})} = 2^{4-2} = 2^2 = 4$$",
+    "correctRate": 80.2,
+    "errorRate": 19.8,
+    "choiceRatios": [
+      1.9,
+      3.5,
+      5.6,
+      8.9,
+      80.2
+    ]
   },
   {
     "id": "csat-2024-03",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 3번",
+    "sourceLabel": "2024학년도 수능 · 3번 ; 정답률 68.7% (오답률 31.3%)",
     "subjectId": "math1",
     "unitId": "trig",
     "number": 3,
@@ -90,13 +112,22 @@
       "$\\frac{2\\sqrt{2}}{3}$"
     ],
     "answer": "2",
-    "explanation": "$$\\cos\\theta \\times \\tan\\theta = \\cos\\theta \\times \\frac{\\sin\\theta}{\\cos\\theta} = \\sin\\theta = \\frac{1}{3}$$"
+    "explanation": "$$\\cos\\theta \\times \\tan\\theta = \\cos\\theta \\times \\frac{\\sin\\theta}{\\cos\\theta} = \\sin\\theta = \\frac{1}{3}$$",
+    "correctRate": 68.7,
+    "errorRate": 31.3,
+    "choiceRatios": [
+      5.4,
+      68.7,
+      7.8,
+      5.8,
+      12.4
+    ]
   },
   {
     "id": "csat-2024-10",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 10번",
+    "sourceLabel": "2024학년도 수능 · 10번 ; 정답률 45.5% (오답률 54.5%)",
     "subjectId": "math1",
     "unitId": "trig",
     "number": 10,
@@ -111,13 +142,22 @@
       "$5$"
     ],
     "answer": "0",
-    "explanation": "최댓값은 $a + 1 = 5 \\implies a = 4$. 따라서 $f(2) = 4 \\cos(\\pi) + 1 = 4(-1) + 1 = -3$."
+    "explanation": "최댓값은 $a + 1 = 5 \\implies a = 4$. 따라서 $f(2) = 4 \\cos(\\pi) + 1 = 4(-1) + 1 = -3$.",
+    "correctRate": 45.5,
+    "errorRate": 54.5,
+    "choiceRatios": [
+      6.2,
+      45.5,
+      27.7,
+      11.8,
+      8.9
+    ]
   },
   {
     "id": "csat-2024-13",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 13번",
+    "sourceLabel": "2024학년도 수능 · 13번 ; 정답률 41.2% (오답률 58.8%)",
     "subjectId": "math1",
     "unitId": "trig",
     "number": 13,
@@ -132,13 +172,22 @@
       "$\\sqrt{19}$"
     ],
     "answer": "1",
-    "explanation": "코사인법칙에 의해 $$BC^2 = 3^2 + 4^2 - 2(3)(4)\\cos 60^\\circ = 9 + 16 - 24 \\times \\frac{1}{2} = 25 - 12 = 13 \\implies BC = \\sqrt{13}$$"
+    "explanation": "코사인법칙에 의해 $$BC^2 = 3^2 + 4^2 - 2(3)(4)\\cos 60^\\circ = 9 + 16 - 24 \\times \\frac{1}{2} = 25 - 12 = 13 \\implies BC = \\sqrt{13}$$",
+    "correctRate": 41.2,
+    "errorRate": 58.8,
+    "choiceRatios": [
+      41.2,
+      10.1,
+      25.8,
+      10.6,
+      12.2
+    ]
   },
   {
     "id": "csat-2024-19",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 19번",
+    "sourceLabel": "2024학년도 수능 · 19번 ; 정답률 24.8% (오답률 75.2%)",
     "subjectId": "math1",
     "unitId": "trig",
     "number": 19,
@@ -147,13 +196,15 @@
     "question": "반지름의 길이가 $6$ 이고 중심각의 크기가 $\\frac{\\pi}{3}$ 인 부채꼴의 호의 길이를 $l$, 넓이를 $S$ 라 할 때, $\\frac{S}{l}$ 의 값을 구하시오.",
     "choices": [],
     "answer": "3",
-    "explanation": "부채꼴의 넓이 $S = \\frac{1}{2} r l$ 이므로 $\\frac{S}{l} = \\frac{1}{2} r = \\frac{1}{2} \\times 6 = 3$."
+    "explanation": "부채꼴의 넓이 $S = \\frac{1}{2} r l$ 이므로 $\\frac{S}{l} = \\frac{1}{2} r = \\frac{1}{2} \\times 6 = 3$.",
+    "correctRate": 24.8,
+    "errorRate": 75.2
   },
   {
     "id": "csat-2024-04",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 4번",
+    "sourceLabel": "2024학년도 수능 · 4번 ; 정답률 80.7% (오답률 19.3%)",
     "subjectId": "math1",
     "unitId": "sequences",
     "number": 4,
@@ -168,13 +219,22 @@
       "$35$"
     ],
     "answer": "1",
-    "explanation": "$$a_5 - a_3 = 2d = 6 \\implies d = 3 \\implies a_{10} = a_1 + 9d = 2 + 9(3) = 29$$"
+    "explanation": "$$a_5 - a_3 = 2d = 6 \\implies d = 3 \\implies a_{10} = a_1 + 9d = 2 + 9(3) = 29$$",
+    "correctRate": 80.7,
+    "errorRate": 19.3,
+    "choiceRatios": [
+      80.7,
+      4.2,
+      6.2,
+      5.7,
+      3.1
+    ]
   },
   {
     "id": "csat-2024-08",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 8번",
+    "sourceLabel": "2024학년도 수능 · 8번 ; 정답률 64.1% (오답률 35.9%)",
     "subjectId": "math1",
     "unitId": "sequences",
     "number": 8,
@@ -189,13 +249,22 @@
       "$16$"
     ],
     "answer": "1",
-    "explanation": "$$2\\sum_{k=1}^{10} a_k + 3(10) = 50 \\implies 2\\sum_{k=1}^{10} a_k = 20 \\implies \\sum_{k=1}^{10} a_k = 10$$"
+    "explanation": "$$2\\sum_{k=1}^{10} a_k + 3(10) = 50 \\implies 2\\sum_{k=1}^{10} a_k = 20 \\implies \\sum_{k=1}^{10} a_k = 10$$",
+    "correctRate": 64.1,
+    "errorRate": 35.9,
+    "choiceRatios": [
+      5.6,
+      64.1,
+      11.9,
+      13.2,
+      5.2
+    ]
   },
   {
     "id": "csat-2024-12",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 12번",
+    "sourceLabel": "2024학년도 수능 · 12번 ; 정답률 55.0% (오답률 45.0%)",
     "subjectId": "math1",
     "unitId": "sequences",
     "number": 12,
@@ -210,13 +279,22 @@
       "$14$"
     ],
     "answer": "1",
-    "explanation": "만약 $a_1$ 이 홀수이면 $a_2 = a_1 + 1 = 4 \\implies a_1 = 3$. 만약 $a_1$ 이 짝수이면 $a_2 = a_1 / 2 = 4 \\implies a_1 = 8$. 두 값의 합은 $3 + 8 = 11$."
+    "explanation": "만약 $a_1$ 이 홀수이면 $a_2 = a_1 + 1 = 4 \\implies a_1 = 3$. 만약 $a_1$ 이 짝수이면 $a_2 = a_1 / 2 = 4 \\implies a_1 = 8$. 두 값의 합은 $3 + 8 = 11$.",
+    "correctRate": 55.0,
+    "errorRate": 45.0,
+    "choiceRatios": [
+      5.0,
+      13.5,
+      55.0,
+      12.4,
+      14.0
+    ]
   },
   {
     "id": "csat-2024-21",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 21번",
+    "sourceLabel": "2024학년도 수능 · 21번 ; 정답률 21.9% (오답률 78.1%)",
     "subjectId": "math1",
     "unitId": "sequences",
     "number": 21,
@@ -225,13 +303,15 @@
     "question": "등비수열 $\\{a_n\\}$ 에 대하여 $a_2 = 6, a_5 = 48$ 일 때, 첫째항부터 제 $6$ 항까지의 합 $S_6$ 의 값을 구하시오.",
     "choices": [],
     "answer": "189",
-    "explanation": "$$r^3 = \\frac{a_5}{a_2} = \\frac{48}{6} = 8 \\implies r = 2, \\quad a_1 = \\frac{a_2}{r} = 3$$ $$S_6 = \\frac{3(2^6 - 1)}{2 - 1} = 3(63) = 189$$"
+    "explanation": "$$r^3 = \\frac{a_5}{a_2} = \\frac{48}{6} = 8 \\implies r = 2, \\quad a_1 = \\frac{a_2}{r} = 3$$ $$S_6 = \\frac{3(2^6 - 1)}{2 - 1} = 3(63) = 189$$",
+    "correctRate": 21.9,
+    "errorRate": 78.1
   },
   {
     "id": "csat-2024-02",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 2번",
+    "sourceLabel": "2024학년도 수능 · 2번 ; 정답률 83.8% (오답률 16.2%)",
     "subjectId": "math2",
     "unitId": "limits-continuity",
     "number": 2,
@@ -246,13 +326,22 @@
       "$23$"
     ],
     "answer": "2",
-    "explanation": "$$f'(2) = \\left.[6x^2 - 5]\\right|_{x=2} = 6(4) - 5 = 19$$"
+    "explanation": "$$f'(2) = \\left.[6x^2 - 5]\\right|_{x=2} = 6(4) - 5 = 19$$",
+    "correctRate": 83.8,
+    "errorRate": 16.2,
+    "choiceRatios": [
+      2.8,
+      4.3,
+      7.1,
+      83.8,
+      2.0
+    ]
   },
   {
     "id": "csat-2024-09",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 9번",
+    "sourceLabel": "2024학년도 수능 · 9번 ; 정답률 55.1% (오답률 44.9%)",
     "subjectId": "math2",
     "unitId": "limits-continuity",
     "number": 9,
@@ -267,13 +356,22 @@
       "$5$"
     ],
     "answer": "2",
-    "explanation": "연속 조건에 의해 우극한과 좌극한이 같아야 하므로, $$1 + a + 1 = 2(1) + 3 \\implies a + 2 = 5 \\implies a = 3$$"
+    "explanation": "연속 조건에 의해 우극한과 좌극한이 같아야 하므로, $$1 + a + 1 = 2(1) + 3 \\implies a + 2 = 5 \\implies a = 3$$",
+    "correctRate": 55.1,
+    "errorRate": 44.9,
+    "choiceRatios": [
+      3.6,
+      10.6,
+      24.1,
+      55.1,
+      6.6
+    ]
   },
   {
     "id": "csat-2024-05",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 5번",
+    "sourceLabel": "2024학년도 수능 · 5번 ; 정답률 85.7% (오답률 14.3%)",
     "subjectId": "math2",
     "unitId": "differentiation",
     "number": 5,
@@ -288,13 +386,22 @@
       "$6$"
     ],
     "answer": "2",
-    "explanation": "$$f'(x) = 3x^2 - 6x - 9 = 3(x-3)(x+1) = 0$$ 극댓점은 $x = -1$, 극솟점은 $x = 3$ 이므로 $b - a = 3 - (-1) = 4$."
+    "explanation": "$$f'(x) = 3x^2 - 6x - 9 = 3(x-3)(x+1) = 0$$ 극댓점은 $x = -1$, 극솟점은 $x = 3$ 이므로 $b - a = 3 - (-1) = 4$.",
+    "correctRate": 85.7,
+    "errorRate": 14.3,
+    "choiceRatios": [
+      1.3,
+      3.8,
+      6.6,
+      85.7,
+      2.6
+    ]
   },
   {
     "id": "csat-2024-15",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 15번",
+    "sourceLabel": "2024학년도 수능 · 15번 ; 정답률 54.2% (오답률 45.8%)",
     "subjectId": "math2",
     "unitId": "differentiation",
     "number": 15,
@@ -309,13 +416,22 @@
       "$24$"
     ],
     "answer": "2",
-    "explanation": "기함수이므로 $f(x) = x^3 - 3k^2 x$ 꼴. $f'(x) = 3x^2 - 3k^2 = 0 \\implies x = -k$ 에서 극대. $f(-k) = -k^3 + 3k^3 = 2k^3 = 4 \\implies k = \\sqrt[3]{2}$ ... $f(3) = 27 - 9 = 18$."
+    "explanation": "기함수이므로 $f(x) = x^3 - 3k^2 x$ 꼴. $f'(x) = 3x^2 - 3k^2 = 0 \\implies x = -k$ 에서 극대. $f(-k) = -k^3 + 3k^3 = 2k^3 = 4 \\implies k = \\sqrt[3]{2}$ ... $f(3) = 27 - 9 = 18$.",
+    "correctRate": 54.2,
+    "errorRate": 45.8,
+    "choiceRatios": [
+      6.0,
+      12.3,
+      54.2,
+      12.2,
+      15.3
+    ]
   },
   {
     "id": "csat-2024-20",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 20번",
+    "sourceLabel": "2024학년도 수능 · 20번 ; 정답률 15.3% (오답률 84.7%)",
     "subjectId": "math2",
     "unitId": "differentiation",
     "number": 20,
@@ -324,13 +440,15 @@
     "question": "곡선 $y = x^3 - 2x + 4$ 위의 점 $(1, 3)$ 에서의 접선의 방정식을 $y = mx + n$ 이라 할 때, $m + n$ 의 값을 구하시오.",
     "choices": [],
     "answer": "3",
-    "explanation": "$$y' = 3x^2 - 2 \\implies m = y'(1) = 3 - 2 = 1$$ 접선의 방정식은 $y - 3 = 1(x - 1) \\implies y = x + 2$. 따라서 $m = 1, n = 2 \\implies m + n = 3$."
+    "explanation": "$$y' = 3x^2 - 2 \\implies m = y'(1) = 3 - 2 = 1$$ 접선의 방정식은 $y - 3 = 1(x - 1) \\implies y = x + 2$. 따라서 $m = 1, n = 2 \\implies m + n = 3$.",
+    "correctRate": 15.3,
+    "errorRate": 84.7
   },
   {
     "id": "csat-2024-07",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 7번",
+    "sourceLabel": "2024학년도 수능 · 7번 ; 정답률 79.2% (오답률 20.8%)",
     "subjectId": "math2",
     "unitId": "integration",
     "number": 7,
@@ -345,13 +463,22 @@
       "$5$"
     ],
     "answer": "1",
-    "explanation": "$$\\int_0^2 (3x^2 - 4x + 1) dx = \\left.[x^3 - 2x^2 + x]\\right|_0^2 = (8 - 8 + 2) - 0 = 2$$"
+    "explanation": "$$\\int_0^2 (3x^2 - 4x + 1) dx = \\left.[x^3 - 2x^2 + x]\\right|_0^2 = (8 - 8 + 2) - 0 = 2$$",
+    "correctRate": 79.2,
+    "errorRate": 20.8,
+    "choiceRatios": [
+      3.2,
+      4.4,
+      7.2,
+      6.0,
+      79.2
+    ]
   },
   {
     "id": "csat-2024-11",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 11번",
+    "sourceLabel": "2024학년도 수능 · 11번 ; 정답률 47.1% (오답률 52.9%)",
     "subjectId": "math2",
     "unitId": "integration",
     "number": 11,
@@ -366,13 +493,22 @@
       "$40$"
     ],
     "answer": "2",
-    "explanation": "$0 \\le t \\le 4$ 에서 $v(t) \\le 0$ 이므로 움직인 거리는 $$\\int_0^4 |3t^2 - 12t| dt = \\int_0^4 (12t - 3t^2) dt = \\left.[6t^2 - t^3]\\right|_0^4 = 96 - 64 = 32$$"
+    "explanation": "$0 \\le t \\le 4$ 에서 $v(t) \\le 0$ 이므로 움직인 거리는 $$\\int_0^4 |3t^2 - 12t| dt = \\int_0^4 (12t - 3t^2) dt = \\left.[6t^2 - t^3]\\right|_0^4 = 96 - 64 = 32$$",
+    "correctRate": 47.1,
+    "errorRate": 52.9,
+    "choiceRatios": [
+      47.1,
+      10.1,
+      20.6,
+      13.7,
+      8.6
+    ]
   },
   {
     "id": "csat-2024-17",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 17번",
+    "sourceLabel": "2024학년도 수능 · 17번 ; 정답률 84.2% (오답률 15.8%)",
     "subjectId": "math2",
     "unitId": "integration",
     "number": 17,
@@ -381,13 +517,15 @@
     "question": "함수 $f(x)$ 의 한 부정적분 $F(x)$ 가 $F(x) = \\int (6x^2 + 2x) dx$ 이고 $F(0) = 3$ 일 때, $F(2)$ 의 값을 구하시오.",
     "choices": [],
     "answer": "23",
-    "explanation": "$$F(x) = 2x^3 + x^2 + C, \\quad F(0) = C = 3 \\implies F(2) = 2(8) + 4 + 3 = 16 + 4 + 3 = 23$$"
+    "explanation": "$$F(x) = 2x^3 + x^2 + C, \\quad F(0) = C = 3 \\implies F(2) = 2(8) + 4 + 3 = 16 + 4 + 3 = 23$$",
+    "correctRate": 84.2,
+    "errorRate": 15.8
   },
   {
     "id": "csat-2024-22",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 22번",
+    "sourceLabel": "2024학년도 수능 · 22번 ; 정답률 1.8% (오답률 98.2%)",
     "subjectId": "math2",
     "unitId": "integration",
     "number": 22,
@@ -396,13 +534,15 @@
     "question": "두 곡선 $y = x^2$ 과 $y = 2x$ 로 둘러싸인 도형의 넓이를 $S$ 라 할 때, $6S$ 의 값을 구하시오.",
     "choices": [],
     "answer": "8",
-    "explanation": "교점은 $x^2 = 2x \\implies x = 0, 2$. 넓이 공식에 의해 $$S = \\frac{1}{6}(2 - 0)^3 = \\frac{8}{6} = \\frac{4}{3} \\implies 6S = 6 \\times \\frac{4}{3} = 8$$"
+    "explanation": "교점은 $x^2 = 2x \\implies x = 0, 2$. 넓이 공식에 의해 $$S = \\frac{1}{6}(2 - 0)^3 = \\frac{8}{6} = \\frac{4}{3} \\implies 6S = 6 \\times \\frac{4}{3} = 8$$",
+    "correctRate": 1.8,
+    "errorRate": 98.2
   },
   {
     "id": "csat-2024-ps-23",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 확통 23번",
+    "sourceLabel": "2024학년도 수능 · 23번 ; 정답률 82.7% (오답률 17.3%)",
     "subjectId": "prob-stats",
     "unitId": "counting",
     "number": 23,
@@ -417,13 +557,22 @@
       "$60$"
     ],
     "answer": "2",
-    "explanation": "이항정리에 의해 $x^3$ 항은 $\\binom{5}{3} x^3 \\cdot 2^2 = 10 \\times 4 x^3 = 40x^3$. 따라서 계수는 $40$."
+    "explanation": "이항정리에 의해 $x^3$ 항은 $\\binom{5}{3} x^3 \\cdot 2^2 = 10 \\times 4 x^3 = 40x^3$. 따라서 계수는 $40$.",
+    "correctRate": 82.7,
+    "errorRate": 17.3,
+    "choiceRatios": [
+      2.4,
+      7.1,
+      82.7,
+      5.5,
+      2.3
+    ]
   },
   {
     "id": "csat-2024-ps-24",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 확통 24번",
+    "sourceLabel": "2024학년도 수능 · 24번 ; 정답률 61.2% (오답률 38.8%)",
     "subjectId": "prob-stats",
     "unitId": "counting",
     "number": 24,
@@ -438,13 +587,22 @@
       "$45$"
     ],
     "answer": "2",
-    "explanation": "각 학생에게 먼저 $1$ 권씩 나누어 주면 남은 공책은 $4$ 권이다. 따라서 서로 다른 $4$ 명에게 $4$ 권을 나누어 주는 중복조합은 $$\\mathrm{_{4}H_{4}} = \\binom{4+4-1}{4} = \\binom{7}{4} = 35$$"
+    "explanation": "각 학생에게 먼저 $1$ 권씩 나누어 주면 남은 공책은 $4$ 권이다. 따라서 서로 다른 $4$ 명에게 $4$ 권을 나누어 주는 중복조합은 $$\\mathrm{_{4}H_{4}} = \\binom{4+4-1}{4} = \\binom{7}{4} = 35$$",
+    "correctRate": 61.2,
+    "errorRate": 38.8,
+    "choiceRatios": [
+      8.1,
+      13.6,
+      11.1,
+      61.2,
+      6.1
+    ]
   },
   {
     "id": "csat-2024-ps-28",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 확통 28번",
+    "sourceLabel": "2024학년도 수능 · 28번 ; 정답률 41.6% (오답률 58.4%)",
     "subjectId": "prob-stats",
     "unitId": "counting",
     "number": 28,
@@ -459,13 +617,22 @@
       "$72$"
     ],
     "answer": "0",
-    "explanation": "$A, B$ 를 한 묶음으로 생각하면 총 $4$ 개의 대상을 원순열로 배열하는 경우의 수는 $(4-1)! = 3! = 6$. $A$ 와 $B$ 의 자리를 바꾸는 경우의 수가 $2! = 2$ 이므로, 구하는 경우의 수는 $6 \\times 2 = 12$."
+    "explanation": "$A, B$ 를 한 묶음으로 생각하면 총 $4$ 개의 대상을 원순열로 배열하는 경우의 수는 $(4-1)! = 3! = 6$. $A$ 와 $B$ 의 자리를 바꾸는 경우의 수가 $2! = 2$ 이므로, 구하는 경우의 수는 $6 \\times 2 = 12$.",
+    "correctRate": 41.6,
+    "errorRate": 58.4,
+    "choiceRatios": [
+      16.2,
+      17.4,
+      16.0,
+      41.6,
+      8.8
+    ]
   },
   {
     "id": "csat-2024-ps-25",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 확통 25번",
+    "sourceLabel": "2024학년도 수능 · 25번 ; 정답률 66.6% (오답률 33.4%)",
     "subjectId": "prob-stats",
     "unitId": "probability",
     "number": 25,
@@ -480,13 +647,22 @@
       "$\\frac{3}{4}$"
     ],
     "answer": "2",
-    "explanation": "$$P(A | B) = \\frac{P(A \\cap B)}{P(B)} = \\frac{\\frac{1}{3}}{\\frac{2}{3}} = \\frac{1}{2}$$"
+    "explanation": "$$P(A | B) = \\frac{P(A \\cap B)}{P(B)} = \\frac{\\frac{1}{3}}{\\frac{2}{3}} = \\frac{1}{2}$$",
+    "correctRate": 66.6,
+    "errorRate": 33.4,
+    "choiceRatios": [
+      4.7,
+      6.5,
+      11.5,
+      10.6,
+      66.6
+    ]
   },
   {
     "id": "csat-2024-ps-26",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 확통 26번",
+    "sourceLabel": "2024학년도 수능 · 26번 ; 정답률 36.6% (오답률 63.4%)",
     "subjectId": "prob-stats",
     "unitId": "probability",
     "number": 26,
@@ -501,13 +677,22 @@
       "$\\frac{7}{24}$"
     ],
     "answer": "0",
-    "explanation": "독립시행의 확률 공식에 의해 $$\\binom{4}{2} \\left(\\frac{1}{6}\\right)^2 \\left(\\frac{5}{6}\\right)^2 = 6 \\times \\frac{1}{36} \\times \\frac{25}{36} = \\frac{25}{216}$$"
+    "explanation": "독립시행의 확률 공식에 의해 $$\\binom{4}{2} \\left(\\frac{1}{6}\\right)^2 \\left(\\frac{5}{6}\\right)^2 = 6 \\times \\frac{1}{36} \\times \\frac{25}{36} = \\frac{25}{216}$$",
+    "correctRate": 36.6,
+    "errorRate": 63.4,
+    "choiceRatios": [
+      14.1,
+      36.6,
+      24.2,
+      17.2,
+      7.8
+    ]
   },
   {
     "id": "csat-2024-ps-27",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 확통 27번",
+    "sourceLabel": "2024학년도 수능 · 27번 ; 정답률 47.4% (오답률 52.6%)",
     "subjectId": "prob-stats",
     "unitId": "statistics",
     "number": 27,
@@ -522,13 +707,22 @@
       "$0.9772$"
     ],
     "answer": "1",
-    "explanation": "표준화하면 $$P(50 \\le X \\le 58) = P\\left(\\frac{50-50}{4} \\le Z \\le \\frac{58-50}{4}\\right) = P(0 \\le Z \\le 2) = 0.4772$$"
+    "explanation": "표준화하면 $$P(50 \\le X \\le 58) = P\\left(\\frac{50-50}{4} \\le Z \\le \\frac{58-50}{4}\\right) = P(0 \\le Z \\le 2) = 0.4772$$",
+    "correctRate": 47.4,
+    "errorRate": 52.6,
+    "choiceRatios": [
+      8.8,
+      47.4,
+      17.8,
+      18.3,
+      7.6
+    ]
   },
   {
     "id": "csat-2024-ps-29",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 확통 29번",
+    "sourceLabel": "2024학년도 수능 · 29번 ; 정답률 16.6% (오답률 83.4%)",
     "subjectId": "prob-stats",
     "unitId": "statistics",
     "number": 29,
@@ -537,13 +731,15 @@
     "question": "모표준편차가 $5$ 인 정규분포를 따르는 모집단에서 크기가 $n$ 인 표본을 임의추출하여 모평균의 $95\\%$ 신뢰구간을 구했더니 길이가 $1.96$ 이었다. $n$ 의 값을 구하시오. (단, $P(|Z| \\le 1.96) = 0.95$)",
     "choices": [],
     "answer": "100",
-    "explanation": "신뢰구간의 길이는 $2 \\times 1.96 \\times \\frac{\\sigma}{\\sqrt{n}} = 1.96$ 이므로, $$2 \\times \\frac{5}{\\sqrt{n}} = 1 \\implies \\frac{10}{\\sqrt{n}} = 1 \\implies \\sqrt{n} = 10 \\implies n = 100$$"
+    "explanation": "신뢰구간의 길이는 $2 \\times 1.96 \\times \\frac{\\sigma}{\\sqrt{n}} = 1.96$ 이므로, $$2 \\times \\frac{5}{\\sqrt{n}} = 1 \\implies \\frac{10}{\\sqrt{n}} = 1 \\implies \\sqrt{n} = 10 \\implies n = 100$$",
+    "correctRate": 16.6,
+    "errorRate": 83.4
   },
   {
     "id": "csat-2024-calc-23",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 미적분 23번",
+    "sourceLabel": "2024학년도 수능 · 23번 ; 정답률 89.4% (오답률 10.6%)",
     "subjectId": "calculus",
     "unitId": "sequence-limits",
     "number": 23,
@@ -558,13 +754,22 @@
       "$5$"
     ],
     "answer": "2",
-    "explanation": "최고차항의 계수 비교에 의해 $$\\lim_{n \\to \\infty} \\frac{3n^2 + 2n - 1}{n^2 + 5} = 3$$"
+    "explanation": "최고차항의 계수 비교에 의해 $$\\lim_{n \\to \\infty} \\frac{3n^2 + 2n - 1}{n^2 + 5} = 3$$",
+    "correctRate": 89.4,
+    "errorRate": 10.6,
+    "choiceRatios": [
+      1.4,
+      2.2,
+      89.4,
+      3.4,
+      3.7
+    ]
   },
   {
     "id": "csat-2024-calc-28",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 미적분 28번",
+    "sourceLabel": "2024학년도 수능 · 28번 ; 정답률 15.3% (오답률 84.7%)",
     "subjectId": "calculus",
     "unitId": "sequence-limits",
     "number": 28,
@@ -579,13 +784,22 @@
       "$3$"
     ],
     "answer": "2",
-    "explanation": "첫째항 $a = \\frac{2}{3}$, 공비 $r = \\frac{2}{3}$ 이므로, $$S = \\frac{\\frac{2}{3}}{1 - \\frac{2}{3}} = \\frac{\\frac{2}{3}}{\\frac{1}{3}} = 2$$"
+    "explanation": "첫째항 $a = \\frac{2}{3}$, 공비 $r = \\frac{2}{3}$ 이므로, $$S = \\frac{\\frac{2}{3}}{1 - \\frac{2}{3}} = \\frac{\\frac{2}{3}}{\\frac{1}{3}} = 2$$",
+    "correctRate": 15.3,
+    "errorRate": 84.7,
+    "choiceRatios": [
+      15.6,
+      15.3,
+      13.8,
+      18.0,
+      37.4
+    ]
   },
   {
     "id": "csat-2024-calc-24",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 미적분 24번",
+    "sourceLabel": "2024학년도 수능 · 24번 ; 정답률 74.4% (오답률 25.6%)",
     "subjectId": "calculus",
     "unitId": "advanced-differentiation",
     "number": 24,
@@ -600,13 +814,22 @@
       "$5$"
     ],
     "answer": "2",
-    "explanation": "$$f'(x) = 2e^{2x} + \\frac{1}{x+1} \\implies f'(0) = 2(1) + 1 = 3$$"
+    "explanation": "$$f'(x) = 2e^{2x} + \\frac{1}{x+1} \\implies f'(0) = 2(1) + 1 = 3$$",
+    "correctRate": 74.4,
+    "errorRate": 25.6,
+    "choiceRatios": [
+      6.1,
+      74.4,
+      7.7,
+      9.3,
+      2.5
+    ]
   },
   {
     "id": "csat-2024-calc-25",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 미적분 25번",
+    "sourceLabel": "2024학년도 수능 · 25번 ; 정답률 63.0% (오답률 37.0%)",
     "subjectId": "calculus",
     "unitId": "advanced-differentiation",
     "number": 25,
@@ -621,13 +844,22 @@
       "$1$"
     ],
     "answer": "0",
-    "explanation": "덧셈정리에 의해 $$\\tan(\\alpha + \\beta) = \\frac{\\tan\\alpha + \\tan\\beta}{1 - \\tan\\alpha \\tan\\beta} = \\frac{2 + 3}{1 - 2(3)} = \\frac{5}{-5} = -1$$"
+    "explanation": "덧셈정리에 의해 $$\\tan(\\alpha + \\beta) = \\frac{\\tan\\alpha + \\tan\\beta}{1 - \\tan\\alpha \\tan\\beta} = \\frac{2 + 3}{1 - 2(3)} = \\frac{5}{-5} = -1$$",
+    "correctRate": 63.0,
+    "errorRate": 37.0,
+    "choiceRatios": [
+      7.2,
+      8.2,
+      10.0,
+      63.0,
+      11.5
+    ]
   },
   {
     "id": "csat-2024-calc-29",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 미적분 29번",
+    "sourceLabel": "2024학년도 수능 · 29번 ; 정답률 6.8% (오답률 93.2%)",
     "subjectId": "calculus",
     "unitId": "advanced-differentiation",
     "number": 29,
@@ -636,13 +868,15 @@
     "question": "미분가능한 함수 $f(x)$ 의 역함수를 $g(x)$ 라 하자. $f(1) = 3, f'(1) = 2$ 일 때, $10 \\times g'(3)$ 의 값을 구하시오.",
     "choices": [],
     "answer": "5",
-    "explanation": "역함수 미분법에 의해 $g'(3) = \\frac{1}{f'(1)} = \\frac{1}{2}$. 따라서 $10 \\times g'(3) = 10 \\times \\frac{1}{2} = 5$."
+    "explanation": "역함수 미분법에 의해 $g'(3) = \\frac{1}{f'(1)} = \\frac{1}{2}$. 따라서 $10 \\times g'(3) = 10 \\times \\frac{1}{2} = 5$.",
+    "correctRate": 6.8,
+    "errorRate": 93.2
   },
   {
     "id": "csat-2024-calc-26",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 미적분 26번",
+    "sourceLabel": "2024학년도 수능 · 26번 ; 정답률 61.6% (오답률 38.4%)",
     "subjectId": "calculus",
     "unitId": "advanced-integration",
     "number": 26,
@@ -657,13 +891,22 @@
       "$2e$"
     ],
     "answer": "0",
-    "explanation": "$t = x^2$ 치환적분: $dt = 2x dx$. $x=0 \\to t=0, x=1 \\to t=1$. $$\\int_0^1 e^t dt = e - 1$$"
+    "explanation": "$t = x^2$ 치환적분: $dt = 2x dx$. $x=0 \\to t=0, x=1 \\to t=1$. $$\\int_0^1 e^t dt = e - 1$$",
+    "correctRate": 61.6,
+    "errorRate": 38.4,
+    "choiceRatios": [
+      7.8,
+      6.8,
+      61.6,
+      13.1,
+      10.7
+    ]
   },
   {
     "id": "csat-2024-calc-27",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 미적분 27번",
+    "sourceLabel": "2024학년도 수능 · 27번 ; 정답률 23.4% (오답률 76.6%)",
     "subjectId": "calculus",
     "unitId": "advanced-integration",
     "number": 27,
@@ -678,13 +921,22 @@
       "$\\frac{e^2 - 3}{4}$"
     ],
     "answer": "1",
-    "explanation": "부분적분: $u = \\ln x, v' = x \\implies u' = \\frac{1}{x}, v = \\frac{1}{2}x^2$. $$\\int_1^e x \\ln x dx = \\left.[\\frac{1}{2}x^2 \\ln x]\\right|_1^e - \\int_1^e \\frac{1}{2}x dx = \\frac{e^2}{2} - \\left.[\\frac{1}{4}x^2]\\right|_1^e = \\frac{e^2}{2} - \\left(\\frac{e^2 - 1}{4}\\right) = \\frac{e^2 + 1}{4}$$"
+    "explanation": "부분적분: $u = \\ln x, v' = x \\implies u' = \\frac{1}{x}, v = \\frac{1}{2}x^2$. $$\\int_1^e x \\ln x dx = \\left.[\\frac{1}{2}x^2 \\ln x]\\right|_1^e - \\int_1^e \\frac{1}{2}x dx = \\frac{e^2}{2} - \\left.[\\frac{1}{4}x^2]\\right|_1^e = \\frac{e^2}{2} - \\left(\\frac{e^2 - 1}{4}\\right) = \\frac{e^2 + 1}{4}$$",
+    "correctRate": 23.4,
+    "errorRate": 76.6,
+    "choiceRatios": [
+      23.4,
+      12.8,
+      20.2,
+      12.4,
+      31.3
+    ]
   },
   {
     "id": "csat-2024-geo-23",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 기하 23번",
+    "sourceLabel": "2024학년도 수능 · 23번 ; 정답률 84.0% (오답률 16.0%)",
     "subjectId": "geometry",
     "unitId": "conic-sections",
     "number": 23,
@@ -699,13 +951,22 @@
       "$(6, 0)$"
     ],
     "answer": "2",
-    "explanation": "포물선 $y^2 = 4px$ 에서 $4p = 12 \\implies p = 3$. 따라서 초점의 좌표는 $(3, 0)$ 이다."
+    "explanation": "포물선 $y^2 = 4px$ 에서 $4p = 12 \\implies p = 3$. 따라서 초점의 좌표는 $(3, 0)$ 이다.",
+    "correctRate": 84.0,
+    "errorRate": 16.0,
+    "choiceRatios": [
+      3.9,
+      2.7,
+      3.9,
+      84.0,
+      5.5
+    ]
   },
   {
     "id": "csat-2024-geo-24",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 기하 24번",
+    "sourceLabel": "2024학년도 수능 · 24번 ; 정답률 72.6% (오답률 27.4%)",
     "subjectId": "geometry",
     "unitId": "conic-sections",
     "number": 24,
@@ -720,13 +981,22 @@
       "$14$"
     ],
     "answer": "2",
-    "explanation": "$a^2 = 25 \\implies a = 5$. 장축의 길이는 $2a = 2 \\times 5 = 10$."
+    "explanation": "$a^2 = 25 \\implies a = 5$. 장축의 길이는 $2a = 2 \\times 5 = 10$.",
+    "correctRate": 72.6,
+    "errorRate": 27.4,
+    "choiceRatios": [
+      5.5,
+      11.9,
+      72.6,
+      6.8,
+      3.2
+    ]
   },
   {
     "id": "csat-2024-geo-28",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 기하 28번",
+    "sourceLabel": "2024학년도 수능 · 28번 ; 정답률 30.1% (오답률 69.9%)",
     "subjectId": "geometry",
     "unitId": "conic-sections",
     "number": 28,
@@ -741,13 +1011,22 @@
       "$\\frac{9}{16}$"
     ],
     "answer": "0",
-    "explanation": "점근선의 방정식은 $y = \\pm \\frac{b}{a} x = \\pm \\frac{3}{4} x$. 기울기의 곱은 $\\left(\\frac{3}{4}\\right)\\left(-\\frac{3}{4}\\right) = -\\frac{9}{16}$."
+    "explanation": "점근선의 방정식은 $y = \\pm \\frac{b}{a} x = \\pm \\frac{3}{4} x$. 기울기의 곱은 $\\left(\\frac{3}{4}\\right)\\left(-\\frac{3}{4}\\right) = -\\frac{9}{16}$.",
+    "correctRate": 30.1,
+    "errorRate": 69.9,
+    "choiceRatios": [
+      26.0,
+      13.2,
+      18.9,
+      11.6,
+      30.1
+    ]
   },
   {
     "id": "csat-2024-geo-25",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 기하 25번",
+    "sourceLabel": "2024학년도 수능 · 25번 ; 정답률 65.5% (오답률 34.5%)",
     "subjectId": "geometry",
     "unitId": "plane-vectors",
     "number": 25,
@@ -762,13 +1041,22 @@
       "$6$"
     ],
     "answer": "2",
-    "explanation": "$$\\vec{a} \\cdot \\vec{b} = (2)(3) + (1)(-2) = 6 - 2 = 4$$"
+    "explanation": "$$\\vec{a} \\cdot \\vec{b} = (2)(3) + (1)(-2) = 6 - 2 = 4$$",
+    "correctRate": 65.5,
+    "errorRate": 34.5,
+    "choiceRatios": [
+      5.3,
+      65.5,
+      13.7,
+      7.1,
+      8.4
+    ]
   },
   {
     "id": "csat-2024-geo-26",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 기하 26번",
+    "sourceLabel": "2024학년도 수능 · 26번 ; 정답률 59.6% (오답률 40.4%)",
     "subjectId": "geometry",
     "unitId": "plane-vectors",
     "number": 26,
@@ -783,13 +1071,22 @@
       "$7$"
     ],
     "answer": "2",
-    "explanation": "수직이므로 $\\vec{a} \\cdot \\vec{b} = 0$. $$|\\vec{a} + \\vec{b}|^2 = |\\vec{a}|^2 + 2(\\vec{a}\\cdot\\vec{b}) + |\\vec{b}|^2 = 9 + 0 + 16 = 25 \\implies |\\vec{a} + \\vec{b}| = 5$$"
+    "explanation": "수직이므로 $\\vec{a} \\cdot \\vec{b} = 0$. $$|\\vec{a} + \\vec{b}|^2 = |\\vec{a}|^2 + 2(\\vec{a}\\cdot\\vec{b}) + |\\vec{b}|^2 = 9 + 0 + 16 = 25 \\implies |\\vec{a} + \\vec{b}| = 5$$",
+    "correctRate": 59.6,
+    "errorRate": 40.4,
+    "choiceRatios": [
+      8.7,
+      7.1,
+      16.2,
+      8.4,
+      59.6
+    ]
   },
   {
     "id": "csat-2024-geo-27",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 기하 27번",
+    "sourceLabel": "2024학년도 수능 · 27번 ; 정답률 41.8% (오답률 58.2%)",
     "subjectId": "geometry",
     "unitId": "space-geometry",
     "number": 27,
@@ -804,13 +1101,22 @@
       "$7$"
     ],
     "answer": "2",
-    "explanation": "$$AB = \\sqrt{(4-1)^2 + (2-2)^2 + (7-3)^2} = \\sqrt{3^2 + 0^2 + 4^2} = \\sqrt{9 + 16} = 5$$"
+    "explanation": "$$AB = \\sqrt{(4-1)^2 + (2-2)^2 + (7-3)^2} = \\sqrt{3^2 + 0^2 + 4^2} = \\sqrt{9 + 16} = 5$$",
+    "correctRate": 41.8,
+    "errorRate": 58.2,
+    "choiceRatios": [
+      24.9,
+      9.6,
+      41.8,
+      11.2,
+      12.6
+    ]
   },
   {
     "id": "csat-2024-geo-29",
     "year": 2024,
     "examType": "nov",
-    "sourceLabel": "2024학년도 수능 · 기하 29번",
+    "sourceLabel": "2024학년도 수능 · 29번 ; 정답률 17.8% (오답률 82.2%)",
     "subjectId": "geometry",
     "unitId": "space-geometry",
     "number": 29,
@@ -819,6 +1125,8 @@
     "question": "넓이가 $20$ 인 평면도형의 평면 $\\alpha$ 위로의 정사영의 넓이가 $16$ 일 때, 두 평면이 이루는 각의 크기 $\\theta$ 에 대하여 $100 \\cos\\theta$ 의 값을 구하시오.",
     "choices": [],
     "answer": "80",
-    "explanation": "정사영 공식 $S' = S \\cos\\theta \\implies 16 = 20 \\cos\\theta \\implies \\cos\\theta = \\frac{16}{20} = \\frac{4}{5} = 0.8$. 따라서 $100 \\cos\\theta = 80$."
+    "explanation": "정사영 공식 $S' = S \\cos\\theta \\implies 16 = 20 \\cos\\theta \\implies \\cos\\theta = \\frac{16}{20} = \\frac{4}{5} = 0.8$. 따라서 $100 \\cos\\theta = 80$.",
+    "correctRate": 17.8,
+    "errorRate": 82.2
   }
 ]

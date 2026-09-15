@@ -6,6 +6,7 @@ import AiExamParser, { extractTextFromPdf, parseExamText } from '../../component
 import SubscriptionAdmin from '../../components/SubscriptionAdmin';
 import { getExamFullText } from '../../data/sampleExams';
 import { classifyCsatProblem } from '../../csatProblemClassifier';
+import { getCsatRates } from '../../utils/csatRates';
 
 const FILE_TYPE_LABELS = {
   problems: '문제지', solutions: '해설지', answers: '정답지',
@@ -121,6 +122,7 @@ export default function CsatAdmin() {
             try {
               const items = parsed.map((p) => {
                 const cls = classifyCsatProblem(p.question, p.explanation, grade);
+                const rateInfo = getCsatRates(parseInt(year, 10), examType, variantId, p.number);
                 return {
                   problemNumber: p.number,
                   subjectId: cls.subjectId,
@@ -130,6 +132,9 @@ export default function CsatAdmin() {
                   answer: p.correctAnswer,
                   explanation: p.explanation,
                   points: p.points,
+                  correctRate: rateInfo?.correctRate ?? null,
+                  errorRate: rateInfo?.errorRate ?? null,
+                  choiceRatios: rateInfo?.choiceRatios ?? null,
                 };
               });
               await fetch('/api/csat/problems', {
@@ -302,6 +307,7 @@ export default function CsatAdmin() {
 
         const items = parsed.map((p) => {
           const cls = classifyCsatProblem(p.question, p.explanation, f.grade);
+          const rateInfo = getCsatRates(f.year, targetExamType, f.variantId, p.number);
           return {
             problemNumber: p.number,
             subjectId: cls.subjectId,
@@ -311,6 +317,9 @@ export default function CsatAdmin() {
             answer: p.correctAnswer,
             explanation: p.explanation,
             points: p.points,
+            correctRate: rateInfo?.correctRate ?? null,
+            errorRate: rateInfo?.errorRate ?? null,
+            choiceRatios: rateInfo?.choiceRatios ?? null,
           };
         });
 

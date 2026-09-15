@@ -318,7 +318,7 @@ export default function InteractiveExamWorkspace({
               problem={problem}
               userAnswer={answers[problem?.id || problem?.number]}
               onSelectAnswer={handleSelectAnswer}
-              isExamMode={mode === 'exam'}
+              isExamMode={true}
               showResult={submitted}
               language={language}
               forceScratchpadOpen={allScratchpadOpen}

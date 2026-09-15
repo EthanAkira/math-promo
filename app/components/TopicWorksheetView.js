@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import InteractiveProblemCard from './InteractiveProblemCard';
+import { enrichProblemWithRates } from '../utils/csatRates';
 
 export default function TopicWorksheetView({
   category = 'amc', // 'amc' | 'csat'
@@ -641,13 +642,33 @@ export default function TopicWorksheetView({
         </div>
       ) : (
         <div style={{ display: 'grid', gap: 12 }}>
-          {activeProblems.map((problem, localIdx) => {
+          {activeProblems.map((rawProblem, localIdx) => {
             const absoluteNumber = startIndex + localIdx + 1;
-            const displaySource = problem.sourceLabel || (
-              category === 'amc'
-                ? `${problem.year} AMC ${problem.level || 8} · #${problem.problemNumber || absoluteNumber}`
-                : `${problem.year || 2024}학년도 수능 · #${problem.problemNumber || problem.number || absoluteNumber}`
-            );
+            const problem = category === 'csat' ? enrichProblemWithRates(rawProblem) : rawProblem;
+
+            let displaySource = '';
+            if (category === 'amc') {
+              displaySource = problem.sourceLabel || `${problem.year || 2024} AMC ${problem.level || 8} · #${problem.problemNumber || absoluteNumber}`;
+            } else {
+              const yr = problem.year || 2024;
+              const pnum = problem.problemNumber || problem.number || absoluteNumber;
+              const etype = problem.examType || 'nov';
+              let examTitle = '수능';
+              if (etype === 'sept') examTitle = '9월 모의평가';
+              else if (etype === 'june') examTitle = '6월 모의평가';
+              else if (etype === 'city-mock') examTitle = '학력평가';
+
+              let trackTitle = '';
+              if (problem.variant && !['공통', '홀수형', '짝수형', 'standard'].includes(problem.variant)) {
+                trackTitle = ` (${problem.variant})`;
+              }
+
+              displaySource = `${yr}학년도 ${examTitle}${trackTitle} · ${pnum}번`;
+              if (problem.correctRate != null) {
+                const err = problem.errorRate != null ? problem.errorRate : Math.round((100 - problem.correctRate) * 10) / 10;
+                displaySource += ` ; 정답률 ${problem.correctRate}% (오답률 ${err}%)`;
+              }
+            }
 
             const isAmc = category === 'amc';
             const effectiveChoices = (problem.choices && problem.choices.length > 0)
@@ -668,7 +689,10 @@ export default function TopicWorksheetView({
                     correctAnswer: problem.answer !== undefined ? parseInt(problem.answer, 10) : problem.correctAnswer,
                     explanation: problem.explanation,
                     unit: unit?.label,
-                    sourceLabel: displaySource, // 출제 정보가 문제 번호 옆에 배지로 배치
+                    sourceLabel: displaySource, // 출제 정보 및 정답률이 문제 번호 옆에 배지로 배치
+                    correctRate: problem.correctRate,
+                    errorRate: problem.errorRate,
+                    choiceRatios: problem.choiceRatios,
                     examType: category,
                     choiceMarkerType: category === 'amc' ? 'letters' : 'numbers',
                   }}
