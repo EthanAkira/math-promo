@@ -24,7 +24,12 @@ for (const node of CURRICULUM_CATALOG.nodes) {
 }
 
 const requiredIntlStages = [
-  'intl-arithmetic',
+  'intl-grade-1',
+  'intl-grade-2',
+  'intl-grade-3',
+  'intl-grade-4',
+  'intl-grade-5',
+  'intl-grade-6',
   'intl-pre-algebra',
   'intl-algebra-1',
   'intl-geometry',

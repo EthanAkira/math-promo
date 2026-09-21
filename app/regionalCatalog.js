@@ -572,11 +572,47 @@ const zhHK = {
   'applied-g9s2-scatter-direction': '散布圖之分布與相關方向',
   'applied-g9s2-scatter-region-analysis': '散布圖區域計數與相關性分析',
 
+  // Eureka Math Grade 4 Units
+  'g4e-m1a-place-value': '大數的位值（至百萬位）', 'g4e-m1b-compare': '大數的大小比較', 'g4e-m1c-rounding': '大數的四捨五入',
+  'g4e-m1d-addition': '多位數直式加法', 'g4e-m1e-subtraction': '多位數直式減法', 'g4e-m1f-word-problems': '加減法多步驟應用題',
+  'g4e-m2a-metric-convert': '公制單位換算', 'g4e-m2b-metric-apply': '公制單位應用題',
+  'g4e-m3a-area-perimeter-compare': '面積、周長與倍數應用題', 'g4e-m3b-multiply-10-100-1000': '乘數為10、100、1000的乘法',
+  'g4e-m3c-multiply-multidigit-1digit': '多位數乘以一位數', 'g4e-m3d-multiply-word-problems': '乘法文字應用題',
+  'g4e-m3e-division-remainders': '有餘數的除法', 'g4e-m3f-factors-primes': '因數、倍數與質數',
+  'g4e-m3g-division-large': '大數除法直式', 'g4e-m3h-multiply-2x2': '兩位數乘以兩位數',
+  'g4e-m4a-lines-angles': '直線與角的基礎（垂直與平行）', 'g4e-m4b-angle-measure': '量角器測量角度',
+  'g4e-m4c-angle-addition': '角的加法與分解', 'g4e-m4d-figures-symmetry': '三角形與四邊形分類及對稱',
+  'g4e-m5a-decompose-fractions': '分數的分解', 'g4e-m5b-fraction-equivalence': '等值分數',
+  'g4e-m5c-fraction-compare': '分數的大小比較', 'g4e-m5d-fraction-add-sub-like': '同分母分數加減法',
+  'g4e-m5e-fraction-greater-than-1': '假分數與帶分數轉換', 'g4e-m5f-mixed-number-add-sub': '帶分數加減法',
+  'g4e-m5g-fraction-multiply-whole': '分數乘以整數', 'g4e-m5h-fraction-pattern': '分數數列規律',
+  'g4e-m6a-tenths': '十分位小數', 'g4e-m6b-hundredths': '百分位小數',
+  'g4e-m6c-decimal-compare': '小數的大小比較', 'g4e-m6d-decimal-addition': '小數加法與減法',
+  'g4e-m6e-money-decimals': '貨幣與小數', 'g4e-m7a-conversion-tables': '換算表應用',
+  'g4e-m7b-mixed-unit-problems': '複合單位應用題', 'g4e-m7c-mixed-number-measurement': '帶分數度量應用',
+  'g4e-m7d-composite-area-review': '複合圖形面積複習',
 
-
-
-
-
+  // Eureka Math Grade 5 Units
+  'g5e-m1a-powers-of-ten': '10的乘方與小數位值移動', 'g5e-m1a-metric-shift': '10的乘方與公制單位換算',
+  'g5e-m1b-decimal-forms': '小數展開式（至千分位）', 'g5e-m1b-decimal-compare': '千分位小數大小比較',
+  'g5e-m1c-rounding-decimals': '小數的四捨五入', 'g5e-m1d-decimal-add-sub': '小數加減法直式',
+  'g5e-m1e-decimal-multiply-1digit': '小數乘一位整數', 'g5e-m1f-decimal-divide-1digit': '小數除以一位整數',
+  'g5e-m2a-mental-mult': '多位數心算乘法與乘積估算', 'g5e-m2a-order-expressions': '含括號的數值運算式',
+  'g5e-m2b-mult-standard-alg': '多位數直式乘法標準演算法', 'g5e-m2c-decimal-mult': '多位數小數乘法',
+  'g5e-m2d-measurement-word-mult': '度量衡單位換算乘法應用題', 'g5e-m2e-mental-div': '多位數心算除法與商的估算',
+  'g5e-m2f-div-2digit-divisor': '除以兩位數的直式除法', 'g5e-m2g-decimal-div-multidigit': '多位數小數除法',
+  'g5e-m2h-div-word-problems': '除法多步驟應用題與餘數詮釋', 'g5e-m3a-equivalent-fractions': '等值分數、約分與通分',
+  'g5e-m3b-fraction-add-sub-visual': '利用面積模型進行分數加減法', 'g5e-m3c-fraction-add-sub-unlike': '異分母分數與帶分數加減法',
+  'g5e-m3d-fraction-word-problems': '分數加減應用題（線段圖/長條圖）', 'g5e-m4a-line-plots': '分數測量數據折線圖與分佈圖',
+  'g5e-m4b-fraction-as-division': '分數作為除法與公平平分', 'g5e-m4c-whole-times-fraction': '整數乘以分數與求幾分之幾',
+  'g5e-m4d-fraction-expressions': '分數算式與分步文字題', 'g5e-m4e-fraction-times-fraction': '分數乘以分數（面積模型）',
+  'g5e-m4f-scaling-resizing': '乘法作為倍率縮放與大小比較', 'g5e-m4g-fraction-division-unit': '單位分數與整數的除法',
+  'g5e-m4h-numerical-expressions': '分數與小數四則混合運算式', 'g5e-m5a-volume-unit-cubes': '單位正方體與體積概念（立方厘米）',
+  'g5e-m5b-volume-formula': '長方體與正方體體積公式（長×闊×高）', 'g5e-m5c-area-fractional-sides': '分數邊長長方形面積與平鋪',
+  'g5e-m5d-quadrilateral-hierarchy': '平面圖形分類與四邊形包含關係', 'g5e-m6a-coordinate-plane-basics': '直角坐標平面基礎與數對 (x, y)',
+  'g5e-m6b-coordinate-patterns': '坐標平面規律與坐標作圖規則', 'g5e-m6c-figures-coordinate-plane': '坐標平面上的幾何圖形與距離',
+  'g5e-m6d-line-graphs': '折線圖與生活情境數據分析', 'g5e-m6e-multistep-word-problems': '跨單元多步驟綜合應用題',
+  'g5e-m6f-year-review-patterns': '數列規律、數字謎題與年度總複習',
 
   'common-divisors-gcd': '公因數與最高公因數', 'gcd-basic': '最高公因數基礎', 'gcd-prime-form': '利用質因數分解求最高公因數', coprime: '互質數', 'common-multiples-lcm': '公倍數與最低公倍數', 'lcm-basic': '最低公倍數基礎', 'lcm-prime-form': '利用質因數分解求最低公倍數', 'gcd-lcm-relation': '最高公因數與最低公倍數的關係', 'gcd-lcm-application': '最高公因數與最低公倍數應用', 'gcd-lcm-mixed': '最高公因數與最低公倍數綜合練習',
   'positive-negative': '正數與負數', 'integer-classification': '整數的分類', 'rational-classification': '有理數的分類', 'number-line': '數線與坐標', 'absolute-value': '絕對值', 'number-comparison': '比較數的大小', 'inequality-expression': '不等號的運用', 'integer-solutions': '符合條件的整數', 'integer-rational-mixed': '整數與有理數綜合練習', 'rational-addition': '有理數加法', 'rational-subtraction': '有理數減法', 'rational-add-subtract': '加減混合運算', 'rational-multiplication': '有理數乘法與乘方', 'rational-division': '有理數除法與倒數', 'rational-four-operations': '有理數四則混合運算', 'rational-operations-review': '有理數四則運算綜合練習',

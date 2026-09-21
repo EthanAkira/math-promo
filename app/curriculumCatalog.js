@@ -915,6 +915,12 @@ const KOREAN_GRADE_STAGE_SEEDS = [
       topics: grade === 4 ? [
         { label: `${grade}학년 수학 연산·단원 연습`, href: `/elementary/practice?grade=${grade}`, ready: true, availability: 'ready' },
         { label: '국제 커리큘럼 연계 심화 단원 (자릿값·곱셈·나눗셈·각도·분수·소수 등 37종)', href: `/elementary/practice?grade=${grade}&unit=g4e-m1a-place-value`, ready: true, availability: 'ready' },
+      ] : grade === 5 ? [
+        { label: `${grade}학년 수학 연산·단원 연습`, href: `/elementary/practice?grade=${grade}`, ready: true, availability: 'ready' },
+        { label: '국제 커리큘럼 연계 심화 단원 (자릿값·소수·분수사칙·부피·좌표평면 등 39종)', href: `/elementary/practice?grade=${grade}&unit=g5e-m1a-powers-of-ten`, ready: true, availability: 'ready' },
+      ] : grade === 6 ? [
+        { label: `${grade}학년 수학 연산·단원 연습`, href: `/elementary/practice?grade=${grade}`, ready: true, availability: 'ready' },
+        { label: '국제 커리큘럼 연계 심화 단원 (비와 비율·분수나눗셈·정수유리수·일차방정식·입체도형·통계 등 40종)', href: `/elementary/practice?grade=${grade}&unit=g6e-m1a-ratios`, ready: true, availability: 'ready' },
       ] : [
         { label: `${grade}학년 수학 연산·단원 연습`, href: `/elementary/practice?grade=${grade}`, ready: true, availability: 'ready' },
       ],
@@ -1388,57 +1394,121 @@ const KOREAN_2022_SUBJECT_STAGE_SEEDS = [
  */
 const INTERNATIONAL_COURSE_STAGE_SEEDS = [
   {
-    id: 'intl-arithmetic',
-    title: 'Arithmetic & Foundations',
-    subtitle: 'Number sense and operations',
+    id: 'intl-grade-1',
+    title: 'Grade 1 Mathematics',
+    subtitle: 'Number bonds, counting, and early addition/subtraction',
     availability: 'ready',
     topics: [
-      { label: 'Grades 1–6 Operations Practice', href: '/elementary/practice', ready: true, availability: 'ready' },
-      { label: 'Fractions, Decimals & Ratios', href: '/elementary/practice?grade=6', ready: true, availability: 'ready' },
-      { isHeader: true, label: 'Grade 4 — Module 1: Place Value, Rounding & Addition/Subtraction' },
-      { label: 'Place Value to Millions', href: '/elementary/practice?grade=4&unit=g4e-m1a-place-value', ready: true, availability: 'ready' },
-      { label: 'Comparing Large Numbers', href: '/elementary/practice?grade=4&unit=g4e-m1b-compare', ready: true, availability: 'ready' },
-      { label: 'Rounding Large Numbers', href: '/elementary/practice?grade=4&unit=g4e-m1c-rounding', ready: true, availability: 'ready' },
-      { label: 'Multi-Digit Addition', href: '/elementary/practice?grade=4&unit=g4e-m1d-addition', ready: true, availability: 'ready' },
-      { label: 'Multi-Digit Subtraction', href: '/elementary/practice?grade=4&unit=g4e-m1e-subtraction', ready: true, availability: 'ready' },
-      { label: 'Addition & Subtraction Word Problems', href: '/elementary/practice?grade=4&unit=g4e-m1f-word-problems', ready: true, availability: 'ready' },
-      { isHeader: true, label: 'Grade 4 — Module 2: Metric Unit Conversions' },
-      { label: 'Metric Unit Conversion', href: '/elementary/practice?grade=4&unit=g4e-m2a-metric-convert', ready: true, availability: 'ready' },
-      { label: 'Applying Metric Conversions', href: '/elementary/practice?grade=4&unit=g4e-m2b-metric-apply', ready: true, availability: 'ready' },
-      { isHeader: true, label: 'Grade 4 — Module 3: Multi-Digit Multiplication & Division' },
-      { label: 'Area, Perimeter & Comparison', href: '/elementary/practice?grade=4&unit=g4e-m3a-area-perimeter-compare', ready: true, availability: 'ready' },
-      { label: 'Multiplying by 10, 100, 1000', href: '/elementary/practice?grade=4&unit=g4e-m3b-multiply-10-100-1000', ready: true, availability: 'ready' },
-      { label: 'Multi-Digit × 1-Digit Multiplication', href: '/elementary/practice?grade=4&unit=g4e-m3c-multiply-multidigit-1digit', ready: true, availability: 'ready' },
-      { label: 'Multiplication Word Problems', href: '/elementary/practice?grade=4&unit=g4e-m3d-multiply-word-problems', ready: true, availability: 'ready' },
-      { label: 'Division with Remainders', href: '/elementary/practice?grade=4&unit=g4e-m3e-division-remainders', ready: true, availability: 'ready' },
-      { label: 'Factors, Multiples & Primes', href: '/elementary/practice?grade=4&unit=g4e-m3f-factors-primes', ready: true, availability: 'ready' },
-      { label: 'Dividing Large Numbers', href: '/elementary/practice?grade=4&unit=g4e-m3g-division-large', ready: true, availability: 'ready' },
-      { label: '2-Digit × 2-Digit Multiplication', href: '/elementary/practice?grade=4&unit=g4e-m3h-multiply-2x2', ready: true, availability: 'ready' },
-      { isHeader: true, label: 'Grade 4 — Module 4: Angle Measure & Plane Figures' },
-      { label: 'Lines & Angles Basics', href: '/elementary/practice?grade=4&unit=g4e-m4a-lines-angles', ready: true, availability: 'ready' },
-      { label: 'Measuring Angles with a Protractor', href: '/elementary/practice?grade=4&unit=g4e-m4b-angle-measure', ready: true, availability: 'ready' },
-      { label: 'Angle Addition', href: '/elementary/practice?grade=4&unit=g4e-m4c-angle-addition', ready: true, availability: 'ready' },
-      { label: 'Classifying Triangles & Quadrilaterals', href: '/elementary/practice?grade=4&unit=g4e-m4d-figures-symmetry', ready: true, availability: 'ready' },
-      { isHeader: true, label: 'Grade 4 — Module 5: Fraction Equivalence, Ordering & Operations' },
-      { label: 'Decomposing Fractions', href: '/elementary/practice?grade=4&unit=g4e-m5a-decompose-fractions', ready: true, availability: 'ready' },
-      { label: 'Equivalent Fractions', href: '/elementary/practice?grade=4&unit=g4e-m5b-fraction-equivalence', ready: true, availability: 'ready' },
-      { label: 'Comparing Fractions', href: '/elementary/practice?grade=4&unit=g4e-m5c-fraction-compare', ready: true, availability: 'ready' },
-      { label: 'Adding & Subtracting Like Fractions', href: '/elementary/practice?grade=4&unit=g4e-m5d-fraction-add-sub-like', ready: true, availability: 'ready' },
-      { label: 'Fractions Greater Than 1', href: '/elementary/practice?grade=4&unit=g4e-m5e-fraction-greater-than-1', ready: true, availability: 'ready' },
-      { label: 'Adding & Subtracting Mixed Numbers', href: '/elementary/practice?grade=4&unit=g4e-m5f-mixed-number-add-sub', ready: true, availability: 'ready' },
-      { label: 'Multiplying Fractions by Whole Numbers', href: '/elementary/practice?grade=4&unit=g4e-m5g-fraction-multiply-whole', ready: true, availability: 'ready' },
-      { label: 'Fraction Sum Patterns', href: '/elementary/practice?grade=4&unit=g4e-m5h-fraction-pattern', ready: true, availability: 'ready' },
-      { isHeader: true, label: 'Grade 4 — Module 6: Decimal Fractions' },
-      { label: 'Tenths', href: '/elementary/practice?grade=4&unit=g4e-m6a-tenths', ready: true, availability: 'ready' },
-      { label: 'Tenths and Hundredths', href: '/elementary/practice?grade=4&unit=g4e-m6b-hundredths', ready: true, availability: 'ready' },
-      { label: 'Comparing Decimals', href: '/elementary/practice?grade=4&unit=g4e-m6c-decimal-compare', ready: true, availability: 'ready' },
-      { label: 'Adding & Subtracting Decimals', href: '/elementary/practice?grade=4&unit=g4e-m6d-decimal-addition', ready: true, availability: 'ready' },
-      { label: 'Money as Decimals', href: '/elementary/practice?grade=4&unit=g4e-m6e-money-decimals', ready: true, availability: 'ready' },
-      { isHeader: true, label: 'Grade 4 — Module 7: Exploring Measurement with Multiplication' },
-      { label: 'Measurement Conversion Tables', href: '/elementary/practice?grade=4&unit=g4e-m7a-conversion-tables', ready: true, availability: 'ready' },
-      { label: 'Mixed-Unit Word Problems', href: '/elementary/practice?grade=4&unit=g4e-m7b-mixed-unit-problems', ready: true, availability: 'ready' },
-      { label: 'Measurements as Mixed Numbers', href: '/elementary/practice?grade=4&unit=g4e-m7c-mixed-number-measurement', ready: true, availability: 'ready' },
-      { label: 'Composite Figure Area', href: '/elementary/practice?grade=4&unit=g4e-m7d-composite-area-review', ready: true, availability: 'ready' },
+      { label: 'Grades 1–6 Practice Overview', href: '/elementary/practice', ready: true, availability: 'ready' },
+      { label: 'Number Bonds to 10', href: '/elementary/practice?grade=1&unit=g1-bonds', ready: true, availability: 'ready' },
+      { label: 'One-digit addition & subtraction', href: '/elementary/practice?grade=1&unit=g1-within-9', ready: true, availability: 'ready' },
+      { label: 'Three-number operations', href: '/elementary/practice?grade=1&unit=g1-three-numbers', ready: true, availability: 'ready' },
+      { label: 'Two-digit ± one-digit (no regrouping)', href: '/elementary/practice?grade=1&unit=g1-two-digit-no-carry', ready: true, availability: 'ready' },
+      { label: 'Regrouping practice', href: '/elementary/practice?grade=1&unit=g1-two-digit-carry', ready: true, availability: 'ready' },
+    ],
+  },
+  {
+    id: 'intl-grade-2',
+    title: 'Grade 2 Mathematics',
+    subtitle: 'Two-digit arithmetic, time, and multiplication foundations',
+    availability: 'ready',
+    topics: [
+      { label: 'Grade 2 overview', href: '/elementary/practice?grade=2', ready: true, availability: 'ready' },
+      { label: 'Two-digit operations: basic', href: '/elementary/practice?grade=2&unit=g2-no-carry', ready: true, availability: 'ready' },
+      { label: 'Two-digit operations: advanced', href: '/elementary/practice?grade=2&unit=g2-carry', ready: true, availability: 'ready' },
+      { label: 'Three-number operations', href: '/elementary/practice?grade=2&unit=g2-three-numbers', ready: true, availability: 'ready' },
+      { label: 'Times tables 2–5', href: '/elementary/practice?grade=2&unit=g2-tables-2-5', ready: true, availability: 'ready' },
+      { label: 'Times tables 6–9', href: '/elementary/practice?grade=2&unit=g2-tables-6-9', ready: true, availability: 'ready' },
+      { label: 'Measuring length', href: '/elementary/practice?grade=2&unit=g2-length', ready: true, availability: 'ready' },
+      { label: 'Clock time and elapsed time', href: '/elementary/practice?grade=2&unit=g2-time', ready: true, availability: 'ready' },
+      { label: 'Reading a clock', href: '/elementary/practice?grade=2&unit=g2-clock-read', ready: true, availability: 'ready' },
+    ],
+  },
+  {
+    id: 'intl-grade-3',
+    title: 'Grade 3 Mathematics',
+    subtitle: 'Place value, multiplication, division and fractions',
+    availability: 'ready',
+    topics: [
+      { label: 'Grade 3 overview', href: '/elementary/practice?grade=3', ready: true, availability: 'ready' },
+      { label: '3- and 4-digit operations', href: '/elementary/practice?grade=3&unit=g3-add-sub', ready: true, availability: 'ready' },
+      { label: 'Division basics', href: '/elementary/practice?grade=3&unit=g3-division-basic', ready: true, availability: 'ready' },
+      { label: '2-digit × 1-digit multiplication', href: '/elementary/practice?grade=3&unit=g3-multiply-2x1', ready: true, availability: 'ready' },
+      { label: '3-digit × 1-digit multiplication', href: '/elementary/practice?grade=3&unit=g3-multiply-3x1', ready: true, availability: 'ready' },
+      { label: '2-digit × 2-digit multiplication', href: '/elementary/practice?grade=3&unit=g3-multiply-2x2', ready: true, availability: 'ready' },
+      { label: 'Fractions and mixed numbers', href: '/elementary/practice?grade=3&unit=g3-fractions', ready: true, availability: 'ready' },
+      { label: 'Number patterns', href: '/elementary/practice?grade=3&unit=g3-number-patterns', ready: true, availability: 'ready' },
+      { label: 'Length, time and unit conversion', href: '/elementary/practice?grade=3&unit=g3-length-time-units', ready: true, availability: 'ready' },
+      { label: 'Capacity and weight', href: '/elementary/practice?grade=3&unit=g3-capacity-weight', ready: true, availability: 'ready' },
+      { label: 'Circles and properties', href: '/elementary/practice?grade=3&unit=g3-circle-properties', ready: true, availability: 'ready' },
+      { label: 'Tables and pictographs', href: '/elementary/practice?grade=3&unit=g3-data-table', ready: true, availability: 'ready' },
+    ],
+  },
+  {
+    id: 'intl-grade-4',
+    title: 'Grade 4 Mathematics',
+    subtitle: 'Multi-digit operations, fractions, decimals, and geometry',
+    availability: 'ready',
+    topics: [
+      { label: 'Grade 4 overview', href: '/elementary/practice?grade=4', ready: true, availability: 'ready' },
+      { label: 'Place value to millions', href: '/elementary/practice?grade=4&unit=g4e-m1a-place-value', ready: true, availability: 'ready' },
+      { label: 'Rounding large numbers', href: '/elementary/practice?grade=4&unit=g4e-m1c-rounding', ready: true, availability: 'ready' },
+      { label: 'Multi-digit multiplication & division', href: '/elementary/practice?grade=4&unit=g4e-m3c-multiply-multidigit-1digit', ready: true, availability: 'ready' },
+      { label: 'Factors, multiples & primes', href: '/elementary/practice?grade=4&unit=g4e-m3f-factors-primes', ready: true, availability: 'ready' },
+      { label: 'Angles and plane figures', href: '/elementary/practice?grade=4&unit=g4e-m4a-lines-angles', ready: true, availability: 'ready' },
+      { label: 'Equivalent fractions', href: '/elementary/practice?grade=4&unit=g4e-m5b-fraction-equivalence', ready: true, availability: 'ready' },
+      { label: 'Adding & subtracting like fractions', href: '/elementary/practice?grade=4&unit=g4e-m5d-fraction-add-sub-like', ready: true, availability: 'ready' },
+      { label: 'Tenths and hundredths', href: '/elementary/practice?grade=4&unit=g4e-m6b-hundredths', ready: true, availability: 'ready' },
+      { label: 'Adding & subtracting decimals', href: '/elementary/practice?grade=4&unit=g4e-m6d-decimal-addition', ready: true, availability: 'ready' },
+      { label: 'Metric unit conversions', href: '/elementary/practice?grade=4&unit=g4e-m2a-metric-convert', ready: true, availability: 'ready' },
+      { label: 'Composite figure area', href: '/elementary/practice?grade=4&unit=g4e-m7d-composite-area-review', ready: true, availability: 'ready' },
+    ],
+  },
+  {
+    id: 'intl-grade-5',
+    title: 'Grade 5 Mathematics',
+    subtitle: 'Decimal operations, fractions, volume, and coordinate geometry',
+    availability: 'ready',
+    topics: [
+      { label: 'Grade 5 overview', href: '/elementary/practice?grade=5', ready: true, availability: 'ready' },
+      { label: 'Powers of ten and place value', href: '/elementary/practice?grade=5&unit=g5e-m1a-powers-of-ten', ready: true, availability: 'ready' },
+      { label: 'Decimal addition & subtraction', href: '/elementary/practice?grade=5&unit=g5e-m1d-decimal-add-sub', ready: true, availability: 'ready' },
+      { label: 'Multi-digit multiplication', href: '/elementary/practice?grade=5&unit=g5e-m2b-mult-standard-alg', ready: true, availability: 'ready' },
+      { label: 'Division with two-digit divisors', href: '/elementary/practice?grade=5&unit=g5e-m2f-div-2digit-divisor', ready: true, availability: 'ready' },
+      { label: 'Equivalent fractions & simplification', href: '/elementary/practice?grade=5&unit=g5e-m3a-equivalent-fractions', ready: true, availability: 'ready' },
+      { label: 'Adding & subtracting unlike fractions', href: '/elementary/practice?grade=5&unit=g5e-m3c-fraction-add-sub-unlike', ready: true, availability: 'ready' },
+      { label: 'Multiplying fractions by fractions', href: '/elementary/practice?grade=5&unit=g5e-m4e-fraction-times-fraction', ready: true, availability: 'ready' },
+      { label: 'Volume concepts with unit cubes', href: '/elementary/practice?grade=5&unit=g5e-m5a-volume-unit-cubes', ready: true, availability: 'ready' },
+      { label: 'Coordinate plane basics', href: '/elementary/practice?grade=5&unit=g5e-m6a-coordinate-plane-basics', ready: true, availability: 'ready' },
+      { label: 'Line graphs & problem solving', href: '/elementary/practice?grade=5&unit=g5e-m6d-line-graphs', ready: true, availability: 'ready' },
+    ],
+  },
+  {
+    id: 'intl-grade-6',
+    title: 'Grade 6 Mathematics',
+    subtitle: 'Ratios, rational numbers, pre-algebra expressions, geometry & statistics (Eureka Math / EngageNY)',
+    availability: 'ready',
+    topics: [
+      { label: 'Grade 6 overview', href: '/elementary/practice?grade=6', ready: true, availability: 'ready' },
+      { label: 'Ratios & Tape Diagrams', href: '/elementary/practice?grade=6&unit=g6e-m1a-ratios', ready: true, availability: 'ready' },
+      { label: 'Unit Rates & Proportions', href: '/elementary/practice?grade=6&unit=g6e-m1c-unit-rate', ready: true, availability: 'ready' },
+      { label: 'Percents as Rate per 100', href: '/elementary/practice?grade=6&unit=g6e-m1d-percent-rate-per-100', ready: true, availability: 'ready' },
+      { label: 'Fraction Division (Reciprocal Algorithm)', href: '/elementary/practice?grade=6&unit=g6e-m2a-fraction-div-algorithm', ready: true, availability: 'ready' },
+      { label: 'Multi-Digit Decimal Long Division', href: '/elementary/practice?grade=6&unit=g6e-m2c-multidigit-division-algorithm', ready: true, availability: 'ready' },
+      { label: 'Divisibility, GCF & LCM Factoring', href: '/elementary/practice?grade=6&unit=g6e-m2d-gcf-distributive-property', ready: true, availability: 'ready' },
+      { label: 'Positive & Negative Numbers on Number Line', href: '/elementary/practice?grade=6&unit=g6e-m3a-rational-number-line', ready: true, availability: 'ready' },
+      { label: 'Absolute Value & Magnitude', href: '/elementary/practice?grade=6&unit=g6e-m3b-absolute-value-magnitude', ready: true, availability: 'ready' },
+      { label: 'Four-Quadrant Coordinate Plane & Distance', href: '/elementary/practice?grade=6&unit=g6e-m3c-distance-coordinate-plane', ready: true, availability: 'ready' },
+      { label: 'Writing & Evaluating Algebraic Expressions', href: '/elementary/practice?grade=6&unit=g6e-m4b-algebraic-expressions', ready: true, availability: 'ready' },
+      { label: 'Distributive Property & Combining Like Terms', href: '/elementary/practice?grade=6&unit=g6e-m4c-distributive-combining', ready: true, availability: 'ready' },
+      { label: 'One-Step Linear Equations', href: '/elementary/practice?grade=6&unit=g6e-m4e-one-step-addition-equations', ready: true, availability: 'ready' },
+      { label: 'One-Variable Inequalities & Graphing', href: '/elementary/practice?grade=6&unit=g6e-m4f-inequalities-number-line', ready: true, availability: 'ready' },
+      { label: 'Area of Parallelograms, Triangles & Polygons', href: '/elementary/practice?grade=6&unit=g6e-m5a-area-trapezoids-composite', ready: true, availability: 'ready' },
+      { label: 'Volume with Fractional Unit Cubes', href: '/elementary/practice?grade=6&unit=g6e-m5c-volume-fractional-cubes', ready: true, availability: 'ready' },
+      { label: 'Nets & Surface Area of Solids', href: '/elementary/practice?grade=6&unit=g6e-m5d-nets-surface-area', ready: true, availability: 'ready' },
+      { label: 'Dot Plots, Histograms & Frequency Tables', href: '/elementary/practice?grade=6&unit=g6e-m6a-dot-plots-histograms', ready: true, availability: 'ready' },
+      { label: 'Mean, MAD, Median & IQR', href: '/elementary/practice?grade=6&unit=g6e-m6b-median-iqr', ready: true, availability: 'ready' },
+      { label: 'Five-Number Summary & Box Plots', href: '/elementary/practice?grade=6&unit=g6e-m6c-box-plots-five-summary', ready: true, availability: 'ready' },
     ],
   },
   {
@@ -1669,6 +1739,62 @@ const ENGLISH_CORE_ELEMENTARY_TOPICS = [
   { label: 'Composite Figure Area', href: '/elementary/practice?grade=4&unit=g4e-m7d-composite-area-review', ready: true, availability: 'ready' },
 ];
 
+const ENGLISH_CORE_ELEMENTARY_G5_TOPICS = [
+  { label: 'Powers of Ten & Place Value Shifts', href: '/elementary/practice?grade=5&unit=g5e-m1a-powers-of-ten', ready: true, availability: 'ready' },
+  { label: 'Metric Conversions with Powers of 10', href: '/elementary/practice?grade=5&unit=g5e-m1a-metric-shift', ready: true, availability: 'ready' },
+  { label: 'Decimals in Expanded Form to Thousandths', href: '/elementary/practice?grade=5&unit=g5e-m1b-decimal-forms', ready: true, availability: 'ready' },
+  { label: 'Rounding Decimals to Any Place', href: '/elementary/practice?grade=5&unit=g5e-m1c-rounding-decimals', ready: true, availability: 'ready' },
+  { label: 'Adding & Subtracting Decimals (Thousandths)', href: '/elementary/practice?grade=5&unit=g5e-m1d-decimal-add-sub', ready: true, availability: 'ready' },
+  { label: 'Standard Algorithm for Multi-Digit Multiplication', href: '/elementary/practice?grade=5&unit=g5e-m2b-mult-standard-alg', ready: true, availability: 'ready' },
+  { label: 'Multi-Digit Decimal Multiplication', href: '/elementary/practice?grade=5&unit=g5e-m2c-decimal-mult', ready: true, availability: 'ready' },
+  { label: 'Dividing by Two-Digit Divisors', href: '/elementary/practice?grade=5&unit=g5e-m2f-div-2digit-divisor', ready: true, availability: 'ready' },
+  { label: 'Multi-Digit Decimal Division', href: '/elementary/practice?grade=5&unit=g5e-m2g-decimal-div-multidigit', ready: true, availability: 'ready' },
+  { label: 'Adding & Subtracting Fractions (Unlike Denominators)', href: '/elementary/practice?grade=5&unit=g5e-m3c-fraction-add-sub-unlike', ready: true, availability: 'ready' },
+  { label: 'Fraction Addition & Subtraction Word Problems', href: '/elementary/practice?grade=5&unit=g5e-m3d-fraction-word-problems', ready: true, availability: 'ready' },
+  { label: 'Fractions as Division & Equal Sharing', href: '/elementary/practice?grade=5&unit=g5e-m4b-fraction-as-division', ready: true, availability: 'ready' },
+  { label: 'Multiplying Fractions by Fractions', href: '/elementary/practice?grade=5&unit=g5e-m4e-fraction-times-fraction', ready: true, availability: 'ready' },
+  { label: 'Multiplication as Scaling and Resizing', href: '/elementary/practice?grade=5&unit=g5e-m4f-scaling-resizing', ready: true, availability: 'ready' },
+  { label: 'Dividing Unit Fractions & Whole Numbers', href: '/elementary/practice?grade=5&unit=g5e-m4g-fraction-division-unit', ready: true, availability: 'ready' },
+  { label: 'Numerical Expressions with Fractions & Decimals', href: '/elementary/practice?grade=5&unit=g5e-m4h-numerical-expressions', ready: true, availability: 'ready' },
+  { label: 'Volume Concepts with Unit Cubes', href: '/elementary/practice?grade=5&unit=g5e-m5a-volume-unit-cubes', ready: true, availability: 'ready' },
+  { label: 'Volume Formulas for Right Rectangular Prisms', href: '/elementary/practice?grade=5&unit=g5e-m5b-volume-formula', ready: true, availability: 'ready' },
+  { label: 'Area of Rectangles with Fractional Side Lengths', href: '/elementary/practice?grade=5&unit=g5e-m5c-area-fractional-sides', ready: true, availability: 'ready' },
+  { label: 'Classifying 2D Shapes & Quadrilateral Hierarchy', href: '/elementary/practice?grade=5&unit=g5e-m5d-quadrilateral-hierarchy', ready: true, availability: 'ready' },
+  { label: 'Coordinate Plane Basics & Ordered Pairs', href: '/elementary/practice?grade=5&unit=g5e-m6a-coordinate-plane-basics', ready: true, availability: 'ready' },
+  { label: 'Patterns in the Coordinate Plane & Graphing Rules', href: '/elementary/practice?grade=5&unit=g5e-m6b-coordinate-patterns', ready: true, availability: 'ready' },
+  { label: 'Line Graphs & Real-World Problem Solving', href: '/elementary/practice?grade=5&unit=g5e-m6d-line-graphs', ready: true, availability: 'ready' },
+  { label: 'Multi-Step Word Problems', href: '/elementary/practice?grade=5&unit=g5e-m6e-multistep-word-problems', ready: true, availability: 'ready' },
+];
+
+const ENGLISH_CORE_ELEMENTARY_G6_TOPICS = [
+  { label: 'Ratios & Tape Diagrams', href: '/elementary/practice?grade=6&unit=g6e-m1a-ratios', ready: true, availability: 'ready' },
+  { label: 'Equivalent Ratios & Double Number Lines', href: '/elementary/practice?grade=6&unit=g6e-m1b-double-number-lines', ready: true, availability: 'ready' },
+  { label: 'Ratio Tables & Coordinate Graphing', href: '/elementary/practice?grade=6&unit=g6e-m1b-ratio-coordinate-plane', ready: true, availability: 'ready' },
+  { label: 'Unit Rates & Proportional Relationships', href: '/elementary/practice?grade=6&unit=g6e-m1c-unit-rate', ready: true, availability: 'ready' },
+  { label: 'Speed, Work & Multi-Unit Conversions', href: '/elementary/practice?grade=6&unit=g6e-m1c-multi-unit-conversions', ready: true, availability: 'ready' },
+  { label: 'Percents as Rate per 100 & Finding the Whole', href: '/elementary/practice?grade=6&unit=g6e-m1d-percent-whole-from-part', ready: true, availability: 'ready' },
+  { label: 'Fraction Division Models & Algorithm', href: '/elementary/practice?grade=6&unit=g6e-m2a-fraction-div-algorithm', ready: true, availability: 'ready' },
+  { label: 'Multi-Digit Decimal Operations & Long Division', href: '/elementary/practice?grade=6&unit=g6e-m2c-multidigit-division-algorithm', ready: true, availability: 'ready' },
+  { label: 'Divisibility Rules & Euclidean Algorithm', href: '/elementary/practice?grade=6&unit=g6e-m2d-euclidean-algorithm', ready: true, availability: 'ready' },
+  { label: 'GCF, LCM & Distributive Factoring', href: '/elementary/practice?grade=6&unit=g6e-m2d-gcf-distributive-property', ready: true, availability: 'ready' },
+  { label: 'Positive & Negative Numbers on Number Line', href: '/elementary/practice?grade=6&unit=g6e-m3a-rational-number-line', ready: true, availability: 'ready' },
+  { label: 'Absolute Value & Magnitude in Context', href: '/elementary/practice?grade=6&unit=g6e-m3b-absolute-value-magnitude', ready: true, availability: 'ready' },
+  { label: 'Four-Quadrant Coordinate Plane & Distance', href: '/elementary/practice?grade=6&unit=g6e-m3c-distance-coordinate-plane', ready: true, availability: 'ready' },
+  { label: 'Powers, Exponents & Order of Operations', href: '/elementary/practice?grade=6&unit=g6e-m4a-powers-exponents', ready: true, availability: 'ready' },
+  { label: 'Writing & Evaluating Algebraic Expressions', href: '/elementary/practice?grade=6&unit=g6e-m4b-algebraic-expressions', ready: true, availability: 'ready' },
+  { label: 'Distributive Property & Combining Like Terms', href: '/elementary/practice?grade=6&unit=g6e-m4c-distributive-combining', ready: true, availability: 'ready' },
+  { label: 'Solving One-Step Equations (Addition & Multiplication)', href: '/elementary/practice?grade=6&unit=g6e-m4e-one-step-addition-equations', ready: true, availability: 'ready' },
+  { label: 'Writing & Graphing Inequalities', href: '/elementary/practice?grade=6&unit=g6e-m4f-inequalities-number-line', ready: true, availability: 'ready' },
+  { label: 'Independent & Dependent Variables (y = kx)', href: '/elementary/practice?grade=6&unit=g6e-m4g-independent-dependent-vars', ready: true, availability: 'ready' },
+  { label: 'Area of Parallelograms, Triangles & Trapezoids', href: '/elementary/practice?grade=6&unit=g6e-m5a-area-trapezoids-composite', ready: true, availability: 'ready' },
+  { label: 'Polygons on the Coordinate Plane', href: '/elementary/practice?grade=6&unit=g6e-m5b-polygons-coordinate-plane', ready: true, availability: 'ready' },
+  { label: 'Volume with Fractional Edge Lengths', href: '/elementary/practice?grade=6&unit=g6e-m5c-volume-fractional-cubes', ready: true, availability: 'ready' },
+  { label: 'Nets & Surface Area of Prisms & Pyramids', href: '/elementary/practice?grade=6&unit=g6e-m5d-nets-surface-area', ready: true, availability: 'ready' },
+  { label: 'Statistical Questions, Dot Plots & Histograms', href: '/elementary/practice?grade=6&unit=g6e-m6a-dot-plots-histograms', ready: true, availability: 'ready' },
+  { label: 'Mean, MAD, Median & Interquartile Range (IQR)', href: '/elementary/practice?grade=6&unit=g6e-m6b-median-iqr', ready: true, availability: 'ready' },
+  { label: 'Five-Number Summary & Box Plots', href: '/elementary/practice?grade=6&unit=g6e-m6c-box-plots-five-summary', ready: true, availability: 'ready' },
+];
+
 const JAPAN_STAGE_SEEDS = [
   {
     id: 'jp-shogakko-4',
@@ -1696,6 +1822,60 @@ const JAPAN_STAGE_SEEDS = [
       { label: '小数のたし算とひき算', href: '/elementary/practice?grade=4&unit=g4e-m6d-decimal-addition', ready: true, availability: 'ready' },
       { label: '単位換算表の活用', href: '/elementary/practice?grade=4&unit=g4e-m7a-conversion-tables', ready: true, availability: 'ready' },
       { label: '複合図形の面積', href: '/elementary/practice?grade=4&unit=g4e-m7d-composite-area-review', ready: true, availability: 'ready' },
+    ],
+  },
+  {
+    id: 'jp-shogakko-5',
+    title: '小学校算数 (5年生)',
+    subtitle: 'Primary Mathematics · Grade 5 · 小数のかけ算とわり算・体積・分数のたし算とひき算・合同と四角形',
+    availability: 'ready',
+    topics: [
+      { label: '10の累乗と小数の位取り', href: '/elementary/practice?grade=5&unit=g5e-m1a-powers-of-ten', ready: true, availability: 'ready' },
+      { label: '小数の位取りと千分の一の位', href: '/elementary/practice?grade=5&unit=g5e-m1b-decimal-forms', ready: true, availability: 'ready' },
+      { label: '小数の四捨五入 (概数)', href: '/elementary/practice?grade=5&unit=g5e-m1c-rounding-decimals', ready: true, availability: 'ready' },
+      { label: '小数のたし算とひき算 (筆算)', href: '/elementary/practice?grade=5&unit=g5e-m1d-decimal-add-sub', ready: true, availability: 'ready' },
+      { label: '小数のかけ算 (筆算・小数点の位置)', href: '/elementary/practice?grade=5&unit=g5e-m2c-decimal-mult', ready: true, availability: 'ready' },
+      { label: '小数のわり算 (商とあまり)', href: '/elementary/practice?grade=5&unit=g5e-m2g-decimal-div-multidigit', ready: true, availability: 'ready' },
+      { label: '2桁でわるわり算の筆算', href: '/elementary/practice?grade=5&unit=g5e-m2f-div-2digit-divisor', ready: true, availability: 'ready' },
+      { label: '等しい分数と約分・通分', href: '/elementary/practice?grade=5&unit=g5e-m3a-equivalent-fractions', ready: true, availability: 'ready' },
+      { label: '異分母分数のたし算とひき算', href: '/elementary/practice?grade=5&unit=g5e-m3c-fraction-add-sub-unlike', ready: true, availability: 'ready' },
+      { label: '分数の文章題 (テープ図の活用)', href: '/elementary/practice?grade=5&unit=g5e-m3d-fraction-word-problems', ready: true, availability: 'ready' },
+      { label: 'わり算と分数 (分数倍)', href: '/elementary/practice?grade=5&unit=g5e-m4b-fraction-as-division', ready: true, availability: 'ready' },
+      { label: '分数のかけ算 (分数×整数・分数×分数)', href: '/elementary/practice?grade=5&unit=g5e-m4e-fraction-times-fraction', ready: true, availability: 'ready' },
+      { label: '積の大きさと倍率 (1より大きい・小さい)', href: '/elementary/practice?grade=5&unit=g5e-m4f-scaling-resizing', ready: true, availability: 'ready' },
+      { label: '分数のわり算 (単位分数÷整数)', href: '/elementary/practice?grade=5&unit=g5e-m4g-fraction-division-unit', ready: true, availability: 'ready' },
+      { label: '直方体と立方体の体積 (1cm³と展開図)', href: '/elementary/practice?grade=5&unit=g5e-m5a-volume-unit-cubes', ready: true, availability: 'ready' },
+      { label: '体積の公式 (縦×横×高さ・底面積×高さ)', href: '/elementary/practice?grade=5&unit=g5e-m5b-volume-formula', ready: true, availability: 'ready' },
+      { label: '帯分数の辺をもつ長方形の面積', href: '/elementary/practice?grade=5&unit=g5e-m5c-area-fractional-sides', ready: true, availability: 'ready' },
+      { label: '合同な図形と四角形の性質 (台形・平行四辺形・ひし形)', href: '/elementary/practice?grade=5&unit=g5e-m5d-quadrilateral-hierarchy', ready: true, availability: 'ready' },
+      { label: '平面上の位置の表し方 (座標・順序対)', href: '/elementary/practice?grade=5&unit=g5e-m6a-coordinate-plane-basics', ready: true, availability: 'ready' },
+      { label: '伴って変わる２つの数量とグラフ (折れ線グラフ)', href: '/elementary/practice?grade=5&unit=g5e-m6d-line-graphs', ready: true, availability: 'ready' },
+    ],
+  },
+  {
+    id: 'jp-shogakko-6',
+    title: '小学校算数 (6年生)',
+    subtitle: 'Primary Mathematics · Grade 6 · 分数のわり算・比・文字と式・拡大図と縮図・角柱と円柱の体積・データの調べ方',
+    availability: 'ready',
+    topics: [
+      { label: '分数のかけ算とわり算 (逆数の計算)', href: '/elementary/practice?grade=6&unit=g6e-m2a-fraction-div-algorithm', ready: true, availability: 'ready' },
+      { label: '比とその利用 (等しい比・線分図)', href: '/elementary/practice?grade=6&unit=g6e-m1a-equivalent-ratios', ready: true, availability: 'ready' },
+      { label: '比の表と比例関係', href: '/elementary/practice?grade=6&unit=g6e-m1b-ratio-tables', ready: true, availability: 'ready' },
+      { label: '単位量あたりの大きさ (速さ・仕事量)', href: '/elementary/practice?grade=6&unit=g6e-m1c-speed-work-rates', ready: true, availability: 'ready' },
+      { label: '割合と百分率 (歩合・百分率の応用)', href: '/elementary/practice?grade=6&unit=g6e-m1d-percent-rate-per-100', ready: true, availability: 'ready' },
+      { label: '小数と整数の筆算わり算 (標準アルゴリズム)', href: '/elementary/practice?grade=6&unit=g6e-m2c-multidigit-division-algorithm', ready: true, availability: 'ready' },
+      { label: '倍数・約数と最大公約数・最小公倍数', href: '/elementary/practice?grade=6&unit=g6e-m2d-gcf-distributive-property', ready: true, availability: 'ready' },
+      { label: '正の数・負の数と数直線', href: '/elementary/practice?grade=6&unit=g6e-m3a-rational-number-line', ready: true, availability: 'ready' },
+      { label: '絶対値と数の大小比較', href: '/elementary/practice?grade=6&unit=g6e-m3b-absolute-value-magnitude', ready: true, availability: 'ready' },
+      { label: '4つの象限の座標平面と距離', href: '/elementary/practice?grade=6&unit=g6e-m3c-distance-coordinate-plane', ready: true, availability: 'ready' },
+      { label: '文字を使った式 (x, y) と式の値', href: '/elementary/practice?grade=6&unit=g6e-m4b-algebraic-expressions', ready: true, availability: 'ready' },
+      { label: '一次方程式の解き方 (等式の性質)', href: '/elementary/practice?grade=6&unit=g6e-m4e-one-step-addition-equations', ready: true, availability: 'ready' },
+      { label: '不等式の基礎と数直線による表現', href: '/elementary/practice?grade=6&unit=g6e-m4f-inequalities-number-line', ready: true, availability: 'ready' },
+      { label: '平行四辺形・三角形・台形の面積', href: '/elementary/practice?grade=6&unit=g6e-m5a-area-trapezoids-composite', ready: true, availability: 'ready' },
+      { label: '分数辺長をもつ立体の体積', href: '/elementary/practice?grade=6&unit=g6e-m5c-volume-fractional-cubes', ready: true, availability: 'ready' },
+      { label: '立体図形の展開図と表面積', href: '/elementary/practice?grade=6&unit=g6e-m5d-nets-surface-area', ready: true, availability: 'ready' },
+      { label: 'データの整理とドットプロット・度数分布', href: '/elementary/practice?grade=6&unit=g6e-m6a-dot-plots-histograms', ready: true, availability: 'ready' },
+      { label: '平均値・中央値・四分位範囲と箱ひげ図', href: '/elementary/practice?grade=6&unit=g6e-m6c-box-plots-five-summary', ready: true, availability: 'ready' },
     ],
   },
   {
@@ -1815,6 +1995,61 @@ const TAIWAN_STAGE_SEEDS = [
     ],
   },
   {
+    id: 'tw-elementary-5',
+    title: '國小數學 (五年級)',
+    subtitle: 'Primary Mathematics · Grade 5 · 多位數乘除·異分母分數加減·體積·小數乘除',
+    availability: 'ready',
+    topics: [
+      { label: '十的乘方與小數位值轉換', href: '/elementary/practice?grade=5&unit=g5e-m1a-powers-of-ten', ready: true, availability: 'ready' },
+      { label: '小數的展開式 (到千分位)', href: '/elementary/practice?grade=5&unit=g5e-m1b-decimal-forms', ready: true, availability: 'ready' },
+      { label: '小數的四捨五入與概數', href: '/elementary/practice?grade=5&unit=g5e-m1c-rounding-decimals', ready: true, availability: 'ready' },
+      { label: '小數的加法與減法直式', href: '/elementary/practice?grade=5&unit=g5e-m1d-decimal-add-sub', ready: true, availability: 'ready' },
+      { label: '多位數直式乘法', href: '/elementary/practice?grade=5&unit=g5e-m2b-mult-standard-alg', ready: true, availability: 'ready' },
+      { label: '小數的乘法 (直式與小數點定位)', href: '/elementary/practice?grade=5&unit=g5e-m2c-decimal-mult', ready: true, availability: 'ready' },
+      { label: '兩位數除法直式與驗算', href: '/elementary/practice?grade=5&unit=g5e-m2f-div-2digit-divisor', ready: true, availability: 'ready' },
+      { label: '小數除法 (小數除以整數)', href: '/elementary/practice?grade=5&unit=g5e-m2g-decimal-div-multidigit', ready: true, availability: 'ready' },
+      { label: '等值分數與通分約分', href: '/elementary/practice?grade=5&unit=g5e-m3a-equivalent-fractions', ready: true, availability: 'ready' },
+      { label: '異分母分數的加法與減法', href: '/elementary/practice?grade=5&unit=g5e-m3c-fraction-add-sub-unlike', ready: true, availability: 'ready' },
+      { label: '分數作為除法的商', href: '/elementary/practice?grade=5&unit=g5e-m4b-fraction-as-division', ready: true, availability: 'ready' },
+      { label: '分數乘法 (分數乘以整數與分數)', href: '/elementary/practice?grade=5&unit=g5e-m4e-fraction-times-fraction', ready: true, availability: 'ready' },
+      { label: '乘法縮放與倍率關係', href: '/elementary/practice?grade=5&unit=g5e-m4f-scaling-resizing', ready: true, availability: 'ready' },
+      { label: '單位分數除法與整數除法', href: '/elementary/practice?grade=5&unit=g5e-m4g-fraction-division-unit', ready: true, availability: 'ready' },
+      { label: '正方體與長方體的體積 (立方公分)', href: '/elementary/practice?grade=5&unit=g5e-m5a-volume-unit-cubes', ready: true, availability: 'ready' },
+      { label: '體積公式 (長×寬×高·底面積×高)', href: '/elementary/practice?grade=5&unit=g5e-m5b-volume-formula', ready: true, availability: 'ready' },
+      { label: '帶分數邊長的長方形面積', href: '/elementary/practice?grade=5&unit=g5e-m5c-area-fractional-sides', ready: true, availability: 'ready' },
+      { label: '四邊形的分類與包含關係', href: '/elementary/practice?grade=5&unit=g5e-m5d-quadrilateral-hierarchy', ready: true, availability: 'ready' },
+      { label: '平面直角坐標與數對 (x, y)', href: '/elementary/practice?grade=5&unit=g5e-m6a-coordinate-plane-basics', ready: true, availability: 'ready' },
+      { label: '折線圖的報讀與生活應用', href: '/elementary/practice?grade=5&unit=g5e-m6d-line-graphs', ready: true, availability: 'ready' },
+    ],
+  },
+  {
+    id: 'tw-elementary-6',
+    title: '國小數學 (六年級)',
+    subtitle: 'Primary Mathematics · Grade 6 · 分數除法·比與比值·基準量與比較量·縮圖與比例尺·圓形圖與統計',
+    availability: 'ready',
+    topics: [
+      { label: '分數除法 (倒數計算法則與應用)', href: '/elementary/practice?grade=6&unit=g6e-m2a-fraction-div-algorithm', ready: true, availability: 'ready' },
+      { label: '比與比值 (最簡整數比與線段圖)', href: '/elementary/practice?grade=6&unit=g6e-m1a-equivalent-ratios', ready: true, availability: 'ready' },
+      { label: '比的表格與雙數線模型', href: '/elementary/practice?grade=6&unit=g6e-m1b-double-number-lines', ready: true, availability: 'ready' },
+      { label: '單位率與正比例關係', href: '/elementary/practice?grade=6&unit=g6e-m1c-unit-rate', ready: true, availability: 'ready' },
+      { label: '速率與時間、距離計算', href: '/elementary/practice?grade=6&unit=g6e-m1c-speed-work-rates', ready: true, availability: 'ready' },
+      { label: '百分率與基準量、比較量', href: '/elementary/practice?grade=6&unit=g6e-m1d-percent-rate-per-100', ready: true, availability: 'ready' },
+      { label: '多位數小數除法直式演算法', href: '/elementary/practice?grade=6&unit=g6e-m2c-multidigit-division-algorithm', ready: true, availability: 'ready' },
+      { label: '質因數分解與最大公因數、最小公倍數', href: '/elementary/practice?grade=6&unit=g6e-m2d-gcf-distributive-property', ready: true, availability: 'ready' },
+      { label: '正數、負數與數線表示', href: '/elementary/practice?grade=6&unit=g6e-m3a-rational-number-line', ready: true, availability: 'ready' },
+      { label: '生活中的絕對值與大小比較', href: '/elementary/practice?grade=6&unit=g6e-m3b-absolute-value-magnitude', ready: true, availability: 'ready' },
+      { label: '四個象限的直角坐標與距離', href: '/elementary/practice?grade=6&unit=g6e-m3c-distance-coordinate-plane', ready: true, availability: 'ready' },
+      { label: '以符號列式與代數式求值', href: '/elementary/practice?grade=6&unit=g6e-m4b-algebraic-expressions', ready: true, availability: 'ready' },
+      { label: '等量公理與一元一次方程式', href: '/elementary/practice?grade=6&unit=g6e-m4e-one-step-addition-equations', ready: true, availability: 'ready' },
+      { label: '一元一次不等式與數線圖示', href: '/elementary/practice?grade=6&unit=g6e-m4f-inequalities-number-line', ready: true, availability: 'ready' },
+      { label: '平行四邊形、三角形與梯形面積', href: '/elementary/practice?grade=6&unit=g6e-m5a-area-trapezoids-composite', ready: true, availability: 'ready' },
+      { label: '分數邊長柱體的體積計算', href: '/elementary/practice?grade=6&unit=g6e-m5c-volume-fractional-cubes', ready: true, availability: 'ready' },
+      { label: '柱體與錐體的展開圖與表面積', href: '/elementary/practice?grade=6&unit=g6e-m5d-nets-surface-area', ready: true, availability: 'ready' },
+      { label: '次數分配直方圖與統計圖表', href: '/elementary/practice?grade=6&unit=g6e-m6a-dot-plots-histograms', ready: true, availability: 'ready' },
+      { label: '平均數、中位數與盒狀圖', href: '/elementary/practice?grade=6&unit=g6e-m6c-box-plots-five-summary', ready: true, availability: 'ready' },
+    ],
+  },
+  {
     id: 'tw-junior',
     title: '國中數學 (七〜九年級)',
     subtitle: 'Junior High Math · Grades 7–9',
@@ -1896,6 +2131,20 @@ const HONGKONG_STAGE_SEEDS = [
     subtitle: 'CDC Syllabus · Key Stage 2 · Eureka Math / EngageNY structure',
     availability: 'ready',
     topics: ENGLISH_CORE_ELEMENTARY_TOPICS,
+  },
+  {
+    id: 'hk-primary-5',
+    title: 'Primary Mathematics (Primary 5)',
+    subtitle: 'CDC Syllabus · Key Stage 2 · Fractions, Decimals, Volume & Practical Problems',
+    availability: 'ready',
+    topics: ENGLISH_CORE_ELEMENTARY_G5_TOPICS,
+  },
+  {
+    id: 'hk-primary-6',
+    title: 'Primary Mathematics (Primary 6)',
+    subtitle: 'CDC Syllabus · Key Stage 2 · Fractions Division, Speed, Percentages, Algebra & Data Handling',
+    availability: 'ready',
+    topics: ENGLISH_CORE_ELEMENTARY_G6_TOPICS,
   },
   {
     id: 'hk-junior',
@@ -1985,6 +2234,20 @@ const SINGAPORE_STAGE_SEEDS = [
     topics: ENGLISH_CORE_ELEMENTARY_TOPICS,
   },
   {
+    id: 'sg-primary-5',
+    title: 'Primary Mathematics (Primary 5)',
+    subtitle: 'MOE Syllabus · Fractions, Decimals, Rate, Volume & Geometry',
+    availability: 'ready',
+    topics: ENGLISH_CORE_ELEMENTARY_G5_TOPICS,
+  },
+  {
+    id: 'sg-primary-6',
+    title: 'Primary Mathematics (Primary 6)',
+    subtitle: 'MOE Syllabus · Fractions Division, Ratios & Percentages, Speed, Algebra & Solid Nets',
+    availability: 'ready',
+    topics: ENGLISH_CORE_ELEMENTARY_G6_TOPICS,
+  },
+  {
     id: 'sg-lower-secondary',
     title: 'Lower Secondary Mathematics (Sec 1–2)',
     subtitle: 'MOE Syllabus · O-Level Foundations',
@@ -2058,6 +2321,20 @@ const MALAYSIA_STAGE_SEEDS = [
     subtitle: 'KSSR · Eureka Math / EngageNY structure',
     availability: 'ready',
     topics: ENGLISH_CORE_ELEMENTARY_TOPICS,
+  },
+  {
+    id: 'my-primary-5',
+    title: 'Primary Mathematics (Tahun 5)',
+    subtitle: 'KSSR · Pecahan, Perpuluhan, Ruang & Koordinat',
+    availability: 'ready',
+    topics: ENGLISH_CORE_ELEMENTARY_G5_TOPICS,
+  },
+  {
+    id: 'my-primary-6',
+    title: 'Primary Mathematics (Tahun 6)',
+    subtitle: 'KSSR · Pecahan, Nisbah dan Kadaran, Peratusan, Koordinat & Pengurusan Data',
+    availability: 'ready',
+    topics: ENGLISH_CORE_ELEMENTARY_G6_TOPICS,
   },
   {
     id: 'my-lower-secondary',
@@ -2152,6 +2429,54 @@ const VIETNAM_STAGE_SEEDS = [
     ],
   },
   {
+    id: 'vn-tieuhoc-5',
+    title: 'Toán Lớp 5',
+    subtitle: 'Chương trình GDPT 2018 · Tiểu học · Số thập phân, Phân số, Thể tích hình hộp, Tọa độ & Bài toán chuyển động',
+    availability: 'ready',
+    topics: [
+      { label: 'Số thập phân & Các phép tính (cộng, trừ, nhân, chia)', href: '/elementary/practice?grade=5&unit=g5e-m1d-decimal-add-sub', ready: true, availability: 'ready' },
+      { label: 'Hàng của số thập phân (đến hàng phần nghìn)', href: '/elementary/practice?grade=5&unit=g5e-m1b-decimal-forms', ready: true, availability: 'ready' },
+      { label: 'Làm tròn số thập phân', href: '/elementary/practice?grade=5&unit=g5e-m1c-rounding-decimals', ready: true, availability: 'ready' },
+      { label: 'Nhân số thập phân với số tự nhiên & số thập phân', href: '/elementary/practice?grade=5&unit=g5e-m2c-decimal-mult', ready: true, availability: 'ready' },
+      { label: 'Chia số thập phân cho số tự nhiên & số thập phân', href: '/elementary/practice?grade=5&unit=g5e-m2g-decimal-div-multidigit', ready: true, availability: 'ready' },
+      { label: 'Quy đồng mẫu số và cộng trừ phân số khác mẫu', href: '/elementary/practice?grade=5&unit=g5e-m3c-fraction-add-sub-unlike', ready: true, availability: 'ready' },
+      { label: 'Phân số và phép chia số tự nhiên', href: '/elementary/practice?grade=5&unit=g5e-m4b-fraction-as-division', ready: true, availability: 'ready' },
+      { label: 'Nhân phân số với số tự nhiên và phân số', href: '/elementary/practice?grade=5&unit=g5e-m4e-fraction-times-fraction', ready: true, availability: 'ready' },
+      { label: 'Chia phân số cho số tự nhiên', href: '/elementary/practice?grade=5&unit=g5e-m4g-fraction-division-unit', ready: true, availability: 'ready' },
+      { label: 'Thể tích hình hộp chữ nhật và hình lập phương', href: '/elementary/practice?grade=5&unit=g5e-m5b-volume-formula', ready: true, availability: 'ready' },
+      { label: 'Khái niệm thể tích và đơn vị xăng-ti-mét khối (cm³)', href: '/elementary/practice?grade=5&unit=g5e-m5a-volume-unit-cubes', ready: true, availability: 'ready' },
+      { label: 'Diện tích hình chữ nhật có kích thước phân số', href: '/elementary/practice?grade=5&unit=g5e-m5c-area-fractional-sides', ready: true, availability: 'ready' },
+      { label: 'Hình học phẳng và phân loại tứ giác', href: '/elementary/practice?grade=5&unit=g5e-m5d-quadrilateral-hierarchy', ready: true, availability: 'ready' },
+      { label: 'Mặt phẳng tọa độ và cặp số xác định vị trí', href: '/elementary/practice?grade=5&unit=g5e-m6a-coordinate-plane-basics', ready: true, availability: 'ready' },
+      { label: 'Biểu đồ đường thẳng và giải toán thực tế', href: '/elementary/practice?grade=5&unit=g5e-m6d-line-graphs', ready: true, availability: 'ready' },
+      { label: 'Giải toán có lời văn nhiều bước (chuyển động, tỉ số)', href: '/elementary/practice?grade=5&unit=g5e-m6e-multistep-word-problems', ready: true, availability: 'ready' },
+    ],
+  },
+  {
+    id: 'vn-thcs-6',
+    title: 'Toán Lớp 6',
+    subtitle: 'Chương trình GDPT 2018 · THCS · Tỉ số và tỉ số phần trăm, Số nguyên, Phân số, Hình học trực quan & Thống kê',
+    availability: 'ready',
+    topics: [
+      { label: 'Phép chia phân số và bài toán thực tế', href: '/elementary/practice?grade=6&unit=g6e-m2a-fraction-div-algorithm', ready: true, availability: 'ready' },
+      { label: 'Tỉ số, tỉ lệ thức và mô hình đoạn thẳng', href: '/elementary/practice?grade=6&unit=g6e-m1a-ratios', ready: true, availability: 'ready' },
+      { label: 'Bảng tỉ số và quan hệ tỉ lệ', href: '/elementary/practice?grade=6&unit=g6e-m1b-ratio-tables', ready: true, availability: 'ready' },
+      { label: 'Tỉ số phần trăm và tìm giá trị phân số', href: '/elementary/practice?grade=6&unit=g6e-m1d-percent-rate-per-100', ready: true, availability: 'ready' },
+      { label: 'Số nguyên âm, số nguyên dương và trục số', href: '/elementary/practice?grade=6&unit=g6e-m3a-rational-number-line', ready: true, availability: 'ready' },
+      { label: 'Giá trị tuyệt đối và thứ tự trong tập số nguyên', href: '/elementary/practice?grade=6&unit=g6e-m3b-absolute-value-magnitude', ready: true, availability: 'ready' },
+      { label: 'Mặt phẳng tọa độ bốn góc phần tư', href: '/elementary/practice?grade=6&unit=g6e-m3c-four-quadrant-plane', ready: true, availability: 'ready' },
+      { label: 'Biểu thức đại số và thứ tự thực hiện phép tính', href: '/elementary/practice?grade=6&unit=g6e-m4b-algebraic-expressions', ready: true, availability: 'ready' },
+      { label: 'Phương trình một bước và tính chất đẳng thức', href: '/elementary/practice?grade=6&unit=g6e-m4e-one-step-addition-equations', ready: true, availability: 'ready' },
+      { label: 'Bất đẳng thức một ẩn trên trục số', href: '/elementary/practice?grade=6&unit=g6e-m4f-inequalities-number-line', ready: true, availability: 'ready' },
+      { label: 'Diện tích hình bình hành, hình tam giác và hình thang', href: '/elementary/practice?grade=6&unit=g6e-m5a-area-trapezoids-composite', ready: true, availability: 'ready' },
+      { label: 'Hình đa giác trên mặt phẳng tọa độ', href: '/elementary/practice?grade=6&unit=g6e-m5b-polygons-coordinate-plane', ready: true, availability: 'ready' },
+      { label: 'Thể tích hình hộp và hình lăng trụ', href: '/elementary/practice?grade=6&unit=g6e-m5c-volume-fractional-cubes', ready: true, availability: 'ready' },
+      { label: 'Khai triển hình học và diện tích toàn phần', href: '/elementary/practice?grade=6&unit=g6e-m5d-nets-surface-area', ready: true, availability: 'ready' },
+      { label: 'Thu thập số liệu, bảng tần số và biểu đồ cột/điểm', href: '/elementary/practice?grade=6&unit=g6e-m6a-dot-plots-histograms', ready: true, availability: 'ready' },
+      { label: 'Số trung bình, trung vị và biểu đồ hộp', href: '/elementary/practice?grade=6&unit=g6e-m6c-box-plots-five-summary', ready: true, availability: 'ready' },
+    ],
+  },
+  {
     id: 'vn-thcs',
     title: 'Toán THCS (Lớp 6–9)',
     subtitle: 'Chương trình GDPT 2018 · Trung học cơ sở',
@@ -2220,6 +2545,20 @@ const INDIA_STAGE_SEEDS = [
     subtitle: 'CBSE · Eureka Math / EngageNY structure',
     availability: 'ready',
     topics: ENGLISH_CORE_ELEMENTARY_TOPICS,
+  },
+  {
+    id: 'in-primary-5',
+    title: 'Primary Mathematics (Class 5)',
+    subtitle: 'CBSE / NCERT · Fractions, Decimals, Boxes & Sketches (Volume), Patterns',
+    availability: 'ready',
+    topics: ENGLISH_CORE_ELEMENTARY_G5_TOPICS,
+  },
+  {
+    id: 'in-middle-6',
+    title: 'Middle Mathematics (Class 6)',
+    subtitle: 'CBSE / NCERT · Ratio & Proportion, Integers, Fractions, Algebra & Data Handling',
+    availability: 'ready',
+    topics: ENGLISH_CORE_ELEMENTARY_G6_TOPICS,
   },
   {
     id: 'in-secondary',
@@ -2303,9 +2642,14 @@ const ENGLISH_CORE_HIGH_TOPICS = [
   { label: 'Probability & Statistics', href: '/middle-school/pre-algebra?profile=algebra-2&unit=conditional-probability', ready: true, availability: 'ready' },
 ];
 
-function englishStages(prefix, middleTitle, middleSubtitle, highTitle, highSubtitle, seniorTitle, seniorSubtitle, elementaryTitle, elementarySubtitle) {
-  return [
+function englishStages(prefix, middleTitle, middleSubtitle, highTitle, highSubtitle, seniorTitle, seniorSubtitle, elementaryTitle, elementarySubtitle, elementary5Title, elementary5Subtitle) {
+  const stages = [
     { id: `${prefix}-elementary`, title: elementaryTitle, subtitle: elementarySubtitle, availability: 'ready', topics: ENGLISH_CORE_ELEMENTARY_TOPICS },
+  ];
+  if (elementary5Title) {
+    stages.push({ id: `${prefix}-elementary-5`, title: elementary5Title, subtitle: elementary5Subtitle, availability: 'ready', topics: ENGLISH_CORE_ELEMENTARY_G5_TOPICS });
+  }
+  stages.push(
     { id: `${prefix}-middle`, title: middleTitle, subtitle: middleSubtitle, availability: 'ready', topics: ENGLISH_CORE_MIDDLE_TOPICS },
     { id: `${prefix}-high`, title: highTitle, subtitle: highSubtitle, availability: 'ready', topics: ENGLISH_CORE_HIGH_TOPICS },
     { id: `${prefix}-senior`, title: seniorTitle, subtitle: seniorSubtitle, availability: 'ready', topics: [
@@ -2314,15 +2658,76 @@ function englishStages(prefix, middleTitle, middleSubtitle, highTitle, highSubti
       { label: 'Calculus: Integration & Applications', href: '/middle-school/pre-algebra?profile=ap-calc-ab&unit=h2-definite-integrals', ready: true, availability: 'ready' },
       { label: 'Vectors & Three-Dimensional Geometry', href: '/middle-school/pre-algebra?profile=precalculus&unit=precalc-vectors', ready: true, availability: 'ready' },
       { label: 'Advanced Probability & Statistics', href: '/middle-school/pre-algebra?profile=kr-high-2-probability-statistics', ready: true, availability: 'ready' },
-    ] },
-  ];
+    ] }
+  );
+  return stages;
 }
 
-const USA_STAGE_SEEDS = englishStages('us', 'Middle School Mathematics (Grades 6–8)', 'Common Core representative pathway', 'High School Mathematics', 'Algebra I · Geometry · Algebra II', 'College-Ready & Advanced Placement', 'Precalculus · AP Calculus · AP Statistics', 'Elementary Mathematics (Grade 4)', 'Common Core representative pathway · Eureka Math / EngageNY structure');
-const AUSTRALIA_STAGE_SEEDS = englishStages('au', 'Australian Curriculum Mathematics (Years 7–8)', 'Version 9.0 · Number, Algebra, Measurement, Space, Statistics & Probability', 'Australian Curriculum Mathematics (Years 9–10)', 'Version 9.0 · preparation for senior pathways', 'Senior Secondary Mathematics', 'General Mathematics · Mathematical Methods · Specialist Mathematics', 'Primary Mathematics (Year 4)', 'Version 9.0 · Number, Algebra, Measurement & Space — Foundation Level');
-const UK_STAGE_SEEDS = englishStages('uk', 'Key Stage 3 Mathematics (Years 7–9)', 'England National Curriculum', 'GCSE Mathematics (Key Stage 4)', 'Foundation & Higher content', 'Sixth Form Mathematics', 'A Level Mathematics · Further Mathematics', 'Key Stage 2 Mathematics (Year 5)', 'England National Curriculum · ages 9–10');
-const CANADA_STAGE_SEEDS = englishStages('ca', 'Junior/Intermediate Mathematics (Grades 6–9)', 'Representative provincial pathway', 'Secondary Mathematics (Grades 10–11)', 'Foundations · Pre-calculus · Workplace pathways', 'Grade 12 Mathematics', 'Pre-calculus · Calculus · Statistics', 'Elementary Mathematics (Grade 4)', 'Representative provincial pathway · Eureka Math / EngageNY structure');
-const NEW_ZEALAND_STAGE_SEEDS = englishStages('nz', 'Mathematics & Statistics (Years 7–10)', 'NZ Curriculum 2025 · Phases 3–4', 'Senior Secondary Mathematics (Year 11)', 'Mathematics & Statistics learning area', 'Senior Qualifications (Years 12–13)', 'NCEA transition · Mathematics & Statistics', 'Mathematics & Statistics (Year 5)', 'NZ Curriculum 2025 · Phase 2–3 · ages 9–10');
+const USA_STAGE_SEEDS = englishStages(
+  'us',
+  'Middle School Mathematics (Grades 6–8)',
+  'Common Core representative pathway',
+  'High School Mathematics',
+  'Algebra I · Geometry · Algebra II',
+  'College-Ready & Advanced Placement',
+  'Precalculus · AP Calculus · AP Statistics',
+  'Elementary Mathematics (Grade 4)',
+  'Common Core representative pathway · Eureka Math / EngageNY structure',
+  'Elementary Mathematics (Grade 5)',
+  'Common Core representative pathway · Eureka Math / EngageNY structure'
+);
+const AUSTRALIA_STAGE_SEEDS = englishStages(
+  'au',
+  'Australian Curriculum Mathematics (Years 7–8)',
+  'Version 9.0 · Number, Algebra, Measurement, Space, Statistics & Probability',
+  'Australian Curriculum Mathematics (Years 9–10)',
+  'Version 9.0 · preparation for senior pathways',
+  'Senior Secondary Mathematics',
+  'General Mathematics · Mathematical Methods · Specialist Mathematics',
+  'Primary Mathematics (Year 4)',
+  'Version 9.0 · Number, Algebra, Measurement & Space — Foundation Level',
+  'Primary Mathematics (Year 5)',
+  'Version 9.0 · Number, Algebra, Measurement & Space — Fractions & Operations'
+);
+const UK_STAGE_SEEDS = englishStages(
+  'uk',
+  'Key Stage 3 Mathematics (Years 7–9)',
+  'England National Curriculum',
+  'GCSE Mathematics (Key Stage 4)',
+  'Foundation & Higher content',
+  'Sixth Form Mathematics',
+  'A Level Mathematics · Further Mathematics',
+  'Key Stage 2 Mathematics (Year 5)',
+  'England National Curriculum · ages 9–10',
+  'Key Stage 2 Mathematics (Year 6)',
+  'England National Curriculum · SATs preparation · ages 10–11'
+);
+const CANADA_STAGE_SEEDS = englishStages(
+  'ca',
+  'Junior/Intermediate Mathematics (Grades 6–9)',
+  'Representative provincial pathway',
+  'Secondary Mathematics (Grades 10–11)',
+  'Foundations · Pre-calculus · Workplace pathways',
+  'Grade 12 Mathematics',
+  'Pre-calculus · Calculus · Statistics',
+  'Elementary Mathematics (Grade 4)',
+  'Representative provincial pathway · Eureka Math / EngageNY structure',
+  'Elementary Mathematics (Grade 5)',
+  'Representative provincial pathway · Eureka Math / EngageNY structure'
+);
+const NEW_ZEALAND_STAGE_SEEDS = englishStages(
+  'nz',
+  'Mathematics & Statistics (Years 7–10)',
+  'NZ Curriculum 2025 · Phases 3–4',
+  'Senior Secondary Mathematics (Year 11)',
+  'Mathematics & Statistics learning area',
+  'Senior Qualifications (Years 12–13)',
+  'NCEA transition · Mathematics & Statistics',
+  'Mathematics & Statistics (Year 5)',
+  'NZ Curriculum 2025 · Phase 2–3 · ages 9–10',
+  'Mathematics & Statistics (Year 6)',
+  'NZ Curriculum 2025 · Phase 2–3 · Fractions, Decimals & Measurement'
+);
 
 /**
  * 4. 수학 영역별 인덱스 (Math Domains)
@@ -2335,6 +2740,7 @@ const DOMAIN_STAGE_SEEDS = [
     availability: 'ready',
     topics: [
       { label: '초등 수 연산 (자연수·분수·소수)', href: '/elementary/practice', ready: true, availability: 'ready' },
+      { label: '초등 5학년 분수·소수 사칙연산 (유레카 심화)', href: '/elementary/practice?grade=5&unit=g5e-m1d-decimal-add-sub', ready: true, availability: 'ready' },
       { label: '소수와 소인수분해', href: '/middle-school/prime-factorization', ready: true, availability: 'ready' },
       { label: '최대공약수와 최소공배수', href: '/middle-school/gcd-lcm', ready: true, availability: 'ready' },
       { label: '정수와 유리수의 사칙계산', href: '/middle-school/integers-rationals', ready: true, availability: 'ready' },
@@ -2355,6 +2761,7 @@ const DOMAIN_STAGE_SEEDS = [
     availability: 'ready',
     topics: [
       { label: '문자와 식 · 일차방정식', href: '/middle-school/algebra-basics.html?unit=expressions-review', ready: true, availability: 'ready' },
+      { label: '초등 5학년 좌표평면과 수치 패턴 (유레카 심화)', href: '/elementary/practice?grade=5&unit=g5e-m6b-coordinate-patterns', ready: true, availability: 'ready' },
       { label: '좌표평면과 그래프 · 정비례와 반비례', href: '/middle-school/coordinate-plane', ready: true, availability: 'ready' },
       { label: '연립일차방정식과 부등식', href: '/middle-school/pre-algebra?profile=kr-middle-2&unit=systems-linear', ready: true, availability: 'ready' },
       { label: '중2 일차부등식 세부 응용', href: '/middle-school/pre-algebra?profile=kr-middle-2&unit=applied-linear-ineq-all-types-mixed', ready: true, availability: 'ready' },
@@ -2383,6 +2790,7 @@ const DOMAIN_STAGE_SEEDS = [
     availability: 'ready',
     topics: [
       { label: '기본 도형 (점·선·면·각)', href: '/middle-school/basic-figures?profile=kr&unit=visual-foundations', ready: true, availability: 'ready' },
+      { label: '초등 5학년 직육면체 부피와 사각형 분류 (유레카 심화)', href: '/elementary/practice?grade=5&unit=g5e-m5b-volume-formula', ready: true, availability: 'ready' },
       { label: '[기본] 다각형과 원·부채꼴', href: '/middle-school/basic-figures?profile=kr&unit=polygon-angles-basic', ready: true, availability: 'ready' },
       { label: '[기본] 입체도형의 성질 (다면체·겉넓이·부피)', href: '/middle-school/basic-figures?profile=kr&unit=expanded-solid-measures', ready: true, availability: 'ready' },
       { label: '[기본] 삼각형과 사각형의 성질 (이등변·외심·내심·평행사변형)', href: '/middle-school/basic-figures?profile=kr&unit=isosceles-triangle-properties', ready: true, availability: 'ready' },
@@ -2410,6 +2818,7 @@ const DOMAIN_STAGE_SEEDS = [
     subtitle: 'Data & Probability',
     availability: 'ready',
     topics: [
+      { label: '초등 5학년 꺾은선그래프와 실생활 자료 (유레카 심화)', href: '/elementary/practice?grade=5&unit=g5e-m6d-line-graphs', ready: true, availability: 'ready' },
       { label: '중1 줄기와 잎 그림 · 도수분포표', href: '/middle-school/pre-algebra?profile=kr-middle-1&unit=frequency-table', ready: true, availability: 'ready' },
       { label: '중1 자료의 정리와 해석 세부 응용', href: '/middle-school/basic-figures?profile=kr&unit=applied-data-statistics-all-mixed', ready: true, availability: 'ready' },
       { label: '중1-2 전 범위 최종 실전 총괄 모의고사', href: '/middle-school/basic-figures?profile=kr&unit=applied-grade7-semester-two-final-exam', ready: true, availability: 'ready' },
@@ -2494,6 +2903,8 @@ function representativeGrades(stage, topic) {
   const stageId = stage.id || '';
   const elementary = stageId.match(/^kr-elem-(\d+)$/);
   if (elementary) return [Number(elementary[1])];
+  const intlGrade = stageId.match(/^intl-grade-(\d+)$/);
+  if (intlGrade) return [Number(intlGrade[1])];
   const middle = stageId.match(/^kr-middle-(\d+)-grade$/);
   if (middle) return [Number(middle[1]) + 6];
   const high = stageId.match(/^kr-high-(\d+)-grade$/);
@@ -2505,7 +2916,10 @@ function representativeGrades(stage, topic) {
 function schoolLevelFor(view, stage) {
   if (view.schoolLevel) return view.schoolLevel;
   if (stage.level) return stage.level;
-  if (view.id === 'intl-course') return stage.id === 'intl-arithmetic' ? 'elementary' : 'secondary';
+  if (view.id === 'intl-course') {
+    if (stage.id === 'intl-arithmetic' || /^intl-grade-\d+$/.test(stage.id)) return 'elementary';
+    return 'secondary';
+  }
   return 'cross-level';
 }
 
