@@ -391,6 +391,46 @@ function fractionPractice(random) {
   return inline(`${left}/${denominator} □ ${right}/${denominator}`, left > right ? '>' : '<');
 }
 
+const GRADE4_INTL_UNITS = [
+  { id: 'g4e-m1a-place-value', label: '[M1] 자릿값과 큰 수 읽기', description: '백만 단위까지 자릿값과 10배 관계, 수를 여러 형태로 나타내기', make: m1PlaceValue },
+  { id: 'g4e-m1b-compare', label: '[M1] 큰 수의 비교', description: '다섯~일곱 자리 수의 크기 비교와 몇 천/몇 만 더 크거나 작은 수', make: m1Compare },
+  { id: 'g4e-m1c-rounding', label: '[M1] 큰 수의 반올림', description: '주어진 자리까지 반올림하기', make: m1Rounding },
+  { id: 'g4e-m1d-addition', label: '[M1] 큰 수의 덧셈', description: '세로셈과 받아올림이 있는 덧셈 문장제', make: m1Addition },
+  { id: 'g4e-m1e-subtraction', label: '[M1] 큰 수의 뺄셈', description: '받아내림이 있는 뺄셈과 문장제', make: m1Subtraction },
+  { id: 'g4e-m1f-word-problems', label: '[M1] 덧셈과 뺄셈 문장제', description: '두 단계 이상의 덧셈·뺄셈 문장제', make: m1WordProblems },
+  { id: 'g4e-m2a-metric-convert', label: '[M2] 미터법 단위 환산', description: 'km·m·cm, kg·g, L·mL 단위를 작은 단위로 바꾸기', make: m2MetricConvert },
+  { id: 'g4e-m2b-metric-apply', label: '[M2] 미터법 단위 활용 문장제', description: '길이·무게·들이를 활용한 다단계 문장제', make: m2MetricApply },
+  { id: 'g4e-m3a-area-perimeter-compare', label: '[M3] 넓이·둘레와 배 비교', description: '직사각형의 넓이·둘레 공식과 몇 배 문장제', make: m3AreaPerimeterCompare },
+  { id: 'g4e-m3b-multiply-10-100-1000', label: '[M3] 10, 100, 1000의 곱셈', description: '10, 100, 1000을 곱하거나 나누는 규칙', make: m3MultiplyPowersOfTen },
+  { id: 'g4e-m3c-multiply-multidigit-1digit', label: '[M3] 몇 자리 수 × 한 자리 수', description: '두~네 자리 수와 한 자리 수의 곱셈', make: m3MultiplyMultiDigitByOne },
+  { id: 'g4e-m3d-multiply-word-problems', label: '[M3] 곱셈 문장제', description: '곱셈을 활용한 실생활 문장제', make: m3MultiplyWordProblems },
+  { id: 'g4e-m3e-division-remainders', label: '[M3] 나머지가 있는 나눗셈', description: '나머지가 있는 나눗셈과 나머지 해석', make: m3DivisionWithRemainder },
+  { id: 'g4e-m3f-factors-primes', label: '[M3] 약수, 배수, 소수', description: '약수 구하기, 소수와 합성수, 배수 판별', make: m3FactorsPrimes },
+  { id: 'g4e-m3g-division-large', label: '[M3] 큰 수의 나눗셈', description: '세~네 자리 수를 한 자리 수로 나누기', make: m3DivisionLarge },
+  { id: 'g4e-m3h-multiply-2x2', label: '[M3] 두 자리 수 × 두 자리 수', description: '두 자리 수끼리의 곱셈', make: m3Multiply2x2 },
+  { id: 'g4e-m4a-lines-angles', label: '[M4] 직선과 각의 기초', description: '수직선·평행선 판별과 각의 분류', make: m4LinesAngles },
+  { id: 'g4e-m4b-angle-measure', label: '[M4] 각도기로 각 재기', description: '각도기를 이용해 주어진 각의 크기 재기', make: m4AngleMeasure },
+  { id: 'g4e-m4c-angle-addition', label: '[M4] 각의 덧셈', description: '나뉜 각의 합을 이용해 모르는 각 구하기', make: m4AngleAddition },
+  { id: 'g4e-m4d-figures-symmetry', label: '[M4] 삼각형·사각형 분류', description: '변과 각에 따른 삼각형·사각형 분류', make: m4FiguresSymmetry },
+  { id: 'g4e-m5a-decompose-fractions', label: '[M5] 분수의 분해', description: '분수를 단위분수의 합으로 나타내기', make: m5DecomposeFractions },
+  { id: 'g4e-m5b-fraction-equivalence', label: '[M5] 분수의 동치', description: '곱셈과 나눗셈으로 동치분수 만들기', make: m5FractionEquivalence },
+  { id: 'g4e-m5c-fraction-compare', label: '[M5] 분수의 크기 비교', description: '분모가 다른 분수의 크기 비교', make: m5FractionCompare },
+  { id: 'g4e-m5d-fraction-add-sub-like', label: '[M5] 분모가 같은 분수의 덧셈과 뺄셈', description: '두세 개의 분수를 더하고 빼기', make: m5FractionAddSubLike },
+  { id: 'g4e-m5e-fraction-greater-than-1', label: '[M5] 가분수와 대분수', description: '가분수·대분수 변환과 크기 비교', make: m5FractionGreaterThanOne },
+  { id: 'g4e-m5f-mixed-number-add-sub', label: '[M5] 대분수의 덧셈과 뺄셈', description: '분모가 같은 대분수의 덧셈과 뺄셈', make: m5MixedNumberAddSub },
+  { id: 'g4e-m5g-fraction-multiply-whole', label: '[M5] 분수와 자연수의 곱셈', description: '자연수와 분수(대분수 포함)의 곱셈', make: m5FractionMultiplyWhole },
+  { id: 'g4e-m5h-fraction-pattern', label: '[M5] 분수의 규칙 찾기', description: '단위분수를 더해가는 규칙 찾기', make: m5FractionPattern },
+  { id: 'g4e-m6a-tenths', label: '[M6] 소수 한 자리 수 (십분의 일)', description: '십분의 몇을 분수와 소수로 나타내기', make: m6Tenths },
+  { id: 'g4e-m6b-hundredths', label: '[M6] 십분의 일과 백분의 일', description: '백분의 몇을 소수로, 소수 두 자리 수의 동치', make: m6Hundredths },
+  { id: 'g4e-m6c-decimal-compare', label: '[M6] 소수의 크기 비교', description: '소수 한두 자리 수의 크기 비교', make: m6DecimalCompare },
+  { id: 'g4e-m6d-decimal-addition', label: '[M6] 소수의 덧셈과 뺄셈', description: '소수 한두 자리 수의 덧셈과 뺄셈', make: m6DecimalAddition },
+  { id: 'g4e-m6e-money-decimals', label: '[M6] 소수로 나타낸 돈', description: '달러와 센트를 소수로 나타내고 계산하기', make: m6MoneyDecimals },
+  { id: 'g4e-m7a-conversion-tables', label: '[M7] 측정 단위 환산표', description: '환산표를 이용한 단위 변환', make: m7ConversionTables },
+  { id: 'g4e-m7b-mixed-unit-problems', label: '[M7] 혼합 단위 문장제', description: '큰 단위와 작은 단위가 섞인 문장제', make: m7MixedUnitProblems },
+  { id: 'g4e-m7c-mixed-number-measurement', label: '[M7] 분수로 나타낸 측정값', description: '대분수로 나타낸 측정값을 한 단위로 바꾸기', make: m7MixedNumberMeasurement },
+  { id: 'g4e-m7d-composite-area-review', label: '[M7] 복합 도형의 넓이', description: '직사각형에서 일부를 잘라낸 도형의 넓이 구하기', make: m7CompositeAreaReview },
+];
+
 export const GRADE_CATALOG = [
   {
     id: '1', label: '1학년', units: [
@@ -446,6 +486,7 @@ export const GRADE_CATALOG = [
       { id: 'g4-growing-block-patterns', label: '묶음 수열의 규칙', description: '길이가 하나씩 늘어나는 묶음에서 항의 위치 찾기', make: (r) => makeElementaryGrowingBlockPattern(r, randomInt, pick) },
       { id: 'g4-angle', label: '각도', description: '각도의 합과 차, 예각·직각·둔각 분류', make: angleBasic },
       { id: 'g4-polygon-angle', label: '삼각형과 사각형의 각', description: '내각의 합을 이용해 나머지 각 구하기', make: polygonAngleMissing },
+      ...GRADE4_INTL_UNITS,
     ],
   },
   {
@@ -494,6 +535,13 @@ const ENGLISH = {
     'g2-no-carry': ['Two-digit operations: basic', 'No regrouping'], 'g2-carry': ['Two-digit operations: advanced', 'With regrouping'], 'g2-three-numbers': ['Three-number operations', 'Sums and differences up to 100'], 'g2-tables-2-5': ['Times tables 2–5', 'Multiplication facts 2 through 5'], 'g2-tables-6-9': ['Times tables 6–9', 'Multiplication facts 6 through 9'], 'g2-tables-all': ['All times tables', 'Random facts from 2 through 9'], 'g2-length': ['Measuring length', 'Sums and differences of cm and m'], 'g2-time': ['Clock time', 'Find the time some minutes later'], 'g2-clock-read': ['Reading a clock', 'Read the hour and minute from a clock face'],
     'g3-add-sub': ['3- and 4-digit operations', 'Large-number addition and subtraction'], 'g3-division-basic': ['Division basics', 'Exact division within multiplication facts'], 'g3-multiply-2x1': ['2-digit × 1-digit', 'Multiply a two-digit number'], 'g3-multiply-3x1': ['3-digit × 1-digit', 'Multiply a three-digit number'], 'g3-multiply-2x2': ['2-digit × 2-digit', 'Multiply two two-digit numbers'], 'g3-division-exact': ['2-digit ÷ 1-digit', 'Exact two-digit division'], 'g3-fractions': ['Fractions', 'Improper and mixed fractions; comparison'], 'g3-number-patterns': ['Number patterns', 'Continue additive and multiplicative sequences'], 'g3-length-time-units': ['Length & time units', 'Convert mm, cm, m, km, minutes, seconds'], 'g3-capacity-weight': ['Capacity & weight', 'Convert and add L, mL, g, kg'], 'g3-circle': ['Circles', 'Relate radius and diameter'], 'g3-line-ray-segment': ['Segments, rays & lines', 'Identify the figure shown'], 'g3-count-figures': ['Counting segments, rays & lines', 'Count the figures formed by several points'], 'g3-division-remainder': ['Division with remainders', 'Divide 2–3 digit numbers by a 1-digit number'], 'g3-circle-properties': ['Properties of circles', 'Touching circles, center distance, and size comparison'], 'g3-fraction-of-whole': ['Fractions of a whole', 'Read a shaded part as a fraction or find its value from a tape diagram'], 'g3-data-table': ['Tables', 'Find the missing value in a table'], 'g3-pictograph': ['Pictographs', 'Read and compare values from a pictograph'],
     'g4-large-multiply': ['Large-number multiplication', '2–4 digit numbers times 1–2 digit numbers'], 'g4-large-division': ['Large-number division', 'Divide 2–3 digit numbers'], 'g4-fraction-add-sub': ['Fraction addition & subtraction', 'Like denominators and mixed forms'], 'g4-decimal-add-sub': ['Decimal addition & subtraction', 'Tenths through thousandths'], 'g4-number-patterns': ['Patterns & sequences', 'Find missing terms from additive and multiplicative rules'], 'g4-growing-block-patterns': ['Growing block patterns', 'Locate terms in groups whose lengths increase'], 'g4-angle': ['Angles', 'Add, subtract, and classify angles'], 'g4-polygon-angle': ['Triangle & quadrilateral angles', 'Use the angle-sum property to find a missing angle'],
+    'g4e-m1a-place-value': ['[M1] Place value to millions', 'Digit value, ×10 relationships, and multiple number forms'], 'g4e-m1b-compare': ['[M1] Comparing large numbers', 'Compare multi-digit numbers and find numbers thousands/ten-thousands more or less'], 'g4e-m1c-rounding': ['[M1] Rounding large numbers', 'Round multi-digit numbers to a given place'], 'g4e-m1d-addition': ['[M1] Multi-digit addition', 'Standard algorithm addition with regrouping and word problems'], 'g4e-m1e-subtraction': ['[M1] Multi-digit subtraction', 'Standard algorithm subtraction with regrouping and word problems'], 'g4e-m1f-word-problems': ['[M1] Addition & subtraction word problems', 'Multi-step word problems combining addition and subtraction'],
+    'g4e-m2a-metric-convert': ['[M2] Metric unit conversion', 'Convert km/m/cm, kg/g, L/mL to a smaller unit'], 'g4e-m2b-metric-apply': ['[M2] Applying metric conversions', 'Multi-step word problems using length, weight, and capacity'],
+    'g4e-m3a-area-perimeter-compare': ['[M3] Area, perimeter & comparison', 'Rectangle area/perimeter formulas and multiplicative comparison word problems'], 'g4e-m3b-multiply-10-100-1000': ['[M3] Multiplying by 10, 100, 1000', 'Patterns for multiplying and dividing by powers of ten'], 'g4e-m3c-multiply-multidigit-1digit': ['[M3] Multi-digit × 1-digit', 'Multiply 2–4 digit numbers by a one-digit number'], 'g4e-m3d-multiply-word-problems': ['[M3] Multiplication word problems', 'Real-world problems solved with multiplication'], 'g4e-m3e-division-remainders': ['[M3] Division with remainders', 'Divide with remainders and interpret the remainder'], 'g4e-m3f-factors-primes': ['[M3] Factors, multiples & primes', 'Find factors, classify prime/composite, identify multiples'], 'g4e-m3g-division-large': ['[M3] Dividing large numbers', 'Divide 3–4 digit numbers by a one-digit number'], 'g4e-m3h-multiply-2x2': ['[M3] 2-digit × 2-digit multiplication', 'Multiply two two-digit numbers'],
+    'g4e-m4a-lines-angles': ['[M4] Lines & angles basics', 'Identify perpendicular/parallel lines and classify angles'], 'g4e-m4b-angle-measure': ['[M4] Measuring angles', 'Use a protractor to measure a given angle'], 'g4e-m4c-angle-addition': ['[M4] Angle addition', 'Find an unknown angle using the sum of adjacent angles'], 'g4e-m4d-figures-symmetry': ['[M4] Classifying triangles & quadrilaterals', 'Classify shapes by side length and angle type'],
+    'g4e-m5a-decompose-fractions': ['[M5] Decomposing fractions', 'Express a fraction as a sum of unit fractions'], 'g4e-m5b-fraction-equivalence': ['[M5] Equivalent fractions', 'Create equivalent fractions using multiplication and division'], 'g4e-m5c-fraction-compare': ['[M5] Comparing fractions', 'Compare fractions with different denominators'], 'g4e-m5d-fraction-add-sub-like': ['[M5] Adding/subtracting like fractions', 'Add and subtract two or three fractions with the same denominator'], 'g4e-m5e-fraction-greater-than-1': ['[M5] Fractions greater than 1', 'Convert between improper fractions and mixed numbers, and compare'], 'g4e-m5f-mixed-number-add-sub': ['[M5] Adding/subtracting mixed numbers', 'Add and subtract mixed numbers with like denominators'], 'g4e-m5g-fraction-multiply-whole': ['[M5] Multiplying fractions by whole numbers', 'Multiply a whole number by a fraction or mixed number'], 'g4e-m5h-fraction-pattern': ['[M5] Fraction sum patterns', 'Find the pattern when adding a sequence of unit fractions'],
+    'g4e-m6a-tenths': ['[M6] Tenths', 'Express tenths as a fraction and as a decimal'], 'g4e-m6b-hundredths': ['[M6] Tenths and hundredths', 'Express hundredths as decimals and relate tenths to hundredths'], 'g4e-m6c-decimal-compare': ['[M6] Comparing decimals', 'Compare decimals to one or two places'], 'g4e-m6d-decimal-addition': ['[M6] Adding/subtracting decimals', 'Add and subtract decimals to one or two places'], 'g4e-m6e-money-decimals': ['[M6] Money as decimals', 'Express and calculate money amounts as decimals'],
+    'g4e-m7a-conversion-tables': ['[M7] Measurement conversion tables', 'Use a conversion table to change units'], 'g4e-m7b-mixed-unit-problems': ['[M7] Mixed-unit word problems', 'Word problems mixing a larger and smaller unit'], 'g4e-m7c-mixed-number-measurement': ['[M7] Measurements as mixed numbers', 'Convert a mixed-number measurement to a single unit'], 'g4e-m7d-composite-area-review': ['[M7] Composite figure area', 'Find the area of an L-shaped composite figure'],
     'g5-mixed-natural': ['Mixed whole-number operations', 'Order of operations and parentheses'], 'g5-factors-multiples': ['Factors & multiples', 'GCF, LCM, factors and multiples'], 'g5-reduce-common-denominator': ['Simplifying fractions', 'Reduce and compare fractions'], 'g5-fraction-add-sub': ['Fraction addition & subtraction', 'Unlike denominators'], 'g5-fraction-multiply': ['Fraction multiplication', 'Multiply fractions and whole numbers'], 'g5-decimal-multiply': ['Decimal multiplication', 'Multiply decimals and whole numbers'], 'g5-perimeter-area': ['Perimeter & area', 'Rectangles, triangles, parallelograms, trapezoids, rhombuses, and rectilinear figures'], 'g5-block-pattern': ['Staircase patterns', 'Count unit squares in a growing staircase figure'], 'g5-range-round': ['Number ranges & rounding', 'At least/most, more/less than, round up/down/nearest'], 'g5-average-probability': ['Average & likelihood', 'Find an average and express likelihood as a fraction'], 'g5-solid-figure': ['Rectangular & cube prisms', 'Count faces, edges, vertices and edge-length totals'], 'g5-congruence-symmetry': ['Congruence & symmetry', 'Corresponding sides, angles, and symmetric points'], 'g5-function-table': ['Patterns & correspondence', 'Find a value from a table rule'],
     'g6-fraction-divide-natural': ['Fraction ÷ whole number', 'Divide proper, improper and mixed fractions'], 'g6-decimal-divide-natural': ['Decimal ÷ whole number', 'Exact decimal division'], 'g6-ratio': ['Ratios and rates', 'Simplify ratios and convert forms'], 'g6-fraction-divide': ['Fraction division', 'Divide fractions and whole numbers'], 'g6-decimal-divide': ['Decimal division', 'Divide decimals with different place values'], 'g6-proportion-basic': ['Basic proportions', 'Find the missing value in a proportion'], 'g6-proportion-story': ['Proportion word problems', 'Solve everyday situations with proportions'], 'g6-distribution-basic': ['Basic proportional distribution', 'Divide a total in a given ratio'], 'g6-distribution-story': ['Distribution word problems', 'Share quantities in a given ratio'], 'g6-proportion-application': ['Proportion applications', 'Use sums, differences and known shares'], 'g6-percentage-basic': ['Expressing percentages', 'Convert between fractions, decimals, and percentages'], 'g6-percentage-word': ['Percentage word problems', 'Discounts and shares of a total'], 'g6-circle-measure': ['Circumference & area of circles', 'Use π ≈ 3.14'], 'g6-prism-pyramid': ['Prisms & pyramids', 'Count faces, edges, and vertices'], 'g6-volume-surface': ['Volume & surface area', 'Rectangular prisms and cubes'], 'g6-data-graph': ['Band & pie graphs', 'Word problems interpreting percentage data'],
   },
@@ -528,3 +576,14 @@ import {
   pointSymmetry, polygonAngleMissing, prismPyramidCounts, rangeRound, solidFigureBasic,
   solidFigureNet, solidFigureSketch, timeAddCalc, volumeSurfaceArea, weightCapacityConvert,
 } from './geometryMeasurementEngine';
+import {
+  m1PlaceValue, m1Compare, m1Rounding, m1Addition, m1Subtraction, m1WordProblems,
+  m2MetricConvert, m2MetricApply,
+  m3AreaPerimeterCompare, m3MultiplyPowersOfTen, m3MultiplyMultiDigitByOne, m3MultiplyWordProblems,
+  m3DivisionWithRemainder, m3FactorsPrimes, m3DivisionLarge, m3Multiply2x2,
+  m4LinesAngles, m4AngleMeasure, m4AngleAddition, m4FiguresSymmetry,
+  m5DecomposeFractions, m5FractionEquivalence, m5FractionCompare, m5FractionAddSubLike,
+  m5FractionGreaterThanOne, m5MixedNumberAddSub, m5FractionMultiplyWhole, m5FractionPattern,
+  m6Tenths, m6Hundredths, m6DecimalCompare, m6DecimalAddition, m6MoneyDecimals,
+  m7ConversionTables, m7MixedUnitProblems, m7MixedNumberMeasurement, m7CompositeAreaReview,
+} from './grade4EurekaEngine';

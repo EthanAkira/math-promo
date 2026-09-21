@@ -94,7 +94,7 @@ function ProblemBody({ problem, view, value, checked, onChange, language }) {
       <div className="word-answer"><span>{isNonKorean(language) ? 'Answer' : '답'}</span>{input}{problem.answerSuffix ? <em>{problem.answerSuffix}</em> : null}</div>
     </div>;
   }
-  const expression = isNonKorean(language) ? problem.expression.replace('약수:', 'Factors of').replace('최대공약수:', 'GCF of').replace('최소공배수:', 'LCM of').replace(/의 (\d+)번째 배수/, ' — multiple #$1').replace('가장 간단한 비', 'simplest ratio').replace('기약분수', 'simplest form').replace('가분수', 'improper fraction').replace('대분수', 'mixed number') : problem.expression;
+  const expression = isNonKorean(language) ? problem.expression.replace('약수:', 'Factors of').replace('최대공약수:', 'GCF of').replace('최소공배수:', 'LCM of').replace(/의 (\d+)번째 배수/, ' — multiple #$1').replace('가장 간단한 비', 'simplest ratio').replace('기약분수', 'simplest form').replace('가분수', 'improper fraction').replace('대분수', 'mixed number').replace('→ 소수', '→ decimal').replace('→ 분수', '→ fraction') : problem.expression;
   return <div className="inline-calculation font-mono"><span><MathText value={expression} /></span><b>=</b><span className="inline-answer">{input}</span></div>;
 }
 

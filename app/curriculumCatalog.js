@@ -912,7 +912,10 @@ const KOREAN_GRADE_STAGE_SEEDS = [
       title: `초등학교 ${grade}학년`,
       subtitle: `Korean Grade ${grade}`,
       availability: 'ready',
-      topics: [
+      topics: grade === 4 ? [
+        { label: `${grade}학년 수학 연산·단원 연습`, href: `/elementary/practice?grade=${grade}`, ready: true, availability: 'ready' },
+        { label: '국제 커리큘럼 연계 심화 단원 (자릿값·곱셈·나눗셈·각도·분수·소수 등 37종)', href: `/elementary/practice?grade=${grade}&unit=g4e-m1a-place-value`, ready: true, availability: 'ready' },
+      ] : [
         { label: `${grade}학년 수학 연산·단원 연습`, href: `/elementary/practice?grade=${grade}`, ready: true, availability: 'ready' },
       ],
     };
@@ -1392,6 +1395,50 @@ const INTERNATIONAL_COURSE_STAGE_SEEDS = [
     topics: [
       { label: 'Grades 1–6 Operations Practice', href: '/elementary/practice', ready: true, availability: 'ready' },
       { label: 'Fractions, Decimals & Ratios', href: '/elementary/practice?grade=6', ready: true, availability: 'ready' },
+      { isHeader: true, label: 'Grade 4 — Module 1: Place Value, Rounding & Addition/Subtraction' },
+      { label: 'Place Value to Millions', href: '/elementary/practice?grade=4&unit=g4e-m1a-place-value', ready: true, availability: 'ready' },
+      { label: 'Comparing Large Numbers', href: '/elementary/practice?grade=4&unit=g4e-m1b-compare', ready: true, availability: 'ready' },
+      { label: 'Rounding Large Numbers', href: '/elementary/practice?grade=4&unit=g4e-m1c-rounding', ready: true, availability: 'ready' },
+      { label: 'Multi-Digit Addition', href: '/elementary/practice?grade=4&unit=g4e-m1d-addition', ready: true, availability: 'ready' },
+      { label: 'Multi-Digit Subtraction', href: '/elementary/practice?grade=4&unit=g4e-m1e-subtraction', ready: true, availability: 'ready' },
+      { label: 'Addition & Subtraction Word Problems', href: '/elementary/practice?grade=4&unit=g4e-m1f-word-problems', ready: true, availability: 'ready' },
+      { isHeader: true, label: 'Grade 4 — Module 2: Metric Unit Conversions' },
+      { label: 'Metric Unit Conversion', href: '/elementary/practice?grade=4&unit=g4e-m2a-metric-convert', ready: true, availability: 'ready' },
+      { label: 'Applying Metric Conversions', href: '/elementary/practice?grade=4&unit=g4e-m2b-metric-apply', ready: true, availability: 'ready' },
+      { isHeader: true, label: 'Grade 4 — Module 3: Multi-Digit Multiplication & Division' },
+      { label: 'Area, Perimeter & Comparison', href: '/elementary/practice?grade=4&unit=g4e-m3a-area-perimeter-compare', ready: true, availability: 'ready' },
+      { label: 'Multiplying by 10, 100, 1000', href: '/elementary/practice?grade=4&unit=g4e-m3b-multiply-10-100-1000', ready: true, availability: 'ready' },
+      { label: 'Multi-Digit × 1-Digit Multiplication', href: '/elementary/practice?grade=4&unit=g4e-m3c-multiply-multidigit-1digit', ready: true, availability: 'ready' },
+      { label: 'Multiplication Word Problems', href: '/elementary/practice?grade=4&unit=g4e-m3d-multiply-word-problems', ready: true, availability: 'ready' },
+      { label: 'Division with Remainders', href: '/elementary/practice?grade=4&unit=g4e-m3e-division-remainders', ready: true, availability: 'ready' },
+      { label: 'Factors, Multiples & Primes', href: '/elementary/practice?grade=4&unit=g4e-m3f-factors-primes', ready: true, availability: 'ready' },
+      { label: 'Dividing Large Numbers', href: '/elementary/practice?grade=4&unit=g4e-m3g-division-large', ready: true, availability: 'ready' },
+      { label: '2-Digit × 2-Digit Multiplication', href: '/elementary/practice?grade=4&unit=g4e-m3h-multiply-2x2', ready: true, availability: 'ready' },
+      { isHeader: true, label: 'Grade 4 — Module 4: Angle Measure & Plane Figures' },
+      { label: 'Lines & Angles Basics', href: '/elementary/practice?grade=4&unit=g4e-m4a-lines-angles', ready: true, availability: 'ready' },
+      { label: 'Measuring Angles with a Protractor', href: '/elementary/practice?grade=4&unit=g4e-m4b-angle-measure', ready: true, availability: 'ready' },
+      { label: 'Angle Addition', href: '/elementary/practice?grade=4&unit=g4e-m4c-angle-addition', ready: true, availability: 'ready' },
+      { label: 'Classifying Triangles & Quadrilaterals', href: '/elementary/practice?grade=4&unit=g4e-m4d-figures-symmetry', ready: true, availability: 'ready' },
+      { isHeader: true, label: 'Grade 4 — Module 5: Fraction Equivalence, Ordering & Operations' },
+      { label: 'Decomposing Fractions', href: '/elementary/practice?grade=4&unit=g4e-m5a-decompose-fractions', ready: true, availability: 'ready' },
+      { label: 'Equivalent Fractions', href: '/elementary/practice?grade=4&unit=g4e-m5b-fraction-equivalence', ready: true, availability: 'ready' },
+      { label: 'Comparing Fractions', href: '/elementary/practice?grade=4&unit=g4e-m5c-fraction-compare', ready: true, availability: 'ready' },
+      { label: 'Adding & Subtracting Like Fractions', href: '/elementary/practice?grade=4&unit=g4e-m5d-fraction-add-sub-like', ready: true, availability: 'ready' },
+      { label: 'Fractions Greater Than 1', href: '/elementary/practice?grade=4&unit=g4e-m5e-fraction-greater-than-1', ready: true, availability: 'ready' },
+      { label: 'Adding & Subtracting Mixed Numbers', href: '/elementary/practice?grade=4&unit=g4e-m5f-mixed-number-add-sub', ready: true, availability: 'ready' },
+      { label: 'Multiplying Fractions by Whole Numbers', href: '/elementary/practice?grade=4&unit=g4e-m5g-fraction-multiply-whole', ready: true, availability: 'ready' },
+      { label: 'Fraction Sum Patterns', href: '/elementary/practice?grade=4&unit=g4e-m5h-fraction-pattern', ready: true, availability: 'ready' },
+      { isHeader: true, label: 'Grade 4 — Module 6: Decimal Fractions' },
+      { label: 'Tenths', href: '/elementary/practice?grade=4&unit=g4e-m6a-tenths', ready: true, availability: 'ready' },
+      { label: 'Tenths and Hundredths', href: '/elementary/practice?grade=4&unit=g4e-m6b-hundredths', ready: true, availability: 'ready' },
+      { label: 'Comparing Decimals', href: '/elementary/practice?grade=4&unit=g4e-m6c-decimal-compare', ready: true, availability: 'ready' },
+      { label: 'Adding & Subtracting Decimals', href: '/elementary/practice?grade=4&unit=g4e-m6d-decimal-addition', ready: true, availability: 'ready' },
+      { label: 'Money as Decimals', href: '/elementary/practice?grade=4&unit=g4e-m6e-money-decimals', ready: true, availability: 'ready' },
+      { isHeader: true, label: 'Grade 4 — Module 7: Exploring Measurement with Multiplication' },
+      { label: 'Measurement Conversion Tables', href: '/elementary/practice?grade=4&unit=g4e-m7a-conversion-tables', ready: true, availability: 'ready' },
+      { label: 'Mixed-Unit Word Problems', href: '/elementary/practice?grade=4&unit=g4e-m7b-mixed-unit-problems', ready: true, availability: 'ready' },
+      { label: 'Measurements as Mixed Numbers', href: '/elementary/practice?grade=4&unit=g4e-m7c-mixed-number-measurement', ready: true, availability: 'ready' },
+      { label: 'Composite Figure Area', href: '/elementary/practice?grade=4&unit=g4e-m7d-composite-area-review', ready: true, availability: 'ready' },
     ],
   },
   {
@@ -1599,7 +1646,58 @@ const INTERNATIONAL_COURSE_STAGE_SEEDS = [
  * 다른 진입 경로로 노출하는 것. 실제 현지 기출문제 기반 심화(응용) 문제는 추후 curriculum-advanced
  * 유료 구독으로 추가될 예정이라 여기서는 다루지 않는다 (한국 심화 문제와 동일한 구독으로 열람 가능).
  */
+const ENGLISH_CORE_ELEMENTARY_TOPICS = [
+  { label: 'Place Value to Millions', href: '/elementary/practice?grade=4&unit=g4e-m1a-place-value', ready: true, availability: 'ready' },
+  { label: 'Rounding Large Numbers', href: '/elementary/practice?grade=4&unit=g4e-m1c-rounding', ready: true, availability: 'ready' },
+  { label: 'Multi-Digit Addition (Standard Algorithm)', href: '/elementary/practice?grade=4&unit=g4e-m1d-addition', ready: true, availability: 'ready' },
+  { label: 'Multi-Digit Subtraction (Standard Algorithm)', href: '/elementary/practice?grade=4&unit=g4e-m1e-subtraction', ready: true, availability: 'ready' },
+  { label: 'Metric Unit Conversion', href: '/elementary/practice?grade=4&unit=g4e-m2a-metric-convert', ready: true, availability: 'ready' },
+  { label: 'Area, Perimeter & Multiplicative Comparison', href: '/elementary/practice?grade=4&unit=g4e-m3a-area-perimeter-compare', ready: true, availability: 'ready' },
+  { label: 'Multi-Digit × 1-Digit Multiplication', href: '/elementary/practice?grade=4&unit=g4e-m3c-multiply-multidigit-1digit', ready: true, availability: 'ready' },
+  { label: 'Division with Remainders', href: '/elementary/practice?grade=4&unit=g4e-m3e-division-remainders', ready: true, availability: 'ready' },
+  { label: 'Factors, Multiples & Prime Numbers', href: '/elementary/practice?grade=4&unit=g4e-m3f-factors-primes', ready: true, availability: 'ready' },
+  { label: '2-Digit × 2-Digit Multiplication', href: '/elementary/practice?grade=4&unit=g4e-m3h-multiply-2x2', ready: true, availability: 'ready' },
+  { label: 'Lines, Angles & Classification', href: '/elementary/practice?grade=4&unit=g4e-m4a-lines-angles', ready: true, availability: 'ready' },
+  { label: 'Measuring Angles with a Protractor', href: '/elementary/practice?grade=4&unit=g4e-m4b-angle-measure', ready: true, availability: 'ready' },
+  { label: 'Classifying Triangles & Quadrilaterals', href: '/elementary/practice?grade=4&unit=g4e-m4d-figures-symmetry', ready: true, availability: 'ready' },
+  { label: 'Equivalent Fractions', href: '/elementary/practice?grade=4&unit=g4e-m5b-fraction-equivalence', ready: true, availability: 'ready' },
+  { label: 'Adding & Subtracting Fractions', href: '/elementary/practice?grade=4&unit=g4e-m5d-fraction-add-sub-like', ready: true, availability: 'ready' },
+  { label: 'Mixed Numbers: Addition & Subtraction', href: '/elementary/practice?grade=4&unit=g4e-m5f-mixed-number-add-sub', ready: true, availability: 'ready' },
+  { label: 'Decimals: Tenths & Hundredths', href: '/elementary/practice?grade=4&unit=g4e-m6b-hundredths', ready: true, availability: 'ready' },
+  { label: 'Adding & Subtracting Decimals', href: '/elementary/practice?grade=4&unit=g4e-m6d-decimal-addition', ready: true, availability: 'ready' },
+  { label: 'Measurement Conversion Tables', href: '/elementary/practice?grade=4&unit=g4e-m7a-conversion-tables', ready: true, availability: 'ready' },
+  { label: 'Composite Figure Area', href: '/elementary/practice?grade=4&unit=g4e-m7d-composite-area-review', ready: true, availability: 'ready' },
+];
+
 const JAPAN_STAGE_SEEDS = [
+  {
+    id: 'jp-shogakko-4',
+    title: '小学校算数 (4年生)',
+    subtitle: 'Primary Mathematics · Grade 4 · Eureka Math / EngageNY 構成',
+    availability: 'ready',
+    topics: [
+      { label: '大きい数の位取り (百万まで)', href: '/elementary/practice?grade=4&unit=g4e-m1a-place-value', ready: true, availability: 'ready' },
+      { label: '大きい数の四捨五入', href: '/elementary/practice?grade=4&unit=g4e-m1c-rounding', ready: true, availability: 'ready' },
+      { label: '大きい数のたし算 (筆算)', href: '/elementary/practice?grade=4&unit=g4e-m1d-addition', ready: true, availability: 'ready' },
+      { label: '大きい数のひき算 (筆算)', href: '/elementary/practice?grade=4&unit=g4e-m1e-subtraction', ready: true, availability: 'ready' },
+      { label: 'メートル法の単位換算', href: '/elementary/practice?grade=4&unit=g4e-m2a-metric-convert', ready: true, availability: 'ready' },
+      { label: '面積・周の長さと何倍の文章題', href: '/elementary/practice?grade=4&unit=g4e-m3a-area-perimeter-compare', ready: true, availability: 'ready' },
+      { label: '何桁×1桁のかけ算', href: '/elementary/practice?grade=4&unit=g4e-m3c-multiply-multidigit-1digit', ready: true, availability: 'ready' },
+      { label: 'あまりのあるわり算', href: '/elementary/practice?grade=4&unit=g4e-m3e-division-remainders', ready: true, availability: 'ready' },
+      { label: '約数・倍数と素数', href: '/elementary/practice?grade=4&unit=g4e-m3f-factors-primes', ready: true, availability: 'ready' },
+      { label: '2桁×2桁のかけ算', href: '/elementary/practice?grade=4&unit=g4e-m3h-multiply-2x2', ready: true, availability: 'ready' },
+      { label: '直線と角の基礎 (垂直・平行)', href: '/elementary/practice?grade=4&unit=g4e-m4a-lines-angles', ready: true, availability: 'ready' },
+      { label: '分度器を使った角の測定', href: '/elementary/practice?grade=4&unit=g4e-m4b-angle-measure', ready: true, availability: 'ready' },
+      { label: '三角形・四角形の分類', href: '/elementary/practice?grade=4&unit=g4e-m4d-figures-symmetry', ready: true, availability: 'ready' },
+      { label: '等しい分数(同値分数)', href: '/elementary/practice?grade=4&unit=g4e-m5b-fraction-equivalence', ready: true, availability: 'ready' },
+      { label: '分数のたし算とひき算', href: '/elementary/practice?grade=4&unit=g4e-m5d-fraction-add-sub-like', ready: true, availability: 'ready' },
+      { label: '帯分数のたし算とひき算', href: '/elementary/practice?grade=4&unit=g4e-m5f-mixed-number-add-sub', ready: true, availability: 'ready' },
+      { label: '小数:10分の1と100分の1', href: '/elementary/practice?grade=4&unit=g4e-m6b-hundredths', ready: true, availability: 'ready' },
+      { label: '小数のたし算とひき算', href: '/elementary/practice?grade=4&unit=g4e-m6d-decimal-addition', ready: true, availability: 'ready' },
+      { label: '単位換算表の活用', href: '/elementary/practice?grade=4&unit=g4e-m7a-conversion-tables', ready: true, availability: 'ready' },
+      { label: '複合図形の面積', href: '/elementary/practice?grade=4&unit=g4e-m7d-composite-area-review', ready: true, availability: 'ready' },
+    ],
+  },
   {
     id: 'jp-chugakko',
     title: '中学校数学 (中1〜中3)',
@@ -1689,6 +1787,34 @@ const JAPAN_STAGE_SEEDS = [
 
 const TAIWAN_STAGE_SEEDS = [
   {
+    id: 'tw-elementary',
+    title: '國小數學 (四年級)',
+    subtitle: 'Primary Mathematics · Grade 4 · Eureka Math / EngageNY 架構',
+    availability: 'ready',
+    topics: [
+      { label: '大數的位值 (到百萬位)', href: '/elementary/practice?grade=4&unit=g4e-m1a-place-value', ready: true, availability: 'ready' },
+      { label: '大數的四捨五入', href: '/elementary/practice?grade=4&unit=g4e-m1c-rounding', ready: true, availability: 'ready' },
+      { label: '大數的直式加法', href: '/elementary/practice?grade=4&unit=g4e-m1d-addition', ready: true, availability: 'ready' },
+      { label: '大數的直式減法', href: '/elementary/practice?grade=4&unit=g4e-m1e-subtraction', ready: true, availability: 'ready' },
+      { label: '公制單位換算', href: '/elementary/practice?grade=4&unit=g4e-m2a-metric-convert', ready: true, availability: 'ready' },
+      { label: '面積、周長與倍數應用題', href: '/elementary/practice?grade=4&unit=g4e-m3a-area-perimeter-compare', ready: true, availability: 'ready' },
+      { label: '多位數乘以一位數', href: '/elementary/practice?grade=4&unit=g4e-m3c-multiply-multidigit-1digit', ready: true, availability: 'ready' },
+      { label: '有餘數的除法', href: '/elementary/practice?grade=4&unit=g4e-m3e-division-remainders', ready: true, availability: 'ready' },
+      { label: '因數、倍數與質數', href: '/elementary/practice?grade=4&unit=g4e-m3f-factors-primes', ready: true, availability: 'ready' },
+      { label: '兩位數乘以兩位數', href: '/elementary/practice?grade=4&unit=g4e-m3h-multiply-2x2', ready: true, availability: 'ready' },
+      { label: '直線與角的基礎(垂直與平行)', href: '/elementary/practice?grade=4&unit=g4e-m4a-lines-angles', ready: true, availability: 'ready' },
+      { label: '用量角器測量角度', href: '/elementary/practice?grade=4&unit=g4e-m4b-angle-measure', ready: true, availability: 'ready' },
+      { label: '三角形與四邊形的分類', href: '/elementary/practice?grade=4&unit=g4e-m4d-figures-symmetry', ready: true, availability: 'ready' },
+      { label: '等值分數', href: '/elementary/practice?grade=4&unit=g4e-m5b-fraction-equivalence', ready: true, availability: 'ready' },
+      { label: '分數的加法與減法', href: '/elementary/practice?grade=4&unit=g4e-m5d-fraction-add-sub-like', ready: true, availability: 'ready' },
+      { label: '帶分數的加法與減法', href: '/elementary/practice?grade=4&unit=g4e-m5f-mixed-number-add-sub', ready: true, availability: 'ready' },
+      { label: '小數:十分位與百分位', href: '/elementary/practice?grade=4&unit=g4e-m6b-hundredths', ready: true, availability: 'ready' },
+      { label: '小數的加法與減法', href: '/elementary/practice?grade=4&unit=g4e-m6d-decimal-addition', ready: true, availability: 'ready' },
+      { label: '換算表的應用', href: '/elementary/practice?grade=4&unit=g4e-m7a-conversion-tables', ready: true, availability: 'ready' },
+      { label: '複合圖形的面積', href: '/elementary/practice?grade=4&unit=g4e-m7d-composite-area-review', ready: true, availability: 'ready' },
+    ],
+  },
+  {
     id: 'tw-junior',
     title: '國中數學 (七〜九年級)',
     subtitle: 'Junior High Math · Grades 7–9',
@@ -1764,6 +1890,13 @@ const TAIWAN_STAGE_SEEDS = [
 ];
 
 const HONGKONG_STAGE_SEEDS = [
+  {
+    id: 'hk-elementary',
+    title: 'Primary Mathematics (Primary 4)',
+    subtitle: 'CDC Syllabus · Key Stage 2 · Eureka Math / EngageNY structure',
+    availability: 'ready',
+    topics: ENGLISH_CORE_ELEMENTARY_TOPICS,
+  },
   {
     id: 'hk-junior',
     title: 'Junior Secondary Mathematics (S1–S3)',
@@ -1845,6 +1978,13 @@ const HONGKONG_STAGE_SEEDS = [
 
 const SINGAPORE_STAGE_SEEDS = [
   {
+    id: 'sg-elementary',
+    title: 'Primary Mathematics (Primary 4)',
+    subtitle: 'MOE Syllabus · Eureka Math / EngageNY structure',
+    availability: 'ready',
+    topics: ENGLISH_CORE_ELEMENTARY_TOPICS,
+  },
+  {
     id: 'sg-lower-secondary',
     title: 'Lower Secondary Mathematics (Sec 1–2)',
     subtitle: 'MOE Syllabus · O-Level Foundations',
@@ -1913,6 +2053,13 @@ const SINGAPORE_STAGE_SEEDS = [
 
 const MALAYSIA_STAGE_SEEDS = [
   {
+    id: 'my-elementary',
+    title: 'Primary Mathematics (Tahun 4)',
+    subtitle: 'KSSR · Eureka Math / EngageNY structure',
+    availability: 'ready',
+    topics: ENGLISH_CORE_ELEMENTARY_TOPICS,
+  },
+  {
     id: 'my-lower-secondary',
     title: 'Lower Secondary Mathematics (Tingkatan 1–3)',
     subtitle: 'KSSM · Menengah Rendah',
@@ -1977,6 +2124,34 @@ const MALAYSIA_STAGE_SEEDS = [
 
 const VIETNAM_STAGE_SEEDS = [
   {
+    id: 'vn-tieuhoc',
+    title: 'Toán Lớp 4',
+    subtitle: 'Chương trình GDPT 2018 · Tiểu học · Cấu trúc Eureka Math / EngageNY',
+    availability: 'ready',
+    topics: [
+      { label: 'Giá trị theo hàng của số lớn (đến hàng triệu)', href: '/elementary/practice?grade=4&unit=g4e-m1a-place-value', ready: true, availability: 'ready' },
+      { label: 'Làm tròn số lớn', href: '/elementary/practice?grade=4&unit=g4e-m1c-rounding', ready: true, availability: 'ready' },
+      { label: 'Phép cộng số nhiều chữ số (đặt tính)', href: '/elementary/practice?grade=4&unit=g4e-m1d-addition', ready: true, availability: 'ready' },
+      { label: 'Phép trừ số nhiều chữ số (đặt tính)', href: '/elementary/practice?grade=4&unit=g4e-m1e-subtraction', ready: true, availability: 'ready' },
+      { label: 'Đổi đơn vị đo lường hệ mét', href: '/elementary/practice?grade=4&unit=g4e-m2a-metric-convert', ready: true, availability: 'ready' },
+      { label: 'Diện tích, chu vi và bài toán so sánh gấp bội', href: '/elementary/practice?grade=4&unit=g4e-m3a-area-perimeter-compare', ready: true, availability: 'ready' },
+      { label: 'Nhân số nhiều chữ số với số có 1 chữ số', href: '/elementary/practice?grade=4&unit=g4e-m3c-multiply-multidigit-1digit', ready: true, availability: 'ready' },
+      { label: 'Phép chia có dư', href: '/elementary/practice?grade=4&unit=g4e-m3e-division-remainders', ready: true, availability: 'ready' },
+      { label: 'Ước số, bội số và số nguyên tố', href: '/elementary/practice?grade=4&unit=g4e-m3f-factors-primes', ready: true, availability: 'ready' },
+      { label: 'Nhân số có 2 chữ số với số có 2 chữ số', href: '/elementary/practice?grade=4&unit=g4e-m3h-multiply-2x2', ready: true, availability: 'ready' },
+      { label: 'Đường thẳng và góc (vuông góc, song song)', href: '/elementary/practice?grade=4&unit=g4e-m4a-lines-angles', ready: true, availability: 'ready' },
+      { label: 'Đo góc bằng thước đo góc', href: '/elementary/practice?grade=4&unit=g4e-m4b-angle-measure', ready: true, availability: 'ready' },
+      { label: 'Phân loại tam giác và tứ giác', href: '/elementary/practice?grade=4&unit=g4e-m4d-figures-symmetry', ready: true, availability: 'ready' },
+      { label: 'Phân số bằng nhau', href: '/elementary/practice?grade=4&unit=g4e-m5b-fraction-equivalence', ready: true, availability: 'ready' },
+      { label: 'Cộng và trừ phân số', href: '/elementary/practice?grade=4&unit=g4e-m5d-fraction-add-sub-like', ready: true, availability: 'ready' },
+      { label: 'Cộng và trừ hỗn số', href: '/elementary/practice?grade=4&unit=g4e-m5f-mixed-number-add-sub', ready: true, availability: 'ready' },
+      { label: 'Số thập phân: hàng phần mười và phần trăm', href: '/elementary/practice?grade=4&unit=g4e-m6b-hundredths', ready: true, availability: 'ready' },
+      { label: 'Cộng và trừ số thập phân', href: '/elementary/practice?grade=4&unit=g4e-m6d-decimal-addition', ready: true, availability: 'ready' },
+      { label: 'Bảng quy đổi đơn vị đo', href: '/elementary/practice?grade=4&unit=g4e-m7a-conversion-tables', ready: true, availability: 'ready' },
+      { label: 'Diện tích hình ghép', href: '/elementary/practice?grade=4&unit=g4e-m7d-composite-area-review', ready: true, availability: 'ready' },
+    ],
+  },
+  {
     id: 'vn-thcs',
     title: 'Toán THCS (Lớp 6–9)',
     subtitle: 'Chương trình GDPT 2018 · Trung học cơ sở',
@@ -2039,6 +2214,13 @@ const VIETNAM_STAGE_SEEDS = [
 ];
 
 const INDIA_STAGE_SEEDS = [
+  {
+    id: 'in-elementary',
+    title: 'Primary Mathematics (Class 4)',
+    subtitle: 'CBSE · Eureka Math / EngageNY structure',
+    availability: 'ready',
+    topics: ENGLISH_CORE_ELEMENTARY_TOPICS,
+  },
   {
     id: 'in-secondary',
     title: 'Secondary Mathematics (Class 9–10)',
@@ -2121,8 +2303,9 @@ const ENGLISH_CORE_HIGH_TOPICS = [
   { label: 'Probability & Statistics', href: '/middle-school/pre-algebra?profile=algebra-2&unit=conditional-probability', ready: true, availability: 'ready' },
 ];
 
-function englishStages(prefix, middleTitle, middleSubtitle, highTitle, highSubtitle, seniorTitle, seniorSubtitle) {
+function englishStages(prefix, middleTitle, middleSubtitle, highTitle, highSubtitle, seniorTitle, seniorSubtitle, elementaryTitle, elementarySubtitle) {
   return [
+    { id: `${prefix}-elementary`, title: elementaryTitle, subtitle: elementarySubtitle, availability: 'ready', topics: ENGLISH_CORE_ELEMENTARY_TOPICS },
     { id: `${prefix}-middle`, title: middleTitle, subtitle: middleSubtitle, availability: 'ready', topics: ENGLISH_CORE_MIDDLE_TOPICS },
     { id: `${prefix}-high`, title: highTitle, subtitle: highSubtitle, availability: 'ready', topics: ENGLISH_CORE_HIGH_TOPICS },
     { id: `${prefix}-senior`, title: seniorTitle, subtitle: seniorSubtitle, availability: 'ready', topics: [
@@ -2135,11 +2318,11 @@ function englishStages(prefix, middleTitle, middleSubtitle, highTitle, highSubti
   ];
 }
 
-const USA_STAGE_SEEDS = englishStages('us', 'Middle School Mathematics (Grades 6–8)', 'Common Core representative pathway', 'High School Mathematics', 'Algebra I · Geometry · Algebra II', 'College-Ready & Advanced Placement', 'Precalculus · AP Calculus · AP Statistics');
-const AUSTRALIA_STAGE_SEEDS = englishStages('au', 'Australian Curriculum Mathematics (Years 7–8)', 'Version 9.0 · Number, Algebra, Measurement, Space, Statistics & Probability', 'Australian Curriculum Mathematics (Years 9–10)', 'Version 9.0 · preparation for senior pathways', 'Senior Secondary Mathematics', 'General Mathematics · Mathematical Methods · Specialist Mathematics');
-const UK_STAGE_SEEDS = englishStages('uk', 'Key Stage 3 Mathematics (Years 7–9)', 'England National Curriculum', 'GCSE Mathematics (Key Stage 4)', 'Foundation & Higher content', 'Sixth Form Mathematics', 'A Level Mathematics · Further Mathematics');
-const CANADA_STAGE_SEEDS = englishStages('ca', 'Junior/Intermediate Mathematics (Grades 6–9)', 'Representative provincial pathway', 'Secondary Mathematics (Grades 10–11)', 'Foundations · Pre-calculus · Workplace pathways', 'Grade 12 Mathematics', 'Pre-calculus · Calculus · Statistics');
-const NEW_ZEALAND_STAGE_SEEDS = englishStages('nz', 'Mathematics & Statistics (Years 7–10)', 'NZ Curriculum 2025 · Phases 3–4', 'Senior Secondary Mathematics (Year 11)', 'Mathematics & Statistics learning area', 'Senior Qualifications (Years 12–13)', 'NCEA transition · Mathematics & Statistics');
+const USA_STAGE_SEEDS = englishStages('us', 'Middle School Mathematics (Grades 6–8)', 'Common Core representative pathway', 'High School Mathematics', 'Algebra I · Geometry · Algebra II', 'College-Ready & Advanced Placement', 'Precalculus · AP Calculus · AP Statistics', 'Elementary Mathematics (Grade 4)', 'Common Core representative pathway · Eureka Math / EngageNY structure');
+const AUSTRALIA_STAGE_SEEDS = englishStages('au', 'Australian Curriculum Mathematics (Years 7–8)', 'Version 9.0 · Number, Algebra, Measurement, Space, Statistics & Probability', 'Australian Curriculum Mathematics (Years 9–10)', 'Version 9.0 · preparation for senior pathways', 'Senior Secondary Mathematics', 'General Mathematics · Mathematical Methods · Specialist Mathematics', 'Primary Mathematics (Year 4)', 'Version 9.0 · Number, Algebra, Measurement & Space — Foundation Level');
+const UK_STAGE_SEEDS = englishStages('uk', 'Key Stage 3 Mathematics (Years 7–9)', 'England National Curriculum', 'GCSE Mathematics (Key Stage 4)', 'Foundation & Higher content', 'Sixth Form Mathematics', 'A Level Mathematics · Further Mathematics', 'Key Stage 2 Mathematics (Year 5)', 'England National Curriculum · ages 9–10');
+const CANADA_STAGE_SEEDS = englishStages('ca', 'Junior/Intermediate Mathematics (Grades 6–9)', 'Representative provincial pathway', 'Secondary Mathematics (Grades 10–11)', 'Foundations · Pre-calculus · Workplace pathways', 'Grade 12 Mathematics', 'Pre-calculus · Calculus · Statistics', 'Elementary Mathematics (Grade 4)', 'Representative provincial pathway · Eureka Math / EngageNY structure');
+const NEW_ZEALAND_STAGE_SEEDS = englishStages('nz', 'Mathematics & Statistics (Years 7–10)', 'NZ Curriculum 2025 · Phases 3–4', 'Senior Secondary Mathematics (Year 11)', 'Mathematics & Statistics learning area', 'Senior Qualifications (Years 12–13)', 'NCEA transition · Mathematics & Statistics', 'Mathematics & Statistics (Year 5)', 'NZ Curriculum 2025 · Phase 2–3 · ages 9–10');
 
 /**
  * 4. 수학 영역별 인덱스 (Math Domains)
