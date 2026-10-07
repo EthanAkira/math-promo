@@ -36,7 +36,7 @@ export default function IllumiaHero() {
 
         {/* Service Description */}
         <div className="illumia-service-desc">
-          <p className="desc-lead">수학 · 코딩 · 사고력 게임을</p>
+          <p className="desc-lead">수학 · 코딩 &amp; 데이터 · 사고력 게임을</p>
           <p className="desc-focus font-display">
             <strong>탐구하고, 이해하고, 직접 발견하는 학습 공간</strong>
           </p>
@@ -104,7 +104,7 @@ export default function IllumiaHero() {
             <span className="hallmark-icon">📐</span>
             <div>
               <strong className="hallmark-title">3대 탐구 영역</strong>
-              <span className="hallmark-sub">수학 · 코딩 · 사고력 게임</span>
+              <span className="hallmark-sub">수학 · 코딩 &amp; 데이터 · 사고력 게임</span>
             </div>
           </div>
           <div className="hallmark-divider" />
