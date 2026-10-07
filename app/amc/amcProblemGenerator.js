@@ -16,6 +16,27 @@
  *     Chapter 10: Sets and Venn Diagrams
  *     Chapter 11: Counting Techniques
  *     Chapter 12: Divisibility
+ * - "AMC 8 Preparation (Volume 3)" by mymathcounts.com:
+ *     Chapter 13: Geometric Visualization
+ *     Chapter 14: Factors
+ *     Chapter 15: Prime Numbers
+ *     Chapter 16: Ratio, Rate and Proportion
+ *     Chapter 17: Least Common Multiple and Greatest Common Factor
+ *     Chapter 18: Solving Equations
+ * - "AMC 8 Preparation (Volume 4)" by mymathcounts.com:
+ *     Chapter 19: Special Symbols and Operations
+ *     Chapter 20: Remainder
+ *     Chapter 21: Sequences and Series
+ *     Chapter 22: Functions
+ *     Chapter 23: Pythagorean Theorem and Triangles
+ *     Chapter 24: Probability
+ * - "AMC 8 Preparation (Volume 5)" by mymathcounts.com:
+ *     Chapter 25: Angles and Triangles
+ *     Chapter 26: Rectangles and Squares
+ *     Chapter 27: Similar Triangles
+ *     Chapter 28: Trapezoids
+ *     Chapter 29: Circles
+ *     Chapter 30: Volumes
  * - And standard AMC 8 past competition topics (Geometry, Number Theory, Algebra, Combinatorics, Probability).
  */
 
@@ -94,7 +115,34 @@ export const GENERATORS = {
   // 1. AREA & PERIMETER (Ch 1: Perimeter and Area)
   // -----------------------------------------------------------------------
   'area-perimeter': (lang) => {
-    const variant = pickRandom(['four-rectangles', 'cut-corner-perimeter', 'shaded-ring']);
+    const variant = pickRandom(['four-rectangles', 'cut-corner-perimeter', 'shaded-ring', 'trapezoid-midsegment-area']);
+
+    if (variant === 'trapezoid-midsegment-area') {
+      // AMC 8 Prep Vol. 5 Ch.28 Trapezoids: Midsegment and Area Formula
+      const a = randInt(2, 8) * 2;
+      const b = a + randInt(2, 6) * 2;
+      const m = (a + b) / 2;
+      const h = randInt(4, 12);
+      const correctAns = m * h;
+
+      const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+        if (i === 1) return (a + b) * h; // forgot dividing by 2
+        if (i === 2) return m * (h + 1);
+        if (i === 3) return Math.round((a * b * h) / (a + b));
+        return Math.max(1, correctAns + (i % 2 === 0 ? 6 : -6));
+      });
+
+      const question = lang === 'ko'
+        ? `사다리꼴 $ABCD$에서 윗변 $AB$의 길이는 $${a}$, 아랫변 $CD$의 길이는 $${b}$이고, 두 밑변 사이의 높이는 $${h}$입니다. 두 빗변의 중점을 연결한 중점연결선(Midsegment)의 길이가 $m = ${m}$일 때, 이 사다리꼴의 넓이를 구하세요.`
+        : `In trapezoid $ABCD$, base $AB$ has length $${a}$, base $CD$ has length $${b}$, and the height is $${h}$. If the midsegment connecting the midpoints of the non-parallel legs has length $m = ${m}$, find the area of the trapezoid.`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 5 Ch.28 사다리꼴의 중점연결선과 넓이 공식]**\n\n사다리꼴의 중점연결선(중선, Midsegment)의 길이는 두 밑변 길이의 평균입니다:\n\n$$m = \\frac{a + b}{2} = \\frac{${a} + ${b}}{2} = ${m}$$\n\n사다리꼴의 넓이는 (중점연결선의 길이) $\\times$ (높이)로 직접 계산할 수 있습니다:\n\n$$\\text{Area} = \\frac{a + b}{2} \\times h = m \\times h = ${m} \\times ${h} = ${correctAns}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${correctAns})** 입니다.`
+        : `**[AMC 8 Prep Vol. 5 Ch.28 Trapezoid Midsegment and Area Formula]**\n\nThe midsegment of a trapezoid is the average of its parallel bases:\n\n$$m = \\frac{a + b}{2} = \\frac{${a} + ${b}}{2} = ${m}$$\n\nThe area of the trapezoid equals the midsegment times the height:\n\n$$\\text{Area} = m \\times h = ${m} \\times ${h} = ${correctAns}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${correctAns})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
     if (variant === 'four-rectangles') {
       // AMC 12 / AMC 8 Vol 1 Example 6:
       // Rectangle partitioned into 4 rectangles by two parallel segments.
@@ -178,9 +226,99 @@ export const GENERATORS = {
   },
 
   // -----------------------------------------------------------------------
-  // 2. TRIANGLES (Ch 1: Perimeter and Area)
+  // 2. TRIANGLES (Vol 1 Ch 1, Vol 4 Ch 23 & Vol 5 Ch 27)
   // -----------------------------------------------------------------------
   'triangles': (lang) => {
+    const variant = pickRandom(['pythagorean-triple-area', 'inscribed-circle-radius', 'similar-triangles-parallel']);
+
+    if (variant === 'similar-triangles-parallel') {
+      // AMC 8 Prep Vol. 5 Ch.27: Similar Triangles - Parallel Segment Area Ratio
+      const data = pickRandom([
+        { m: 2, n: 1, sADE: 16, sTrap: 20 },
+        { m: 1, n: 2, sADE: 5, sTrap: 40 },
+        { m: 3, n: 2, sADE: 18, sTrap: 32 },
+        { m: 2, n: 3, sADE: 12, sTrap: 63 },
+        { m: 3, n: 1, sADE: 27, sTrap: 21 },
+        { m: 1, n: 1, sADE: 10, sTrap: 30 },
+      ]);
+      const { m, n, sADE, sTrap } = data;
+      const totalRatio = m + n;
+      const mSq = m * m;
+      const totSq = totalRatio * totalRatio;
+      const trapParts = totSq - mSq;
+      const totalArea = sADE + sTrap;
+
+      const { choices, correctIdx } = buildChoices(sTrap, (i) => {
+        if (i === 1) return totalArea;
+        if (i === 2) return Math.round(sADE * (n / m));
+        if (i === 3) return sTrap + 5;
+        return Math.max(1, sTrap - 5);
+      });
+
+      const question = lang === 'ko'
+        ? `삼각형 $ABC$의 변 $AB$ 위의 점 $D$와 변 $AC$ 위의 점 $E$를 잇는 선분 $DE$가 밑변 $BC$와 평행합니다. $AD : DB = ${m} : ${n}$이고 삼각형 $ADE$의 넓이가 $${sADE}$일 때, 사다리꼴 $DBCE$의 넓이는 얼마입니까?`
+        : `In triangle $ABC$, segment $DE$ is parallel to $BC$, with $D$ on $AB$ and $E$ on $AC$. If $AD : DB = ${m} : ${n}$ and the area of triangle $ADE$ is $${sADE}$, what is the area of trapezoid $DBCE$?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 5 Ch.27 삼각형의 닮음과 넓이의 비]**\n\n$DE \\parallel BC$이므로 $\\triangle ADE \\sim \\triangle ABC$ (AA 닮음)입니다.\n\n닮음비는 대응변의 길이의 비이므로:\n\n$$\\frac{AD}{AB} = \\frac{${m}}{${m} + ${n}} = \\frac{${m}}{${totalRatio}}$$\n\n닮은 두 도형의 넓이의 비는 닮음비의 제곱에 비례합니다:\n\n$$\\frac{S_{\\triangle ADE}}{S_{\\triangle ABC}} = \\left(\\frac{${m}}{${totalRatio}}\\right)^2 = \\frac{${mSq}}{${totSq}}$$\n\n따라서 $\\triangle ABC$의 넓이는:\n\n$$S_{\\triangle ABC} = ${sADE} \\times \\frac{${totSq}}{${mSq}} = ${totalArea}$$\n\n사다리꼴 $DBCE$의 넓이는 전체 삼각형에서 위쪽 삼각형의 넓이를 뺀 것입니다:\n\n$$S_{DBCE} = S_{\\triangle ABC} - S_{\\triangle ADE} = ${totalArea} - ${sADE} = ${sTrap}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${sTrap})** 입니다.`
+        : `**[AMC 8 Prep Vol. 5 Ch.27 Similar Triangles: Area Ratio Principle]**\n\nSince $DE \\parallel BC$, $\\triangle ADE \\sim \\triangle ABC$ by AA similarity.\n\nThe ratio of similitude is:\n\n$$\\frac{AD}{AB} = \\frac{${m}}{${m} + ${n}} = \\frac{${m}}{${totalRatio}}$$\n\nThe ratio of their areas is the square of the ratio of similitude:\n\n$$\\frac{\\text{Area}(\\triangle ADE)}{\\text{Area}(\\triangle ABC)} = \\left(\\frac{${m}}{${totalRatio}}\\right)^2 = \\frac{${mSq}}{${totSq}}$$\n\nThus, $\\text{Area}(\\triangle ABC) = ${sADE} \\times \\frac{${totSq}}{${mSq}} = ${totalArea}$.\n\nThe area of trapezoid $DBCE$ is the difference:\n\n$$\\text{Area}(DBCE) = ${totalArea} - ${sADE} = ${sTrap}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${sTrap})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'inscribed-circle-radius') {
+      // AMC 8 Prep Vol. 4 Ch.23: Inradius of right triangle r = (a + b - c) / 2
+      const triple = pickRandom([
+        [6, 8, 10, 2],
+        [5, 12, 13, 2],
+        [9, 12, 15, 3],
+        [8, 15, 17, 3],
+        [7, 24, 25, 3],
+        [10, 24, 26, 4],
+        [12, 16, 20, 4],
+        [15, 20, 25, 5],
+      ]);
+      const [a, b, c, r] = triple;
+      const askType = pickRandom(['radius', 'area']);
+
+      if (askType === 'area') {
+        const circleAreaStr = `$${r * r}\\pi$`;
+        const { choices, correctIdx } = buildChoices(circleAreaStr, (i) => {
+          if (i === 1) return `$${2 * r}\\pi$`;
+          if (i === 2) return `$${r * r * 2}\\pi$`;
+          if (i === 3) return `$${(r + 1) * (r + 1)}\\pi$`;
+          return `$${Math.max(1, r - 1) * Math.max(1, r - 1)}\\pi$`;
+        });
+
+        const question = lang === 'ko'
+          ? `세 변의 길이가 각각 $${a}\\text{ cm}$, $${b}\\text{ cm}$, $${c}\\text{ cm}$인 직각삼각형의 내접원의 넓이는 몇 $\\text{cm}^2$입니까?`
+          : `A right triangle has side lengths $${a}\\text{ cm}$, $${b}\\text{ cm}$, and $${c}\\text{ cm}$. What is the area of its inscribed circle in square centimeters?`;
+
+        const explanation = lang === 'ko'
+          ? `**[AMC 8 Prep Vol. 4 Ch.23 직각삼각형과 내접원의 반지름]**\n\n직각삼각형의 두 직각변을 $a, b$, 빗변을 $c$라 할 때, 내접원의 반지름 $r$은 다음 공식으로 구합니다:\n\n$$r = \\frac{a + b - c}{2} = \\frac{${a} + ${b} - ${c}}{2} = \\frac{${a + b - c}}{2} = ${r}\\text{ cm}$$\n\n따라서 내접원의 넓이는:\n\n$$S = \\pi r^2 = \\pi (${r})^2 = ${r * r}\\pi\\text{ cm}^2$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${r * r}\\pi\\text{ cm}^2$)** 입니다.`
+          : `**[AMC 8 Prep Vol. 4 Ch.23 Inradius of a Right Triangle]**\n\nFor a right triangle with legs $a, b$ and hypotenuse $c$, the inradius $r$ is:\n\n$$r = \\frac{a + b - c}{2} = \\frac{${a} + ${b} - ${c}}{2} = ${r}\\text{ cm}$$\n\nThe area of the inscribed circle is:\n\n$$S = \\pi r^2 = ${r * r}\\pi\\text{ cm}^2$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${r * r}\\pi)**.`;
+
+        return { question, choices, correctIdx, explanation };
+      }
+
+      const { choices, correctIdx } = buildChoices(r, (i) => {
+        if (i === 1) return r + 1;
+        if (i === 2) return Math.max(1, r - 1);
+        if (i === 3) return r + 2;
+        return r + 3;
+      });
+
+      const question = lang === 'ko'
+        ? `세 변의 길이가 각각 $${a}\\text{ cm}$, $${b}\\text{ cm}$, $${c}\\text{ cm}$인 직각삼각형에 내접하는 원의 반지름 $r$의 길이는 몇 $\\text{cm}$입니까?`
+        : `A right triangle has side lengths $${a}\\text{ cm}$, $${b}\\text{ cm}$, and $${c}\\text{ cm}$. What is the radius $r$ of the circle inscribed in this triangle in centimeters?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 4 Ch.23 직각삼각형과 내접원의 반지름 공식]**\n\n직각삼각형의 두 직각변 $a=${a}$, $b=${b}$와 빗변 $c=${c}$에 대하여 내접원의 반지름 $r$은:\n\n$$r = \\frac{a + b - c}{2} = \\frac{${a} + ${b} - ${c}}{2} = \\frac{${a + b - c}}{2} = ${r}\\text{ cm}$$\n\n(또는 삼각형 넓이 공식 $\\frac{1}{2}ab = \\frac{1}{2}r(a+b+c) \\implies r = \\frac{${a * b}}{${a + b + c}} = ${r}$)\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${r}\\text{ cm}$)** 입니다.`
+        : `**[AMC 8 Prep Vol. 4 Ch.23 Inradius of a Right Triangle]**\n\nFor a right triangle with legs $a=${a}$, $b=${b}$ and hypotenuse $c=${c}$, the inradius is given by:\n\n$$r = \\frac{a + b - c}{2} = \\frac{${a} + ${b} - ${c}}{2} = ${r}\\text{ cm}$$\n\n(Equivalently, Area = $\\frac{1}{2}ab = \\frac{1}{2}r(a+b+c) \\implies r = \\frac{${a * b}}{${a + b + c}} = ${r}$).\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${r})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
     // Pythagorean triples
     const triple = pickRandom([
       [3, 4, 5],
@@ -206,8 +344,8 @@ export const GENERATORS = {
       : `A right triangle has a hypotenuse of length $${hyp}\\text{ cm}$ and one leg of length $${leg1}\\text{ cm}$. What is the area of the triangle in square centimeters?`;
 
     const explanation = lang === 'ko'
-      ? `**[AMC 8 Prep Vol. 1 Ch.1 피타고라스 정리와 직각삼각형의 넓이]**\n\n피타고라스 정리 $a^2 + b^2 = c^2$에 의해 다른 한 변의 길이를 구합니다:\n\n$$b = \\sqrt{${hyp}^2 - ${leg1}^2} = \\sqrt{${hyp * hyp} - ${leg1 * leg1}} = \\sqrt{${leg2 * leg2}} = ${leg2}$$\n\n직각삼각형의 넓이는 두 직각변의 곱의 절반이므로:\n\n$$A = \\frac{1}{2} \\times ${leg1} \\times ${leg2} = ${area}\\text{ cm}^2$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${area}\\text{ cm}^2$)** 입니다.`
-      : `**[AMC 8 Prep Vol. 1 Ch.1 Pythagorean Theorem & Right Triangle Area]**\n\nUsing the Pythagorean theorem $a^2 + b^2 = c^2$:\n\n$$b = \\sqrt{${hyp}^2 - ${leg1}^2} = \\sqrt{${hyp * hyp - leg1 * leg1}} = ${leg2}$$\n\nThe area of the right triangle is:\n\n$$A = \\frac{1}{2} \\times ${leg1} \\times ${leg2} = ${area}\\text{ cm}^2$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${area})**.`;
+      ? `**[AMC 8 Prep Vol. 1 Ch.1 & Vol. 4 Ch.23 피타고라스 정리와 직각삼각형의 넓이]**\n\n피타고라스 정리 $a^2 + b^2 = c^2$에 의해 다른 한 변의 길이를 구합니다:\n\n$$b = \\sqrt{${hyp}^2 - ${leg1}^2} = \\sqrt{${hyp * hyp} - ${leg1 * leg1}} = \\sqrt{${leg2 * leg2}} = ${leg2}$$\n\n직각삼각형의 넓이는 두 직각변의 곱의 절반이므로:\n\n$$A = \\frac{1}{2} \\times ${leg1} \\times ${leg2} = ${area}\\text{ cm}^2$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${area}\\text{ cm}^2$)** 입니다.`
+      : `**[AMC 8 Prep Vol. 1 Ch.1 & Vol. 4 Ch.23 Pythagorean Theorem & Right Triangle Area]**\n\nUsing the Pythagorean theorem $a^2 + b^2 = c^2$:\n\n$$b = \\sqrt{${hyp}^2 - ${leg1}^2} = \\sqrt{${hyp * hyp - leg1 * leg1}} = ${leg2}$$\n\nThe area of the right triangle is:\n\n$$A = \\frac{1}{2} \\times ${leg1} \\times ${leg2} = ${area}\\text{ cm}^2$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${area})**.`;
 
     return { question, choices, correctIdx, explanation };
   },
@@ -243,7 +381,40 @@ export const GENERATORS = {
   // 4. SEQUENCES & PATTERNS (Ch 2: Patterns)
   // -----------------------------------------------------------------------
   'sequences-patterns': (lang) => {
-    const variant = pickRandom(['odd-sum', 'arithmetic-term', 'triangular']);
+    const variant = pickRandom(['odd-sum', 'arithmetic-term', 'triangular', 'arithmetic-mean-terms']);
+
+    if (variant === 'arithmetic-mean-terms') {
+      const xTarget = randInt(2, 9);
+      const c = randInt(3, 6);
+      const a = randInt(1, c - 1);
+      const diffCoeff = randInt(1, 3);
+      const e = 2 * c - a - diffCoeff;
+      const dVal = randInt(-5, 5);
+      const bVal = randInt(-5, 5);
+      const fVal = 2 * dVal - bVal + diffCoeff * xTarget;
+
+      const t1 = `${a}x ${bVal >= 0 ? '+' : '-'} ${Math.abs(bVal)}`;
+      const t2 = `${c}x ${dVal >= 0 ? '+' : '-'} ${Math.abs(dVal)}`;
+      const t3 = `${e}x ${fVal >= 0 ? '+' : '-'} ${Math.abs(fVal)}`;
+
+      const { choices, correctIdx } = buildChoices(xTarget, (i) => {
+        if (i === 1) return xTarget + 1;
+        if (i === 2) return xTarget - 1 || 5;
+        if (i === 3) return xTarget + 2;
+        return xTarget + randInt(3, 7) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? `어떤 등차수열의 연속한 세 항이 차례대로 $${t1}$, $${t2}$, $${t3}$일 때, $x$의 값을 구하세요.`
+        : `If $${t1}$, $${t2}$, and $${t3}$ are three consecutive terms of an arithmetic sequence, find the value of $x$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 10.4 등차중항과 미지수]**\n\n등차수열에서 연속한 세 항 $A, B, C$ 사이에 등차중항 성질 $2B = A + C$가 성립합니다:\n\n$$2(${t2}) = (${t1}) + (${t3})$$\n\n전개하여 정리하면:\n$$${2 * c}x ${2 * dVal >= 0 ? '+' : '-'} ${Math.abs(2 * dVal)} = ${a + e}x ${bVal + fVal >= 0 ? '+' : '-'} ${Math.abs(bVal + fVal)}$$\n\n$$${2 * c - a - e}x = ${bVal + fVal - 2 * dVal} \\implies x = ${xTarget}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${xTarget})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 10.4 Arithmetic Means]**\n\nFor three consecutive terms $A, B, C$ of an arithmetic sequence, $2B = A + C$:\n\n$$2(${t2}) = (${t1}) + (${t3})$$\n\nExpanding and solving for $x$:\n$$${2 * c}x ${2 * dVal >= 0 ? '+' : '-'} ${Math.abs(2 * dVal)} = ${a + e}x ${bVal + fVal >= 0 ? '+' : '-'} ${Math.abs(bVal + fVal)}$$\n\n$$${2 * c - a - e}x = ${bVal + fVal - 2 * dVal} \\implies x = ${xTarget}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${xTarget})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
     if (variant === 'odd-sum') {
       // Sum of first n odd integers = n^2
       const n = randInt(11, 25);
@@ -319,6 +490,30 @@ export const GENERATORS = {
   // 5. UNITS DIGIT & CYCLES (Ch 2: Patterns)
   // -----------------------------------------------------------------------
   'units-digit-cycles': (lang) => {
+    const variant = pickRandom(['units-digit', 'last-two-digits']);
+
+    if (variant === 'last-two-digits') {
+      const exp = randInt(2021, 2035);
+      const rem = exp % 4;
+      const mod100Map = { 1: 7, 2: 49, 3: 43, 0: 1 };
+      const ans = mod100Map[rem];
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        const pool = [1, 7, 43, 49, 21, 9, 63, 81].filter((v) => v !== ans);
+        return pool[i % pool.length];
+      });
+
+      const question = lang === 'ko'
+        ? `$7^{${exp}}$ 을 $100$으로 나눈 나머지(끝 두 자리 수)를 구하세요.`
+        : `Find the remainder when $7^{${exp}}$ is divided by $100$ (the last two digits).`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Competition Math: Number Theory Topic 5.1 & Topic 6 거듭제곱의 끝 두 자리(mod 100)]**\n\n$7$의 거듭제곱을 $100$으로 나눈 나머지를 차례로 구하면 다음과 같이 $4$개를 주기로 순환합니다:\n- $7^1 \\equiv 7 \\pmod{100}$\n- $7^2 \\equiv 49 \\pmod{100}$\n- $7^3 \\equiv 343 \\equiv 43 \\pmod{100}$\n- $7^4 \\equiv 301 \\equiv 1 \\pmod{100}$\n\n지수 $${exp}$를 주기 $4$로 나누면 $${exp} = 4 \\times ${Math.floor(exp / 4)} + ${rem}$ 이므로:\n\n$$7^{${exp}} \\equiv 7^{${rem === 0 ? 4 : rem}} \\equiv ${ans} \\pmod{100}$$\n\n따라서 구하는 나머지는 **$${ans}$** 입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Competition Math: Number Theory Topic 5.1 & Topic 6 Powers mod 100]**\n\nComputing powers of $7$ modulo $100$ reveals a period of $4$:\n- $7^1 \\equiv 7 \\pmod{100}$\n- $7^2 \\equiv 49 \\pmod{100}$\n- $7^3 \\equiv 43 \\pmod{100}$\n- $7^4 \\equiv 1 \\pmod{100}$\n\nSince $${exp} = 4 \\times ${Math.floor(exp / 4)} + ${rem}$:\n\n$$7^{${exp}} \\equiv 7^{${rem === 0 ? 4 : rem}} \\equiv ${ans} \\pmod{100}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
     const base = pickRandom([2, 3, 7, 8]);
     const exp = randInt(2020, 2035);
     const cycleMap = {
@@ -342,8 +537,8 @@ export const GENERATORS = {
     const cycleStr = base === 2 ? '2, 4, 8, 6' : base === 3 ? '3, 9, 7, 1' : base === 7 ? '7, 9, 3, 1' : '8, 4, 2, 6';
 
     const explanation = lang === 'ko'
-      ? `**[AMC 8 Prep Vol. 1 Ch.2 거듭제곱의 일의 자리 주기성]**\n\n밑이 $${base}$일 때 거듭제곱의 일의 자리 숫자는 4개를 주기로 반복됩니다: **($${cycleStr}$)**\n\n지수 $${exp}$를 주기 $4$로 나눈 나머지를 구합니다:\n\n$$${exp} = 4 \\times ${Math.floor(exp / 4)} + ${remainder}$$\n\n나머지가 $${remainder}$이므로 일의 자리 숫자는 주기의 ${remainder === 0 ? '4번째' : remainder + '번째'} 숫자인 **$${ans}$** 입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${ans}$)** 입니다.`
-      : `**[AMC 8 Prep Vol. 1 Ch.2 Units Digit Power Cycles]**\n\nThe units digits of powers of $${base}$ repeat every 4 terms in the cycle: **($${cycleStr}$)**.\n\nDividing the exponent by 4:\n\n$$${exp} = 4 \\times ${Math.floor(exp / 4)} + ${remainder}$$\n\nSince the remainder is $${remainder}$, the units digit is **${ans}**.\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${ans})**.`;
+      ? `**[The Essential Guide to Competition Math: Number Theory Topic 1.1 & Topic 5.1 일의 자리 주기성]**\n\n밑이 $${base}$일 때 거듭제곱의 일의 자리 숫자는 4개를 주기로 반복됩니다: **($${cycleStr}$)**\n\n지수 $${exp}$를 주기 $4$로 나눈 나머지를 구합니다:\n\n$$${exp} = 4 \\times ${Math.floor(exp / 4)} + ${remainder}$$\n\n나머지가 $${remainder}$이므로 일의 자리 숫자는 주기의 ${remainder === 0 ? '4번째' : remainder + '번째'} 숫자인 **$${ans}$** 입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${ans}$)** 입니다.`
+      : `**[The Essential Guide to Competition Math: Number Theory Topic 1.1 & Topic 5.1 Units Digit Power Cycles]**\n\nThe units digits of powers of $${base}$ repeat every 4 terms in the cycle: **($${cycleStr}$)**.\n\nDividing the exponent by 4:\n\n$$${exp} = 4 \\times ${Math.floor(exp / 4)} + ${remainder}$$\n\nSince the remainder is $${remainder}$, the units digit is **${ans}**.\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${ans})**.`;
 
     return { question, choices, correctIdx, explanation };
   },
@@ -461,10 +656,73 @@ export const GENERATORS = {
   },
 
   // -----------------------------------------------------------------------
-  // 9. EVEN/ODD & DIVISIBILITY (Vol 1 Ch 5 & Vol 2 Ch 12)
+  // 9. EVEN/ODD & DIVISIBILITY (Vol 1 Ch 5, Vol 2 Ch 12 & Vol 4 Ch 20)
   // -----------------------------------------------------------------------
   'remainders-divisibility': (lang) => {
-    const variant = pickRandom(['parity-multiples', 'trailing-zeros', 'divisibility-digit']);
+    const variant = pickRandom(['parity-multiples', 'trailing-zeros', 'divisibility-digit', 'common-shortage', 'divisor-remainder-count']);
+
+    if (variant === 'common-shortage') {
+      // AMC 8 Prep Vol. 4 Ch.20: Remainder - common shortage CRT pattern
+      const config = pickRandom([
+        { a: 4, b: 5, c: 6, k: 1, L: 60 },
+        { a: 3, b: 4, b2: 5, c: 5, k: 1, L: 60 },
+        { a: 5, b: 6, c: 8, k: 1, L: 120 },
+        { a: 6, b: 8, c: 9, k: 1, L: 72 },
+        { a: 4, b: 6, c: 9, k: 2, L: 36 },
+        { a: 6, b: 9, c: 15, k: 3, L: 90 },
+      ]);
+      const { a, b, c, k, L } = config;
+      const r1 = a - k;
+      const r2 = b - k;
+      const r3 = c - k;
+      const ans = L - k;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return L + k;
+        if (i === 2) return L;
+        if (i === 3) return ans - 5;
+        return ans + 5 * i;
+      });
+
+      const question = lang === 'ko'
+        ? `어떤 자연수 $N$을 $${a}$로 나누면 나머지가 $${r1}$이고, $${b}$로 나누면 나머지가 $${r2}$이며, $${c}$로 나누면 나머지가 $${r3}$입니다. 이러한 성질을 만족하는 가장 작은 양의 정수 $N$은 얼마입니까?`
+        : `When a positive integer $N$ is divided by $${a}$, the remainder is $${r1}$; when divided by $${b}$, the remainder is $${r2}$; and when divided by $${c}$, the remainder is $${r3}$. What is the smallest positive integer $N$?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 4 Ch.20 나머지 정리와 공통 부족수]**\n\n각 나눗셈의 나머지를 관찰하면, 나누는 수에서 나머지를 뺀 차이가 모두 $${k}$로 일정합니다:\n\n$$${a} - ${r1} = ${k},\\quad ${b} - ${r2} = ${k},\\quad ${c} - ${r3} = ${k}$$\n\n따라서 $N$에 $${k}$를 더한 수 $(N + ${k})$는 $${a}, ${b}, ${c}$ 모두의 공배수가 됩니다.\n\n$$\\text{lcm}(${a}, ${b}, ${c}) = ${L}$$\n\n가장 작은 양의 정수 $N$을 구해야 하므로:\n\n$$N + ${k} = ${L} \\implies N = ${L} - ${k} = ${ans}$$\n\n(검산: $${ans} = ${a} \\times ${Math.floor(ans / a)} + ${r1}$, $${ans} = ${b} \\times ${Math.floor(ans / b)} + ${r2}$, $${ans} = ${c} \\times ${Math.floor(ans / c)} + ${r3}$)\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${ans}$)** 입니다.`
+        : `**[AMC 8 Prep Vol. 4 Ch.20 Chinese Remainder Theorem: Constant Shortage]**\n\nNotice that each divisor minus its remainder is constant: $${a} - ${r1} = ${k}$, $${b} - ${r2} = ${k}$, and $${c} - ${r3} = ${k}$.\n\nTherefore, $N + ${k}$ must be a common multiple of $${a}, ${b}$, and $${c}$:\n\n$$\\text{lcm}(${a}, ${b}, ${c}) = ${L}$$\n\nFor the smallest positive integer $N$:\n\n$$N + ${k} = ${L} \\implies N = ${L} - ${k} = ${ans}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'divisor-remainder-count') {
+      // AMC 8 Prep Vol. 4 Ch.20: Remainder - divisor condition (M = qk + r => qk = M - r, k > r)
+      const data = pickRandom([
+        { M: 51, r: 3, diff: 48, divisors: [1, 2, 3, 4, 6, 8, 12, 16, 24, 48], count: 7 },
+        { M: 77, r: 5, diff: 72, divisors: [1, 2, 3, 4, 6, 8, 9, 12, 18, 24, 36, 72], count: 8 },
+        { M: 64, r: 4, diff: 60, divisors: [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60], count: 8 },
+        { M: 43, r: 3, diff: 40, divisors: [1, 2, 4, 5, 8, 10, 20, 40], count: 6 },
+      ]);
+      const { M, r, diff, divisors, count } = data;
+      const validDivisors = divisors.filter((d) => d > r);
+
+      const { choices, correctIdx } = buildChoices(count, (i) => {
+        if (i === 1) return divisors.length; // forgot k > r
+        if (i === 2) return count + 1;
+        if (i === 3) return Math.max(1, count - 1);
+        return count + 2;
+      });
+
+      const question = lang === 'ko'
+        ? `$${M}$을 어떤 자연수 $k$로 나누었을 때 나머지가 $${r}$이 됩니다. 이러한 조건을 만족하는 자연수 $k$의 개수는 모두 몇 개입니까?`
+        : `When $${M}$ is divided by a positive integer $k$, the remainder is $${r}$. How many such positive integers $k$ are there?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 4 Ch.20 나눗셈 정리와 제수의 조건]**\n\n나눗셈 정리에서 $${M} = qk + ${r}$ ($q$는 몫)으로 나타낼 수 있습니다. 이 식을 정리하면:\n\n$$qk = ${M} - ${r} = ${diff}$$\n\n따라서 $k$는 $${diff}$의 약수여야 합니다.\n\n이때 **가장 중요한 조건은 나머지가 나누는 수보다 작아야 하므로 $k > ${r}$** 이어야 합니다.\n\n$${diff}$의 모든 양의 약수는 $${divisors.join(', ')}$ (총 $${divisors.length}$개)입니다.\n이 중 $${r}$보다 큰 약수만 고르면:\n\n$$\\{${validDivisors.join(', ')}\\}$$\n\n총 **$${count}$개**입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${count}개)** 입니다.`
+        : `**[AMC 8 Prep Vol. 4 Ch.20 Division Algorithm & Divisor Constraint]**\n\nBy the division algorithm, $${M} = qk + ${r}$, which means $qk = ${M} - ${r} = ${diff}$.\n\nThus $k$ must be a factor of $${diff}$. Furthermore, the remainder must be strictly less than the divisor, so **$k > ${r}$**.\n\nThe positive factors of $${diff}$ are $${divisors.join(', ')}$ (total $${divisors.length}$). Those strictly greater than $${r}$ are:\n\n$$\\{${validDivisors.join(', ')}\\}$$\n\nThere are **${count}** such integers.\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${count})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'parity-multiples') {
       // Number of odd multiples of 3 between start and end (Vol 1 Ex 6)
@@ -730,6 +988,100 @@ export const GENERATORS = {
   // 11. RATIOS & RATES (Ch 6: Word Problems Related to Percentage)
   // -----------------------------------------------------------------------
   'ratios-percent': (lang) => {
+    const variant = pickRandom(['continued-ratio', 'triangle-angles-ratio', 'algebraic-proportion', 'salt-mixture']);
+
+    if (variant === 'continued-ratio') {
+      // AMC 8 Prep Vol. 3 Ch.16 Section 3: Continued Ratio a:b:c
+      const p = randInt(2, 4);
+      const q = randInt(3, 5);
+      const r = randInt(2, 4);
+      const s = randInt(3, 6);
+      const termA = p * r;
+      const termB = q * r;
+      const termC = q * s;
+      const sumTerms = termA + termB + termC;
+      const multiplier = randInt(4, 12);
+      const totalAmount = sumTerms * multiplier;
+      const shareC = termC * multiplier;
+      const shareA = termA * multiplier;
+      const diffCA = shareC - shareA;
+
+      const { choices, correctIdx } = buildChoices(shareC, (i) => {
+        if (i === 1) return shareA;
+        if (i === 2) return termB * multiplier;
+        if (i === 3) return diffCA;
+        return shareC + randInt(5, 25) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? `과일 샐러드를 파인애플, 배, 복숭아를 섞어 만듭니다. 파인애플과 배의 무게비는 $${p} : ${q}$이고, 배와 복숭아의 무게비는 $${r} : ${s}$입니다. 전체 샐러드의 무게가 $${totalAmount}\\text{ g}$일 때, 사용된 복숭아의 무게는 몇 $\\text{g}$입니까?`
+        : `A fruit salad is made by mixing pineapples, pears, and peaches. The ratio of pineapples to pears by weight is $${p} : ${q}$, and the ratio of pears to peaches is $${r} : ${s}$. If the total weight of the salad is $${totalAmount}\\text{ g}$, how many grams of peaches are in the salad?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 3 Ch.16 연비(Continued Ratio)와 비례배분]**\n\n공통 대상인 '배'의 비를 맞추어 세 과일의 연비를 구합니다:\n- 파인애플 : 배 $= ${p} : ${q} = (${p}\\times ${r}) : (${q}\\times ${r}) = ${termA} : ${termB}$\n- 배 : 복숭아 $= ${r} : ${s} = (${r}\\times ${q}) : (${s}\\times ${q}) = ${termB} : ${termC}$\n\n따라서 세 과일의 무게 연비는:\n$$\\text{파인애플} : \\text{배} : \\text{복숭아} = ${termA} : ${termB} : ${termC}$$\n\n전체 비의 합: $${termA} + ${termB} + ${termC} = ${sumTerms}$\n\n복숭아의 무게는 전체 $${totalAmount}\\text{ g}$ 중 $\\frac{${termC}}{${sumTerms}}$ 이므로:\n\n$$\\text{복숭아 무게} = ${totalAmount} \\times \\frac{${termC}}{${sumTerms}} = ${shareC}\\text{ g}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${shareC}\\text{ g}$)** 입니다.`
+        : `**[AMC 8 Prep Vol. 3 Ch.16 Continued Ratio & Proportional Division]**\n\nScale the ratios so the common term (pears) has the same value:\n- Pineapples : Pears $= ${p} : ${q} = ${termA} : ${termB}$\n- Pears : Peaches $= ${r} : ${s} = ${termB} : ${termC}$\n\nThus the continued ratio is:\n$$\\text{Pineapples} : \\text{Pears} : \\text{Peaches} = ${termA} : ${termB} : ${termC}$$\n\nTotal ratio parts: $${termA} + ${termB} + ${termC} = ${sumTerms}$.\n\nThe weight of peaches is:\n\n$$\\text{Peaches} = ${totalAmount} \\times \\frac{${termC}}{${sumTerms}} = ${shareC}\\text{ g}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${shareC}\\text{ g})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'triangle-angles-ratio') {
+      // AMC 8 Prep Vol. 3 Ch.16 Problem 1: Triangle angles in ratio a:b:c
+      const triplets = [[2, 3, 5], [1, 2, 3], [2, 5, 8], [3, 4, 5], [1, 3, 5], [2, 3, 7]];
+      const [a, b, c] = pickRandom(triplets);
+      const totalParts = a + b + c;
+      const degPerPart = 180 / totalParts;
+      const angleMin = Math.round(a * degPerPart);
+      const angleMax = Math.round(c * degPerPart);
+      const diff = angleMax - angleMin;
+
+      const { choices, correctIdx } = buildChoices(`${diff}^\\circ`, (i) => {
+        if (i === 1) return `${angleMax}^\\circ`;
+        if (i === 2) return `${angleMin}^\\circ`;
+        if (i === 3) return `${Math.round(b * degPerPart)}^\\circ`;
+        return `${Math.max(10, diff + randInt(5, 20) * (i % 2 === 0 ? 1 : -1))}^\\circ`;
+      });
+
+      const question = lang === 'ko'
+        ? `어떤 삼각형의 세 내각의 크기의 비가 $${a} : ${b} : ${c}$입니다. 이 삼각형에서 가장 큰 각과 가장 작은 각의 크기의 차는 몇 도($^\\circ$)입니까?`
+        : `The measures of the three interior angles of a triangle are in the ratio $${a} : ${b} : ${c}$. What is the positive difference in degrees ($^\\circ$) between the largest angle and the smallest angle?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 3 Ch.16 비례배분과 삼각형의 내각]**\n\n삼각형의 세 내각의 총합은 $180^\\circ$입니다.\n세 각의 비의 총합은 $${a} + ${b} + ${c} = ${totalParts}$ 이므로, 비 $1$에 해당하는 각도는:\n\n$$\\frac{180^\\circ}{${totalParts}} = ${degPerPart}^\\circ$$\n\n가장 큰 각은 $${c} \\times ${degPerPart}^\\circ = ${angleMax}^\\circ$ 이고,\n가장 작은 각은 $${a} \\times ${degPerPart}^\\circ = ${angleMin}^\\circ$ 입니다.\n\n두 각의 차는:\n\n$$${angleMax}^\\circ - ${angleMin}^\\circ = ${diff}^\\circ$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${diff}^\\circ$)** 입니다.`
+        : `**[AMC 8 Prep Vol. 3 Ch.16 Proportional Angles in a Triangle]**\n\nThe sum of angles in a triangle is $180^\\circ$.\nTotal parts $= ${a} + ${b} + ${c} = ${totalParts}$.\nEach part is worth $\\frac{180^\\circ}{${totalParts}} = ${degPerPart}^\\circ$.\n\nLargest angle $= ${c} \\times ${degPerPart}^\\circ = ${angleMax}^\\circ$, smallest angle $= ${a} \\times ${degPerPart}^\\circ = ${angleMin}^\\circ$.\n\nDifference: $${angleMax}^\\circ - ${angleMin}^\\circ = ${diff}^\\circ$.\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${diff}^\\circ)**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'algebraic-proportion') {
+      // AMC 8 Prep Vol. 3 Ch.16 Problem 2: x/y = k, find (x-y)/(x+y) or y/(x+y)
+      const k = randInt(2, 6);
+      const isDiff = Math.random() < 0.5;
+      const exprLatex = isDiff ? '\\frac{x - y}{x + y}' : '\\frac{y}{x + y}';
+      const ansNum = isDiff ? (k - 1) : 1;
+      const ansDen = k + 1;
+      const g = gcd(ansNum, ansDen);
+      const simpNum = ansNum / g;
+      const simpDen = ansDen / g;
+      const ansLatex = simpDen === 1 ? `${simpNum}` : `\\frac{${simpNum}}{${simpDen}}`;
+
+      const { choices, correctIdx } = buildChoices(ansLatex, (i) => {
+        if (i === 1) return `\\frac{${k}}{${k + 1}}`;
+        if (i === 2) return `\\frac{${k + 1}}{${k}}`;
+        if (i === 3) return `\\frac{${k - 1}}{${k}}`;
+        return `\\frac{${simpNum + i}}{${simpDen + i}}`;
+      });
+
+      const question = lang === 'ko'
+        ? `두 양수 $x, y$에 대하여 $\\frac{x}{y} = ${k}$ 일 때, $${exprLatex}$ 의 값은 얼마입니까?`
+        : `If $x$ and $y$ are positive numbers such that $\\frac{x}{y} = ${k}$, what is the value of $${exprLatex}$?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 3 Ch.16 비례식의 성질(Componendo and Dividendo)]**\n\n분수식 $${exprLatex}$ 의 분자와 분모를 각각 $y$로 나눕니다:\n\n$$${exprLatex} = ${isDiff ? `\\frac{\\frac{x}{y} - 1}{\\frac{x}{y} + 1} = \\frac{${k} - 1}{${k} + 1} = \\frac{${ansNum}}{${ansDen}}` : `\\frac{1}{\\frac{x}{y} + 1} = \\frac{1}{${k} + 1} = \\frac{1}{${ansDen}}`}${g > 1 ? ` = ${ansLatex}` : ''}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${ansLatex}$)** 입니다.`
+        : `**[AMC 8 Prep Vol. 3 Ch.16 Algebraic Proportions]**\n\nDivide the numerator and denominator by $y$:\n\n$$${exprLatex} = ${isDiff ? `\\frac{x/y - 1}{x/y + 1} = \\frac{${k} - 1}{${k} + 1} = ${ansLatex}` : `\\frac{1}{x/y + 1} = \\frac{1}{${k} + 1} = ${ansLatex}`}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${ansLatex})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
     // Mixture problem: V1 at C1% mixed with V2 at C2%
     const V1 = pickRandom([20, 30, 40]);
     const C1 = pickRandom([10, 20]);
@@ -745,7 +1097,6 @@ export const GENERATORS = {
       if (i === 1) return `${(C1 + C2) / 2}\\%`;
       if (i === 2) return `${Math.round((finalConc + 2.5) * 10) / 10}\\%`;
       if (i === 3) return `${C2}\\%`;
-      // Guaranteed-fresh for every later retry.
       return `${Math.round((finalConc - 2.5 - i) * 10) / 10}\\%`;
     });
 
@@ -754,8 +1105,8 @@ export const GENERATORS = {
       : `A $${C1}\\%$ salt solution of mass $${V1}\\text{ g}$ is mixed with a $${C2}\\%$ salt solution of mass $${V2}\\text{ g}$. What is the concentration (percentage) of salt in the resulting mixture?`;
 
     const explanation = lang === 'ko'
-      ? `**[AMC 8 Prep Vol. 1 Ch.6 소금물 농도 혼합 공식]**\n\n1. 첫 번째 소금물의 소금 양: $${V1} \\times \\frac{${C1}}{100} = ${salt1}\\text{ g}$\n2. 두 번째 소금물의 소금 양: $${V2} \\times \\frac{${C2}}{100} = ${salt2}\\text{ g}$\n3. 혼합물의 총 소금 양: $${salt1} + ${salt2} = ${totalSalt}\\text{ g}$\n4. 혼합물의 총 무게: $${V1} + ${V2} = ${totalV}\\text{ g}$\n\n따라서 혼합물의 농도는:\n\n$$\\text{농도} = \\frac{${totalSalt}}{${totalV}} \\times 100\\% = ${finalConc}\\%$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${finalConc}\\%$)** 입니다.`
-      : `**[AMC 8 Prep Vol. 1 Ch.6 Solution Mixture Formula]**\n\n1. Salt in first solution: $${V1} \\times ${C1 / 100} = ${salt1}\\text{ g}$.\n2. Salt in second solution: $${V2} \\times ${C2 / 100} = ${salt2}\\text{ g}$.\n3. Total salt: $${totalSalt}\\text{ g}$. Total mass: $${totalV}\\text{ g}$.\n4. Concentration: $\\frac{${totalSalt}}{${totalV}} \\times 100\\% = ${finalConc}\\%$.\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${finalConc}\\%)**.`;
+      ? `**[AMC 8 Prep Vol. 1 Ch.6 & Vol. 3 Ch.16 소금물 농도 혼합 공식]**\n\n1. 첫 번째 소금물의 소금 양: $${V1} \\times \\frac{${C1}}{100} = ${salt1}\\text{ g}$\n2. 두 번째 소금물의 소금 양: $${V2} \\times \\frac{${C2}}{100} = ${salt2}\\text{ g}$\n3. 혼합물의 총 소금 양: $${salt1} + ${salt2} = ${totalSalt}\\text{ g}$\n4. 혼합물의 총 무게: $${V1} + ${V2} = ${totalV}\\text{ g}$\n\n따라서 혼합물의 농도는:\n\n$$\\text{농도} = \\frac{${totalSalt}}{${totalV}} \\times 100\\% = ${finalConc}\\%$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${finalConc}\\%$)** 입니다.`
+      : `**[AMC 8 Prep Vol. 1 Ch.6 & Vol. 3 Ch.16 Solution Mixture Formula]**\n\n1. Salt in first solution: $${V1} \\times ${C1 / 100} = ${salt1}\\text{ g}$.\n2. Salt in second solution: $${V2} \\times ${C2 / 100} = ${salt2}\\text{ g}$.\n3. Total salt: $${totalSalt}\\text{ g}$. Total mass: $${totalV}\\text{ g}$.\n4. Concentration: $\\frac{${totalSalt}}{${totalV}} \\times 100\\% = ${finalConc}\\%$.\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${finalConc}\\%)**.`;
 
     return { question, choices, correctIdx, explanation };
   },
@@ -864,7 +1215,68 @@ export const GENERATORS = {
   // 14. PROBABILITY
   // -----------------------------------------------------------------------
   'probability': (lang) => {
-    const variant = pickRandom(['dice-sum', 'conditional', 'geometric', 'combinatorial']);
+    const variant = pickRandom(['dice-sum', 'conditional', 'geometric', 'combinatorial', 'complementary-dice-product']);
+
+    if (variant === 'complementary-dice-product') {
+      // AMC 8 Prep Vol. 4 Ch.24: Complementary probability
+      const condition = pickRandom(['even-product', 'at-least-one-white']);
+      if (condition === 'even-product') {
+        const ans = `\\frac{3}{4}`;
+
+        const { choices, correctIdx } = buildChoices(ans, (i) => {
+          if (i === 1) return `\\frac{1}{4}`; // both odd
+          if (i === 2) return `\\frac{1}{2}`; // naive 50%
+          if (i === 3) return `\\frac{5}{6}`;
+          return `\\frac{2}{3}`;
+        });
+
+        const question = lang === 'ko'
+          ? `서로 다른 두 개의 표준 주사위를 동시에 던질 때, 나오는 두 눈의 곱이 **짝수**일 확률은 얼마입니까?`
+          : `When two fair standard six-sided dice are rolled simultaneously, what is the probability that the product of the two numbers rolled is **even**?`;
+
+        const explanation = lang === 'ko'
+          ? `**[AMC 8 Prep Vol. 4 Ch.24 여사건의 확률(Complementary Probability)]**\n\n두 수의 곱이 홀수가 되는 유일한 경우는 **두 수 모두 홀수**일 때뿐입니다:\n\n각 주사위에서 홀수 $\\{1, 3, 5\\}$가 나올 확률은 각각 $\\frac{3}{6} = \\frac{1}{2}$입니다.\n\n따라서 두 눈 모두 홀수일 확률은:\n\n$$P(\\text{두 수 모두 홀수}) = \\frac{1}{2} \\times \\frac{1}{2} = \\frac{1}{4}$$\n\n곱이 짝수일 사건은 위 사건의 여사건이므로:\n\n$$P(\\text{곱이 짝수}) = 1 - P(\\text{두 수 모두 홀수}) = 1 - \\frac{1}{4} = \\frac{3}{4}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${ans}$)** 입니다.`
+          : `**[AMC 8 Prep Vol. 4 Ch.24 Complementary Probability]**\n\nThe product of two integers is odd if and only if **both integers are odd**.\n\nThe probability of rolling an odd number $\\{1, 3, 5\\}$ on one die is $\\frac{3}{6} = \\frac{1}{2}$.\n\nThus, the probability that both dice show odd numbers is:\n\n$$P(\\text{both odd}) = \\frac{1}{2} \\times \\frac{1}{2} = \\frac{1}{4}$$\n\nThe product being even is the complement of this event:\n\n$$P(\\text{even product}) = 1 - \\frac{1}{4} = \\frac{3}{4}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+        return { question, choices, correctIdx, explanation };
+      }
+
+      // at least one white marble drawn without replacement
+      const w = randInt(3, 6);
+      const b = randInt(2, 5);
+      const total = w + b;
+      const bothBlueNumer = b * (b - 1);
+      const totalDenom = total * (total - 1);
+      const atLeastOneNumer = totalDenom - bothBlueNumer;
+      const g = gcd(atLeastOneNumer, totalDenom);
+      const num = atLeastOneNumer / g;
+      const den = totalDenom / g;
+      const ans = `\\frac{${num}}{${den}}`;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) {
+          const g1 = gcd(bothBlueNumer, totalDenom);
+          return `\\frac{${bothBlueNumer / g1}}{${totalDenom / g1}}`; // both blue
+        }
+        if (i === 2) return `\\frac{${w}}{${total}}`; // single draw prob
+        if (i === 3) {
+          const g3 = gcd(num - 1, den);
+          return `\\frac{${Math.max(1, num - 1) / g3}}{${den / g3}}`;
+        }
+        const gi = gcd(num, den + i);
+        return `\\frac{${num / gi}}{${(den + i) / gi}}`;
+      });
+
+      const question = lang === 'ko'
+        ? `주머니 속에 흰 구슬 $${w}$개와 파란 구슬 $${b}$개가 들어 있습니다. 이 주머니에서 구슬 $2$개를 임의로 동시에 꺼낼 때, **적어도 한 개가 흰 구슬**일 확률은 얼마입니까?`
+        : `A bag contains $${w}$ white marbles and $${b}$ blue marbles. If two marbles are drawn at random without replacement, what is the probability that **at least one** marble is white?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 4 Ch.24 여사건의 확률: 적어도 하나(At least one)]**\n\n'적어도 하나가 흰 구슬'인 사건의 여사건은 '꺼낸 $2$개 모두 파란 구슬'인 사건입니다.\n\n전체 구슬은 $${w} + ${b} = ${total}$개입니다.\n$2$개 모두 파란 구슬일 확률:\n\n$$P(\\text{모두 파랑}) = \\frac{\\binom{${b}}{2}}{\\binom{${total}}{2}} = \\frac{${b} \\times ${b - 1}}{${total} \\times ${total - 1}} = \\frac{${bothBlueNumer}}{${totalDenom}}$$\n\n따라서 적어도 하나가 흰 구슬일 확률은:\n\n$$P(\\text{적어도 하나 흰색}) = 1 - \\frac{${bothBlueNumer}}{${totalDenom}} = \\frac{${atLeastOneNumer}}{${totalDenom}} = \\frac{${num}}{${den}}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} ($${ans}$)** 입니다.`
+        : `**[AMC 8 Prep Vol. 4 Ch.24 Complementary Probability: At Least One]**\n\nThe complement of "at least one white marble" is "both marbles are blue".\n\nThere are $${total}$ marbles in total. The probability that both drawn marbles are blue is:\n\n$$P(\\text{both blue}) = \\frac{${b} \\times ${b - 1}}{${total} \\times ${total - 1}} = \\frac{${bothBlueNumer}}{${totalDenom}}$$\n\nUsing the complement rule:\n\n$$P(\\text{at least one white}) = 1 - \\frac{${bothBlueNumer}}{${totalDenom}} = \\frac{${num}}{${den}}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'combinatorial') {
       const n = randInt(8, 14);
@@ -1019,9 +1431,122 @@ export const GENERATORS = {
   },
 
   // -----------------------------------------------------------------------
-  // 15. PRIMES & FACTORIZATION
+  // 15. PRIMES & FACTORIZATION (The Essential Guide to Competition Math: Number Theory Topic 1.3)
   // -----------------------------------------------------------------------
   'primes-factorization': (lang) => {
+    const variant = pickRandom(['prime-parity-sum', 'square-root-primality', 'prime-factor-count', 'largest-prime-factor', 'sum-of-prime-factors']);
+
+    if (variant === 'prime-parity-sum') {
+      // AMC 8 Prep Vol. 3 Ch.15 Prime Numbers: sum of two primes is odd => one must be 2
+      const candidatePrimes = [31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83];
+      const qPrime = pickRandom(candidatePrimes);
+      const sumVal = 2 + qPrime; // odd sum
+      const prodVal = 2 * qPrime;
+
+      const { choices, correctIdx } = buildChoices(prodVal, (i) => {
+        if (i === 1) return 3 * (sumVal - 3);
+        if (i === 2) return prodVal + 6;
+        if (i === 3) return prodVal - 6;
+        return prodVal + randInt(4, 18) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? `두 소수 $p, q$의 합이 $${sumVal}$일 때, 두 소수의 곱 $p \\times q$의 값은 얼마입니까?`
+        : `The sum of two prime numbers $p$ and $q$ is $${sumVal}$. What is their product $p \\times q$?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 3 Ch.15 소수의 유일한 짝수 성질과 홀짝성]**\n\n두 자연수의 합이 홀수($${sumVal}$)가 되려면 하나는 짝수이고 다른 하나는 홀수여야 합니다.\n\n소수 중에서 유일한 짝수는 **$2$** 뿐이므로, 두 소수 중 하나는 반드시 $2$입니다:\n\n$$p = 2, \\quad q = ${sumVal} - 2 = ${qPrime}$$\n\n($${qPrime}$ 또한 소수임을 확인)\n\n따라서 두 소수의 곱은:\n\n$$p \\times q = 2 \\times ${qPrime} = ${prodVal}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${prodVal})** 입니다.`
+        : `**[AMC 8 Prep Vol. 3 Ch.15 Prime Parity & The Unique Even Prime 2]**\n\nFor the sum of two integers to be odd ($${sumVal}$), one must be even and the other must be odd.\n\nSince $2$ is the only even prime number, one of the primes must be $2$:\n\n$$p = 2, \\quad q = ${sumVal} - 2 = ${qPrime}$$\n\n(We verify that $${qPrime}$ is indeed prime.)\n\nTherefore, their product is:\n\n$$p \\times q = 2 \\times ${qPrime} = ${prodVal}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${prodVal})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'square-root-primality') {
+      // AMC 8 Prep Vol. 3 Ch.15 Theorem 3 (The Square Root Rule)
+      const cases = [
+        { A: 50, B: 600, lowVal: '7.07', highVal: '24.49', primes: [11, 13, 17, 19, 23], count: 5 },
+        { A: 60, B: 500, lowVal: '7.75', highVal: '22.36', primes: [11, 13, 17, 19], count: 4 },
+        { A: 40, B: 400, lowVal: '6.32', highVal: '20.00', primes: [7, 11, 13, 17, 19], count: 5 },
+        { A: 100, B: 900, lowVal: '10.00', highVal: '30.00', primes: [11, 13, 17, 19, 23, 29], count: 6 },
+        { A: 25, B: 250, lowVal: '5.00', highVal: '15.81', primes: [7, 11, 13], count: 3 },
+      ];
+      const selected = pickRandom(cases);
+      const { A, B, primes, count } = selected;
+      const primesStr = primes.join(', ');
+
+      const { choices, correctIdx } = buildChoices(count, (i) => {
+        if (i === 1) return count + 1;
+        if (i === 2) return Math.max(1, count - 1);
+        if (i === 3) return count + 2;
+        return Math.max(1, count + i);
+      });
+
+      const question = lang === 'ko'
+        ? `$\\sqrt{${A}}$ 보다 크고 $\\sqrt{${B}}$ 보다 작은 소수는 모두 몇 개입니까?`
+        : `How many prime numbers are there between $\\sqrt{${A}}$ and $\\sqrt{${B}}$?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 3 Ch.15 제곱근 범위의 소수 판정]**\n\n주어진 제곱근 값의 범위를 근사치로 파악합니다:\n- $\\sqrt{${A}} \\approx ${selected.lowVal}$\n- $\\sqrt{${B}} \\approx ${selected.highVal}$\n\n따라서 구하는 소수는 $\\sqrt{${A}} < p < \\sqrt{${B}}$ 를 만족하는 소수들입니다:\n\n$$${primesStr}$$\n\n해당하는 소수는 총 **$${count}$개** 입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${count}$개)** 입니다.`
+        : `**[AMC 8 Prep Vol. 3 Ch.15 Primes in Square-Root Intervals]**\n\nEstimate the square root bounds:\n- $\\sqrt{${A}} \\approx ${selected.lowVal}$\n- $\\sqrt{${B}} \\approx ${selected.highVal}$\n\nThe primes satisfying $\\sqrt{${A}} < p < \\sqrt{${B}}$ are:\n\n$$${primesStr}$$\n\nThere are **${count}** such prime numbers in total.\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${count})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'largest-prime-factor') {
+      const items = [
+        { N: 2021, factors: [43, 47], largest: 47, exp: '2021 = 43 \\times 47' },
+        { N: 2022, factors: [2, 3, 337], largest: 337, exp: '2022 = 2 \\times 3 \\times 337' },
+        { N: 2023, factors: [7, 17, 17], largest: 17, exp: '2023 = 7 \\times 17^2' },
+        { N: 2024, factors: [2, 2, 2, 11, 23], largest: 23, exp: '2024 = 2^3 \\times 11 \\times 23' },
+        { N: 1768, factors: [2, 2, 2, 13, 17], largest: 17, exp: '1768 = 2^3 \\times 13 \\times 17' },
+        { N: 1260, factors: [2, 2, 3, 3, 5, 7], largest: 7, exp: '1260 = 2^2 \\times 3^2 \\times 5 \\times 7' },
+        { N: 992, factors: [2, 2, 2, 2, 2, 31], largest: 31, exp: '992 = 2^5 \\times 31' },
+      ];
+      const item = pickRandom(items);
+      const { N, largest, exp } = item;
+
+      const { choices, correctIdx } = buildChoices(largest, (i) => {
+        const primeDistractors = [7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53].filter((p) => p !== largest);
+        return primeDistractors[i % primeDistractors.length];
+      });
+
+      const question = lang === 'ko'
+        ? `자연수 $${N}$의 가장 큰 소인수를 구하세요.`
+        : `Find the greatest prime factor of the positive integer $${N}$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Competition Math: Number Theory Topic 1.3 소인수분해와 최대 소인수]**\n\n자연수 $${N}$을 소인수분해하면 다음과 같습니다:\n\n$$${N} = ${exp}$$\n\n따라서 $${N}$의 소인수 중 가장 큰 것은 **$${largest}$** 입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${largest})** 입니다.`
+        : `**[The Essential Guide to Competition Math: Number Theory Topic 1.3 Prime Factorization]**\n\nFactoring $${N}$ into primes:\n\n$$${N} = ${exp}$$\n\nThe greatest prime factor is **${largest}**.\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${largest})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'sum-of-prime-factors') {
+      const p1 = pickRandom([2, 3]);
+      const p2 = pickRandom([5, 7]);
+      const p3 = pickRandom([11, 13]);
+      const N = p1 * p2 * p3;
+      const ans = p1 + p2 + p3;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return ans + 2;
+        if (i === 2) return Math.max(2, ans - 2);
+        if (i === 3) return p1 * p2;
+        return ans + i + 1;
+      });
+
+      const question = lang === 'ko'
+        ? `자연수 $${N}$의 모든 서로 다른 소인수의 합을 구하세요.`
+        : `Find the sum of all distinct prime factors of the integer $${N}$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Competition Math: Number Theory Topic 1.3 소인수의 합]**\n\n$${N}$을 소인수분해하면 $${N} = ${p1} \\times ${p2} \\times ${p3}$ 입니다.\n서로 다른 소인수는 $${p1}, ${p2}, ${p3}$ 이므로 그 합은:\n\n$$${p1} + ${p2} + ${p3} = ${ans}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Competition Math: Number Theory Topic 1.3 Sum of Distinct Prime Factors]**\n\nFactoring $${N}$ gives $${N} = ${p1} \\times ${p2} \\times ${p3}$.\nThe distinct prime factors are $${p1}, ${p2}, ${p3}$, and their sum is:\n\n$$${p1} + ${p2} + ${p3} = ${ans}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // prime-factor-count
     const p = pickRandom([2, 3]);
     const q = pickRandom([5, 7]);
     const a = randInt(2, 3);
@@ -1041,8 +1566,8 @@ export const GENERATORS = {
       : `How many positive divisors does the integer $${N}$ have?`;
 
     const explanation = lang === 'ko'
-      ? `**[소인수분해와 약수의 개수 공식]**\n\n자연수 $${N}$을 소인수분해하면:\n\n$$${N} = ${p}^{${a}} \\times ${q}^{${b}}$$\n\n약수의 개수 공식 $(a+1)(b+1)$에 의해:\n\n$$\\text{약수의 개수} = (${a} + 1) \\times (${b} + 1) = ${a + 1} \\times ${b + 1} = ${numDivisors}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${numDivisors}$개)** 입니다.`
-      : `**[Prime Factorization & Number of Divisors]**\n\nFactoring $${N}$ into primes gives:\n\n$$${N} = ${p}^{${a}} \\times ${q}^{${b}}$$\n\nThe number of positive divisors is $(a+1)(b+1)$:\n\n$$(${a}+1)(${b}+1) = ${numDivisors}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${numDivisors})**.`;
+      ? `**[The Essential Guide to Competition Math: Number Theory Topic 1.3 소인수분해와 약수의 개수]**\n\n자연수 $${N}$을 소인수분해하면:\n\n$$${N} = ${p}^{${a}} \\times ${q}^{${b}}$$\n\n약수의 개수 공식 $(a+1)(b+1)$에 의해:\n\n$$\\text{약수의 개수} = (${a} + 1) \\times (${b} + 1) = ${a + 1} \\times ${b + 1} = ${numDivisors}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${numDivisors}$개)** 입니다.`
+      : `**[The Essential Guide to Competition Math: Number Theory Topic 1.3 Prime Factorization & Divisors]**\n\nFactoring $${N}$ into primes gives:\n\n$$${N} = ${p}^{${a}} \\times ${q}^{${b}}$$\n\nThe number of positive divisors is $(a+1)(b+1)$:\n\n$$(${a}+1)(${b}+1) = ${numDivisors}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${numDivisors})**.`;
 
     return { question, choices, correctIdx, explanation };
   },
@@ -1051,7 +1576,30 @@ export const GENERATORS = {
   // 16. SYMMETRY & TRANSFORMATIONS (Vol 2 Ch 7: Transformations)
   // -----------------------------------------------------------------------
   'symmetry-transformations': (lang) => {
-    const variant = pickRandom(['line-reflection', 'point-reflection', 'rotational-symmetry']);
+    const variant = pickRandom(['cube-net-opposite', 'line-reflection', 'point-reflection', 'rotational-symmetry']);
+
+    if (variant === 'cube-net-opposite') {
+      // AMC 8 Prep Vol. 3 Ch.13 Section 2: 11 Nets of a Cube & Opposite Faces
+      const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
+      const targetFace = pickRandom(letters);
+      const oppMap = { A: 'F', F: 'A', B: 'D', D: 'B', C: 'E', E: 'C' };
+      const correctOpp = oppMap[targetFace];
+
+      const { choices, correctIdx } = buildChoices(correctOpp, (i) => {
+        const distractors = letters.filter(l => l !== correctOpp && l !== targetFace);
+        return distractors[i % distractors.length];
+      });
+
+      const question = lang === 'ko'
+        ? `정육면체의 전개도가 다음과 같이 주어졌습니다. 윗줄에 면 $A$, 가운뎃줄에 면 $B, C, D, E$가 왼쪽부터 차례로 이어져 있고, 아랫줄의 면 $C$ 바로 아래에 면 $F$가 붙어 있습니다.\n\n이 전개도를 접어서 정육면체를 만들 때, 면 **$${targetFace}$** 의 맞은편(평행한 면)에 오는 면은 어느 것입니까?`
+        : `A net of a cube is given: the top row has face $A$ (attached above $C$), the middle row has faces $B, C, D, E$ in a line from left to right, and the bottom row has face $F$ attached directly below $C$.\n\nWhen this net is folded to form a cube, which face is opposite face **$${targetFace}$**?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 3 Ch.13 정육면체의 11가지 전개도와 맞은편 면 분석]**\n\n정육면체 1-4-1 전개도에서 마주보는(평행한) 두 면의 성질:\n1. 일직선상으로 연결된 4개의 면($B, C, D, E$)에서는 한 칸 건너뛴 면끼리 서로 마주봅니다:\n   - $B$의 맞은편은 $D$\n   - $C$의 맞은편은 $E$\n2. 양쪽으로 돌출된 면($A$와 $F$)끼리 접혀서 서로 마주봅니다:\n   - $A$의 맞은편은 $F$\n\n따라서 면 **$${targetFace}$** 의 맞은편 면은 **$${correctOpp}$** 입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${correctOpp}$)** 입니다.`
+        : `**[AMC 8 Prep Vol. 3 Ch.13 11 Nets of a Cube & Opposite Face Rules]**\n\nFor a standard 1-4-1 cube net:\n1. In the four-square horizontal strip ($B, C, D, E$), faces separated by one square are opposite:\n   - $B$ is opposite $D$\n   - $C$ is opposite $E$\n2. The two flap faces on opposite sides fold up to face each other:\n   - $A$ is opposite $F$\n\nTherefore, the face opposite **$${targetFace}$** is **$${correctOpp}$**.\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${correctOpp})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'line-reflection') {
       const isXReflection = Math.random() < 0.5;
@@ -1172,7 +1720,60 @@ export const GENERATORS = {
   // 17. CONSECUTIVE INTEGERS & EQUATIONS (Vol 2 Ch 8: Consecutive Integers)
   // -----------------------------------------------------------------------
   'equations-inequalities': (lang) => {
-    const variant = pickRandom(['consecutive-integers', 'consecutive-odd']);
+    const variant = pickRandom(['fraction-linear-equation', 'rational-cross-mult', 'consecutive-integers', 'consecutive-odd']);
+
+    if (variant === 'fraction-linear-equation') {
+      // AMC 8 Prep Vol. 3 Ch.18 Problem 4: Solving linear equations with fractions
+      const b = pickRandom([2, 3]);
+      const e = pickRandom([4, 5]);
+      const L = lcm(b, e);
+      const p1 = randInt(1, 4);
+      const p2 = randInt(1, 4);
+      const multB = randInt(3, 7);
+      const xVal = multB * b - p1;
+      const remE = (xVal - p2) % e;
+      const adjP2 = p2 + remE;
+      const K = (xVal + p1) / b - (xVal - adjP2) / e;
+
+      const { choices, correctIdx } = buildChoices(xVal, (i) => {
+        if (i === 1) return xVal + b;
+        if (i === 2) return Math.max(1, xVal - e);
+        if (i === 3) return xVal + 2;
+        return xVal + randInt(3, 8) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? `다음 방정식을 만족하는 $x$의 값을 구하세요.\n\n$$\\frac{x + ${p1}}{${b}} = \\frac{x - ${adjP2}}{${e}} + ${K}$$`
+        : `Find the value of $x$ that satisfies the equation:\n\n$$\\frac{x + ${p1}}{${b}} = \\frac{x - ${adjP2}}{${e}} + ${K}$$`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 3 Ch.18 분수 계수 일차방정식 풀이]**\n\n양변에 분모의 최소공배수인 $${L}$을 곱하여 분수를 없앱니다:\n\n$$${L} \\times \\frac{x + ${p1}}{${b}} = ${L} \\times \\left(\\frac{x - ${adjP2}}{${e}} + ${K}\\right)$$\n$$${L / b}(x + ${p1}) = ${L / e}(x - ${adjP2}) + ${L * K}$$\n$$${L / b}x + ${(L / b) * p1} = ${L / e}x - ${(L / e) * adjP2} + ${L * K}$$\n\n동류항끼리 정리하면:\n\n$$(${L / b} - ${L / e})x = ${L * K - (L / e) * adjP2 - (L / b) * p1} \\implies ${L / b - L / e}x = ${(L / b - L / e) * xVal}$$\n$$x = ${xVal}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${xVal})** 입니다.`
+        : `**[AMC 8 Prep Vol. 3 Ch.18 Solving Linear Equations with Fractions]**\n\nMultiply both sides by $\\text{lcm}(${b}, ${e}) = ${L}$ to clear denominators:\n\n$$${L / b}(x + ${p1}) = ${L / e}(x - ${adjP2}) + ${L * K}$$\n\nExpanding and isolating $x$:\n\n$$(${L / b} - ${L / e})x = ${(L / b - L / e) * xVal} \\implies x = ${xVal}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${xVal})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'rational-cross-mult') {
+      // AMC 8 Prep Vol. 3 Ch.18 Problem 5: (3x - 1)/(4x - 4) = 2/3
+      const ans = -5;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return -3;
+        if (i === 2) return -2;
+        if (i === 3) return -7;
+        return 3 + i;
+      });
+
+      const question = lang === 'ko'
+        ? `다음 방정식을 만족하는 $x$의 값을 구하세요.\n\n$$\\frac{3x - 1}{4x - 4} = \\frac{2}{3}$$`
+        : `Solve for $x$ in the equation:\n\n$$\\frac{3x - 1}{4x - 4} = \\frac{2}{3}$$`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 3 Ch.18 대각선 곱을 이용한 유리방정식 풀이]**\n\n대각선 곱(Cross-multiplication) 성질 $\\frac{A}{B} = \\frac{C}{D} \\implies A \\times D = B \\times C$ 를 적용합니다:\n\n$$3(3x - 1) = 2(4x - 4)$$\n$$9x - 3 = 8x - 8$$\n\n$x$항과 상수항을 이항하여 정리하면:\n\n$$9x - 8x = -8 + 3 \\implies x = -5$$\n\n(분모 확인: $4(-5) - 4 = -24 \\neq 0$ 이므로 유효한 해입니다.)\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[AMC 8 Prep Vol. 3 Ch.18 Solving Rational Equations via Cross-Multiplication]**\n\nApply cross-multiplication:\n\n$$3(3x - 1) = 2(4x - 4)$$\n$$9x - 3 = 8x - 8$$\n$$9x - 8x = -8 + 3 \\implies x = -5$$\n\n(Checking denominator: $4(-5) - 4 = -24 \\neq 0$, so $x = -5$ is extraneous-free.)\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'consecutive-integers') {
       const k = pickRandom([5, 7, 9]);
@@ -1605,7 +2206,39 @@ export const GENERATORS = {
   },
 
   'angles-plane-figures': (lang) => {
-    const variant = pickRandom(['parallel-transversal', 'triangle-angle-sum', 'angle-bisector']);
+    const variant = pickRandom(['parallel-transversal', 'triangle-angle-sum', 'angle-bisector', 'star-polygon-angles']);
+
+    if (variant === 'star-polygon-angles') {
+      // AMC 8 Prep Vol. 5 Ch.25: Angles and Triangles - 5-pointed Star Vertex Angles
+      const configs = [
+        { a: 28, b: 36, c: 42, d: 34, e: 40 },
+        { a: 35, b: 30, c: 45, d: 35, e: 35 },
+        { a: 32, b: 38, c: 40, d: 30, e: 40 },
+        { a: 25, b: 40, c: 35, d: 45, e: 35 },
+        { a: 36, b: 36, c: 36, d: 36, e: 36 },
+        { a: 30, b: 42, c: 28, d: 44, e: 36 },
+      ];
+      const cfg = pickRandom(configs);
+      const { a, b, c, d, e } = cfg;
+      const ans = `${e}^\\circ`;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return `${e + 10}^\\circ`;
+        if (i === 2) return `${Math.max(10, e - 10)}^\\circ`;
+        if (i === 3) return `${e + 5}^\\circ`;
+        return `${Math.max(10, e - 5)}^\\circ`;
+      });
+
+      const question = lang === 'ko'
+        ? `오각별(5-pointed star) 모양의 도형에서 다섯 개의 뾰족한 꼭짓점 각의 크기가 각각 $\\angle A = ${a}^\\circ$, $\\angle B = ${b}^\\circ$, $\\angle C = ${c}^\\circ$, $\\angle D = ${d}^\\circ$, 그리고 $\\angle E$입니다. 이때 $\\angle E$의 크기는 몇 도입니까?`
+        : `In a 5-pointed star, the measures of four of the vertex angles are $\\angle A = ${a}^\\circ$, $\\angle B = ${b}^\\circ$, $\\angle C = ${c}^\\circ$, and $\\angle D = ${d}^\\circ$. What is the measure of the fifth vertex angle $\\angle E$?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 5 Ch.25 오각별 다각형의 꼭짓점 각의 합과 외각 정리]**\n\n오각별의 꼭짓점 각들은 삼각형들의 외각 관계를 두 번 적용하면 삼각형 하나의 내각으로 모을 수 있습니다.\n\n일반적으로 임의의 오각별에서 다섯 꼭짓점 각의 총합은 항상 $180^\\circ$입니다:\n\n$$\\angle A + \\angle B + \\angle C + \\angle D + \\angle E = 180^\\circ$$\n\n주어진 네 각을 대입하면:\n\n$$${a}^\\circ + ${b}^\\circ + ${c}^\\circ + ${d}^\\circ + \\angle E = 180^\\circ$$\n$$${a + b + c + d}^\\circ + \\angle E = 180^\\circ \\implies \\angle E = 180^\\circ - ${a + b + c + d}^\\circ = ${e}^\\circ$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[AMC 8 Prep Vol. 5 Ch.25 Star Polygon Angles & Exterior Angle Theorem]**\n\nBy repeatedly applying the exterior angle theorem, the five point angles of any 5-pointed star sum to the interior angles of a single triangle ($180^\\circ$):\n\n$$\\angle A + \\angle B + \\angle C + \\angle D + \\angle E = 180^\\circ$$\n\nSubstituting the given angles:\n\n$$${a}^\\circ + ${b}^\\circ + ${c}^\\circ + ${d}^\\circ + \\angle E = 180^\\circ$$\n$$\\angle E = 180^\\circ - ${a + b + c + d}^\\circ = ${e}^\\circ$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'angle-bisector') {
       // Build AB, AC, BD, DC from a shared ratio r1:r2 so BD/DC = AB/AC holds by construction,
@@ -1708,7 +2341,79 @@ export const GENERATORS = {
   },
 
   'quadrilaterals-polygons': (lang) => {
-    if (Math.random() < 0.35) {
+    const variant = pickRandom(['british-flag-theorem', 'trapezoid-butterfly', 'cyclic-quadrilateral', 'angle-ratio']);
+
+    if (variant === 'british-flag-theorem') {
+      // AMC 8 Prep Vol. 5 Ch.26 Rectangles and Squares: British Flag Theorem AP^2 + PC^2 = BP^2 + PD^2
+      const quadruples = [
+        [1, 8, 4, 7],   // 1 + 64 = 16 + 49 = 65
+        [2, 9, 6, 7],   // 4 + 81 = 36 + 49 = 85
+        [3, 11, 7, 9],  // 9 + 121 = 49 + 81 = 130
+        [5, 10, 2, 11], // 25 + 100 = 4 + 121 = 125
+        [4, 13, 8, 11], // 16 + 169 = 64 + 121 = 185
+        [6, 17, 10, 15], // 36 + 289 = 100 + 225 = 325
+        [5, 15, 9, 13], // 25 + 225 = 81 + 169 = 250
+        [7, 11, 1, 13], // 49 + 121 = 1 + 169 = 170
+        [8, 9, 1, 12],  // 64 + 81 = 1 + 144 = 145
+      ];
+      const [ap, pc, bp, pd] = pickRandom(quadruples);
+      const correctAns = pd;
+
+      const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+        if (i === 1) return pd + 1;
+        if (i === 2) return Math.max(1, pd - 1);
+        if (i === 3) return pd + 2;
+        return Math.max(1, pd - 2);
+      });
+
+      const question = lang === 'ko'
+        ? `직사각형 $ABCD$의 내부(또는 평면 위)에 점 $P$가 있습니다. 점 $P$에서 각 꼭짓점까지의 거리가 $AP = ${ap}$, $PC = ${pc}$, $BP = ${bp}$일 때, $PD$의 길이를 구하세요.`
+        : `Point $P$ lies inside rectangle $ABCD$. If the distances from $P$ to three vertices are $AP = ${ap}$, $PC = ${pc}$, and $BP = ${bp}$, find the length of $PD$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 5 Ch.26 영국 국기 정리 (British Flag Theorem)]**\n\n직사각형 $ABCD$와 평면 위의 임의의 점 $P$에 대하여, 마주보는 꼭짓점까지의 거리의 제곱의 합은 서로 같습니다:\n\n$$AP^2 + PC^2 = BP^2 + PD^2$$\n\n주어진 수치를 대입하면:\n\n$$${ap}^2 + ${pc}^2 = ${bp}^2 + PD^2$$\n$$${ap * ap} + ${pc * pc} = ${bp * bp} + PD^2$$\n$$${ap * ap + pc * pc} = ${bp * bp} + PD^2 \\implies PD^2 = ${ap * ap + pc * pc - bp * bp} = ${pd * pd}$$\n\n따라서 $PD = \\sqrt{${pd * pd}} = ${correctAns}$ 입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${correctAns})** 입니다.`
+        : `**[AMC 8 Prep Vol. 5 Ch.26 British Flag Theorem]**\n\nFor any point $P$ in the plane of rectangle $ABCD$, the sum of the squares of the distances to opposite vertices is invariant:\n\n$$AP^2 + PC^2 = BP^2 + PD^2$$\n\nSubstituting the given values:\n\n$$${ap}^2 + ${pc}^2 = ${bp}^2 + PD^2$$\n$$${ap * ap} + ${pc * pc} = ${bp * bp} + PD^2$$\n$$${ap * ap + pc * pc} = ${bp * bp} + PD^2 \\implies PD^2 = ${pd * pd} \\implies PD = ${correctAns}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${correctAns})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'trapezoid-butterfly') {
+      // AMC 8 Prep Vol. 5 Ch.28 Trapezoids: Butterfly Theorem on Diagonals
+      const pairs = [
+        [1, 4],   // S1 = 1, S2 = 16, m=1, n=4 -> side = 4, total = 25
+        [2, 3],   // S1 = 4, S2 = 9, m=2, n=3 -> side = 6, total = 25
+        [2, 5],   // S1 = 4, S2 = 25, m=2, n=5 -> side = 10, total = 49
+        [3, 4],   // S1 = 9, S2 = 16, m=3, n=4 -> side = 12, total = 49
+        [3, 5],   // S1 = 9, S2 = 25, m=3, n=5 -> side = 15, total = 64
+        [4, 5],   // S1 = 16, S2 = 25, m=4, n=5 -> side = 20, total = 81
+        [1, 3],   // S1 = 1, S2 = 9, m=1, n=3 -> side = 3, total = 16
+        [2, 4],   // S1 = 4, S2 = 16, m=2, n=4 -> side = 8, total = 36
+      ];
+      const [m, n] = pickRandom(pairs);
+      const sTop = m * m;
+      const sBottom = n * n;
+      const sSide = m * n;
+      const sTotal = (m + n) * (m + n);
+
+      const { choices, correctIdx } = buildChoices(sTotal, (i) => {
+        if (i === 1) return sTop + sBottom;
+        if (i === 2) return sTop + sBottom + sSide;
+        if (i === 3) return sTotal + 4;
+        return Math.max(4, sTotal - 4);
+      });
+
+      const question = lang === 'ko'
+        ? `사다리꼴 $ABCD$에서 윗변 $AB$와 아랫변 $CD$가 평행합니다. 두 대각선 $AC$와 $BD$가 점 $O$에서 만날 때, $\\triangle AOB$의 넓이는 $${sTop}$이고 $\\triangle COD$의 넓이는 $${sBottom}$입니다. 사다리꼴 $ABCD$ 전체의 넓이를 구하세요.`
+        : `In trapezoid $ABCD$, bases $AB$ and $CD$ are parallel. Diagonals $AC$ and $BD$ intersect at point $O$. If the area of $\\triangle AOB$ is $${sTop}$ and the area of $\\triangle COD$ is $${sBottom}$, find the total area of trapezoid $ABCD$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 5 Ch.28 사다리꼴 대각선 분할 넓이 정리 (Butterfly Theorem)]**\n\n$AB \\parallel CD$이므로 $\\triangle AOB \\sim \\triangle COD$이며, 닮음비는 $\\sqrt{${sTop}} : \\sqrt{${sBottom}} = ${m} : ${n}$입니다.\n\n대각선에 의해 나뉜 두 옆면 삼각형 $\\triangle AOD$와 $\\triangle BOC$의 넓이는 서로 같으며, 다음과 같습니다:\n\n$$S_{\\triangle AOD} = S_{\\triangle BOC} = \\sqrt{S_{\\triangle AOB} \\times S_{\\triangle COD}} = \\sqrt{${sTop} \\times ${sBottom}} = ${sSide}$$\n\n따라서 사다리꼴 전체의 넓이는:\n\n$$S_{ABCD} = (\\sqrt{S_{\\triangle AOB}} + \\sqrt{S_{\\triangle COD}})^2 = (${m} + ${n})^2 = ${sTotal}$$\n\n(또는 네 삼각형 넓이의 합: $${sTop} + ${sBottom} + ${sSide} + ${sSide} = ${sTotal}$)\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${sTotal})** 입니다.`
+        : `**[AMC 8 Prep Vol. 5 Ch.28 Trapezoid Diagonal Butterfly Theorem]**\n\nSince $AB \\parallel CD$, $\\triangle AOB \\sim \\triangle COD$ with ratio of similarity $\\sqrt{${sTop}} : \\sqrt{${sBottom}} = ${m} : ${n}$.\n\nThe two lateral triangles have equal areas:\n\n$$S_{\\triangle AOD} = S_{\\triangle BOC} = \\sqrt{S_{\\triangle AOB} \\times S_{\\triangle COD}} = \\sqrt{${sTop} \\times ${sBottom}} = ${sSide}$$\n\nThus, the total area of trapezoid $ABCD$ is:\n\n$$S_{ABCD} = (\\sqrt{S_{\\triangle AOB}} + \\sqrt{S_{\\triangle COD}})^2 = (${m} + ${n})^2 = ${sTotal}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${sTotal})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'cyclic-quadrilateral') {
       // cyclic-quadrilateral: opposite angles of a cyclic quadrilateral are supplementary
       const angleA = randInt(50, 110);
       const angleB = randInt(60, 120);
@@ -1775,13 +2480,73 @@ export const GENERATORS = {
   // Topic 7.2: Circles)
   // -----------------------------------------------------------------------
   'circles': (lang) => {
-    const variant = pickRandom(['sector-area', 'arc-length', 'inscribed-angle', 'tangent-length']);
+    const variant = pickRandom(['annulus-chord', 'intersecting-chords', 'sector-area', 'arc-length', 'inscribed-angle', 'tangent-length']);
     const fmtPi = (n, d) => {
       const g = gcd(n, d) || 1;
       const nn = n / g;
       const dd = d / g;
       return dd === 1 ? `${nn}\\pi` : `\\frac{${nn}\\pi}{${dd}}`;
     };
+
+    if (variant === 'annulus-chord') {
+      // AMC 8 Prep Vol. 5 Ch.29 Circles: Annulus area from tangent chord length (Mamikon / Pythagorean)
+      const chordLen = pickRandom([6, 8, 10, 12, 14, 16, 18, 20]);
+      const halfChord = chordLen / 2;
+      const ringAreaCoeff = halfChord * halfChord;
+      const ans = `${ringAreaCoeff}\\pi`;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return `${chordLen * chordLen}\\pi`;
+        if (i === 2) return `${chordLen}\\pi`;
+        if (i === 3) return `${ringAreaCoeff * 2}\\pi`;
+        return `${Math.max(1, ringAreaCoeff - 10)}\\pi`;
+      });
+
+      const question = lang === 'ko'
+        ? `중심이 같은 두 동심원이 있습니다. 큰 원의 현 $AB$가 작은 원에 접하며 그 길이가 $${chordLen}$일 때, 두 원 사이의 고리 모양 영역(환면, Annulus)의 넓이를 구하세요.`
+        : `Two concentric circles have the same center. A chord $AB$ of the larger circle is tangent to the smaller circle and has length $${chordLen}$. What is the area of the ring (annulus) between the two circles?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 5 Ch.29 동심원과 현의 성질 (피타고라스 정리)]**\n\n큰 원의 반지름을 $R$, 작은 원의 반지름을 $r$이라 하면 구하는 고리의 넓이는 $\\pi R^2 - \\pi r^2 = \\pi (R^2 - r^2)$입니다.\n\n원의 중심에서 접점까지 내린 수선은 작은 원의 반지름 $r$이고, 접선인 현 $AB$를 수직이등분합니다. 따라서 직각삼각형에서:\n\n$$R^2 = r^2 + \\left(\\frac{${chordLen}}{2}\\right)^2 = r^2 + ${halfChord}^2$$\n$$R^2 - r^2 = ${halfChord}^2 = ${ringAreaCoeff}$$\n\n따라서 고리 모양 영역의 넓이는:\n\n$$\\text{넓이} = \\pi (R^2 - r^2) = ${ringAreaCoeff}\\pi$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${ans}$)** 입니다.`
+        : `**[AMC 8 Prep Vol. 5 Ch.29 Concentric Circles Tangent Chord Property]**\n\nLet $R$ and $r$ be the radii of the larger and smaller circles, respectively. The area of the ring is $\\pi R^2 - \\pi r^2 = \\pi (R^2 - r^2)$.\n\nThe radius $r$ to the point of tangency is perpendicular to chord $AB$ and bisects it into segments of length $${chordLen}/2 = ${halfChord}$. By the Pythagorean theorem:\n\n$$R^2 - r^2 = (${halfChord})^2 = ${ringAreaCoeff}$$\n\nThus, the area of the annulus is:\n\n$$\\text{Area} = \\pi (R^2 - r^2) = ${ringAreaCoeff}\\pi$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'intersecting-chords') {
+      // AMC 8 Prep Vol. 5 Ch.29 Circles: Intersecting Chords Theorem AP * PB = CP * PD
+      const chordConfigs = [
+        { a: 3, b: 8, c: 4, d: 6 },
+        { a: 4, b: 6, c: 3, d: 8 },
+        { a: 4, b: 9, c: 6, d: 6 },
+        { a: 2, b: 18, c: 4, d: 9 },
+        { a: 6, b: 8, c: 4, d: 12 },
+        { a: 5, b: 12, c: 6, d: 10 },
+        { a: 5, b: 12, c: 4, d: 15 },
+        { a: 8, b: 9, c: 6, d: 12 },
+        { a: 4, b: 10, c: 5, d: 8 },
+        { a: 3, b: 12, c: 4, d: 9 },
+      ];
+      const { a, b, c, d } = pickRandom(chordConfigs);
+      const correctAns = d;
+
+      const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+        if (i === 1) return d + 1;
+        if (i === 2) return Math.max(1, d - 1);
+        if (i === 3) return d + 2;
+        return Math.max(1, d - 2);
+      });
+
+      const question = lang === 'ko'
+        ? `원 내부의 점 $P$에서 두 현 $AB$와 $CD$가 서로 만납니다. $AP = ${a}$, $PB = ${b}$, $CP = ${c}$일 때, 선분 $PD$의 길이를 구하세요.`
+        : `Two chords $AB$ and $CD$ intersect at point $P$ inside a circle. If $AP = ${a}$, $PB = ${b}$, and $CP = ${c}$, find the length of segment $PD$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 5 Ch.29 원의 현과 방먁 정리 (Intersecting Chords Theorem)]**\n\n원 내부에서 두 현이 교차할 때, 원주각과 닮은 삼각형 성질에 의해 두 현의 선분 곱이 서로 같습니다:\n\n$$AP \\times PB = CP \\times PD$$\n\n주어진 선분의 길이를 대입하면:\n\n$$${a} \\times ${b} = ${c} \\times PD$$\n$$${a * b} = ${c} \\times PD \\implies PD = \\frac{${a * b}}{${c}} = ${d}$$\n\n따라서 $PD = ${correctAns}$ 입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${correctAns})** 입니다.`
+        : `**[AMC 8 Prep Vol. 5 Ch.29 Intersecting Chords Theorem]**\n\nWhen two chords intersect inside a circle, the products of their segments are equal by similar triangles:\n\n$$AP \\times PB = CP \\times PD$$\n\nSubstituting the given values:\n\n$$${a} \\times ${b} = ${c} \\times PD \\implies ${a * b} = ${c} \\times PD \\implies PD = ${d}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${correctAns})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'sector-area') {
       const angle = pickRandom([30, 45, 60, 72, 90, 120, 135, 150, 180, 270]);
@@ -1881,7 +2646,159 @@ export const GENERATORS = {
   },
 
   'solids': (lang) => {
-    const variant = pickRandom(['rect-prism', 'triangular-prism']);
+    const variant = pickRandom(['space-diagonal', 'cylinder-scaling-ratio', 'cube-painted-slicing', 'polyhedron-euler', 'rect-prism', 'triangular-prism']);
+
+    if (variant === 'space-diagonal') {
+      // AMC 8 Prep Vol. 5 Ch.30 Volumes: Space Diagonal of a Rectangular Solid d = sqrt(a^2 + b^2 + c^2)
+      const quadruples = [
+        [2, 3, 6, 7],     // 4 + 9 + 36 = 49 -> 7
+        [1, 4, 8, 9],     // 1 + 16 + 64 = 81 -> 9
+        [4, 4, 7, 9],     // 16 + 16 + 49 = 81 -> 9
+        [2, 6, 9, 11],    // 4 + 36 + 81 = 121 -> 11
+        [6, 6, 7, 11],    // 36 + 36 + 49 = 121 -> 11
+        [3, 4, 12, 13],   // 9 + 16 + 144 = 169 -> 13
+        [2, 10, 11, 15],  // 4 + 100 + 121 = 225 -> 15
+        [5, 10, 10, 15],  // 25 + 100 + 100 = 225 -> 15
+        [8, 9, 12, 17],   // 64 + 81 + 144 = 289 -> 17
+      ];
+      const [a, b, c, d] = pickRandom(quadruples);
+      const correctAns = d;
+
+      const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+        if (i === 1) return d + 1;
+        if (i === 2) return Math.max(1, d - 1);
+        if (i === 3) return a + b + c;
+        return Math.max(1, d + (i % 2 === 0 ? 2 : -2));
+      });
+
+      const question = lang === 'ko'
+        ? `가로, 세로, 높이의 길이가 각각 $${a}$, $${b}$, $${c}$인 직육면체가 있습니다. 이 직육면체의 공간 대각선(가장 먼 두 꼭짓점 사이의 거리)의 길이를 구하세요.`
+        : `A rectangular solid has length $${a}$, width $${b}$, and height $${c}$. Find the length of the space diagonal (the distance between the two farthest opposite vertices).`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 5 Ch.30 직육면체의 공간 대각선 (Space Diagonal)]**\n\n가로 $a$, 세로 $b$, 높이 $c$인 직육면체의 공간 대각선 길이 $d$는 3차원 피타고라스 정리에 의해 다음과 같습니다:\n\n$$d = \\sqrt{a^2 + b^2 + c^2}$$\n\n주어진 수치를 대입하면:\n\n$$d = \\sqrt{${a}^2 + ${b}^2 + ${c}^2} = \\sqrt{${a * a} + ${b * b} + ${c * c}} = \\sqrt{${d * d}} = ${correctAns}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${correctAns})** 입니다.`
+        : `**[AMC 8 Prep Vol. 5 Ch.30 Rectangular Solid Space Diagonal]**\n\nFor a rectangular box with dimensions $a, b, c$, the space diagonal $d$ is given by the 3D Pythagorean theorem:\n\n$$d = \\sqrt{a^2 + b^2 + c^2}$$\n\nSubstituting the dimensions:\n\n$$d = \\sqrt{${a}^2 + ${b}^2 + ${c}^2} = \\sqrt{${a * a} + ${b * b} + ${c * c}} = \\sqrt{${d * d}} = ${correctAns}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${correctAns})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'cylinder-scaling-ratio') {
+      // AMC 8 Prep Vol. 5 Ch.30 Volumes: Cylinder Volume Conservation
+      const configs = [
+        { r1: 4, h1: 12, r2: 2, h2: 48 },   // (4/2)^2 * 12 = 48
+        { r1: 6, h1: 8, r2: 4, h2: 18 },    // (36/16) * 8 = 18
+        { r1: 3, h1: 20, r2: 6, h2: 5 },    // (3/6)^2 * 20 = 5
+        { r1: 4, h1: 24, r2: 8, h2: 6 },    // (4/8)^2 * 24 = 6
+        { r1: 5, h1: 16, r2: 10, h2: 4 },   // (5/10)^2 * 16 = 4
+        { r1: 6, h1: 5, r2: 3, h2: 20 },    // (6/3)^2 * 5 = 20
+        { r1: 2, h1: 36, r2: 6, h2: 4 },    // (2/6)^2 * 36 = 4
+        { r1: 4, h1: 9, r2: 6, h2: 4 },     // (16/36) * 9 = 4
+      ];
+      const { r1, h1, r2, h2 } = pickRandom(configs);
+      const correctAns = h2;
+
+      const { choices, correctIdx } = buildChoices(correctAns, (i) => {
+        if (i === 1) return Math.round(h1 * (r1 / r2));
+        if (i === 2) return h1;
+        if (i === 3) return h2 + 2;
+        return Math.max(1, h2 - 2);
+      });
+
+      const question = lang === 'ko'
+        ? `밑면의 반지름이 $${r1}$인 원기둥 모양의 수조 $A$에 높이 $${h1}$만큼 물이 채워져 있습니다. 이 물을 모두 밑면의 반지름이 $${r2}$인 다른 원기둥 수조 $B$에 부었을 때, 수조 $B$에 채워지는 물의 높이를 구하세요. (단, 두 수조에서 물은 넘치지 않습니다.)`
+        : `A cylindrical tank $A$ with base radius $${r1}$ is filled with water to a depth of $${h1}$. If all of this water is poured into a second cylindrical tank $B$ with base radius $${r2}$, what will be the depth of the water in tank $B$? (Assume no water spills.)`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 5 Ch.30 원기둥의 부피와 액체 이동 (Conservation of Volume)]**\n\n원기둥의 부피 공식은 $V = \\pi r^2 h$입니다. 물의 전체 부피는 보존되므로:\n\n$$V_A = \\pi \\times ${r1}^2 \\times ${h1} = \\pi \\times ${r1 * r1} \\times ${h1} = ${r1 * r1 * h1}\\pi$$\n\n이 물을 반지름이 $${r2}$인 수조 $B$에 부었을 때의 높이를 $h_B$라 하면:\n\n$$\\pi \\times ${r2}^2 \\times h_B = ${r1 * r1 * h1}\\pi$$\n$$${r2 * r2} h_B = ${r1 * r1 * h1} \\implies h_B = \\frac{${r1 * r1 * h1}}{${r2 * r2}} = ${h2}$$\n\n따라서 수조 $B$의 물의 높이는 **$${correctAns}$** 입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${correctAns})** 입니다.`
+        : `**[AMC 8 Prep Vol. 5 Ch.30 Cylinder Volume Conservation]**\n\nThe volume of a cylinder is $V = \\pi r^2 h$. Since the volume of water remains constant:\n\n$$V_A = \\pi \\times ${r1}^2 \\times ${h1} = ${r1 * r1 * h1}\\pi$$\n\nSetting this equal to the volume in cylinder $B$ with radius $${r2}$ and depth $h_B$:\n\n$$\\pi \\times ${r2}^2 \\times h_B = ${r1 * r1 * h1}\\pi \\implies ${r2 * r2} h_B = ${r1 * r1 * h1} \\implies h_B = ${h2}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${correctAns})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'cube-painted-slicing') {
+      // AMC 8 Prep Vol. 3 Ch.13 Three-Dimensional Figures: Painted Cube Slicing
+      const N = randInt(3, 6);
+      const targetFaces = pickRandom([0, 1, 2, 3]);
+      let ans = 0;
+      let targetLabelKo = '';
+      let targetLabelEn = '';
+      let formulaKo = '';
+      let formulaEn = '';
+
+      if (targetFaces === 3) {
+        ans = 8;
+        targetLabelKo = '정확히 세 면';
+        targetLabelEn = 'exactly 3 faces';
+        formulaKo = '정육면체의 8개 꼭짓점(Corner)에 위치한 쌓기나무이므로 항상 $8$개입니다.';
+        formulaEn = 'These are the corner cubes of the big cube, so there are always 8.';
+      } else if (targetFaces === 2) {
+        ans = 12 * (N - 2);
+        targetLabelKo = '정확히 두 면';
+        targetLabelEn = 'exactly 2 faces';
+        formulaKo = `12개의 모서리(Edge)에서 꼭짓점을 제외한 부분에 위치하므로 $12 \\times (N - 2) = 12 \\times (${N} - 2) = ${ans}$개입니다.`;
+        formulaEn = `Located along the 12 edges excluding the corners: $12 \\times (N - 2) = 12 \\times (${N} - 2) = ${ans}$.`;
+      } else if (targetFaces === 1) {
+        ans = 6 * Math.pow(N - 2, 2);
+        targetLabelKo = '정확히 한 면';
+        targetLabelEn = 'exactly 1 face';
+        formulaKo = `6개의 겉면(Face) 중앙 부분에 위치하므로 $6 \\times (N - 2)^2 = 6 \\times (${N} - 2)^2 = ${ans}$개입니다.`;
+        formulaEn = `Located in the interior of the 6 outer faces: $6 \\times (N - 2)^2 = 6 \\times (${N} - 2)^2 = ${ans}$.`;
+      } else {
+        ans = Math.pow(N - 2, 3);
+        targetLabelKo = '어느 면도 칠해지지 않은(0면)';
+        targetLabelEn = 'no painted faces (0 faces)';
+        formulaKo = `겉면에 접하지 않는 안쪽 내부 정육면체이므로 $(N - 2)^3 = (${N} - 2)^3 = ${ans}$개입니다.`;
+        formulaEn = `Located in the unpainted inner core of the cube: $(N - 2)^3 = (${N} - 2)^3 = ${ans}$.`;
+      }
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return targetFaces === 3 ? 12 : 8;
+        if (i === 2) return 12 * (N - 2) + 2;
+        if (i === 3) return 6 * Math.pow(N - 2, 2) + 4;
+        return ans + randInt(4, 16) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? `한 변의 길이가 $${N}$인 정육면체의 겉면 전체를 빨간색으로 칠한 후, 한 변의 길이가 $1$인 작은 단위 정육면체 $${N * N * N}$개로 잘랐습니다. 이 작은 정육면체들 중 **${targetLabelKo}** 이 빨간색으로 칠해진 것은 모두 몇 개입니까?`
+        : `A large cube of side length $${N}$ has all its exterior faces painted red. It is then cut into $${N * N * N}$ unit cubes ($1 \\times 1 \\times 1$). How many of these unit cubes have **${targetLabelEn}** painted red?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 3 Ch.13 정육면체 절단과 채색(Painted Cubes)]**\n\n$N \\times N \\times N$ 정육면체를 단위 정육면체로 자를 때 각 면의 페인트가 칠해진 개수 공식:\n- 3면 칠해진 정육면체: 꼭짓점 $= 8$개\n- 2면 칠해진 정육면체: 모서리 $= 12(N - 2)$개\n- 1면 칠해진 정육면체: 면 내부 $= 6(N - 2)^2$개\n- 0면 칠해진 정육면체: 내부 중심 $= (N - 2)^3$개\n\n$N = ${N}$ 일 때 ${targetLabelKo} 칠해진 개수는:\n${formulaKo}\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${ans}개)** 입니다.`
+        : `**[AMC 8 Prep Vol. 3 Ch.13 Painted Cube Slicing Formulas]**\n\nWhen an $N \\times N \\times N$ painted cube is cut into unit cubes:\n- 3 faces painted: 8 corners\n- 2 faces painted: $12(N - 2)$ edge cubes\n- 1 face painted: $6(N - 2)^2$ face-interior cubes\n- 0 faces painted: $(N - 2)^3$ inner-core cubes\n\nFor $N = ${N}$ with ${targetLabelEn}:\n${formulaEn}\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'polyhedron-euler') {
+      // AMC 8 Prep Vol. 3 Ch.13 Section 4: Euler's Formula V - E + F = 2
+      const polyhedra = [
+        { nameKo: '정십이면체', nameEn: 'regular dodecahedron', V: 20, E: 30, F: 12 },
+        { nameKo: '정이십면체', nameEn: 'regular icosahedron', V: 12, E: 30, F: 20 },
+        { nameKo: '정팔면체', nameEn: 'regular octahedron', V: 6, E: 12, F: 8 },
+        { nameKo: '육각기둥', nameEn: 'hexagonal prism', V: 12, E: 18, F: 8 },
+        { nameKo: '오각뿔', nameEn: 'pentagonal pyramid', V: 6, E: 10, F: 6 },
+        { nameKo: '축구공 다면체(깎은 정이십면체)', nameEn: 'truncated icosahedron', V: 60, E: 90, F: 32 },
+      ];
+      const p = pickRandom(polyhedra);
+      const ans = p.F;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return p.V;
+        if (i === 2) return Math.round(p.E / 2);
+        if (i === 3) return ans + 4;
+        return Math.max(4, ans + (i % 2 === 0 ? 2 : -2));
+      });
+
+      const question = lang === 'ko'
+        ? `어떤 볼록다면체(${p.nameKo})의 꼭짓점의 개수가 $V = ${p.V}$개이고 모서리의 개수가 $E = ${p.E}$개입니다. 오일러의 다면체 정리를 이용하여 이 다면체의 면의 개수($F$)를 구하세요.`
+        : `A convex polyhedron (${p.nameEn}) has $V = ${p.V}$ vertices and $E = ${p.E}$ edges. Using Euler's formula for polyhedra, find the number of faces ($F$).`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 3 Ch.13 오일러의 다면체 정리 (Euler's Polyhedral Formula)]**\n\n모든 볼록다면체에서 꼭짓점($V$), 모서리($E$), 면($F$) 사이에는 항상 다음 관계가 성립합니다:\n\n$$V - E + F = 2$$\n\n주어진 $V = ${p.V}$, $E = ${p.E}$를 대입하면:\n\n$$${p.V} - ${p.E} + F = 2 \\implies -${p.E - p.V} + F = 2$$\n$$F = 2 + ${p.E - p.V} = ${ans}$$\n\n따라서 면의 개수는 **$${ans}$개** 입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${ans}개)** 입니다.`
+        : `**[AMC 8 Prep Vol. 3 Ch.13 Euler's Polyhedral Formula]**\n\nFor any convex polyhedron, Euler's formula states:\n\n$$V - E + F = 2$$\n\nSubstituting $V = ${p.V}$ and $E = ${p.E}$:\n\n$$${p.V} - ${p.E} + F = 2 \\implies F = 2 + ${p.E} - ${p.V} = ${ans}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'rect-prism') {
       const l = randInt(3, 10);
@@ -2047,10 +2964,46 @@ export const GENERATORS = {
   },
 
   // -----------------------------------------------------------------------
-  // FUNCTION PROPERTIES (The Essential Guide to Algebra 1, Topic 12: Functions)
+  // FUNCTION PROPERTIES (The Essential Guide to Algebra 1 & Vol 4 Ch 22)
   // -----------------------------------------------------------------------
   'function-properties': (lang) => {
-    const variant = pickRandom(['composition', 'arithmetic-combo', 'solve-for-input']);
+    const variant = pickRandom(['composition', 'arithmetic-combo', 'solve-for-input', 'greatest-integer-floor']);
+
+    if (variant === 'greatest-integer-floor') {
+      // AMC 8 Prep Vol. 4 Ch.22: Greatest Integer Function (Floor function [x] or \lfloor x \rfloor)
+      const k = pickRandom([2, 3]);
+      const pInt = randInt(2, 5);
+      const pDec = pickRandom([0.3, 0.4, 0.7, 0.8]);
+      const x1 = Number((pInt + pDec).toFixed(1));
+
+      const nInt = randInt(1, 4);
+      const nDec = pickRandom([0.2, 0.3, 0.6, 0.7]);
+      const x2 = Number((-nInt - nDec).toFixed(1));
+
+      const v1 = Math.floor(k * x1);
+      const v2 = Math.floor(k * x2);
+      const ans = v1 + v2;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return v1 + Math.trunc(k * x2); // truncation error for negative number
+        if (i === 2) return ans + 1;
+        if (i === 3) return ans - 1;
+        return ans + 2 * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? `실수 $x$에 대하여 $x$보다 크지 않은 최대의 정수를 $\\lfloor x \\rfloor$ (또는 $[x]$)라 정의하고, 함수 $f(x) = \\lfloor ${k}x \\rfloor$라 할 때, $f(${x1}) + f(${x2})$의 값은 얼마입니까?`
+        : `For any real number $x$, let $\\lfloor x \\rfloor$ denote the greatest integer less than or equal to $x$. If $f(x) = \\lfloor ${k}x \\rfloor$, what is the value of $f(${x1}) + f(${x2})$?`;
+
+      const kx1 = (k * x1).toFixed(1);
+      const kx2 = (k * x2).toFixed(1);
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 4 Ch.22 바닥함수(Greatest Integer Function) $\\lfloor x \\rfloor$]**\n\n$\\lfloor x \\rfloor$는 $x$ 이하의 정수 중 가장 큰 정수를 나타냅니다.\n\n1. $f(${x1})$ 계산:\n   $$${k} \\times ${x1} = ${kx1} \\implies \\lfloor ${kx1} \\rfloor = ${v1}$$\n\n2. $f(${x2})$ 계산 (음수 바닥함수 주의):\n   $$${k} \\times (${x2}) = ${kx2}$$\n   $-${Math.abs(v2)} \\le ${kx2} < -${Math.abs(v2) - 1}$ 이므로\n   $$\\lfloor ${kx2} \\rfloor = ${v2}$$\n   *(음수의 경우 소수점을 단순히 버리는 $-${Math.trunc(Math.abs(k * x2))}이 아니라, 더 작은 정수인 $${v2}$가 됨에 주의합니다.)*\n\n따라서 두 값의 합은:\n\n$$f(${x1}) + f(${x2}) = ${v1} + (${v2}) = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[AMC 8 Prep Vol. 4 Ch.22 Greatest Integer Function $\\lfloor x \\rfloor$]**\n\nBy definition, $\\lfloor x \\rfloor$ is the largest integer that does not exceed $x$.\n\n1. For $f(${x1})$:\n   $$${k} \\times ${x1} = ${kx1} \\implies \\lfloor ${kx1} \\rfloor = ${v1}$$\n\n2. For $f(${x2})$ (note the negative argument):\n   $$${k} \\times (${x2}) = ${kx2} \\implies \\lfloor ${kx2} \\rfloor = ${v2}$$\n   *(For negative numbers, $\\lfloor -3.6 \\rfloor = -4$, not $-3$.)*\n\nSumming the two values:\n\n$$f(${x1}) + f(${x2}) = ${v1} + (${v2}) = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'composition') {
       const a = pickRandom([2, 3, -2, -3, 4]);
@@ -2230,6 +3183,37 @@ export const GENERATORS = {
   // SYSTEMS OF EQUATIONS (The Essential Guide to Algebra 1, Topic 3: Two-Variable Equations)
   // -----------------------------------------------------------------------
   'systems-of-equations': (lang) => {
+    const variant = pickRandom(['systems-word-problem', 'linear-elimination']);
+
+    if (variant === 'systems-word-problem') {
+      // AMC 8 Prep Vol. 3 Ch.18 Section 5: Systems of Linear Equations Word Problem
+      const pricePen = randInt(2, 6);
+      const priceBook = randInt(pricePen + 2, pricePen + 8);
+      const a1 = 2, b1 = 3;
+      const a2 = 3, b2 = 5;
+      const cost1 = a1 * pricePen + b1 * priceBook;
+      const cost2 = a2 * pricePen + b2 * priceBook;
+      const targetItem = Math.random() < 0.5 ? 'pen' : 'book';
+      const ans = targetItem === 'pen' ? pricePen : priceBook;
+
+      const { choices, correctIdx } = buildChoices(`$${ans}`, (i) => {
+        if (i === 1) return `$${targetItem === 'pen' ? priceBook : pricePen}`;
+        if (i === 2) return `$${ans + 2}`;
+        if (i === 3) return `$${Math.max(1, ans - 2)}`;
+        return `$${ans + i + 1}`;
+      });
+
+      const question = lang === 'ko'
+        ? `어떤 문구점에서 볼펜 $${a1}$자루와 공책 $${b1}$권의 가격은 $${cost1}달러이고, 같은 볼펜 $${a2}$자루와 공책 $${b2}$권의 가격은 $${cost2}달러입니다. 볼펜 $1$자루의 가격 $x$달러와 공책 $1$권의 가격 $y$달러 중, **${targetItem === 'pen' ? '볼펜 1자루의 가격' : '공책 1권의 가격'}** 은 얼마입니까?`
+        : `At a bookstore, ${a1} pens and ${b1} notebooks cost $${cost1}, while ${a2} pens and ${b2} notebooks cost $${cost2}. What is the price of **${targetItem === 'pen' ? 'one pen' : 'one notebook'}**?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 3 Ch.18 연립방정식과 소거법(Elimination Method)]**\n\n볼펜의 가격을 $x$, 공책의 가격을 $y$라 두면 다음 연립방정식이 성립합니다:\n\n$$${a1}x + ${b1}y = ${cost1} \\quad \\cdots (1)$$\n$$${a2}x + ${b2}y = ${cost2} \\quad \\cdots (2)$$\n\n(1)식에 $3$을 곱하고 (2)식에 $2$를 곱하여 $x$를 소거합니다:\n\n$$6x + 9y = ${cost1 * 3}$$\n$$6x + 10y = ${cost2 * 2}$$\n\n두 식을 빼면:\n\n$$y = ${cost2 * 2} - ${cost1 * 3} = ${priceBook}$$\n\n이를 (1)식에 대입하면 $x = ${pricePen}$ 입니다.\n\n따라서 ${targetItem === 'pen' ? '볼펜 1자루' : '공책 1권'}의 가격은 **$${ans}달러** 입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${ans})** 입니다.`
+        : `**[AMC 8 Prep Vol. 3 Ch.18 Systems of Equations via Elimination]**\n\nLet $x$ be the price of a pen and $y$ the price of a notebook:\n\n$$${a1}x + ${b1}y = ${cost1} \\quad \\cdots (1)$$\n$$${a2}x + ${b2}y = ${cost2} \\quad \\cdots (2)$$\n\nMultiply (1) by 3 and (2) by 2 to eliminate $x$:\n\n$$6x + 9y = ${cost1 * 3}$$\n$$6x + 10y = ${cost2 * 2}$$\n\nSubtracting gives $y = ${priceBook}$, and substituting back gives $x = ${pricePen}$.\n\nThe price of ${targetItem === 'pen' ? 'one pen' : 'one notebook'} is **$${ans}**.\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} ($${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
     const x0 = randInt(-8, 8);
     const y0 = randInt(-8, 8);
     let a; let b; let d; let e;
@@ -2268,7 +3252,39 @@ export const GENERATORS = {
   // LINEAR GRAPHS & SLOPE (The Essential Guide to Algebra 1, Topic 5: Linear Graphs)
   // -----------------------------------------------------------------------
   'linear-graphs': (lang) => {
-    const variant = pickRandom(['slope-two-points', 'perpendicular-slope']);
+    const variant = pickRandom(['slope-two-points', 'perpendicular-slope', 'slope-yintercept-product']);
+
+    if (variant === 'slope-yintercept-product') {
+      const triplets = [
+        { A: 2, B: 3, C: 18, prod: -4 },
+        { A: 3, B: 2, C: 8, prod: -6 },
+        { A: 2, B: 4, C: 16, prod: -2 },
+        { A: 4, B: 3, C: 18, prod: -8 },
+        { A: 3, B: 5, C: 25, prod: -3 },
+        { A: 1, B: 2, C: 8, prod: -2 },
+        { A: 3, B: 4, C: 16, prod: -3 },
+      ];
+      const { A, B, C, prod } = pickRandom(triplets);
+
+      const { choices, correctIdx } = buildChoices(prod, (i) => {
+        if (i === 1) return -prod;
+        if (i === 2) return prod - 2;
+        if (i === 3) return Math.round(C / B);
+        return prod + randInt(2, 6) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? `직선의 방정식 $${A}x + ${B}y = ${C}$ 에 대하여, 이 직선의 기울기와 $y$절편의 곱을 구하세요.`
+        : `For the linear equation $${A}x + ${B}y = ${C}$, find the product of the slope and the $y$-intercept.`;
+
+      const yInt = C / B;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 2.3 직선의 방정식과 기울기·절편]**\n\n방정식을 표준형($y = mx + b$)으로 변형합니다:\n$$${B}y = -${A}x + ${C} \\implies y = -\\frac{${A}}{${B}}x + ${yInt}$$\n\n- 기울기: $m = -\\frac{${A}}{${B}}$\n- $y$절편: $b = ${yInt}$\n\n따라서 두 값의 곱은:\n$$m \\times b = \\left(-\\frac{${A}}{${B}}\\right) \\times ${yInt} = ${prod}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${prod})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 2.3 Slope & Y-Intercept of a Line]**\n\nConvert into slope-intercept form ($y = mx + b$):\n$$${B}y = -${A}x + ${C} \\implies y = -\\frac{${A}}{${B}}x + ${yInt}$$\n\n- Slope: $m = -\\frac{${A}}{${B}}$\n- $y$-intercept: $b = ${yInt}$\n\nThe product is:\n$$m \\times b = \\left(-\\frac{${A}}{${B}}\\right) \\times ${yInt} = ${prod}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${prod})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'slope-two-points') {
       const x1 = randInt(-8, 8);
@@ -2466,6 +3482,100 @@ export const GENERATORS = {
   },
 
   // -----------------------------------------------------------------------
+  // QUADRATIC INEQUALITIES & DISCRIMINANTS (The Essential Guide to Algebra 2, Topic 4.7-4.8)
+  // -----------------------------------------------------------------------
+  'quadratic-inequalities': (lang) => {
+    const variant = pickRandom(['integer-solutions-count', 'always-positive-condition', 'double-root-discriminant']);
+
+    if (variant === 'integer-solutions-count') {
+      const r1 = randInt(-7, 2);
+      const span = randInt(4, 12);
+      const r2 = r1 + span;
+      const b = -(r1 + r2);
+      const c = r1 * r2;
+      const bTerm = b === 0 ? '' : b > 0 ? ` + ${b === 1 ? '' : b}x` : ` - ${Math.abs(b) === 1 ? '' : Math.abs(b)}x`;
+      const cTerm = c === 0 ? '' : c > 0 ? ` + ${c}` : ` - ${Math.abs(c)}`;
+
+      const ans = span + 1;
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return span;
+        if (i === 2) return span - 1;
+        if (i === 3) return span + 2;
+        return ans + randInt(3, 6) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? `이차부등식 $x^2${bTerm}${cTerm} \\le 0$ 을 만족하는 정수 $x$의 개수를 구하세요.`
+        : `How many integers $x$ satisfy the quadratic inequality $x^2${bTerm}${cTerm} \\le 0$?`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 4.7 이차부등식 (Quadratic Inequalities)]**\n\n좌변을 인수분해하면 $(x - (${r1}))(x - (${r2})) \\le 0$ 입니다.\n따라서 해는 $${r1} \\le x \\le ${r2}$ 이며, 이를 만족하는 정수 $x$의 개수는\n\n$$${r2} - (${r1}) + 1 = ${ans}\\text{개}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 4.7 Quadratic Inequalities]**\n\nFactoring the left side gives $(x - (${r1}))(x - (${r2})) \\le 0$.\nTherefore, the solution set is $${r1} \\le x \\le ${r2}$. The number of integers in this range is\n\n$$${r2} - (${r1}) + 1 = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'always-positive-condition') {
+      const r1 = randInt(-5, -2);
+      const r2 = randInt(1, 6);
+      const span = r2 - r1;
+      const m = r1 + r2;
+      const n = -r1 * r2;
+      const ans = span - 1;
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return span;
+        if (i === 2) return span + 1;
+        if (i === 3) return Math.max(1, span - 2);
+        return ans + randInt(2, 5) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const mCoeff = m === 1 ? 'k' : m === -1 ? '-k' : m !== 0 ? `${m}k` : '';
+      const nCoeff = n > 0 ? `+ ${n}` : n < 0 ? `- ${Math.abs(n)}` : '';
+      const constExp = `(${mCoeff} ${nCoeff})`.trim().replace(/\(\s*\+/, '(').replace(/\s+/g, ' ');
+
+      const negMTerm = -m === 1 ? '+ k' : -m === -1 ? '- k' : -m > 0 ? `+ ${-m}k` : -m < 0 ? `- ${Math.abs(m)}k` : '';
+
+      const question = lang === 'ko'
+        ? `모든 실수 $x$에 대하여 이차부등식 $x^2 + 2kx + ${constExp} > 0$ 이 항상 성립하도록 하는 정수 $k$의 개수를 구하세요.`
+        : `Find the number of integer values of $k$ for which the inequality $x^2 + 2kx + ${constExp} > 0$ holds for all real numbers $x$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 4.8 이차부등식과 판별식 (Definite Quadratics)]**\n\n이차항의 계수가 $1 > 0$이므로 모든 실수 $x$에 대해 성립하려면 판별식 $D < 0$이어야 합니다:\n\n$$\\frac{D}{4} = k^2 - ${constExp} = k^2 ${negMTerm} - ${n} < 0$$\n$$(k - (${r1}))(k - (${r2})) < 0 \\implies ${r1} < k < ${r2}$$\n\n따라서 이를 만족하는 정수 $k$는 $${r1 + 1}$부터 $${r2 - 1}$까지 총 **$${ans}$개**입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 4.8 Quadratic Inequalities & Discriminants]**\n\nSince the coefficient of $x^2$ is positive ($1 > 0$), the quadratic is strictly positive for all real $x$ if and only if its discriminant $D < 0$:\n\n$$\\frac{D}{4} = k^2 - ${constExp} = k^2 ${negMTerm} - ${n} < 0$$\n$$(k - (${r1}))(k - (${r2})) < 0 \\implies ${r1} < k < ${r2}$$\n\nThus, the integer values of $k$ are from $${r1 + 1}$ to $${r2 - 1}$, giving **${ans}** integers.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // double-root-discriminant
+    const k1 = randInt(1, 6);
+    const k2 = randInt(-6, -1);
+    const A = k1 + k2;
+    const B = -k1 * k2;
+    const ans = k1;
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return Math.abs(k2);
+      if (i === 2) return k1 + 1;
+      if (i === 3) return Math.abs(A) + 1;
+      return ans + randInt(2, 5);
+    });
+
+    const aCoeff = A === 1 ? 'k' : A === -1 ? '-k' : A !== 0 ? `${A}k` : '';
+    const bCoeff = B > 0 ? `+ ${B}` : B < 0 ? `- ${Math.abs(B)}` : '';
+    const tailExp = `(${aCoeff} ${bCoeff})`.trim().replace(/\(\s*\+/, '(').replace(/\s+/g, ' ');
+    const negATerm = -A === 1 ? '+ k' : -A === -1 ? '- k' : -A > 0 ? `+ ${-A}k` : -A < 0 ? `- ${Math.abs(A)}k` : '';
+
+    const question = lang === 'ko'
+      ? `이차방정식 $x^2 + 2kx + ${tailExp} = 0$ 이 중근(실근 하나)을 갖도록 하는 양수 $k$의 값을 구하세요.`
+      : `Find the positive value of $k$ such that the quadratic equation $x^2 + 2kx + ${tailExp} = 0$ has a repeated real root (double root).`;
+
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 2 Topic 4.5 판별식과 근의 성질 (Discriminant)]**\n\n이차방정식이 중근을 가질 조건은 판별식 $D = 0$ 입니다:\n\n$$\\frac{D}{4} = k^2 - ${tailExp} = k^2 ${negATerm} - ${B} = 0$$\n$$(k - ${k1})(k - (${k2})) = 0 \\implies k = ${k1} \\text{ 또는 } k = ${k2}$$\n\n양수 $k$를 구하므로 정답은 **$${ans}$** 입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+      : `**[The Essential Guide to Algebra 2 Topic 4.5 Discriminant and Nature of Roots]**\n\nFor a quadratic equation to have a repeated real root, its discriminant must equal $0$:\n\n$$\\frac{D}{4} = k^2 - ${tailExp} = k^2 ${negATerm} - ${B} = 0$$\n$$(k - ${k1})(k - (${k2})) = 0 \\implies k = ${k1} \\text{ or } k = ${k2}$$\n\nSince $k > 0$, the value is **${ans}**.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
   // FUNCTION GRAPHS & TRANSFORMATIONS (The Essential Guide to Algebra 1, Topic 13)
   // -----------------------------------------------------------------------
   'function-transformations': (lang) => {
@@ -2646,7 +3756,38 @@ export const GENERATORS = {
   // RATIONAL FUNCTIONS (The Essential Guide to Algebra 2, Topic 8)
   // -----------------------------------------------------------------------
   'rational-functions': (lang) => {
-    const variant = pickRandom(['vertical-asymptotes', 'solve-rational-equation']);
+    const variant = pickRandom(['vertical-asymptotes', 'solve-rational-equation', 'oblique-asymptotes']);
+
+    if (variant === 'oblique-asymptotes') {
+      const a = pickRandom([1, 2, 3]);
+      const d = pickRandom([-3, -2, -1, 1, 2, 3]);
+      const k = randInt(-5, 5);
+      const b = k - a * d;
+      const c = randInt(1, 9);
+      const ans = k;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return ans + a;
+        if (i === 2) return -ans;
+        if (i === 3) return b;
+        return ans + randInt(2, 6) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const numerStr = `${a === 1 ? '' : a}x^2 ${b >= 0 ? '+' : '-'} ${Math.abs(b)}x ${c >= 0 ? '+' : '-'} ${Math.abs(c)}`;
+      const denomStr = d >= 0 ? `x - ${d}` : `x + ${Math.abs(d)}`;
+
+      const question = lang === 'ko'
+        ? `유리함수 $f(x) = \\dfrac{${numerStr}}{${denomStr}}$ 의 사선점근선(oblique asymptote)의 $y$절편을 구하세요.`
+        : `Find the $y$-intercept of the oblique (slant) asymptote of the rational function $f(x) = \\dfrac{${numerStr}}{${denomStr}}$.`;
+
+      const slantLine = `${a === 1 ? '' : a}x ${k >= 0 ? '+' : '-'} ${Math.abs(k)}`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 8.4 사선점근선 (Oblique Asymptote)]**\n\n분자의 차수가 분모의 차수보다 $1$차수 높으므로 다항식 나눗셈을 통해 사선점근선을 구합니다:\n\n$$\\frac{${numerStr}}{${denomStr}} = (${slantLine}) + \\frac{R}{${denomStr}}$$\n\n따라서 사선점근선의 방정식은 $y = ${slantLine}$ 이며, $y$절편은 **$${ans}$** 입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 8.4 Oblique Asymptotes]**\n\nSince the degree of the numerator is $1$ greater than the denominator, perform polynomial division:\n\n$$\\frac{${numerStr}}{${denomStr}} = (${slantLine}) + \\frac{R}{${denomStr}}$$\n\nThe equation of the oblique (slant) asymptote is $y = ${slantLine}$, so its $y$-intercept is **$${ans}$**.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'vertical-asymptotes') {
       const h = randInt(-6, 6) || 1;
@@ -2760,10 +3901,40 @@ export const GENERATORS = {
   },
 
   // -----------------------------------------------------------------------
-  // GEOMETRIC SEQUENCES & SERIES (The Essential Guide to Algebra 2, Topic 10)
+  // GEOMETRIC SEQUENCES & SERIES (The Essential Guide to Algebra 2 & Vol 4 Ch 21)
   // -----------------------------------------------------------------------
   'geometric-series': (lang) => {
-    const variant = pickRandom(['series-sum', 'nth-term']);
+    const variant = pickRandom(['series-sum', 'nth-term', 'add-constant-geometric']);
+
+    if (variant === 'add-constant-geometric') {
+      // AMC 8 Prep Vol. 4 Ch.21: Adding constant to form geometric sequence (등비중항)
+      const data = pickRandom([
+        { p: 20, q: 50, s: 100, c: 25, t1: 45, t2: 75, t3: 125, ratio: '5/3' },
+        { p: 10, q: 20, s: 35, c: 10, t1: 20, t2: 30, t3: 45, ratio: '3/2' },
+        { p: 2, q: 14, s: 38, c: 10, t1: 12, t2: 24, t3: 48, ratio: '2' },
+        { p: 3, q: 11, s: 35, c: 1, t1: 4, t2: 12, t3: 36, ratio: '3' },
+        { p: 4, q: 10, s: 22, c: 2, t1: 6, t2: 12, t3: 24, ratio: '2' },
+        { p: 12, q: 24, s: 42, c: 12, t1: 24, t2: 36, t3: 54, ratio: '3/2' },
+      ]);
+      const { p, q, s, c, t1, t2, t3 } = data;
+
+      const { choices, correctIdx } = buildChoices(c, (i) => {
+        if (i === 1) return c + 5;
+        if (i === 2) return Math.max(1, c - 3);
+        if (i === 3) return c + 10;
+        return c + 2 * i;
+      });
+
+      const question = lang === 'ko'
+        ? `세 수 $${p}$, $${q}$, $${s}$의 각 수에 동일한 양의 상수 $c$를 더했더니, 얻어진 세 수 $(${p}+c)$, $(${q}+c)$, $(${s}+c)$가 순서대로 등비수열을 이루었습니다. 더한 상수 $c$의 값은 얼마입니까?`
+        : `When the same positive constant $c$ is added to each of the numbers $${p}$, $${q}$, and $${s}$, the resulting three numbers form a geometric sequence. What is the value of $c$?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 4 Ch.21 등비수열과 등비중항의 성질]**\n\n세 수 $A, B, C$가 등비수열을 이룰 때, 등비중항 성질 $B^2 = A \\times C$가 성립합니다.\n\n$$(${q} + c)^2 = (${p} + c)(${s} + c)$$\n\n양변을 전개하면:\n$$${q * q} + ${2 * q}c + c^2 = ${p * s} + (${p + s})c + c^2$$\n\n양변에서 $c^2$을 소거하고 일차방정식을 풀면:\n$$${q * q} + ${2 * q}c = ${p * s} + ${p + s}c$$\n$$${p + s - 2 * q}c = ${q * q - p * s} \\implies c = \\frac{${q * q - p * s}}{${p + s - 2 * q}} = ${c}$$\n\n(확인: $${p}+${c}=${t1}$, $${q}+${c}=${t2}$, $${s}+${c}=${t3}$ 은 공비가 일정한 등비수열입니다.)\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${c})** 입니다.`
+        : `**[AMC 8 Prep Vol. 4 Ch.21 Geometric Mean Property]**\n\nIf three terms form a geometric sequence, the square of the middle term equals the product of the outer terms ($B^2 = AC$):\n\n$$(${q} + c)^2 = (${p} + c)(${s} + c)$$\n\nExpanding both sides:\n$$${q * q} + ${2 * q}c + c^2 = ${p * s} + (${p + s})c + c^2$$\n\nSubtracting $c^2$ and solving for $c$:\n$$${p + s - 2 * q}c = ${q * q - p * s} \\implies c = ${c}$$\n\n(Verification: $${t1}, ${t2}, ${t3}$ form a geometric sequence).\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${c})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
     const a1 = randInt(1, 5);
     const r = pickRandom([2, 3, -2, -3]);
     const n = randInt(3, 5);
@@ -2839,7 +4010,40 @@ export const GENERATORS = {
   // PROBABILITY DISTRIBUTIONS (The Essential Guide to Algebra 2, Topic 13)
   // -----------------------------------------------------------------------
   'probability-distributions': (lang) => {
-    const variant = pickRandom(['binomial-probability', 'expected-value']);
+    const variant = pickRandom(['binomial-probability', 'expected-value', 'conditional-probability']);
+
+    if (variant === 'conditional-probability') {
+      const r = pickRandom([3, 4, 5]);
+      const b = pickRandom([2, 3, 4]);
+      const total = r + b;
+      const totalPairs = (total * (total - 1)) / 2;
+      const bluePairs = (b * (b - 1)) / 2;
+      const atLeastOneRed = totalPairs - bluePairs;
+      const bothRed = (r * (r - 1)) / 2;
+      const g = gcd(bothRed, atLeastOneRed);
+      const numSimp = bothRed / g;
+      const denSimp = atLeastOneRed / g;
+      const ans = `${numSimp}/${denSimp}`;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return `${bothRed}/${totalPairs}`;
+        if (i === 2) return `${atLeastOneRed}/${totalPairs}`;
+        if (i === 3) return `${numSimp}/${denSimp + 1}`;
+        const altNum = Math.max(1, numSimp + (i % 2 === 0 ? 1 : -1));
+        const altDen = denSimp + (altNum >= denSimp ? 2 : 0);
+        return `${altNum}/${altDen}`;
+      });
+
+      const question = lang === 'ko'
+        ? `주머니 속에 빨간 구슬 $${r}$개와 파란 구슬 $${b}$개가 들어 있습니다. 이 주머니에서 구슬 $2$개를 동시에 꺼낼 때, 꺼낸 구슬 중 적어도 하나가 빨간 구슬인 것으로 알려졌습니다. 이때 두 구슬이 모두 빨간 구슬일 확률을 구하세요.`
+        : `A bag contains $${r}$ red marbles and $${b}$ blue marbles. Two marbles are drawn simultaneously at random. Given that at least one of the drawn marbles is red, what is the probability that both marbles are red?`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 13.1 조건부 확률 (Conditional Probability)]**\n\n전체 $${total}$개 중 $2$개를 꺼내는 경우의 수는 $\\binom{${total}}{2} = ${totalPairs}$가지입니다.\n- 파란 구슬만 $2$개 나오는 경우의 수: $\\binom{${b}}{2} = ${bluePairs}$가지\n- 적어도 $1$개가 빨간 구슬인 경우의 수 ($P(B)$): $${totalPairs} - ${bluePairs} = ${atLeastOneRed}$가지\n- 두 구슬 모두 빨간 구슬인 경우의 수 ($P(A \\cap B)$): $\\binom{${r}}{2} = ${bothRed}$가지\n\n조건부 확률의 정의 $P(A|B) = \\dfrac{P(A \\cap B)}{P(B)}$ 에 의해:\n\n$$P = \\frac{${bothRed}}{${atLeastOneRed}} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 13.1 Conditional Probability]**\n\nThe total number of ways to draw $2$ marbles from $${total}$ is $\\binom{${total}}{2} = ${totalPairs}$.\n- Ways to draw only blue marbles: $\\binom{${b}}{2} = ${bluePairs}$\n- Ways to draw at least one red marble ($P(B)$): $${totalPairs} - ${bluePairs} = ${atLeastOneRed}$\n- Ways to draw both red marbles ($P(A \\cap B)$): $\\binom{${r}}{2} = ${bothRed}$\n\nBy the conditional probability formula $P(A|B) = \\dfrac{P(A \\cap B)}{P(B)}$:\n\n$$P = \\frac{${bothRed}}{${atLeastOneRed}} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'binomial-probability') {
       const n = randInt(4, 6);
@@ -2895,8 +4099,64 @@ export const GENERATORS = {
   // Topic 2: Least Common Multiple and Greatest Common Divisor)
   // -----------------------------------------------------------------------
   'gcd-lcm': (lang) => {
-    const variant = pickRandom(['product-relation', 'euclidean-steps', 'lcm-word-problem', 'gcd-word-problem']);
+    const variant = pickRandom(['lcm-fractions', 'meshing-gears', 'product-relation', 'euclidean-steps', 'lcm-word-problem', 'gcd-word-problem']);
     const coprimePairs = [[2, 3], [3, 4], [2, 5], [3, 5], [4, 5], [2, 7], [3, 7], [4, 7], [5, 6]];
+
+    if (variant === 'lcm-fractions') {
+      // AMC 8 Prep Vol. 3 Ch.17 Rule 4: LCM of fractions [a/b, c/d] = lcm(a, c) / gcd(b, d)
+      const fracPairs = [
+        { a: 9, b: 5, c: 4, d: 3, numLcm: 36, denGcd: 1, ans: 36 },
+        { a: 6, b: 5, c: 8, d: 15, numLcm: 24, denGcd: 5, ans: '24/5' },
+        { a: 3, b: 4, c: 5, d: 6, numLcm: 15, denGcd: 2, ans: '15/2' },
+        { a: 7, b: 2, c: 5, d: 4, numLcm: 35, denGcd: 2, ans: '35/2' },
+        { a: 4, b: 3, c: 6, d: 5, numLcm: 12, denGcd: 1, ans: 12 },
+      ];
+      const item = pickRandom(fracPairs);
+      const { a, b, c, d, numLcm, denGcd } = item;
+      const ansLatex = denGcd === 1 ? `${numLcm}` : `\\frac{${numLcm}}{${denGcd}}`;
+
+      const { choices, correctIdx } = buildChoices(ansLatex, (i) => {
+        if (i === 1) return denGcd === 1 ? `${numLcm * 2}` : `\\frac{${numLcm * 2}}{${denGcd}}`;
+        if (i === 2) return denGcd === 1 ? `${numLcm - 6}` : `\\frac{${numLcm}}{${denGcd + 1}}`;
+        if (i === 3) return `\\frac{${a * c}}{${b * d}}`;
+        return denGcd === 1 ? `${numLcm + randInt(4, 12)}` : `\\frac{${numLcm + randInt(2, 6)}}{${denGcd}}`;
+      });
+
+      const question = lang === 'ko'
+        ? `민수와 지우가 원형 트랙의 같은 출발선에서 동시에 같은 방향으로 달리기 시작했습니다. 민수는 한 바퀴를 도는 데 $\\frac{${a}}{${b}}$분이 걸리고, 지우는 한 바퀴를 도는 데 $\\frac{${c}}{${d}}$분이 걸립니다. 두 사람이 출발 후 처음으로 다시 출발선에서 만나는 시간은 몇 분 후입니까?`
+        : `Alice and Bob start running in the same direction from the same starting point on a circular track. Alice completes a lap in $\\frac{${a}}{${b}}$ minutes, while Bob completes a lap in $\\frac{${c}}{${d}}$ minutes. How many minutes will elapse before they first meet again at the starting point?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 3 Ch.17 분수의 최소공배수(LCM of Fractions) 공식]**\n\n두 사람이 출발점에서 다시 만나는 시간은 두 랩 타임의 최소공배수입니다. 기약분수의 최소공배수 공식:\n\n$$\\text{lcm}\\left(\\frac{a}{b}, \\frac{c}{d}\\right) = \\frac{\\text{lcm}(a, c)}{\\gcd(b, d)}$$\n\n주어진 분수 $\\frac{${a}}{${b}}$와 $\\frac{${c}}{${d}}$에 적용하면:\n- 분자의 최소공배수: $\\text{lcm}(${a}, ${c}) = ${numLcm}$\n- 분모의 최대공약수: $\\gcd(${b}, ${d}) = ${denGcd}$\n\n따라서 처음으로 다시 만나는 시간은:\n\n$$\\text{lcm}\\left(\\frac{${a}}{${b}}, \\frac{${c}}{${d}}\\right) = \\frac{${numLcm}}{${denGcd}} = ${ansLatex}\\text{분}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${ansLatex}\\text{분}$)** 입니다.`
+        : `**[AMC 8 Prep Vol. 3 Ch.17 LCM of Fractions Formula]**\n\nThe elapsed time until they meet again at the start is the LCM of their fractional lap times:\n\n$$\\text{lcm}\\left(\\frac{a}{b}, \\frac{c}{d}\\right) = \\frac{\\text{lcm}(a, c)}{\\gcd(b, d)}$$\n\nWith $\\frac{${a}}{${b}}$ and $\\frac{${c}}{${d}}$:\n- $\\text{lcm}(${a}, ${c}) = ${numLcm}$\n- $\\gcd(${b}, ${d}) = ${denGcd}$\n\nTherefore, they meet after:\n\n$$\\frac{\\text{lcm}(${a}, ${c})}{\\gcd(${b}, ${d})} = ${ansLatex}\\text{ minutes}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${ansLatex})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'meshing-gears') {
+      // AMC 8 Prep Vol. 3 Ch.17 Problem 21: Meshing gears
+      const n1 = pickRandom([12, 15, 18, 20]);
+      const n2 = pickRandom([24, 28, 30, 32]);
+      const L = lcm(n1, n2);
+      const revsSmaller = L / Math.min(n1, n2);
+
+      const { choices, correctIdx } = buildChoices(revsSmaller, (i) => {
+        if (i === 1) return L / Math.max(n1, n2);
+        if (i === 2) return revsSmaller + 1;
+        if (i === 3) return Math.max(1, revsSmaller - 1);
+        return revsSmaller + i + 1;
+      });
+
+      const question = lang === 'ko'
+        ? `톱니 수가 각각 $${n1}$개, $${n2}$개인 두 톱니바퀴 A, B가 서로 맞물려 돌아가고 있습니다. 처음에 맞물려 있던 특정한 두 톱니가 다시 처음 위치에서 맞물릴 때까지, 작은 톱니바퀴는 최소 몇 바퀴 회전해야 합니까?`
+        : `Two meshing gears A and B have $${n1}$ and $${n2}$ teeth, respectively. When the gears rotate, what is the minimum number of complete revolutions the smaller gear must make before the original pair of meshing teeth touch each other again?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 3 Ch.17 톱니바퀴 맞물림과 최소공배수]**\n\n처음 맞물렸던 톱니가 다시 만나려면 맞물려 지나간 총 톱니 수가 두 톱니 수의 최소공배수가 되어야 합니다:\n\n$$\\text{lcm}(${n1}, ${n2}) = ${L}\\text{개}$$\n\n작은 톱니바퀴(톱니 $${Math.min(n1, n2)}$개)의 회전수는:\n\n$$\\frac{\\text{lcm}(${n1}, ${n2})}{${Math.min(n1, n2)}} = \\frac{${L}}{${Math.min(n1, n2)}} = ${revsSmaller}\\text{바퀴}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${revsSmaller}\\text{바퀴})** 입니다.`
+        : `**[AMC 8 Prep Vol. 3 Ch.17 Meshing Gears & LCM]**\n\nThe marked teeth meet again when the total number of passing teeth equals $\\text{lcm}(${n1}, ${n2}) = ${L}$.\n\nThe number of revolutions of the smaller gear (${Math.min(n1, n2)} teeth) is:\n\n$$\\frac{${L}}{${Math.min(n1, n2)}} = ${revsSmaller}\\text{ revolutions}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${revsSmaller})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'product-relation') {
       const g = pickRandom([2, 3, 4, 5, 6]);
@@ -3016,7 +4276,66 @@ export const GENERATORS = {
   // Theory Topic 3: Counting Divisors and More Arithmetic)
   // -----------------------------------------------------------------------
   'divisors-multiples': (lang) => {
-    const variant = pickRandom(['divisor-count', 'divisor-sum', 'perfect-square-divisors']);
+    const variant = pickRandom(['smallest-int-with-k-divisors', 'divisors-not-multiples', 'divisor-count', 'divisor-sum', 'perfect-square-divisors']);
+
+    if (variant === 'smallest-int-with-k-divisors') {
+      // AMC 8 Prep Vol. 3 Ch.14 Skills: Smallest integer with k factors
+      const cases = [
+        { k: 6, ans: 12, expKo: '6 = (2+1)(1+1) \\implies 2^2 \\times 3^1 = 12', expEn: '6 = (2+1)(1+1) \\implies 2^2 \\times 3^1 = 12' },
+        { k: 8, ans: 24, expKo: '8 = (3+1)(1+1) \\implies 2^3 \\times 3^1 = 24', expEn: '8 = (3+1)(1+1) \\implies 2^3 \\times 3^1 = 24' },
+        { k: 10, ans: 48, expKo: '10 = (4+1)(1+1) \\implies 2^4 \\times 3^1 = 48', expEn: '10 = (4+1)(1+1) \\implies 2^4 \\times 3^1 = 48' },
+        { k: 12, ans: 60, expKo: '12 = (2+1)(1+1)(1+1) \\implies 2^2 \\times 3^1 \\times 5^1 = 60', expEn: '12 = (2+1)(1+1)(1+1) \\implies 2^2 \\times 3^1 \\times 5^1 = 60' },
+      ];
+      const item = pickRandom(cases);
+      const { k, ans, expKo, expEn } = item;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return ans + 6;
+        if (i === 2) return Math.max(6, ans - 6);
+        if (i === 3) return ans * 2;
+        return ans + randInt(8, 20) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? `양의 약수의 개수가 정확히 $${k}$개인 가장 작은 자연수는 얼마입니까?`
+        : `What is the smallest positive integer that has exactly $${k}$ positive divisors?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 3 Ch.14 약수의 개수와 최소 자연수 구하기]**\n\n자연수 $N$의 소인수분해가 $p_1^{a_1} p_2^{a_2} \\dots$ 일 때, 약수의 개수는 $(a_1 + 1)(a_2 + 1)\\dots$ 입니다.\n\n약수의 개수가 $${k}$개가 되도록 지수를 분해하고, 가장 작은 소수($2, 3, 5, \\dots$)에 큰 지수를 배정하면:\n\n$$${expKo}$$\n\n따라서 조건을 만족하는 가장 작은 자연수는 **$${ans}$** 입니다.\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[AMC 8 Prep Vol. 3 Ch.14 Smallest Integer with k Divisors]**\n\nThe number of divisors of $N = p_1^{a_1} p_2^{a_2}\\dots$ is $(a_1+1)(a_2+1)\\dots = ${k}$.\n\nAssign the largest exponents to the smallest primes ($2, 3, 5, \\dots$):\n\n$$${expEn}$$\n\nThe smallest positive integer is **${ans}**.\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'divisors-not-multiples') {
+      // AMC 8 Prep Vol. 3 Ch.14 Problem 3: Probability that a factor of N is not a multiple of p
+      const configs = [
+        { N: 120, p: 5, factorsN: 16, nonMult: 8, pNum: 1, pDen: 2, pStr: '\\frac{1}{2}' },
+        { N: 180, p: 5, factorsN: 18, nonMult: 12, pNum: 2, pDen: 3, pStr: '\\frac{2}{3}' },
+        { N: 240, p: 5, factorsN: 20, nonMult: 10, pNum: 1, pDen: 2, pStr: '\\frac{1}{2}' },
+        { N: 360, p: 5, factorsN: 24, nonMult: 12, pNum: 1, pDen: 2, pStr: '\\frac{1}{2}' },
+        { N: 72, p: 3, factorsN: 12, nonMult: 4, pNum: 1, pDen: 3, pStr: '\\frac{1}{3}' },
+      ];
+      const item = pickRandom(configs);
+      const { N, p, factorsN, nonMult, pStr } = item;
+
+      const { choices, correctIdx } = buildChoices(pStr, (i) => {
+        if (i === 1) return '\\frac{1}{4}';
+        if (i === 2) return '\\frac{3}{4}';
+        if (i === 3) return '\\frac{1}{5}';
+        return `\\frac{1}{${i + 3}}`;
+      });
+
+      const question = lang === 'ko'
+        ? `자연수 $${N}$의 모든 양의 약수 중 하나를 무작위로 고를 때, 그 약수가 $${p}$의 배수가 아닐 확률은 얼마입니까?`
+        : `If one of the positive factors of $${N}$ is chosen at random, what is the probability that the chosen factor is NOT a multiple of $${p}$?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 3 Ch.14 특정 소인수의 배수가 아닌 약수의 개수와 확률]**\n\n1. 전체 $${N}$의 양의 약수의 개수는 $${factorsN}$개입니다.\n2. $${p}$의 배수가 아닌 약수는 소인수분해에서 소인수 $${p}$를 포함하지 않는($${p}^0$) 약수이므로 총 $${nonMult}$개입니다.\n\n따라서 구하는 확률은:\n\n$$P = \\frac{${nonMult}}{${factorsN}} = ${pStr}$$\n\n정답은 **${['①','②','③','④','⑤'][correctIdx]} ($${pStr}$)** 입니다.`
+        : `**[AMC 8 Prep Vol. 3 Ch.14 Factors Not Multiples of a Prime]**\n\n1. Total positive factors of $${N}$: $${factorsN}$.\n2. Factors that are not multiples of $${p}$ (exponent of $${p}$ is 0): $${nonMult}$.\n\nThe probability is:\n\n$$P = \\frac{${nonMult}}{${factorsN}} = ${pStr}$$\n\nThe correct choice is **${['A','B','C','D','E'][correctIdx]} (${pStr})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'divisor-count') {
       const primePairs = [[2, 3], [2, 5], [2, 7], [3, 5], [3, 7], [2, 11], [3, 11], [5, 7]];
@@ -3094,7 +4413,7 @@ export const GENERATORS = {
   // Theory Topic 5: Modular Arithmetic — Fermat's Little Theorem)
   // -----------------------------------------------------------------------
   'modular-arithmetic': (lang) => {
-    const variant = pickRandom(['fermat-little-theorem', 'modular-product-remainder', 'linear-congruence']);
+    const variant = pickRandom(['fermat-little-theorem', 'modular-product-remainder', 'linear-congruence', 'chinese-remainder-theorem']);
 
     const modPow = (base, exp, mod) => {
       let result = 1 % mod;
@@ -3102,6 +4421,42 @@ export const GENERATORS = {
       for (let e = 0; e < exp; e += 1) result = (result * b) % mod;
       return result;
     };
+
+    if (variant === 'chinese-remainder-theorem') {
+      const pairs = [
+        [5, 7], [5, 9], [7, 11], [4, 9], [3, 7], [4, 7]
+      ];
+      const [m1, m2] = pickRandom(pairs);
+      const r1 = randInt(1, m1 - 1);
+      const r2 = randInt(1, m2 - 1);
+      const M = m1 * m2;
+      let x0 = 0;
+      for (let x = 1; x <= M; x += 1) {
+        if (x % m1 === r1 && x % m2 === r2) {
+          x0 = x;
+          break;
+        }
+      }
+      let ans = x0;
+      while (ans < 100) ans += M;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return ans - M >= 100 ? ans - M : ans + M;
+        if (i === 2) return ans + M;
+        if (i === 3) return ans + 2;
+        return ans + i * 5;
+      });
+
+      const question = lang === 'ko'
+        ? `연립합동식 $\\begin{cases} n \\equiv ${r1} \\pmod{${m1}} \\\\ n \\equiv ${r2} \\pmod{${m2}} \\end{cases}$ 을 만족하는 가장 작은 세 자리 자연수 $n$을 구하세요.`
+        : `Find the smallest three-digit positive integer $n$ satisfying the system $\\begin{cases} n \\equiv ${r1} \\pmod{${m1}} \\\\ n \\equiv ${r2} \\pmod{${m2}} \\end{cases}$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Competition Math: Number Theory Topic 5.2 & Topic 6 중국인의 나머지 정리(CRT)]**\n\n첫 번째 조건에서 $n = ${m1}k + ${r1}$ 로 둘 수 있습니다.\n이를 두 번째 조건에 대입하면:\n\n$$${m1}k + ${r1} \\equiv ${r2} \\pmod{${m2}}$$\n\n이를 만족하는 가장 작은 음이 아닌 정수 $k$를 구하여 대입하면 최소 양의 정수 해는 $n \\equiv ${x0} \\pmod{${M}}$ 입니다.\n세 자리 자연수($n \\ge 100$) 중 가장 작은 값을 찾기 위해 주기 $${M}$을 더하면:\n\n$$n = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Competition Math: Number Theory Topic 5.2 & Topic 6 Chinese Remainder Theorem]**\n\nFrom the first congruence, $n = ${m1}k + ${r1}$.\nSubstituting into the second congruence:\n\n$$${m1}k + ${r1} \\equiv ${r2} \\pmod{${m2}}$$\n\nSolving gives the base solution $n \\equiv ${x0} \\pmod{${M}}$.\nAdding multiples of the period $${M}$ until reaching three digits ($n \\ge 100$) yields:\n\n$$n = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'fermat-little-theorem') {
       const p = pickRandom([5, 7, 11, 13, 17, 19]);
@@ -3184,12 +4539,161 @@ export const GENERATORS = {
   },
 
   // -----------------------------------------------------------------------
+  // DIOPHANTINE EQUATIONS & SFFT (The Essential Guide to Competition Math:
+  // Number Theory Topic 3.1 & Topic 6 Simon's Favorite Factoring Technique)
+  // -----------------------------------------------------------------------
+  'diophantine-equations': (lang) => {
+    const variant = pickRandom(['sfft-xy-pairs', 'difference-of-squares-pairs', 'linear-diophantine']);
+
+    if (variant === 'sfft-xy-pairs') {
+      const a = randInt(2, 5);
+      const b = randInt(2, 5);
+      const K = pickRandom([12, 16, 18, 20, 24, 28, 30, 36]);
+      const c = K - a * b;
+      let posCount = 0;
+      for (let d = 1; d <= K; d += 1) {
+        if (K % d === 0) {
+          const x = b + d;
+          const y = a + Math.floor(K / d);
+          if (x > 0 && y > 0) posCount += 1;
+        }
+      }
+      const ans = posCount;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return ans + 1;
+        if (i === 2) return Math.max(1, ans - 1);
+        if (i === 3) return ans + 2;
+        return ans + randInt(3, 5);
+      });
+
+      const cSign = c >= 0 ? ` = ${c}` : ` = -${Math.abs(c)}`;
+      const eqStr = `xy - ${a}x - ${b}y${cSign}`;
+
+      const question = lang === 'ko'
+        ? `방정식 $${eqStr}$ 을 만족하는 양의 정수 순서쌍 $(x, y)$의 개수를 구하세요.`
+        : `How many ordered pairs of positive integers $(x, y)$ satisfy the equation $${eqStr}$?`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Competition Math: Number Theory Topic 3.1 & Topic 6 Simon's Favorite Factoring Technique (SFFT)]**\n\n양변에 $${a} \\times ${b} = ${a * b}$를 더하여 좌변을 인수분해합니다:\n\n$$xy - ${a}x - ${b}y + ${a * b} = ${c} + ${a * b} = ${K}$$\n$$(x - ${b})(y - ${a}) = ${K}$$\n\n$x, y$가 양의 정수이므로 $x - ${b}$와 $y - ${a}$는 모두 양수이어야 하며, $x - ${b}$는 $${K}$의 양의 약수여야 합니다.\n$${K}$의 양의 약수의 개수가 $${ans}$개이므로, 각 약수마다 양의 정수 해 $(x, y)$가 유일하게 하나씩 대응됩니다.\n따라서 순서쌍의 개수는 **$${ans}$개**입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans}개)** 입니다.`
+        : `**[The Essential Guide to Competition Math: Number Theory Topic 3.1 & Topic 6 Simon's Favorite Factoring Technique (SFFT)]**\n\nAdd $${a} \\times ${b} = ${a * b}$ to both sides to factor by grouping:\n\n$$xy - ${a}x - ${b}y + ${a * b} = ${c} + ${a * b} = ${K}$$\n$$(x - ${b})(y - ${a}) = ${K}$$\n\nSince $x, y > 0$, both factors must be positive divisors of $${K}$.\nSince $${K}$ has $${ans}$ positive divisors, there are **${ans}** ordered pairs $(x, y)$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'difference-of-squares-pairs') {
+      const N = pickRandom([45, 60, 72, 84, 96, 105, 120, 144]);
+      let count = 0;
+      const solutions = [];
+      for (let d1 = 1; d1 * d1 < N; d1 += 1) {
+        if (N % d1 === 0) {
+          const d2 = N / d1;
+          if ((d1 + d2) % 2 === 0) {
+            count += 1;
+            solutions.push(`(${Math.floor((d1 + d2) / 2)}, ${Math.floor((d2 - d1) / 2)})`);
+          }
+        }
+      }
+      const ans = count;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return ans + 1;
+        if (i === 2) return Math.max(1, ans - 1);
+        if (i === 3) return ans + 2;
+        return ans + randInt(3, 5);
+      });
+
+      const question = lang === 'ko'
+        ? `방정식 $x^2 - y^2 = ${N}$ 을 만족하는 양의 정수 순서쌍 $(x, y)$의 개수를 구하세요.`
+        : `How many ordered pairs of positive integers $(x, y)$ satisfy the equation $x^2 - y^2 = ${N}$?`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Competition Math: Number Theory Topic 1.2 & Topic 6 합차공식과 정수해]**\n\n좌변을 합차공식으로 인수분해하면 $(x - y)(x + y) = ${N}$ 입니다.\n$x, y$가 양의 정수이므로 $0 < x - y < x + y$ 이고, $(x - y) + (x + y) = 2x$ (짝수)이므로 두 인수의 홀짝성(Parity)이 같아야 합니다.\n$${N}$의 약수 쌍 $(d_1, d_2)$ 중 $d_1 < d_2$ 이고 $d_1, d_2$의 홀짝성이 일치하는 쌍을 찾으면 총 **$${ans}$개** (${solutions.join(', ')}) 입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans}개)** 입니다.`
+        : `**[The Essential Guide to Competition Math: Number Theory Topic 1.2 & Topic 6 Difference of Squares & Parity]**\n\nFactoring gives $(x - y)(x + y) = ${N}$.\nFor positive integers $x, y$, we must have $0 < x - y < x + y$, and $(x - y) + (x + y) = 2x$ (an even sum), meaning $x - y$ and $x + y$ must share the same parity (both even or both odd).\nChecking factor pairs $(d_1, d_2)$ with $d_1 < d_2$ of the same parity yields **${ans}** pairs (${solutions.join(', ')}).\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // linear-diophantine: ax + by = c, smallest positive integer x
+    const a = pickRandom([3, 5, 7, 11]);
+    let b = pickRandom([4, 6, 8, 9, 13]);
+    while (gcd(a, b) !== 1) b = pickRandom([4, 6, 8, 9, 13]);
+    const xTrue = randInt(1, b - 1);
+    const yTrue = randInt(1, 10);
+    const c = a * xTrue + b * yTrue;
+    const ans = xTrue;
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return (ans + 1) % b || b;
+      if (i === 2) return Math.max(1, ans - 1);
+      if (i === 3) return ans + 2;
+      return (ans + i) % b || 1;
+    });
+
+    const question = lang === 'ko'
+      ? `방정식 $${a}x + ${b}y = ${c}$ 을 만족하는 양의 정수 해 $(x, y)$ 중 $x$의 최솟값을 구하세요.`
+      : `Find the minimum possible value of $x$ for positive integers $(x, y)$ satisfying $${a}x + ${b}y = ${c}$.`;
+
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Competition Math: Number Theory Topic 2.3 베주 항등식과 일차 부정방정식]**\n\n양변을 법 $${b}$에 대해 정리하면:\n\n$$${a}x \\equiv ${c} \\equiv ${c % b} \\pmod{${b}}$$\n\n$x = 1, 2, \\dots, ${b - 1}$ 을 대입하여 $${a}x \\equiv ${c % b} \\pmod{${b}}$ 을 만족하는 가장 작은 양의 정수를 찾으면 $x = ${ans}$ 입니다.\n이때 $y = \\dfrac{${c} - ${a}(${ans})}{${b}} = ${yTrue} > 0$ 이므로 양의 정수 해가 됩니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+      : `**[The Essential Guide to Competition Math: Number Theory Topic 2.3 Bézout's Identity & Linear Diophantine]**\n\nReducing modulo $${b}$:\n\n$$${a}x \\equiv ${c % b} \\pmod{${b}}$$\n\nThe smallest positive integer solution is $x = ${ans}$, which gives $y = ${yTrue} > 0$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
   // POLYNOMIAL ZEROS & RATIONAL ROOT THEOREM (The Essential Guide to
   // Algebra 2 Topic 5: Polynomials and Polynomial Function / Topic 6:
   // Application of Polynomials)
   // -----------------------------------------------------------------------
   'polynomial-zeros': (lang) => {
-    const variant = pickRandom(['rational-root-largest', 'polynomial-from-zeros', 'factor-theorem-check']);
+    const variant = pickRandom(['rational-root-largest', 'polynomial-from-zeros', 'factor-theorem-check', 'descartes-rule-of-signs']);
+
+    if (variant === 'descartes-rule-of-signs') {
+      const signs = pickRandom([
+        [1, -1, 1, -1, 1],
+        [1, 1, -1, 1, -1],
+        [1, -1, -1, 1, 1],
+        [1, 1, 1, -1, -1],
+        [1, -1, 1, 1, -1],
+      ]);
+      const coeffs = signs.map((s) => s * randInt(1, 5));
+      let signChanges = 0;
+      for (let i = 0; i < coeffs.length - 1; i += 1) {
+        if ((coeffs[i] > 0 && coeffs[i + 1] < 0) || (coeffs[i] < 0 && coeffs[i + 1] > 0)) {
+          signChanges += 1;
+        }
+      }
+      const ans = signChanges;
+      const polyTerms = [];
+      for (let i = 0; i < coeffs.length; i += 1) {
+        const pwr = coeffs.length - 1 - i;
+        const c = coeffs[i];
+        const sign = c > 0 ? (i === 0 ? '' : '+ ') : '- ';
+        const absC = Math.abs(c) === 1 && pwr > 0 ? '' : Math.abs(c);
+        const xPart = pwr === 0 ? '' : pwr === 1 ? 'x' : `x^${pwr}`;
+        polyTerms.push(`${sign}${absC}${xPart}`);
+      }
+      const polyStr = polyTerms.join(' ');
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return ans + 1;
+        if (i === 2) return Math.max(0, ans - 1);
+        if (i === 3) return ans + 2;
+        return (ans + i) % 5;
+      });
+
+      const question = lang === 'ko'
+        ? `다항식 $P(x) = ${polyStr}$ 에 대하여, 데카르트 부호 법칙(Descartes' Rule of Signs)을 적용했을 때 가질 수 있는 양의 실근의 **최대 개수**는 몇 개입니까?`
+        : `According to Descartes' Rule of Signs, what is the maximum number of positive real roots for the polynomial $P(x) = ${polyStr}$?`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 6.6 데카르트 부호 법칙 (Descartes' Rule of Signs)]**\n\n다항식 $P(x)$의 양의 실근의 개수는 계수의 부호 변화(sign change) 횟수와 같거나 그보다 짝수만큼 적습니다.\n\n계수의 부호 배열:\n$$(${coeffs.map(c => c > 0 ? '+' : '-').join(', ')})$$\n\n부호가 바뀌는 횟수는 총 **$${ans}$회**입니다. 따라서 양의 실근의 최대 개수는 **$${ans}$개**입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 6.6 Descartes' Rule of Signs]**\n\nThe number of positive real roots of $P(x)$ equals the number of sign changes in the coefficients, or is less by an even integer.\n\nSign sequence of the coefficients:\n$$(${coeffs.map(c => c > 0 ? '+' : '-').join(', ')})$$\n\nThere are **$${ans}$ sign changes**. Hence, the maximum number of positive real roots is **$${ans}$**.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
     const fmtLinear = (c) => (c === 0 ? 'x' : c > 0 ? `x - ${c}` : `x + ${Math.abs(c)}`);
     const formatCubic = (b2, b1, b0) => {
       const terms = ['x^3'];
@@ -3608,11 +5112,88 @@ export const GENERATORS = {
   },
 
   // -----------------------------------------------------------------------
-  // EXPRESSIONS & SUBSTITUTION (AMC10 기본서 이론편 Ch 2. Algebra — Grouping/
-  // Special Product Factoring, Difference of Squares, Algebraic Substitution)
+  // -----------------------------------------------------------------------
+  // EXPRESSIONS & SUBSTITUTION (AMC10 & AMC 8 Vol 4 Ch 19 Special Symbols)
   // -----------------------------------------------------------------------
   'expressions-substitution': (lang) => {
-    const variant = pickRandom(['common-exponent-fraction', 'difference-of-squares', 'substitution-value']);
+    const variant = pickRandom(['common-exponent-fraction', 'difference-of-squares', 'substitution-value', 'custom-operator']);
+
+    if (variant === 'custom-operator') {
+      // AMC 8 Prep Vol. 4 Ch.19: Special Symbols and Operations (정의된 연산 기호 a◇b)
+      const opKind = pickRandom(['quotient-squares', 'harmonic-compound', 'determinant']);
+
+      if (opKind === 'quotient-squares') {
+        const b = pickRandom([2, 4, 6, 8]);
+        const a = 3 * b;
+        const ans = Math.round((a * a + b * b) / (a + b)); // = 2.5 * b, integer because b is even
+
+        const { choices, correctIdx } = buildChoices(ans, (i) => {
+          if (i === 1) return a - b;
+          if (i === 2) return Math.round((a * a - b * b) / (a + b)); // a - b
+          if (i === 3) return ans + 2;
+          return Math.max(1, ans - 2);
+        });
+
+        const question = lang === 'ko'
+          ? `두 양의 정수 $a, b$에 대하여 새로운 연산 기호 $\\diamondsuit$를 다음과 같이 정의합니다:\n\n$$a \\diamondsuit b = \\frac{a^2 + b^2}{a + b}$$\n\n이때 $${a} \\diamondsuit ${b}$의 값을 구하세요.`
+          : `For positive integers $a$ and $b$, a new operation $\\diamondsuit$ is defined as:\n\n$$a \\diamondsuit b = \\frac{a^2 + b^2}{a + b}$$\n\nWhat is the value of $${a} \\diamondsuit ${b}$?`;
+
+        const explanation = lang === 'ko'
+          ? `**[AMC 8 Prep Vol. 4 Ch.19 정의된 연산 기호와 식의 계산]**\n\n주어진 연산 규칙 $a \\diamondsuit b = \\frac{a^2 + b^2}{a + b}$에 $a = ${a}$, $b = ${b}$를 대입합니다:\n\n$$${a} \\diamondsuit ${b} = \\frac{${a}^2 + ${b}^2}{${a} + ${b}} = \\frac{${a * a} + ${b * b}}{${a + b}} = \\frac{${a * a + b * b}}{${a + b}} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+          : `**[AMC 8 Prep Vol. 4 Ch.19 Special Symbols and Operations]**\n\nSubstitute $a = ${a}$ and $b = ${b}$ into the definition $a \\diamondsuit b = \\frac{a^2 + b^2}{a + b}$:\n\n$$${a} \\diamondsuit ${b} = \\frac{${a}^2 + ${b}^2}{${a} + ${b}} = \\frac{${a * a} + ${b * b}}{${a + b}} = \\frac{${a * a + b * b}}{${a + b}} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+        return { question, choices, correctIdx, explanation };
+      }
+
+      if (opKind === 'harmonic-compound') {
+        const x = 12;
+        const y = 6;
+        const xyRes = 4;
+        const z = 4;
+        const ans = 2;
+
+        const { choices, correctIdx } = buildChoices(ans, (i) => {
+          if (i === 1) return 4;
+          if (i === 2) return 3;
+          if (i === 3) return 1;
+          return 5;
+        });
+
+        const question = lang === 'ko'
+          ? `두 양의 실수 $x, y$에 대하여 연산 $\\star$가 $x \\star y = \\frac{xy}{x + y}$로 정의될 때, $(${x} \\star ${y}) \\star ${z}$의 값은 얼마입니까?`
+          : `For positive real numbers $x$ and $y$, the operation $\\star$ is defined by $x \\star y = \\frac{xy}{x + y}$. What is the value of $(${x} \\star ${y}) \\star ${z}$?`;
+
+        const explanation = lang === 'ko'
+          ? `**[AMC 8 Prep Vol. 4 Ch.19 복합 정의 연산 기호]**\n\n괄호 안의 연산을 먼저 계산합니다:\n\n$$${x} \\star ${y} = \\frac{${x} \\times ${y}}{${x} + ${y}} = \\frac{72}{18} = ${xyRes}$$\n\n이제 그 결과와 $${z}$의 연산을 계산합니다:\n\n$$(${x} \\star ${y}) \\star ${z} = ${xyRes} \\star ${z} = \\frac{${xyRes} \\times ${z}}{${xyRes} + ${z}} = \\frac{16}{8} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+          : `**[AMC 8 Prep Vol. 4 Ch.19 Special Symbols and Operations]**\n\nFirst evaluate the expression inside the parentheses:\n\n$$${x} \\star ${y} = \\frac{${x} \\times ${y}}{${x} + ${y}} = \\frac{72}{18} = ${xyRes}$$\n\nNow evaluate the outer operation with $${z}$:\n\n$$${xyRes} \\star ${z} = \\frac{${xyRes} \\times ${z}}{${xyRes} + ${z}} = \\frac{16}{8} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+        return { question, choices, correctIdx, explanation };
+      }
+
+      // determinant
+      const a = randInt(3, 9);
+      const b = randInt(2, 7);
+      const c = randInt(2, 6);
+      const d = randInt(3, 8);
+      const ans = a * d - b * c;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return a * d + b * c;
+        if (i === 2) return a * b - c * d;
+        if (i === 3) return ans + 2;
+        return ans - 2;
+      });
+
+      const question = lang === 'ko'
+        ? `기호 $\\begin{vmatrix} p & q \\\\ r & s \\end{vmatrix}$가 $ps - qr$로 정의될 때, $\\begin{vmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{vmatrix}$의 값은 얼마입니까?`
+        : `If the symbol $\\begin{vmatrix} p & q \\\\ r & s \\end{vmatrix}$ is defined as $ps - qr$, what is the value of $\\begin{vmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{vmatrix}$?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 Prep Vol. 4 Ch.19 행렬식 연산 기호 (Determinant)]**\n\n정의에 따라 대각선 성분의 곱의 차를 계산합니다:\n\n$$\\begin{vmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{vmatrix} = (${a} \\times ${d}) - (${b} \\times ${c}) = ${a * d} - ${b * c} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[AMC 8 Prep Vol. 4 Ch.19 Determinant Symbol Definition]**\n\nBy definition, multiply along the main diagonal and subtract the off-diagonal product:\n\n$$\\begin{vmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{vmatrix} = (${a} \\times ${d}) - (${b} \\times ${c}) = ${a * d} - ${b * c} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
 
     if (variant === 'common-exponent-fraction') {
       const b = pickRandom([2, 3, 4, 5, 6]);
@@ -3688,6 +5269,540 @@ export const GENERATORS = {
 
     return { question, choices, correctIdx, explanation };
   },
+
+  // -----------------------------------------------------------------------
+  // WORK & RATES (The Essential Guide to Algebra 2, Topic 8.6 Word Problems)
+  // -----------------------------------------------------------------------
+  'work-rate': (lang) => {
+    const variant = pickRandom(['together-pipes', 'together-workers', 'worker-leaves']);
+
+    if (variant === 'together-pipes') {
+      const isDrain = Math.random() < 0.5;
+      if (isDrain) {
+        const pairs = [
+          [4, 6, 12],
+          [6, 10, 15],
+          [3, 6, 6],
+          [4, 12, 6],
+          [6, 8, 24],
+          [10, 15, 30],
+          [8, 12, 24],
+        ];
+        const [a, b, ans] = pickRandom(pairs);
+
+        const { choices, correctIdx } = buildChoices(ans, (i) => {
+          if (i === 1) return a + b;
+          if (i === 2) return b - a;
+          if (i === 3) return Math.round((a * b) / (a + b));
+          return ans + randInt(2, 8) * (i % 2 === 0 ? 1 : -1);
+        });
+
+        const question = lang === 'ko'
+          ? `어떤 물통에 수도관 A로는 물을 가득 채우는 데 $${a}$시간이 걸리고, 배수관 B로는 가득 찬 물을 모두 빼내는 데 $${b}$시간이 걸립니다. 빈 물통에 수도관 A와 배수관 B를 동시에 열어둘 때, 물통을 가득 채우는 데 걸리는 시간은 몇 시간입니까?`
+          : `Pipe A can fill a tank in $${a}$ hours, while drain pipe B can completely empty the full tank in $${b}$ hours. If both pipes are opened simultaneously when the tank is empty, how many hours will it take to fill the tank completely?`;
+
+        const explanation = lang === 'ko'
+          ? `**[The Essential Guide to Algebra 2 Topic 8.6 유리방정식과 작업률 문제]**\n\n물통 전체의 용량을 $1$이라 하면:\n- 수도관 A의 1시간당 유입률: $\\dfrac{1}{${a}}$\n- 배수관 B의 1시간당 배출률: $\\dfrac{1}{${b}}$\n\n두 관을 동시에 열었을 때 1시간당 알짜 유입률은:\n$$\\frac{1}{${a}} - \\frac{1}{${b}} = \\frac{${b} - ${a}}{${a * b}} = \\frac{1}{${ans}}$$\n\n따라서 물통을 가득 채우는 데 걸리는 시간은 $${ans}$시간입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+          : `**[The Essential Guide to Algebra 2 Topic 8.6 Rational Equations & Work-Rate Problems]**\n\nLet the total volume of the tank be $1$.\n- Rate of Pipe A: $\\dfrac{1}{${a}}$ per hour\n- Rate of Drain B: $\\dfrac{1}{${b}}$ per hour\n\nNet rate when both are open:\n$$\\frac{1}{${a}} - \\frac{1}{${b}} = \\frac{${b} - ${a}}{${a * b}} = \\frac{1}{${ans}}$$\n\nTherefore, it takes $${ans}$ hours to fill the tank completely.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+        return { question, choices, correctIdx, explanation };
+      } else {
+        const pairs = [
+          [3, 6, 2],
+          [4, 12, 3],
+          [6, 12, 4],
+          [10, 15, 6],
+          [12, 24, 8],
+          [20, 30, 12],
+          [15, 30, 10],
+          [5, 20, 4],
+        ];
+        const [a, b, ans] = pickRandom(pairs);
+
+        const { choices, correctIdx } = buildChoices(ans, (i) => {
+          if (i === 1) return Math.round((a + b) / 2);
+          if (i === 2) return a + b;
+          if (i === 3) return b - a;
+          return ans + randInt(2, 6) * (i % 2 === 0 ? 1 : -1);
+        });
+
+        const question = lang === 'ko'
+          ? `수도관 A만 사용하면 수영장을 채우는 데 $${a}$시간이 걸리고, 수도관 B만 사용하면 $${b}$시간이 걸립니다. 두 수도관을 동시에 사용하여 빈 수영장을 가득 채우는 데 걸리는 시간은 몇 시간입니까?`
+          : `Pipe A can fill a pool in $${a}$ hours, and Pipe B can fill it in $${b}$ hours alone. Working together, how many hours will it take to fill the empty pool?`;
+
+        const explanation = lang === 'ko'
+          ? `**[The Essential Guide to Algebra 2 Topic 8.6 유리방정식과 작업률 문제]**\n\n수영장 전체의 일의 양을 $1$이라 하면:\n- 수도관 A의 1시간 작업률: $\\dfrac{1}{${a}}$\n- 수도관 B의 1시간 작업률: $\\dfrac{1}{${b}}$\n\n두 수도관의 합산 작업률:\n$$\\frac{1}{${a}} + \\frac{1}{${b}} = \\frac{${b} + ${a}}{${a * b}} = \\frac{1}{${ans}}$$\n\n따라서 수영장을 채우는 데 걸리는 시간은 $${ans}$시간입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+          : `**[The Essential Guide to Algebra 2 Topic 8.6 Rational Equations & Work-Rate Problems]**\n\nLet the total pool volume be $1$.\n- Rate of Pipe A: $\\dfrac{1}{${a}}$ per hour\n- Rate of Pipe B: $\\dfrac{1}{${b}}$ per hour\n\nCombined rate:\n$$\\frac{1}{${a}} + \\frac{1}{${b}} = \\frac{${b} + ${a}}{${a * b}} = \\frac{1}{${ans}}$$\n\nThus, it takes $${ans}$ hours to fill the pool.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+        return { question, choices, correctIdx, explanation };
+      }
+    }
+
+    const pairs = [
+      { a: 6, b: 12, tTogether: 4 },
+      { a: 10, b: 15, tTogether: 6 },
+      { a: 12, b: 24, tTogether: 8 },
+      { a: 20, b: 30, tTogether: 12 },
+      { a: 4, b: 12, tTogether: 3 },
+      { a: 8, b: 24, tTogether: 6 },
+    ];
+    const item = pickRandom(pairs);
+    const { a, b, tTogether } = item;
+
+    if (variant === 'worker-leaves') {
+      const dCandidates = [];
+      for (let cand = 1; cand < a; cand += 1) {
+        const rem = (1 - cand / a) * tTogether;
+        if (Number.isInteger(rem) && rem > 0) {
+          dCandidates.push({ d: cand, remDays: rem });
+        }
+      }
+      const chosen = dCandidates.length > 0 ? pickRandom(dCandidates) : { d: 2, remDays: Math.round((1 - 2 / a) * tTogether) };
+      const { d, remDays } = chosen;
+
+      const { choices, correctIdx } = buildChoices(remDays, (i) => {
+        if (i === 1) return tTogether;
+        if (i === 2) return a - d;
+        if (i === 3) return remDays + d;
+        return remDays + randInt(2, 6) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? `민호 혼자 하면 $${a}$일, 서연 혼자 하면 $${b}$일이 걸리는 프로젝트가 있습니다. 민호가 먼저 혼자서 $${d}$일 동안 작업한 후, 서연이가 합류하여 두 사람이 함께 작업하여 프로젝트를 완성했습니다. 두 사람이 함께 작업한 기간은 며칠입니까?`
+        : `Alice can complete a project alone in $${a}$ days, and Bob can complete it alone in $${b}$ days. Alice works alone for the first $${d}$ days, after which Bob joins her and they work together until the project is finished. How many days did they work together?`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 8.6 작업률과 분수방정식]**\n\n전체 일의 양을 $1$이라 하면:\n- 민호의 하루 작업률: $\\dfrac{1}{${a}}$, 서연의 하루 작업률: $\\dfrac{1}{${b}}$\n- 민호가 $${d}$일 동안 한 일: $${d} \\times \\dfrac{1}{${a}} = \\dfrac{${d}}{${a}}$\n- 남은 일의 양: $1 - \\dfrac{${d}}{${a}} = \\dfrac{${a - d}}{${a}}$\n\n두 사람이 함께 일할 때의 하루 작업률:\n$$\\frac{1}{${a}} + \\frac{1}{${b}} = \\frac{1}{${tTogether}}$$\n\n남은 일을 두 사람이 함께 끝내는 데 걸린 일수:\n$$\\frac{\\frac{${a - d}}{${a}}}{\\frac{1}{${tTogether}}} = \\frac{${a - d}}{${a}} \\times ${tTogether} = ${remDays}\\text{일}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${remDays})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 8.6 Rational Equations & Work-Rate Problems]**\n\nLet the total work be $1$.\n- Alice's daily rate: $\\dfrac{1}{${a}}$, Bob's daily rate: $\\dfrac{1}{${b}}$\n- Work done by Alice in $${d}$ days: $${d} \\times \\dfrac{1}{${a}} = \\dfrac{${d}}{${a}}$\n- Remaining work: $1 - \\dfrac{${d}}{${a}} = \\dfrac{${a - d}}{${a}}$\n\nCombined daily rate:\n$$\\frac{1}{${a}} + \\frac{1}{${b}} = \\frac{1}{${tTogether}}$$\n\nDays working together to finish the remaining work:\n$$\\frac{\\frac{${a - d}}{${a}}}{\\frac{1}{${tTogether}}} = \\frac{${a - d}}{${a}} \\times ${tTogether} = ${remDays}\\text{ days}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${remDays})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // together-workers
+    const ans = tTogether;
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return Math.round((a + b) / 2);
+      if (i === 2) return a + b;
+      if (i === 3) return b - a;
+      return ans + randInt(2, 6) * (i % 2 === 0 ? 1 : -1);
+    });
+
+    const question = lang === 'ko'
+      ? `기계 A는 어떤 작업을 끝내는 데 혼자서 $${a}$시간이 걸리고, 기계 B는 혼자서 $${b}$시간이 걸립니다. 두 기계를 동시에 가동하여 같은 작업을 완료하려면 몇 시간이 걸립니까?`
+      : `Machine A can finish a job in $${a}$ hours alone, and Machine B takes $${b}$ hours alone. If both machines work simultaneously, how many hours will they take to complete the job?`;
+
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 2 Topic 8.6 작업률과 분수방정식]**\n\n전체 일의 양을 $1$로 두면, 두 기계의 시간당 작업률의 합은:\n$$\\frac{1}{${a}} + \\frac{1}{${b}} = \\frac{${b} + ${a}}{${a * b}} = \\frac{1}{${ans}}$$\n\n따라서 함께 작업할 때 걸리는 시간은 $${ans}$시간입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+      : `**[The Essential Guide to Algebra 2 Topic 8.6 Rational Equations & Work-Rate Problems]**\n\nLetting the total work be $1$, the combined rate per hour is:\n$$\\frac{1}{${a}} + \\frac{1}{${b}} = \\frac{${b} + ${a}}{${a * b}} = \\frac{1}{${ans}}$$\n\nThus, together they take $${ans}$ hours.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // AM-GM INEQUALITY (The Essential Guide to Algebra 2, Topic 10.4)
+  // -----------------------------------------------------------------------
+  'am-gm-inequality': (lang) => {
+    const variant = pickRandom(['min-reciprocal-sum', 'max-product-given-sum', 'shifted-reciprocal']);
+
+    if (variant === 'min-reciprocal-sum') {
+      const pairs = [
+        [1, 16, 8],
+        [1, 25, 10],
+        [1, 36, 12],
+        [2, 18, 12],
+        [2, 32, 16],
+        [3, 12, 12],
+        [3, 27, 18],
+        [4, 9, 12],
+        [4, 25, 20],
+        [9, 16, 24],
+      ];
+      const [a, b, minVal] = pickRandom(pairs);
+      const aStr = a === 1 ? 'x' : `${a}x`;
+
+      const { choices, correctIdx } = buildChoices(minVal, (i) => {
+        if (i === 1) return Math.round(minVal / 2);
+        if (i === 2) return minVal + a;
+        if (i === 3) return Math.round(Math.sqrt(a * b));
+        return minVal + randInt(2, 8) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? `양수 $x > 0$에 대하여, $f(x) = ${aStr} + \\dfrac{${b}}{x}$의 최솟값을 구하세요.`
+        : `For positive real $x > 0$, find the minimum value of $f(x) = ${aStr} + \\dfrac{${b}}{x}$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 10.4 산술·기하평균 부등식 (AM-GM Inequality)]**\n\n$${aStr} > 0$이고 $\\dfrac{${b}}{x} > 0$이므로, 산술-기하평균 부등식($\\dfrac{A+B}{2} \\ge \\sqrt{AB}$)에 의해:\n\n$$${aStr} + \\frac{${b}}{x} \\ge 2\\sqrt{(${aStr})\\left(\\frac{${b}}{x}\\right)} = 2\\sqrt{${a * b}} = 2(${Math.round(minVal / 2)}) = ${minVal}$$\n\n등호는 $${aStr} = \\dfrac{${b}}{x} \\iff x^2 = \\dfrac{${b}}{${a}}$일 때 성립합니다. 따라서 최솟값은 $${minVal}$입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${minVal})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 10.4 AM-GM Inequality]**\n\nSince $${aStr} > 0$ and $\\dfrac{${b}}{x} > 0$, by the AM-GM Inequality ($\\dfrac{A+B}{2} \\ge \\sqrt{AB}$):\n\n$$${aStr} + \\frac{${b}}{x} \\ge 2\\sqrt{(${aStr})\\left(\\frac{${b}}{x}\\right)} = 2\\sqrt{${a * b}} = 2(${Math.round(minVal / 2)}) = ${minVal}$$\n\nEquality holds when $${aStr} = \\dfrac{${b}}{x} \\iff x^2 = \\dfrac{${b}}{${a}}$. Thus, the minimum value is $${minVal}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${minVal})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'max-product-given-sum') {
+      const halfS = randInt(4, 15);
+      const S = 2 * halfS;
+      const maxProd = halfS * halfS;
+
+      const { choices, correctIdx } = buildChoices(maxProd, (i) => {
+        if (i === 1) return (halfS - 1) * (halfS + 1);
+        if (i === 2) return S * 2;
+        if (i === 3) return maxProd - 4;
+        return maxProd + randInt(2, 10) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? `두 양의 실수 $x, y$가 $x + y = ${S}$를 만족할 때, 곱 $xy$의 최댓값을 구하세요.`
+        : `If $x$ and $y$ are positive real numbers such that $x + y = ${S}$, find the maximum value of $xy$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 10.4 산술·기하평균 부등식 (AM-GM Inequality)]**\n\n산술-기하평균 부등식에 의해:\n$$\\sqrt{xy} \\le \\frac{x+y}{2} = \\frac{${S}}{2} = ${halfS}$$\n\n양변을 제곱하면:\n$$xy \\le (${halfS})^2 = ${maxProd}$$\n\n등호는 $x = y = ${halfS}$일 때 성립하므로, $xy$의 최댓값은 $${maxProd}$입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${maxProd})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 10.4 AM-GM Inequality]**\n\nBy the AM-GM Inequality:\n$$\\sqrt{xy} \\le \\frac{x+y}{2} = \\frac{${S}}{2} = ${halfS}$$\n\nSquaring both sides:\n$$xy \\le (${halfS})^2 = ${maxProd}$$\n\nEquality holds when $x = y = ${halfS}$. Thus, the maximum value of $xy$ is $${maxProd}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${maxProd})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    const c = randInt(1, 5);
+    const k = pickRandom([4, 9, 16, 25, 36]);
+    const sqrtK = Math.round(Math.sqrt(k));
+    const ans = 2 * sqrtK - c;
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return 2 * sqrtK;
+      if (i === 2) return 2 * sqrtK + c;
+      if (i === 3) return ans + 2;
+      return ans + randInt(2, 6) * (i % 2 === 0 ? 1 : -1);
+    });
+
+    const question = lang === 'ko'
+      ? `$x > -${c}$인 실수 $x$에 대하여, $x + \\dfrac{${k}}{x + ${c}}$의 최솟값을 구하세요.`
+      : `For real $x > -${c}$, find the minimum value of $x + \\dfrac{${k}}{x + ${c}}$.`;
+
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 2 Topic 10.4 산술·기하평균 부등식의 치환]**\n\n식에 $${c}$를 더하고 빼서 분모와 형태를 맞춥니다:\n$$x + \\frac{${k}}{x+${c}} = (x+${c}) + \\frac{${k}}{x+${c}} - ${c}$$\n\n$x > -${c}$이므로 $x+${c} > 0$입니다. 산술-기하평균 부등식을 적용하면:\n$$(x+${c}) + \\frac{${k}}{x+${c}} \\ge 2\\sqrt{(x+${c})\\cdot\\frac{${k}}{x+${c}}} = 2\\sqrt{${k}} = ${2 * sqrtK}$$\n\n따라서 최솟값은:\n$$${2 * sqrtK} - ${c} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+      : `**[The Essential Guide to Algebra 2 Topic 10.4 AM-GM Inequality with Substitution]**\n\nAdd and subtract $${c}$ to match the denominator:\n$$x + \\frac{${k}}{x+${c}} = (x+${c}) + \\frac{${k}}{x+${c}} - ${c}$$\n\nSince $x > -${c}$, $x+${c} > 0$. Applying the AM-GM inequality:\n$$(x+${c}) + \\frac{${k}}{x+${c}} \\ge 2\\sqrt{(x+${c})\\cdot\\frac{${k}}{x+${c}}} = 2\\sqrt{${k}} = ${2 * sqrtK}$$\n\nSubtracting $${c}$ gives the minimum value:\n$$${2 * sqrtK} - ${c} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // RADICAL EQUATIONS & EXTRANEOUS ROOTS (The Essential Guide to Algebra 2, Topic 7.4)
+  // -----------------------------------------------------------------------
+  'radical-equations': (lang) => {
+    const variant = pickRandom(['extraneous-root-detection', 'single-radical-solve']);
+
+    if (variant === 'extraneous-root-detection') {
+      const cases = [
+        { a: 2, b: 15, validRoot: 5, extraRoot: -3 },
+        { a: 3, b: 10, validRoot: 5, extraRoot: -2 },
+        { a: 4, b: 21, validRoot: 7, extraRoot: -3 },
+        { a: 1, b: 12, validRoot: 4, extraRoot: -3 },
+        { a: 2, b: 8,  validRoot: 4, extraRoot: -2 },
+        { a: 5, b: 14, validRoot: 7, extraRoot: -2 },
+      ];
+      const item = pickRandom(cases);
+      const { a, b, validRoot, extraRoot } = item;
+      const aTerm = a === 1 ? 'x' : `${a}x`;
+
+      const askExtraneous = Math.random() < 0.5;
+      const ans = askExtraneous ? extraRoot : validRoot;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return askExtraneous ? validRoot : extraRoot;
+        if (i === 2) return validRoot + extraRoot;
+        if (i === 3) return -ans;
+        return ans + randInt(2, 6) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? (askExtraneous
+            ? `방정식 $\\sqrt{${aTerm} + ${b}} = x$의 양변을 제곱하여 얻은 이차방정식의 해 중, 원래 방정식을 만족하지 않는 **무연근(extraneous root)**은 얼마입니까?`
+            : `무리방정식 $\\sqrt{${aTerm} + ${b}} = x$의 실수 해 $x$의 값을 구하세요.`)
+        : (askExtraneous
+            ? `When solving $\\sqrt{${aTerm} + ${b}} = x$ by squaring both sides, which solution of the resulting quadratic is an **extraneous root**?`
+            : `Find the real solution $x$ to the radical equation $\\sqrt{${aTerm} + ${b}} = x$.`);
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 7.4 무리방정식과 무연근]**\n\n양변을 제곱하면:\n$$${aTerm} + ${b} = x^2 \\implies x^2 - ${a}x - ${b} = 0$$\n\n인수분해하면 $(x - ${validRoot})(x - (${extraRoot})) = 0$이므로 $x = ${validRoot}$ 또는 $x = ${extraRoot}$입니다.\n\n- $x = ${validRoot}$ 대입: $\\sqrt{${a}(${validRoot}) + ${b}} = \\sqrt{${validRoot * validRoot}} = ${validRoot}$ (참)\n- $x = ${extraRoot}$ 대입: 좌변 $\\sqrt{${a}(${extraRoot}) + ${b}} = \\sqrt{${extraRoot * extraRoot}} = ${Math.abs(extraRoot)}$, 우변 $x = ${extraRoot}$. 좌변 $\\ne$ 우변이므로 **$x = ${extraRoot}$는 무연근**입니다.\n\n따라서 구하는 답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 7.4 Radical Equations & Extraneous Roots]**\n\nSquaring both sides:\n$$${aTerm} + ${b} = x^2 \\implies x^2 - ${a}x - ${b} = 0$$\n\nFactoring gives $(x - ${validRoot})(x - (${extraRoot})) = 0$, so $x = ${validRoot}$ or $x = ${extraRoot}$.\n\n- For $x = ${validRoot}$: $\\sqrt{${a}(${validRoot}) + ${b}} = ${validRoot}$ (Valid)\n- For $x = ${extraRoot}$: LHS $= \\sqrt{${a}(${extraRoot}) + ${b}} = ${Math.abs(extraRoot)}$, while RHS $= ${extraRoot}$. Since LHS $\\ne$ RHS, **$x = ${extraRoot}$ is an extraneous root**.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    const cases2 = [
+      { p: 7, q: 7, xVal: 9 },
+      { p: 5, q: 5, xVal: 4 },
+      { p: 9, q: 9, xVal: 16 },
+      { p: 8, q: 4, xVal: 1 },
+      { p: 15, q: 5, xVal: 1 },
+      { p: 16, q: 8, xVal: 1 },
+      { p: 21, q: 7, xVal: 4 },
+    ];
+    const item2 = pickRandom(cases2);
+    const { p, q, xVal } = item2;
+
+    const { choices, correctIdx } = buildChoices(xVal, (i) => {
+      if (i === 1) return xVal + p;
+      if (i === 2) return Math.round(xVal / 2) || 2;
+      if (i === 3) return q * q;
+      return xVal + randInt(2, 8) * (i % 2 === 0 ? 1 : -1);
+    });
+
+    const question = lang === 'ko'
+      ? `방정식 $\\sqrt{x + ${p}} + \\sqrt{x} = ${q}$을 만족하는 실수 $x$의 값을 구하세요.`
+      : `Solve the equation $\\sqrt{x + ${p}} + \\sqrt{x} = ${q}$ for real $x$.`;
+
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 2 Topic 7.4 무리방정식 풀이]**\n\n$\\sqrt{x}$를 우변으로 이항하여 정리합니다:\n$$\\sqrt{x + ${p}} = ${q} - \\sqrt{x}$$\n\n양변을 제곱하면:\n$$x + ${p} = ${q * q} - ${2 * q}\\sqrt{x} + x$$\n\n양변에서 $x$를 소거하고 정리하면:\n$${2 * q}\\sqrt{x} = ${q * q - p} \\implies \\sqrt{x} = ${Math.round((q * q - p) / (2 * q))}$$\n\n양변을 다시 제곱하면 $x = ${xVal}$입니다.\n\n검산: $\\sqrt{${xVal + p}} + \\sqrt{${xVal}} = ${Math.round(Math.sqrt(xVal + p))} + ${Math.round(Math.sqrt(xVal))} = ${q}$ (성립)\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${xVal})** 입니다.`
+      : `**[The Essential Guide to Algebra 2 Topic 7.4 Solving Radical Equations]**\n\nIsolate $\\sqrt{x + ${p}}$:\n$$\\sqrt{x + ${p}} = ${q} - \\sqrt{x}$$\n\nSquaring both sides:\n$$x + ${p} = ${q * q} - ${2 * q}\\sqrt{x} + x$$\n\nCancelling $x$ and solving for $\\sqrt{x}$:\n$${2 * q}\\sqrt{x} = ${q * q - p} \\implies \\sqrt{x} = ${Math.round((q * q - p) / (2 * q))}$$\n\nSquaring again gives $x = ${xVal}$.\n\nCheck: $\\sqrt{${xVal + p}} + \\sqrt{${xVal}} = ${q}$ (Valid).\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${xVal})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // ABSOLUTE VALUE GRAPHS & REGIONS (The Essential Guide to Algebra 2, Topic 1.7 & 2.6)
+  // -----------------------------------------------------------------------
+  'absolute-value-graphs': (lang) => {
+    const variant = pickRandom(['diamond-area', 'scaled-diamond-area', 'min-sum-abs']);
+
+    if (variant === 'diamond-area') {
+      const c = randInt(3, 10);
+      const h = randInt(-5, 5);
+      const k = randInt(-5, 5);
+      const area = 2 * c * c;
+
+      const { choices, correctIdx } = buildChoices(area, (i) => {
+        if (i === 1) return c * c;
+        if (i === 2) return 4 * c * c;
+        if (i === 3) return Math.round(Math.PI * c * c);
+        return area + randInt(4, 20) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const hPart = h === 0 ? '|x|' : (h > 0 ? `|x - ${h}|` : `|x + ${Math.abs(h)}|`);
+      const kPart = k === 0 ? '|y|' : (k > 0 ? `|y - ${k}|` : `|y + ${Math.abs(k)}|`);
+
+      const question = lang === 'ko'
+        ? `좌표평면에서 부등식 $${hPart} + ${kPart} \\le ${c}$를 만족하는 영역의 넓이를 구하세요.`
+        : `Find the area of the region in the coordinate plane defined by the inequality $${hPart} + ${kPart} \\le ${c}$.`;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 1.7 & 2.6 절댓값 함수와 마름모 영역]**\n\n$|x - h| + |y - k| \\le c$가 나타내는 영역은 점 $(${h}, ${k})$를 중심으로 하고, 대각선의 길이가 $2c$인 정사각형(마름모)입니다.\n\n대각선의 길이가 각각 $2(${c}) = ${2 * c}$이므로, 마름모의 넓이는:\n$$\\text{Area} = \\frac{1}{2} \\times d_1 \\times d_2 = \\frac{1}{2} \\times ${2 * c} \\times ${2 * c} = 2(${c}^2) = ${area}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${area})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 1.7 & 2.6 Absolute Value Equations & Diamond Regions]**\n\nThe inequality $|x - h| + |y - k| \\le c$ represents a square (rhombus) centered at $(${h}, ${k})$ with horizontal and vertical diagonals of length $2c$.\n\nThe area is:\n$$\\text{Area} = \\frac{1}{2} d_1 d_2 = \\frac{1}{2} (2c)(2c) = 2c^2 = 2(${c}^2) = ${area}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${area})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    if (variant === 'scaled-diamond-area') {
+      const pairs = [
+        { a: 2, b: 3, K: 6, area: 12 },
+        { a: 2, b: 5, K: 10, area: 20 },
+        { a: 3, b: 4, K: 12, area: 24 },
+        { a: 1, b: 2, K: 6, area: 36 },
+        { a: 3, b: 5, K: 15, area: 30 },
+      ];
+      const item = pickRandom(pairs);
+      const { a, b, K, area } = item;
+      const aStr = a === 1 ? '|x|' : `|${a}x|`;
+      const bStr = b === 1 ? '|y|' : `|${b}y|`;
+
+      const { choices, correctIdx } = buildChoices(area, (i) => {
+        if (i === 1) return area / 2;
+        if (i === 2) return area * 2;
+        if (i === 3) return K * K;
+        return area + randInt(4, 16) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? `좌표평면에서 $${aStr} + ${bStr} \\le ${K}$가 둘러싸는 영역의 넓이를 구하세요.`
+        : `Find the area of the region bounded by $${aStr} + ${bStr} \\le ${K}$ in the coordinate plane.`;
+
+      const xIntercept = K / a;
+      const yIntercept = K / b;
+
+      const explanation = lang === 'ko'
+        ? `**[The Essential Guide to Algebra 2 Topic 1.7 & 2.6 절댓값 함수 그래프]**\n\n영역의 경계는 네 개의 사분면에서 절편을 꼭짓점으로 갖는 마름모입니다:\n- $x$절편: $(\\pm ${xIntercept}, 0)$\n- $y$절편: $(0, \\pm ${yIntercept})$\n\n두 대각선의 길이는 $2(${xIntercept}) = ${2 * xIntercept}$와 $2(${yIntercept}) = ${2 * yIntercept}$입니다.\n$$\\text{Area} = \\frac{1}{2} \\times ${2 * xIntercept} \\times ${2 * yIntercept} = 2 \\times ${xIntercept} \\times ${yIntercept} = ${area}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${area})** 입니다.`
+        : `**[The Essential Guide to Algebra 2 Topic 1.7 & 2.6 Absolute Value Graphs]**\n\nThe boundary forms a rhombus with intercepts as vertices:\n- $x$-intercepts: $(\\pm ${xIntercept}, 0)$\n- $y$-intercepts: $(0, \\pm ${yIntercept})$\n\nThe diagonal lengths are $2(${xIntercept}) = ${2 * xIntercept}$ and $2(${yIntercept}) = ${2 * yIntercept}$.\n$$\\text{Area} = \\frac{1}{2} \\times ${2 * xIntercept} \\times ${2 * yIntercept} = 2 \\times ${xIntercept} \\times ${yIntercept} = ${area}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${area})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // min-sum-abs
+    const a = randInt(1, 4);
+    const b = a + randInt(2, 5);
+    const c = b + randInt(2, 5);
+    const minVal = c - a;
+
+    const { choices, correctIdx } = buildChoices(minVal, (i) => {
+      if (i === 1) return c - b;
+      if (i === 2) return b - a;
+      if (i === 3) return (c - a) * 2;
+      return minVal + randInt(2, 6) * (i % 2 === 0 ? 1 : -1);
+    });
+
+    const question = lang === 'ko'
+      ? `함수 $f(x) = |x - ${a}| + |x - ${b}| + |x - ${c}|$의 최솟값을 구하세요.`
+      : `Find the minimum value of $f(x) = |x - ${a}| + |x - ${b}| + |x - ${c}|$.`;
+
+    const explanation = lang === 'ko'
+      ? `**[The Essential Guide to Algebra 2 Topic 1.7 & 2.6 절댓값 함수의 최솟값과 중앙값]**\n\n홀수 개의 절댓값의 합 $|x-a_1| + |x-a_2| + \\cdots + |x-a_n|$의 최솟값은 $x$가 중앙값(median)일 때 발생합니다.\n\n주어진 수 $${a} < ${b} < ${c}$의 중앙값은 $x = ${b}$입니다:\n$$f(${b}) = |${b} - ${a}| + |${b} - ${b}| + |${b} - ${c}| = (${b - a}) + 0 + (${c - b}) = ${c} - ${a} = ${minVal}$$\n\n따라서 최솟값은 $${minVal}$입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${minVal})** 입니다.`
+      : `**[The Essential Guide to Algebra 2 Topic 1.7 & 2.6 Absolute Value Functions & Median Optimization]**\n\nThe sum of an odd number of absolute values $|x-a_1| + \\cdots + |x-a_n|$ is minimized at the median.\n\nFor $${a} < ${b} < ${c}$, the median is $x = ${b}$:\n$$f(${b}) = |${b} - ${a}| + |${b} - ${b}| + |${b} - ${c}| = (${b - a}) + 0 + (${c - b}) = ${c} - ${a} = ${minVal}$$\n\nThus, the minimum value is $${minVal}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${minVal})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // CHARTS & DATA ANALYSIS (AMC 8 / Pre-Algebra)
+  // -----------------------------------------------------------------------
+  'charts-data-analysis': (lang) => {
+    const variant = pickRandom(['pie-chart-count', 'bar-chart-percent']);
+
+    if (variant === 'pie-chart-count') {
+      const N = pickRandom([120, 240, 360, 480, 600, 720]);
+      const angle = pickRandom([30, 45, 60, 90, 120, 135, 150]);
+      const count = (N * angle) / 360;
+
+      const { choices, correctIdx } = buildChoices(count, (i) => {
+        if (i === 1) return angle;
+        if (i === 2) return Math.round((N * (angle + 30)) / 360);
+        if (i === 3) return Math.round(count / 2);
+        return count + randInt(3, 15) * (i % 2 === 0 ? 1 : -1);
+      });
+
+      const question = lang === 'ko'
+        ? `전체 학생 $${N}$명을 대상으로 가장 좋아하는 운동을 조사하여 원그래프로 나타냈습니다. 축구를 선택한 학생 부분의 중심각의 크기가 $${angle}^\\circ$일 때, 축구를 선택한 학생은 모두 몇 명입니까?`
+        : `A circle graph (pie chart) shows the favorite sport of all $${N}$ students in a school. If the central angle for soccer is $${angle}^\\circ$, how many students chose soccer?`;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 통계와 자료 해석: 원그래프]**\n\n원 전체의 중심각은 $360^\\circ$입니다. 따라서 축구를 선택한 학생의 비율은 $\\dfrac{${angle}^\\circ}{360^\\circ}$입니다:\n\n$$\\text{학생 수} = ${N} \\times \\frac{${angle}}{360} = ${count}\\text{명}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${count})** 입니다.`
+        : `**[AMC 8 Statistics & Data Analysis: Circle Graph]**\n\nA full circle has $360^\\circ$. The fraction of students who chose soccer is $\\dfrac{${angle}^\\circ}{360^\\circ}$:\n\n$$\\text{Students} = ${N} \\times \\frac{${angle}}{360} = ${count}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${count})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    const f1 = randInt(4, 8);
+    const f2 = randInt(6, 12);
+    const f3 = randInt(8, 15);
+    const f4 = randInt(5, 10);
+    const total = f1 + f2 + f3 + f4;
+    const targetCount = f3 + f4;
+
+    const { choices, correctIdx } = buildChoices(targetCount, (i) => {
+      if (i === 1) return f3;
+      if (i === 2) return f1 + f2;
+      if (i === 3) return total;
+      return targetCount + randInt(2, 6) * (i % 2 === 0 ? 1 : -1);
+    });
+
+    const question = lang === 'ko'
+      ? `어느 학급의 수학 쪽지시험 점수별 학생 수가 다음과 같습니다:\n- 60점: $${f1}$명\n- 70점: $${f2}$명\n- 80점: $${f3}$명\n- 90점: $${f4}$명\n\n80점 이상을 받은 학생은 모두 몇 명입니까?`
+      : `The table shows the number of students who received each score on a quiz:\n- 60 points: $${f1}$ students\n- 70 points: $${f2}$ students\n- 80 points: $${f3}$ students\n- 90 points: $${f4}$ students\n\nHow many students scored at least 80 points?`;
+
+    const explanation = lang === 'ko'
+      ? `**[AMC 8 통계와 자료 해석: 도수분포표]**\n\n80점 이상을 받은 학생은 80점 학생 수와 90점 학생 수의 합입니다:\n\n$$${f3} + ${f4} = ${targetCount}\\text{명}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${targetCount})** 입니다.`
+      : `**[AMC 8 Statistics & Data Analysis: Frequency Table]**\n\nThe number of students scoring at least 80 is the sum of students scoring 80 and 90:\n\n$$${f3} + ${f4} = ${targetCount}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${targetCount})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // CLOCKS & CALENDARS (AMC 8 / Pre-Algebra)
+  // -----------------------------------------------------------------------
+  'clocks-calendars': (lang) => {
+    const variant = pickRandom(['clock-angle', 'calendar-day']);
+
+    if (variant === 'clock-angle') {
+      const times = [
+        { h: 3, m: 0, angle: 90 },
+        { h: 3, m: 30, angle: 75 },
+        { h: 2, m: 20, angle: 50 },
+        { h: 4, m: 40, angle: 100 },
+        { h: 8, m: 20, angle: 130 },
+        { h: 9, m: 30, angle: 105 },
+        { h: 1, m: 30, angle: 135 },
+        { h: 5, m: 10, angle: 95 },
+        { h: 7, m: 20, angle: 100 },
+      ];
+      const item = pickRandom(times);
+      const { h, m, angle } = item;
+      const mStr = m < 10 ? `0${m}` : `${m}`;
+      const ans = `${angle}^\\circ`;
+
+      const { choices, correctIdx } = buildChoices(ans, (i) => {
+        if (i === 1) return `${180 - angle}^\\circ`;
+        if (i === 2) return `${angle + 15}^\\circ`;
+        if (i === 3) return `${angle - 15}^\\circ`;
+        return `${angle + 5 * i}^\\circ`;
+      });
+
+      const question = lang === 'ko'
+        ? `$${h}$시 $${mStr}$분에 시계의 시침과 분침이 이루는 작은 쪽의 각도는 몇 도입니까?`
+        : `At $${h}:${mStr}$, what is the measure of the smaller angle between the hour hand and the minute hand of a clock?`;
+
+      const hourAngle = 30 * h + 0.5 * m;
+      const minAngle = 6 * m;
+
+      const explanation = lang === 'ko'
+        ? `**[AMC 8 시계와 각도 문제]**\n\n12시를 기준으로 한 각도:\n- 분침: $1$분에 $6^\\circ$씩 회전하므로 $${m}\\text{분} \\times 6^\\circ = ${minAngle}^\\circ$\n- 시침: $1$시간에 $30^\\circ$, $1$분에 $0.5^\\circ$씩 회전하므로 $30^\\circ \\times ${h} + 0.5^\\circ \\times ${m} = ${hourAngle}^\\circ$\n\n두 침이 이루는 각도:\n$$|${hourAngle}^\\circ - ${minAngle}^\\circ| = ${Math.abs(hourAngle - minAngle)}^\\circ$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+        : `**[AMC 8 Clock Hands & Angles]**\n\nMeasured from the 12 o'clock position:\n- Minute hand moves $6^\\circ$ per minute: $${m} \\times 6^\\circ = ${minAngle}^\\circ$\n- Hour hand moves $30^\\circ$ per hour plus $0.5^\\circ$ per minute: $30^\\circ \\times ${h} + 0.5^\\circ \\times ${m} = ${hourAngle}^\\circ$\n\nThe angle between them is:\n$$|${hourAngle}^\\circ - ${minAngle}^\\circ| = ${angle}^\\circ$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+      return { question, choices, correctIdx, explanation };
+    }
+
+    const daysKo = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
+    const daysEn = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const startIdx = randInt(0, 6);
+    const N = randInt(50, 200);
+    const endIdx = (startIdx + N) % 7;
+
+    const ansKo = daysKo[endIdx];
+    const ansEn = daysEn[endIdx];
+    const ans = lang === 'ko' ? ansKo : ansEn;
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      const idx = (endIdx + i) % 7;
+      return lang === 'ko' ? daysKo[idx] : daysEn[idx];
+    });
+
+    const question = lang === 'ko'
+      ? `오늘이 **${daysKo[startIdx]}**일 때, 오늘로부터 $${N}$일 뒤는 무슨 요일입니까?`
+      : `If today is **${daysEn[startIdx]}**, what day of the week will it be in $${N}$ days?`;
+
+    const remainder = N % 7;
+    const quotient = Math.floor(N / 7);
+
+    const explanation = lang === 'ko'
+      ? `**[AMC 8 달력과 모듈러 연산]**\n\n요일은 7일마다 반복됩니다:\n$$${N} = 7 \\times ${quotient} + ${remainder}$$\n\n따라서 $${N}$일 뒤의 요일은 ${daysKo[startIdx]}로부터 $${remainder}$일 뒤의 요일과 같습니다:\n$${remainder}$일 뒤는 **${ansKo}**입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ansKo})** 입니다.`
+      : `**[AMC 8 Calendars & Modular Arithmetic]**\n\nThe days of the week repeat every 7 days:\n$$${N} = 7 \\times ${quotient} + ${remainder}$$\n\nThus, $${N}$ days from ${daysEn[startIdx]} is the same day of the week as $${remainder}$ days from ${daysEn[startIdx]}, which is **${ansEn}**.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ansEn})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // GAMES & STRATEGY (AMC 8 Preparation, Vol 1 Ch 3)
+  // -----------------------------------------------------------------------
+  'games-strategy': (lang) => {
+    const k = pickRandom([3, 4, 5]);
+    const rem = randInt(1, k);
+    const m = randInt(3, 8);
+    const N = m * (k + 1) + rem;
+    const ans = rem;
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return 1;
+      if (i === 2) return k;
+      if (i === 3) return (k + 1) - rem;
+      return (ans + i) % (k + 1) || 1;
+    });
+
+    const question = lang === 'ko'
+      ? `두 사람이 $${N}$개의 바둑돌을 가지고 게임을 합니다. 두 사람은 번갈아 가며 한 번에 $1$개 이상 $${k}$개 이하의 돌을 가져갈 수 있으며, 마지막 남은 돌을 가져가는 사람이 승리합니다. 선공(첫 번째 플레이어)이 반드시 승리하기 위해 첫 턴에 가져가야 하는 돌의 개수는 몇 개입니까?`
+      : `Two players play a game with a pile of $${N}$ stones. On each turn, a player may take anywhere from $1$ to $${k}$ stones. The player who takes the last stone wins. To guarantee a win, how many stones must the first player take on their very first move?`;
+
+    const explanation = lang === 'ko'
+      ? `**[AMC 8 게임과 필승 전략: 님(Nim) 게임과 나머지]**\n\n두 플레이어가 한 라운드에 합쳐서 $${k + 1}$개의 돌을 가져갈 수 있습니다 (상대가 $x$개를 가져가면, 나는 $${k + 1} - x$개를 가져감).\n\n따라서 전체 돌의 개수를 $${k + 1}$로 나눈 나머지를 선공이 먼저 가져가면 필승 위치를 확보할 수 있습니다:\n$$${N} = ${m} \\times (${k + 1}) + ${rem}$$\n\n선공이 첫 번째 턴에 $${rem}$개의 돌을 가져가면, 남은 돌의 개수는 $${m} \\times ${k + 1} = ${m * (k + 1)}$개가 되어 이후 매 턴마다 합이 $${k + 1}$이 되도록 돌을 가져가 항상 마지막 돌을 가져갈 수 있습니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+      : `**[AMC 8 Winning Strategies: Nim & Modulo Invariants]**\n\nA pair of turns can always sum to $${k + 1}$ stones (if the opponent takes $x$, you take $${k + 1} - x$).\n\nDividing $${N}$ by $${k + 1}$ gives:\n$$${N} = ${m} \\times (${k + 1}) + ${rem}$$\n\nBy taking $${rem}$ stones on the first move, the first player leaves $${m * (k + 1)}$ stones (a multiple of $${k + 1}$). For every subsequent move of $x$ stones by the second player, the first player responds by taking $${k + 1} - x$ stones, guaranteeing the last stone.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
 };
 
 /**
@@ -3698,6 +5813,15 @@ export function getGeneratorForUnit(unitId) {
   if (GENERATORS[unitId]) return GENERATORS[unitId];
 
   // Specific mappings for AMC fine units
+  if (unitId.includes('work')) return GENERATORS['work-rate'];
+  if (unitId.includes('am-gm')) return GENERATORS['am-gm-inequality'];
+  if (unitId.includes('radical')) return GENERATORS['radical-equations'];
+  if (unitId.includes('absolute-value')) return GENERATORS['absolute-value-graphs'];
+  if (unitId.includes('quadratic-inequal')) return GENERATORS['quadratic-inequalities'];
+  if (unitId.includes('diophantine') || unitId.includes('sfft')) return GENERATORS['diophantine-equations'];
+  if (unitId.includes('clock') || unitId.includes('calendar')) return GENERATORS['clocks-calendars'];
+  if (unitId.includes('game') || unitId.includes('strategy')) return GENERATORS['games-strategy'];
+  if (unitId.includes('chart') || unitId.includes('data-analysis')) return GENERATORS['charts-data-analysis'];
   if (unitId.includes('symmetry') || unitId.includes('transform')) return GENERATORS['symmetry-transformations'];
   if (unitId.includes('equation') || unitId.includes('inequal') || unitId.includes('consecutive')) return GENERATORS['equations-inequalities'];
   if (unitId.includes('venn') || unitId.includes('set')) return GENERATORS['venn-sets'];
@@ -3708,17 +5832,17 @@ export function getGeneratorForUnit(unitId) {
   if (unitId.includes('coordinate') || unitId.includes('grid')) return GENERATORS['coordinate-geometry'];
   if (unitId.includes('digit') || unitId.includes('base')) return GENERATORS['units-digit-cycles'];
   if (unitId.includes('sequence') || unitId.includes('pattern')) return GENERATORS['sequences-patterns'];
-  if (unitId.includes('logic') || unitId.includes('game') || unitId.includes('clock')) return GENERATORS['logical-reasoning'];
+  if (unitId.includes('logic')) return GENERATORS['logical-reasoning'];
   if (unitId.includes('crypt') || unitId.includes('puzzle')) return GENERATORS['cryptarithms-puzzles'];
   if (unitId.includes('arithmetic') || unitId.includes('fraction') || unitId.includes('decimal') || unitId.includes('expression')) return GENERATORS['arithmetic-operations'];
   if (unitId.includes('prime') || unitId.includes('divisor') || unitId.includes('gcd')) return GENERATORS['primes-factorization'];
   if (unitId.includes('remainder') || unitId.includes('divisib')) return GENERATORS['remainders-divisibility'];
-  if (unitId.includes('percent') || unitId.includes('money') || unitId.includes('rate') || unitId.includes('interest')) return GENERATORS['percentages-money'];
+  if (unitId.includes('percent') || unitId.includes('money') || unitId.includes('interest')) return GENERATORS['percentages-money'];
   if (unitId.includes('ratio')) return GENERATORS['ratios-percent'];
-  if (unitId.includes('speed') || unitId.includes('distance') || unitId.includes('work')) return GENERATORS['speed-distance-time'];
+  if (unitId.includes('speed') || unitId.includes('distance')) return GENERATORS['speed-distance-time'];
   if (unitId.includes('count') || unitId.includes('permutation') || unitId.includes('combination')) return GENERATORS['permutations-combinations'];
   if (unitId.includes('prob') || unitId.includes('dice') || unitId.includes('card')) return GENERATORS['probability'];
-  if (unitId.includes('stat') || unitId.includes('average') || unitId.includes('mean')) return GENERATORS['equations-inequalities'];
+  if (unitId.includes('stat') || unitId.includes('average') || unitId.includes('mean')) return GENERATORS['statistics-averages'];
 
   // Default fallback: area-perimeter
   return GENERATORS['area-perimeter'];

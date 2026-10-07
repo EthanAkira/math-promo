@@ -111,6 +111,16 @@ const RULES = [
   },
   {
     subjectId: 'number-theory',
+    unitId: 'modular-arithmetic',
+    test: /\b(?:mod\s+\d+|modulo|congruen|fermat's\s+little\s+theorem|chinese\s+remainder\s+theorem|\bCRT\b)\b|합동식|모듈러|페르마의\s*소정리|중국인의\s*나머지/i,
+  },
+  {
+    subjectId: 'number-theory',
+    unitId: 'diophantine-equations',
+    test: /\b(?:simon's\s+favorite|sfft|diophantine|ordered\s+pairs?\s+(?:of\s+integers?|\(x,\s*y\))|positive\s+integers?\s+[xy].*satisfying.*(?:xy|x\^2\s*-\s*y\^2)|x\^2\s*-\s*y\^2\s*=\s*\d+)\b|사이먼|부정방정식|정수해.*순서쌍|합동식과\s*부정방정식/i,
+  },
+  {
+    subjectId: 'number-theory',
     unitId: 'remainders-divisibility',
     test: /\b(?:remainders?|divisible\s+by|divisibility|leaves\s+a\s+remainder|left\s+over)\b|나머지|배수\s*판정|나누어떨/i,
   },
@@ -148,6 +158,19 @@ const RULES = [
     unitId: 'charts-data-analysis',
     test: /\b(?:bar\s+graph|pie\s+chart|pie\s+graph|line\s+graph|table\s+shows|histogram|chart\s+shows|data\s+in\s+the\s+table|graph\s+shows|graph\s+below|which\s+graph\s+illustrates|elevation)\b|막대그래프|꺾은선|도수분포표|원그래프|표.*분석/i,
   },
+
+  // 4.5 AMC 10/12 & Algebra 2 Specialized Topics (Evaluated before general geometry/algebra)
+  { subjectId: 'advanced', unitId: 'am-gm-inequality', test: /\b(?:AM-GM|arithmetic\s+mean.*geometric\s+mean)\b|산술\s*[-·]?\s*기하\s*평균/i },
+  { subjectId: 'advanced', unitId: 'radical-equations', test: /\b(?:radical\s+equation|extraneous\s+roots?|extraneous\s+solutions?)\b|무리방정식|무연근/i },
+  { subjectId: 'advanced', unitId: 'absolute-value-graphs', test: /\b(?:absolute\s+value\s+graph|diamond\s+region)\b|\|\s*[xy]\s*[-+]\s*\d+\s*\|\s*\+\s*\|\s*[xy]|절댓값\s*함수|마름모\s*영역/i },
+  { subjectId: 'functions', unitId: 'function-transformations', test: /\b(?:transformation|translation|stretched|reflection\s+across|shifted\s+(?:up|down|left|right))\b|함수의\s*변환|평행이동|대칭이동/i },
+  { subjectId: 'combinatorics-probability', unitId: 'binomial-theorem', test: /\b(?:binomial\s+theorem|binomial\s+coefficients?|term\s+in\s+the\s+expansion\s+of)\b|이항정리|이항계수/i },
+  { subjectId: 'combinatorics-probability', unitId: 'probability-distributions', test: /\b(?:probability\s+distribution|expected\s+value|binomial\s+distribution|normal\s+distribution)\b|확률분포|기댓값|이항분포|정규분포/i },
+  { subjectId: 'advanced', unitId: 'complex-numbers-polar', test: /\b(?:de\s+moivre|polar\s+form|cis\s*θ|argument\s+of\s+z)\b|극형식|드무아브르/i },
+  { subjectId: 'advanced', unitId: 'exponential-logarithmic', test: /\b(?:log_|log\s*\(|ln\s*\(|logarithm|exponential\s+equation)\b|로그|지수방정식|로그방정식/i },
+  { subjectId: 'advanced', unitId: 'rational-functions', test: /\b(?:vertical\s+asymptote|horizontal\s+asymptote|rational\s+function)\b|유리함수|점근선/i },
+  { subjectId: 'advanced', unitId: 'quadratic-optimization', test: /\b(?:parabola\s+vertex|minimum\s+value\s+of.*x\^2|maximum\s+value\s+of.*-x\^2)\b|이차함수.*최대|이차함수.*최소|꼭짓점/i },
+  { subjectId: 'advanced', unitId: 'quadratic-inequalities', test: /\b(?:quadratic\s+inequalit|discriminant\b|strictly\s+positive\s+for\s+all\s+real\s+x)\b|이차부등식|판별식/i },
 
   // 5. Specialized Geometry
   {
@@ -250,7 +273,7 @@ const RULES = [
     test: /value\s+of|\b(?:fraction|decimal|evaluate|calculate|order\s+of\s+operations|which\s+of\s+the\s+following\s+numbers?\s+is\s+(?:largest|smallest)|is\s+smallest|is\s+largest|reciprocal|product\s+of|sum\s+of|their\s+product\s+is\s+\d+\s+and\s+their\s+sum\s+is|triplet\s+of\s+numbers|sum\s+NOT\s+equal|correct\s+ordering\s+of\s+the\s+three\s+numbers|greatest\s+integer\s+less\s+than|question\s+mark\s+between|what\s+is\s+[a-z]\s*\+\s*[a-z])\b|[×·÷\+\-\*\/]\s*\d+\s*|[+*\/÷·-]\s*.*=|사칙연산|연산\s*순서|분수|소수의\s*계산|값은/i,
   },
 
-  // 8. Functions & Advanced
+  // 8. Functions & Advanced Fallback
   { subjectId: 'functions', unitId: 'function-properties', test: /\bfunctions?\b|[fgh]\s*\(\s*[a-z0-9]|함수/i },
   { subjectId: 'advanced', unitId: 'trigonometry', test: /\b(?:sin\b|cos\b|tan\b|trigonometr)\b|삼각비|삼각함수/i },
   { subjectId: 'advanced', unitId: 'complex-numbers', test: /\b(?:complex\s+numbers?|imaginary\s+unit)\b|복소수|허수/i },

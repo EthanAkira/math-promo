@@ -16,32 +16,29 @@ export function SiteHeader() {
     <header className="site-header-academic">
       <div className="site-header-inner">
         <a href="/" className="site-brand-academic">
-          <div className="brand-crest">
-            <span className="crest-latin">DLL</span>
+          <div className="brand-crest illumia-crest">
+            <span className="crest-latin font-cinzel">✦</span>
           </div>
           <div className="brand-text-wrap">
-            <span className="brand-main font-display">
-              <span className="brand-name-lead">매일 배움</span>{' '}
-              <span className="brand-name-unit">연구소</span>
+            <span className="brand-main font-cinzel">
+              <span className="brand-name-lead">ILLUMIA</span>{' '}
+              <span className="brand-name-unit">LAB</span>
             </span>
-            <span className="brand-sub font-cinzel">
-              <span className="brand-sub-lead">DAILY LEARNING</span>{' '}
-              <span className="brand-sub-unit">LAB</span>
+            <span className="brand-sub font-mono">
+              <span className="brand-sub-lead">LEARN · UNDERSTAND</span>{' '}
+              <span className="brand-sub-unit">ILLUMINATE</span>
             </span>
           </div>
         </a>
 
         <nav className="site-nav-academic" aria-label="주요 메뉴">
-          <a href="/#archive" className="nav-item">AMC</a>
-          <a href="/csat.html" className="nav-item">{tr(language, 'navCsat')}</a>
+          <a href="/#learning-areas" className="nav-item">{language === 'ko' ? '학습 영역' : 'Learning Areas'}</a>
+          <a href="/amc" className="nav-item">AMC</a>
+          <a href="/csat" className="nav-item">{tr(language, 'navCsat')}</a>
           <a href="/coding" className="nav-item">{tr(language, 'navCoding')}</a>
-          <a href="/notices" className="nav-item">{tr(language, 'navNotices')}</a>
+          <a href="/games" className="nav-item">{tr(language, 'restCorner')}</a>
+          <a href="/about" className="nav-item">{language === 'ko' ? '소개 (About)' : 'About'}</a>
           <a href="/contact" className="nav-item">{tr(language, 'navContact')}</a>
-          <a href="/games.html" className="nav-item">{tr(language, 'restCorner')}</a>
-          <a href="/?curriculumTab=eastasia#curriculum-title" className="nav-item">{tr(language, 'navEastAsia')}</a>
-          <a href="/?curriculumTab=southeastasia#curriculum-title" className="nav-item">{tr(language, 'navSoutheastAsia')}</a>
-          <a href="/?curriculumTab=southasia#curriculum-title" className="nav-item">{tr(language, 'navSouthAsia')}</a>
-          <a href="/?curriculumTab=englishspeaking#curriculum-title" className="nav-item">{language === 'ko' ? '영어권 국가' : 'English-speaking'}</a>
           {user ? <a href="/dashboard" className="nav-item">{tr(language, 'authMyStats')}</a> : null}
         </nav>
 
@@ -148,24 +145,26 @@ export function SiteFooter() {
     <footer className="site-footer-academic">
       <div className="footer-inner">
         <div className="footer-brand-section">
-          <div className="footer-latin-motto font-cinzel">COGITO, ERGO SUM</div>
-          <p className="footer-sub-motto">“나는 생각한다, 고로 존재한다” · 사유하는 수학, 깊이 있는 배움</p>
+          <div className="footer-latin-motto font-cinzel">ILLUMIA LAB</div>
+          <p className="footer-sub-motto">“Where Learning Becomes Illumination” · 배움이 깨달음으로 이어지는 곳</p>
         </div>
 
         <nav className="footer-nav" aria-label="푸터 메뉴">
-          <a href="/amc.html">AMC 8/10/12</a>
-          <a href="/csat.html">{tr(language, 'navCsat')}</a>
+          <a href="/#learning-areas">{language === 'ko' ? '학습 영역' : 'Learning Areas'}</a>
+          <a href="/amc">AMC 8/10/12</a>
+          <a href="/csat">{tr(language, 'navCsat')}</a>
           <a href="/coding">{tr(language, 'navCoding')}</a>
+          <a href="/games">{tr(language, 'restCorner')}</a>
+          <a href="/about">{language === 'ko' ? 'ILLUMIA LAB 소개' : 'About ILLUMIA LAB'}</a>
           <a href="/notices">{tr(language, 'navNotices')}</a>
           <a href="/contact">{tr(language, 'navContact')}</a>
-          <a href="/games.html">{tr(language, 'restCorner')}</a>
         </nav>
 
         <div className="footer-divider-thin" />
 
         <div className="footer-bottom-info">
           <p className="footer-copy-text">
-            © {new Date().getFullYear()} Daily Learning Lab (매일 배움 연구소) · All rights reserved.
+            © {new Date().getFullYear()} ILLUMIA LAB (illumialab.com) · All rights reserved.
           </p>
           <a
             href="https://www.instagram.com/algorythm_logarythm/"

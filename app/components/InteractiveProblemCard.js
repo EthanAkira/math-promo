@@ -5,6 +5,7 @@ import LatexMath from './LatexMath';
 import NoteCanvas from './NoteCanvas';
 import { sanitizePublicText } from '../publicText';
 import { cleanCsatProblemText, decodeHwpPua } from '../utils/hwpPuaDecoder';
+import { syncAnswerEvents } from '../lib/submissions';
 
 const CHOICE_SYMBOLS = ['①', '②', '③', '④', '⑤'];
 const CHOICE_LETTERS = ['(A)', '(B)', '(C)', '(D)', '(E)'];
@@ -420,7 +421,10 @@ export default function InteractiveProblemCard({
             <button
               type="button"
               disabled={!isAnswered}
-              onClick={() => setCheckedInPractice(true)}
+              onClick={() => {
+                setCheckedInPractice(true);
+                syncAnswerEvents([{ grade: examType, unit: unit || sourceLabel, isCorrect }]);
+              }}
               style={{
                 fontSize: '13.5px',
                 fontWeight: '700',

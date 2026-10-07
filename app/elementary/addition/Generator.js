@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
 import ProblemScratchpad from '../../components/ProblemScratchpad';
+import { syncAnswerEvents } from '../../lib/submissions';
 
 const LEVELS = [
   {
@@ -145,6 +146,16 @@ export default function Generator() {
     setChecked(false);
   }
 
+  function checkAnswers() {
+    setChecked(true);
+    syncAnswerEvents(problems
+      .filter((problem) => answers[problem.id] !== undefined && answers[problem.id] !== '')
+      .map((problem) => ({
+        unit: levelId,
+        isCorrect: Number(answers[problem.id]) === problem.answer,
+      })));
+  }
+
   return (
     <div className="worksheet-app">
       <section className="worksheet-controls no-print" aria-label="문제지 설정">
@@ -225,7 +236,7 @@ export default function Generator() {
           >
             ✍️ {tabletMode ? '연습장 전체 닫기' : '연습장 전체 열기'}
           </button>
-          <button className="button button-primary" onClick={() => setChecked(true)}>채점하기</button>
+          <button className="button button-primary" onClick={checkAnswers}>채점하기</button>
         </div>
         {checked ? <strong className="score">{PROBLEM_COUNT}문제 중 {correctCount}문제 정답</strong> : null}
       </section> : null}

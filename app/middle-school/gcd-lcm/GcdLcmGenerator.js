@@ -10,7 +10,7 @@ import { useLanguage } from '../../language';
 import { useAuth } from '../../auth';
 import { isNonKorean, tr } from '../../i18n';
 import MathText from '../../components/MathText';
-import { recordAttempts } from '../../lib/submissions';
+import { recordAttempts, syncAnswerEvents } from '../../lib/submissions';
 import ProblemScratchpad from '../../components/ProblemScratchpad';
 
 const PROBLEM_COUNT = 20;
@@ -177,7 +177,7 @@ export default function GcdLcmGenerator() {
 
   function checkAnswers() {
     setChecked(true);
-    recordAttempts(user, problems
+    const gradedEntries = problems
       .filter((item) => answers[item.id] !== undefined && answers[item.id] !== '')
       .map((item) => ({
         grade: 'middle-1',
@@ -185,7 +185,9 @@ export default function GcdLcmGenerator() {
         problemType: 'short',
         isCorrect: normalizeAnswer(answers[item.id]) === normalizeAnswer(item.answer),
         answer: answers[item.id],
-      })));
+      }));
+    recordAttempts(user, gradedEntries);
+    syncAnswerEvents(gradedEntries);
   }
 
   const unitLabel = localizeGcdLcmUnit(unit, language);

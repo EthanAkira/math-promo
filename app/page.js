@@ -3,7 +3,10 @@
 import { SiteHeader, SiteFooter, TutorProfileDisclosure } from './components';
 import { useLanguage } from './language';
 import { tr } from './i18n';
-import DescartesHero from './DescartesHero';
+import IllumiaHero from './components/IllumiaHero';
+import LearningAreasSection from './components/LearningAreasSection';
+import PhilosophyFlowSection from './components/PhilosophyFlowSection';
+import WhyIllumiaLabSection from './components/WhyIllumiaLabSection';
 import CurriculumExplorer from './CurriculumExplorer';
 import { GAMES_COPY } from './games/gamesCopy';
 
@@ -15,8 +18,17 @@ export default function HomePage() {
     <>
       <SiteHeader />
       <main className="main-content-wrap">
-        {/* René Descartes Philosophical Hero Section */}
-        <DescartesHero />
+        {/* Section 1: ILLUMIA LAB Hero Section */}
+        <IllumiaHero />
+
+        {/* Section 2: Learning Areas */}
+        <LearningAreasSection />
+
+        {/* Section 3: Learning Philosophy (Learning -> Illumination) */}
+        <PhilosophyFlowSection />
+
+        {/* Sections 4-7: Why ILLUMIA, Why LAB, Core Question, Final CTA */}
+        <WhyIllumiaLabSection />
 
         {/* Multidimensional Curriculum Explorer */}
         <div className="content-divider">

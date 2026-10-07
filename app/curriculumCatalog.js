@@ -8,8 +8,8 @@ export const CURRICULUM_COPY = {
     eyebrow: 'CURRICULUM MAP',
     title: '어떤 순서로 수학을 찾아볼까요?',
     description: '한국 교육과정(학년별/2022 개정 과목별), 국제학교 과정, 수학 영역별의 관점으로 체계적으로 탐색할 수 있습니다.',
-    mainTabs: ['한국 교육과정', '국제학교 과정', '수학 영역별', '동아시아 교육과정', '동남아시아 교육과정', '남아시아 교육과정', '영어권 국가 교육과정'],
-    mainTabHelp: ['초1~고3 학년별 및 2022 개정 과목별', 'Pre-Algebra · Algebra 1·2 · Precalculus', '수와 연산, 대수, 기하, 확률·통계 등 개념 지도', '일본 · 대만 · 홍콩', '싱가포르 · 말레이시아 · 베트남', '인도', '미국 · 호주 · 영국 · 캐나다 · 뉴질랜드'],
+    mainTabs: ['한국 교육과정', '국제학교 과정', '수학 영역별', '미국 교육과정', '영국 교육과정', '호주 교육과정', '말레이시아 교육과정', '싱가포르 교육과정', '홍콩 교육과정', '인도 교육과정', '기타 국가 교육과정'],
+    mainTabHelp: ['초1~고3 학년별 및 2022 개정 과목별', 'Pre-Algebra · Algebra 1·2 · Precalculus', '수와 연산, 대수, 기하, 확률·통계 등 개념 지도', '미국 Common Core · Grade 1~12 / AP Calculus', '영국 Key Stage 1~5 · GCSE / A-Level', '호주 Foundation~Year 12 · VCE / HSC', '말레이시아 KSSR · Form 1~5 / SPM', '싱가포르 Primary 1~6 · Secondary / O-Level', '홍콩 P1~P6 · S1~S6 / HKDSE', '인도 CBSE Class 1~12', '일본 · 대만 · 베트남 · 캐나다 · 뉴질랜드'],
     subViews: {
       byGrade: '학년별 보기 · 기존 분류',
       bySubject2022: '2022 개정 과목별 보기',
@@ -53,6 +53,14 @@ export const CURRICULUM_COPY = {
       subject2022Notice: '2022 개정 교육과정이 완전히 적용된 뒤의 공식 과목 체계(공통·일반 선택·진로 선택·융합 선택·전문)입니다. 2027학년도 수능까지는 현재 고3에게 아직 적용되지 않으며, 고3의 실제 응시 과목명은 "학년별 보기"에서 확인하세요.',
       intlNotice: '국제학교 및 해외 교육과정(Pre-Algebra, Algebra 1·2, Precalculus 등)의 독립 과정입니다. 한국 교육과정과 별도로 관리됩니다.',
       domainNotice: '학년과 교육과정을 넘어 수와 연산, 변화와 관계, 도형과 측정, 자료와 가능성 등의 수학 핵심 개념별로 탐색합니다.',
+      usaNotice: '미국(주별/Common Core) 및 Pre-Algebra ~ AP Calculus 단계에 맞춰 구성된 문제 은행입니다.',
+      ukNotice: '영국(National Curriculum) Key Stage 1~5 및 GCSE, A-Level 단계에 맞춰 구성된 문제 은행입니다.',
+      australiaNotice: '호주(Australian Curriculum) Foundation~Year 12 및 주별 고등과정에 맞춰 구성된 문제 은행입니다.',
+      malaysiaNotice: '말레이시아(KSSR / KSSM / SPM) 교육과정 단계에 맞춰 구성된 문제 은행입니다.',
+      singaporeNotice: '싱가포르(MOE) Primary, Secondary, O-Level 단계에 맞춰 구성된 문제 은행입니다.',
+      hongkongNotice: '홍콩(EDB) 초등 P1~P6, 중고등 S1~S6 및 HKDSE 단계에 맞춰 구성된 문제 은행입니다.',
+      indiaNotice: '인도(CBSE) Class 1~12 단계에 맞춰 구성된 문제 은행입니다.',
+      otherNotice: '일본·대만·베트남·캐나다·뉴질랜드 교육과정의 실제 학년·과목 명칭에 맞춰 구성된 문제 은행입니다.',
       eastAsiaNotice: '일본·대만·홍콩 교육과정의 실제 학년·과목 명칭에 맞춰 기존 문제 은행을 재구성해 보여드립니다. 각국 기출문제를 분석한 실제 응용문제는 추후 추가될 예정이며, 추가되면 한국 심화 문제와 동일하게 유료 구독(curriculum-advanced)으로 열람할 수 있습니다.',
       southeastAsiaNotice: '싱가포르·말레이시아·베트남 교육과정의 실제 학년·과목 명칭에 맞춰 기존 문제 은행을 재구성해 보여드립니다. 각국 기출문제를 분석한 실제 응용문제는 추후 추가될 예정이며, 추가되면 한국 심화 문제와 동일하게 유료 구독(curriculum-advanced)으로 열람할 수 있습니다.',
       southAsiaNotice: '인도(CBSE) 교육과정의 실제 학년·과목 명칭에 맞춰 기존 문제 은행을 재구성해 보여드립니다. 실제 기출문제를 분석한 응용문제는 추후 추가될 예정이며, 추가되면 한국 심화 문제와 동일하게 유료 구독(curriculum-advanced)으로 열람할 수 있습니다.',
@@ -71,8 +79,8 @@ export const CURRICULUM_COPY = {
     eyebrow: 'CURRICULUM MAP',
     title: 'Choose how you want to explore math',
     description: 'Browse by Korean curriculum (grades / 2022 subjects), international course sequence, or mathematical domain.',
-    mainTabs: ['Korean Curriculum', 'Course Sequence', 'Math Domains', 'East Asia Curricula', 'Southeast Asia Curricula', 'South Asia Curricula', 'English-speaking Countries'],
-    mainTabHelp: ['Grades 1–12 & 2022 Revised Subjects', 'Pre-Algebra, Algebra 1–2, Precalculus', 'Concept strands across systems', 'Japan · Taiwan · Hong Kong', 'Singapore · Malaysia · Vietnam', 'India', 'United States · Australia · United Kingdom · Canada · New Zealand'],
+    mainTabs: ['Korean Curriculum', 'Course Sequence', 'Math Domains', 'United States', 'United Kingdom', 'Australia', 'Malaysia', 'Singapore', 'Hong Kong', 'India', 'Other Countries'],
+    mainTabHelp: ['Grades 1–12 & 2022 Revised Subjects', 'Pre-Algebra, Algebra 1–2, Precalculus', 'Concept strands across systems', 'Grades 1–12 · Common Core / AP Calculus', 'Key Stages 1–5 · GCSE / A-Level', 'Foundation–Year 12 · VCE / HSC', 'Primary Year 1–6 · Form 1–5 / SPM', 'Primary 1–6 · Secondary / O-Level', 'P1–P6 · S1–S6 / HKDSE', 'CBSE Class 1–12', 'Japan · Taiwan · Vietnam · Canada · New Zealand'],
     subViews: {
       byGrade: 'By Grade · Classic Names',
       bySubject2022: '2022 Revised Subjects',
@@ -116,6 +124,14 @@ export const CURRICULUM_COPY = {
       subject2022Notice: 'This is the official subject structure once the 2022 revision is fully in effect (Common / General Elective / Career Elective / Convergence / Advanced). It does not yet apply to today’s actual grade-12 students until the CSAT for the 2027 admission cycle — see "By Grade" for what grade 12 currently sits.',
       intlNotice: 'Independent progression for international school programs (Pre-Algebra, Algebra 1–2, Precalculus). Managed separately from national curricula.',
       domainNotice: 'Explore core mathematical concepts across grades: Number & Operations, Algebra, Geometry, Data & Probability.',
+      usaNotice: 'Problems organized around the US curriculum (Common Core / State Standards) and Pre-Algebra through AP Calculus.',
+      ukNotice: 'Problems organized around the UK National Curriculum across Key Stages 1–5, GCSE, and A-Level.',
+      australiaNotice: 'Problems organized around the Australian Curriculum (Foundation to Year 12) and senior secondary pathways.',
+      malaysiaNotice: 'Problems organized around the Malaysian curriculum (KSSR / KSSM / SPM).',
+      singaporeNotice: 'Problems organized around Singapore MOE Primary, Secondary, and O-Level syllabuses.',
+      hongkongNotice: 'Problems organized around Hong Kong EDB Primary (P1–P6), Secondary (S1–S6), and HKDSE.',
+      indiaNotice: 'Problems organized around India CBSE Class 1–12 curriculum.',
+      otherNotice: 'Problems organized around national curricula of Japan, Taiwan, Vietnam, Canada, and New Zealand.',
       eastAsiaNotice: 'The existing problem bank is reorganized to match the real grade and subject names used in Japan, Taiwan, and Hong Kong. Country-specific applied problems drawn from real past exams will be added later, gated behind the same paid subscription (curriculum-advanced) as the Korean advanced-tier problems.',
       southeastAsiaNotice: 'The existing problem bank is reorganized to match the real grade and subject names used in Singapore, Malaysia, and Vietnam. Country-specific applied problems drawn from real past exams will be added later, gated behind the same paid subscription (curriculum-advanced) as the Korean advanced-tier problems.',
       southAsiaNotice: 'The existing problem bank is reorganized to match the real grade and subject names used in India (CBSE). Country-specific applied problems drawn from real past exams will be added later, gated behind the same paid subscription (curriculum-advanced) as the Korean advanced-tier problems.',
@@ -1092,7 +1108,6 @@ const KOREAN_GRADE_STAGE_SEEDS = [
         ready: true,
         availability: 'partial',
         meta: { legacy: '수학(상)', revised2022: '공통수학1', officialType: '공통 과목' },
-        csat: { href: '/csat/units?unit=polynomial-ops' },
       },
       {
         label: '수학(하) · 공통수학2 (도형의 방정식·집합과 명제·함수)',
@@ -1101,7 +1116,6 @@ const KOREAN_GRADE_STAGE_SEEDS = [
         availability: 'partial',
         amc: { href: '/amc/units?unit=venn-sets&variant=1' },
         meta: { legacy: '수학(하)', revised2022: '공통수학2', officialType: '공통 과목' },
-        csat: { href: '/csat/units?unit=coordinate-geometry-equations' },
       },
       {
         label: '고등 기하 기초 (좌표와 도형)',
@@ -1137,34 +1151,43 @@ const KOREAN_GRADE_STAGE_SEEDS = [
         availability: 'partial',
         meta: { legacy: '수학Ⅰ', revised2022: '대수', officialType: '일반 선택' },
       },
-      { label: '지수법칙과 지수함수·지수방정식', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=exponential-equations', ready: true, availability: 'ready' },
+      { label: '지수법칙과 지수함수·지수방정식', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=exponential-equations', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=exp-log' } },
       { label: '지수·로그함수의 관계와 그래프', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-exponential-log-functions', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=exp-log' } },
-      { label: '지수·로그함수 그래프의 평행이동과 대칭이동', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=precalc-exp-log-transformations', ready: true, availability: 'ready' },
-      { label: '로그의 정의와 성질', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=logarithms', ready: true, availability: 'ready' },
-      { label: '일반각과 호도법', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-radians-trig', ready: true, availability: 'ready' },
+      { label: '지수·로그함수 그래프의 평행이동과 대칭이동', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=precalc-exp-log-transformations', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=exp-log' } },
+      { label: '로그의 정의와 성질', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=logarithms', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=exp-log' } },
+      { label: '일반각과 호도법', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-radians-trig', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=trig' } },
       { label: '삼각함수의 값과 성질', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=algebra2-trigonometry', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=trig' } },
-      { label: '삼각함수의 그래프', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=precalc-trig-graphs', ready: true, availability: 'ready' },
-      { label: '삼각함수의 상호관계와 삼각방정식', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=precalc-trig-identities', ready: true, availability: 'ready' },
-      { label: '사인법칙과 코사인법칙', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-sine-cosine-laws', ready: true, availability: 'ready' },
+      { label: '삼각함수의 그래프', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=precalc-trig-graphs', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=trig' } },
+      { label: '삼각함수의 상호관계와 삼각방정식', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=precalc-trig-identities', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=trig' } },
+      { label: '사인법칙과 코사인법칙', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-sine-cosine-laws', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=trig' } },
       { label: '등차수열의 뜻과 일반항', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=sequences', ready: true, availability: 'ready', amc: { href: '/amc/units?unit=sequences-patterns&variant=1' }, csat: { href: '/csat/units?unit=sequences' } },
-      { label: '등비수열과 그 합', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=geometric-sequences', ready: true, availability: 'ready' },
-      { label: '수열의 합과 수학적 귀납법', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-sequence-sums-induction', ready: true, availability: 'ready' },
+      { label: '등비수열과 그 합', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=geometric-sequences', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=sequences' } },
+      { label: '수열의 합과 수학적 귀납법', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-sequence-sums-induction', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=sequences' } },
       {
         label: '미적분Ⅰ (예전 2015 개정: 수학Ⅱ — 함수의 극한·연속, 미분, 적분)',
         href: '/middle-school/pre-algebra?profile=kr-high-2-calculus-1',
         ready: true,
         availability: 'partial',
         meta: { legacy: '수학Ⅱ', revised2022: '미적분Ⅰ', officialType: '일반 선택' },
-        csat: { href: '/csat/units?unit=differentiation' },
       },
+      { label: '미적분Ⅰ · 함수의 극한과 미정계수 결정', href: '/middle-school/pre-algebra?profile=kr-high-2-calculus-1&unit=h2-function-limits', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=limits-continuity' } },
+      { label: '미적분Ⅰ · 함수의 연속과 사잇값 정리', href: '/middle-school/pre-algebra?profile=kr-high-2-calculus-1&unit=h2-continuity', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=limits-continuity' } },
+      { label: '미적분Ⅰ · 미분계수와 도함수의 계산', href: '/middle-school/pre-algebra?profile=kr-high-2-calculus-1&unit=h2-derivative-rules', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=differentiation' } },
+      { label: '미적분Ⅰ · 접선의 방정식과 순간변화율', href: '/middle-school/pre-algebra?profile=kr-high-2-calculus-1&unit=h2-tangent-lines', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=differentiation' } },
+      { label: '미적분Ⅰ · 함수의 증가·감소와 극값·도함수 활용', href: '/middle-school/pre-algebra?profile=kr-high-2-calculus-1&unit=h2-monotonic-extrema', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=differentiation' } },
+      { label: '미적분Ⅰ · 부정적분과 정적분의 계산', href: '/middle-school/pre-algebra?profile=kr-high-2-calculus-1&unit=h2-definite-integrals', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=integration' } },
+      { label: '미적분Ⅰ · 정적분의 활용과 곡선 사이의 넓이', href: '/middle-school/pre-algebra?profile=kr-high-2-calculus-1&unit=h2-integral-area', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=integration' } },
       {
         label: '확률과 통계 (2015·2022 개정 동일 — 경우의 수, 확률, 통계적 추정)',
         href: '/middle-school/pre-algebra?profile=kr-high-2-probability-statistics',
         ready: true,
         availability: 'partial',
         meta: { legacy: '확률과 통계', revised2022: '확률과 통계', officialType: '일반 선택' },
-        csat: { href: '/csat/units?unit=probability' },
       },
+      { label: '확률과 통계 · 순열과 조합 (경우의 수)', href: '/middle-school/pre-algebra?profile=kr-high-2-probability-statistics&unit=h2-binomial-distribution', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=counting' } },
+      { label: '확률과 통계 · 확률의 뜻과 조건부확률', href: '/middle-school/pre-algebra?profile=kr-high-2-probability-statistics&unit=h2-expected-value', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=probability' } },
+      { label: '확률과 통계 · 이산확률변수와 정규분포', href: '/middle-school/pre-algebra?profile=kr-high-2-probability-statistics&unit=h2-normal-distribution', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=statistics' } },
+      { label: '확률과 통계 · 모평균의 통계적 추정과 신뢰구간', href: '/middle-school/pre-algebra?profile=kr-high-2-probability-statistics&unit=h2-confidence-interval', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=statistics' } },
     ],
   },
 
@@ -1185,16 +1208,24 @@ const KOREAN_GRADE_STAGE_SEEDS = [
         ready: true,
         availability: 'partial',
         meta: { legacy: '미적분', revised2022: '미적분Ⅱ', officialType: '진로 선택' },
-        csat: { href: '/csat/units?unit=sequence-limits' },
       },
+      { label: '미적분 · 수열의 극한값 계산', href: '/middle-school/pre-algebra?profile=kr-high-3-calculus-2&unit=h3-sequence-limits', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=sequence-limits' } },
+      { label: '미적분 · 급수와 무한등비급수의 합', href: '/middle-school/pre-algebra?profile=kr-high-3-calculus-2&unit=h3-infinite-series', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=sequence-limits' } },
+      { label: '미적분 · 지수·로그·삼각함수의 미분법', href: '/middle-school/pre-algebra?profile=kr-high-3-calculus-2&unit=h3-exp-log-derivatives', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=advanced-differentiation' } },
+      { label: '미적분 · 여러 가지 미분법 (곱·몫·연쇄법칙)과 음함수', href: '/middle-school/pre-algebra?profile=kr-high-3-calculus-2&unit=h3-advanced-derivative-rules', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=advanced-differentiation' } },
+      { label: '미적분 · 치환적분법과 부분적분법', href: '/middle-school/pre-algebra?profile=kr-high-3-calculus-2&unit=h3-substitution-integration', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=advanced-integration' } },
+      { label: '미적분 · 정적분의 활용과 회전체 부피', href: '/middle-school/pre-algebra?profile=kr-high-3-calculus-2&unit=h3-volume-integrals', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=advanced-integration' } },
       {
         label: '기하 (2022 개정: 기하 — 이차곡선, 평면벡터, 공간도형과 공간좌표)',
         href: '/middle-school/pre-algebra?profile=kr-high-3-geometry',
         ready: true,
         availability: 'partial',
         meta: { legacy: '기하', revised2022: '기하', officialType: '진로 선택' },
-        csat: { href: '/csat/units?unit=conic-sections' },
       },
+      { label: '기하 · 이차곡선 (포물선·타원·쌍곡선)과 접선', href: '/middle-school/pre-algebra?profile=kr-high-3-geometry&unit=h3-parabola', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=conic-sections' } },
+      { label: '기하 · 평면벡터의 연산과 내적', href: '/middle-school/pre-algebra?profile=kr-high-3-geometry&unit=h3-vector-angle', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=plane-vectors' } },
+      { label: '기하 · 공간도형과 직선·평면의 위치 관계', href: '/middle-school/pre-algebra?profile=kr-high-3-geometry&unit=h3-lines-planes', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=space-geometry' } },
+      { label: '기하 · 공간좌표와 구의 방정식', href: '/middle-school/pre-algebra?profile=kr-high-3-geometry&unit=h3-space-coordinates', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=space-geometry' } },
       {
         label: '수능 수학 종합 연습 (실전 모의)',
         href: '/middle-school/basic-figures?profile=csat&unit=regional-geometry-mixed',
@@ -1263,18 +1294,18 @@ const KOREAN_2022_SUBJECT_STAGE_SEEDS = [
         availability: 'partial',
         meta: { legacy: '구 수학Ⅰ', grade: '고2 대표', evidence: 'implemented' },
       },
-      { label: '대수 · 지수법칙과 지수함수·지수방정식', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=exponential-equations', ready: true, availability: 'ready' },
-      { label: '대수 · 지수·로그함수의 관계와 그래프', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-exponential-log-functions', ready: true, availability: 'ready' },
-      { label: '대수 · 지수·로그함수 그래프의 변환', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=precalc-exp-log-transformations', ready: true, availability: 'ready' },
-      { label: '대수 · 로그의 성질과 밑의 변환', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=logarithms', ready: true, availability: 'ready' },
-      { label: '대수 · 일반각과 호도법', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-radians-trig', ready: true, availability: 'ready' },
-      { label: '대수 · 삼각함수의 값과 성질', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=algebra2-trigonometry', ready: true, availability: 'ready' },
-      { label: '대수 · 삼각함수의 그래프', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=precalc-trig-graphs', ready: true, availability: 'ready' },
-      { label: '대수 · 삼각함수의 상호관계와 삼각방정식', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=precalc-trig-identities', ready: true, availability: 'ready' },
-      { label: '대수 · 사인법칙과 코사인법칙', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-sine-cosine-laws', ready: true, availability: 'ready' },
-      { label: '대수 · 등차수열의 뜻과 일반항', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=sequences', ready: true, availability: 'ready' },
-      { label: '대수 · 등비수열과 그 합', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=geometric-sequences', ready: true, availability: 'ready' },
-      { label: '대수 · 수열의 합과 수학적 귀납법', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-sequence-sums-induction', ready: true, availability: 'ready' },
+      { label: '대수 · 지수법칙과 지수함수·지수방정식', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=exponential-equations', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=exp-log' } },
+      { label: '대수 · 지수·로그함수의 관계와 그래프', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-exponential-log-functions', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=exp-log' } },
+      { label: '대수 · 지수·로그함수 그래프의 변환', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=precalc-exp-log-transformations', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=exp-log' } },
+      { label: '대수 · 로그의 성질과 밑의 변환', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=logarithms', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=exp-log' } },
+      { label: '대수 · 일반각과 호도법', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-radians-trig', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=trig' } },
+      { label: '대수 · 삼각함수의 값과 성질', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=algebra2-trigonometry', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=trig' } },
+      { label: '대수 · 삼각함수의 그래프', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=precalc-trig-graphs', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=trig' } },
+      { label: '대수 · 삼각함수의 상호관계와 삼각방정식', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=precalc-trig-identities', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=trig' } },
+      { label: '대수 · 사인법칙과 코사인법칙', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-sine-cosine-laws', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=trig' } },
+      { label: '대수 · 등차수열의 뜻과 일반항', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=sequences', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=sequences' } },
+      { label: '대수 · 등비수열과 그 합', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=geometric-sequences', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=sequences' } },
+      { label: '대수 · 수열의 합과 수학적 귀납법', href: '/middle-school/pre-algebra?profile=kr-high-2-algebra&unit=h2-sequence-sums-induction', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=sequences' } },
       {
         label: '미적분Ⅰ (함수의 극한과 연속, 미분, 적분)',
         href: '/middle-school/pre-algebra?profile=kr-high-2-calculus-1',
@@ -1282,6 +1313,13 @@ const KOREAN_2022_SUBJECT_STAGE_SEEDS = [
         availability: 'partial',
         meta: { legacy: '구 수학Ⅱ', grade: '고2 대표', evidence: 'implemented' },
       },
+      { label: '미적분Ⅰ · 함수의 극한과 미정계수 결정', href: '/middle-school/pre-algebra?profile=kr-high-2-calculus-1&unit=h2-function-limits', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=limits-continuity' } },
+      { label: '미적분Ⅰ · 함수의 연속과 사잇값 정리', href: '/middle-school/pre-algebra?profile=kr-high-2-calculus-1&unit=h2-continuity', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=limits-continuity' } },
+      { label: '미적분Ⅰ · 미분계수와 도함수의 계산', href: '/middle-school/pre-algebra?profile=kr-high-2-calculus-1&unit=h2-derivative-rules', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=differentiation' } },
+      { label: '미적분Ⅰ · 접선의 방정식과 순간변화율', href: '/middle-school/pre-algebra?profile=kr-high-2-calculus-1&unit=h2-tangent-lines', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=differentiation' } },
+      { label: '미적분Ⅰ · 함수의 증가·감소와 극값·도함수 활용', href: '/middle-school/pre-algebra?profile=kr-high-2-calculus-1&unit=h2-monotonic-extrema', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=differentiation' } },
+      { label: '미적분Ⅰ · 부정적분과 정적분의 계산', href: '/middle-school/pre-algebra?profile=kr-high-2-calculus-1&unit=h2-definite-integrals', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=integration' } },
+      { label: '미적분Ⅰ · 정적분의 활용과 곡선 사이의 넓이', href: '/middle-school/pre-algebra?profile=kr-high-2-calculus-1&unit=h2-integral-area', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=integration' } },
       {
         label: '확률과 통계 (경우의 수, 확률, 확률분포, 통계적 추정)',
         href: '/middle-school/pre-algebra?profile=kr-high-2-probability-statistics',
@@ -1289,6 +1327,10 @@ const KOREAN_2022_SUBJECT_STAGE_SEEDS = [
         availability: 'partial',
         meta: { legacy: '구 확률과 통계', grade: '고2 대표', evidence: 'implemented' },
       },
+      { label: '확률과 통계 · 순열과 조합 (경우의 수)', href: '/middle-school/pre-algebra?profile=kr-high-2-probability-statistics&unit=h2-binomial-distribution', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=counting' } },
+      { label: '확률과 통계 · 확률의 뜻과 조건부확률', href: '/middle-school/pre-algebra?profile=kr-high-2-probability-statistics&unit=h2-expected-value', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=probability' } },
+      { label: '확률과 통계 · 이산확률변수와 정규분포', href: '/middle-school/pre-algebra?profile=kr-high-2-probability-statistics&unit=h2-normal-distribution', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=statistics' } },
+      { label: '확률과 통계 · 모평균의 통계적 추정과 신뢰구간', href: '/middle-school/pre-algebra?profile=kr-high-2-probability-statistics&unit=h2-confidence-interval', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=statistics' } },
     ],
   },
 
@@ -1309,6 +1351,12 @@ const KOREAN_2022_SUBJECT_STAGE_SEEDS = [
         availability: 'partial',
         meta: { legacy: '구 미적분', grade: '고3 대표', evidence: 'implemented' },
       },
+      { label: '미적분Ⅱ · 수열의 극한값 계산', href: '/middle-school/pre-algebra?profile=kr-high-3-calculus-2&unit=h3-sequence-limits', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=sequence-limits' } },
+      { label: '미적분Ⅱ · 급수와 무한등비급수의 합', href: '/middle-school/pre-algebra?profile=kr-high-3-calculus-2&unit=h3-infinite-series', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=sequence-limits' } },
+      { label: '미적분Ⅱ · 지수·로그·삼각함수의 미분법', href: '/middle-school/pre-algebra?profile=kr-high-3-calculus-2&unit=h3-exp-log-derivatives', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=advanced-differentiation' } },
+      { label: '미적분Ⅱ · 여러 가지 미분법 (곱·몫·연쇄법칙)과 음함수', href: '/middle-school/pre-algebra?profile=kr-high-3-calculus-2&unit=h3-advanced-derivative-rules', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=advanced-differentiation' } },
+      { label: '미적분Ⅱ · 치환적분법과 부분적분법', href: '/middle-school/pre-algebra?profile=kr-high-3-calculus-2&unit=h3-substitution-integration', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=advanced-integration' } },
+      { label: '미적분Ⅱ · 정적분의 활용과 회전체 부피', href: '/middle-school/pre-algebra?profile=kr-high-3-calculus-2&unit=h3-volume-integrals', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=advanced-integration' } },
       {
         label: '기하 (이차곡선, 평면벡터, 공간도형과 공간벡터)',
         href: '/middle-school/pre-algebra?profile=kr-high-3-geometry',
@@ -1316,6 +1364,10 @@ const KOREAN_2022_SUBJECT_STAGE_SEEDS = [
         availability: 'partial',
         meta: { legacy: '구 기하', grade: '고3 대표', evidence: 'implemented' },
       },
+      { label: '기하 · 이차곡선 (포물선·타원·쌍곡선)과 접선', href: '/middle-school/pre-algebra?profile=kr-high-3-geometry&unit=h3-parabola', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=conic-sections' } },
+      { label: '기하 · 평면벡터의 연산과 내적', href: '/middle-school/pre-algebra?profile=kr-high-3-geometry&unit=h3-vector-angle', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=plane-vectors' } },
+      { label: '기하 · 공간도형과 직선·평면의 위치 관계', href: '/middle-school/pre-algebra?profile=kr-high-3-geometry&unit=h3-lines-planes', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=space-geometry' } },
+      { label: '기하 · 공간좌표와 구의 방정식', href: '/middle-school/pre-algebra?profile=kr-high-3-geometry&unit=h3-space-coordinates', ready: true, availability: 'ready', csat: { href: '/csat/units?unit=space-geometry' } },
       {
         label: '경제 수학 (수와 경제, 함수와 경제, 미분과 경제, 금융과 경제)',
         href: '#',
@@ -2642,12 +2694,15 @@ const ENGLISH_CORE_HIGH_TOPICS = [
   { label: 'Probability & Statistics', href: '/middle-school/pre-algebra?profile=algebra-2&unit=conditional-probability', ready: true, availability: 'ready' },
 ];
 
-function englishStages(prefix, middleTitle, middleSubtitle, highTitle, highSubtitle, seniorTitle, seniorSubtitle, elementaryTitle, elementarySubtitle, elementary5Title, elementary5Subtitle) {
+function englishStages(prefix, middleTitle, middleSubtitle, highTitle, highSubtitle, seniorTitle, seniorSubtitle, elementaryTitle, elementarySubtitle, elementary5Title, elementary5Subtitle, elementary6Title, elementary6Subtitle) {
   const stages = [
     { id: `${prefix}-elementary`, title: elementaryTitle, subtitle: elementarySubtitle, availability: 'ready', topics: ENGLISH_CORE_ELEMENTARY_TOPICS },
   ];
   if (elementary5Title) {
     stages.push({ id: `${prefix}-elementary-5`, title: elementary5Title, subtitle: elementary5Subtitle, availability: 'ready', topics: ENGLISH_CORE_ELEMENTARY_G5_TOPICS });
+  }
+  if (elementary6Title) {
+    stages.push({ id: `${prefix}-elementary-6`, title: elementary6Title, subtitle: elementary6Subtitle, availability: 'ready', topics: ENGLISH_CORE_ELEMENTARY_G6_TOPICS });
   }
   stages.push(
     { id: `${prefix}-middle`, title: middleTitle, subtitle: middleSubtitle, availability: 'ready', topics: ENGLISH_CORE_MIDDLE_TOPICS },
@@ -2665,7 +2720,7 @@ function englishStages(prefix, middleTitle, middleSubtitle, highTitle, highSubti
 
 const USA_STAGE_SEEDS = englishStages(
   'us',
-  'Middle School Mathematics (Grades 6–8)',
+  'Middle School Mathematics (Grades 7–8)',
   'Common Core representative pathway',
   'High School Mathematics',
   'Algebra I · Geometry · Algebra II',
@@ -2674,7 +2729,9 @@ const USA_STAGE_SEEDS = englishStages(
   'Elementary Mathematics (Grade 4)',
   'Common Core representative pathway · Eureka Math / EngageNY structure',
   'Elementary Mathematics (Grade 5)',
-  'Common Core representative pathway · Eureka Math / EngageNY structure'
+  'Common Core representative pathway · Eureka Math / EngageNY structure',
+  'Middle School Mathematics (Grade 6)',
+  'Common Core CCSS G6 · Eureka Math / EngageNY structure'
 );
 const AUSTRALIA_STAGE_SEEDS = englishStages(
   'au',
@@ -2687,11 +2744,13 @@ const AUSTRALIA_STAGE_SEEDS = englishStages(
   'Primary Mathematics (Year 4)',
   'Version 9.0 · Number, Algebra, Measurement & Space — Foundation Level',
   'Primary Mathematics (Year 5)',
-  'Version 9.0 · Number, Algebra, Measurement & Space — Fractions & Operations'
+  'Version 9.0 · Number, Algebra, Measurement & Space — Fractions & Operations',
+  'Primary Mathematics (Year 6)',
+  'Version 9.0 · Ratios, Rates, Integers, Algebra & Data Handling'
 );
 const UK_STAGE_SEEDS = englishStages(
   'uk',
-  'Key Stage 3 Mathematics (Years 7–9)',
+  'Key Stage 3 Mathematics (Years 8–9)',
   'England National Curriculum',
   'GCSE Mathematics (Key Stage 4)',
   'Foundation & Higher content',
@@ -2700,11 +2759,13 @@ const UK_STAGE_SEEDS = englishStages(
   'Key Stage 2 Mathematics (Year 5)',
   'England National Curriculum · ages 9–10',
   'Key Stage 2 Mathematics (Year 6)',
-  'England National Curriculum · SATs preparation · ages 10–11'
+  'England National Curriculum · SATs preparation · ages 10–11',
+  'Key Stage 3 Mathematics (Year 7)',
+  'England National Curriculum · Ratios, Algebra, Negatives & Statistics'
 );
 const CANADA_STAGE_SEEDS = englishStages(
   'ca',
-  'Junior/Intermediate Mathematics (Grades 6–9)',
+  'Junior/Intermediate Mathematics (Grades 7–9)',
   'Representative provincial pathway',
   'Secondary Mathematics (Grades 10–11)',
   'Foundations · Pre-calculus · Workplace pathways',
@@ -2713,11 +2774,13 @@ const CANADA_STAGE_SEEDS = englishStages(
   'Elementary Mathematics (Grade 4)',
   'Representative provincial pathway · Eureka Math / EngageNY structure',
   'Elementary Mathematics (Grade 5)',
-  'Representative provincial pathway · Eureka Math / EngageNY structure'
+  'Representative provincial pathway · Eureka Math / EngageNY structure',
+  'Intermediate Mathematics (Grade 6)',
+  'Representative provincial pathway · Ratios, Rates, Integers & Pre-Algebra'
 );
 const NEW_ZEALAND_STAGE_SEEDS = englishStages(
   'nz',
-  'Mathematics & Statistics (Years 7–10)',
+  'Mathematics & Statistics (Years 8–10)',
   'NZ Curriculum 2025 · Phases 3–4',
   'Senior Secondary Mathematics (Year 11)',
   'Mathematics & Statistics learning area',
@@ -2726,7 +2789,9 @@ const NEW_ZEALAND_STAGE_SEEDS = englishStages(
   'Mathematics & Statistics (Year 5)',
   'NZ Curriculum 2025 · Phase 2–3 · ages 9–10',
   'Mathematics & Statistics (Year 6)',
-  'NZ Curriculum 2025 · Phase 2–3 · Fractions, Decimals & Measurement'
+  'NZ Curriculum 2025 · Phase 2–3 · Fractions, Decimals & Measurement',
+  'Mathematics & Statistics (Year 7)',
+  'NZ Curriculum 2025 · Phase 3 · Proportional reasoning & Algebraic thinking'
 );
 
 /**
@@ -2741,6 +2806,7 @@ const DOMAIN_STAGE_SEEDS = [
     topics: [
       { label: '초등 수 연산 (자연수·분수·소수)', href: '/elementary/practice', ready: true, availability: 'ready' },
       { label: '초등 5학년 분수·소수 사칙연산 (유레카 심화)', href: '/elementary/practice?grade=5&unit=g5e-m1d-decimal-add-sub', ready: true, availability: 'ready' },
+      { label: '초등 6학년 비와 비율·분수 나눗셈 (유레카 심화)', href: '/elementary/practice?grade=6&unit=g6e-m1c-unit-rate', ready: true, availability: 'ready' },
       { label: '소수와 소인수분해', href: '/middle-school/prime-factorization', ready: true, availability: 'ready' },
       { label: '최대공약수와 최소공배수', href: '/middle-school/gcd-lcm', ready: true, availability: 'ready' },
       { label: '정수와 유리수의 사칙계산', href: '/middle-school/integers-rationals', ready: true, availability: 'ready' },
@@ -2762,6 +2828,7 @@ const DOMAIN_STAGE_SEEDS = [
     topics: [
       { label: '문자와 식 · 일차방정식', href: '/middle-school/algebra-basics.html?unit=expressions-review', ready: true, availability: 'ready' },
       { label: '초등 5학년 좌표평면과 수치 패턴 (유레카 심화)', href: '/elementary/practice?grade=5&unit=g5e-m6b-coordinate-patterns', ready: true, availability: 'ready' },
+      { label: '초등 6학년 일차방정식·부등식·정수 유리수 (유레카 심화)', href: '/elementary/practice?grade=6&unit=g6e-m4e-one-step-addition-equations', ready: true, availability: 'ready' },
       { label: '좌표평면과 그래프 · 정비례와 반비례', href: '/middle-school/coordinate-plane', ready: true, availability: 'ready' },
       { label: '연립일차방정식과 부등식', href: '/middle-school/pre-algebra?profile=kr-middle-2&unit=systems-linear', ready: true, availability: 'ready' },
       { label: '중2 일차부등식 세부 응용', href: '/middle-school/pre-algebra?profile=kr-middle-2&unit=applied-linear-ineq-all-types-mixed', ready: true, availability: 'ready' },
@@ -2791,6 +2858,7 @@ const DOMAIN_STAGE_SEEDS = [
     topics: [
       { label: '기본 도형 (점·선·면·각)', href: '/middle-school/basic-figures?profile=kr&unit=visual-foundations', ready: true, availability: 'ready' },
       { label: '초등 5학년 직육면체 부피와 사각형 분류 (유레카 심화)', href: '/elementary/practice?grade=5&unit=g5e-m5b-volume-formula', ready: true, availability: 'ready' },
+      { label: '초등 6학년 평행사변형·삼각형 넓이와 입체 겉넓이·부피 (유레카 심화)', href: '/elementary/practice?grade=6&unit=g6e-m5a-area-trapezoids-composite', ready: true, availability: 'ready' },
       { label: '[기본] 다각형과 원·부채꼴', href: '/middle-school/basic-figures?profile=kr&unit=polygon-angles-basic', ready: true, availability: 'ready' },
       { label: '[기본] 입체도형의 성질 (다면체·겉넓이·부피)', href: '/middle-school/basic-figures?profile=kr&unit=expanded-solid-measures', ready: true, availability: 'ready' },
       { label: '[기본] 삼각형과 사각형의 성질 (이등변·외심·내심·평행사변형)', href: '/middle-school/basic-figures?profile=kr&unit=isosceles-triangle-properties', ready: true, availability: 'ready' },
@@ -2819,6 +2887,7 @@ const DOMAIN_STAGE_SEEDS = [
     availability: 'ready',
     topics: [
       { label: '초등 5학년 꺾은선그래프와 실생활 자료 (유레카 심화)', href: '/elementary/practice?grade=5&unit=g5e-m6d-line-graphs', ready: true, availability: 'ready' },
+      { label: '초등 6학년 통계·히스토그램과 상자그림 (유레카 심화)', href: '/elementary/practice?grade=6&unit=g6e-m6c-box-plots-five-summary', ready: true, availability: 'ready' },
       { label: '중1 줄기와 잎 그림 · 도수분포표', href: '/middle-school/pre-algebra?profile=kr-middle-1&unit=frequency-table', ready: true, availability: 'ready' },
       { label: '중1 자료의 정리와 해석 세부 응용', href: '/middle-school/basic-figures?profile=kr&unit=applied-data-statistics-all-mixed', ready: true, availability: 'ready' },
       { label: '중1-2 전 범위 최종 실전 총괄 모의고사', href: '/middle-school/basic-figures?profile=kr&unit=applied-grade7-semester-two-final-exam', ready: true, availability: 'ready' },

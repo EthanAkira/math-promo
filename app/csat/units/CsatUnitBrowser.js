@@ -9,6 +9,25 @@ import staticCsatCatalog from '../../data/csatProblemCatalog.json';
 import csatCommonMathCatalog from '../../data/csatCommonMathProblemCatalog.json';
 import { enrichProblemsListWithRates } from '../../utils/csatRates';
 import { generateCommonMathVariant } from '../commonMathProblemGenerator';
+import { generateCsatSimilarProblem } from '../csatForecastEngine';
+
+const UNIT_FREQUENCY_MAP = {
+  'exp-log': { count: 4, rate: '100%' },
+  trig: { count: 3, rate: '100%' },
+  sequences: { count: 4, rate: '100%' },
+  'limits-continuity': { count: 2.2, rate: '100%' },
+  differentiation: { count: 4.8, rate: '100%' },
+  integration: { count: 4, rate: '100%' },
+  counting: { count: 2, rate: '100%' },
+  probability: { count: 3, rate: '100%' },
+  statistics: { count: 3, rate: '100%' },
+  'sequence-limits': { count: 2, rate: '100%' },
+  'advanced-differentiation': { count: 2, rate: '100%' },
+  'advanced-integration': { count: 4, rate: '100%' },
+  'conic-sections': { count: 3, rate: '100%' },
+  'plane-vectors': { count: 2, rate: '100%' },
+  'space-geometry': { count: 3, rate: '100%' },
+};
 
 const combinedStaticCatalog = [...staticCsatCatalog, ...csatCommonMathCatalog];
 
@@ -127,7 +146,21 @@ export default function CsatUnitBrowser() {
 
   function handleGenerateVariant(unitId) {
     const candidate = problems.find((p) => p.unitId === unitId) || { unitId };
-    const generated = generateCommonMathVariant(candidate);
+    let generated;
+    if (unitId && (unitId.startsWith('polynomial') || unitId.startsWith('equation') || unitId.startsWith('coordinate') || unitId.startsWith('set') || unitId.startsWith('function') || unitId.startsWith('common-math'))) {
+      generated = generateCommonMathVariant(candidate);
+    } else {
+      let subjId = candidate.subjectId;
+      if (!subjId) {
+        for (const s of ALL_SUBJECT_GROUPS) {
+          if (s.units.some((u) => u.id === unitId)) {
+            subjId = s.id;
+            break;
+          }
+        }
+      }
+      generated = generateCsatSimilarProblem(candidate, { subjectId: subjId });
+    }
     setVariantProblem(generated);
   }
 
@@ -190,7 +223,8 @@ export default function CsatUnitBrowser() {
     return () => { cancelled = true; };
   }, [authStatus, user]);
 
-  const entitled = authStatus === 'ready' && !!user && subStatus === 'active';
+  const TEMPORARY_OPEN_ACCESS = true; // 임시 공개: 수정보완 중에는 언제든지 이용 가능하도록 유지
+  const entitled = TEMPORARY_OPEN_ACCESS || (authStatus === 'ready' && !!user && subStatus === 'active');
 
   // Fetch file manifest
   useEffect(() => {
@@ -315,7 +349,7 @@ export default function CsatUnitBrowser() {
   }
 
   function handleItemClick(event) {
-    if (entitled) return;
+    if (TEMPORARY_OPEN_ACCESS || entitled) return;
     event.preventDefault();
     if (authStatus !== 'ready' || subStatus === 'loading') return;
     window.alert(!user ? words.alertNeedLogin : words.alertNeedSub);
@@ -370,12 +404,17 @@ export default function CsatUnitBrowser() {
           <h1 className="font-display" style={{ fontSize: 26, margin: '0 0 6px' }}>{words.title}</h1>
           <p style={{ color: 'var(--ink-soft)', margin: 0, fontSize: 14 }}>{words.subtitle}</p>
         </div>
-        <a href="/csat" className="button button-secondary" style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}>
-          {words.byType} →
-        </a>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <a href="/csat/forecast" className="button button-primary" style={{ textDecoration: 'none', background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)', whiteSpace: 'nowrap' }}>
+            🔮 이번 년도 출제 예측실 →
+          </a>
+          <a href="/csat" className="button button-secondary" style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}>
+            {words.byType} →
+          </a>
+        </div>
       </div>
 
-      {!entitled ? (
+      {!TEMPORARY_OPEN_ACCESS && !entitled ? (
         <div style={{ background: 'rgba(239, 68, 68, 0.07)', border: '1px solid rgba(239, 68, 68, 0.25)', borderRadius: 10, padding: '10px 14px', margin: '14px 0 18px', fontSize: 13, color: 'var(--red-pen, #dc2626)' }}>
           🔒 {words.memberNotice}
         </div>
@@ -682,6 +721,11 @@ export default function CsatUnitBrowser() {
                               <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(99, 102, 241, 0.1)', color: '#4338ca', border: '1px solid rgba(99, 102, 241, 0.25)' }}>
                                 🏛️ 2022개정: {subject.revised2022}
                               </span>
+                              {UNIT_FREQUENCY_MAP[unit.id] && (
+                                <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 6, background: 'rgba(16, 185, 129, 0.1)', color: '#047857', border: '1px solid rgba(16, 185, 129, 0.25)' }}>
+                                  📊 5개년 출제율 {UNIT_FREQUENCY_MAP[unit.id].rate} (연평균 {UNIT_FREQUENCY_MAP[unit.id].count}문항)
+                                </span>
+                              )}
                             </div>
                           </div>
 
@@ -761,7 +805,7 @@ export default function CsatUnitBrowser() {
                                     onClick={handleItemClick}
                                     style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'var(--paper)', borderRadius: 8, textDecoration: 'none', color: 'var(--ink)' }}
                                   >
-                                    <span>{!entitled || file.meta?.accessTier === 'premium' ? '🔒 ' : ''}{year} {EXAM_TYPE_LABELS[examType]} · {variant.label}{file.meta?.grade === 'g1' || file.meta?.grade === 'g2' ? ` · ${GRADE_LABELS[file.meta.grade]}` : ''}</span>
+                                    <span>{!TEMPORARY_OPEN_ACCESS && (!entitled || file.meta?.accessTier === 'premium') ? '🔒 ' : ''}{year} {EXAM_TYPE_LABELS[examType]} · {variant.label}{file.meta?.grade === 'g1' || file.meta?.grade === 'g2' ? ` · ${GRADE_LABELS[file.meta.grade]}` : ''}</span>
                                     <span style={{ fontSize: 13, color: 'var(--ink-soft)' }}>{fileTypeLabel(fileType, language)} →</span>
                                   </a>
                                 ))
@@ -808,7 +852,7 @@ export default function CsatUnitBrowser() {
                                     onClick={handleItemClick}
                                     style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'var(--paper)', borderRadius: 8, textDecoration: 'none', color: 'var(--ink)' }}
                                   >
-                                    <span>{!entitled || file.meta?.accessTier === 'premium' ? '🔒 ' : ''}{year} {EXAM_TYPE_LABELS[examType]} · {variant.label}</span>
+                                    <span>{!TEMPORARY_OPEN_ACCESS && (!entitled || file.meta?.accessTier === 'premium') ? '🔒 ' : ''}{year} {EXAM_TYPE_LABELS[examType]} · {variant.label}</span>
                                     <span style={{ fontSize: 13, color: 'var(--ink-soft)' }}>{fileTypeLabel(fileType, language)} →</span>
                                   </a>
                                 ))

@@ -192,17 +192,20 @@ Object.assign(supplementalMessages, {
     navNotices: '最新消息', navContact: '聯絡我們', noticesTitle: '最新消息', noticesDesc: '查看網站的最新消息與更新。', noticesCrumb: '最新消息', contactTitle: '聯絡我們', contactDesc: '歡迎提交問題、意見或錯誤報告。', contactCrumb: '聯絡我們',
     formName: '姓名（選填）', formEmail: '電郵（選填，用作回覆）', formType: '查詢類別', formTypeBug: '錯誤報告', formTypeSuggestion: '功能建議', formTypeQuestion: '問題', formTypeOther: '其他', formMessage: '內容', formMessagePlaceholder: '請詳細填寫查詢內容。', formSubmit: '以電郵傳送', formHelp: '按下傳送後會開啟電郵應用程式，請核對內容後送出。', formDirectEmail: '或直接傳送電郵', formRequired: '請輸入內容。', formSent: '已開啟電郵應用程式，請核對後送出。',
     quickPractice: '快速練習', uploadMaterials: '上載教材', amcArchive: 'AMC 歷屆試題', amcArchiveDesc: '按年份查看 AMC 8、10及12歷屆試題，並提供預覽及下載。', amc8Level: '中學生或以下', amc10Level: '十年級或以下 · A/B', amc12Level: '十二年級或以下 · A/B', restCorner: '休息天地',
+    navUsa: '美國', navUk: '英國', navAustralia: '澳洲', navMalaysia: '馬來西亞', navSingapore: '新加坡', navHongKong: '香港', navIndia: '印度',
   },
   'zh-TW': {
     topicAlgebra: '代數式', algebraTitle: '代數式與一元一次方程式學習單產生器', algebraCrumb: '代數式與一元一次方程式', topicCoordinate: '直角坐標與圖形', coordinateTitle: '直角坐標與圖形學習單產生器', coordinateCrumb: '直角坐標與圖形', topicProportion: '正比與反比', proportionTitle: '正比與反比學習單產生器', proportionCrumb: '正比與反比',
     navNotices: '公告', navContact: '聯絡我們', noticesTitle: '公告', noticesDesc: '查看網站的最新消息與更新。', noticesCrumb: '公告', contactTitle: '聯絡我們', contactDesc: '歡迎傳送問題、意見或錯誤回報。', contactCrumb: '聯絡我們',
     formName: '姓名（選填）', formEmail: '電子郵件（選填，供回覆使用）', formType: '詢問類型', formTypeBug: '錯誤回報', formTypeSuggestion: '功能建議', formTypeQuestion: '問題', formTypeOther: '其他', formMessage: '內容', formMessagePlaceholder: '請詳細填寫您想詢問的內容。', formSubmit: '用電子郵件傳送', formHelp: '按下傳送後會開啟電子郵件應用程式，請確認內容後寄出。', formDirectEmail: '或直接寄送電子郵件', formRequired: '請輸入內容。', formSent: '已開啟電子郵件應用程式，請確認後寄出。',
     quickPractice: '快速練習', uploadMaterials: '上傳教材', amcArchive: 'AMC 歷屆試題', amcArchiveDesc: '依年份整理 AMC 8、10、12 歷屆試題，並提供預覽與下載。', amc8Level: '國中生以下', amc10Level: '十年級以下 · A/B', amc12Level: '十二年級以下 · A/B', restCorner: '休息一下',
+    navUsa: '美國', navUk: '英國', navAustralia: '澳洲', navMalaysia: '馬來西亞', navSingapore: '新加坡', navHongKong: '香港', navIndia: '印度',
   },
 });
 
 Object.assign(supplementalMessages.en, {
   quickPractice: 'Quick practice', uploadMaterials: 'Upload materials', amcArchive: 'AMC Archive', amcArchiveDesc: 'AMC 8, 10, and 12 past exams by year, with preview and download.', amc8Level: 'Middle school and below', amc10Level: '10th grade and below · A/B', amc12Level: '12th grade and below · A/B', restCorner: 'Rest Corner', examArchives: 'Exam Archives', examArchivesDesc: 'AMC and Korean CSAT (수능) past exams by year, with preview and download.', csatArchive: 'CSAT (Korean SAT)', csatJune: 'June Mock Exam', csatJuneDesc: 'Nationwide mock exam for 12th graders · every June', csatSept: 'September Mock Exam', csatSeptDesc: 'Nationwide mock exam for 12th graders · every September', csatNov: 'CSAT (수능)', csatNovDesc: 'Held every November · the official CSAT', navCsat: 'CSAT Archive', navEastAsia: 'East Asia Curricula', navSoutheastAsia: 'Southeast Asia Curricula', navSouthAsia: 'South Asia Curricula',
+  navUsa: 'USA', navUk: 'UK', navAustralia: 'Australia', navMalaysia: 'Malaysia', navSingapore: 'Singapore', navHongKong: 'Hong Kong', navIndia: 'India',
   descartesEyebrow: 'PHILOSOPHY OF MATHEMATICS & REASON',
   descartesQuoteLatin: 'Cogito, ergo sum',
   descartesQuoteTranslation: 'I think, therefore I am',
@@ -240,6 +243,7 @@ Object.assign(supplementalMessages.en, {
 supplementalMessages['en-SG'] = { ...supplementalMessages.en, ...supplementalMessages['en-SG'] };
 Object.assign(supplementalMessages.ko, {
   quickPractice: '빠른 문제 선택', uploadMaterials: '자료 업로드', amcArchive: 'AMC 기출문제', amcArchiveDesc: 'AMC 8·10·12 기출문제를 연도별로 모아 미리보기와 다운로드를 제공합니다.', amc8Level: '중학생 이하 대상', amc10Level: '10학년 이하 대상 · A/B', amc12Level: '12학년 이하 대상 · A/B', restCorner: '쉬어가는 코너', examArchives: '기출문제 아카이브', examArchivesDesc: 'AMC와 대학수학능력시험(수능) 기출문제를 연도별로 모아 미리보기와 다운로드를 제공합니다.', csatArchive: '대학수학능력시험', csatJune: '6월 모의고사', csatJuneDesc: '고3 전국연합학력평가 · 매년 6월 시행', csatSept: '9월 모의고사', csatSeptDesc: '고3 전국연합학력평가 · 매년 9월 시행', csatNov: '대학수학능력시험', csatNovDesc: '매년 11월 시행 · 본수능', navCsat: '대학수학능력시험(수학)', navEastAsia: '동아시아 교육과정', navSoutheastAsia: '동남아시아 교육과정', navSouthAsia: '남아시아 교육과정',
+  navUsa: '미국', navUk: '영국', navAustralia: '호주', navMalaysia: '말레이시아', navSingapore: '싱가포르', navHongKong: '홍콩', navIndia: '인도',
   descartesEyebrow: '수학과 사유의 철학 · PHILOSOPHY & REASON',
   descartesQuoteLatin: 'Cogito, ergo sum',
   descartesQuoteTranslation: '나는 생각한다, 고로 존재한다',

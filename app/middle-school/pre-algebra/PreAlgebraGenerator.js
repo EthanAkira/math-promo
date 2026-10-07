@@ -6,7 +6,7 @@ import { useLanguage } from '../../language';
 import { useAuth } from '../../auth';
 import { isNonKorean, tr } from '../../i18n';
 import { finalizeGeneratedProblem, findPreAlgebraProfile, findPreAlgebraUnit, localizePreAlgebraUnit, unitsForProfile } from './catalog';
-import { recordAttempts } from '../../lib/submissions';
+import { recordAttempts, syncAnswerEvents } from '../../lib/submissions';
 import ProblemScratchpad from '../../components/ProblemScratchpad';
 import { preAlgebraCategory, preAlgebraCopy, preAlgebraProfileLabel } from './localization';
 import { hasProblemVisual, MathText, ProblemVisual } from './PreAlgebraVisuals';
@@ -192,7 +192,7 @@ export default function PreAlgebraGenerator() {
   function changeCoreAnswer(id, value) { setCoreAnswers((current) => ({ ...current, [id]: value })); setCoreChecked(false); }
   function checkCoreAnswers() {
     setCoreChecked(true);
-    recordAttempts(user, coreProblems
+    const gradedCoreEntries = coreProblems
       .filter((item) => coreAnswers[item.id] !== undefined && coreAnswers[item.id] !== '')
       .map((item) => ({
         grade: profileId,
@@ -200,7 +200,9 @@ export default function PreAlgebraGenerator() {
         problemType: item.kind === 'choice' ? 'mcq' : 'short',
         isCorrect: equivalent(coreAnswers[item.id], item.answer),
         answer: coreAnswers[item.id],
-      })));
+      }));
+    recordAttempts(user, gradedCoreEntries);
+    syncAnswerEvents(gradedCoreEntries);
   }
 
   useEffect(() => {
@@ -224,7 +226,7 @@ export default function PreAlgebraGenerator() {
 
   function checkAnswers() {
     setChecked(true);
-    recordAttempts(user, problems
+    const gradedEntries = problems
       .filter((item) => answers[item.id] !== undefined && answers[item.id] !== '')
       .map((item) => ({
         grade: profileId,
@@ -232,7 +234,9 @@ export default function PreAlgebraGenerator() {
         problemType: item.kind === 'choice' ? 'mcq' : 'short',
         isCorrect: equivalent(answers[item.id], item.answer),
         answer: answers[item.id],
-      })));
+      }));
+    recordAttempts(user, gradedEntries);
+    syncAnswerEvents(gradedEntries);
   }
 
   const unitLabel = localizePreAlgebraUnit(unit, language);

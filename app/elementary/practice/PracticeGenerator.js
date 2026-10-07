@@ -9,7 +9,7 @@ import { useAuth } from '../../auth';
 import { isNonKorean, tr } from '../../i18n';
 import ProblemScratchpad from '../../components/ProblemScratchpad';
 import MathText from '../../components/MathText';
-import { recordAttempts } from '../../lib/submissions';
+import { recordAttempts, syncAnswerEvents } from '../../lib/submissions';
 
 const PROBLEM_COUNT = 20;
 
@@ -164,7 +164,7 @@ export default function PracticeGenerator() {
 
   function checkAnswers() {
     setChecked(true);
-    recordAttempts(user, problems
+    const gradedEntries = problems
       .filter((problem) => answers[problem.id] !== undefined && answers[problem.id] !== '')
       .map((problem) => ({
         grade: gradeId,
@@ -172,7 +172,9 @@ export default function PracticeGenerator() {
         problemType: 'short',
         isCorrect: normalizeAnswer(answers[problem.id]) === normalizeAnswer(problem.answer),
         answer: answers[problem.id],
-      })));
+      }));
+    recordAttempts(user, gradedEntries);
+    syncAnswerEvents(gradedEntries);
   }
 
   const gradeLabel = localizeGrade(grade, language);

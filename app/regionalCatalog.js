@@ -614,6 +614,31 @@ const zhHK = {
   'g5e-m6d-line-graphs': '折線圖與生活情境數據分析', 'g5e-m6e-multistep-word-problems': '跨單元多步驟綜合應用題',
   'g5e-m6f-year-review-patterns': '數列規律、數字謎題與年度總複習',
 
+  // Eureka Math Grade 6 Units
+  'g6e-m1a-ratios': '比的意義與線段圖模型', 'g6e-m1a-equivalent-ratios': '等值比與化簡比',
+  'g6e-m1b-ratio-tables': '比率表格與多步驟比對', 'g6e-m1b-double-number-lines': '雙數線模型與線段比例',
+  'g6e-m1b-ratio-coordinate-plane': '直角坐標平面上的比與正比例圖像', 'g6e-m1c-unit-rate': '單位率與比例常數',
+  'g6e-m1c-speed-work-rates': '速率、工作效率與單價應用題', 'g6e-m1c-multi-unit-conversions': '多重單位轉換與複名數速率',
+  'g6e-m1d-percent-rate-per-100': '百分率作為百之幾的比例率', 'g6e-m1d-percent-of-quantity': '求數量的百分率（部分量求值）',
+  'g6e-m1d-percent-whole-from-part': '由部分量與百分率求總量（基準量）', 'g6e-m2a-fraction-div-models': '分數除法視覺面積與長條模型',
+  'g6e-m2a-fraction-div-algorithm': '分數除以分數（乘以倒數綜合法則）', 'g6e-m2a-fraction-div-word-problems': '分數除法生活情境應用題',
+  'g6e-m2b-multidigit-decimal-ops': '多位數小數加減與乘法運算', 'g6e-m2c-multidigit-division-algorithm': '多位數小數除法標準直式演算法',
+  'g6e-m2d-divisibility-rules': '整除法則（2, 3, 4, 5, 8, 9, 10的倍數）', 'g6e-m2d-gcf-distributive-property': '最大公因數與乘法分配律因數分解',
+  'g6e-m2d-lcm-word-problems': '最小公倍數與週期相遇應用題', 'g6e-m2d-euclidean-algorithm': '輾轉相除法（求大數最大公因數）',
+  'g6e-m3a-positive-negative-opposites': '正數、負數與相反數概念', 'g6e-m3a-rational-number-line': '數線上的有理數（正負分數與小數）',
+  'g6e-m3b-comparing-ordering-rationals': '有理數的大小比較與不等式', 'g6e-m3b-absolute-value-magnitude': '生活情境中的絕對值與數值大小',
+  'g6e-m3c-four-quadrant-plane': '四個象限的直角坐標平面', 'g6e-m3c-reflections-symmetry': '對稱點與坐標軸鏡射對稱',
+  'g6e-m3c-distance-coordinate-plane': '坐標平面上的水平與垂直距離', 'g6e-m4a-powers-exponents': '乘方、指數與四則運算順序（PEMDAS）',
+  'g6e-m4b-algebraic-expressions': '以代數式表示數量與代數式求值', 'g6e-m4c-distributive-combining': '乘法分配律與合併同類項',
+  'g6e-m4d-equivalent-expressions': '等價代數式的驗證與化簡', 'g6e-m4e-one-step-addition-equations': '一元一次加減方程的解法（等式性質）',
+  'g6e-m4e-one-step-mult-equations': '一元一次乘除方程的解法（等式性質）', 'g6e-m4f-inequalities-number-line': '一元一次不等式的列式與數線圖示',
+  'g6e-m4g-independent-dependent-vars': '自變量與應變量（正比例函數 y = kx）', 'g6e-m5a-area-parallelograms-triangles': '平行四邊形與直角三角形面積',
+  'g6e-m5a-area-trapezoids-composite': '梯形與複合圖形的面積割補', 'g6e-m5b-polygons-coordinate-plane': '坐標平面上的多邊形周長與面積',
+  'g6e-m5c-volume-fractional-cubes': '分數邊長長方體的體積計算', 'g6e-m5d-nets-surface-area': '角柱與角錐的展開圖與表面積',
+  'g6e-m6a-statistical-questions': '統計問題與數據分佈型態', 'g6e-m6a-dot-plots-histograms': '點圖、次數分配表與直方圖',
+  'g6e-m6b-mean-mad': '平均數作為公平分配與平均絕對偏差（MAD）', 'g6e-m6b-median-iqr': '中位數與四分位距（IQR）',
+  'g6e-m6c-box-plots-five-summary': '五數綜合摘要與盒狀圖（箱形圖）',
+
   'common-divisors-gcd': '公因數與最高公因數', 'gcd-basic': '最高公因數基礎', 'gcd-prime-form': '利用質因數分解求最高公因數', coprime: '互質數', 'common-multiples-lcm': '公倍數與最低公倍數', 'lcm-basic': '最低公倍數基礎', 'lcm-prime-form': '利用質因數分解求最低公倍數', 'gcd-lcm-relation': '最高公因數與最低公倍數的關係', 'gcd-lcm-application': '最高公因數與最低公倍數應用', 'gcd-lcm-mixed': '最高公因數與最低公倍數綜合練習',
   'positive-negative': '正數與負數', 'integer-classification': '整數的分類', 'rational-classification': '有理數的分類', 'number-line': '數線與坐標', 'absolute-value': '絕對值', 'number-comparison': '比較數的大小', 'inequality-expression': '不等號的運用', 'integer-solutions': '符合條件的整數', 'integer-rational-mixed': '整數與有理數綜合練習', 'rational-addition': '有理數加法', 'rational-subtraction': '有理數減法', 'rational-add-subtract': '加減混合運算', 'rational-multiplication': '有理數乘法與乘方', 'rational-division': '有理數除法與倒數', 'rational-four-operations': '有理數四則混合運算', 'rational-operations-review': '有理數四則運算綜合練習',
   notation: '省略乘號與除號', 'verbal-expressions': '以代數式表示數量', 'expression-values': '代數式的值', 'polynomial-basics': '多項式與一次式', 'monomial-multiply-divide': '單項式的乘除法', 'simplify-linear': '一次式的加減法', 'expressions-review': '代數式綜合練習', 'equation-identity': '方程與恆等式', 'equality-properties': '等式的性質', 'linear-equations': '一元一次方程基礎', 'advanced-linear-equations': '含括號、小數及分數的一元一次方程', 'equation-word-problems': '一元一次方程應用題', 'distance-speed-time': '距離、速率與時間', concentration: '濃度問題', 'equations-review': '一元一次方程綜合練習',
@@ -634,6 +659,9 @@ const zhTW = {
   'direct-relation': '求正比關係式', 'direct-classify': '判斷正比關係', 'direct-evaluate': '正比關係式的值', 'direct-graph': '正比關係圖形', 'inverse-relation': '求反比關係式', 'inverse-classify': '判斷反比關係', 'inverse-evaluate': '反比關係式的值', 'inverse-graph': '反比關係圖形', 'proportion-application': '正比與反比的應用', 'proportion-mixed': '正比與反比綜合練習',
   'applied-irc-powers-signs': '次方運算與符號法則', 'applied-irc-neg-one-power': '負一之次方代數式求值', 'applied-irc-line-section-ratio': '數線線段比例分點座標',
   'applied-alg-eval-basic-negative': '代數式求值（負數與次方符號）', 'applied-alg-neg-power-linear': '含負一之n次方一次式化簡',
+  'g6e-m4e-one-step-addition-equations': '一元一次加減方程式的解法（等量公理）', 'g6e-m4e-one-step-mult-equations': '一元一次乘除方程式的解法（等量公理）',
+  'g6e-m3c-four-quadrant-plane': '四個象限的直角座標平面', 'g6e-m3c-distance-coordinate-plane': '座標平面上的水平與垂直距離',
+  'g6e-m5b-polygons-coordinate-plane': '座標平面上的多邊形周長與面積', 'g6e-m1b-ratio-coordinate-plane': '直角座標平面上的比與正比圖形',
 };
 
 function singaporeEnglish(text) {

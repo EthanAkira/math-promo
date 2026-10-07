@@ -177,23 +177,37 @@ export default function CurriculumExplorer() {
   const { language, setLanguage } = useLanguage();
   const [activeTab, setActiveTab] = useState(() => (language === 'ko' ? 'korea' : 'courses'));
   const [krSubView, setKrSubView] = useState('grade'); // 'grade' | 'subject2022'
-  const [eastAsiaCountry, setEastAsiaCountry] = useState('japan'); // 'japan' | 'taiwan' | 'hongkong'
-  const [southeastAsiaCountry, setSoutheastAsiaCountry] = useState('singapore'); // 'singapore' | 'malaysia' | 'vietnam'
-  const [southAsiaCountry, setSouthAsiaCountry] = useState('india'); // 'india'
-  const [englishSpeakingCountry, setEnglishSpeakingCountry] = useState('usa');
+  const [otherCountry, setOtherCountry] = useState('japan'); // 'japan' | 'taiwan' | 'vietnam' | 'canada' | 'newzealand'
 
   // If user has not manually changed tab on first load, adjust to language default once
   useEffect(() => {
-    // A direct link (e.g. the top-nav "동아시아 교육과정" item) takes priority over both
-    // sessionStorage and the language default, so it reliably lands on the right tab.
+    // Direct links or specific country selections take priority
     const requestedTab = new URLSearchParams(window.location.search).get('curriculumTab');
-    if (requestedTab && ['korea', 'courses', 'domains', 'eastasia', 'southeastasia', 'southasia', 'englishspeaking'].includes(requestedTab)) {
-      setActiveTab(requestedTab);
-      try { window.sessionStorage.setItem('math-curriculum-tab', requestedTab); } catch {}
-      return;
+    const validTabs = ['korea', 'courses', 'domains', 'usa', 'uk', 'australia', 'malaysia', 'singapore', 'hongkong', 'india', 'other'];
+    const aliasMap = {
+      eastasia: 'hongkong',
+      southeastasia: 'singapore',
+      southasia: 'india',
+      englishspeaking: 'usa',
+      japan: 'other',
+      taiwan: 'other',
+      vietnam: 'other',
+      canada: 'other',
+      newzealand: 'other',
+    };
+    if (requestedTab) {
+      const target = aliasMap[requestedTab] || requestedTab;
+      if (validTabs.includes(target)) {
+        setActiveTab(target);
+        if (['japan', 'taiwan', 'vietnam', 'canada', 'newzealand'].includes(requestedTab)) {
+          setOtherCountry(requestedTab);
+        }
+        try { window.sessionStorage.setItem('math-curriculum-tab', target); } catch {}
+        return;
+      }
     }
     const userSelected = window.sessionStorage.getItem('math-curriculum-tab');
-    if (userSelected) {
+    if (userSelected && validTabs.includes(userSelected)) {
       setActiveTab(userSelected);
     } else if (language === 'ko') {
       setActiveTab('korea');
@@ -209,7 +223,13 @@ export default function CurriculumExplorer() {
     try {
       window.sessionStorage.setItem('math-curriculum-tab', tabId);
     } catch {}
-    if (tabId === 'korea') setLanguage('ko');
+    if (tabId === 'korea') {
+      setLanguage('ko');
+    } else if (COUNTRY_LANGUAGE[tabId]) {
+      setLanguage(COUNTRY_LANGUAGE[tabId]);
+    } else if (tabId === 'other' && COUNTRY_LANGUAGE[otherCountry]) {
+      setLanguage(COUNTRY_LANGUAGE[otherCountry]);
+    }
   };
 
   const tabs = useMemo(
@@ -217,19 +237,32 @@ export default function CurriculumExplorer() {
       { id: 'korea', label: copy.mainTabs[0], help: copy.mainTabHelp[0] },
       { id: 'courses', label: copy.mainTabs[1], help: copy.mainTabHelp[1] },
       { id: 'domains', label: copy.mainTabs[2], help: copy.mainTabHelp[2] },
-      { id: 'eastasia', label: copy.mainTabs[3], help: copy.mainTabHelp[3] },
-      { id: 'southeastasia', label: copy.mainTabs[4], help: copy.mainTabHelp[4] },
-      { id: 'southasia', label: copy.mainTabs[5], help: copy.mainTabHelp[5] },
-      { id: 'englishspeaking', label: copy.mainTabs[6] || 'English-speaking Countries', help: copy.mainTabHelp[6] || 'United States · Australia · United Kingdom · Canada · New Zealand' },
+      { id: 'usa', label: copy.mainTabs[3] || (language === 'ko' ? '미국 교육과정' : 'United States'), help: copy.mainTabHelp[3] || 'Grade 1~12 / AP Calculus' },
+      { id: 'uk', label: copy.mainTabs[4] || (language === 'ko' ? '영국 교육과정' : 'United Kingdom'), help: copy.mainTabHelp[4] || 'Key Stage 1~5 / GCSE / A-Level' },
+      { id: 'australia', label: copy.mainTabs[5] || (language === 'ko' ? '호주 교육과정' : 'Australia'), help: copy.mainTabHelp[5] || 'Foundation~Year 12 / VCE / HSC' },
+      { id: 'malaysia', label: copy.mainTabs[6] || (language === 'ko' ? '말레이시아 교육과정' : 'Malaysia'), help: copy.mainTabHelp[6] || 'Year 1~6 / Form 1~5 / SPM' },
+      { id: 'singapore', label: copy.mainTabs[7] || (language === 'ko' ? '싱가포르 교육과정' : 'Singapore'), help: copy.mainTabHelp[7] || 'Primary 1~6 / Secondary / O-Level' },
+      { id: 'hongkong', label: copy.mainTabs[8] || (language === 'ko' ? '홍콩 교육과정' : 'Hong Kong'), help: copy.mainTabHelp[8] || 'P1~P6 / S1~S6 / HKDSE' },
+      { id: 'india', label: copy.mainTabs[9] || (language === 'ko' ? '인도 교육과정' : 'India'), help: copy.mainTabHelp[9] || 'CBSE Class 1~12' },
+      { id: 'other', label: copy.mainTabs[10] || (language === 'ko' ? '기타 국가 교육과정' : 'Other Countries'), help: copy.mainTabHelp[10] || (language === 'ko' ? '일본 · 대만 · 베트남 · 캐나다 · 뉴질랜드' : 'Japan · Taiwan · Vietnam · Canada · New Zealand') },
     ],
-    [copy]
+    [copy, language]
   );
 
-  const EAST_ASIA_STAGES = { japan: JAPAN_STAGES, taiwan: TAIWAN_STAGES, hongkong: HONGKONG_STAGES };
-  const SOUTHEAST_ASIA_STAGES = { singapore: SINGAPORE_STAGES, malaysia: MALAYSIA_STAGES, vietnam: VIETNAM_STAGES };
-  const SOUTH_ASIA_STAGES = { india: INDIA_STAGES };
-  const ENGLISH_SPEAKING_STAGES = { usa: USA_STAGES, australia: AUSTRALIA_STAGES, uk: UK_STAGES, canada: CANADA_STAGES, newzealand: NEW_ZEALAND_STAGES };
-  const englishSpeakingLabels = copy.englishSpeakingCountries || CURRICULUM_COPY.en.englishSpeakingCountries;
+  const OTHER_COUNTRY_STAGES = {
+    japan: JAPAN_STAGES,
+    taiwan: TAIWAN_STAGES,
+    vietnam: VIETNAM_STAGES,
+    canada: CANADA_STAGES,
+    newzealand: NEW_ZEALAND_STAGES,
+  };
+  const OTHER_COUNTRY_LABELS = {
+    japan: copy.eastAsiaCountries?.japan || (language === 'ko' ? '일본 교육과정' : 'Japan Curriculum'),
+    taiwan: copy.eastAsiaCountries?.taiwan || (language === 'ko' ? '대만 교육과정' : 'Taiwan Curriculum'),
+    vietnam: copy.southeastAsiaCountries?.vietnam || (language === 'ko' ? '베트남 교육과정' : 'Vietnam Curriculum'),
+    canada: copy.englishSpeakingCountries?.canada || (language === 'ko' ? '캐나다 교육과정' : 'Canada Curriculum'),
+    newzealand: copy.englishSpeakingCountries?.newzealand || (language === 'ko' ? '뉴질랜드 교육과정' : 'New Zealand Curriculum'),
+  };
 
   const koreanSchoolGroups = useMemo(
     () => [
@@ -275,7 +308,7 @@ export default function CurriculumExplorer() {
             aria-selected={activeTab === tab.id}
             aria-controls={`curriculum-panel-${tab.id}`}
             id={`curriculum-tab-${tab.id}`}
-            className={activeTab === tab.id ? 'active' : ''}
+            className={`${activeTab === tab.id ? 'active' : ''} ${tab.id === 'other' ? 'tab-other-countries' : ''}`.trim()}
             onClick={() => handleTabChange(tab.id)}
           >
             <strong>{tab.label}</strong>
@@ -487,110 +520,122 @@ export default function CurriculumExplorer() {
           </div>
         )}
 
-        {/* Tab 4: 동아시아 교육과정 (일본·대만·홍콩) */}
-        {activeTab === 'eastasia' && (
+        {/* USA */}
+        {(activeTab === 'usa' || activeTab === 'englishspeaking') && (
           <div className="eastasia-curriculum-wrap">
-            <div className="curriculum-subview-bar">
-              <div className="subview-toggle-group country-toggle-group" role="group" aria-label="동아시아 교육과정 국가 선택">
-                {['japan', 'taiwan', 'hongkong'].map((country) => (
-                  <button
-                    type="button"
-                    key={country}
-                    className={`subview-btn ${eastAsiaCountry === country ? 'active' : ''}`}
-                    onClick={() => { setEastAsiaCountry(country); setLanguage(COUNTRY_LANGUAGE[country]); }}
-                  >
-                    <strong>{copy.eastAsiaCountries[country]}</strong>
-                  </button>
-                ))}
-              </div>
-            </div>
-
             <div className="curriculum-notice-banner official">
-              <span className="notice-icon">🌏</span>
-              <p>{copy.notices.eastAsiaNotice}</p>
+              <span className="notice-icon">🇺🇸</span>
+              <p>{copy.notices?.usaNotice || '미국(주별/Common Core) 및 Pre-Algebra ~ AP Calculus 단계에 맞춰 구성된 문제 은행입니다.'}</p>
             </div>
-
             <div className="curriculum-stage-grid">
-              {EAST_ASIA_STAGES[eastAsiaCountry].map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
+              {USA_STAGES.map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
             </div>
           </div>
         )}
 
-        {/* Tab 5: 동남아시아 교육과정 (싱가포르·말레이시아·베트남) */}
-        {activeTab === 'southeastasia' && (
+        {/* UK */}
+        {activeTab === 'uk' && (
           <div className="eastasia-curriculum-wrap">
-            <div className="curriculum-subview-bar">
-              <div className="subview-toggle-group country-toggle-group" role="group" aria-label="동남아시아 교육과정 국가 선택">
-                {['singapore', 'malaysia', 'vietnam'].map((country) => (
-                  <button
-                    type="button"
-                    key={country}
-                    className={`subview-btn ${southeastAsiaCountry === country ? 'active' : ''}`}
-                    onClick={() => { setSoutheastAsiaCountry(country); setLanguage(COUNTRY_LANGUAGE[country]); }}
-                  >
-                    <strong>{copy.southeastAsiaCountries[country]}</strong>
-                  </button>
-                ))}
-              </div>
-            </div>
-
             <div className="curriculum-notice-banner official">
-              <span className="notice-icon">🌏</span>
-              <p>{copy.notices.southeastAsiaNotice}</p>
+              <span className="notice-icon">🇬🇧</span>
+              <p>{copy.notices?.ukNotice || '영국(National Curriculum) Key Stage 1~5 및 GCSE, A-Level 단계에 맞춰 구성된 문제 은행입니다.'}</p>
             </div>
-
             <div className="curriculum-stage-grid">
-              {SOUTHEAST_ASIA_STAGES[southeastAsiaCountry].map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
+              {UK_STAGES.map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
             </div>
           </div>
         )}
 
-        {/* Tab 6: 남아시아 교육과정 (인도) */}
-        {activeTab === 'southasia' && (
+        {/* Australia */}
+        {activeTab === 'australia' && (
           <div className="eastasia-curriculum-wrap">
-            <div className="curriculum-subview-bar">
-              <div className="subview-toggle-group country-toggle-group" role="group" aria-label="남아시아 교육과정 국가 선택">
-                {['india'].map((country) => (
-                  <button
-                    type="button"
-                    key={country}
-                    className={`subview-btn ${southAsiaCountry === country ? 'active' : ''}`}
-                    onClick={() => { setSouthAsiaCountry(country); setLanguage(COUNTRY_LANGUAGE[country]); }}
-                  >
-                    <strong>{copy.southAsiaCountries[country]}</strong>
-                  </button>
-                ))}
-              </div>
-            </div>
-
             <div className="curriculum-notice-banner official">
-              <span className="notice-icon">🌏</span>
-              <p>{copy.notices.southAsiaNotice}</p>
+              <span className="notice-icon">🇦🇺</span>
+              <p>{copy.notices?.australiaNotice || '호주(Australian Curriculum) Foundation~Year 12 및 주별 고등과정에 맞춰 구성된 문제 은행입니다.'}</p>
             </div>
-
             <div className="curriculum-stage-grid">
-              {SOUTH_ASIA_STAGES[southAsiaCountry].map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
+              {AUSTRALIA_STAGES.map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
             </div>
           </div>
         )}
 
-        {activeTab === 'englishspeaking' && (
+        {/* Malaysia */}
+        {activeTab === 'malaysia' && (
+          <div className="eastasia-curriculum-wrap">
+            <div className="curriculum-notice-banner official">
+              <span className="notice-icon">🇲🇾</span>
+              <p>{copy.notices?.malaysiaNotice || '말레이시아(KSSR / KSSM / SPM) 교육과정 단계에 맞춰 구성된 문제 은행입니다.'}</p>
+            </div>
+            <div className="curriculum-stage-grid">
+              {MALAYSIA_STAGES.map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
+            </div>
+          </div>
+        )}
+
+        {/* Singapore */}
+        {(activeTab === 'singapore' || activeTab === 'southeastasia') && (
+          <div className="eastasia-curriculum-wrap">
+            <div className="curriculum-notice-banner official">
+              <span className="notice-icon">🇸🇬</span>
+              <p>{copy.notices?.singaporeNotice || '싱가포르(MOE) Primary, Secondary, O-Level 단계에 맞춰 구성된 문제 은행입니다.'}</p>
+            </div>
+            <div className="curriculum-stage-grid">
+              {SINGAPORE_STAGES.map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
+            </div>
+          </div>
+        )}
+
+        {/* Hong Kong */}
+        {(activeTab === 'hongkong' || activeTab === 'eastasia') && (
+          <div className="eastasia-curriculum-wrap">
+            <div className="curriculum-notice-banner official">
+              <span className="notice-icon">🇭🇰</span>
+              <p>{copy.notices?.hongkongNotice || '홍콩(EDB) 초등 P1~P6, 중고등 S1~S6 및 HKDSE 단계에 맞춰 구성된 문제 은행입니다.'}</p>
+            </div>
+            <div className="curriculum-stage-grid">
+              {HONGKONG_STAGES.map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
+            </div>
+          </div>
+        )}
+
+        {/* India */}
+        {(activeTab === 'india' || activeTab === 'southasia') && (
+          <div className="eastasia-curriculum-wrap">
+            <div className="curriculum-notice-banner official">
+              <span className="notice-icon">🇮🇳</span>
+              <p>{copy.notices?.indiaNotice || '인도(CBSE) Class 1~12 단계에 맞춰 구성된 문제 은행입니다.'}</p>
+            </div>
+            <div className="curriculum-stage-grid">
+              {INDIA_STAGES.map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
+            </div>
+          </div>
+        )}
+
+        {/* Other Countries: Japan, Taiwan, Vietnam, Canada, New Zealand */}
+        {activeTab === 'other' && (
           <div className="eastasia-curriculum-wrap">
             <div className="curriculum-subview-bar">
-              <div className="subview-toggle-group country-toggle-group" role="group" aria-label="영어권 국가 교육과정 선택">
-                {['usa', 'australia', 'uk', 'canada', 'newzealand'].map((country) => (
-                  <button type="button" key={country} className={`subview-btn ${englishSpeakingCountry === country ? 'active' : ''}`} onClick={() => { setEnglishSpeakingCountry(country); setLanguage(COUNTRY_LANGUAGE[country]); }}>
-                    <strong>{englishSpeakingLabels[country]}</strong>
+              <div className="subview-toggle-group country-toggle-group" role="group" aria-label="기타 국가 교육과정 선택">
+                {['japan', 'taiwan', 'vietnam', 'canada', 'newzealand'].map((country) => (
+                  <button
+                    type="button"
+                    key={country}
+                    className={`subview-btn ${otherCountry === country ? 'active' : ''}`}
+                    onClick={() => { setOtherCountry(country); setLanguage(COUNTRY_LANGUAGE[country]); }}
+                  >
+                    <strong>{OTHER_COUNTRY_LABELS[country]}</strong>
                   </button>
                 ))}
               </div>
             </div>
+
             <div className="curriculum-notice-banner official">
               <span className="notice-icon">🌐</span>
-              <p>{copy.notices.englishSpeakingNotice || CURRICULUM_COPY.en.notices.englishSpeakingNotice}</p>
+              <p>{copy.notices?.otherNotice || '일본·대만·베트남·캐나다·뉴질랜드 교육과정의 실제 학년·과목 명칭에 맞춰 구성된 문제 은행입니다.'}</p>
             </div>
+
             <div className="curriculum-stage-grid">
-              {ENGLISH_SPEAKING_STAGES[englishSpeakingCountry].map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
+              {(OTHER_COUNTRY_STAGES[otherCountry] || JAPAN_STAGES).map((stage, index) => renderStage(stage, copy, { openByDefault: index < 2 }))}
             </div>
           </div>
         )}
@@ -938,9 +983,15 @@ export default function CurriculumExplorer() {
         .professional-stage {
           border-style: dashed;
         }
+        .curriculum-tabs :global(.tab-other-countries) {
+          grid-column: span 2;
+        }
         @media (max-width: 768px) {
           .curriculum-tabs {
             grid-template-columns: 1fr;
+          }
+          .curriculum-tabs :global(.tab-other-countries) {
+            grid-column: auto;
           }
           .curriculum-tabs button {
             min-height: 60px;

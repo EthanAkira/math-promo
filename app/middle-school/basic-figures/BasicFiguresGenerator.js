@@ -9,7 +9,7 @@ import MathText from '../../components/MathText';
 import { useLanguage } from '../../language';
 import { useAuth } from '../../auth';
 import { isNonKorean, tr } from '../../i18n';
-import { recordAttempts } from '../../lib/submissions';
+import { recordAttempts, syncAnswerEvents } from '../../lib/submissions';
 import ProblemScratchpad from '../../components/ProblemScratchpad';
 
 const PROBLEM_COUNT = 20;
@@ -234,7 +234,7 @@ export default function BasicFiguresGenerator() {
   function changeCoreAnswer(id, value) { setCoreAnswers((current) => ({ ...current, [id]: value })); setCoreChecked(false); }
   function checkCoreAnswers() {
     setCoreChecked(true);
-    recordAttempts(user, coreProblems
+    const gradedCoreEntries = coreProblems
       .filter((item) => coreAnswers[item.id] !== undefined && coreAnswers[item.id] !== '')
       .map((item) => ({
         grade: profileId,
@@ -242,7 +242,9 @@ export default function BasicFiguresGenerator() {
         problemType: item.choices ? 'mcq' : 'short',
         isCorrect: normalizeAnswer(coreAnswers[item.id]) === normalizeAnswer(item.answer),
         answer: coreAnswers[item.id],
-      })));
+      }));
+    recordAttempts(user, gradedCoreEntries);
+    syncAnswerEvents(gradedCoreEntries);
   }
 
   // Subscription check for the separate 'curriculum-advanced' subject, mirroring the AMC/CSAT
@@ -321,7 +323,7 @@ export default function BasicFiguresGenerator() {
 
   function checkAnswers() {
     setChecked(true);
-    recordAttempts(user, problems
+    const gradedEntries = problems
       .filter((item) => answers[item.id] !== undefined && answers[item.id] !== '')
       .map((item) => ({
         grade: profileId,
@@ -329,7 +331,9 @@ export default function BasicFiguresGenerator() {
         problemType: item.choices ? 'mcq' : 'short',
         isCorrect: normalizeAnswer(answers[item.id]) === normalizeAnswer(item.answer),
         answer: answers[item.id],
-      })));
+      }));
+    recordAttempts(user, gradedEntries);
+    syncAnswerEvents(gradedEntries);
   }
 
   const contentLocale = profile.locale;

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import InteractiveProblemCard from './InteractiveProblemCard';
+import { syncAnswerEvents } from '../lib/submissions';
 
 export default function InteractiveExamWorkspace({
   title,
@@ -63,6 +64,19 @@ export default function InteractiveExamWorkspace({
       );
       if (!confirmSubmit) return;
     }
+    syncAnswerEvents(safeProblems
+      .filter((p) => {
+        const pKey = p?.id || p?.number;
+        return answers[pKey] !== undefined && answers[pKey] !== null && answers[pKey] !== '';
+      })
+      .map((p) => {
+        const pKey = p?.id || p?.number;
+        return {
+          grade: p?.examType,
+          unit: p?.unit || p?.sourceLabel,
+          isCorrect: String(answers[pKey]) === String(p?.correctAnswer),
+        };
+      }));
     setSubmitted(true);
     setIsTimerRunning(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });

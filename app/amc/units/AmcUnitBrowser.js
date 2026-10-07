@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import QRCode from 'qrcode';
 import { useAuth } from '../../auth';
 import { useLanguage } from '../../language';
-import { AMC_UNITS, AMC_FINE_SUBJECTS } from '../../examUnits';
+import { AMC_UNITS, AMC_FINE_SUBJECTS, findAmcFineUnit } from '../../examUnits';
 import InteractiveProblemCard from '../../components/InteractiveProblemCard';
 import TopicWorksheetView from '../../components/TopicWorksheetView';
 import staticAmc8Catalog from '../../data/amc8ProblemCatalog.json';
@@ -287,7 +287,8 @@ export default function AmcUnitBrowser() {
     return () => { cancelled = true; };
   }, [authStatus, user]);
 
-  const entitled = authStatus === 'ready' && !!user && subStatus === 'active';
+  const TEMPORARY_OPEN_ACCESS = true; // 임시 공개: 수정보완 중에는 언제든지 이용 가능하도록 유지
+  const entitled = TEMPORARY_OPEN_ACCESS || (authStatus === 'ready' && !!user && subStatus === 'active');
 
   // Fetch file manifest
   useEffect(() => {
@@ -374,7 +375,20 @@ export default function AmcUnitBrowser() {
       const qSubjMatch = (p.subjectId || '').toLowerCase().includes(q);
       const qUnitMatch = (p.unitId || '').toLowerCase().includes(q);
 
-      return qYearMatch || qNumMatch || qTextMatch || qSubjMatch || qUnitMatch;
+      const fineUnit = p.unitId ? findAmcFineUnit(p.unitId) : null;
+      const qUnitMetaMatch = fineUnit && (
+        (fineUnit.label || '').toLowerCase().includes(q) ||
+        (fineUnit.labelEn || '').toLowerCase().includes(q) ||
+        (fineUnit.numTheoryChapter || '').toLowerCase().includes(q) ||
+        (fineUnit.alg2Chapter || '').toLowerCase().includes(q) ||
+        (fineUnit.vol1Chapter || '').toLowerCase().includes(q) ||
+        (fineUnit.vol2Chapter || '').toLowerCase().includes(q) ||
+        (fineUnit.vol3Chapter || '').toLowerCase().includes(q) ||
+        (fineUnit.vol4Chapter || '').toLowerCase().includes(q) ||
+        (fineUnit.vol5Chapter || '').toLowerCase().includes(q)
+      );
+
+      return qYearMatch || qNumMatch || qTextMatch || qSubjMatch || qUnitMatch || qUnitMetaMatch;
     });
   }, [problems, selectedLevel, searchQuery]);
 
@@ -414,6 +428,24 @@ export default function AmcUnitBrowser() {
   const totalFilteredCount = useMemo(() => {
     return filteredProblems.length;
   }, [filteredProblems]);
+
+  // Count of units directly matching search query by title, metadata, or alg2Chapter
+  const totalMatchingUnits = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return 0;
+    return AMC_FINE_SUBJECTS.flatMap((s) => s.units).filter((u) =>
+      (u.label || '').toLowerCase().includes(q) ||
+      (u.labelEn || '').toLowerCase().includes(q) ||
+      (u.numTheoryChapter || '').toLowerCase().includes(q) ||
+      (u.alg2Chapter || '').toLowerCase().includes(q) ||
+      (u.vol1Chapter || '').toLowerCase().includes(q) ||
+      (u.vol2Chapter || '').toLowerCase().includes(q) ||
+      (u.vol3Chapter || '').toLowerCase().includes(q) ||
+      (u.vol4Chapter || '').toLowerCase().includes(q) ||
+      (u.vol5Chapter || '').toLowerCase().includes(q) ||
+      (u.desc || '').toLowerCase().includes(q)
+    ).length;
+  }, [searchQuery]);
 
   // Only an active search query should ever hide a subject/unit for having 0 matching
   // problems — a real-catalog count of 0 from the level filter alone must not, since the
@@ -465,14 +497,14 @@ export default function AmcUnitBrowser() {
   }
 
   function handleItemClick(event) {
-    if (entitled) return;
+    if (TEMPORARY_OPEN_ACCESS || entitled) return;
     event.preventDefault();
     if (authStatus !== 'ready' || subStatus === 'loading') return;
     window.alert(!user ? words.alertNeedLogin : words.alertNeedSub);
   }
 
   function handleProblemClick(problem) {
-    if (!entitled) {
+    if (!TEMPORARY_OPEN_ACCESS && !entitled) {
       if (authStatus !== 'ready' || subStatus === 'loading') return;
       window.alert(!user ? words.alertNeedLogin : words.alertNeedSub);
       return;
@@ -591,7 +623,7 @@ export default function AmcUnitBrowser() {
         </a>
       </div>
 
-      {!entitled ? (
+      {!TEMPORARY_OPEN_ACCESS && !entitled ? (
         <div style={{ background: 'rgba(239, 68, 68, 0.07)', border: '1px solid rgba(239, 68, 68, 0.25)', borderRadius: 10, padding: '10px 14px', margin: '14px 0 18px', fontSize: 13, color: 'var(--red-pen, #dc2626)' }}>
           🔒 {words.memberNotice}
         </div>
@@ -808,7 +840,7 @@ export default function AmcUnitBrowser() {
               unavailable, since every unit's "유사 문제 생성" generator works independent of the
               real catalog. So only the search box hides subjects/units on a 0 count; the level
               filter alone must never hide a topic the generator can still serve. */}
-          {hasActiveSearch && totalFilteredCount === 0 ? (
+          {hasActiveSearch && totalFilteredCount === 0 && totalMatchingUnits === 0 ? (
             <div style={{ padding: '36px 20px', textAlign: 'center', background: 'var(--card-bg)', border: '1px solid var(--paper-line)', borderRadius: 12 }}>
               <p style={{ color: 'var(--ink-soft)', margin: 0, fontSize: 14 }}>{words.noProblemsFound}</p>
             </div>
@@ -817,7 +849,25 @@ export default function AmcUnitBrowser() {
               {AMC_FINE_SUBJECTS.filter((subject) => {
                 if (subject.id === 'uncategorized') return false;
                 if (selectedSubject !== 'all' && selectedSubject !== subject.id) return false;
-                if (hasActiveSearch) return (subjectCounts[subject.id] || 0) > 0;
+                if (hasActiveSearch) {
+                  const q = searchQuery.trim().toLowerCase();
+                  const subjectMatches = (subject.label || '').toLowerCase().includes(q) || (subject.labelEn || '').toLowerCase().includes(q);
+                  const unitMatches = subject.units.some((u) => {
+                    const list = problemsByFineUnit.get(u.id) || [];
+                    const uMatch = (u.label || '').toLowerCase().includes(q) ||
+                      (u.labelEn || '').toLowerCase().includes(q) ||
+                      (u.numTheoryChapter || '').toLowerCase().includes(q) ||
+                      (u.alg2Chapter || '').toLowerCase().includes(q) ||
+                      (u.vol1Chapter || '').toLowerCase().includes(q) ||
+                      (u.vol2Chapter || '').toLowerCase().includes(q) ||
+                      (u.vol3Chapter || '').toLowerCase().includes(q) ||
+                      (u.vol4Chapter || '').toLowerCase().includes(q) ||
+                      (u.vol5Chapter || '').toLowerCase().includes(q) ||
+                      (u.desc || '').toLowerCase().includes(q);
+                    return uMatch || list.length > 0;
+                  });
+                  return subjectMatches || unitMatches || (subjectCounts[subject.id] || 0) > 0;
+                }
                 return true;
               }).map((subject) => {
                 const totalInSubject = subjectCounts[subject.id] || 0;
@@ -847,7 +897,20 @@ export default function AmcUnitBrowser() {
                     <div style={{ display: 'grid', gap: 12 }}>
                       {subject.units.map((unit) => {
                         const list = problemsByFineUnit.get(unit.id) || [];
-                        if (hasActiveSearch && list.length === 0) return null;
+                        const q = searchQuery.trim().toLowerCase();
+                        const unitDirectMatch = hasActiveSearch && (
+                          (unit.label || '').toLowerCase().includes(q) ||
+                          (unit.labelEn || '').toLowerCase().includes(q) ||
+                          (unit.numTheoryChapter || '').toLowerCase().includes(q) ||
+                          (unit.alg2Chapter || '').toLowerCase().includes(q) ||
+                          (unit.vol1Chapter || '').toLowerCase().includes(q) ||
+                          (unit.vol2Chapter || '').toLowerCase().includes(q) ||
+                          (unit.vol3Chapter || '').toLowerCase().includes(q) ||
+                          (unit.vol4Chapter || '').toLowerCase().includes(q) ||
+                          (unit.vol5Chapter || '').toLowerCase().includes(q) ||
+                          (unit.desc || '').toLowerCase().includes(q)
+                        );
+                        if (hasActiveSearch && list.length === 0 && !unitDirectMatch) return null;
 
                         return (
                           <div
@@ -882,7 +945,7 @@ export default function AmcUnitBrowser() {
                                 {unit.desc}
                               </span>
 
-                              {/* Curriculum Mapping Badges (AMC Level, Volume 1, Volume 2, International Math, Domains) */}
+                              {/* Curriculum Mapping Badges (AMC Level, Volume 1, Volume 2, Volume 3, Volume 4, Volume 5, Number Theory, Algebra 2, International Math, Domains) */}
                               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8, alignItems: 'center' }}>
                                 {unit.amcLevel && (
                                   <span style={{ fontSize: 11, fontWeight: 800, padding: '2px 9px', borderRadius: 6, background: '#111827', color: '#ffffff' }}>
@@ -897,6 +960,31 @@ export default function AmcUnitBrowser() {
                                 {unit.vol2Chapter && (
                                   <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(147, 51, 234, 0.12)', color: '#7e22ce', border: '1px solid rgba(147, 51, 234, 0.25)' }}>
                                     📘 Vol 2: {unit.vol2Chapter}
+                                  </span>
+                                )}
+                                {unit.vol3Chapter && (
+                                  <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(13, 148, 136, 0.12)', color: '#0f766e', border: '1px solid rgba(13, 148, 136, 0.25)' }}>
+                                    📗 Vol 3: {unit.vol3Chapter}
+                                  </span>
+                                )}
+                                {unit.vol4Chapter && (
+                                  <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(59, 130, 246, 0.12)', color: '#1d4ed8', border: '1px solid rgba(59, 130, 246, 0.25)' }}>
+                                    📘 Vol 4: {unit.vol4Chapter}
+                                  </span>
+                                )}
+                                {unit.vol5Chapter && (
+                                  <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(236, 72, 153, 0.12)', color: '#be185d', border: '1px solid rgba(236, 72, 153, 0.25)' }}>
+                                    📙 Vol 5: {unit.vol5Chapter}
+                                  </span>
+                                )}
+                                {unit.numTheoryChapter && (
+                                  <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(5, 150, 105, 0.10)', color: '#047857', border: '1px solid rgba(5, 150, 105, 0.25)' }}>
+                                    📗 정수론: {unit.numTheoryChapter}
+                                  </span>
+                                )}
+                                {unit.alg2Chapter && (
+                                  <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(239, 68, 68, 0.10)', color: '#b91c1c', border: '1px solid rgba(239, 68, 68, 0.25)' }}>
+                                    📕 Alg 2: {unit.alg2Chapter}
                                   </span>
                                 )}
                                 {unit.intlCourse && (

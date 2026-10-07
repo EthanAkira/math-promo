@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import InteractiveProblemCard from './InteractiveProblemCard';
 import { enrichProblemWithRates } from '../utils/csatRates';
+import { syncAnswerEvents } from '../lib/submissions';
 
 export default function TopicWorksheetView({
   category = 'amc', // 'amc' | 'csat'
@@ -77,6 +78,16 @@ export default function TopicWorksheetView({
 
   const handleGradeRound = () => {
     setGradedRounds((prev) => ({ ...prev, [currentRound]: true }));
+    syncAnswerEvents(activeProblems
+      .filter((p) => userAnswers[p.id] !== undefined && userAnswers[p.id] !== null && userAnswers[p.id] !== '')
+      .map((p) => {
+        const correct = p.answer !== undefined ? p.answer : p.correctAnswer;
+        return {
+          grade: category,
+          unit: unit?.label,
+          isCorrect: String(userAnswers[p.id]) === String(correct),
+        };
+      }));
     window.scrollTo({ top: 300, behavior: 'smooth' });
   };
 
@@ -222,6 +233,11 @@ export default function TopicWorksheetView({
                   📘 Vol 2: {unit.vol2Chapter}
                 </span>
               )}
+              {unit?.vol3Chapter && (
+                <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, background: 'rgba(13, 148, 136, 0.12)', color: '#0f766e', border: '1px solid rgba(13, 148, 136, 0.25)' }}>
+                  📗 Vol 3: {unit.vol3Chapter}
+                </span>
+              )}
               {unit?.intlCourse && (
                 <a
                   href={unit.intlCourse.href}
@@ -270,6 +286,28 @@ export default function TopicWorksheetView({
                 <span>✨</span>
                 <span>{language === 'ko' ? '유사 문제 무한 생성' : 'Generate Similar Variant'}</span>
               </button>
+            )}
+
+            {category === 'csat' && (
+              <a
+                href="/csat/forecast"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  padding: '8px 14px',
+                  borderRadius: 8,
+                  fontSize: 13,
+                  fontWeight: 700,
+                  background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)',
+                  color: '#ffffff',
+                  textDecoration: 'none',
+                  boxShadow: '0 2px 6px rgba(29, 78, 216, 0.25)',
+                }}
+              >
+                <span>🔮</span>
+                <span>{language === 'ko' ? '출제예측·빈도분석실' : 'CSAT Forecast'}</span>
+              </a>
             )}
 
             <button
