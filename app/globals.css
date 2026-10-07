@@ -2118,6 +2118,14 @@ html[dir="rtl"] .generated-proportion-graph {
   text-shadow: 0 0 6px rgba(251, 191, 36, 0.7);
 }
 
+.illumia-hero-brand-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
 .illumia-hero-brand {
   margin: 0;
   font-size: clamp(38px, 6vw, 62px);
@@ -2128,6 +2136,16 @@ html[dir="rtl"] .generated-proportion-graph {
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 2px 14px rgba(245, 158, 11, 0.35));
   line-height: 1.15;
+}
+
+.illumia-hero-brand-ko {
+  margin-top: 2px;
+  font-size: clamp(19px, 2.7vw, 27px);
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: #fde68a;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4), 0 0 16px rgba(245, 158, 11, 0.25);
+  line-height: 1.25;
 }
 
 .illumia-slogans-box {
