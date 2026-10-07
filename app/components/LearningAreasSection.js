@@ -59,23 +59,6 @@ export default function LearningAreasSection() {
       primaryLabel: '코딩 Lab 시작하기 →',
     },
     {
-      id: 'languages',
-      badge: 'Symbol & Logic',
-      badgeColor: 'purple',
-      symbol: '🔤',
-      titleKo: '언어와 논리 (Languages & Logic)',
-      titleEn: 'Etymology & Symbolic Logic',
-      descKo: '학술 개념의 뿌리가 되는 라틴어·산스크리트어 어원(Etymology)과 엄밀한 명제 논리학을 탐구하여 깊이 있는 비판적 독해력과 사유의 힘을 다집니다.',
-      descEn: 'Exploring Greek/Latin roots, Sanskrit philosophical concepts, and symbolic logic to cultivate critical thinking and insight.',
-      links: [
-        { label: '라틴어·산스크리트 어원 탐구', href: '/about#etymology' },
-        { label: '명제 논리 & 기호 체계', href: '/about#philosophy' },
-        { label: '다국어 학술 텍스트 분석', href: '/about' },
-      ],
-      primaryHref: '/about#etymology',
-      primaryLabel: '어원과 논리 탐구 →',
-    },
-    {
       id: 'challenges',
       badge: 'Reason & Play',
       badgeColor: 'amber',
@@ -100,7 +83,7 @@ export default function LearningAreasSection() {
       <div className="section-head-box">
         <div className="section-kicker font-mono">EXPLORATION DOMAINS</div>
         <h2 className="section-title font-display">
-          5대 학습 및 탐구 영역
+          핵심 학습 및 탐구 영역
         </h2>
         <p className="section-subtitle">
           단순한 공식 암기를 넘어, 자연과 기호와 논리의 세계를 직접 탐구하고 이해하는 배움의 장

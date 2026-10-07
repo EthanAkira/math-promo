@@ -104,7 +104,7 @@ export default function IllumiaHero() {
             <span className="hallmark-icon">📐</span>
             <div>
               <strong className="hallmark-title">4대 탐구 영역</strong>
-              <span className="hallmark-sub">수학 · 과학 · 코딩 · 언어</span>
+              <span className="hallmark-sub">수학 · 과학 · 코딩 · 사고력 게임</span>
             </div>
           </div>
           <div className="hallmark-divider" />
