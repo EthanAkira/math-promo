@@ -25,23 +25,6 @@ export default function LearningAreasSection() {
       primaryLabel: '수학 탐구 시작 →',
     },
     {
-      id: 'science',
-      badge: 'Discovery & Experiments',
-      badgeColor: 'blue',
-      symbol: '⚛',
-      titleKo: '과학 (Science)',
-      titleEn: 'Natural Principles & Experiments',
-      descKo: '자연계의 물리적·화학적 법칙을 수학적 모델과 사고 실험으로 검증합니다. 단순 암기를 넘어 현상의 원인과 결과를 직접 추론합니다.',
-      descEn: 'Investigating laws of physics, chemistry, and nature through mathematical modeling, thought experiments, and causal inquiry.',
-      links: [
-        { label: '물리·기하학적 모델링', href: '/middle-school/basic-figures' },
-        { label: '과학적 가설과 데이터 추론', href: '/coding' },
-        { label: '자연계 수열과 패턴 탐구', href: '/amc/units' },
-      ],
-      primaryHref: '#philosophy',
-      primaryLabel: '과학 탐구실 둘러보기 →',
-    },
-    {
       id: 'coding',
       badge: 'Interactive Computation',
       badgeColor: 'emerald',
@@ -86,7 +69,7 @@ export default function LearningAreasSection() {
           핵심 학습 및 탐구 영역
         </h2>
         <p className="section-subtitle">
-          단순한 공식 암기를 넘어, 자연과 기호와 논리의 세계를 직접 탐구하고 이해하는 배움의 장
+          단순한 공식 암기를 넘어, 수학과 컴퓨팅, 전략적 사고의 세계를 직접 탐구하고 이해하는 배움의 장
         </p>
       </div>
 
