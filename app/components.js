@@ -33,6 +33,7 @@ export function SiteHeader() {
 
         <nav className="site-nav-academic" aria-label="주요 메뉴">
           <a href="/#learning-areas" className="nav-item">{language === 'ko' ? '학습 영역' : 'Learning Areas'}</a>
+          <a href="/math" className="nav-item">{language === 'ko' ? '수학' : 'Math'}</a>
           <a href="/amc" className="nav-item">AMC</a>
           <a href="/csat" className="nav-item">{tr(language, 'navCsat')}</a>
           <a href="/coding" className="nav-item">{tr(language, 'navCoding')}</a>

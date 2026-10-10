@@ -14,6 +14,7 @@ const STATIC_ROUTES = [
   { path: '/csat/june', priority: 0.6, changeFrequency: 'yearly' },
   { path: '/csat/sept', priority: 0.6, changeFrequency: 'yearly' },
   { path: '/csat/nov', priority: 0.6, changeFrequency: 'yearly' },
+  { path: '/math', priority: 0.8, changeFrequency: 'weekly' },
   { path: '/coding', priority: 0.7, changeFrequency: 'weekly' },
   { path: '/coding/python', priority: 0.6, changeFrequency: 'weekly' },
   { path: '/coding/java', priority: 0.6, changeFrequency: 'weekly' },

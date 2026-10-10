@@ -21,7 +21,7 @@ export default function LearningAreasSection() {
         { label: '중등 Pre-Algebra & 기본도형', href: '/middle-school/pre-algebra' },
         { label: '초등 사고력 연산', href: '/elementary/practice' },
       ],
-      primaryHref: '/amc',
+      primaryHref: '/math',
       primaryLabel: '수학 탐구 시작 →',
     },
     {
