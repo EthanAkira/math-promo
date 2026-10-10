@@ -126,10 +126,20 @@ if (process.argv.includes('--write')) {
     fs.writeFileSync(path.join(sqlDir, `assets-${String(n).padStart(2, '0')}.sql`), chunk.join('\n') + '\n');
     n += 1; chunk = []; size = 0;
   };
+  // D1 rejects any single SQL statement over ~100KB, so each image goes in as several <=80KB
+  // pieces: one INSERT followed by `data = data || piece` UPDATEs (kept in order within a file).
+  const PIECE = 80000;
   for (const [id, b64] of assets) {
-    const stmt = `INSERT OR REPLACE INTO jjang_calc1_assets (id, mime, data) VALUES ('${id}', 'image/png', '${b64}');`;
-    if (size + stmt.length > 900000 && chunk.length) flush();
-    chunk.push(stmt); size += stmt.length;
+    const stmts = [];
+    for (let i = 0; i < b64.length; i += PIECE) {
+      const piece = b64.slice(i, i + PIECE);
+      stmts.push(i === 0
+        ? `INSERT OR REPLACE INTO jjang_calc1_assets (id, mime, data) VALUES ('${id}', 'image/png', '${piece}');`
+        : `UPDATE jjang_calc1_assets SET data = data || '${piece}' WHERE id = '${id}';`);
+    }
+    const total = stmts.reduce((a, s) => a + s.length, 0);
+    if (size + total > 600000 && chunk.length) flush();
+    chunk.push(...stmts); size += total;
   }
   flush();
   console.log(`catalog: ${catalog.length} problems, ${typeList.length} types; assets: ${assets.length} -> ${n} sql files`);
