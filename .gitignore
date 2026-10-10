@@ -8,3 +8,4 @@ out/
 .dev.vars.*
 npm-debug.log*
 math-promo/
+scripts/jjang_calc1_src/out/

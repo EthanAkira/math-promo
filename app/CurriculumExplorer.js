@@ -66,6 +66,7 @@ function TopicItem({ topic, copy }) {
 
   const hasAmc = Boolean(topic.amc);
   const hasCsat = Boolean(topic.csat);
+  const hasPremium = Boolean(topic.premium);
 
   const typeMatch = displayLabel.match(/^\[(기본|응용|실전 총괄|통합)\]\s*/);
   const typeTag = typeMatch ? typeMatch[1] : null;
@@ -135,6 +136,12 @@ function TopicItem({ topic, copy }) {
         <a href={topic.csat.href} className="csat-inline-badge">
           <span>수능 기출문제로 응용 연습하기</span>
           <span className="csat-inline-badge-cta">문제 풀기 →</span>
+        </a>
+      )}
+      {hasPremium && (
+        <a href={topic.premium.href} className="premium-inline-badge">
+          <span>{topic.premium.label || '유형별 기출·응용 문제 (유료)'}</span>
+          <span className="premium-inline-badge-cta">문제 풀기 →</span>
         </a>
       )}
     </div>
@@ -881,6 +888,30 @@ export default function CurriculumExplorer() {
           background: #fecaca;
         }
         .csat-inline-badge-cta {
+          font-weight: 800;
+          white-space: nowrap;
+        }
+        .premium-inline-badge {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          align-self: stretch;
+          margin: 4px 10px 8px;
+          padding: 5px 10px;
+          border-radius: 6px;
+          background: #ede9fe;
+          color: #5b21b6;
+          font-size: 12px;
+          font-weight: 600;
+          line-height: 1.3;
+          text-decoration: none;
+          transition: background 0.15s ease;
+        }
+        .premium-inline-badge:hover {
+          background: #ddd6fe;
+        }
+        .premium-inline-badge-cta {
           font-weight: 800;
           white-space: nowrap;
         }
