@@ -24,7 +24,7 @@ function orderOf(post) {
   return typeof post.order === 'number' ? post.order : Date.parse(post.createdAt) || 0;
 }
 
-const MOVABLE_CATEGORIES = ['notice', 'contact', 'coding'];
+const MOVABLE_CATEGORIES = ['notice', 'contact', 'coding', 'coding-python', 'coding-java', 'coding-stats', 'coding-r', 'coding-c'];
 
 function titleOf(message, fallback) {
   const firstLine = (message || '').split('\n')[0].trim();
@@ -431,7 +431,7 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
         {adminUnlocked && !selectedPost.static ? <div className="no-print" style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 16, paddingTop: 14, borderTop: '1px dashed var(--paper-line)', fontSize: 12.5 }}>
           <span style={labelStyle}>{tr(language, 'boardMoveTo')}</span>
           <select value={moveTarget || selectedPost.category} onChange={(e) => setMoveTarget(e.target.value)} style={{ ...fieldStyle, padding: '6px 10px' }}>
-            {MOVABLE_CATEGORIES.map((value) => <option key={value} value={value}>{tr(language, `boardCategory_${value}`)}</option>)}
+            {MOVABLE_CATEGORIES.map((value) => <option key={value} value={value}>{tr(language, `boardCategory_${value.replace('-', '_')}`)}</option>)}
           </select>
           <button type="button" onClick={moveSelected} disabled={busy || !moveTarget || moveTarget === selectedPost.category} className="button button-secondary">{tr(language, 'boardMoveButton')}</button>
         </div> : null}

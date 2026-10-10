@@ -1,6 +1,8 @@
 export const MANIFEST_KEY = 'board-manifest';
-export const VALID_CATEGORIES = ['notice', 'contact', 'coding'];
-export const ADMIN_ONLY_CATEGORIES = ['notice', 'coding'];
+export const CODING_TRACKS = ['python', 'java', 'stats', 'r', 'c'];
+export const CODING_CATEGORIES = ['coding', ...CODING_TRACKS.map((t) => 'coding-' + t)];
+export const VALID_CATEGORIES = ['notice', 'contact', ...CODING_CATEGORIES];
+export const ADMIN_ONLY_CATEGORIES = ['notice', ...CODING_CATEGORIES];
 
 export function isAdminPassword(env, password) {
   return Boolean(env.AMC_UPLOAD_PASSWORD) && password === env.AMC_UPLOAD_PASSWORD;

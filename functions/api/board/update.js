@@ -1,4 +1,4 @@
-import { readBoard, writeBoard, jsonResponse, postImageKey, CORS_HEADERS, isAdminPassword } from './_shared.js';
+import { CODING_CATEGORIES, readBoard, writeBoard, jsonResponse, postImageKey, CORS_HEADERS, isAdminPassword } from './_shared.js';
 
 const MAX_BYTES = 8 * 1024 * 1024;
 const MAX_ATTACHMENT_BYTES = 20 * 1024 * 1024;
@@ -37,7 +37,7 @@ export async function onRequestPost({ request, env }) {
 
   const file = formData.get('image');
   if (file && typeof file.arrayBuffer === 'function' && file.size > 0) {
-    const maxBytes = post.category === 'coding' ? MAX_ATTACHMENT_BYTES : MAX_BYTES;
+    const maxBytes = CODING_CATEGORIES.includes(post.category) ? MAX_ATTACHMENT_BYTES : MAX_BYTES;
     if (file.size > maxBytes) return jsonResponse({ error: 'Attachment is too large.' }, { status: 400 });
     if (post.image?.key) await env.AMC_FILES.delete(post.image.key);
     const key = postImageKey(id);

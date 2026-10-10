@@ -1,4 +1,4 @@
-import { readBoard, writeBoard, jsonResponse, postImageKey, genId, CORS_HEADERS, VALID_CATEGORIES, ADMIN_ONLY_CATEGORIES, isAdminPassword, orderOf } from './_shared.js';
+import { CODING_CATEGORIES, readBoard, writeBoard, jsonResponse, postImageKey, genId, CORS_HEADERS, VALID_CATEGORIES, ADMIN_ONLY_CATEGORIES, isAdminPassword, orderOf } from './_shared.js';
 
 const MAX_BYTES = 8 * 1024 * 1024;
 const MAX_ATTACHMENT_BYTES = 20 * 1024 * 1024;
@@ -52,7 +52,7 @@ export async function onRequestPost({ request, env }) {
   let image = null;
   const file = formData.get('image');
   if (file && typeof file.arrayBuffer === 'function' && file.size > 0) {
-    const maxBytes = category === 'coding' ? MAX_ATTACHMENT_BYTES : MAX_BYTES;
+    const maxBytes = CODING_CATEGORIES.includes(category) ? MAX_ATTACHMENT_BYTES : MAX_BYTES;
     if (file.size > maxBytes) {
       return jsonResponse({ error: 'Attachment is too large.' }, { status: 400 });
     }
