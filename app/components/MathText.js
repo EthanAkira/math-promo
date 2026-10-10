@@ -1,6 +1,7 @@
 'use client';
 
 import { sanitizePublicText } from '../publicText';
+import { hasLatex, latexToPlain } from '../utils/latexToPlain';
 
 const NON_FRACTIONS = new Set(['and/or', 'either/or', 'true/false', 'yes/no', 'input/output', 'km/h', 'm/s', 'cm/s', 'm/s^2']);
 
@@ -228,7 +229,8 @@ function tokenizeMath(input) {
  */
 export default function MathText({ value }) {
   if (value === null || value === undefined || value === '') return null;
-  const tokens = tokenizeMath(sanitizePublicText(value));
+  const cleaned = sanitizePublicText(value);
+  const tokens = tokenizeMath(hasLatex(cleaned) ? latexToPlain(cleaned) : cleaned);
 
   return (
     <>

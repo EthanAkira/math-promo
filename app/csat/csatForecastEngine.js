@@ -515,7 +515,7 @@ function genGeometryVectorDotProduct(rng) {
   const question = `좌표평면 위의 원 $C: x^2 + y^2 = ${r * r}$ 위의 동점 $P$와 점 $A(${dist}, 0)$에 대하여, ` +
     `벡터 내적 $\\vec{OA} \\cdot \\vec{OP}$의 최댓값은? (단, $O$는 원점이다.)`;
 
-  const explanation = `원점 $O$에 대하여 $|\vec{OA}| = ${dist}$이고, 점 $P$는 반지름이 $${r}$인 원 위의 점이므로 $|\vec{OP}| = ${r}$입니다.\n` +
+  const explanation = `원점 $O$에 대하여 $|\\vec{OA}| = ${dist}$이고, 점 $P$는 반지름이 $${r}$인 원 위의 점이므로 $|\\vec{OP}| =${r}$입니다.\n` +
     `두 벡터의 내적 공식은\n` +
     `$$\\vec{OA} \\cdot \\vec{OP} = |\\vec{OA}| |\\vec{OP}| \\cos\\theta = ${dist} \\times ${r} \\times \\cos\\theta$$\n` +
     `내적이 최대가 되려면 두 벡터가 같은 방향($\\cos\\theta = 1$)일 때입니다.\n` +
