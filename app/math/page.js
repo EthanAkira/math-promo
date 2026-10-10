@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 export default function MathPage() {
-  return <><SiteHeader /><main style={{ maxWidth: 760, margin: '0 auto', padding: '40px 20px 64px' }}>
+  return <><SiteHeader /><main style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 20px 64px' }}>
     <MathHub />
   </main><SiteFooter /></>;
 }
