@@ -5,7 +5,7 @@ import path from 'node:path';
 import fs from 'node:fs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const dir = path.join(root, 'functions', 'api', 'curriculum-advanced', 'engines', 'calc1');
+const dir = path.join(root, 'functions', 'api', 'curriculum-advanced', 'engines', process.env.ENGINE_DIR || 'calc1');
 const N = Number(process.argv[2]) || 300;
 
 function mulberry(seed) {

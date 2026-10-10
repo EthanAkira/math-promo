@@ -52,6 +52,11 @@ export default function MathHub() {
       <div style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 4, lineHeight: 1.6 }}>{ko ? '고2 수학Ⅱ · 고3 미적분 17개 유형 — 기본·기출·예상문제, 해설, 유사문제 생성기' : 'Seventeen calculus unit types — basic, past-exam and forecast problems with solutions and a similar-problem generator.'}</div>
     </a>
 
+    <a href="/premium/geometry" style={{ ...cardStyle, marginTop: 14, borderColor: '#6d28d9', background: '#faf5ff' }}>
+      <div className="font-display" style={{ fontSize: 17, fontWeight: 700 }}>📐 {ko ? '기하와 벡터 유형별 기출·응용 문제' : 'Geometry & Vectors: Past-Exam & Applied Problems by Type'} <span style={{ fontSize: 12, background: '#6d28d9', color: '#fff', padding: '2px 9px', borderRadius: 999, marginLeft: 6 }}>{ko ? '유료' : 'Premium'}</span></div>
+      <div style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 4, lineHeight: 1.6 }}>{ko ? '이차곡선 · 평면벡터 · 공간도형과 공간좌표 17개 유형 — 기본·기출·예상문제, 해설, 유사문제 생성기' : 'Seventeen types: conics, plane vectors and solid geometry — with solutions and a similar-problem generator.'}</div>
+    </a>
+
     <h2 className="font-display" style={{ fontSize: 20, margin: '36px 0 6px' }}>{ko ? '일반 교과 (교육과정별)' : 'General Curriculum'}</h2>
     <p style={{ color: 'var(--ink-soft)', margin: '0 0 14px', fontSize: 14 }}>{ko ? '나라·학교 과정별로 단원과 문제를 찾아봅니다.' : 'Browse units and problems by country or school system.'}</p>
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 10 }}>

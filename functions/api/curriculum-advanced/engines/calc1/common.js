@@ -176,7 +176,7 @@ export function choicesFromStrings(random, correct, wrong) {
 // Final packaging. `answer` is a rational (Fr) or { str, num, wrong:[...] } for symbolic answers.
 const POSITIVE_TAGS = new Set(['jc1-area', 'jc1-motion-dist']);
 export function finish(random, { prompt, explanation, answer, tag, verify, allowShort = true, positive }) {
-  const pos = positive ?? POSITIVE_TAGS.has(tag);
+  const pos = positive ?? (POSITIVE_TAGS.has(tag) || String(tag).startsWith('jg-'));
   const symbolic = answer && answer.str !== undefined;
   let kind = 'mcq';
   let out;
