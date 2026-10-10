@@ -6,6 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "verify:curriculum": "node scripts/verify-curriculum-phase1.mjs && node scripts/verify-curriculum-phase3.mjs && node scripts/verify-curriculum-regression.mjs",
+    "verify:amc": "node scripts/verify_amc_catalog.mjs",
+    "verify:calc1": "node scripts/verify_calc1_catalog.mjs",
+    "verify:math2": "node scripts/verify_math2_catalog.mjs",
+    "verify:probstats": "node scripts/verify_probstats_catalog.mjs",
+    "verify:calc2": "node scripts/verify_calc2_catalog.mjs",
+    "verify:amc-forecast": "node scripts/verify_amc_forecast.mjs",
     "start": "next start",
     "deploy:cloudflare": "npm run verify:curriculum && wrangler pages deploy out --project-name math-promo --branch main"
   },

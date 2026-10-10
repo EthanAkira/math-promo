@@ -7,8 +7,16 @@ import { CSAT_SUBJECTS, csatUnitTagLabel, COMMON_MATH_SUBJECTS, commonMathUnitTa
 import TopicWorksheetView from '../../components/TopicWorksheetView';
 import staticCsatCatalog from '../../data/csatProblemCatalog.json';
 import csatCommonMathCatalog from '../../data/csatCommonMathProblemCatalog.json';
+import csatCalculus1Catalog from '../../data/csatCalculus1BasicCatalog.json';
+import csatMath2ImportantCatalog from '../../data/csatMath2ImportantCatalog.json';
+import csatProbStatsImportantCatalog from '../../data/csatProbStatsImportantCatalog.json';
+import csatCalculus2ImportantCatalog from '../../data/csatCalculus2ImportantCatalog.json';
 import { enrichProblemsListWithRates } from '../../utils/csatRates';
 import { generateCommonMathVariant } from '../commonMathProblemGenerator';
+import { generateCalculus1Variant } from '../calculus1ProblemGenerator';
+import { generateMath2ImportantVariant } from '../math2ImportantProblemGenerator';
+import { generateProbStatsImportantVariant } from '../probStatsImportantProblemGenerator';
+import { generateCalculus2ImportantVariant } from '../calculus2ImportantProblemGenerator';
 import { generateCsatSimilarProblem } from '../csatForecastEngine';
 
 const UNIT_FREQUENCY_MAP = {
@@ -29,14 +37,14 @@ const UNIT_FREQUENCY_MAP = {
   'space-geometry': { count: 3, rate: '100%' },
 };
 
-const combinedStaticCatalog = [...staticCsatCatalog, ...csatCommonMathCatalog];
+const combinedStaticCatalog = [...staticCsatCatalog, ...csatCommonMathCatalog, ...csatCalculus1Catalog, ...csatMath2ImportantCatalog, ...csatProbStatsImportantCatalog, ...csatCalculus2ImportantCatalog];
 
 const COPY = {
   ko: {
     home: '홈',
     hub: '수능 기출문제',
     title: '단원별 수능 기출문제',
-    subtitle: '수능 출제 범위인 수학Ⅰ·수학Ⅱ·확률과 통계·미적분·기하 다섯 과목을 세부 단원별 학습지로 풀어보고, 실시간 수식과 해설을 확인해보세요.',
+    subtitle: '수능 출제 범위인 수학Ⅰ·수학Ⅱ·확률과 통계·미적분·기하 및 공통수학, 짱쉬운 미적분 1(374문항), 짱중요한유형 수학Ⅱ(442문항), 짱중요한유형 확률과 통계(440문항), 짱중요한유형 미적분Ⅱ(522문항 및 전 유형 알고리즘 유사문제 무한 생성)을 세부 단원별 학습지로 풀어보고, 실시간 수식과 해설을 확인해보세요.',
     tabProblems: '✍️ 세부 단원별 문항 풀기',
     tabFiles: '📁 대단원별 파일 다운로드 (PDF)',
     allSubjects: '전체 과목',
@@ -58,7 +66,7 @@ const COPY = {
     home: 'Home',
     hub: 'CSAT Archive',
     title: 'CSAT Archive by Unit',
-    subtitle: 'Practice all five CSAT math subjects (Math I, Math II, Probability & Statistics, Calculus, Geometry) as structured topic worksheets with step-by-step solutions.',
+    subtitle: 'Practice CSAT math subjects (Math I/II, Prob & Stats, Calculus, Geometry, Common Math, Calculus 1 Basics with algorithmic variant generator) as structured topic worksheets with step-by-step solutions.',
     tabProblems: '✍️ Practice by Unit (Worksheets)',
     tabFiles: '📁 Download by Subject (PDF)',
     allSubjects: 'All Subjects',
@@ -147,8 +155,36 @@ export default function CsatUnitBrowser() {
   function handleGenerateVariant(unitId) {
     const candidate = problems.find((p) => p.unitId === unitId) || { unitId };
     let generated;
-    if (unitId && (unitId.startsWith('polynomial') || unitId.startsWith('equation') || unitId.startsWith('coordinate') || unitId.startsWith('set') || unitId.startsWith('function') || unitId.startsWith('common-math'))) {
+    if (candidate?.id?.startsWith('jjangimportant-calc2-') || (candidate?.subUnitId && [
+      'exponential-functions', 'logarithmic-functions', 'exponential-equations',
+      'logarithmic-equations', 'exp-log-applications', 'trig-definition',
+      'trig-graphs', 'trig-addition-formulas', 'trig-synthesis', 'trig-equations',
+      'exp-log-limits', 'trig-limits', 'trig-limit-geometry', 'derivative-rules',
+      'tangent-lines', 'extrema-optimization', 'curve-sketching-equations',
+      'substitution-by-parts', 'riemann-sum-integrals', 'area-between-curves', 'volume-of-solids'
+    ].includes(candidate.subUnitId))) {
+      generated = generateCalculus2ImportantVariant(candidate);
+    } else if (candidate?.id?.startsWith('jjangimportant-probstats-') || (candidate?.subUnitId && [
+      'permutations', 'circular-permutations', 'grid-paths', 'combinations',
+      'duplicate-combinations', 'partitions', 'binomial-theorem', 'probability-addition',
+      'mathematical-probability', 'conditional-probability', 'independent-trials',
+      'discrete-random-var', 'binomial-dist', 'continuous-random-var', 'normal-dist',
+      'sample-mean-dist', 'confidence-interval', 'population-proportion'
+    ].includes(candidate.subUnitId))) {
+      generated = generateProbStatsImportantVariant(candidate);
+    } else if (candidate?.id?.startsWith('jjangimportant-math2-') || (candidate?.subUnitId && [
+      'set-operations', 'set-cardinality', 'propositions-truth-sets',
+      'conditions-logic', 'inequalities-proof', 'composite-functions',
+      'inverse-functions', 'rational-functions', 'radical-functions',
+      'arithmetic-sequences', 'geometric-sequences', 'sequence-means',
+      'sigma-sum', 'various-sequences', 'inductive-definition',
+      'exponents-logs', 'exponents-logs-application'
+    ].includes(candidate.subUnitId))) {
+      generated = generateMath2ImportantVariant(candidate);
+    } else if (unitId && (unitId.startsWith('polynomial') || unitId.startsWith('equation') || unitId.startsWith('coordinate') || unitId.startsWith('set') || unitId.startsWith('function') || unitId.startsWith('common-math'))) {
       generated = generateCommonMathVariant(candidate);
+    } else if (unitId && (unitId === 'sequence-limits' || unitId === 'limits-continuity' || unitId === 'differentiation' || unitId === 'integration' || candidate?.id?.startsWith('jjangeasy-calc-'))) {
+      generated = generateCalculus1Variant(candidate);
     } else {
       let subjId = candidate.subjectId;
       if (!subjId) {

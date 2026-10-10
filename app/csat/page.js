@@ -7,7 +7,7 @@ export const metadata = {
 
 const EXAM_TYPES = [
   { href: '/csat/forecast', icon: '🔮', title: '수능 출제분석 & 출제 예측실', description: '최근 5개년 빈도 통계 · 72대 세부유형 사전 기반 이번 년도 출제 예측 및 기출예상·유사문제 생성' },
-  { href: '/csat/units', icon: '📝', title: '단원별 기출·기본 문제', description: '공통수학1·2(상·하) 기본 748문항 및 수능·모의고사 단원별 문제은행' },
+  { href: '/csat/units', icon: '📝', title: '단원별 기출·기본 문제', description: '공통수학1·2 기본 748문항 · 짱쉬운 미적분 1 기본 374문항 및 수능·모의고사 단원별 기출문제은행' },
   { href: '/csat/june', icon: '🌱', title: '6월 모의고사', description: '고3 전국연합학력평가 · 매년 6월 시행' },
   { href: '/csat/sept', icon: '🍂', title: '9월 모의고사', description: '고3 전국연합학력평가 · 매년 9월 시행' },
   { href: '/csat/nov', icon: '🎓', title: '대학수학능력시험', description: '매년 11월 시행 · 본수능' },

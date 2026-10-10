@@ -8,7 +8,18 @@ import { AMC_UNITS, AMC_FINE_SUBJECTS, findAmcFineUnit } from '../../examUnits';
 import InteractiveProblemCard from '../../components/InteractiveProblemCard';
 import TopicWorksheetView from '../../components/TopicWorksheetView';
 import staticAmc8Catalog from '../../data/amc8ProblemCatalog.json';
+import staticAmc10Catalog from '../../data/amc10ProblemCatalog.json';
+import staticAmc12Catalog from '../../data/amc12ProblemCatalog.json';
+import amcHighSchoolCatalog from '../../data/amcHighSchoolMappedCatalog.json';
 import { generateAmcVariantProblem } from '../amcProblemGenerator';
+import { AMC_UNIT_FREQUENCY_MAP, AMC_DOMAIN_FREQUENCIES } from '../amcForecastEngine';
+
+const allStaticAmcCatalog = [
+  ...staticAmc8Catalog,
+  ...staticAmc10Catalog,
+  ...staticAmc12Catalog,
+  ...amcHighSchoolCatalog,
+];
 
 // --- Seeded worksheet generation (same pattern as the Korean-curriculum generator pages:
 // a random 8-char seed drives a deterministic PRNG so a printed/QR-scanned URL reproduces the
@@ -94,7 +105,7 @@ const COPY = {
     alertNeedSub: '구독이 필요한 서비스입니다. 결제·구독 서비스는 준비 중이며, 이용을 원하시면 문의하기로 연락해주세요.',
     tabProblems: '✍️ 세부 단원별 문항 풀기',
     tabFiles: '📁 대단원별 파일 다운로드 (PDF)',
-    byProblemIntro: '미국수학경시대회(AMC 8) 1998~2024년 435개 전 문항을 34개 세부 경시 주제로 정밀 분류했습니다. 단원을 펼쳐 문항을 직접 풀고 해설을 확인하세요.',
+    byProblemIntro: '미국수학경시대회(AMC 8 · 10 · 12) 주요 기출문항을 34개 세부 경시 주제로 정밀 분류했습니다. 단원을 펼쳐 문항을 직접 풀고 해설을 확인하세요.',
     searchPlaceholder: '연도, 문항 번호, 키워드로 검색 (예: 2024, #5, 소수, 넓이, 속력)...',
     expandAll: '모두 펼치기',
     collapseAll: '모두 접기',
@@ -106,15 +117,15 @@ const COPY = {
     collapse: '접기',
     open: '풀기 / 해설',
     levelAll: '전체 레벨',
-    level8: 'AMC 8 (435문항)',
-    level10: 'AMC 10',
-    level12: 'AMC 12',
+    level8: 'AMC 8 (439문항)',
+    level10: 'AMC 10 (25문항)',
+    level12: 'AMC 12 (25문항)',
   },
   en: {
     home: 'Home',
     hub: 'AMC Archive',
     title: 'AMC Archive by Topic',
-    subtitle: 'Practice all 435 AMC 8 competition problems from 1998 to 2024 organized into 34 fine-grained topics with step-by-step solutions.',
+    subtitle: 'Practice AMC 8, AMC 10, and AMC 12 competition problems with verified AoPS step-by-step solutions.',
     loading: 'Loading archive...',
     error: 'Could not load the archive. Please try again shortly.',
     empty: 'No materials tagged with this topic yet.',
@@ -124,9 +135,9 @@ const COPY = {
     memberNotice: 'Materials by topic (including variant problems and solutions) are available to logged-in subscribers. Feel free to explore the catalog.',
     alertNeedLogin: 'Login required. Please log in using the button in the header.',
     alertNeedSub: 'A subscription is required. Please contact us for access.',
-    tabProblems: '✍️ Practice by Topic (435+ Problems)',
+    tabProblems: '✍️ Practice by Topic (480+ Problems)',
     tabFiles: '📁 Download by Subject (PDF)',
-    byProblemIntro: '435 full competition problems from AMC 8 (1998–2024) classified into 34 standard competition math topics. Expand any topic to solve interactively.',
+    byProblemIntro: 'Full competition problems from AMC 8, 10, and 12 classified into standard competition math topics. Expand any topic to solve interactively.',
     searchPlaceholder: 'Search year, problem #, or keywords (e.g. 2024, #5, prime, area, speed)...',
     expandAll: 'Expand All',
     collapseAll: 'Collapse All',
@@ -138,9 +149,9 @@ const COPY = {
     collapse: 'Collapse',
     open: 'Solve / Solution',
     levelAll: 'All Levels',
-    level8: 'AMC 8 (435 Problems)',
-    level10: 'AMC 10',
-    level12: 'AMC 12',
+    level8: 'AMC 8 (439 Problems)',
+    level10: 'AMC 10 (25 Problems)',
+    level12: 'AMC 12 (25 Problems)',
   },
 };
 
@@ -203,12 +214,12 @@ export default function AmcUnitBrowser() {
   const [activeTab, setActiveTab] = useState('problems'); // 'problems' | 'files'
 
   // Level & Domain Filters
-  const [selectedLevel, setSelectedLevel] = useState('8'); // '8' default for AMC 8
+  const [selectedLevel, setSelectedLevel] = useState('all'); // 'all' default for full catalog
   const [selectedSubject, setSelectedSubject] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Problem Catalog State (initialized immediately with 435 static AMC 8 questions)
-  const [problems, setProblems] = useState(staticAmc8Catalog);
+  // Problem Catalog State (initialized immediately with static AMC 8/10/12 questions)
+  const [problems, setProblems] = useState(allStaticAmcCatalog);
   const [problemsStatus, setProblemsStatus] = useState('ready');
 
   // UI accordion state
@@ -221,6 +232,8 @@ export default function AmcUnitBrowser() {
   const [variantOnlyMode, setVariantOnlyMode] = useState(false);
   const [variantSheet, setVariantSheet] = useState([]);
   const [variantSheetQr, setVariantSheetQr] = useState('');
+  const [showFrequencyTable, setShowFrequencyTable] = useState(false);
+  const [frequencyTableLevel, setFrequencyTableLevel] = useState('8');
 
   // Core practice test (multi-unit, count- and difficulty-configurable) state
   const [coreSelectedUnitIds, setCoreSelectedUnitIds] = useState([]);
@@ -314,9 +327,9 @@ export default function AmcUnitBrowser() {
         if (apiList.length === 0) return;
 
         // Merge API problems with static catalog using canonical key to prevent duplicate entries
-        const getProblemKey = (p) => `${p.level || 8}-${p.year}-${(p.variant || '').toLowerCase()}-${Number(p.problemNumber || p.number || 0)}`;
+        const getProblemKey = (p) => p.id || `${p.level || 8}-${p.year}-${(p.variant || '').toLowerCase()}-${Number(p.problemNumber || p.number || 0)}`;
         const mergedMap = new Map();
-        for (const p of staticAmc8Catalog) {
+        for (const p of allStaticAmcCatalog) {
           mergedMap.set(getProblemKey(p), p);
         }
         for (const p of apiList) {
@@ -363,8 +376,21 @@ export default function AmcUnitBrowser() {
     const cleanQ = q.replace(/^#/, '');
 
     return problems.filter((p) => {
-      // Level filter
-      if (selectedLevel !== 'all' && String(p.level) !== selectedLevel) return false;
+      // Level filter:
+      // If a specific level is selected (8, 10, or 12), match exact level.
+      // BUT for high-school topics (functions, advanced) that have no AMC 8 scope,
+      // allow their matched high-school problems to display so cards are never blank.
+      if (selectedLevel !== 'all') {
+        const matchesLevel = String(p.level) === selectedLevel;
+        if (!matchesLevel) {
+          const isHighSchoolTopic = p.subjectId === 'functions' || p.subjectId === 'advanced';
+          if (selectedLevel === '8' && isHighSchoolTopic) {
+            // Keep visible so high-school topics are never 0
+          } else {
+            return false;
+          }
+        }
+      }
 
       // Search query filter
       if (!q) return true;
@@ -583,8 +609,8 @@ export default function AmcUnitBrowser() {
   }, [selectedUnitId]);
 
   if (activeSubjectAndUnit) {
-    const { subject, unit } = activeSubjectAndUnit;
-    const unitProblems = problemsByFineUnit.get(unit.id) || [];
+    const filteredList = problemsByFineUnit.get(unit.id) || [];
+    const unitProblems = filteredList.length > 0 ? filteredList : problems.filter((p) => p.unitId === unit.id);
     return (
       <div style={{ maxWidth: 1040, margin: '0 auto', padding: '10px 0 60px' }}>
         <TopicWorksheetView
@@ -618,10 +644,91 @@ export default function AmcUnitBrowser() {
           <h1 className="font-display" style={{ fontSize: 26, margin: '0 0 6px' }}>{words.title}</h1>
           <p style={{ color: 'var(--ink-soft)', margin: 0, fontSize: 14 }}>{words.subtitle}</p>
         </div>
-        <a href="/amc" className="button button-secondary" style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}>
-          {words.byYear} →
-        </a>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <button
+            type="button"
+            onClick={() => setShowFrequencyTable((prev) => !prev)}
+            className="button button-secondary"
+            style={{ fontSize: 13, display: 'flex', alignItems: 'center', gap: 6 }}
+          >
+            📊 {language === 'ko' ? (showFrequencyTable ? '출제 빈도표 닫기' : '공식 출제 빈도표 보기') : (showFrequencyTable ? 'Hide Frequencies' : 'View Frequencies')}
+          </button>
+          <a
+            href="/amc/forecast"
+            className="button button-primary"
+            style={{ textDecoration: 'none', whiteSpace: 'nowrap', fontSize: 13, background: 'var(--red-pen, #dc2626)', borderColor: 'var(--red-pen, #dc2626)' }}
+          >
+            🎯 {language === 'ko' ? '적중 예상문제 연구실 →' : 'Forecast Lab →'}
+          </a>
+          <a href="/amc" className="button button-secondary" style={{ textDecoration: 'none', whiteSpace: 'nowrap', fontSize: 13 }}>
+            {words.byYear} →
+          </a>
+        </div>
       </div>
+
+      {/* Collapsible Official Frequency Table */}
+      {showFrequencyTable && (
+        <div style={{ margin: '14px 0 20px', padding: '20px 22px', borderRadius: 12, background: 'var(--paper, #ffffff)', border: '1.5px solid #3b82f6', boxShadow: '0 4px 12px rgba(59,130,246,0.08)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14, flexWrap: 'wrap', gap: 10 }}>
+            <div>
+              <span style={{ fontSize: 12, fontWeight: 700, color: '#2563eb', letterSpacing: '0.04em' }}>OFFICIAL AMC FREQUENCY MATRIX</span>
+              <h3 style={{ margin: '2px 0 0', fontSize: 18, color: 'var(--ink)' }}>
+                {language === 'ko' ? `AMC ${frequencyTableLevel} 영역별 공식 출제 문항 수 & 비중표` : `AMC ${frequencyTableLevel} Official Frequency & Weight Matrix`}
+              </h3>
+            </div>
+            {/* Level switch inside frequency box */}
+            <div style={{ display: 'flex', gap: 6 }}>
+              {['8', '10', '12'].map((lvl) => (
+                <button
+                  key={lvl}
+                  type="button"
+                  onClick={() => setFrequencyTableLevel(lvl)}
+                  style={{
+                    padding: '4px 12px',
+                    borderRadius: 8,
+                    fontSize: 12,
+                    fontWeight: frequencyTableLevel === lvl ? 700 : 500,
+                    border: frequencyTableLevel === lvl ? '1.5px solid #2563eb' : '1px solid #d1d5db',
+                    background: frequencyTableLevel === lvl ? '#eff6ff' : '#fff',
+                    color: frequencyTableLevel === lvl ? '#1d4ed8' : '#374151',
+                    cursor: 'pointer',
+                  }}
+                >
+                  AMC {lvl}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: 13 }}>
+              <thead>
+                <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
+                  <th style={{ padding: '8px 12px' }}>{language === 'ko' ? '출제 영역' : 'Domain'}</th>
+                  <th style={{ padding: '8px 12px', textAlign: 'center' }}>{language === 'ko' ? '평균 문항 수' : 'Avg Count'}</th>
+                  <th style={{ padding: '8px 12px', textAlign: 'center' }}>{language === 'ko' ? '출제 비중' : 'Share'}</th>
+                  <th style={{ padding: '8px 12px', textAlign: 'center' }}>{language === 'ko' ? '출제 빈도' : 'Frequency'}</th>
+                  <th style={{ padding: '8px 12px' }}>{language === 'ko' ? '주요 세부 출제 주제' : 'Core Topics'}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(AMC_DOMAIN_FREQUENCIES[frequencyTableLevel]?.domains || []).map((dom) => (
+                  <tr key={dom.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                    <td style={{ padding: '10px 12px', fontWeight: 700, color: 'var(--ink)' }}>{dom.name}</td>
+                    <td style={{ padding: '10px 12px', textAlign: 'center', fontWeight: 600, color: '#1d4ed8' }}>{dom.count}</td>
+                    <td style={{ padding: '10px 12px', textAlign: 'center', fontWeight: 700 }}>{dom.share}</td>
+                    <td style={{ padding: '10px 12px', textAlign: 'center' }}>
+                      <span style={{ color: '#d97706', letterSpacing: 1 }}>{'★'.repeat(dom.stars)}</span>
+                      <div style={{ fontSize: 10, color: '#64748b' }}>{dom.rate}</div>
+                    </td>
+                    <td style={{ padding: '10px 12px', color: '#475569', fontSize: 12 }}>{dom.topics}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       {!TEMPORARY_OPEN_ACCESS && !entitled ? (
         <div style={{ background: 'rgba(239, 68, 68, 0.07)', border: '1px solid rgba(239, 68, 68, 0.25)', borderRadius: 10, padding: '10px 14px', margin: '14px 0 18px', fontSize: 13, color: 'var(--red-pen, #dc2626)' }}>
@@ -696,10 +803,10 @@ export default function AmcUnitBrowser() {
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, marginBottom: 14 }}>
             <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-soft)', marginRight: 4 }}>레벨:</span>
             {[
+              { id: 'all', label: words.levelAll },
               { id: '8', label: words.level8 },
               { id: '10', label: words.level10 },
               { id: '12', label: words.level12 },
-              { id: 'all', label: words.levelAll },
             ].map((lvl) => {
               const active = selectedLevel === lvl.id;
               return (
@@ -897,6 +1004,8 @@ export default function AmcUnitBrowser() {
                     <div style={{ display: 'grid', gap: 12 }}>
                       {subject.units.map((unit) => {
                         const list = problemsByFineUnit.get(unit.id) || [];
+                        const allUnitCount = (problems || []).filter((p) => p.unitId === unit.id).length;
+                        const effectiveCount = list.length > 0 ? list.length : allUnitCount;
                         const q = searchQuery.trim().toLowerCase();
                         const unitDirectMatch = hasActiveSearch && (
                           (unit.label || '').toLowerCase().includes(q) ||
@@ -910,7 +1019,7 @@ export default function AmcUnitBrowser() {
                           (unit.vol5Chapter || '').toLowerCase().includes(q) ||
                           (unit.desc || '').toLowerCase().includes(q)
                         );
-                        if (hasActiveSearch && list.length === 0 && !unitDirectMatch) return null;
+                        if (hasActiveSearch && effectiveCount === 0 && !unitDirectMatch) return null;
 
                         return (
                           <div
@@ -938,15 +1047,20 @@ export default function AmcUnitBrowser() {
                                   ({unit.labelEn})
                                 </span>
                                 <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 10, background: 'var(--paper-line, #e5e7eb)', color: 'var(--ink, #374151)' }}>
-                                  {words.problemCount(list.length)}
+                                  {words.problemCount(effectiveCount)}
                                 </span>
                               </div>
                               <span style={{ display: 'block', fontSize: 13, color: 'var(--ink-soft)', marginTop: 4 }}>
                                 {unit.desc}
                               </span>
 
-                              {/* Curriculum Mapping Badges (AMC Level, Volume 1, Volume 2, Volume 3, Volume 4, Volume 5, Number Theory, Algebra 2, International Math, Domains) */}
+                              {/* Curriculum Mapping Badges (Frequency, AMC Level, Volumes, etc.) */}
                               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8, alignItems: 'center' }}>
+                                {AMC_UNIT_FREQUENCY_MAP[unit.id] && (
+                                  <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 6, background: '#fef3c7', color: '#92400e', border: '1px solid #fde68a' }}>
+                                    📊 {language === 'ko' ? `출제 빈도: 평균 ${AMC_UNIT_FREQUENCY_MAP[unit.id].count}문항 (${AMC_UNIT_FREQUENCY_MAP[unit.id].rate})` : `Avg ${AMC_UNIT_FREQUENCY_MAP[unit.id].count} probs (${AMC_UNIT_FREQUENCY_MAP[unit.id].rate})`} <span style={{ color: '#d97706', marginLeft: 2 }}>{'★'.repeat(AMC_UNIT_FREQUENCY_MAP[unit.id].stars)}</span>
+                                  </span>
+                                )}
                                 {unit.amcLevel && (
                                   <span style={{ fontSize: 11, fontWeight: 800, padding: '2px 9px', borderRadius: 6, background: '#111827', color: '#ffffff' }}>
                                     🎯 {unit.amcLevel}
@@ -1010,7 +1124,7 @@ export default function AmcUnitBrowser() {
 
                             {/* Action Buttons: Open Worksheet View & Generate Variant */}
                             <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                              {list.length > 0 && (
+                              {effectiveCount > 0 && (
                                 <button
                                   type="button"
                                   onClick={() => handleOpenWorksheet(unit.id)}
@@ -1030,7 +1144,7 @@ export default function AmcUnitBrowser() {
                                   }}
                                 >
                                   <span>📝</span>
-                                  <span>{language === 'ko' ? `실전 학습지 풀기 (${list.length}문항) →` : `Open Worksheet (${list.length}) →`}</span>
+                                  <span>{language === 'ko' ? `실전 학습지 풀기 (${effectiveCount}문항) →` : `Open Worksheet (${effectiveCount}) →`}</span>
                                 </button>
                               )}
 
@@ -1044,26 +1158,48 @@ export default function AmcUnitBrowser() {
                                   display: 'inline-flex',
                                   alignItems: 'center',
                                   gap: 4,
-                                  padding: list.length > 0 ? '8px 12px' : '9px 18px',
+                                  padding: effectiveCount > 0 ? '8px 12px' : '9px 18px',
                                   borderRadius: 8,
-                                  fontSize: list.length > 0 ? 12 : 13,
-                                  fontWeight: list.length > 0 ? 600 : 700,
-                                  background: list.length > 0 ? 'rgba(79, 70, 229, 0.08)' : 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
-                                  color: list.length > 0 ? '#4338ca' : '#ffffff',
-                                  border: list.length > 0 ? '1px solid rgba(79, 70, 229, 0.2)' : 'none',
+                                  fontSize: effectiveCount > 0 ? 12 : 13,
+                                  fontWeight: effectiveCount > 0 ? 600 : 700,
+                                  background: effectiveCount > 0 ? 'rgba(79, 70, 229, 0.08)' : 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+                                  color: effectiveCount > 0 ? '#4338ca' : '#ffffff',
+                                  border: effectiveCount > 0 ? '1px solid rgba(79, 70, 229, 0.2)' : 'none',
                                   cursor: 'pointer',
-                                  boxShadow: list.length > 0 ? 'none' : '0 2px 6px rgba(79, 70, 229, 0.25)',
+                                  boxShadow: effectiveCount > 0 ? 'none' : '0 2px 6px rgba(79, 70, 229, 0.25)',
                                 }}
                               >
                                 <span>✨</span>
                                 <span>
-                                  {list.length > 0
+                                  {effectiveCount > 0
                                     ? (language === 'ko' ? '유사 문제' : 'Variant')
                                     : (language === 'ko'
                                       ? `이 레벨은 기출문제 준비 중 · 유사 문제로 학습하기 →`
                                       : `No archived problems for this level yet — practice with generated variants →`)}
                                 </span>
                               </button>
+
+                              <a
+                                href={`/amc/forecast`}
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: 4,
+                                  padding: '8px 12px',
+                                  borderRadius: 8,
+                                  fontSize: 12,
+                                  fontWeight: 600,
+                                  background: 'rgba(220, 38, 38, 0.08)',
+                                  color: '#dc2626',
+                                  border: '1px solid rgba(220, 38, 38, 0.2)',
+                                  textDecoration: 'none',
+                                  whiteSpace: 'nowrap',
+                                }}
+                                title="출제 예측실에서 예상문제 풀기"
+                              >
+                                <span>🎯</span>
+                                <span>{language === 'ko' ? '적중 예상' : 'Forecast'}</span>
+                              </a>
                             </div>
                           </div>
                         );

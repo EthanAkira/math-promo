@@ -1,3 +1,8 @@
+import { generateCalculus1Problem } from '../csat/calculus1ProblemGenerator.js';
+import { generateMath2ImportantProblem } from '../csat/math2ImportantProblemGenerator.js';
+import { generateProbStatsImportantProblem } from '../csat/probStatsImportantProblemGenerator.js';
+import { generateCalculus2ImportantProblem } from '../csat/calculus2ImportantProblemGenerator.js';
+
 /**
  * AMC 8 Algorithmic Similar Problem Generator Engine
  * 
@@ -5811,6 +5816,143 @@ export const GENERATORS = {
  */
 export function getGeneratorForUnit(unitId) {
   if (GENERATORS[unitId]) return GENERATORS[unitId];
+
+  // Math 2 Important units (짱중요한유형 수학Ⅱ 엔진 연동)
+  const math2UnitsMap = {
+    'venn-sets': 'set-operations',
+    'logical-reasoning': 'propositions-truth-sets',
+    'function-properties': 'composite-functions',
+    'function-transformations': 'inverse-functions',
+    'rational-functions': 'rational-functions',
+    'radical-equations': 'radical-functions',
+    'am-gm-inequality': 'inequalities-proof',
+    'exponential-logarithmic': 'exponents-logs',
+  };
+
+  if (math2UnitsMap[unitId]) {
+    const math2TargetUnit = math2UnitsMap[unitId];
+    return (lang = 'en') => {
+      const p = generateMath2ImportantProblem(math2TargetUnit);
+      const isKo = lang === 'ko';
+      let q = p.question;
+      let expl = p.explanation;
+      if (!isKo) {
+        expl = `**[Math 2 Important · ${p.chapterName || 'Algebra'}]**\n\n${expl}\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][p.correctAnswer]}**.`;
+      } else {
+        expl = `**[짱중요한유형 수학Ⅱ 핵심 해설 · ${p.chapterName || ''}]**\n\n${expl}\n\n정답은 **${['①', '②', '③', '④', '⑤'][p.correctAnswer]}** 입니다.`;
+      }
+      return {
+        question: q,
+        choices: p.choices,
+        correctIdx: p.correctAnswer,
+        explanation: expl,
+      };
+    };
+  }
+
+  // Probability & Statistics Important units (짱중요한유형 확률과 통계 엔진 연동)
+  const probStatsUnitsMap = {
+    'permutations-arrangements': 'permutations',
+    'permutations-combinations': 'combinations',
+    'paths-grids': 'grid-paths',
+    'binomial-theorem': 'binomial-theorem',
+    'probability': 'probability-addition',
+    'probability-distributions': 'discrete-random-var',
+    'statistics-averages': 'sample-mean-dist',
+  };
+
+  if (probStatsUnitsMap[unitId]) {
+    const probStatsTargetUnit = probStatsUnitsMap[unitId];
+    return (lang = 'en') => {
+      const p = generateProbStatsImportantProblem(probStatsTargetUnit);
+      const isKo = lang === 'ko';
+      let q = p.question;
+      let expl = p.explanation;
+      if (!isKo) {
+        expl = `**[Probability & Statistics Important · ${p.chapterName || 'Combinatorics'}]**\n\n${expl}\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][p.correctAnswer]}**.`;
+      } else {
+        expl = `**[짱중요한유형 확률과 통계 핵심 해설 · ${p.chapterName || ''}]**\n\n${expl}\n\n정답은 **${['①', '②', '③', '④', '⑤'][p.correctAnswer]}** 입니다.`;
+      }
+      return {
+        question: q,
+        choices: p.choices,
+        correctIdx: p.correctAnswer,
+        explanation: expl,
+      };
+    };
+  }
+
+  // Calculus 2 Important units (짱중요한유형 미적분Ⅱ 엔진 연동)
+  const calc2UnitsMap = {
+    'trigonometry': 'trig-definition',
+    'trig-identities': 'trig-addition-formulas',
+    'exponential-logarithmic': 'exponential-functions',
+    'logarithms-exponents': 'logarithmic-functions',
+    'derivatives': 'derivative-rules',
+    'integrals': 'substitution-by-parts',
+    'advanced-calculus': 'derivative-rules',
+    'trig-geometry': 'trig-limit-geometry',
+  };
+
+  if (calc2UnitsMap[unitId]) {
+    const calc2TargetUnit = calc2UnitsMap[unitId];
+    return (lang = 'en') => {
+      const p = generateCalculus2ImportantProblem(calc2TargetUnit);
+      const isKo = lang === 'ko';
+      let q = p.question;
+      let expl = p.explanation;
+      if (!isKo) {
+        expl = `**[Calculus 2 Important · ${p.chapterName || 'Calculus'}]**\n\n${expl}\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][p.correctAnswer]}**.`;
+      } else {
+        expl = `**[짱중요한유형 미적분Ⅱ 핵심 해설 · ${p.chapterName || ''}]**\n\n${expl}\n\n정답은 **${['①', '②', '③', '④', '⑤'][p.correctAnswer]}** 입니다.`;
+      }
+      return {
+        question: q,
+        choices: p.choices,
+        correctIdx: p.correctAnswer,
+        explanation: expl,
+      };
+    };
+  }
+
+  // Calculus & CSAT/AMC 12 units (짱쉬운 미적분 1 엔진 연동)
+  if (
+    unitId === 'sequence-limits' ||
+    unitId === 'limits-continuity' ||
+    unitId === 'differentiation' ||
+    unitId === 'integration' ||
+    unitId.includes('calculus') ||
+    unitId.includes('limit') ||
+    unitId.includes('derivative') ||
+    unitId.includes('integral')
+  ) {
+    return (lang = 'en') => {
+      const p = generateCalculus1Problem(unitId);
+      const isKo = lang === 'ko';
+      let q = p.question;
+      let expl = p.explanation;
+      if (!isKo) {
+        q = q.replace(/\\text\{의 값은\?\}/g, '=?')
+             .replace(/\\text\{의 극한값은\?\}/g, '=?')
+             .replace(/\\text\{에서 \}/g, ' at ')
+             .replace(/\\text\{의 미분계수는\?\}/g, ' - find the derivative value:')
+             .replace(/\\text\{의 극댓값과 극솟값의 합은\?\}/g, ' - find the sum of local extrema:')
+             .replace(/\\text\{의 극댓값은\?\}/g, ' - find the local maximum:')
+             .replace(/\\text\{에서 접하는 접선의 방정식이.*?\}/g, ' - find the tangent line equation')
+             .replace(/\\text\{의 연속성을 만족할 때.*?\}/g, ' - condition for continuity:')
+             .replace(/\\text\{둘러싸인 도형의 넓이는\?\}/g, ' - find the enclosed area:');
+        expl = `**[Calculus · ${p.chapterName || 'Limits & Derivatives'}]**\n\n${expl}\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][p.correctAnswer]}**.`;
+      } else {
+        expl = `**[미적분 1 핵심 유형 해설 · ${p.chapterName || ''}]**\n\n${expl}\n\n정답은 **${['①', '②', '③', '④', '⑤'][p.correctAnswer]}** 입니다.`;
+      }
+      return {
+        question: q,
+        choices: p.choices,
+        correctIdx: p.correctAnswer,
+        explanation: expl,
+      };
+    };
+  }
 
   // Specific mappings for AMC fine units
   if (unitId.includes('work')) return GENERATORS['work-rate'];
