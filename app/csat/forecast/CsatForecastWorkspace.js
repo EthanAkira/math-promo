@@ -33,6 +33,19 @@ export default function CsatForecastWorkspace() {
   const [isGraded, setIsGraded] = useState(false);
   const [generationCount, setGenerationCount] = useState(1);
 
+  // 실전 모의고사 (30문항: 공통 22 + 선택 8)
+  const [elective, setElective] = useState('calculus');
+  const [exam, setExam] = useState(null);
+  const [examAnswers, setExamAnswers] = useState({});
+  const [examSubmitted, setExamSubmitted] = useState(false);
+  function startExam(electiveId = elective) {
+    setExam(generateCsatForecastExamSet({ count: 30, electiveSubject: electiveId }));
+    setExamAnswers({});
+    setExamSubmitted(false);
+    if (typeof window !== 'undefined') window.scrollTo({ top: 300, behavior: 'smooth' });
+  }
+  const examScore = exam ? exam.reduce((sum, q, i) => sum + (examAnswers[i] === q.correctAnswer ? 1 : 0), 0) : 0;
+
   // Predictions and Taxonomy data
   const prediction = useMemo(() => getPredictedDistribution(2026), []);
   const frequencies = useMemo(() => getFrequenciesBySubject(selectedSubject), [selectedSubject]);
@@ -133,6 +146,24 @@ export default function CsatForecastWorkspace() {
           }}
         >
           🔮 이번 년도 출제 예측 & 예상문제 풀이
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('exam')}
+          style={{
+            padding: '11px 18px',
+            fontSize: 15,
+            fontWeight: 700,
+            border: 'none',
+            background: 'none',
+            cursor: 'pointer',
+            borderBottom: activeTab === 'exam' ? '3px solid var(--primary, #2563eb)' : '3px solid transparent',
+            color: activeTab === 'exam' ? 'var(--primary, #2563eb)' : 'var(--ink-soft, #6b7280)',
+            marginBottom: -2,
+            whiteSpace: 'nowrap',
+          }}
+        >
+          📝 실전 모의고사 (30문항)
         </button>
         <button
           type="button"
@@ -463,6 +494,58 @@ export default function CsatForecastWorkspace() {
       {/* ========================================================================= */}
       {/* TAB 2: 최근 5개년 출제 빈도 통계                                         */}
       {/* ========================================================================= */}
+      {activeTab === 'exam' && (
+        <div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center', marginBottom: 18 }}>
+            <strong>선택과목</strong>
+            {[['prob-stats', '확률과 통계'], ['calculus', '미적분'], ['geometry', '기하']].map(([id, label]) => (
+              <button key={id} type="button" onClick={() => setElective(id)} style={{ padding: '7px 14px', borderRadius: 999, border: '1px solid var(--paper-line, #e5e7eb)', cursor: 'pointer', fontWeight: 700, fontSize: 13, background: elective === id ? '#1f2733' : '#fff', color: elective === id ? '#fff' : '#475569' }}>{label}</button>
+            ))}
+            <button type="button" className="button" onClick={() => startExam(elective)}>{exam ? '🔄 새 모의고사 생성' : '▶ 모의고사 시작'}</button>
+          </div>
+          <p style={{ margin: '0 0 18px', fontSize: 14, color: 'var(--ink-soft, #6b7280)', lineHeight: 1.7 }}>
+            공통과목(수학Ⅰ·수학Ⅱ) 22문항과 선택과목 8문항으로 구성한 30문항 모의고사를 새로 생성합니다. 모든 문항에 답한 뒤 채점하면 점수와 해설을 볼 수 있습니다.
+          </p>
+          {!exam ? <div style={{ padding: 40, textAlign: 'center', border: '1px dashed var(--paper-line, #e5e7eb)', borderRadius: 12, color: '#64748b' }}>선택과목을 고르고 「모의고사 시작」을 눌러 주세요.</div> : (
+            <>
+              {examSubmitted ? (
+                <div style={{ padding: '14px 18px', marginBottom: 18, borderRadius: 12, background: '#eff6ff', border: '1px solid #bfdbfe', fontWeight: 800, fontSize: 17 }}>
+                  채점 결과: {examScore} / {exam.length} 문항 정답
+                </div>
+              ) : null}
+              {exam.map((q, qi) => (
+                <div key={qi} style={{ border: '1px solid var(--paper-line, #e5e7eb)', borderRadius: 12, padding: 18, marginBottom: 14, background: '#fff' }}>
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' }}>
+                    <strong style={{ fontSize: 17 }}>{qi + 1}.</strong>
+                    <span style={{ fontSize: 12, color: '#64748b' }}>{q.subject || ''}{q.majorUnit ? ` · ${q.majorUnit}` : ''}</span>
+                    {examSubmitted ? <strong style={{ fontSize: 13, color: examAnswers[qi] === q.correctAnswer ? '#059669' : '#dc2626' }}>{examAnswers[qi] === q.correctAnswer ? '✓ 정답' : `✕ 오답 (정답 ${['①', '②', '③', '④', '⑤'][q.correctAnswer]})`}</strong> : null}
+                  </div>
+                  <div style={{ lineHeight: 1.9, marginBottom: 12 }}><MathText value={q.question} /></div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 8 }}>
+                    {q.choices.map((c, ci) => {
+                      const picked = examAnswers[qi] === ci;
+                      const right = examSubmitted && q.correctAnswer === ci;
+                      return (
+                        <button key={ci} type="button" disabled={examSubmitted} onClick={() => setExamAnswers((a) => ({ ...a, [qi]: ci }))} style={{ textAlign: 'left', padding: '8px 12px', borderRadius: 8, cursor: examSubmitted ? 'default' : 'pointer', fontSize: 15, border: `2px solid ${right ? '#16a34a' : picked ? '#1f2733' : 'var(--paper-line, #e5e7eb)'}`, background: right ? '#f0fdf4' : picked ? '#eef2f7' : '#fff' }}>
+                          {['①', '②', '③', '④', '⑤'][ci]} <MathText value={c} />
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {examSubmitted ? <div style={{ marginTop: 12, padding: 12, background: '#f8fafc', borderRadius: 8, lineHeight: 1.9, whiteSpace: 'pre-wrap', fontSize: 14.5 }}><MathText value={q.explanation} /></div> : null}
+                </div>
+              ))}
+              {!examSubmitted ? (
+                <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 12 }}>
+                  <span style={{ fontSize: 13, color: '#64748b' }}>{Object.keys(examAnswers).length} / {exam.length} 문항 답안 선택</span>
+                  <button type="button" className="button" onClick={() => setExamSubmitted(true)}>채점하기</button>
+                </div>
+              ) : null}
+            </>
+          )}
+        </div>
+      )}
+
       {activeTab === 'frequency' && (
         <div>
           <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 12, padding: '18px 20px', marginBottom: 20 }}>

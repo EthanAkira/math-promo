@@ -630,7 +630,10 @@ export function generateCsatForecastExamSet(options = {}) {
   const subjectPool = ['math1', 'math2', 'math1', 'math2', elective];
 
   for (let i = 0; i < count; i++) {
-    const subject = subjectPool[i % subjectPool.length];
+    // 30문항 실전형: 공통 22문항(수학Ⅰ 11 + 수학Ⅱ 11) 다음에 선택과목 8문항
+    const subject = count === 30
+      ? (i < 22 ? (i % 2 === 0 ? 'math1' : 'math2') : elective)
+      : subjectPool[i % subjectPool.length];
     problems.push(
       generateCsatForecastProblem({
         subjectId: subject,
