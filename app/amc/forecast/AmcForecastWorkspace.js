@@ -188,7 +188,7 @@ export default function AmcForecastWorkspace() {
 
           {/* Question Text */}
           <div style={{ fontSize: 16, lineHeight: 1.7, color: 'var(--ink)', marginBottom: 22 }}>
-            <MathText text={currentProblem?.question || ''} />
+            <MathText value={currentProblem?.question || ''} />
           </div>
 
           {/* Choices */}
@@ -238,7 +238,7 @@ export default function AmcForecastWorkspace() {
                     {['①', '②', '③', '④', '⑤'][idx] || `(${chNum})`}
                   </span>
                   <div style={{ flex: 1 }}>
-                    <MathText text={ch} />
+                    <MathText value={ch} />
                   </div>
                   {isCorrect && <span style={{ color: '#16a34a', fontWeight: 700, fontSize: 13 }}>정답 ✓</span>}
                   {isWrong && <span style={{ color: '#dc2626', fontWeight: 700, fontSize: 13 }}>오답 ✗</span>}
@@ -286,7 +286,7 @@ export default function AmcForecastWorkspace() {
                 📘 {isKo ? '단계별 상세 풀이' : 'Step-by-Step Solution'}
               </div>
               <div style={{ fontSize: 14, lineHeight: 1.7, color: '#1e293b' }}>
-                <MathText text={currentProblem.explanation} />
+                <MathText value={currentProblem.explanation} />
               </div>
             </div>
           )}
@@ -377,7 +377,7 @@ export default function AmcForecastWorkspace() {
                       </div>
 
                       <div style={{ fontSize: 15, lineHeight: 1.6, marginBottom: 16 }}>
-                        <MathText text={q.question} />
+                        <MathText value={q.question} />
                       </div>
 
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
@@ -409,7 +409,7 @@ export default function AmcForecastWorkspace() {
                                 {['①', '②', '③', '④', '⑤'][cIdx]}
                               </span>
                               <div style={{ flex: 1, fontSize: 14 }}>
-                                <MathText text={c} />
+                                <MathText value={c} />
                               </div>
                             </button>
                           );
@@ -418,7 +418,7 @@ export default function AmcForecastWorkspace() {
 
                       {examSubmitted && q.explanation && (
                         <div style={{ marginTop: 14, padding: '12px 14px', background: '#f8fafc', borderRadius: 8, fontSize: 13, color: '#334155' }}>
-                          <strong>해설:</strong> <MathText text={q.explanation} />
+                          <strong>해설:</strong> <MathText value={q.explanation} />
                         </div>
                       )}
                     </div>
