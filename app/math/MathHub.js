@@ -23,12 +23,6 @@ const CURRICULUM = [
   { tab: 'other', ko: '기타 국가 교육과정', en: 'Other Countries', subKo: '일본 · 대만 · 베트남 · 캐나다 · 뉴질랜드', subEn: 'Japan · Taiwan · Vietnam · Canada · New Zealand' },
 ];
 
-const QUICK = [
-  { href: '/elementary/practice', ko: '🧮 초등 사고력 연산', en: '🧮 Elementary Mental Math' },
-  { href: '/middle-school/pre-algebra', ko: '📐 중등 Pre-Algebra', en: '📐 Pre-Algebra' },
-  { href: '/middle-school/basic-figures', ko: '🔷 기본도형', en: '🔷 Basic Figures' },
-];
-
 const cardStyle = { display: 'block', padding: 18, border: '1px solid var(--paper-line)', borderRadius: 10, textDecoration: 'none', color: 'var(--ink)' };
 
 export default function MathHub() {
@@ -47,15 +41,7 @@ export default function MathHub() {
       </a>)}
     </div>
 
-    <a href="/premium/calculus1" style={{ ...cardStyle, marginTop: 14, borderColor: '#6d28d9', background: '#faf5ff' }}>
-      <div className="font-display" style={{ fontSize: 17, fontWeight: 700 }}>📈 {ko ? '미적분 유형별 기출·응용 문제' : 'Calculus: Past-Exam & Applied Problems by Type'} <span style={{ fontSize: 12, background: '#6d28d9', color: '#fff', padding: '2px 9px', borderRadius: 999, marginLeft: 6 }}>{ko ? '유료' : 'Premium'}</span></div>
-      <div style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 4, lineHeight: 1.6 }}>{ko ? '고2 수학Ⅱ · 고3 미적분 17개 유형 — 기본·기출·예상문제, 해설, 유사문제 생성기' : 'Seventeen calculus unit types — basic, past-exam and forecast problems with solutions and a similar-problem generator.'}</div>
-    </a>
 
-    <a href="/premium/geometry" style={{ ...cardStyle, marginTop: 14, borderColor: '#6d28d9', background: '#faf5ff' }}>
-      <div className="font-display" style={{ fontSize: 17, fontWeight: 700 }}>📐 {ko ? '기하와 벡터 유형별 기출·응용 문제' : 'Geometry & Vectors: Past-Exam & Applied Problems by Type'} <span style={{ fontSize: 12, background: '#6d28d9', color: '#fff', padding: '2px 9px', borderRadius: 999, marginLeft: 6 }}>{ko ? '유료' : 'Premium'}</span></div>
-      <div style={{ fontSize: 13, color: 'var(--ink-soft)', marginTop: 4, lineHeight: 1.6 }}>{ko ? '이차곡선 · 평면벡터 · 공간도형과 공간좌표 17개 유형 — 기본·기출·예상문제, 해설, 유사문제 생성기' : 'Seventeen types: conics, plane vectors and solid geometry — with solutions and a similar-problem generator.'}</div>
-    </a>
 
     <h2 className="font-display" style={{ fontSize: 20, margin: '36px 0 6px' }}>{ko ? '일반 교과 (교육과정별)' : 'General Curriculum'}</h2>
     <p style={{ color: 'var(--ink-soft)', margin: '0 0 14px', fontSize: 14 }}>{ko ? '나라·학교 과정별로 단원과 문제를 찾아봅니다.' : 'Browse units and problems by country or school system.'}</p>
@@ -66,8 +52,5 @@ export default function MathHub() {
       </a>)}
     </div>
 
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 28 }}>
-      {QUICK.map((q) => <a key={q.href} href={q.href} className="button button-secondary">{ko ? q.ko : q.en}</a>)}
-    </div>
   </>;
 }
