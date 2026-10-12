@@ -220,6 +220,17 @@ function tokenizeMath(input) {
   return tokens;
 }
 
+// A digit followed by U+0307 (from \dot{d}) is a recurring-decimal digit: draw the dot as real markup
+// centred over the digit rather than trusting the font to place a combining mark.
+function renderRecurringDots(text) {
+  if (!text.includes('\u0307')) return text;
+  return text.split(/(.\u0307)/u).map((part, i) => (
+    part.length === 2 && part[1] === '\u0307'
+      ? <span className="recurring-dot" key={i}>{part[0]}</span>
+      : part
+  ));
+}
+
 /**
  * MathText renders mathematics cleanly for worksheets, question prompts, choices, and answer sheets:
  * 1. Fractions: rendered as stacked vertical fractions with horizontal bar (never a bare slash '/').
@@ -236,7 +247,7 @@ export default function MathText({ value }) {
     <>
       {tokens.map((tok, idx) => {
         if (typeof tok === 'string') {
-          return <span key={idx}>{tok}</span>;
+          return <span key={idx}>{renderRecurringDots(tok)}</span>;
         }
         if (tok.type === 'mixed_fraction') {
           return (

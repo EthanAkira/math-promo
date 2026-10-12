@@ -3504,3 +3504,6 @@ html[dir="rtl"] .generated-proportion-graph {
   }
 }
 
+
+.recurring-dot { position: relative; display: inline-block; }
+.recurring-dot::after { content: ''; position: absolute; left: 50%; top: -0.12em; width: 0.17em; height: 0.17em; border-radius: 50%; background: currentColor; transform: translateX(-50%); }
