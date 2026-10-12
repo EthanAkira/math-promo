@@ -431,7 +431,7 @@ function regularSolidGeometry(name) {
   let vertices;
   let faceOf;
   if (name === '정사면체') {
-    vertices = [[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]];
+    vertices = [[0.000000, 1.347219, 0.000000], [1.270171, -0.449073, 0.000000], [-0.635085, -0.449073, 1.100000], [-0.635085, -0.449073, -1.100000]];
   } else if (name === '정육면체') {
     vertices = [];
     [-1, 1].forEach((x) => [-1, 1].forEach((y) => [-1, 1].forEach((z) => vertices.push([x, y, z]))));
@@ -453,7 +453,7 @@ function regularSolidGeometry(name) {
   let minDistance = Infinity;
   vertices.forEach((p, i) => vertices.forEach((q, j) => { if (j > i) minDistance = Math.min(minDistance, dist(p, q)); }));
   const edges = [];
-  vertices.forEach((p, i) => vertices.forEach((q, j) => { if (j > i && Math.abs(dist(p, q) - minDistance) < 1e-6) edges.push([i, j]); }));
+  vertices.forEach((p, i) => vertices.forEach((q, j) => { if (j > i && Math.abs(dist(p, q) - minDistance) < 1e-4) edges.push([i, j]); }));
   const adjacent = (i, j) => edges.some(([a, b]) => (a === i && b === j) || (a === j && b === i));
   let faces = [];
   if (name === '정육면체') {
