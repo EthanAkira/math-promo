@@ -10,6 +10,7 @@ import { recordAttempts, syncAnswerEvents } from '../../lib/submissions';
 import ProblemScratchpad from '../../components/ProblemScratchpad';
 import { preAlgebraCategory, preAlgebraCopy, preAlgebraProfileLabel } from './localization';
 import { hasProblemVisual, MathText, ProblemVisual } from './PreAlgebraVisuals';
+import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
 
 const PROBLEM_COUNT = 20;
 
@@ -114,6 +115,7 @@ function equivalent(left, right) {
 function buildUrl(seed, profileId, unitId, view = 'problems') {
   const url = new URL(window.location.href);
   url.searchParams.set('sheet', seed);
+  url.searchParams.set('n', String(getProblemCount()));
   url.searchParams.set('profile', profileId);
   url.searchParams.set('unit', unitId);
   if (view === 'answers') url.searchParams.set('view', 'answers');
@@ -123,6 +125,7 @@ function buildUrl(seed, profileId, unitId, view = 'problems') {
 
 export default function PreAlgebraGenerator() {
   const { language } = useLanguage();
+  const [count, chooseCount] = useProblemCount();
   const { user } = useAuth();
   const foreign = isNonKorean(language);
   const copy = preAlgebraCopy(language);
@@ -162,7 +165,8 @@ export default function PreAlgebraGenerator() {
   const unit = findPreAlgebraUnit(unitId, profileId);
   const [category, setCategory] = useState('수와 연산');
   const visibleUnits = useMemo(() => units.filter((item) => item.category === category), [units, category]);
-  const problems = useMemo(() => makeProblems(seed, unit), [seed, unit]);
+  const allProblems = useMemo(() => makeProblems(seed, unit), [seed, unit]);
+  const problems = useMemo(() => allProblems.slice(0, count), [allProblems, count]);
   const correctCount = problems.filter((item) => equivalent(answers[item.id], item.answer)).length;
 
   useEffect(() => {
@@ -208,7 +212,7 @@ export default function PreAlgebraGenerator() {
   useEffect(() => {
     if (!ready) return;
     QRCode.toDataURL(buildUrl(seed, profileId, unitId), { width: 220, margin: 1, errorCorrectionLevel: 'M', color: { dark: '#1f2733', light: '#fffefb' } }).then(setQrDataUrl);
-  }, [seed, profileId, unitId, ready]);
+  }, [seed, profileId, unitId, ready, count]);
 
   const replaceUrl = useCallback((nextSeed, nextProfile, nextUnit, nextView) => window.history.replaceState({}, '', buildUrl(nextSeed, nextProfile, nextUnit, nextView)), []);
   function reset(nextSeed, nextProfile = profileId, nextUnit = unitId) {
@@ -295,6 +299,7 @@ export default function PreAlgebraGenerator() {
         <input id="core-count" type="number" min={5} max={100} value={coreCount} onChange={(event) => { const next = Number(event.target.value) || 20; setCoreCount(Math.min(100, Math.max(5, next))); setCoreChecked(false); }} />
       </div> : null}
       <div className="control-actions">
+        <ProblemCountSelect count={count} onChange={chooseCount} language={language} />
                 <button
           type="button"
           className={`button button-secondary tablet-toggle-btn${tabletMode ? ' active' : ''}`}
@@ -342,7 +347,7 @@ export default function PreAlgebraGenerator() {
 
     {mode === 'single' ? <div className={`worksheet-paper middle-worksheet ${view === 'answers' ? 'answer-sheet' : ''}`}>
       <header className="worksheet-heading"><div className="worksheet-brand"><span className="brand-mark">DAILY</span><strong>{tr(language, 'dailyLab')}</strong></div><div className="worksheet-title"><span>{profileLabel}</span><h2>{unitLabel} {tr(language, view === 'answers' ? 'answerSheet' : 'worksheetWord')}</h2><p>{unitDescription}</p></div><div className="worksheet-identity"><div><span>{tr(language, 'worksheetId')}</span><strong>{seed}</strong><small>{tr(language, 'scanQr')}</small></div>{qrDataUrl ? <img src={qrDataUrl} alt={`Worksheet ${seed} QR code`} /> : null}</div></header>
-      <div className="student-row"><span>{tr(language, 'name')}</span><i /><span>{tr(language, 'date')}</span><i /><span className="sheet-kind">{tr(language, view === 'answers' ? 'answers' : 'problems20')}</span></div>
+      <div className="student-row"><span>{tr(language, 'name')}</span><i /><span>{tr(language, 'date')}</span><i /><span className="sheet-kind">{(view === 'answers' ? tr(language, 'answers') : withCount(tr(language, 'problems20'), count))}</span></div>
       <section className="problem-grid word-problem-grid prime-problem-grid" aria-label={`${unitLabel} ${foreign ? 'problems' : '문제'}`}>
         {problems.map((item) => {
           const value = answers[item.id] || '';
@@ -401,7 +406,7 @@ export default function PreAlgebraGenerator() {
           ✍️ {tabletMode ? (foreign ? 'Hide All Scratchpads' : '연습장 전체 닫기') : (foreign ? 'Open All Scratchpads' : '연습장 전체 열기')}
         </button>
         <button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>
-      </div>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
+      </div>{checked ? <strong className="score">{withCount(tr(language, 'score', { count: correctCount }), count)}</strong> : null}</section> : null}
     {mode === 'core' && coreView === 'problems' && coreProblems.length > 0 ? <section className="grading-panel no-print"><div><strong>{tr(language, 'solveTablet')}</strong><p>{foreign ? 'Fractions: 3/4 · Coordinates: 2,-3 · Inequalities: x<=4' : '분수는 3/4, 좌표는 2,-3, 부등식은 x<=4처럼 입력할 수 있습니다.'}</p></div><div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
         <button
           type="button"

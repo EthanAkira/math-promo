@@ -12,6 +12,7 @@ import { isNonKorean, tr } from '../../i18n';
 import MathText from '../../components/MathText';
 import { recordAttempts, syncAnswerEvents } from '../../lib/submissions';
 import ProblemScratchpad from '../../components/ProblemScratchpad';
+import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
 
 const PROBLEM_COUNT = 20;
 
@@ -81,6 +82,7 @@ function normalizeAnswer(value) {
 function buildUrl(seed, unitId, tier = 'basic', view = 'problems') {
   const url = new URL(window.location.href);
   url.searchParams.set('sheet', seed);
+  url.searchParams.set('n', String(getProblemCount()));
   url.searchParams.set('unit', unitId);
   if (tier === 'advanced') url.searchParams.set('tier', 'advanced');
   else url.searchParams.delete('tier');
@@ -93,6 +95,7 @@ const PowerText = MathText;
 
 export default function PrimeFactorizationGenerator() {
   const { language } = useLanguage();
+  const [count, chooseCount] = useProblemCount();
   const { user, status: authStatus } = useAuth();
   const foreign = isNonKorean(language);
   const [unitId, setUnitId] = useState(PRIME_BASIC_UNITS[0].id);
@@ -137,13 +140,13 @@ export default function PrimeFactorizationGenerator() {
   const basicProblems = useMemo(() => makeBasicProblems(seed, unit), [seed, unit]);
   const appliedProblems = useMemo(() => makeAppliedProblems(seed, unit), [seed, unit]);
 
-  const problems = tier === 'advanced' ? appliedProblems : basicProblems;
+  const problems = (tier === 'advanced' ? appliedProblems : basicProblems).slice(0, count);
   const correctCount = problems.filter((item) => normalizeAnswer(answers[item.id]) === normalizeAnswer(item.answer)).length;
 
   useEffect(() => {
     if (!ready) return;
     QRCode.toDataURL(buildUrl(seed, unitId, tier), { width: 220, margin: 1, errorCorrectionLevel: 'M', color: { dark: '#1f2733', light: '#fffefb' } }).then(setQrDataUrl);
-  }, [seed, unitId, tier, ready]);
+  }, [seed, unitId, tier, ready, count]);
 
   const replaceUrl = useCallback((nextSeed, nextUnit, nextTier, nextView) => {
     window.history.replaceState({}, '', buildUrl(nextSeed, nextUnit, nextTier, nextView));
@@ -205,6 +208,7 @@ export default function PrimeFactorizationGenerator() {
         <p>{unitDescription}</p>
       </div>
       <div className="control-actions">
+        <ProblemCountSelect count={count} onChange={chooseCount} language={language} />
                 <button
           type="button"
           className={`button button-secondary tablet-toggle-btn${tabletMode ? ' active' : ''}`}
@@ -251,7 +255,7 @@ export default function PrimeFactorizationGenerator() {
       <div className="student-row">
         <span>{tr(language, 'name')}</span><i />
         <span>{tr(language, 'date')}</span><i />
-        <span className="sheet-kind">{tr(language, view === 'answers' ? 'answers' : 'problems20')}</span>
+        <span className="sheet-kind">{(view === 'answers' ? tr(language, 'answers') : withCount(tr(language, 'problems20'), count))}</span>
       </div>
       <section className="problem-grid word-problem-grid prime-problem-grid" aria-label={`${unitLabel} ${foreign ? 'problems' : '문제'}`}>
         {problems.map((item) => {
@@ -335,7 +339,7 @@ export default function PrimeFactorizationGenerator() {
         </button>
         <button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>
       </div>
-        {checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}
+        {checked ? <strong className="score">{withCount(tr(language, 'score', { count: correctCount }), count)}</strong> : null}
       </section>
     ) : null}
   </div>;

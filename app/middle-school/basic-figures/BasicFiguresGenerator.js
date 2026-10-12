@@ -11,6 +11,7 @@ import { useAuth } from '../../auth';
 import { isNonKorean, tr } from '../../i18n';
 import { recordAttempts, syncAnswerEvents } from '../../lib/submissions';
 import ProblemScratchpad from '../../components/ProblemScratchpad';
+import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
 
 const PROBLEM_COUNT = 20;
 
@@ -155,6 +156,7 @@ function normalizeAnswer(value) {
 function buildUrl(seed, unitId, profileId, view = 'problems') {
   const url = new URL(window.location.href);
   url.searchParams.set('sheet', seed);
+  url.searchParams.set('n', String(getProblemCount()));
   url.searchParams.set('unit', unitId);
   url.searchParams.set('profile', profileId);
   if (view === 'answers') url.searchParams.set('view', 'answers');
@@ -164,6 +166,7 @@ function buildUrl(seed, unitId, profileId, view = 'problems') {
 
 export default function BasicFiguresGenerator() {
   const { language } = useLanguage();
+  const [count, chooseCount] = useProblemCount();
   const { user, status: authStatus } = useAuth();
   const foreign = isNonKorean(language);
   const [unitId, setUnitId] = useState('visual-foundations');
@@ -284,13 +287,13 @@ export default function BasicFiguresGenerator() {
   }, [tier, advancedEntitled, hasAdvancedContent, unitId, profileId, seed]);
 
   const showingAdvanced = tier === 'advanced' && advancedState === 'ready' && advancedProblems;
-  const problems = showingAdvanced ? advancedProblems : basicProblems;
+  const problems = (showingAdvanced ? advancedProblems : basicProblems).slice(0, count);
   const correctCount = problems.filter((item) => normalizeAnswer(answers[item.id]) === normalizeAnswer(item.answer)).length;
 
   useEffect(() => {
     if (!ready) return;
     QRCode.toDataURL(buildUrl(seed, unitId, profileId), { width: 220, margin: 1, errorCorrectionLevel: 'M', color: { dark: '#1f2733', light: '#fffefb' } }).then(setQrDataUrl);
-  }, [seed, unitId, profileId, ready]);
+  }, [seed, unitId, profileId, ready, count]);
 
   function chooseTier(nextTier) {
     if (nextTier === tier) return;
@@ -384,6 +387,7 @@ export default function BasicFiguresGenerator() {
         <input id="core-count" type="number" min={5} max={100} value={coreCount} onChange={(event) => { const next = Number(event.target.value) || 20; setCoreCount(Math.min(100, Math.max(5, next))); setCoreChecked(false); }} />
       </div> : null}
       <div className="control-actions">
+        <ProblemCountSelect count={count} onChange={chooseCount} language={language} />
                 <button
           type="button"
           className={`button button-secondary tablet-toggle-btn${tabletMode ? ' active' : ''}`}
@@ -440,7 +444,7 @@ export default function BasicFiguresGenerator() {
       </div>
     ) : <div className={`worksheet-paper middle-worksheet ${view === 'answers' ? 'answer-sheet' : ''}`}>
       <header className="worksheet-heading"><div className="worksheet-brand"><span className="brand-mark">DAILY</span><strong>{tr(language, 'dailyLab')}</strong></div><div className="worksheet-title"><span>{profile.shortLabel}</span><h2>{unitLabel} {tr(language, view === 'answers' ? 'answerSheet' : 'worksheetWord')}</h2><p>{unitDescription}</p></div><div className="worksheet-identity"><div><span>{tr(language, 'worksheetId')}</span><strong>{seed}</strong><small>{tr(language, 'scanQr')}</small></div>{qrDataUrl ? <img src={qrDataUrl} alt={`Worksheet ${seed} QR code`} /> : null}</div></header>
-      <div className="student-row"><span>{tr(language, 'name')}</span><i /><span>{tr(language, 'date')}</span><i /><span className="sheet-kind">{tr(language, view === 'answers' ? 'answers' : 'problems20')}</span></div>
+      <div className="student-row"><span>{tr(language, 'name')}</span><i /><span>{tr(language, 'date')}</span><i /><span className="sheet-kind">{(view === 'answers' ? tr(language, 'answers') : withCount(tr(language, 'problems20'), count))}</span></div>
       <section className="problem-grid word-problem-grid prime-problem-grid" aria-label={`${unitLabel} ${foreign ? 'problems' : '문제'}`}>
         {problems.map((item) => {
           const value = answers[item.id] || '';
@@ -467,7 +471,7 @@ export default function BasicFiguresGenerator() {
           ✍️ {tabletMode ? (foreign ? 'Hide All Scratchpads' : '연습장 전체 닫기') : (foreign ? 'Open All Scratchpads' : '연습장 전체 열기')}
         </button>
         <button className="button button-primary" onClick={checkAnswers}>{tr(language, 'checkAnswers')}</button>
-      </div>{checked ? <strong className="score">{tr(language, 'score', { count: correctCount })}</strong> : null}</section> : null}
+      </div>{checked ? <strong className="score">{withCount(tr(language, 'score', { count: correctCount }), count)}</strong> : null}</section> : null}
 
     {mode === 'core' ? (coreProblems.length === 0 ? <p className="core-empty-notice no-print">{language === 'ko'
       ? '선택한 단원과 난이도 상한에 해당하는 문제를 만들 수 없습니다. 단원을 하나 이상 선택하세요.'
