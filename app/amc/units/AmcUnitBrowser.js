@@ -609,6 +609,7 @@ export default function AmcUnitBrowser() {
   }, [selectedUnitId]);
 
   if (activeSubjectAndUnit) {
+    const { subject, unit } = activeSubjectAndUnit;
     const filteredList = problemsByFineUnit.get(unit.id) || [];
     const unitProblems = filteredList.length > 0 ? filteredList : problems.filter((p) => p.unitId === unit.id);
     return (
