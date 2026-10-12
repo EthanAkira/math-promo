@@ -56,7 +56,7 @@ function makeBasicProblems(seed, unit) {
     let key;
     do { item = unit.make(random); key = dedupeKey(item); attempt += 1; } while (used.has(key) && attempt < 80);
     used.add(key);
-    return { id: index + 1, ...item };
+    return { id: index + 1, ...asChoiceKind(item) };
   });
 }
 

@@ -49,7 +49,7 @@ function makeBasicProblems(seed, unit) {
     let attempt = 0;
     do { item = unit.make(random); attempt += 1; } while (used.has(`${item.prompt}|${item.expression}`) && attempt < 100);
     used.add(`${item.prompt}|${item.expression}`);
-    return { id: index + 1, ...item };
+    return { id: index + 1, ...asChoiceKind(item) };
   });
 }
 
