@@ -67,6 +67,21 @@ export function latexToPlain(input) {
       if (g) { i = g.end; out += `${latexToPlain(g.value)}⃗`; }
       continue;
     }
+    if (name === 'dot') {
+      // Recurring-decimal dot: put a combining dot above the digit (first and last digit when several).
+      const g = readBraced(text, i);
+      if (g) {
+        i = g.end;
+        const chars = Array.from(latexToPlain(g.value));
+        const mark = (c) => `${c}̇`;
+        if (chars.length) {
+          chars[0] = mark(chars[0]);
+          if (chars.length > 1) chars[chars.length - 1] = mark(chars[chars.length - 1]);
+        }
+        out += chars.join('');
+      }
+      continue;
+    }
     if (name === 'overline') {
       const g = readBraced(text, i);
       if (g) { i = g.end; out += latexToPlain(g.value); }

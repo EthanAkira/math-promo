@@ -10494,7 +10494,8 @@ export function rpmRatDecPeriodAndNotation(random) {
       { value: '1', label: target.notation, labelEn: target.notation },
       { value: '2', label: target.wrongNote, labelEn: target.wrongNote },
       { value: '3', label: `${target.raw.slice(0, 4)}…`, labelEn: `${target.raw.slice(0, 4)}…` },
-      { value: '4', label: `\\dot{${target.period}}`, labelEn: `\\dot{${target.period}}` },
+      // One-dot-short notation (only the first dot) — a believable but wrong way to write it.
+      { value: '4', label: target.notation.replace(/\\dot\{(\d)\}(?!.*\\dot)/, '$1'), labelEn: target.notation.replace(/\\dot\{(\d)\}(?!.*\\dot)/, '$1') },
     ];
     return {
       prompt: `순환소수 ${target.raw}를 점을 찍어 바르게 나타낸 것을 고르시오.`,
