@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import AdvancedGeometryDiagram from './AdvancedGeometryDiagram';
 
 function Arc({ cx, cy, radius, start, end, className = 'angle-arc' }) {
@@ -1177,7 +1178,7 @@ function CircleTwoCirclesTangentDiagram({ data }) {
   </svg>;
 }
 
-export default function GeometryDiagram({ diagram }) {
+function GeometryDiagramInner({ diagram }) {
   if (diagram.kind === 'circle-chord') return <CircleChordDiagram data={diagram} />;
   if (diagram.kind === 'circle-sagitta') return <CircleSagittaDiagram data={diagram} />;
   if (diagram.kind === 'circle-folded') return <CircleFoldedDiagram data={diagram} />;
@@ -1249,4 +1250,29 @@ export default function GeometryDiagram({ diagram }) {
   if (diagram.kind === 'triangle-centroid') return <TriangleCentroidDiagram data={diagram} />;
   if (diagram.kind === 'right-triangle-semicircles') return <RightTriangleSemicirclesDiagram data={diagram} />;
   return <AdvancedGeometryDiagram diagram={diagram} />;
+}
+
+// The diagrams are drawn in fixed viewBoxes with `overflow: visible`, so a tall or wide figure (e.g. a steep
+// triangle) used to poke out of the box and print over the question text. After render the viewBox is grown
+// to the real drawing bounds, so the whole figure takes its own space in the layout instead.
+const FIT_PADDING = 6;
+function fitViewBox(svg) {
+  if (!svg || typeof svg.getBBox !== 'function' || !svg.viewBox?.baseVal) return;
+  let box;
+  try { box = svg.getBBox(); } catch { return; }
+  if (!box || !(box.width > 0) || !(box.height > 0)) return;
+  const view = svg.viewBox.baseVal;
+  const minX = Math.min(view.x, box.x - FIT_PADDING);
+  const minY = Math.min(view.y, box.y - FIT_PADDING);
+  const maxX = Math.max(view.x + view.width, box.x + box.width + FIT_PADDING);
+  const maxY = Math.max(view.y + view.height, box.y + box.height + FIT_PADDING);
+  const changed = Math.abs(minX - view.x) > 0.5 || Math.abs(minY - view.y) > 0.5
+    || Math.abs(maxX - (view.x + view.width)) > 0.5 || Math.abs(maxY - (view.y + view.height)) > 0.5;
+  if (changed) svg.setAttribute('viewBox', `${minX} ${minY} ${maxX - minX} ${maxY - minY}`);
+}
+
+export default function GeometryDiagram({ diagram }) {
+  const ref = useRef(null);
+  useEffect(() => { fitViewBox(ref.current?.querySelector('svg.generated-geometry')); });
+  return <div ref={ref} style={{ display: 'contents' }}><GeometryDiagramInner diagram={diagram} /></div>;
 }
