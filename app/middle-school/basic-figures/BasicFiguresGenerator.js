@@ -13,6 +13,8 @@ import { recordAttempts, syncAnswerEvents } from '../../lib/submissions';
 import ProblemScratchpad from '../../components/ProblemScratchpad';
 import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
 import PracticeLinks from '../practiceLinks';
+import LevelTabs from '../LevelTabs';
+import { unitLevel } from '../levels';
 
 const PROBLEM_COUNT = 20;
 
@@ -206,7 +208,13 @@ export default function BasicFiguresGenerator() {
 
   const unit = findBasicFigureUnit(unitId);
   const profile = findGeometryProfile(profileId);
-  const availableUnits = useMemo(() => BASIC_FIGURE_UNITS.filter((item) => !item.profiles || item.profiles.includes(profileId)), [profileId]);
+  const profileUnits = useMemo(() => BASIC_FIGURE_UNITS.filter((item) => !item.profiles || item.profiles.includes(profileId)), [profileId]);
+  // The Korean middle-school profile uses the same compact layout as the other middle-school pages: one
+  // 문제 유형 list per 기본 / 응용 / 고난도 tab, with no profile or mode pickers.
+  const isKrMiddle = profileId === 'kr';
+  const level = unitLevel(unit);
+  const levelAvailable = useMemo(() => ({ basic: profileUnits.some((item) => unitLevel(item) === 'basic'), applied: profileUnits.some((item) => unitLevel(item) === 'applied'), expert: profileUnits.some((item) => unitLevel(item) === 'expert') }), [profileUnits]);
+  const availableUnits = useMemo(() => (isKrMiddle ? profileUnits.filter((item) => unitLevel(item) === level) : profileUnits), [profileUnits, isKrMiddle, level]);
   const basicProblems = useMemo(() => makeProblems(seed, unit, profile), [seed, unit, profile]);
   const hasAdvancedContent = ADVANCED_UNIT_IDS.has(unitId);
   const coreCategories = useMemo(() => [...new Set(availableUnits.map((item) => item.category).filter(Boolean))], [availableUnits]);
@@ -318,6 +326,11 @@ export default function BasicFiguresGenerator() {
   }
 
   function chooseUnit(nextUnit) { reset(createSeed(), nextUnit); }
+  function chooseLevel(nextLevel) {
+    if (nextLevel === level) return;
+    const target = profileUnits.find((item) => unitLevel(item) === nextLevel && item.category === unit.category) || profileUnits.find((item) => unitLevel(item) === nextLevel);
+    if (target) reset(createSeed(), target.id);
+  }
   function chooseProfile(nextProfile) {
     const nextUnit = BASIC_FIGURE_UNITS.find((item) => item.id === unitId && (!item.profiles || item.profiles.includes(nextProfile)))?.id || 'visual-foundations';
     reset(createSeed(), nextUnit, nextProfile);
@@ -349,7 +362,7 @@ export default function BasicFiguresGenerator() {
 
   return <div className="worksheet-app">
     <section className="worksheet-controls no-print" aria-label={tr(language, 'worksheetSettings')}>
-      <div className="control-group control-group-profile">
+      {!isKrMiddle ? <div className="control-group control-group-profile">
         <label htmlFor="geometry-profile">{language === 'ko' ? '교육과정 · 시험' : 'Curriculum · exam'}</label>
         <select id="geometry-profile" value={profileId} onChange={(event) => chooseProfile(event.target.value)}>
           <optgroup label={language === 'ko' ? '🇰🇷 한국 교육과정 (중등 · 고등)' : '🇰🇷 Korea Curricula (Middle & High)'}>
@@ -359,20 +372,20 @@ export default function BasicFiguresGenerator() {
             {internationalProfiles.map((item) => <option key={item.id} value={item.id}>{language === 'ko' ? item.label : (item.labelEn || item.label)}</option>)}
           </optgroup>
         </select>
-      </div>
+      </div> : null}
       {mode === 'single' ? <div className="control-group control-group-skill">
         <label htmlFor="basic-figures-unit">{tr(language, 'skill')}</label>
         <select id="basic-figures-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>
           {availableUnits.map((item) => <option key={item.id} value={item.id}>{localizeBasicFigureUnit(item, contentLocale)}</option>)}
         </select>
       </div> : null}
-      <div className="control-group control-group-mode">
+      {!isKrMiddle ? <div className="control-group control-group-mode">
         <label>{language === 'ko' ? '생성 방식' : 'Mode'}</label>
         <div className="mode-toggle">
           <button type="button" className={mode === 'single' ? 'active' : ''} onClick={() => setMode('single')}>{language === 'ko' ? '단원별 연습' : 'By Unit'}</button>
           <button type="button" className={mode === 'core' ? 'active' : ''} onClick={() => setMode('core')}>{language === 'ko' ? '종합 테스트 만들기' : 'Core Practice Test'}</button>
         </div>
-      </div>
+      </div> : null}
       {mode === 'core' ? <div className="control-group control-group-core-tier">
         <label>{language === 'ko' ? '난이도 상한' : 'Difficulty Ceiling'}</label>
         <div className="difficulty-toggle">
@@ -434,8 +447,9 @@ export default function BasicFiguresGenerator() {
       })}
     </section> : null}
 
+    {mode === 'single' && isKrMiddle ? <LevelTabs level={level} onChange={chooseLevel} language={language} available={levelAvailable} /> : null}
     {mode === 'single' ? <PracticeLinks path="/middle-school/basic-figures" unitId={unitId} language={language} /> : null}
-    {mode === 'single' ? <div className="tier-toggle no-print" role="tablist" aria-label={tr(language, 'tierAdvanced')}>
+    {mode === 'single' && (!isKrMiddle || hasAdvancedContent) ? <div className="tier-toggle no-print" role="tablist" aria-label={tr(language, 'tierAdvanced')}>
       <button type="button" role="tab" aria-selected={tier === 'basic'} className={`tier-tab${tier === 'basic' ? ' active' : ''}`} onClick={() => chooseTier('basic')}>{tr(language, 'tierBasic')}</button>
       <button type="button" role="tab" aria-selected={tier === 'advanced'} className={`tier-tab${tier === 'advanced' ? ' active' : ''}`} onClick={() => chooseTier('advanced')}>{tr(language, 'tierAdvanced')}</button>
     </div> : null}

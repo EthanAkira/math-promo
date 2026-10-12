@@ -13,6 +13,7 @@ import { hasProblemVisual, MathText, ProblemVisual } from './PreAlgebraVisuals';
 import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
 import { unitLevel, levelTabLabels } from '../levels';
 import PracticeLinks from '../practiceLinks';
+import LevelTabs from '../LevelTabs';
 
 const PROBLEM_COUNT = 20;
 
@@ -165,10 +166,14 @@ export default function PreAlgebraGenerator() {
   const units = useMemo(() => unitsForProfile(profileId), [profileId]);
   const categories = useMemo(() => [...new Set(units.map((item) => item.category))], [units]);
   const level = unitLevel(findPreAlgebraUnit(unitId, profileId));
+  // Korean middle-school profiles use the same compact layout as the other middle-school pages:
+  // one 문제 유형 list per level tab, with no profile / mode / domain pickers.
+  const isKrMiddle = /^kr-middle-/.test(profileId);
+  const levelAvailable = useMemo(() => ({ basic: units.some((item) => unitLevel(item) === 'basic'), applied: units.some((item) => unitLevel(item) === 'applied'), expert: units.some((item) => unitLevel(item) === 'expert') }), [units]);
   const singleCategories = useMemo(() => [...new Set(units.filter((item) => unitLevel(item) === level).map((item) => item.category))], [units, level]);
   const unit = findPreAlgebraUnit(unitId, profileId);
   const [category, setCategory] = useState('수와 연산');
-  const visibleUnits = useMemo(() => units.filter((item) => item.category === category && unitLevel(item) === level), [units, category, level]);
+  const visibleUnits = useMemo(() => units.filter((item) => unitLevel(item) === level && (isKrMiddle || item.category === category)), [units, category, level, isKrMiddle]);
   const allProblems = useMemo(() => makeProblems(seed, unit), [seed, unit]);
   const problems = useMemo(() => allProblems.slice(0, count), [allProblems, count]);
   const correctCount = problems.filter((item) => equivalent(answers[item.id], item.answer)).length;
@@ -267,35 +272,27 @@ export default function PreAlgebraGenerator() {
           the same choice. This is now a plain label; switching subjects goes through /curriculum
           (the one place that job belongs), while Domain/Skill below still switch freely within
           the current subject. */}
-      <div className="control-group control-group-profile">
+      {!isKrMiddle ? <div className="control-group control-group-profile">
         <label>{copy.controls[0]}</label>
         <div className="current-profile-badge">
           <strong>{profileLabel}</strong>
           <a href="/#curriculum-title">{language === 'ko' ? '다른 과정 보기 ↗' : 'Other curricula ↗'}</a>
         </div>
-      </div>
-      <div className="control-group control-group-mode">
+      </div> : null}
+      {!isKrMiddle ? <div className="control-group control-group-mode">
         <label>{language === 'ko' ? '생성 방식' : 'Mode'}</label>
         <div className="mode-toggle">
           <button type="button" className={mode === 'single' ? 'active' : ''} onClick={() => setMode('single')}>{language === 'ko' ? '단원별 연습' : 'By Unit'}</button>
           <button type="button" className={mode === 'core' ? 'active' : ''} onClick={() => setMode('core')}>{language === 'ko' ? '종합 테스트 만들기' : 'Core Practice Test'}</button>
         </div>
-      </div>
+      </div> : null}
       {mode === 'single' ? <>
-      <div className="control-group control-group-level">
-        <label>{language === 'ko' ? '문제 단계' : 'Level'}</label>
-        <div className="mode-toggle" role="tablist">
-          {['basic', 'applied', 'expert'].map((lv) => (
-            <button type="button" role="tab" key={lv} aria-selected={level === lv} className={level === lv ? 'active' : ''} disabled={!units.some((item) => unitLevel(item) === lv)} onClick={() => chooseLevel(lv)}>{levelTabLabels(language)[lv]}</button>
-          ))}
-        </div>
-      </div>
-      <div className="control-group control-group-domain">
+      {!isKrMiddle ? <div className="control-group control-group-domain">
         <label htmlFor="pre-algebra-category">{copy.controls[1]}</label>
         <select id="pre-algebra-category" value={category} onChange={(event) => chooseCategory(event.target.value)}>
           {singleCategories.map((item) => <option key={item} value={item}>{preAlgebraCategory(item, language)}</option>)}
         </select>
-      </div>
+      </div> : null}
       <div className="control-group control-group-skill">
         <label htmlFor="pre-algebra-unit">{tr(language, 'skill')}</label>
         <select id="pre-algebra-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>
@@ -364,6 +361,7 @@ export default function PreAlgebraGenerator() {
       })}
     </section> : null}
 
+    {mode === 'single' ? <LevelTabs level={level} onChange={chooseLevel} language={language} available={levelAvailable} /> : null}
     {mode === 'single' && level === 'applied' ? <PracticeLinks path="/middle-school/pre-algebra" unitId={unitId} language={language} /> : null}
     {mode === 'single' ? <div className={`worksheet-paper middle-worksheet ${view === 'answers' ? 'answer-sheet' : ''}`}>
       <header className="worksheet-heading"><div className="worksheet-brand"><span className="brand-mark">DAILY</span><strong>{tr(language, 'dailyLab')}</strong></div><div className="worksheet-title"><span>{profileLabel}</span><h2>{unitLabel} {tr(language, view === 'answers' ? 'answerSheet' : 'worksheetWord')}</h2><p>{unitDescription}</p></div><div className="worksheet-identity"><div><span>{tr(language, 'worksheetId')}</span><strong>{seed}</strong><small>{tr(language, 'scanQr')}</small></div>{qrDataUrl ? <img src={qrDataUrl} alt={`Worksheet ${seed} QR code`} /> : null}</div></header>
