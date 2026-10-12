@@ -13,6 +13,7 @@ import MathText from '../../components/MathText';
 import { recordAttempts, syncAnswerEvents } from '../../lib/submissions';
 import ProblemScratchpad from '../../components/ProblemScratchpad';
 import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
+import { appliedLevel, unitsForLevel, expertTabLabel } from '../levels';
 
 const PROBLEM_COUNT = 20;
 
@@ -168,7 +169,8 @@ export default function IntegerRationalGenerator() {
     setReady(true);
   }, []);
 
-  const currentUnits = tier === 'advanced' ? RPM_INTEGER_RATIONAL_APPLIED_UNITS : INTEGER_RATIONAL_BASIC_UNITS;
+  const level = tier === 'advanced' ? appliedLevel(findIntegerRationalUnit(unitId)) : null;
+  const currentUnits = tier === 'advanced' ? unitsForLevel(RPM_INTEGER_RATIONAL_APPLIED_UNITS, level) : INTEGER_RATIONAL_BASIC_UNITS;
   const unit = findIntegerRationalUnit(unitId);
   const basicProblems = useMemo(() => makeBasicProblems(seed, unit), [seed, unit]);
   const appliedProblems = useMemo(() => makeAppliedProblems(seed, unit), [seed, unit]);
@@ -194,14 +196,16 @@ export default function IntegerRationalGenerator() {
   function changeView(nextView) { setView(nextView); setChecked(false); replaceUrl(seed, unitId, tier, nextView); }
   function changeAnswer(id, value) { setAnswers((current) => ({ ...current, [id]: value })); setChecked(false); }
 
-  function chooseTier(nextTier) {
-    if (nextTier === tier) return;
+  function chooseTier(nextTab) {
+    const nextTier = nextTab === 'basic' ? 'basic' : 'advanced';
+    const nextLevel = nextTab === 'expert' ? 'expert' : 'applied';
+    if (nextTab === (tier === 'basic' ? 'basic' : level)) return;
     if (nextTier === 'advanced') {
       if (authStatus !== 'ready' || advancedSubStatus === 'loading') return;
       if (!user) { window.alert(tr(language, 'advancedAlertNeedLogin')); return; }
       if (advancedSubStatus !== 'active') { window.alert(tr(language, 'advancedAlertNeedSub')); return; }
     }
-    const targetUnits = nextTier === 'advanced' ? RPM_INTEGER_RATIONAL_APPLIED_UNITS : INTEGER_RATIONAL_BASIC_UNITS;
+    const targetUnits = nextTier === 'advanced' ? unitsForLevel(RPM_INTEGER_RATIONAL_APPLIED_UNITS, nextLevel) : INTEGER_RATIONAL_BASIC_UNITS;
     const nextUnitId = targetUnits.some((u) => u.id === unitId) ? unitId : targetUnits[0].id;
     setTier(nextTier); setUnitId(nextUnitId); setAnswers({}); setChecked(false);
     replaceUrl(seed, nextUnitId, nextTier, view);
@@ -256,8 +260,11 @@ export default function IntegerRationalGenerator() {
       <button type="button" role="tab" aria-selected={tier === 'basic'} className={`tier-tab${tier === 'basic' ? ' active' : ''}`} onClick={() => chooseTier('basic')}>
         {tr(language, 'tierBasic')}
       </button>
-      <button type="button" role="tab" aria-selected={tier === 'advanced'} className={`tier-tab${tier === 'advanced' ? ' active' : ''}`} onClick={() => chooseTier('advanced')}>
+      <button type="button" role="tab" aria-selected={level === 'applied'} className={`tier-tab${level === 'applied' ? ' active' : ''}`} onClick={() => chooseTier('applied')}>
         {tr(language, 'tierAdvanced')}
+      </button>
+      <button type="button" role="tab" aria-selected={level === 'expert'} className={`tier-tab${level === 'expert' ? ' active' : ''}`} onClick={() => chooseTier('expert')}>
+        {expertTabLabel(language)}
       </button>
     </div>
 
@@ -268,7 +275,7 @@ export default function IntegerRationalGenerator() {
           <strong>{tr(language, 'dailyLab')}</strong>
         </div>
         <div className="worksheet-title">
-          <span>{tr(language, 'grade1Middle')} · {tier === 'advanced' ? (language === 'ko' ? '응용문제' : 'Applied') : (language === 'ko' ? '기본문제' : 'Basic')}</span>
+          <span>{tr(language, 'grade1Middle')} · {tier === 'advanced' ? (level === 'expert' ? (language === 'ko' ? '고난도 문제' : 'Challenge') : (language === 'ko' ? '응용문제' : 'Applied')) : (language === 'ko' ? '기본문제' : 'Basic')}</span>
           <h2>{unitLabel} {tr(language, view === 'answers' ? 'answerSheet' : 'worksheetWord')}</h2>
           <p>{unitDescription}</p>
         </div>

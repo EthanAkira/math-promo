@@ -14,6 +14,7 @@ import { recordAttempts, syncAnswerEvents } from '../../lib/submissions';
 import ProblemScratchpad from '../../components/ProblemScratchpad';
 import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
 import { localizeGcdTerms } from '../../utils/gcdTerms';
+import { appliedLevel, unitsForLevel, expertTabLabel } from '../levels';
 
 const PROBLEM_COUNT = 20;
 
@@ -136,7 +137,8 @@ export default function PrimeFactorizationGenerator() {
     setReady(true);
   }, []);
 
-  const currentUnits = tier === 'advanced' ? RPM_PRIME_APPLIED_UNITS : PRIME_BASIC_UNITS;
+  const level = tier === 'advanced' ? appliedLevel(findPrimeUnit(unitId)) : null;
+  const currentUnits = tier === 'advanced' ? unitsForLevel(RPM_PRIME_APPLIED_UNITS, level) : PRIME_BASIC_UNITS;
   const unit = findPrimeUnit(unitId);
   const basicProblems = useMemo(() => makeBasicProblems(seed, unit), [seed, unit]);
   const appliedProblems = useMemo(() => makeAppliedProblems(seed, unit), [seed, unit]);
@@ -162,14 +164,16 @@ export default function PrimeFactorizationGenerator() {
   function changeView(nextView) { setView(nextView); setChecked(false); replaceUrl(seed, unitId, tier, nextView); }
   function changeAnswer(id, value) { setAnswers((current) => ({ ...current, [id]: value })); setChecked(false); }
 
-  function chooseTier(nextTier) {
-    if (nextTier === tier) return;
+  function chooseTier(nextTab) {
+    const nextTier = nextTab === 'basic' ? 'basic' : 'advanced';
+    const nextLevel = nextTab === 'expert' ? 'expert' : 'applied';
+    if (nextTab === (tier === 'basic' ? 'basic' : level)) return;
     if (nextTier === 'advanced') {
       if (authStatus !== 'ready' || advancedSubStatus === 'loading') return;
       if (!user) { window.alert(tr(language, 'advancedAlertNeedLogin')); return; }
       if (advancedSubStatus !== 'active') { window.alert(tr(language, 'advancedAlertNeedSub')); return; }
     }
-    const nextUnits = nextTier === 'advanced' ? RPM_PRIME_APPLIED_UNITS : PRIME_BASIC_UNITS;
+    const nextUnits = nextTier === 'advanced' ? unitsForLevel(RPM_PRIME_APPLIED_UNITS, nextLevel) : PRIME_BASIC_UNITS;
     const isCurrentValid = nextUnits.some((u) => u.id === unitId);
     const nextUnitId = isCurrentValid ? unitId : nextUnits[0].id;
     setTier(nextTier);
@@ -228,8 +232,11 @@ export default function PrimeFactorizationGenerator() {
       <button type="button" role="tab" aria-selected={tier === 'basic'} className={`tier-tab${tier === 'basic' ? ' active' : ''}`} onClick={() => chooseTier('basic')}>
         {tr(language, 'tierBasic')}
       </button>
-      <button type="button" role="tab" aria-selected={tier === 'advanced'} className={`tier-tab${tier === 'advanced' ? ' active' : ''}`} onClick={() => chooseTier('advanced')}>
+      <button type="button" role="tab" aria-selected={level === 'applied'} className={`tier-tab${level === 'applied' ? ' active' : ''}`} onClick={() => chooseTier('applied')}>
         {tr(language, 'tierAdvanced')}
+      </button>
+      <button type="button" role="tab" aria-selected={level === 'expert'} className={`tier-tab${level === 'expert' ? ' active' : ''}`} onClick={() => chooseTier('expert')}>
+        {expertTabLabel(language)}
       </button>
     </div>
 
@@ -240,7 +247,7 @@ export default function PrimeFactorizationGenerator() {
           <strong>{tr(language, 'dailyLab')}</strong>
         </div>
         <div className="worksheet-title">
-          <span>{tr(language, 'grade1Middle')} · {tier === 'advanced' ? (language === 'ko' ? '응용문제' : 'Applied') : (language === 'ko' ? '기본문제' : 'Basic')}</span>
+          <span>{tr(language, 'grade1Middle')} · {tier === 'advanced' ? (level === 'expert' ? (language === 'ko' ? '고난도 문제' : 'Challenge') : (language === 'ko' ? '응용문제' : 'Applied')) : (language === 'ko' ? '기본문제' : 'Basic')}</span>
           <h2>{unitLabel} {tr(language, view === 'answers' ? 'answerSheet' : 'worksheetWord')}</h2>
           <p>{unitDescription}</p>
         </div>

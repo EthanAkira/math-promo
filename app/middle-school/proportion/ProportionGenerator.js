@@ -14,6 +14,7 @@ import { recordAttempts, syncAnswerEvents } from '../../lib/submissions';
 import ProblemScratchpad from '../../components/ProblemScratchpad';
 import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
 import { asChoiceKind } from '../choiceKind';
+import { appliedLevel, unitsForLevel, expertTabLabel } from '../levels';
 
 const PROBLEM_COUNT = 20;
 
@@ -191,7 +192,8 @@ export default function ProportionGenerator() {
     setReady(true);
   }, []);
 
-  const currentUnits = tier === 'advanced' ? RPM_PROPORTION_APPLIED_UNITS : PROPORTION_UNITS;
+  const level = tier === 'advanced' ? appliedLevel(findProportionUnit(unitId)) : null;
+  const currentUnits = tier === 'advanced' ? unitsForLevel(RPM_PROPORTION_APPLIED_UNITS, level) : PROPORTION_UNITS;
   const unit = findProportionUnit(unitId);
   const basicProblems = useMemo(() => makeBasicProblems(seed, unit), [seed, unit]);
   const appliedProblems = useMemo(() => makeAppliedProblems(seed, unit), [seed, unit]);
@@ -217,14 +219,16 @@ export default function ProportionGenerator() {
   function changeView(nextView) { setView(nextView); setChecked(false); replaceUrl(seed, unitId, tier, nextView); }
   function changeAnswer(id, value) { setAnswers((current) => ({ ...current, [id]: value })); setChecked(false); }
 
-  function chooseTier(nextTier) {
-    if (nextTier === tier) return;
+  function chooseTier(nextTab) {
+    const nextTier = nextTab === 'basic' ? 'basic' : 'advanced';
+    const nextLevel = nextTab === 'expert' ? 'expert' : 'applied';
+    if (nextTab === (tier === 'basic' ? 'basic' : level)) return;
     if (nextTier === 'advanced') {
       if (authStatus !== 'ready' || advancedSubStatus === 'loading') return;
       if (!user) { window.alert(tr(language, 'advancedAlertNeedLogin')); return; }
       if (advancedSubStatus !== 'active') { window.alert(tr(language, 'advancedAlertNeedSub')); return; }
     }
-    const targetUnits = nextTier === 'advanced' ? RPM_PROPORTION_APPLIED_UNITS : PROPORTION_UNITS;
+    const targetUnits = nextTier === 'advanced' ? unitsForLevel(RPM_PROPORTION_APPLIED_UNITS, nextLevel) : PROPORTION_UNITS;
     const nextUnit = targetUnits.some((u) => u.id === unitId) ? unitId : targetUnits[0].id;
     setTier(nextTier); setUnitId(nextUnit); setAnswers({}); setChecked(false);
     replaceUrl(seed, nextUnit, nextTier, view);
@@ -279,8 +283,11 @@ export default function ProportionGenerator() {
       <button type="button" role="tab" aria-selected={tier === 'basic'} className={`tier-tab${tier === 'basic' ? ' active' : ''}`} onClick={() => chooseTier('basic')}>
         {tr(language, 'tierBasic')}
       </button>
-      <button type="button" role="tab" aria-selected={tier === 'advanced'} className={`tier-tab${tier === 'advanced' ? ' active' : ''}`} onClick={() => chooseTier('advanced')}>
+      <button type="button" role="tab" aria-selected={level === 'applied'} className={`tier-tab${level === 'applied' ? ' active' : ''}`} onClick={() => chooseTier('applied')}>
         {tr(language, 'tierAdvanced')}
+      </button>
+      <button type="button" role="tab" aria-selected={level === 'expert'} className={`tier-tab${level === 'expert' ? ' active' : ''}`} onClick={() => chooseTier('expert')}>
+        {expertTabLabel(language)}
       </button>
     </div>
 
@@ -291,7 +298,7 @@ export default function ProportionGenerator() {
           <strong>{tr(language, 'dailyLab')}</strong>
         </div>
         <div className="worksheet-title">
-          <span>{tr(language, 'grade1Middle')} · {tier === 'advanced' ? (language === 'ko' ? '응용문제' : 'Applied') : (language === 'ko' ? '기본문제' : 'Basic')}</span>
+          <span>{tr(language, 'grade1Middle')} · {tier === 'advanced' ? (level === 'expert' ? (language === 'ko' ? '고난도 문제' : 'Challenge') : (language === 'ko' ? '응용문제' : 'Applied')) : (language === 'ko' ? '기본문제' : 'Basic')}</span>
           <h2>{unitLabel} {tr(language, view === 'answers' ? 'answerSheet' : 'worksheetWord')}</h2>
           <p>{unitDescription}</p>
         </div>

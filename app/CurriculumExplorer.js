@@ -158,6 +158,7 @@ export function arrangeAmcAsApplied(topics) {
   const out = [];
   let pending = [];
   let inApplied = false;
+  const hasAppliedGroup = topics.some((t) => t.isHeader && /응용/.test(t.label || ''));
   const flush = () => {
     pending.forEach((t) => {
       const clean = String(t.label).replace(/^\[[^\]]+\]\s*/, '');
@@ -168,7 +169,7 @@ export function arrangeAmcAsApplied(topics) {
   };
   topics.forEach((t) => {
     if (t.isHeader) {
-      if (inApplied) flush();
+      if (inApplied || !hasAppliedGroup) flush();
       inApplied = /응용/.test(t.label || '');
       out.push(t);
     } else if ((t.amc || t.csat) && HANGUL.test(t.label || '')) {
@@ -181,9 +182,30 @@ export function arrangeAmcAsApplied(topics) {
   return out;
 }
 
+// Middle-school grade stages list each unit once, grouped only by semester. The basic / applied /
+// challenge split lives in the worksheet page as tabs, so the old "기본 문제" and "유형별 실전 응용"
+// groups (and their duplicate application links) are not shown here.
+function simplifyMiddleTopics(stage) {
+  if (!/^kr-middle-\d-grade$/.test(stage.id || '')) return stage.topics;
+  const out = [];
+  let skipping = false;
+  stage.topics.forEach((t) => {
+    if (t.isHeader) {
+      if (/유형별 실전 응용/.test(t.label || '')) { skipping = true; return; }
+      skipping = false;
+      const m = String(t.label).match(/\[(중\d-(\d))\]/);
+      out.push(m ? { ...t, label: `📘 [${m[1]}] ${m[2] === '1' ? '1학기' : '2학기'}` } : t);
+    } else if (!skipping) {
+      out.push({ ...t, label: String(t.label).replace(/^\[기본\]\s*/, '') });
+    }
+  });
+  return out;
+}
+
 function renderStage(stage, copy, { openByDefault = false, extraClassName = '' } = {}) {
-  const stageTopics = arrangeAmcAsApplied(stage.topics);
-  const stageStatus = availabilityForTopics(stage.topics);
+  const simplified = simplifyMiddleTopics(stage);
+  const stageTopics = arrangeAmcAsApplied(simplified);
+  const stageStatus = availabilityForTopics(simplified);
   return (
     <details className={`curriculum-stage ${extraClassName}`.trim()} key={stage.id} open={openByDefault}>
       <summary>
@@ -191,7 +213,7 @@ function renderStage(stage, copy, { openByDefault = false, extraClassName = '' }
           <strong>{sanitizePublicText(stage.title)}</strong>
           <small>{sanitizePublicText(stage.subtitle)}</small>
         </span>
-        <span className={`curriculum-count ${stageStatus}`}>{availabilitySummary(stage.topics, copy)}</span>
+        <span className={`curriculum-count ${stageStatus}`}>{availabilitySummary(simplified, copy)}</span>
         <span className="sr-only">{copy.badges.open}</span>
       </summary>
       {stage.notice && (
