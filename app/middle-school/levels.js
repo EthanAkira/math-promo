@@ -4,6 +4,7 @@
 const EXPERT_LABEL = /(심화|발전|실력\s*UP|최고난도|단원 실전 다지기|종합|총괄|전 유형|혼합|모의)/;
 
 export function appliedLevel(unit) {
+  if (unit?.amcUnitId) return 'applied';
   return EXPERT_LABEL.test(String(unit?.label ?? '')) ? 'expert' : 'applied';
 }
 

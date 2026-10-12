@@ -213,6 +213,7 @@ export const RPM_PRIME_APPLIED_UNITS = [
     make: rpmPrimeAllTypesMixed,
   },
 ];
+RPM_PRIME_APPLIED_UNITS.push(amcAppliedUnit('primes-factorization', '소인수분해', 'Prime Factorization'));
 
 export const PRIME_UNITS = [...PRIME_BASIC_UNITS, ...RPM_PRIME_APPLIED_UNITS];
 
@@ -229,3 +230,4 @@ function _localizePrimeUnit(unit, language, field = 'label') {
   return localizeRegionalUnit(unit.id, language, unit.en[field === 'label' ? 0 : 1], field);
 }
 import { localizeRegionalUnit } from '../../regionalCatalog.js';
+import { amcAppliedUnit } from '../amcApplied';

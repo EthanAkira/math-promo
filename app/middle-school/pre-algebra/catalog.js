@@ -271,6 +271,7 @@ import {
   rpmG8ProbAdvancedSkillUp,
   rpmGrade8SemesterTwoFinalExam,
 } from '../rpmAppliedEngine';
+import { amcUnitsForPath } from '../amcApplied';
 
 
 function randomInt(random, min, max) {
@@ -1367,6 +1368,7 @@ function withDifficultyTier(units) {
 }
 
 export const PRE_ALGEBRA_UNITS = withDifficultyTier([...IMPORTED_UNITS, ...NEW_UNITS, ...SECONDARY_ALGEBRA_UNITS, ...ALGEBRA_COMPLETION_UNITS, ...KOREAN_HIGH2_UNITS, ...PRECALCULUS_UNITS, ...KOREAN_HIGH3_UNITS, ...AP_CALCULUS_UNITS]);
+PRE_ALGEBRA_UNITS.push(...amcUnitsForPath('/middle-school/pre-algebra', PRE_ALGEBRA_UNITS));
 
 export const PRE_ALGEBRA_PROFILES = [
   { id: 'kr-middle-1', label: '중1 · 소인수분해·정수·문자와 식·좌표', labelEn: 'Grade 7 · Numbers, Expressions & Coordinates', description: '2022 개정 교육과정 중1 비기하 핵심 단원 연습', descriptionEn: 'Core non-geometry Grade 7 topics in Korea’s 2022 curriculum' },

@@ -303,6 +303,7 @@ export const RPM_GCD_LCM_APPLIED_UNITS = [
     make: rpmGcdLcmAllTypesMixed,
   },
 ];
+RPM_GCD_LCM_APPLIED_UNITS.push(amcAppliedUnit('gcd-lcm', '최대공약수와 최소공배수', 'GCF & LCM'));
 
 export const GCD_LCM_UNITS = [...GCD_LCM_BASIC_UNITS, ...RPM_GCD_LCM_APPLIED_UNITS];
 
@@ -319,3 +320,4 @@ function _localizeGcdLcmUnit(unit, language, field = 'label') {
   return localizeRegionalUnit(unit.id, language, unit.en[field === 'label' ? 0 : 1], field);
 }
 import { localizeRegionalUnit } from '../../regionalCatalog';
+import { amcAppliedUnit } from '../amcApplied';

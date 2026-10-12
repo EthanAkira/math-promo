@@ -1,5 +1,3 @@
-'use client';
-
 // AMC / 수능 practice links that used to be inline badges on the home curriculum list. They now live on the
 // worksheet page next to the 응용문제 level. Keys are "<page path>|<unit id>" ("" = every unit on that page).
 const LINKS = {
@@ -144,18 +142,25 @@ const LINKS = {
   }
 };
 
+// [{ unitId, amcUnitId }] for every unit of `path` that has an AMC unit attached ("" = the whole page).
+export function amcMappingsFor(path) {
+  return Object.entries(LINKS)
+    .filter(([key, value]) => key.startsWith(`${path}|`) && value.amc)
+    .map(([key, value]) => ({ unitId: key.slice(path.length + 1), amcUnitId: (value.amc.match(/unit=([a-z0-9-]+)/) || [])[1] }))
+    .filter((entry) => entry.amcUnitId);
+}
+
 export function practiceLinksFor(path, unitId) {
   return LINKS[`${path}|${unitId}`] || LINKS[`${path}|`] || null;
 }
 
 export default function PracticeLinks({ path, unitId, language }) {
   const links = practiceLinksFor(path, unitId);
-  if (!links) return null;
+  if (!links || !links.csat) return null;
   const ko = language === 'ko';
   const linkStyle = { display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 12px', border: '1px solid var(--paper-line, #d8d0bd)', borderRadius: 999, background: '#fff', color: 'var(--ink, #222)', textDecoration: 'none', fontSize: 13, fontWeight: 700 };
   return (
     <div className="practice-links no-print" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, margin: '0 0 12px' }}>
-      {links.amc ? <a href={links.amc} style={linkStyle}>🏆 {ko ? 'AMC 스타일 응용문제로 연습하기 →' : 'Practice AMC-style applied problems →'}</a> : null}
       {links.csat ? <a href={links.csat} style={linkStyle}>📝 {ko ? '수능 기출 응용문제로 연습하기 →' : 'Practice CSAT past-exam problems →'}</a> : null}
     </div>
   );

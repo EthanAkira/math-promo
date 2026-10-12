@@ -140,6 +140,7 @@ import { TRIANGLE_SIMILARITY_UNITS } from './triangleSimilarityEngine.js';
 import { CIRCLE_PROPERTIES_UNITS } from './circlePropertiesEngine.js';
 import { TRANSFORMATIONS_UNITS } from './transformationsEngine.js';
 import { LOGICAL_REASONING_UNITS } from './logicalReasoningEngine.js';
+import { amcUnitsForPath } from '../amcApplied';
 
 function randomInt(random, min, max) {
   return Math.floor(random() * (max - min + 1)) + min;
@@ -1148,6 +1149,7 @@ export const BASIC_FIGURE_UNITS = withDifficultyTier([
   ...RPM_DATA_STATISTICS_APPLIED_UNITS,
   ...RPM_GRADE7_FINAL_MOCK_UNITS,
 ]);
+BASIC_FIGURE_UNITS.push(...amcUnitsForPath('/middle-school/basic-figures', BASIC_FIGURE_UNITS));
 
 export function findBasicFigureUnit(unitId) {
   return BASIC_FIGURE_UNITS.find((unit) => unit.id === unitId)

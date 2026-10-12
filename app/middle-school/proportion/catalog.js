@@ -205,6 +205,7 @@ export const RPM_PROPORTION_APPLIED_UNITS = [
   { id: 'applied-prop-all-types-mixed', label: '[단원 실전 다지기] 매일 정비례와 반비례 종합', description: '정비례/반비례 판별, 그래프 성질, 교점, 넓이, 실생활 활용 전 유형 종합 출제', en: ['Daily Proportion Comprehensive', 'Comprehensive mixed practice across all direct and inverse proportion types'], make: rpmPropAllTypesMixed },
   { id: 'applied-semester-one-mock-exam', label: '[1학기 총괄평가] 매일 중학 1-1 전 범위 실전 모의고사 (소인수분해~반비례)', description: '소인수분해, 정수와 유리수, 일차방정식, 좌표평면, 정비례·반비례 전 단원 실전 모의고사', en: ['Semester 1 Final Review Mock Exam', 'Comprehensive mock exam across all Grade 7 Semester 1 chapters'], make: rpmSemesterOneMockExam },
 ];
+RPM_PROPORTION_APPLIED_UNITS.push(amcAppliedUnit('ratios-percent', '정비례와 반비례', 'Proportions'));
 
 export const PROPORTION_ALL_UNITS = [...PROPORTION_UNITS, ...RPM_PROPORTION_APPLIED_UNITS];
 
@@ -246,3 +247,4 @@ import {
   rpmPropAllTypesMixed,
   rpmSemesterOneMockExam,
 } from '../rpmAppliedEngine.js';
+import { amcAppliedUnit } from '../amcApplied';

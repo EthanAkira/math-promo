@@ -184,6 +184,7 @@ export const RPM_COORDINATE_APPLIED_UNITS = [
   { id: 'applied-coord-all-types-mixed', label: '[단원 실전 다지기] 매일 좌표평면과 그래프 종합', description: '순서쌍, 축 위의 점, 사분면, 부호 조건, 대칭, 넓이, 그래프 해석 전 유형 종합 출제', en: ['Daily Coordinate Plane Comprehensive', 'Comprehensive mixed practice covering all coordinate plane and graph types'], make: rpmCoordAllTypesMixed },
   { id: 'applied-semester-one-mock-exam', label: '[1학기 총괄평가] 매일 중학 1-1 전 범위 실전 모의고사 (소인수분해~반비례)', description: '소인수분해, 정수와 유리수, 일차방정식, 좌표평면, 정비례·반비례 전 단원 실전 모의고사', en: ['Semester 1 Final Review Mock Exam', 'Comprehensive mock exam across all Grade 7 Semester 1 chapters'], make: rpmSemesterOneMockExam },
 ];
+RPM_COORDINATE_APPLIED_UNITS.push(amcAppliedUnit('coordinate-geometry', '좌표평면과 그래프', 'Coordinate Plane'));
 
 export const COORDINATE_ALL_UNITS = [...COORDINATE_UNITS, ...RPM_COORDINATE_APPLIED_UNITS];
 
@@ -217,3 +218,4 @@ import {
   rpmCoordAllTypesMixed,
   rpmSemesterOneMockExam,
 } from '../rpmAppliedEngine.js';
+import { amcAppliedUnit } from '../amcApplied';
