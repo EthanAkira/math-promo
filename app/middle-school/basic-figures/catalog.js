@@ -1,3 +1,4 @@
+import { superscriptPowers } from '../../utils/superscriptPowers';
 
 import {
   rpmGeoBasicIntersections,
@@ -1155,6 +1156,10 @@ export function findBasicFigureUnit(unitId) {
 }
 
 export function localizeBasicFigureUnit(unit, language, field = 'label') {
+  return superscriptPowers(_localizeBasicFigureUnit(unit, language, field));
+}
+
+function _localizeBasicFigureUnit(unit, language, field = 'label') {
   if (unit.labels) {
     const values = field === 'label' ? unit.labels : unit.descriptions;
     return values[language] || values[language?.split('-')[0]] || values.en || values.ko;

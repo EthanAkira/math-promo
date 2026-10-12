@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useLanguage } from './language';
 import { sanitizePublicText } from './publicText';
+import { superscriptPowers } from './utils/superscriptPowers';
 import {
   CURRICULUM_COPY,
   KOREAN_GRADE_STAGES,
@@ -55,7 +56,7 @@ function topicAvailabilityLabel(topic, copy) {
 // A topic can likewise carry `csat: { href }` — a matching CSAT(수능) unit in /csat/units, shown as
 // its own badge-link the same way (both can appear together on one topic).
 function TopicItem({ topic, copy }) {
-  const displayLabel = sanitizePublicText(topic.label);
+  const displayLabel = superscriptPowers(sanitizePublicText(topic.label));
   if (topic.isHeader) {
     return (
       <div className="curriculum-topic-group-header">

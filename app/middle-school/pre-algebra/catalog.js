@@ -1,3 +1,4 @@
+import { superscriptPowers } from '../../utils/superscriptPowers';
 import { ALL_GRADE9_ALGEBRA_APPLIED_UNITS } from './grade9AlgebraEngine.js';
 import { ALL_GRADE9_SEMESTER2_APPLIED_UNITS } from './grade9Semester2Engine.js';
 import { PRIME_BASIC_UNITS } from '../prime-factorization/catalog';
@@ -1399,6 +1400,10 @@ export function findPreAlgebraUnit(unitId, profileId = 'kr-middle-1') {
 }
 
 export function localizePreAlgebraUnit(unit, language, field = 'label') {
+  return superscriptPowers(_localizePreAlgebraUnit(unit, language, field));
+}
+
+function _localizePreAlgebraUnit(unit, language, field = 'label') {
   if (language === 'ko') return unit[field];
   return unit.en?.[field === 'label' ? 0 : 1] || unit[field];
 }

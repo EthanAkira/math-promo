@@ -1,3 +1,4 @@
+import { superscriptPowers } from '../../utils/superscriptPowers';
 function randomInt(random, min, max) {
   return Math.floor(random() * (max - min + 1)) + min;
 }
@@ -212,6 +213,10 @@ export function findProportionUnit(unitId) {
 }
 
 export function localizeProportionUnit(unit, language, field = 'label') {
+  return superscriptPowers(_localizeProportionUnit(unit, language, field));
+}
+
+function _localizeProportionUnit(unit, language, field = 'label') {
   if (language === 'ko') return unit[field];
   return localizeRegionalUnit(unit.id, language, unit.en[field === 'label' ? 0 : 1], field);
 }
