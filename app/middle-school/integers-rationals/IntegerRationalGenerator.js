@@ -299,7 +299,7 @@ export default function IntegerRationalGenerator() {
               <p><MathText value={prompt} /></p>
               {item.diagram ? <RpmDiagram diagram={item.diagram} /> : item.kind === 'number-line' ? <NumberLine line={item.line} /> : expression ? <strong className="word-expression font-mono"><RationalText value={expression} /></strong> : null}
               {item.choices ? (
-                <div className="choice-answer">
+                <div className={`choice-answer${item.choices.some((c) => String(c.label ?? '').length > 14) ? ' choice-answer-long' : ''}`}>
                   {view === 'answers' ? (
                     <strong><MathText value={selectedChoice ? `${selectedChoice.value}. ${foreign && selectedChoice.labelEn ? selectedChoice.labelEn : selectedChoice.label}` : item.answer} /></strong>
                   ) : (
@@ -311,7 +311,7 @@ export default function IntegerRationalGenerator() {
                         onClick={() => changeAnswer(item.id, choice.value)}
                         aria-pressed={value === choice.value}
                       >
-                        <span>{choice.value}</span><MathText value={foreign && choice.labelEn ? choice.labelEn : choice.label} />
+                        <span className="choice-marker">{choice.value}</span><span className="choice-text"><MathText value={foreign && choice.labelEn ? choice.labelEn : choice.label} /></span>
                       </button>
                     ))
                   )}

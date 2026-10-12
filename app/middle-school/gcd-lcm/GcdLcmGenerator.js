@@ -270,7 +270,7 @@ export default function GcdLcmGenerator() {
               {item.diagram ? <RpmDiagram diagram={item.diagram} /> : null}
               {item.expression ? <strong className="word-expression font-mono"><PowerText value={localizeGcdTerms(item.expression, language)} /></strong> : null}
               {item.choices ? (
-                <div className="choice-answer">
+                <div className={`choice-answer${item.choices.some((c) => String(c.label ?? '').length > 14) ? ' choice-answer-long' : ''}`}>
                   {view === 'answers' ? (
                     <strong><MathText value={selectedChoice ? `${selectedChoice.value}. ${foreign && selectedChoice.labelEn ? selectedChoice.labelEn : selectedChoice.label}` : item.answer} /></strong>
                   ) : (
@@ -282,7 +282,7 @@ export default function GcdLcmGenerator() {
                         onClick={() => changeAnswer(item.id, choice.value)}
                         aria-pressed={value === choice.value}
                       >
-                        <span>{choice.value}</span><MathText value={foreign && choice.labelEn ? choice.labelEn : choice.label} />
+                        <span className="choice-marker">{choice.value}</span><span className="choice-text"><MathText value={foreign && choice.labelEn ? choice.labelEn : choice.label} /></span>
                       </button>
                     ))
                   )}

@@ -1669,8 +1669,10 @@ html[dir="rtl"] .language-picker-academic select {
 .graphic-problem .generated-coord-plane,.graphic-problem .generated-proportion-graph { max-width: 150px; }
 .graphic-problem .generated-trip-graph { max-width: 240px; }
 .choice-answer { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin-top: 12px; }
-.choice-answer button { min-height: 38px; color: var(--ink); background: #fff; border: 1px solid var(--paper-line); border-radius: 8px; font: inherit; font-weight: 700; cursor: pointer; }
-.choice-answer button span { display: inline-grid; place-items: center; width: 22px; height: 22px; margin-right: 6px; border: 1px solid currentColor; border-radius: 50%; font-size: 11px; }
+.choice-answer button { display: flex; align-items: flex-start; gap: 8px; min-height: 38px; padding: 7px 10px; text-align: left; line-height: 1.5; color: var(--ink); background: #fff; border: 1px solid var(--paper-line); border-radius: 8px; font: inherit; font-weight: 600; cursor: pointer; }
+.choice-answer button .choice-marker { flex: 0 0 22px; display: inline-grid; place-items: center; width: 22px; height: 22px; margin-top: 1px; border: 1px solid currentColor; border-radius: 50%; font-size: 11px; line-height: 1; }
+.choice-answer button .choice-text { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; word-break: keep-all; }
+.choice-answer.choice-answer-long { grid-template-columns: 1fr; }
 .choice-answer button.selected { color: #1769aa; background: #eef7ff; border: 2px solid #1769aa; }
 .choice-answer button.correct { color: var(--chalk-green); background: #eff8f4; border-color: var(--chalk-green); }
 .choice-answer button.wrong { color: var(--red-pen); background: #fff3f5; border-color: var(--red-pen); }
