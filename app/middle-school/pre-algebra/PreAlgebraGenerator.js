@@ -11,7 +11,7 @@ import ProblemScratchpad from '../../components/ProblemScratchpad';
 import { preAlgebraCategory, preAlgebraCopy, preAlgebraProfileLabel } from './localization';
 import { hasProblemVisual, MathText, ProblemVisual } from './PreAlgebraVisuals';
 import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
-import { unitLevel, levelTabLabels } from '../levels';
+import { unitLevel, levelTabLabels, middleSemester } from '../levels';
 import PracticeLinks from '../practiceLinks';
 import LevelTabs from '../LevelTabs';
 
@@ -169,11 +169,13 @@ export default function PreAlgebraGenerator() {
   // Korean middle-school profiles use the same compact layout as the other middle-school pages:
   // one 문제 유형 list per level tab, with no profile / mode / domain pickers.
   const isKrMiddle = /^kr-middle-/.test(profileId);
-  const levelAvailable = useMemo(() => ({ basic: units.some((item) => unitLevel(item) === 'basic'), applied: units.some((item) => unitLevel(item) === 'applied'), expert: units.some((item) => unitLevel(item) === 'expert') }), [units]);
+  const semester = middleSemester(findPreAlgebraUnit(unitId, profileId));
+  const semesterUnits = useMemo(() => (isKrMiddle ? units.filter((item) => middleSemester(item) === semester) : units), [units, isKrMiddle, semester]);
+  const levelAvailable = useMemo(() => ({ basic: semesterUnits.some((item) => unitLevel(item) === 'basic'), applied: semesterUnits.some((item) => unitLevel(item) === 'applied'), expert: semesterUnits.some((item) => unitLevel(item) === 'expert') }), [semesterUnits]);
   const singleCategories = useMemo(() => [...new Set(units.filter((item) => unitLevel(item) === level).map((item) => item.category))], [units, level]);
   const unit = findPreAlgebraUnit(unitId, profileId);
   const [category, setCategory] = useState('수와 연산');
-  const visibleUnits = useMemo(() => units.filter((item) => unitLevel(item) === level && (isKrMiddle || item.category === category)), [units, category, level, isKrMiddle]);
+  const visibleUnits = useMemo(() => semesterUnits.filter((item) => unitLevel(item) === level && (isKrMiddle || item.category === category)), [semesterUnits, category, level, isKrMiddle]);
   const allProblems = useMemo(() => makeProblems(seed, unit), [seed, unit]);
   const problems = useMemo(() => allProblems.slice(0, count), [allProblems, count]);
   const correctCount = problems.filter((item) => equivalent(answers[item.id], item.answer)).length;
@@ -236,7 +238,7 @@ export default function PreAlgebraGenerator() {
   function chooseUnit(nextUnit) { reset(createSeed(), profileId, nextUnit); }
   function chooseLevel(nextLevel) {
     if (nextLevel === level) return;
-    const target = units.find((item) => unitLevel(item) === nextLevel && item.category === category) || units.find((item) => unitLevel(item) === nextLevel);
+    const target = semesterUnits.find((item) => unitLevel(item) === nextLevel && item.category === category) || semesterUnits.find((item) => unitLevel(item) === nextLevel);
     if (!target) return;
     setCategory(target.category);
     reset(createSeed(), profileId, target.id);

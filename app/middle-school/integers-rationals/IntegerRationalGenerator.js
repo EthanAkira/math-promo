@@ -13,7 +13,7 @@ import MathText from '../../components/MathText';
 import { recordAttempts, syncAnswerEvents } from '../../lib/submissions';
 import ProblemScratchpad from '../../components/ProblemScratchpad';
 import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
-import { appliedLevel, unitsForLevel, expertTabLabel } from '../levels';
+import { appliedLevel, unitsForLevel, expertTabLabel, middleSemester } from '../levels';
 import PracticeLinks from '../practiceLinks';
 
 const PROBLEM_COUNT = 20;
@@ -171,7 +171,10 @@ export default function IntegerRationalGenerator() {
   }, []);
 
   const level = tier === 'advanced' ? appliedLevel(findIntegerRationalUnit(unitId)) : null;
-  const currentUnits = tier === 'advanced' ? unitsForLevel(RPM_INTEGER_RATIONAL_APPLIED_UNITS, level) : INTEGER_RATIONAL_BASIC_UNITS;
+  // 중1-1 (정수와 유리수) and 중2-1 (유리수와 순환소수) share this page; list only the current semester's units.
+  const semester = middleSemester(findIntegerRationalUnit(unitId));
+  const bySemester = (list) => { const filtered = list.filter((item) => middleSemester(item) === semester); return filtered.length ? filtered : list; };
+  const currentUnits = bySemester(tier === 'advanced' ? unitsForLevel(RPM_INTEGER_RATIONAL_APPLIED_UNITS, level) : INTEGER_RATIONAL_BASIC_UNITS);
   const unit = findIntegerRationalUnit(unitId);
   const basicProblems = useMemo(() => makeBasicProblems(seed, unit), [seed, unit]);
   const appliedProblems = useMemo(() => makeAppliedProblems(seed, unit), [seed, unit]);
@@ -206,7 +209,7 @@ export default function IntegerRationalGenerator() {
       if (!user) { window.alert(tr(language, 'advancedAlertNeedLogin')); return; }
       if (advancedSubStatus !== 'active') { window.alert(tr(language, 'advancedAlertNeedSub')); return; }
     }
-    const targetUnits = nextTier === 'advanced' ? unitsForLevel(RPM_INTEGER_RATIONAL_APPLIED_UNITS, nextLevel) : INTEGER_RATIONAL_BASIC_UNITS;
+    const targetUnits = nextTier === 'advanced' ? bySemester(unitsForLevel(RPM_INTEGER_RATIONAL_APPLIED_UNITS, nextLevel)) : bySemester(INTEGER_RATIONAL_BASIC_UNITS);
     const nextUnitId = targetUnits.some((u) => u.id === unitId) ? unitId : targetUnits[0].id;
     setTier(nextTier); setUnitId(nextUnitId); setAnswers({}); setChecked(false);
     replaceUrl(seed, nextUnitId, nextTier, view);

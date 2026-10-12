@@ -14,7 +14,7 @@ import ProblemScratchpad from '../../components/ProblemScratchpad';
 import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
 import PracticeLinks from '../practiceLinks';
 import LevelTabs from '../LevelTabs';
-import { unitLevel } from '../levels';
+import { unitLevel, middleSemester } from '../levels';
 
 const PROBLEM_COUNT = 20;
 
@@ -213,8 +213,11 @@ export default function BasicFiguresGenerator() {
   // 문제 유형 list per 기본 / 응용 / 고난도 tab, with no profile or mode pickers.
   const isKrMiddle = profileId === 'kr';
   const level = unitLevel(unit);
-  const levelAvailable = useMemo(() => ({ basic: profileUnits.some((item) => unitLevel(item) === 'basic'), applied: profileUnits.some((item) => unitLevel(item) === 'applied'), expert: profileUnits.some((item) => unitLevel(item) === 'expert') }), [profileUnits]);
-  const availableUnits = useMemo(() => (isKrMiddle ? profileUnits.filter((item) => unitLevel(item) === level) : profileUnits), [profileUnits, isKrMiddle, level]);
+  // Only the units of the same middle-school semester (중1-2, 중2-2, 중3-2 …) are offered on this page.
+  const semester = middleSemester(unit);
+  const semesterUnits = useMemo(() => (isKrMiddle ? profileUnits.filter((item) => middleSemester(item) === semester) : profileUnits), [profileUnits, isKrMiddle, semester]);
+  const levelAvailable = useMemo(() => ({ basic: semesterUnits.some((item) => unitLevel(item) === 'basic'), applied: semesterUnits.some((item) => unitLevel(item) === 'applied'), expert: semesterUnits.some((item) => unitLevel(item) === 'expert') }), [semesterUnits]);
+  const availableUnits = useMemo(() => (isKrMiddle ? semesterUnits.filter((item) => unitLevel(item) === level) : profileUnits), [profileUnits, semesterUnits, isKrMiddle, level]);
   const basicProblems = useMemo(() => makeProblems(seed, unit, profile), [seed, unit, profile]);
   const hasAdvancedContent = ADVANCED_UNIT_IDS.has(unitId);
   const coreCategories = useMemo(() => [...new Set(availableUnits.map((item) => item.category).filter(Boolean))], [availableUnits]);
@@ -328,7 +331,7 @@ export default function BasicFiguresGenerator() {
   function chooseUnit(nextUnit) { reset(createSeed(), nextUnit); }
   function chooseLevel(nextLevel) {
     if (nextLevel === level) return;
-    const target = profileUnits.find((item) => unitLevel(item) === nextLevel && item.category === unit.category) || profileUnits.find((item) => unitLevel(item) === nextLevel);
+    const target = semesterUnits.find((item) => unitLevel(item) === nextLevel && item.category === unit.category) || semesterUnits.find((item) => unitLevel(item) === nextLevel);
     if (target) reset(createSeed(), target.id);
   }
   function chooseProfile(nextProfile) {
