@@ -9,10 +9,10 @@ const MIDDLE_PROFILES = ['kr', 'international', 'amc', 'sg', 'tw', 'hk'];
 
 function polygonDiagonals(random, profile) {
   const n = ri(random, 4, 12); const mode = ri(random, 0, 2);
-  if (mode === 0) return make(tx(profile, `정${n}각형의 한 꼭짓점에서 그을 수 있는 대각선의 개수를 구하세요.`, `Find the number of diagonals from one vertex of a regular ${n}-gon.`), n - 3, { kind: 'polygon-basic', n, mode: 'vertex-diagonals' }, tx(profile, `자기 자신과 양옆의 두 꼭짓점을 제외하므로 ${n}−3=${n - 3}개입니다.`, `Exclude the vertex itself and its two neighbours: ${n}−3=${n - 3}.`));
+  if (mode === 0) return make(tx(profile, `정${n}각형의 한 꼭짓점에서 그을 수 있는 대각선의 개수를 구하세요.`, `Find the number of diagonals from one vertex of a regular ${n}-gon.`), n - 3, { kind: 'polygon-basic', n, mode: 'vertex-mark' }, tx(profile, `자기 자신과 양옆의 두 꼭짓점을 제외하므로 ${n}−3=${n - 3}개입니다.`, `Exclude the vertex itself and its two neighbours: ${n}−3=${n - 3}.`));
   const total = n * (n - 3) / 2;
-  if (mode === 1) return make(tx(profile, `${n}각형의 대각선의 총 개수를 구하세요.`, `Find the total number of diagonals in a ${n}-gon.`), total, { kind: 'polygon-basic', n, mode: 'all-diagonals' }, tx(profile, `각 꼭짓점에서 ${n - 3}개를 긋고 두 번씩 센 것이므로 ${n}(${n}−3)/2=${total}개입니다.`, `There are ${n}(${n}−3)/2=${total} diagonals.`));
-  return make(tx(profile, `대각선의 개수가 ${total}개인 다각형의 변의 개수를 구하세요.`, `A polygon has ${total} diagonals. Find its number of sides.`), n, { kind: 'polygon-basic', n, mode: 'outline' }, tx(profile, `m(m−3)/2=${total}을 만족하는 자연수 m은 ${n}입니다.`, `Solve m(m−3)/2=${total}; m=${n}.`));
+  if (mode === 1) return make(tx(profile, `${n}각형의 대각선의 총 개수를 구하세요.`, `Find the total number of diagonals in a ${n}-gon.`), total, { kind: 'polygon-basic', n, mode: 'plain' }, tx(profile, `각 꼭짓점에서 ${n - 3}개를 긋고 두 번씩 센 것이므로 ${n}(${n}−3)/2=${total}개입니다.`, `There are ${n}(${n}−3)/2=${total} diagonals.`));
+  return make(tx(profile, `대각선의 개수가 ${total}개인 다각형의 변의 개수를 구하세요.`, `A polygon has ${total} diagonals. Find its number of sides.`), n, null, tx(profile, `m(m−3)/2=${total}을 만족하는 자연수 m은 ${n}입니다.`, `Solve m(m−3)/2=${total}; m=${n}.`));
 }
 
 function polygonAngles(random, profile) {
@@ -27,7 +27,7 @@ function polygonAngles(random, profile) {
       : make(tx(profile, `정${n}각형의 한 내각의 크기를 구하세요.`, `Find one interior angle of a regular ${n}-gon.`), interior, { kind: 'polygon-basic', n, mode: 'interior' }, tx(profile, `180°−360°/${n}=${interior}°입니다.`, `180°−360°/${n}=${interior}°.`), { answerSuffix: '°' });
   }
   const valid = pick(random, [4, 5, 6, 8, 9, 10, 12]); const angle = 360 / valid;
-  return make(tx(profile, `한 외각의 크기가 ${angle}°인 정다각형의 이름을 변의 개수로 답하세요.`, `A regular polygon has exterior angle ${angle}°. How many sides does it have?`), valid, { kind: 'polygon-basic', n: valid, mode: 'exterior' }, tx(profile, `변의 개수는 360°÷${angle}°=${valid}입니다.`, `The number of sides is 360°÷${angle}°=${valid}.`));
+  return make(tx(profile, `한 외각의 크기가 ${angle}°인 정다각형의 이름을 변의 개수로 답하세요.`, `A regular polygon has exterior angle ${angle}°. How many sides does it have?`), valid, null, tx(profile, `변의 개수는 360°÷${angle}°=${valid}입니다.`, `The number of sides is 360°÷${angle}°=${valid}.`));
 }
 
 function circleParts(random, profile) {
