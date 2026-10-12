@@ -852,7 +852,7 @@ export function rpmGcdWordDistribute(random) {
     return {
       prompt: `연필 ${n1}자루와 지우개 ${n2}개를 되도록 많은 학생들에게 남김없이 똑같이 나누어 주려고 한다. 나누어 줄 수 있는 학생 수를 구하시오.`,
       promptEn: `We want to divide ${n1} pencils and ${n2} erasers equally among as many students as possible without leftovers. Find the maximum number of students.`,
-      expression: `최대공약수(${n1}, ${n2}) = ${g}`,
+      expression: '',
       answer: String(g),
       answerSuffix: '명',
       explanation: `가능한 한 많은 학생에게 똑같이 나누어 주어야 하므로 학생 수는 ${n1}과 ${n2}의 최대공약수인 ${g}명입니다.`,
@@ -866,7 +866,7 @@ export function rpmGcdWordDistribute(random) {
     return {
       prompt: `바나나 ${n1}개, 오렌지 ${n2}개, 사과 ${n3}개를 가능한 한 많은 학생들에게 똑같이 나누어 주려고 한다. 나누어 줄 수 있는 학생 수를 구하시오.`,
       promptEn: `Divide ${n1} bananas, ${n2} oranges, and ${n3} apples equally among as many students as possible without leftovers. Find the maximum number of students.`,
-      expression: `최대공약수(${n1}, ${n2}, ${n3}) = ${actualG}`,
+      expression: '',
       answer: String(actualG),
       answerSuffix: '명',
       explanation: `학생 수는 ${n1}, ${n2}, ${n3}의 최대공약수인 ${actualG}명입니다.`,
@@ -881,7 +881,7 @@ export function rpmGcdWordDistribute(random) {
     return {
       prompt: `어느 중학교 등산부의 여학생 수는 ${n1}명이고 남학생 수는 ${n2}명이다. 야영을 하기 위하여 여학생 a명과 남학생 b명씩을 한 조로 나누려고 한다. 가능한 한 많은 조로 나누려고 할 때, a + b의 값을 구하시오.`,
       promptEn: `A hiking club has ${n1} girls and ${n2} boys. They want to form as many teams as possible, each with a girls and b boys. Find a + b.`,
-      expression: `조의 수 = 최대공약수(${n1}, ${n2}) = ${g}`,
+      expression: '',
       answer: String(ans),
       explanation: `가능한 한 많은 조로 나누어야 하므로 조의 수는 ${n1}과 ${n2}의 최대공약수인 ${g}개입니다. 한 조당 여학생은 a = ${n1} ÷ ${g} = ${a}명, 남학생은 b = ${n2} ÷ ${g} = ${b}명이므로 a + b = ${ans}입니다.`,
     };
@@ -903,7 +903,7 @@ export function rpmGcdWordTileFence(random) {
     return {
       prompt: `가로의 길이가 ${W}cm, 세로의 길이가 ${H}cm인 직사각형 모양의 벽에 같은 크기의 정사각형 모양의 사진을 빈틈없이 붙이려고 한다. 가능한 한 큰 사진을 붙이려고 할 때, 사진의 한 변의 길이를 x cm, 필요한 사진의 수를 y장이라 하자. ${askSum ? 'x + y의 값' : '필요한 사진의 수 y'}를 구하시오.`,
       promptEn: `A rectangular wall of ${W}cm by ${H}cm is to be covered completely with identical square photos as large as possible. If each photo has side length x cm and y photos are needed, find ${askSum ? 'x + y' : 'the number of photos y'}.`,
-      expression: `사진 한 변 x = 최대공약수(${W}, ${H}) = ${s}cm, y = (${W}/${s}) × (${H}/${s}) = ${tileCount}`,
+      expression: '',
       answer: String(ans),
       diagram: { kind: 'rpm-tile-rectangle', w: W, h: H, tileSize: s, unit: 'cm', mode: 'fill' },
       explanation: `사진의 한 변의 길이 x는 ${W}와 ${H}의 최대공약수인 ${s}cm입니다. 가로에 ${qw}장, 세로에 ${qh}장이 들어가므로 필요한 사진의 수 y = ${qw} × ${qh} = ${tileCount}장입니다. 따라서 정답은 ${ans}입니다.`,
@@ -918,7 +918,7 @@ export function rpmGcdWordTileFence(random) {
     return {
       prompt: `가로의 길이가 ${W}m, 세로의 길이가 ${H}m인 직사각형 모양의 목장의 둘레에 일정한 간격으로 기둥을 세우려고 한다. 네 모퉁이에 반드시 기둥을 세울 때, 필요한 최소한의 기둥의 개수를 구하시오.`,
       promptEn: `A rectangular ranch of ${W}m by ${H}m is to have fence posts installed along its perimeter at equal intervals, including all 4 corners. Find the minimum number of posts needed.`,
-      expression: `간격 g = 최대공약수(${W}, ${H}) = ${g}m, 둘레 기둥 수 = 2 × (${qw} + ${qh})`,
+      expression: '',
       answer: String(posts),
       answerSuffix: '개',
       diagram: { kind: 'rpm-tile-rectangle', w: W, h: H, tileSize: g, unit: 'm', mode: 'perimeter' },
@@ -941,7 +941,7 @@ export function rpmGcdWordRemainder(random) {
     return {
       prompt: `어떤 자연수로 ${n1}을 나누면 ${r1}이 남고, ${n2}를 나누면 ${r2}가 남는다고 한다. 이러한 자연수 중에서 가장 큰 수를 구하시오.`,
       promptEn: `When divided into ${n1}, a natural number leaves a remainder of ${r1}; divided into ${n2}, it leaves a remainder of ${r2}. Find the greatest such natural number.`,
-      expression: `최대공약수(${n1} - ${r1}, ${n2} - ${r2}) = ${g}`,
+      expression: '',
       answer: String(g),
       explanation: `구하는 수는 ${n1} - ${r1} = ${n1 - r1}과 ${n2} - ${r2} = ${n2 - r2}의 공약수 중 ${Math.max(r1, r2)}보다 큰 수입니다. 이 중 가장 큰 수는 두 수의 최대공약수인 ${g}입니다.`,
     };
@@ -959,7 +959,7 @@ export function rpmGcdWordRemainder(random) {
     return {
       prompt: `어떤 자연수로 ${n1}을 나누면 ${d}가 부족하고, ${n2}를 나누면 ${r2}가 남고, ${n3}을 나누면 ${r3}이 남는다. 이러한 자연수 중에서 가장 큰 수를 구하시오.`,
       promptEn: `When divided into ${n1}, it lacks ${d}; into ${n2}, remainder ${r2}; into ${n3}, remainder ${r3}. Find the greatest such natural number.`,
-      expression: `최대공약수(${n1 + d}, ${n2 - r2}, ${n3 - r3}) = ${g}`,
+      expression: '',
       answer: String(g),
       explanation: `구하는 수는 ${n1} + ${d} = ${n1 + d}, ${n2} - ${r2} = ${n2 - r2}, ${n3} - ${r3} = ${n3 - r3}의 공약수 중 가장 큰 수이므로 최대공약수인 ${g}입니다.`,
     };
@@ -985,7 +985,7 @@ export function rpmLcmWordBrickCube(random) {
     return {
       prompt: `가로의 길이가 ${a}cm, 세로의 길이가 ${b}cm인 직사각형 모양의 색종이를 빈틈없이 붙여서 가장 작은 정사각형을 만들려고 한다. 필요한 색종이의 수를 구하시오.`,
       promptEn: `Rectangular colored papers of ${a}cm by ${b}cm are pasted edge-to-edge without gaps to form the smallest square. Find the number of paper sheets needed.`,
-      expression: `정사각형 한 변 = 최소공배수(${a}, ${b}) = ${L}cm`,
+      expression: '',
       answer: String(count),
       answerSuffix: '장',
       explanation: `정사각형의 한 변의 길이는 ${a}와 ${b}의 최소공배수인 ${L}cm입니다. 가로에 ${L / a}장, 세로에 ${L / b}장이 필요하므로 필요한 색종이의 수는 ${L / a} × ${L / b} = ${count}장입니다.`,
@@ -997,7 +997,7 @@ export function rpmLcmWordBrickCube(random) {
     return {
       prompt: `가로의 길이, 세로의 길이, 높이가 각각 ${a}cm, ${b}cm, ${c}cm인 직육면체 모양의 벽돌을 한 방향으로 빈틈없이 쌓아서 가장 작은 정육면체를 만들려고 한다. 이때 필요한 벽돌의 개수를 구하시오.`,
       promptEn: `Bricks measuring ${a}cm by ${b}cm by ${c}cm are stacked in the same orientation to build the smallest cube. Find the number of bricks required.`,
-      expression: `정육면체 한 변 = 최소공배수(${a}, ${b}, ${c}) = ${L}cm`,
+      expression: '',
       answer: String(count),
       answerSuffix: '개',
       diagram: { kind: 'rpm-brick-cube', a, b, c, target: '정육면체' },
@@ -1016,7 +1016,7 @@ export function rpmLcmWordGearTrackCycle(random) {
     return {
       prompt: `톱니의 수가 각각 ${a}개, ${b}개인 톱니바퀴 A, B가 서로 맞물려 돌아가고 있다. 두 톱니바퀴가 처음으로 다시 같은 톱니에서 맞물릴 때까지 톱니바퀴 A의 회전수를 구하시오.`,
       promptEn: `Two intermeshed gears A and B have ${a} and ${b} teeth respectively. How many rotations does Gear A make before they first mesh again at the same teeth?`,
-      expression: `최소공배수(${a}, ${b}) = ${L}개 톱니`,
+      expression: '',
       answer: String(rotA),
       answerSuffix: '바퀴',
       diagram: { kind: 'rpm-gears', teethA: a, teethB: b },
@@ -1029,7 +1029,7 @@ export function rpmLcmWordGearTrackCycle(random) {
     return {
       prompt: `서로 맞물려 도는 톱니바퀴 A, B, C가 있다. A의 톱니의 수는 ${a}개, B는 ${b}개, C는 ${c}개이다. 세 톱니바퀴가 처음으로 다시 같은 위치에서 맞물리려면 A는 몇 바퀴 회전해야 하는가?`,
       promptEn: `Three meshed gears A, B, C have ${a}, ${b}, ${c} teeth. How many rotations does gear A make before all three re-align?`,
-      expression: `최소공배수(${a}, ${b}, ${c}) = ${L}`,
+      expression: '',
       answer: String(rotA),
       answerSuffix: '바퀴',
       explanation: `맞물린 톱니의 수는 세 수의 최소공배수인 ${L}개입니다. 따라서 A는 ${L} ÷ ${a} = ${rotA}바퀴 회전해야 합니다.`,
@@ -1040,7 +1040,7 @@ export function rpmLcmWordGearTrackCycle(random) {
     return {
       prompt: `어느 역에서 새마을호 열차는 ${t1}분마다, 무궁화호 열차는 ${t2}분마다, 전철은 ${t3}분마다 출발한다. 오전 6시에 세 열차가 동시에 출발하였을 때, 그 다음에 처음으로 다시 동시에 출발하는 것은 몇 분 후인가?`,
       promptEn: `Three trains depart every ${t1}, ${t2}, and ${t3} minutes. If they leave simultaneously at 6:00 AM, how many minutes later will they depart together again?`,
-      expression: `최소공배수(${t1}, ${t2}, ${t3}) = ${L}분`,
+      expression: '',
       answer: String(L),
       answerSuffix: '분 후',
       explanation: `세 열차가 다시 동시에 출발하는 주기는 ${t1}, ${t2}, ${t3}의 최소공배수인 ${L}분 후입니다.`,
@@ -1136,7 +1136,7 @@ export function rpmGcdLcmFractionMultiplier(random) {
     return {
       prompt: `세 수 110/n, 220/n, 275/n 을 모두 자연수가 되게 하는 두 자리 자연수 n의 개수를 구하시오.`,
       promptEn: `How many 2-digit natural numbers n make 110/n, 220/n, and 275/n all natural numbers?`,
-      expression: `최대공약수(110, 220, 275) = ${g}`,
+      expression: '',
       answer: String(twoDigitDivs.length),
       answerSuffix: '개',
       explanation: `n은 110, 220, 275의 공약수이어야 하므로 최대공약수인 ${g}의 약수이어야 합니다. ${g}의 약수 [${divisorsOf(g).join(', ')}] 중 두 자리 자연수는 [${twoDigitDivs.join(', ')}]으로 모두 ${twoDigitDivs.length}개입니다.`,
@@ -8905,7 +8905,7 @@ export function rpmRegularPolyhedraFaceShapes(random) {
     return {
       prompt: `${target.name}의 각 면의 모양을 고르시오.`,
       promptEn: `What is the shape of each face of a regular ${target.name}?`,
-      expression: `\\text{면의 모양: } ${target.face}`,
+      expression: '',
       answer: target.face === '정삼각형' ? '1' : target.face === '정사각형' ? '2' : '3',
       choices: [
         { value: '1', label: '정삼각형', labelEn: 'Equilateral triangle' },
@@ -8920,7 +8920,7 @@ export function rpmRegularPolyhedraFaceShapes(random) {
     return {
       prompt: `${target.name}의 한 꼭짓점에 모인 면의 개수를 구하시오. (숫자만 입력)`,
       promptEn: `Find the number of faces meeting at each vertex of a regular ${target.name}.`,
-      expression: String(target.count),
+      expression: '',
       answer: String(target.count),
       explanation: `${target.name}의 한 꼭짓점에 모인 면의 개수는 ${target.count}개입니다.`,
     };
@@ -8944,7 +8944,7 @@ export function rpmRegularPolyhedraElementsCount(random) {
     return {
       prompt: `${target.name}의 꼭짓점의 개수를 구하시오.`,
       promptEn: `Find the number of vertices of a regular ${target.name}.`,
-      expression: String(target.v),
+      expression: '',
       answer: String(target.v),
       explanation: `${target.name}의 꼭짓점의 개수는 ${target.v}개입니다.`,
     };
@@ -8953,7 +8953,7 @@ export function rpmRegularPolyhedraElementsCount(random) {
     return {
       prompt: `${target.name}의 모서리의 개수를 구하시오.`,
       promptEn: `Find the number of edges of a regular ${target.name}.`,
-      expression: String(target.e),
+      expression: '',
       answer: String(target.e),
       explanation: `${target.name}의 모서리의 개수는 ${target.e}개입니다.`,
     };
@@ -8963,7 +8963,7 @@ export function rpmRegularPolyhedraElementsCount(random) {
     return {
       prompt: `${target.name}의 모서리의 개수를 e, 꼭짓점의 개수를 v라 할 때, e - v의 값을 구하시오.`,
       promptEn: `For a regular ${target.name}, let e be edges and v be vertices. Find e - v.`,
-      expression: `${target.e} - ${target.v}`,
+      expression: '',
       answer: String(diff),
       explanation: `${target.name}의 모서리의 개수는 ${target.e}개, 꼭짓점의 개수는 ${target.v}개입니다. 따라서 e - v = ${target.e} - ${target.v} = ${diff}입니다.`,
     };
@@ -9692,7 +9692,7 @@ export function rpmSolidSurfaceShortestPath(random) {
   return {
     prompt: `밑면의 반지름의 길이가 ${l}cm이고 모선의 길이가 ${6 * l}cm인 원뿔의 전개도에서 옆면 부채꼴의 중심각의 크기는 60°이다. 모선 OA 위의 점 A에서 출발하여 원뿔의 옆면을 한 바퀴 돌아 다시 점 A로 돌아오는 실의 최단 길이를 구하시오. (단, 모선의 길이는 ${6 * l}cm, 단위 cm는 생략)`,
     promptEn: `On a cone with slant height ${6 * l} cm and lateral sector central angle 60°, find the shortest path length wrapped around the cone from point A back to A.`,
-    expression: `${6 * l}`,
+    expression: '',
     answer: String(6 * l),
     explanation: `입체도형의 옆면을 돌아가는 최단거리는 전개도 상에서 두 점을 잇는 선분의 길이입니다. 전개도에서 부채꼴의 중심각이 60°이고 양 변(모선)의 길이가 각각 ${6 * l}cm이므로, 점 A와 A'을 잇는 삼각형은 정삼각형이 됩니다. 따라서 최단 길이는 모선의 길이와 같은 ${6 * l}cm입니다.`,
   };
@@ -10043,7 +10043,7 @@ export function rpmDataRelativeFrequencyConcept(random) {
     return {
       prompt: `전체 학생 수가 ${total}명인 학급에서 어떤 계급의 도수가 ${freq}명일 때, 이 계급의 상대도수를 소수로 구하시오.`,
       promptEn: `In a class of ${total} students, a class has frequency ${freq}. Find its relative frequency as a decimal.`,
-      expression: `\\frac{${freq}}{${total}}`,
+      expression: '',
       answer: String(Number(relFreq)),
       explanation: `상대도수 = (그 계급의 도수) / (도수의 총합) = ${freq} / ${total} = ${relFreq} 입니다.`,
     };
@@ -10052,7 +10052,7 @@ export function rpmDataRelativeFrequencyConcept(random) {
     return {
       prompt: `어떤 도수분포표에서 모든 계급의 상대도수의 총합은 항상 얼마인가?`,
       promptEn: `In any relative frequency distribution, what is always the sum of all relative frequencies?`,
-      expression: `\\sum \\text{상대도수} = 1`,
+      expression: '',
       answer: '1',
       explanation: `모든 계급의 도수의 합은 전체 도수와 같으므로, 상대도수의 총합은 항상 1입니다.`,
     };
@@ -10318,7 +10318,7 @@ export function rpmRatDecTerminatingCondition(random) {
     return {
       prompt: `다음 보기의 분수 중 유한소수로 나타낼 수 있는 것의 개수를 구하시오.\n\n[보기] ${shuffled.map(f => f.text).join(', ')}`,
       promptEn: `How many of the following fractions can be represented as terminating decimals?\n[List] ${shuffled.map(f => f.text).join(', ')}`,
-      expression: `${termCount}`,
+      expression: '',
       answer: String(termCount),
       explanation: `기약분수로 나타내었을 때 분모의 소인수가 2 또는 5뿐인 것만 유한소수가 됩니다.\n` +
         shuffled.map(f => `- ${f.text}: ${f.term ? '유한소수' : '무한(순환)소수'} (${f.expl})`).join('\n') +
@@ -10333,7 +10333,7 @@ export function rpmRatDecTerminatingCondition(random) {
     return {
       prompt: `다음 분수 중 유한소수로 나타낼 수 있는 것을 고르시오.`,
       promptEn: `Which of the following fractions can be represented as a terminating decimal?`,
-      expression: `\\text{정답 번호: } ${correctIdx}`,
+      expression: '',
       answer: String(correctIdx),
       choices: options.map((opt, i) => ({
         value: String(i + 1),
@@ -10365,7 +10365,7 @@ export function rpmRatDecMultiplyToTerminatingSingle(random) {
     return {
       prompt: `분수 \\frac{${prob.a}}{${prob.b}}에 자연수 x를 곱하여 소수로 나타내면 유한소수가 된다고 한다. x의 값이 될 수 있는 가장 작은 자연수를 구하시오.`,
       promptEn: `When the fraction \\frac{${prob.a}}{${prob.b}} is multiplied by a natural number x, it becomes a terminating decimal. Find the smallest natural number x.`,
-      expression: `${prob.k}`,
+      expression: '',
       answer: String(prob.k),
       explanation: `\\frac{${prob.a}}{${prob.b}}를 기약분수로 나타내어 분모를 소인수분해하면 2와 5 이외의 소인수의 곱이 ${prob.k}입니다. 따라서 유한소수가 되기 위해 x는 ${prob.k}의 배수이어야 하므로, 가장 작은 자연수 x는 ${prob.k}입니다.`,
     };
@@ -10375,7 +10375,7 @@ export function rpmRatDecMultiplyToTerminatingSingle(random) {
     return {
       prompt: `분수 \\frac{${prob.a}}{${prob.b}}에 자연수 x를 곱하여 소수로 나타내면 유한소수가 된다고 한다. x의 값이 될 수 있는 두 자리 자연수의 개수를 구하시오.`,
       promptEn: `When \\frac{${prob.a}}{${prob.b}} is multiplied by a natural number x, it becomes a terminating decimal. How many two-digit natural numbers x satisfy this?`,
-      expression: `${count2Digit}`,
+      expression: '',
       answer: String(count2Digit),
       explanation: `\\frac{${prob.a}}{${prob.b}}를 기약분수로 나타내어 분모의 2와 5 이외의 소인수를 찾으면 ${prob.k}입니다. 따라서 x는 ${prob.k}의 배수이어야 합니다. 두 자리 자연수 중 ${prob.k}의 배수의 개수는 99 이하의 배수 개수(${Math.floor(99 / prob.k)})에서 9 이하의 배수 개수(${Math.floor(9 / prob.k)})를 뺀 ${count2Digit}개입니다.`,
     };
@@ -10398,7 +10398,7 @@ export function rpmRatDecMultiplyToTerminatingBoth(random) {
     return {
       prompt: `두 분수 \\frac{${cfg.a1}}{${cfg.b1}}과 \\frac{${cfg.a2}}{${cfg.b2}}에 각각 어떤 자연수 x를 곱하면 두 분수 모두 유한소수로 나타내어진다고 한다. 이러한 x의 값 중 가장 작은 자연수를 구하시오.`,
       promptEn: `When both \\frac{${cfg.a1}}{${cfg.b1}} and \\frac{${cfg.a2}}{${cfg.b2}} are multiplied by a natural number x, both become terminating decimals. Find the smallest such natural number x.`,
-      expression: `${cfg.lcmK}`,
+      expression: '',
       answer: String(cfg.lcmK),
       explanation: `\\frac{${cfg.a1}}{${cfg.b1}}이 유한소수가 되려면 x는 ${cfg.k1}의 배수이어야 하고, \\frac{${cfg.a2}}{${cfg.b2}}가 유한소수가 되려면 x는 ${cfg.k2}의 배수이어야 합니다. 두 조건을 모두 만족하려면 x는 ${cfg.k1}과 ${cfg.k2}의 공배수, 즉 최소공배수인 ${cfg.lcmK}의 배수이어야 하므로 가장 작은 자연수 x는 ${cfg.lcmK}입니다.`,
     };
@@ -10408,7 +10408,7 @@ export function rpmRatDecMultiplyToTerminatingBoth(random) {
     return {
       prompt: `두 분수 \\frac{${cfg.a1}}{${cfg.b1}}과 \\frac{${cfg.a2}}{${cfg.b2}}에 각각 자연수 x를 곱하면 두 분수 모두 유한소수가 된다. x의 값이 될 수 있는 두 자리 자연수의 개수를 구하시오.`,
       promptEn: `When both \\frac{${cfg.a1}}{${cfg.b1}} and \\frac{${cfg.a2}}{${cfg.b2}} are multiplied by x, both become terminating decimals. How many two-digit natural numbers x exist?`,
-      expression: `${count2Digit}`,
+      expression: '',
       answer: String(count2Digit),
       explanation: `x는 두 분모의 2, 5 이외의 소인수의 최소공배수인 ${cfg.lcmK}의 배수이어야 합니다. 두 자리 자연수 중 ${cfg.lcmK}의 배수는 ${count2Digit}개입니다.`,
     };
@@ -10434,7 +10434,7 @@ export function rpmRatDecDenominatorVariable(random) {
   return {
     prompt: `분수 \\frac{21}{2^2 \\times 5 \\times x}를 소수로 나타내면 유한소수가 될 때, 다음 중 x의 값이 될 수 없는 것은?`,
     promptEn: `When the fraction \\frac{21}{2^2 \\times 5 \\times x} is represented as a decimal, it is a terminating decimal. Which of the following CANNOT be the value of x?`,
-    expression: `\\text{정답 번호: } ${correctIdx}`,
+    expression: '',
     answer: String(correctIdx),
     choices: options.map((opt, i) => ({
       value: String(i + 1),
@@ -10484,7 +10484,7 @@ export function rpmRatDecPeriodAndNotation(random) {
     return {
       prompt: `순환소수 ${target.raw}의 순환마디를 구하시오.`,
       promptEn: `Find the repeating period of the repeating decimal ${target.raw}.`,
-      expression: `${target.period}`,
+      expression: '',
       answer: target.period,
       explanation: `${target.raw}에서 소수점 아래 일정하게 반복되는 숫자의 배열은 ${target.period}이므로 순환마디는 ${target.period}입니다.`,
     };
@@ -10499,7 +10499,7 @@ export function rpmRatDecPeriodAndNotation(random) {
     return {
       prompt: `순환소수 ${target.raw}를 점을 찍어 바르게 나타낸 것을 고르시오.`,
       promptEn: `Choose the correct repeating decimal notation with dots for ${target.raw}.`,
-      expression: `\\text{정답: } ${target.notation}`,
+      expression: '',
       answer: '1',
       choices,
       explanation: `순환소수는 순환마디의 양 끝 숫자 위에 점을 찍어 나타내므로 올바른 표현은 ${target.notation}입니다.`,
@@ -10535,7 +10535,7 @@ export function rpmRatDecNthDigitOfRepeating(random) {
   return {
     prompt: `분수 \\frac{${p.num}}{${p.den}}을 소수로 나타낼 때, 소수점 아래 ${n}번째 자리의 숫자를 구하시오.`,
     promptEn: `When the fraction \\frac{${p.num}}{${p.den}} is expressed as a decimal, find the ${n}-th digit after the decimal point.`,
-    expression: `${ansDigit}`,
+    expression: '',
     answer: String(ansDigit),
     explanation: `\\frac{${p.num}}{${p.den}} = 0.${p.nonRep.join('')}\\dot{${p.digits[0]}}${p.digits.length > 2 ? p.digits.slice(1, -1).join('') : ''}\\dot{${p.digits[p.digits.length - 1]}}입니다. ${nonRepLen > 0 ? `순환하지 않는 자리가 ${nonRepLen}개이고, ` : ''}순환마디의 길이가 ${repLen}이므로, (${n} - ${nonRepLen}) ÷ ${repLen}의 나머지는 ${(n - nonRepLen) % repLen}입니다. 따라서 소수점 아래 ${n}번째 자리의 숫자는 ${ansDigit}입니다.`,
   };
@@ -10556,7 +10556,7 @@ export function rpmRatDecRepeatingOnlyCondition(random) {
   return {
     prompt: `분수 \\frac{x}{2^2 \\times 3 \\times 5}를 소수로 나타내면 순환소수로만 나타낼 수 있을 때, 다음 중 x의 값이 될 수 없는 것은?`,
     promptEn: `When \\frac{x}{2^2 \\times 3 \\times 5} is represented as a decimal, it can only be a repeating decimal. Which of the following CANNOT be the value of x?`,
-    expression: `\\text{정답 번호: } ${correctIdx}`,
+    expression: '',
     answer: String(correctIdx),
     choices: options.map((opt, i) => ({
       value: String(i + 1),
@@ -10659,7 +10659,7 @@ export function rpmRatDecRepeatingToTerminating(random) {
     return {
       prompt: `순환소수 ${p.dec}에 어떤 자연수 x를 곱하면 유한소수가 된다고 한다. x의 값이 될 수 있는 가장 작은 자연수를 구하시오.`,
       promptEn: `When the repeating decimal ${p.dec} is multiplied by a natural number x, it becomes a terminating decimal. Find the smallest natural number x.`,
-      expression: `${p.k}`,
+      expression: '',
       answer: String(p.k),
       explanation: `순환소수 ${p.dec}을(를) 기약분수로 나타내면 \\frac{${p.rNum}}{${p.rDen}}입니다. 분모 ${p.rDen}을(를) 소인수분해하면 2와 5 이외의 소인수가 ${p.k}이므로, 유한소수가 되기 위해 곱해야 하는 가장 작은 자연수는 ${p.k}입니다.`,
     };
@@ -10668,7 +10668,7 @@ export function rpmRatDecRepeatingToTerminating(random) {
     return {
       prompt: `순환소수 ${p.dec}에 어떤 자연수 x를 곱하여 유한소수가 되도록 할 때, x의 값이 될 수 있는 가장 작은 두 자리 자연수를 구하시오.`,
       promptEn: `When ${p.dec} is multiplied by x, it becomes terminating. Find the smallest two-digit natural number x.`,
-      expression: `${min2Digit}`,
+      expression: '',
       answer: String(min2Digit),
       explanation: `순환소수 ${p.dec} = \\frac{${p.rNum}}{${p.rDen}}의 분모에서 2와 5 이외의 소인수는 ${p.k}이므로 x는 ${p.k}의 배수이어야 합니다. 따라서 가장 작은 두 자리 자연수 x는 ${min2Digit}입니다.`,
     };
@@ -10704,7 +10704,7 @@ export function rpmRatDecFaultyObservation(random) {
   return {
     prompt: `어떤 기약분수를 순환소수로 나타내는데 갑은 분모를 잘못 보아 ${c.decA}(으)로 나타내었고, 을은 분자를 잘못 보아 ${c.decB}(으)로 나타내었다. 처음의 기약분수를 순환소수로 바르게 나타내시오.`,
     promptEn: `When converting an irreducible fraction to a repeating decimal, Student A misread the denominator and got ${c.decA}, while Student B misread the numerator and got ${c.decB}. Express the original irreducible fraction as a repeating decimal.`,
-    expression: c.correctDec,
+    expression: '',
     answer: c.correctDec,
     explanation: `갑은 분모를 잘못 보았으므로 분자는 제대로 보았습니다. ${c.decA} = \\frac{${c.rNumA}}{${c.rDenA}}에서 분자는 ${c.rNumA}입니다.\n을은 분자를 잘못 보았으므로 분모는 제대로 보았습니다. ${c.decB} = \\frac{${c.rNumB}}{${c.rDenB}}에서 분모는 ${c.rDenB}입니다.\n따라서 처음 기약분수는 \\frac{${c.correctFrac.split('/')[0]}}{${c.correctFrac.split('/')[1]}}이며, 이를 순환소수로 나타내면 ${c.correctDec}입니다.`,
   };
@@ -10727,7 +10727,7 @@ export function rpmRatDecRepeatingInequality(random) {
     return {
       prompt: `부등식 ${cfg.left} < 0.\\dot{a} < ${cfg.right}를 만족하는 한 자리 자연수 a의 개수를 구하시오.`,
       promptEn: `Find the number of single-digit natural numbers a satisfying ${cfg.left} < 0.\\dot{a} < ${cfg.right}.`,
-      expression: `${cfg.vals.length}`,
+      expression: '',
       answer: String(cfg.vals.length),
       explanation: `0.\\dot{a} = \\frac{a}{9}이므로 주어진 부등식은 ${cfg.left} < \\frac{a}{9} < ${cfg.right}입니다. 각 변에 9를 곱하면 ${cfg.lVal} < a < ${cfg.rVal}이므로 만족하는 한 자리 자연수 a는 ${cfg.vals.join(', ')}의 ${cfg.vals.length}개입니다.`,
     };
@@ -10737,7 +10737,7 @@ export function rpmRatDecRepeatingInequality(random) {
     return {
       prompt: `부등식 ${cfg.left} < 0.\\dot{a} < ${cfg.right}를 만족하는 한 자리 자연수 a의 값 중 가장 큰 수를 구하시오.`,
       promptEn: `Find the maximum single-digit natural number a satisfying ${cfg.left} < 0.\\dot{a} < ${cfg.right}.`,
-      expression: `${maxVal}`,
+      expression: '',
       answer: String(maxVal),
       explanation: `0.\\dot{a} = \\frac{a}{9}이므로 ${cfg.lVal} < a < ${cfg.rVal}입니다. 이를 만족하는 가장 큰 한 자리 자연수는 ${maxVal}입니다.`,
     };
@@ -10837,7 +10837,7 @@ export function rpmRatDecBetweenFractionsTerminating(random) {
   return {
     prompt: `두 분수 \\frac{${cfg.lNum}}{${cfg.lDen}}과 \\frac{${cfg.rNum}}{${cfg.rDen}} 사이의 분수 중에서 분모가 ${cfg.M}이고 유한소수로 나타낼 수 있는 분수의 개수를 구하시오. (단, 분자는 자연수이다.)`,
     promptEn: `How many fractions with denominator ${cfg.M} strictly between \\frac{${cfg.lNum}}{${cfg.lDen}} and \\frac{${cfg.rNum}}{${cfg.rDen}} can be represented as terminating decimals?`,
-    expression: `${cfg.count}`,
+    expression: '',
     answer: String(cfg.count),
     explanation: `분모를 ${cfg.M}(으)로 통분하면 \\frac{${cfg.low}}{${cfg.M}} < \\frac{x}{${cfg.M}} < \\frac{${cfg.high}}{${cfg.M}}입니다. 분모 ${cfg.M}의 2, 5 이외의 소인수는 ${cfg.k}이므로 유한소수가 되려면 분자 x는 ${cfg.k}의 배수이어야 합니다. ${cfg.low} < x < ${cfg.high} 범위의 ${cfg.k}의 배수는 ${cfg.list.join(', ')}의 ${cfg.count}개입니다.`,
   };
@@ -10862,7 +10862,7 @@ export function rpmRatDecMistakeEquationApplication(random) {
     return {
       prompt: `어떤 자연수에 ${mc.rep}을(를) 곱해야 할 것을 잘못하여 ${mc.dec}을(를) 곱하였더니 그 결과가 정답보다 ${mc.diffNum}만큼 작아졌다. 이때 어떤 자연수를 구하시오.`,
       promptEn: `When a natural number was supposed to be multiplied by ${mc.rep}, it was mistakenly multiplied by ${mc.dec}, yielding a result ${mc.diffNum} smaller than the correct answer. Find the natural number.`,
-      expression: `${mc.n}`,
+      expression: '',
       answer: String(mc.n),
       explanation: `어떤 자연수를 N이라 하면, N \\times ${mc.rep} - N \\times ${mc.dec} = ${mc.diffNum}입니다.\n${mc.rep} - ${mc.dec} = \\frac{1}{30}이고, ${mc.diffNum} = \\frac{${Math.round(mc.diffNum * 10)}}{10}이므로\nN \\times \\frac{1}{30} = \\frac{${Math.round(mc.diffNum * 10)}}{10} \\implies N = ${mc.n}입니다.`,
     };
@@ -10873,7 +10873,7 @@ export function rpmRatDecMistakeEquationApplication(random) {
     return {
       prompt: `한 자리 자연수 a, b (a > b)에 대하여 0.a\\dot{b} + 0.b\\dot{a} = 0.\\dot{${S}}일 때, a + b의 값을 구하시오.`,
       promptEn: `For single-digit natural numbers a and b with a > b, if 0.a\\dot{b} + 0.b\\dot{a} = 0.\\dot{${S}}, find a + b.`,
-      expression: `${S}`,
+      expression: '',
       answer: String(S),
       explanation: `0.a\\dot{b} = \\frac{10a + b - a}{90} = \\frac{9a + b}{90}, 0.b\\dot{a} = \\frac{9b + a}{90}입니다.\n두 식의 합은 \\frac{(9a + b) + (9b + a)}{90} = \\frac{10(a + b)}{90} = \\frac{a + b}{9}입니다.\n우변은 0.\\dot{${S}} = \\frac{${S}}{9}이므로 \\frac{a + b}{9} = \\frac{${S}}{9} \\implies a + b = ${S}입니다.`,
     };
@@ -10917,7 +10917,7 @@ export function rpmRatDecAdvancedSkillUp(random) {
     return {
       prompt: `세 자리 자연수 N에 대하여 \\frac{N}{420}을 소수로 나타내면 유한소수가 되고, N은 6의 배수이다. 100 < N < 200을 만족하는 자연수 N의 개수를 구하시오.`,
       promptEn: `For a 3-digit natural number N, \\frac{N}{420} is a terminating decimal and N is a multiple of 6. How many such N exist in 100 < N < 200?`,
-      expression: `2`,
+      expression: '',
       answer: '2',
       explanation: `420 = 2^2 \\times 3 \\times 5 \\times 7이므로 유한소수가 되려면 N은 3 \\times 7 = 21의 배수이어야 합니다.\n또한 N은 6의 배수이어야 하므로 N은 6과 21의 최소공배수인 42의 배수입니다.\n100 < N < 200 범위의 42의 배수는 42 \\times 3 = 126, 42 \\times 4 = 168의 2개입니다.`,
     };
@@ -10927,7 +10927,7 @@ export function rpmRatDecAdvancedSkillUp(random) {
     return {
       prompt: `두 분수 \\frac{5}{72}와 \\frac{11}{140}에 어떤 자연수 x를 곱하면 두 분수 모두 유한소수가 된다고 한다. x의 값이 될 수 있는 가장 작은 세 자리 자연수를 구하시오.`,
       promptEn: `When both \\frac{5}{72} and \\frac{11}{140} are multiplied by x, both become terminating decimals. Find the smallest 3-digit natural number x.`,
-      expression: `126`,
+      expression: '',
       answer: '126',
       explanation: `72 = 2^3 \\times 3^2이므로 x는 9의 배수이어야 하고, 140 = 2^2 \\times 5 \\times 7이므로 x는 7의 배수이어야 합니다.\n따라서 x는 9와 7의 최소공배수인 63의 배수입니다. 가장 작은 세 자리 자연수는 63 \\times 2 = 126입니다.`,
     };
@@ -10940,7 +10940,7 @@ export function rpmRatDecAdvancedSkillUp(random) {
     return {
       prompt: `분수 \\frac{1}{7}을 소수로 나타낼 때, 소수점 아래 31번째 자리의 숫자를 x, 소수점 아래 50번째 자리의 숫자를 y라 하자. 이때 0.x + 0.y의 값을 기약분수로 나타내시오.`,
       promptEn: `When \\frac{1}{7} is expressed as a decimal, let x be the 31st digit and y be the 50th digit after the decimal point. Express 0.x + 0.y as an irreducible fraction.`,
-      expression: `\\frac{1}{2}`,
+      expression: '',
       answer: '1/2',
       explanation: `\\frac{1}{7} = 0.\\dot{1}4285\\dot{7}로 순환마디의 길이는 6입니다.\n31 ÷ 6 = 5 ... 1이므로 x = 1입니다.\n50 ÷ 6 = 8 ... 2이므로 y = 4입니다.\n따라서 0.x + 0.y = 0.1 + 0.4 = 0.5 = \\frac{1}{2}입니다.`,
     };
@@ -14184,7 +14184,7 @@ export function rpmLineEqnEnclosedTriangleArea(random) {
   return {
     prompt: `두 직선과 x축으로 둘러싸인 삼각형의 밑변이 두 x절편 ${xInt2}와 ${xInt1} 사이에 있고, 두 직선의 교점의 y좌표가 ${py}일 때, 이 삼각형의 넓이를 구하시오.`,
     promptEn: `A triangle is formed by two lines and the x-axis. The x-intercepts are ${xInt2} and ${xInt1}, and the intersection's y-coordinate is ${py}. Find the area.`,
-    expression: `\\text{Base} = ${xInt1} - ${xInt2} = ${base}, \\quad \\text{Height} = ${py}`,
+    expression: '',
     answer: String(area),
     explanation: `x축 위에 있는 밑변의 길이는 ${xInt1} - ${xInt2} = ${base} 이고, 교점의 y좌표가 높이가 되므로 높이는 ${py} 입니다. 따라서 삼각형의 넓이는 1/2 × ${base} × ${py} = ${area} 입니다.`,
     explanationEn: `Base along the x-axis = ${base}, height = ${py}. Area = 1/2 × ${base} × ${py} = ${area}.`
