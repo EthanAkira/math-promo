@@ -238,9 +238,47 @@ function renderRecurringDots(text) {
  * 3. Permutations & Combinations (nPr, nCr, nHr, nΠr): rendered with small subscript n and r flanking the operator.
  * 4. Radicals (√): rendered with a horizontal vinculum over the radicand (never a bare '√' glyph with no bar).
  */
+// A line like "| x | 1 | 2 | 3 |" is one row of a table. Consecutive rows are drawn as a real bordered
+// grid (x/y value tables, magic squares, ...) instead of a run of "|" characters.
+const TABLE_ROW = /^\|\s.*\s\|$/;
+const HEAD_CELL = /^\$?[a-z]\$?$/;
+
+function renderTextAndTables(text) {
+  const lines = text.split('\n').map((line) => line.trim()).filter((line) => line !== '');
+  const blocks = [];
+  lines.forEach((line) => {
+    if (TABLE_ROW.test(line)) {
+      const cells = line.slice(1, -1).split('|').map((cell) => cell.trim());
+      const last = blocks[blocks.length - 1];
+      if (last && last.type === 'table') last.rows.push(cells);
+      else blocks.push({ type: 'table', rows: [cells] });
+    } else blocks.push({ type: 'text', line });
+  });
+  return (
+    <>
+      {blocks.map((block, bi) => {
+        if (block.type === 'text') {
+          return <span key={bi}>{bi > 0 && blocks[bi - 1].type === 'text' ? <br /> : null}<MathText value={block.line} /></span>;
+        }
+        const head = block.rows.length === 2 && block.rows.every((row) => HEAD_CELL.test(row[0]));
+        return (
+          <span className={`math-table${head ? ' has-head' : ''}`} role="table" key={bi}>
+            {block.rows.map((row, ri) => (
+              <span className="math-table-row" role="row" key={ri}>
+                {row.map((cell, ci) => <span className="math-table-cell" role="cell" key={ci}><MathText value={cell} /></span>)}
+              </span>
+            ))}
+          </span>
+        );
+      })}
+    </>
+  );
+}
+
 export default function MathText({ value }) {
   if (value === null || value === undefined || value === '') return null;
   const cleaned = sanitizePublicText(value);
+  if (typeof cleaned === 'string' && cleaned.includes('\n')) return renderTextAndTables(cleaned);
   const tokens = tokenizeMath(hasLatex(cleaned) ? latexToPlain(cleaned) : cleaned);
 
   return (

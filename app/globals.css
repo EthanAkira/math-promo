@@ -3507,3 +3507,9 @@ html[dir="rtl"] .generated-proportion-graph {
 
 .recurring-dot { position: relative; display: inline-block; }
 .recurring-dot::after { content: ''; position: absolute; left: 50%; top: -0.12em; width: 0.17em; height: 0.17em; border-radius: 50%; background: currentColor; transform: translateX(-50%); }
+
+.math-table { display: table; border-collapse: collapse; margin: 8px 0; max-width: 100%; }
+.math-table-row { display: table-row; }
+.math-table-cell { display: table-cell; min-width: 2.6em; padding: 5px 14px; border: 1px solid var(--ink-soft, #667); text-align: center; vertical-align: middle; font-weight: 600; }
+.math-table.has-head .math-table-row > .math-table-cell:first-child { background: #f1ede2; font-weight: 800; }
+@media print { .math-table-cell { border-color: #000; } }

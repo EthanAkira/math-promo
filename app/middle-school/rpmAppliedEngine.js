@@ -3371,7 +3371,8 @@ export function rpmAlgMagicSquarePyramid(random) {
     const shown = (r === 0 && (col === 0 || col === 2)) || (r === 1 && col === 1);
     return shown ? fmt(grid[r][col]) : '□';
   };
-  const rows = [0, 1, 2].map((r) => `${r + 1}행:  ${[0, 1, 2].map((col) => label(r, col)).join('   |   ')}`);
+  // One "| a | b | c |" line per row; MathText draws consecutive such lines as a bordered 3x3 grid.
+  const rows = [0, 1, 2].map((r) => `| ${[0, 1, 2].map((col) => label(r, col)).join(' | ')} |`);
   const A = grid[cellA[0]][cellA[1]];
   const B = grid[cellB[0]][cellB[1]];
   const ask = pick(random, ['A - B', 'A + B', 'A']);
