@@ -3065,21 +3065,55 @@ export function rpmAlgPolyTermsDegree(random) {
 
 // 9. [문자와 식 유형 09] 일차식의 식별과 분모 문자 함정
 export function rpmAlgLinearIdentify(random) {
-  const choices = [
-    { value: '1', label: '-5x', labelEn: '-5x', isRight: true },
-    { value: '2', label: '4', labelEn: '4', isRight: false },
-    { value: '3', label: '1/x + 3', labelEn: '1/x + 3', isRight: false },
-    { value: '4', label: 'x^2 + 1', labelEn: 'x^2 + 1', isRight: false },
-    { value: '5', label: '1 + x - x^2', labelEn: '1 + x - x^2', isRight: false },
+  const v = pick(random, ['x', 'y', 'a', 'b']);
+  const n = (lo, hi) => ri(random, lo, hi);
+  const sgn = (k) => (k < 0 ? `- ${-k}` : `+ ${k}`);
+  // [text, why it is / is not a linear expression]
+  const linearMakers = [
+    () => { const a = pick(random, [-9, -7, -5, -4, -3, -2, 2, 3, 4, 5, 6, 8]); return [`${a}${v}`, `${a}${v}는 차수가 1인 일차식입니다.`]; },
+    () => { const a = pick(random, [-6, -4, -3, -2, 2, 3, 5, 7]); const b = n(1, 9); return [`${a}${v} ${sgn(pick(random, [-1, 1]) * b)}`, `차수가 1인 항 ${a}${v}와 상수항으로 이루어진 일차식입니다.`]; },
+    () => { const d = pick(random, [2, 3, 4, 5]); const b = n(1, 8); return [`${v}/${d} + ${b}`, `분모가 문자가 아닌 수이므로 ${v}/${d}는 일차항이고, 전체가 일차식입니다.`]; },
+    () => { const a = n(2, 6); const b = n(1, 7); return [`${a} - ${b}${v}`, `차수가 1인 항 ${b}${v}를 포함한 일차식입니다.`]; },
   ];
+  const nonLinearMakers = [
+    () => { const c = pick(random, [-6, -4, 3, 4, 7, 9]); return [`${c}`, `${c}는 상수항뿐이므로 차수가 0인 상수입니다(일차식이 아님).`]; },
+    () => { const b = n(1, 8); return [`1/${v} + ${b}`, `분모에 문자가 있는 1/${v}는 다항식이 아니므로 일차식이 아닙니다.`]; },
+    () => { const a = n(2, 7); return [`${a}/${v}`, `분모에 문자가 있으므로 다항식이 아니고 일차식이 아닙니다.`]; },
+    () => { const b = n(1, 9); return [`${v}^2 + ${b}`, `최고차항의 차수가 2인 이차식입니다.`]; },
+    () => { const a = n(2, 5); return [`${a}${v}^2`, `차수가 2인 이차식입니다.`]; },
+    () => { const a = n(1, 5); return [`${a} + ${v} - ${v}^2`, `최고차항의 차수가 2이므로 이차식입니다.`]; },
+    () => { const a = n(2, 6); return [`${v}^2 - ${a}${v}`, `차수가 2인 이차식입니다.`]; },
+  ];
+  const build = (makers, count) => {
+    const out = []; const seen = new Set(); let guard = 0;
+    while (out.length < count && guard < 200) {
+      guard += 1;
+      const item = pick(random, makers)();
+      if (!seen.has(item[0])) { seen.add(item[0]); out.push(item); }
+    }
+    return out;
+  };
+  const askLinear = random() < 0.65;
+  let target; let others;
+  if (askLinear) {
+    [target] = build(linearMakers, 1);
+    others = build(nonLinearMakers, 4);
+  } else {
+    [target] = build(nonLinearMakers, 1);
+    others = build(linearMakers, 4);
+  }
+  const all = [{ text: target[0], right: true }, ...others.map((o) => ({ text: o[0], right: false }))];
+  for (let k = all.length - 1; k > 0; k -= 1) { const r = Math.floor(random() * (k + 1)); [all[k], all[r]] = [all[r], all[k]]; }
+  const choices = all.map((c, idx) => ({ value: String(idx + 1), label: c.text, labelEn: c.text, isRight: c.right }));
+  const answerIdx = all.findIndex((c) => c.right) + 1;
   return {
-    prompt: '다음 보기 중 일차식인 것은?',
-    promptEn: 'Which of the following is a linear expression?',
-    expression: '일차식의 판별',
+    prompt: askLinear ? '다음 보기 중 일차식인 것은?' : '다음 보기 중 일차식이 아닌 것은?',
+    promptEn: askLinear ? 'Which of the following is a linear expression?' : 'Which of the following is NOT a linear expression?',
+    expression: '',
     choices,
-    answer: '1',
-    explanation: '-5x는 차수가 1인 일차식입니다. 4는 상수항(0차), 1/x+3은 분모에 문자가 있어 다항식이 아니며, x^2+1과 1+x-x^2은 2차식입니다.',
-    explanationEn: '-5x is a linear term of degree 1. 1/x is not a polynomial, 4 is constant (degree 0), others have degree 2.'
+    answer: String(answerIdx),
+    explanation: `${target[1]} 정답은 ${answerIdx}번(${target[0]})입니다.`,
+    explanationEn: `The answer is choice ${answerIdx} (${target[0]}).`,
   };
 }
 

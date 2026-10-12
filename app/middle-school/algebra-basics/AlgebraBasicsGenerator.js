@@ -13,6 +13,7 @@ import MathText from '../../components/MathText';
 import { recordAttempts, syncAnswerEvents } from '../../lib/submissions';
 import ProblemScratchpad from '../../components/ProblemScratchpad';
 import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
+import { asChoiceKind } from '../choiceKind';
 
 const PROBLEM_COUNT = 20;
 
@@ -65,7 +66,7 @@ function makeAppliedProblems(seed, unit) {
       attempt += 1;
     } while (used.has(`${item.prompt}|${item.expression}`) && attempt < 60);
     used.add(`${item.prompt}|${item.expression}`);
-    return { id: index + 1, ...item };
+    return { id: index + 1, ...asChoiceKind(item) };
   });
 }
 
