@@ -176,7 +176,7 @@ export function rpmPrimePowerRules(random) {
 
 // [유형 03] 소인수분해와 지수 연산
 export function rpmPrimeFactorizeExponents(random) {
-  const variant = pick(random, ['solveLinearFactors', 'orderedPrimes', 'correctFactorization']);
+  const variant = pick(random, ['solveLinearFactors', 'orderedPrimes']);
   if (variant === 'solveLinearFactors') {
     const [a, b, c] = pick(random, [
       [3, 2, 5],
@@ -194,7 +194,7 @@ export function rpmPrimeFactorizeExponents(random) {
       answer: String(ans),
       explanation: `${N}을 소인수분해하면 2^${a} × 3^${b} × ${c}입니다. 따라서 a = ${a}, b = ${b}, c = ${c}이므로 a - b + c = ${a} - ${b} + ${c} = ${ans}입니다.`,
     };
-  } else if (variant === 'orderedPrimes') {
+  } else {
     const [a, b, m, n] = pick(random, [
       [3, 5, 2, 2],
       [2, 3, 3, 2],
@@ -212,28 +212,9 @@ export function rpmPrimeFactorizeExponents(random) {
       answer: String(ans),
       explanation: `${N}을 소인수분해하면 ${a}^${m} × ${b}^${n}입니다. a < b이므로 a = ${a}, b = ${b}, m = ${m}, n = ${n}입니다. 따라서 a + b - m + n = ${a} + ${b} - ${m} + ${n} = ${ans}입니다.`,
     };
-  } else {
-    const [val, correctStr, wrong1, wrong2, wrong3] = pick(random, [
-      [504, '2^3 × 3^2 × 7', '2^3 × 3^4', '2^3 × 11^2', '2^2 × 3^3 × 5'],
-      [360, '2^3 × 3^2 × 5', '2^4 × 3 × 5', '2^3 × 9 × 5', '2^2 × 3^3 × 5'],
-      [180, '2^2 × 3^2 × 5', '2 × 3^2 × 10', '2^3 × 3 × 5', '4 × 9 × 5'],
-    ]);
-    const choices = [
-      { value: '1', label: correctStr },
-      { value: '2', label: wrong1 },
-      { value: '3', label: wrong2 },
-      { value: '4', label: wrong3 },
-    ].sort(() => random() - 0.5);
-    const correctIdx = choices.findIndex((c) => c.label === correctStr) + 1;
-    return {
-      prompt: `다음 중 ${val}을 올바르게 소인수분해한 것을 고르시오.`,
-      promptEn: `Which of the following is the correct prime factorization of ${val}?`,
-      expression: `${val}`,
-      answer: String(correctIdx),
-      choices,
-      explanation: `${val}을 소인수분해하면 거듭제곱과 소수들의 곱으로 나타내어 ${correctStr}입니다. 합성수가 남아있거나 곱의 결과가 다른 보기는 올바르지 않습니다. 정답은 ${correctIdx}번(${correctStr})입니다.`,
-    };
   }
+  // The "pick the correct factorization" multiple-choice variant was removed: its option layout did not
+  // render faithfully, so only the numeric-answer variants are generated.
 }
 
 // [유형 04] 소인수의 합과 소인수 분석

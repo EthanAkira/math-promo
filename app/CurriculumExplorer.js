@@ -149,18 +149,19 @@ function TopicItem({ topic, copy }) {
 }
 
 // In Korean stages the AMC practice link is not an inline badge on each basic topic; it becomes its own
-// "[응용] AMC 응용문제 편" row placed at the bottom of the applied-problem (응용) group — or at the end of
+// "[응용] AMC / 수능 응용문제 편" rows placed at the bottom of the applied-problem (응용) group — or at the end of
 // the stage when the stage has no applied group. Non-Korean stages are left untouched.
 const HANGUL = /[가-힣]/;
 export function arrangeAmcAsApplied(topics) {
-  if (!topics.some((t) => !t.isHeader && t.amc && HANGUL.test(t.label || ''))) return topics;
+  if (!topics.some((t) => !t.isHeader && (t.amc || t.csat) && HANGUL.test(t.label || ''))) return topics;
   const out = [];
   let pending = [];
   let inApplied = false;
   const flush = () => {
     pending.forEach((t) => {
       const clean = String(t.label).replace(/^\[[^\]]+\]\s*/, '');
-      out.push({ label: `[응용] AMC 응용문제 편 · ${clean}`, href: t.amc.href, ready: true, availability: 'ready', catalogId: `${t.catalogId || t.label}::amc-applied` });
+      if (t.amc) out.push({ label: `[응용] AMC 응용문제 편 · ${clean}`, href: t.amc.href, ready: true, availability: 'ready', catalogId: `${t.catalogId || t.label}::amc-applied` });
+      if (t.csat) out.push({ label: `[응용] 수능 기출 응용문제 편 · ${clean}`, href: t.csat.href, ready: true, availability: 'ready', catalogId: `${t.catalogId || t.label}::csat-applied` });
     });
     pending = [];
   };
@@ -169,8 +170,8 @@ export function arrangeAmcAsApplied(topics) {
       if (inApplied) flush();
       inApplied = /응용/.test(t.label || '');
       out.push(t);
-    } else if (t.amc && HANGUL.test(t.label || '')) {
-      const { amc, ...rest } = t;
+    } else if ((t.amc || t.csat) && HANGUL.test(t.label || '')) {
+      const { amc, csat, ...rest } = t;
       out.push(rest);
       pending.push(t);
     } else out.push(t);
