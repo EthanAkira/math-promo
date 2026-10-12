@@ -551,7 +551,7 @@ export function rpmGcdBasicCoprime(random) {
     return {
       prompt: `${minVal}보다 크고 ${maxVal}보다 작은 자연수 중에서 ${target}과 서로소인 수의 개수를 구하시오.`,
       promptEn: `How many natural numbers strictly between ${minVal} and ${maxVal} are coprime to ${target}?`,
-      expression: `${minVal} < x < ${maxVal}, gcd(x, ${target}) = 1`,
+      expression: `${minVal} < x < ${maxVal}, 최대공약수(x, ${target}) = 1`,
       answer: String(count),
       answerSuffix: '개',
       explanation: `${target}과 최대공약수가 1인 수는 [${matches.join(', ')}]으로 모두 ${count}개입니다.`,
@@ -605,7 +605,7 @@ export function rpmGcdBasicCoprime(random) {
     return {
       prompt: `두 자연수 2^4 × □ 와 2^3 × 3^5 × 11의 최대공약수가 72일 때, 다음 중 □ 안에 들어갈 수 없는 수는?`,
       promptEn: `If the greatest common factor of 2^4 × □ and 2^3 × 3^5 × 11 is 72, which of the following cannot be □?`,
-      expression: `gcd(2^4 × □, 2^3 × 3^5 × 11) = 72 = 2^3 × 3^2`,
+      expression: `최대공약수(2^4 × □, 2^3 × 3^5 × 11) = 72 = 2^3 × 3^2`,
       answer: String(ansIdx),
       choices,
       explanation: `72 = 2^3 × 3^2이므로 □는 3^2을 인수로 가져야 하지만 3^3 이상의 거듭제곱이나 11을 인수로 가질 수 없습니다. ${invalid}은 조건을 만족하지 않으므로 들어갈 수 없습니다. 정답은 ${ansIdx}번(${invalid})입니다.`,
@@ -666,7 +666,7 @@ export function rpmGcdCommonDivisorProp(random) {
     return {
       prompt: `세 자연수 A, B, C에 대하여 A와 B의 최대공약수는 ${d1}이고, B와 C의 최대공약수는 ${d2}일 때, 세 수 A, B, C의 최대공약수를 구하시오.`,
       promptEn: `For natural numbers A, B, C, the GCF of A and B is ${d1}, and the GCF of B and C is ${d2}. Find the greatest common factor of A, B, and C.`,
-      expression: `gcd(A, B) = ${d1}, gcd(B, C) = ${d2}`,
+      expression: `최대공약수(A, B) = ${d1}, 최대공약수(B, C) = ${d2}`,
       answer: String(g),
       explanation: `세 수 A, B, C의 공약수는 (A와 B의 공약수)이면서 (B와 C의 공약수)이어야 하므로, ${d1}과 ${d2}의 공약수입니다. 따라서 세 수의 최대공약수는 ${d1}과 ${d2}의 최대공약수인 ${g}입니다.`,
     };
@@ -811,7 +811,7 @@ export function rpmLcmThreeNumbersRatio(random) {
     return {
       prompt: `세 자연수 3x, 4x, 6x의 최소공배수가 ${L}일 때, 세 자연수의 최대공약수를 구하시오.`,
       promptEn: `The least common multiple of natural numbers 3x, 4x, and 6x is ${L}. Find their greatest common factor.`,
-      expression: `lcm(3x, 4x, 6x) = 12x = ${L}`,
+      expression: `최소공배수(3x, 4x, 6x) = 12x = ${L}`,
       answer: String(x),
       explanation: `3, 4, 6의 최소공배수는 12이므로 3x, 4x, 6x의 최소공배수는 12x입니다. 12x = ${L}에서 x = ${x}입니다. 3, 4, 6의 최대공약수는 1이므로 세 수의 최대공약수는 1 × x = ${x}입니다.`,
     };
@@ -852,7 +852,7 @@ export function rpmGcdWordDistribute(random) {
     return {
       prompt: `연필 ${n1}자루와 지우개 ${n2}개를 되도록 많은 학생들에게 남김없이 똑같이 나누어 주려고 한다. 나누어 줄 수 있는 학생 수를 구하시오.`,
       promptEn: `We want to divide ${n1} pencils and ${n2} erasers equally among as many students as possible without leftovers. Find the maximum number of students.`,
-      expression: `gcd(${n1}, ${n2}) = ${g}`,
+      expression: `최대공약수(${n1}, ${n2}) = ${g}`,
       answer: String(g),
       answerSuffix: '명',
       explanation: `가능한 한 많은 학생에게 똑같이 나누어 주어야 하므로 학생 수는 ${n1}과 ${n2}의 최대공약수인 ${g}명입니다.`,
@@ -866,7 +866,7 @@ export function rpmGcdWordDistribute(random) {
     return {
       prompt: `바나나 ${n1}개, 오렌지 ${n2}개, 사과 ${n3}개를 가능한 한 많은 학생들에게 똑같이 나누어 주려고 한다. 나누어 줄 수 있는 학생 수를 구하시오.`,
       promptEn: `Divide ${n1} bananas, ${n2} oranges, and ${n3} apples equally among as many students as possible without leftovers. Find the maximum number of students.`,
-      expression: `gcd(${n1}, ${n2}, ${n3}) = ${actualG}`,
+      expression: `최대공약수(${n1}, ${n2}, ${n3}) = ${actualG}`,
       answer: String(actualG),
       answerSuffix: '명',
       explanation: `학생 수는 ${n1}, ${n2}, ${n3}의 최대공약수인 ${actualG}명입니다.`,
@@ -881,7 +881,7 @@ export function rpmGcdWordDistribute(random) {
     return {
       prompt: `어느 중학교 등산부의 여학생 수는 ${n1}명이고 남학생 수는 ${n2}명이다. 야영을 하기 위하여 여학생 a명과 남학생 b명씩을 한 조로 나누려고 한다. 가능한 한 많은 조로 나누려고 할 때, a + b의 값을 구하시오.`,
       promptEn: `A hiking club has ${n1} girls and ${n2} boys. They want to form as many teams as possible, each with a girls and b boys. Find a + b.`,
-      expression: `조의 수 = gcd(${n1}, ${n2}) = ${g}`,
+      expression: `조의 수 = 최대공약수(${n1}, ${n2}) = ${g}`,
       answer: String(ans),
       explanation: `가능한 한 많은 조로 나누어야 하므로 조의 수는 ${n1}과 ${n2}의 최대공약수인 ${g}개입니다. 한 조당 여학생은 a = ${n1} ÷ ${g} = ${a}명, 남학생은 b = ${n2} ÷ ${g} = ${b}명이므로 a + b = ${ans}입니다.`,
     };
@@ -903,7 +903,7 @@ export function rpmGcdWordTileFence(random) {
     return {
       prompt: `가로의 길이가 ${W}cm, 세로의 길이가 ${H}cm인 직사각형 모양의 벽에 같은 크기의 정사각형 모양의 사진을 빈틈없이 붙이려고 한다. 가능한 한 큰 사진을 붙이려고 할 때, 사진의 한 변의 길이를 x cm, 필요한 사진의 수를 y장이라 하자. ${askSum ? 'x + y의 값' : '필요한 사진의 수 y'}를 구하시오.`,
       promptEn: `A rectangular wall of ${W}cm by ${H}cm is to be covered completely with identical square photos as large as possible. If each photo has side length x cm and y photos are needed, find ${askSum ? 'x + y' : 'the number of photos y'}.`,
-      expression: `사진 한 변 x = gcd(${W}, ${H}) = ${s}cm, y = (${W}/${s}) × (${H}/${s}) = ${tileCount}`,
+      expression: `사진 한 변 x = 최대공약수(${W}, ${H}) = ${s}cm, y = (${W}/${s}) × (${H}/${s}) = ${tileCount}`,
       answer: String(ans),
       diagram: { kind: 'rpm-tile-rectangle', w: W, h: H, tileSize: s, unit: 'cm', mode: 'fill' },
       explanation: `사진의 한 변의 길이 x는 ${W}와 ${H}의 최대공약수인 ${s}cm입니다. 가로에 ${qw}장, 세로에 ${qh}장이 들어가므로 필요한 사진의 수 y = ${qw} × ${qh} = ${tileCount}장입니다. 따라서 정답은 ${ans}입니다.`,
@@ -918,7 +918,7 @@ export function rpmGcdWordTileFence(random) {
     return {
       prompt: `가로의 길이가 ${W}m, 세로의 길이가 ${H}m인 직사각형 모양의 목장의 둘레에 일정한 간격으로 기둥을 세우려고 한다. 네 모퉁이에 반드시 기둥을 세울 때, 필요한 최소한의 기둥의 개수를 구하시오.`,
       promptEn: `A rectangular ranch of ${W}m by ${H}m is to have fence posts installed along its perimeter at equal intervals, including all 4 corners. Find the minimum number of posts needed.`,
-      expression: `간격 g = gcd(${W}, ${H}) = ${g}m, 둘레 기둥 수 = 2 × (${qw} + ${qh})`,
+      expression: `간격 g = 최대공약수(${W}, ${H}) = ${g}m, 둘레 기둥 수 = 2 × (${qw} + ${qh})`,
       answer: String(posts),
       answerSuffix: '개',
       diagram: { kind: 'rpm-tile-rectangle', w: W, h: H, tileSize: g, unit: 'm', mode: 'perimeter' },
@@ -941,7 +941,7 @@ export function rpmGcdWordRemainder(random) {
     return {
       prompt: `어떤 자연수로 ${n1}을 나누면 ${r1}이 남고, ${n2}를 나누면 ${r2}가 남는다고 한다. 이러한 자연수 중에서 가장 큰 수를 구하시오.`,
       promptEn: `When divided into ${n1}, a natural number leaves a remainder of ${r1}; divided into ${n2}, it leaves a remainder of ${r2}. Find the greatest such natural number.`,
-      expression: `gcd(${n1} - ${r1}, ${n2} - ${r2}) = ${g}`,
+      expression: `최대공약수(${n1} - ${r1}, ${n2} - ${r2}) = ${g}`,
       answer: String(g),
       explanation: `구하는 수는 ${n1} - ${r1} = ${n1 - r1}과 ${n2} - ${r2} = ${n2 - r2}의 공약수 중 ${Math.max(r1, r2)}보다 큰 수입니다. 이 중 가장 큰 수는 두 수의 최대공약수인 ${g}입니다.`,
     };
@@ -959,7 +959,7 @@ export function rpmGcdWordRemainder(random) {
     return {
       prompt: `어떤 자연수로 ${n1}을 나누면 ${d}가 부족하고, ${n2}를 나누면 ${r2}가 남고, ${n3}을 나누면 ${r3}이 남는다. 이러한 자연수 중에서 가장 큰 수를 구하시오.`,
       promptEn: `When divided into ${n1}, it lacks ${d}; into ${n2}, remainder ${r2}; into ${n3}, remainder ${r3}. Find the greatest such natural number.`,
-      expression: `gcd(${n1 + d}, ${n2 - r2}, ${n3 - r3}) = ${g}`,
+      expression: `최대공약수(${n1 + d}, ${n2 - r2}, ${n3 - r3}) = ${g}`,
       answer: String(g),
       explanation: `구하는 수는 ${n1} + ${d} = ${n1 + d}, ${n2} - ${r2} = ${n2 - r2}, ${n3} - ${r3} = ${n3 - r3}의 공약수 중 가장 큰 수이므로 최대공약수인 ${g}입니다.`,
     };
@@ -985,7 +985,7 @@ export function rpmLcmWordBrickCube(random) {
     return {
       prompt: `가로의 길이가 ${a}cm, 세로의 길이가 ${b}cm인 직사각형 모양의 색종이를 빈틈없이 붙여서 가장 작은 정사각형을 만들려고 한다. 필요한 색종이의 수를 구하시오.`,
       promptEn: `Rectangular colored papers of ${a}cm by ${b}cm are pasted edge-to-edge without gaps to form the smallest square. Find the number of paper sheets needed.`,
-      expression: `정사각형 한 변 = lcm(${a}, ${b}) = ${L}cm`,
+      expression: `정사각형 한 변 = 최소공배수(${a}, ${b}) = ${L}cm`,
       answer: String(count),
       answerSuffix: '장',
       explanation: `정사각형의 한 변의 길이는 ${a}와 ${b}의 최소공배수인 ${L}cm입니다. 가로에 ${L / a}장, 세로에 ${L / b}장이 필요하므로 필요한 색종이의 수는 ${L / a} × ${L / b} = ${count}장입니다.`,
@@ -997,7 +997,7 @@ export function rpmLcmWordBrickCube(random) {
     return {
       prompt: `가로의 길이, 세로의 길이, 높이가 각각 ${a}cm, ${b}cm, ${c}cm인 직육면체 모양의 벽돌을 한 방향으로 빈틈없이 쌓아서 가장 작은 정육면체를 만들려고 한다. 이때 필요한 벽돌의 개수를 구하시오.`,
       promptEn: `Bricks measuring ${a}cm by ${b}cm by ${c}cm are stacked in the same orientation to build the smallest cube. Find the number of bricks required.`,
-      expression: `정육면체 한 변 = lcm(${a}, ${b}, ${c}) = ${L}cm`,
+      expression: `정육면체 한 변 = 최소공배수(${a}, ${b}, ${c}) = ${L}cm`,
       answer: String(count),
       answerSuffix: '개',
       diagram: { kind: 'rpm-brick-cube', a, b, c, target: '정육면체' },
@@ -1016,7 +1016,7 @@ export function rpmLcmWordGearTrackCycle(random) {
     return {
       prompt: `톱니의 수가 각각 ${a}개, ${b}개인 톱니바퀴 A, B가 서로 맞물려 돌아가고 있다. 두 톱니바퀴가 처음으로 다시 같은 톱니에서 맞물릴 때까지 톱니바퀴 A의 회전수를 구하시오.`,
       promptEn: `Two intermeshed gears A and B have ${a} and ${b} teeth respectively. How many rotations does Gear A make before they first mesh again at the same teeth?`,
-      expression: `lcm(${a}, ${b}) = ${L}개 톱니`,
+      expression: `최소공배수(${a}, ${b}) = ${L}개 톱니`,
       answer: String(rotA),
       answerSuffix: '바퀴',
       diagram: { kind: 'rpm-gears', teethA: a, teethB: b },
@@ -1029,7 +1029,7 @@ export function rpmLcmWordGearTrackCycle(random) {
     return {
       prompt: `서로 맞물려 도는 톱니바퀴 A, B, C가 있다. A의 톱니의 수는 ${a}개, B는 ${b}개, C는 ${c}개이다. 세 톱니바퀴가 처음으로 다시 같은 위치에서 맞물리려면 A는 몇 바퀴 회전해야 하는가?`,
       promptEn: `Three meshed gears A, B, C have ${a}, ${b}, ${c} teeth. How many rotations does gear A make before all three re-align?`,
-      expression: `lcm(${a}, ${b}, ${c}) = ${L}`,
+      expression: `최소공배수(${a}, ${b}, ${c}) = ${L}`,
       answer: String(rotA),
       answerSuffix: '바퀴',
       explanation: `맞물린 톱니의 수는 세 수의 최소공배수인 ${L}개입니다. 따라서 A는 ${L} ÷ ${a} = ${rotA}바퀴 회전해야 합니다.`,
@@ -1040,7 +1040,7 @@ export function rpmLcmWordGearTrackCycle(random) {
     return {
       prompt: `어느 역에서 새마을호 열차는 ${t1}분마다, 무궁화호 열차는 ${t2}분마다, 전철은 ${t3}분마다 출발한다. 오전 6시에 세 열차가 동시에 출발하였을 때, 그 다음에 처음으로 다시 동시에 출발하는 것은 몇 분 후인가?`,
       promptEn: `Three trains depart every ${t1}, ${t2}, and ${t3} minutes. If they leave simultaneously at 6:00 AM, how many minutes later will they depart together again?`,
-      expression: `lcm(${t1}, ${t2}, ${t3}) = ${L}분`,
+      expression: `최소공배수(${t1}, ${t2}, ${t3}) = ${L}분`,
       answer: String(L),
       answerSuffix: '분 후',
       explanation: `세 열차가 다시 동시에 출발하는 주기는 ${t1}, ${t2}, ${t3}의 최소공배수인 ${L}분 후입니다.`,
@@ -1075,7 +1075,7 @@ export function rpmLcmWordRemainderDeficit(random) {
     return {
       prompt: `${a}, ${b}, ${c} 중 어느 수로 나누어도 ${r}이 남는 세 자리의 자연수 중에서 가장 작은 수를 구하시오.`,
       promptEn: `Find the smallest 3-digit natural number that leaves a remainder of ${r} when divided by ${a}, ${b}, or ${c}.`,
-      expression: `lcm(${a}, ${b}, ${c}) × k + ${r}`,
+      expression: `최소공배수(${a}, ${b}, ${c}) × k + ${r}`,
       answer: String(ans),
       explanation: `구하는 수를 x라 하면 x - ${r}은 ${a}, ${b}, ${c}의 공배수입니다. 세 수의 최소공배수는 ${L}이므로, 세 자리 자연수 중 가장 작은 수는 ${L} × ${k} + ${r} = ${ans}입니다.`,
     };
@@ -1091,7 +1091,7 @@ export function rpmLcmWordRemainderDeficit(random) {
     return {
       prompt: `어떤 자연수를 ${a}로 나누면 ${a - d}가 남고, ${b}로 나누면 ${b - d}가 남고, ${c}로 나누면 ${c - d}가 남는다고 한다. 이러한 자연수 중에서 가장 작은 수를 구하시오.`,
       promptEn: `A natural number leaves remainder ${a - d} when divided by ${a}, remainder ${b - d} by ${b}, and remainder ${c - d} by ${c}. Find the smallest such natural number.`,
-      expression: `공통 부족분 ${d}, lcm(${a}, ${b}, ${c}) - ${d}`,
+      expression: `공통 부족분 ${d}, 최소공배수(${a}, ${b}, ${c}) - ${d}`,
       answer: String(ans),
       explanation: `모든 경우 나누는 수와 나머지의 차가 ${d}로 일정하므로, 구하는 수는 ${a}, ${b}, ${c}로 나누었을 때 모두 ${d}가 부족한 수입니다. 따라서 구하는 가장 작은 수는 세 수의 최소공배수에서 ${d}를 뺀 ${L} - ${d} = ${ans}입니다.`,
     };
@@ -1117,7 +1117,7 @@ export function rpmGcdLcmFractionMultiplier(random) {
     return {
       prompt: `두 분수 ${n1}/${d1}과 ${n2}/${d2}의 어느 것에 곱하여도 그 결과가 자연수가 되게 하는 가장 작은 기약분수를 구하시오.`,
       promptEn: `Find the smallest irreducible fraction that gives a natural number when multiplied by either ${n1}/${d1} or ${n2}/${d2}.`,
-      expression: `N = lcm(${d1}, ${d2}), D = gcd(${n1}, ${n2})`,
+      expression: `N = 최소공배수(${d1}, ${d2}), D = 최대공약수(${n1}, ${n2})`,
       answer: ans,
       explanation: `곱하여 자연수가 되려면 분자는 분모 ${d1}, ${d2}의 최소공배수인 ${num}이어야 하고, 분모는 분자 ${n1}, ${n2}의 최대공약수인 ${den}이어야 합니다. 따라서 가장 작은 기약분수는 ${ans}입니다.`,
     };
@@ -1136,7 +1136,7 @@ export function rpmGcdLcmFractionMultiplier(random) {
     return {
       prompt: `세 수 110/n, 220/n, 275/n 을 모두 자연수가 되게 하는 두 자리 자연수 n의 개수를 구하시오.`,
       promptEn: `How many 2-digit natural numbers n make 110/n, 220/n, and 275/n all natural numbers?`,
-      expression: `gcd(110, 220, 275) = ${g}`,
+      expression: `최대공약수(110, 220, 275) = ${g}`,
       answer: String(twoDigitDivs.length),
       answerSuffix: '개',
       explanation: `n은 110, 220, 275의 공약수이어야 하므로 최대공약수인 ${g}의 약수이어야 합니다. ${g}의 약수 [${divisorsOf(g).join(', ')}] 중 두 자리 자연수는 [${twoDigitDivs.join(', ')}]으로 모두 ${twoDigitDivs.length}개입니다.`,

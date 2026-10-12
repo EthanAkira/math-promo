@@ -13,6 +13,7 @@ import MathText from '../../components/MathText';
 import { recordAttempts, syncAnswerEvents } from '../../lib/submissions';
 import ProblemScratchpad from '../../components/ProblemScratchpad';
 import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
+import { localizeGcdTerms } from '../../utils/gcdTerms';
 
 const PROBLEM_COUNT = 20;
 
@@ -267,7 +268,7 @@ export default function PrimeFactorizationGenerator() {
             <div className="word-calculation">
               <p><MathText value={foreign && item.promptEn ? item.promptEn : item.prompt} /></p>
               {item.diagram ? <RpmDiagram diagram={item.diagram} /> : null}
-              {item.expression ? <strong className="word-expression font-mono"><PowerText value={item.expression} /></strong> : null}
+              {item.expression ? <strong className="word-expression font-mono"><PowerText value={localizeGcdTerms(item.expression, language)} /></strong> : null}
               {item.choices ? (
                 <div className="choice-answer">
                   {view === 'answers' ? (
