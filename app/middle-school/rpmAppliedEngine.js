@@ -3335,14 +3335,55 @@ export function rpmAlgNegPowerLinear(random) {
 
 // 21. [문자와 식 심화 21] 일차식 마방진과 다항식 피라미드 퍼즐
 export function rpmAlgMagicSquarePyramid(random) {
-  const ans = '6x-2';
+  // Linear expressions k·x + m are stored as [k, m].
+  const add = (p, q) => [p[0] + q[0], p[1] + q[1]];
+  const sub = (p, q) => [p[0] - q[0], p[1] - q[1]];
+  const fmt = ([k, m]) => {
+    let out = '';
+    if (k !== 0) out = k === 1 ? 'x' : (k === -1 ? '-x' : `${k}x`);
+    if (m !== 0) out += out ? (m < 0 ? ` - ${-m}` : ` + ${m}`) : String(m);
+    return out || '0';
+  };
+  const ans = (p) => fmt(p).replace(/\s+/g, '');
+  const nonZero = (lo, hi) => { let v = 0; while (v === 0) v = ri(random, lo, hi); return v; };
+
+  // Every 3x3 magic square can be written with centre c and two offsets a, b:
+  //   c+a   c-a-b  c+b
+  //   c-a+b c      c+a-b
+  //   c-b   c+a+b  c-a
+  // (all rows, columns and both diagonals sum to 3c).
+  const c = [ri(random, 1, 3), ri(random, -4, 4)];
+  const a = [pick(random, [0, 0, 1]), nonZero(-4, 4)];
+  let b = [pick(random, [0, 0, 1]), nonZero(-4, 4)];
+  if (a[0] === b[0] && a[1] === b[1]) b = [b[0], b[1] + 1];
+  const grid = [
+    [add(c, a), sub(sub(c, a), b), add(c, b)],
+    [add(sub(c, a), b), c, sub(add(c, a), b)],
+    [sub(c, b), add(add(c, a), b), sub(c, a)],
+  ];
+  // The corners (0,0), (0,2) and the centre are always shown, which fixes c, a and b.
+  const hideable = [[0, 1], [1, 0], [1, 2], [2, 0], [2, 1], [2, 2]];
+  const order = hideable.map((cell) => ({ cell, key: random() })).sort((p, q) => p.key - q.key).map((o) => o.cell);
+  const [cellA, cellB] = order;
+  const label = (r, col) => {
+    if (r === cellA[0] && col === cellA[1]) return 'A';
+    if (r === cellB[0] && col === cellB[1]) return 'B';
+    const shown = (r === 0 && (col === 0 || col === 2)) || (r === 1 && col === 1);
+    return shown ? fmt(grid[r][col]) : '□';
+  };
+  const rows = [0, 1, 2].map((r) => `${r + 1}행:  ${[0, 1, 2].map((col) => label(r, col)).join('   |   ')}`);
+  const A = grid[cellA[0]][cellA[1]];
+  const B = grid[cellB[0]][cellB[1]];
+  const ask = pick(random, ['A - B', 'A + B', 'A']);
+  const result = ask === 'A - B' ? sub(A, B) : (ask === 'A + B' ? add(A, B) : A);
+  const S = [c[0] * 3, c[1] * 3];
   return {
-    prompt: '가로, 세로, 대각선에 놓인 세 식의 합이 모두 같도록 표를 채울 때, 식 A - B를 간단히 하시오.',
-    promptEn: 'In a 3x3 magic square where sums of rows, columns, and diagonals are equal, find the expression A - B.',
-    expression: '가로 세로 대각선의 합이 같은 마방진',
-    answer: ans,
-    explanation: '가로의 합이 3x - 3이므로 세로와 대각선 합 조건을 풀면 B = -2x, A = 4x - 2 입니다. 따라서 A - B = 4x - 2 - (-2x) = 6x - 2 입니다.',
-    explanationEn: 'Row sum is 3x - 3. Solving gives B = -2x and A = 4x - 2, so A - B = 6x - 2.'
+    prompt: `3×3 표의 가로, 세로, 대각선에 놓인 세 식의 합이 모두 같도록 표를 채우려고 한다. (□는 아직 모르는 칸)\n${rows.join('\n')}\n이때 식 ${ask}를 간단히 하시오.`,
+    promptEn: `Fill the 3x3 table so that every row, column and diagonal has the same sum (□ = unknown cell). Simplify ${ask}.\n${rows.join('\n')}`,
+    expression: '',
+    answer: ans(result),
+    explanation: `가운데 칸이 ${fmt(c)}이므로 한 줄의 합은 3 × (${fmt(c)}) = ${fmt(S)}입니다. 이 합이 되도록 나머지 칸을 채우면 A = ${fmt(A)}, B = ${fmt(B)}입니다. 따라서 ${ask} = ${fmt(result)}입니다.`,
+    explanationEn: `The centre is ${fmt(c)}, so each line sums to ${fmt(S)}. Then A = ${fmt(A)}, B = ${fmt(B)}, and ${ask} = ${fmt(result)}.`,
   };
 }
 
