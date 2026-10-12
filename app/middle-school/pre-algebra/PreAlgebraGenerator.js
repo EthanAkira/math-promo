@@ -11,7 +11,7 @@ import ProblemScratchpad from '../../components/ProblemScratchpad';
 import { preAlgebraCategory, preAlgebraCopy, preAlgebraProfileLabel } from './localization';
 import { hasProblemVisual, MathText, ProblemVisual } from './PreAlgebraVisuals';
 import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
-import { unitLevel, levelTabLabels, middleSemester } from '../levels';
+import { unitLevel, levelTabLabels, middleSemester, groupUnits } from '../levels';
 import PracticeLinks from '../practiceLinks';
 import LevelTabs from '../LevelTabs';
 
@@ -298,7 +298,9 @@ export default function PreAlgebraGenerator() {
       <div className="control-group control-group-skill">
         <label htmlFor="pre-algebra-unit">{tr(language, 'skill')}</label>
         <select id="pre-algebra-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>
-          {visibleUnits.map((item) => <option key={item.id} value={item.id}>{localizePreAlgebraUnit(item, language)}</option>)}
+          {isKrMiddle
+            ? groupUnits(visibleUnits, (item) => preAlgebraCategory(item.category, language)).map((group) => <optgroup key={group.label} label={group.label}>{group.units.map((item) => <option key={item.id} value={item.id}>{localizePreAlgebraUnit(item, language)}</option>)}</optgroup>)
+            : visibleUnits.map((item) => <option key={item.id} value={item.id}>{localizePreAlgebraUnit(item, language)}</option>)}
         </select>
       </div>
       </> : null}

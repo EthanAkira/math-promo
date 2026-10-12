@@ -14,7 +14,7 @@ import ProblemScratchpad from '../../components/ProblemScratchpad';
 import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
 import PracticeLinks from '../practiceLinks';
 import LevelTabs from '../LevelTabs';
-import { unitLevel, middleSemester } from '../levels';
+import { unitLevel, middleSemester, geometryChapter, groupUnits } from '../levels';
 
 const PROBLEM_COUNT = 20;
 
@@ -379,7 +379,9 @@ export default function BasicFiguresGenerator() {
       {mode === 'single' ? <div className="control-group control-group-skill">
         <label htmlFor="basic-figures-unit">{tr(language, 'skill')}</label>
         <select id="basic-figures-unit" value={unitId} onChange={(event) => chooseUnit(event.target.value)}>
-          {availableUnits.map((item) => <option key={item.id} value={item.id}>{localizeBasicFigureUnit(item, contentLocale)}</option>)}
+          {isKrMiddle && language === 'ko'
+            ? groupUnits(availableUnits, geometryChapter).map((group) => <optgroup key={group.label} label={group.label}>{group.units.map((item) => <option key={item.id} value={item.id}>{localizeBasicFigureUnit(item, contentLocale)}</option>)}</optgroup>)
+            : availableUnits.map((item) => <option key={item.id} value={item.id}>{localizeBasicFigureUnit(item, contentLocale)}</option>)}
         </select>
       </div> : null}
       {!isKrMiddle ? <div className="control-group control-group-mode">

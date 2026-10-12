@@ -82,3 +82,28 @@ export function middleSemester(unit) {
   for (const [semester, pattern] of ID_SEMESTER) if (pattern.test(id)) return semester;
   return null;
 }
+
+// Chapter headings for the grouped 문제 유형 list of the geometry page (Korean middle-school profile).
+const GEOMETRY_CHAPTER = {
+  'basic-figures-intro': '기본 도형', 'core-geometry': '기본 도형 · 각과 작도', 'middle-geometry-basics': '다각형 · 원 · 입체도형',
+  'applied-basic-figures-applied': '기본 도형', 'applied-position-relations-applied': '위치 관계', 'applied-construction-congruence-applied': '작도와 합동',
+  'applied-polygons-applied': '다각형', 'applied-circles-sectors-applied': '원과 부채꼴', 'applied-polyhedra-revolution-applied': '다면체와 회전체',
+  'applied-solids-measures-applied': '입체도형의 겉넓이와 부피', 'applied-data-stats-applied': '자료의 정리와 해석',
+  'applied-geo-mock': '종합 모의고사', 'applied-plane-mock': '종합 모의고사', 'applied-solid-mock': '종합 모의고사', 'applied-grade7-final-mock': '종합 모의고사',
+  'triangle-quadrilateral': '삼각형 · 사각형', 'triangle-similarity': '닮음 · 피타고라스', 'circle-properties': '원의 성질',
+};
+export function geometryChapter(unit) {
+  return GEOMETRY_CHAPTER[unit?.category] || '기타';
+}
+
+// [{ label, units }] in first-appearance order.
+export function groupUnits(units, labelOf) {
+  const groups = [];
+  const byLabel = new Map();
+  units.forEach((unit) => {
+    const label = labelOf(unit);
+    if (!byLabel.has(label)) { const group = { label, units: [] }; byLabel.set(label, group); groups.push(group); }
+    byLabel.get(label).units.push(unit);
+  });
+  return groups;
+}
