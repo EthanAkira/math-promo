@@ -12,6 +12,7 @@ import { isNonKorean, tr } from '../../i18n';
 import { recordAttempts, syncAnswerEvents } from '../../lib/submissions';
 import ProblemScratchpad from '../../components/ProblemScratchpad';
 import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
+import PracticeLinks from '../practiceLinks';
 
 const PROBLEM_COUNT = 20;
 
@@ -433,6 +434,7 @@ export default function BasicFiguresGenerator() {
       })}
     </section> : null}
 
+    {mode === 'single' ? <PracticeLinks path="/middle-school/basic-figures" unitId={unitId} language={language} /> : null}
     {mode === 'single' ? <div className="tier-toggle no-print" role="tablist" aria-label={tr(language, 'tierAdvanced')}>
       <button type="button" role="tab" aria-selected={tier === 'basic'} className={`tier-tab${tier === 'basic' ? ' active' : ''}`} onClick={() => chooseTier('basic')}>{tr(language, 'tierBasic')}</button>
       <button type="button" role="tab" aria-selected={tier === 'advanced'} className={`tier-tab${tier === 'advanced' ? ' active' : ''}`} onClick={() => chooseTier('advanced')}>{tr(language, 'tierAdvanced')}</button>

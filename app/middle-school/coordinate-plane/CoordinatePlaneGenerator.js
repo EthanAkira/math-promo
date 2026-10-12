@@ -15,6 +15,7 @@ import ProblemScratchpad from '../../components/ProblemScratchpad';
 import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
 import { asChoiceKind } from '../choiceKind';
 import { appliedLevel, unitsForLevel, expertTabLabel } from '../levels';
+import PracticeLinks from '../practiceLinks';
 
 const PROBLEM_COUNT = 20;
 
@@ -304,6 +305,7 @@ export default function CoordinatePlaneGenerator() {
       </button>
     </div>
 
+    {level === 'applied' ? <PracticeLinks path="/middle-school/coordinate-plane" unitId={unitId} language={language} /> : null}
     <div className={`worksheet-paper middle-worksheet ${view === 'answers' ? 'answer-sheet' : ''}`}>
       <header className="worksheet-heading">
         <div className="worksheet-brand">

@@ -15,3 +15,18 @@ export function unitsForLevel(units, level) {
 export function expertTabLabel(language) {
   return language === 'ko' ? '고난도 문제 🔒' : 'Challenge 🔒';
 }
+
+// Level of any catalog unit (pre-algebra / basic-figures keep a hand-judged difficulty `tier`):
+// applied-* units use the label rule above; others map basic→기본, intermediate→응용, advanced→고난도.
+export function unitLevel(unit) {
+  if (String(unit?.id ?? '').startsWith('applied-')) return appliedLevel(unit);
+  if (unit?.tier === 'advanced') return 'expert';
+  if (unit?.tier === 'intermediate') return 'applied';
+  return 'basic';
+}
+
+export function levelTabLabels(language) {
+  return language === 'ko'
+    ? { basic: '기본 문제', applied: '응용문제', expert: '고난도 문제' }
+    : { basic: 'Basic', applied: 'Applied', expert: 'Challenge' };
+}

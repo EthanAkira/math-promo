@@ -15,6 +15,7 @@ import ProblemScratchpad from '../../components/ProblemScratchpad';
 import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
 import { localizeGcdTerms } from '../../utils/gcdTerms';
 import { appliedLevel, unitsForLevel, expertTabLabel } from '../levels';
+import PracticeLinks from '../practiceLinks';
 
 const PROBLEM_COUNT = 20;
 
@@ -240,6 +241,7 @@ export default function PrimeFactorizationGenerator() {
       </button>
     </div>
 
+    {level === 'applied' ? <PracticeLinks path="/middle-school/prime-factorization" unitId={unitId} language={language} /> : null}
     <div className={`worksheet-paper middle-worksheet ${view === 'answers' ? 'answer-sheet' : ''}`}>
       <header className="worksheet-heading">
         <div className="worksheet-brand">

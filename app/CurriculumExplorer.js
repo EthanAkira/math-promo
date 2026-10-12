@@ -159,14 +159,8 @@ export function arrangeAmcAsApplied(topics) {
   let pending = [];
   let inApplied = false;
   const hasAppliedGroup = topics.some((t) => t.isHeader && /응용/.test(t.label || ''));
-  const flush = () => {
-    pending.forEach((t) => {
-      const clean = String(t.label).replace(/^\[[^\]]+\]\s*/, '');
-      if (t.amc) out.push({ label: `[응용] AMC 응용문제 편 · ${clean}`, href: t.amc.href, ready: true, availability: 'ready', catalogId: `${t.catalogId || t.label}::amc-applied` });
-      if (t.csat) out.push({ label: `[응용] 수능 기출 응용문제 편 · ${clean}`, href: t.csat.href, ready: true, availability: 'ready', catalogId: `${t.catalogId || t.label}::csat-applied` });
-    });
-    pending = [];
-  };
+  // The AMC / 수능 links are no longer separate rows here: the worksheet pages show them in the 응용문제 area.
+  const flush = () => { pending = []; };
   topics.forEach((t) => {
     if (t.isHeader) {
       if (inApplied || !hasAppliedGroup) flush();

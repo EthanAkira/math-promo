@@ -11,6 +11,8 @@ import ProblemScratchpad from '../../components/ProblemScratchpad';
 import { preAlgebraCategory, preAlgebraCopy, preAlgebraProfileLabel } from './localization';
 import { hasProblemVisual, MathText, ProblemVisual } from './PreAlgebraVisuals';
 import { ProblemCountSelect, getProblemCount, useProblemCount, withCount } from '../ProblemCount';
+import { unitLevel, levelTabLabels } from '../levels';
+import PracticeLinks from '../practiceLinks';
 
 const PROBLEM_COUNT = 20;
 
@@ -162,9 +164,11 @@ export default function PreAlgebraGenerator() {
   const profile = findPreAlgebraProfile(profileId);
   const units = useMemo(() => unitsForProfile(profileId), [profileId]);
   const categories = useMemo(() => [...new Set(units.map((item) => item.category))], [units]);
+  const level = unitLevel(findPreAlgebraUnit(unitId, profileId));
+  const singleCategories = useMemo(() => [...new Set(units.filter((item) => unitLevel(item) === level).map((item) => item.category))], [units, level]);
   const unit = findPreAlgebraUnit(unitId, profileId);
   const [category, setCategory] = useState('수와 연산');
-  const visibleUnits = useMemo(() => units.filter((item) => item.category === category), [units, category]);
+  const visibleUnits = useMemo(() => units.filter((item) => item.category === category && unitLevel(item) === level), [units, category, level]);
   const allProblems = useMemo(() => makeProblems(seed, unit), [seed, unit]);
   const problems = useMemo(() => allProblems.slice(0, count), [allProblems, count]);
   const correctCount = problems.filter((item) => equivalent(answers[item.id], item.answer)).length;
@@ -220,11 +224,18 @@ export default function PreAlgebraGenerator() {
     replaceUrl(nextSeed, nextProfile, nextUnit, 'problems');
   }
   function chooseCategory(nextCategory) {
-    const nextUnit = units.find((item) => item.category === nextCategory);
+    const nextUnit = units.find((item) => item.category === nextCategory && unitLevel(item) === level) || units.find((item) => item.category === nextCategory);
     setCategory(nextCategory);
     reset(createSeed(), profileId, nextUnit.id);
   }
   function chooseUnit(nextUnit) { reset(createSeed(), profileId, nextUnit); }
+  function chooseLevel(nextLevel) {
+    if (nextLevel === level) return;
+    const target = units.find((item) => unitLevel(item) === nextLevel && item.category === category) || units.find((item) => unitLevel(item) === nextLevel);
+    if (!target) return;
+    setCategory(target.category);
+    reset(createSeed(), profileId, target.id);
+  }
   function changeView(nextView) { setView(nextView); setChecked(false); replaceUrl(seed, profileId, unitId, nextView); }
   function changeAnswer(id, value) { setAnswers((current) => ({ ...current, [id]: value })); setChecked(false); }
 
@@ -271,10 +282,18 @@ export default function PreAlgebraGenerator() {
         </div>
       </div>
       {mode === 'single' ? <>
+      <div className="control-group control-group-level">
+        <label>{language === 'ko' ? '문제 단계' : 'Level'}</label>
+        <div className="mode-toggle" role="tablist">
+          {['basic', 'applied', 'expert'].map((lv) => (
+            <button type="button" role="tab" key={lv} aria-selected={level === lv} className={level === lv ? 'active' : ''} disabled={!units.some((item) => unitLevel(item) === lv)} onClick={() => chooseLevel(lv)}>{levelTabLabels(language)[lv]}</button>
+          ))}
+        </div>
+      </div>
       <div className="control-group control-group-domain">
         <label htmlFor="pre-algebra-category">{copy.controls[1]}</label>
         <select id="pre-algebra-category" value={category} onChange={(event) => chooseCategory(event.target.value)}>
-          {categories.map((item) => <option key={item} value={item}>{preAlgebraCategory(item, language)}</option>)}
+          {singleCategories.map((item) => <option key={item} value={item}>{preAlgebraCategory(item, language)}</option>)}
         </select>
       </div>
       <div className="control-group control-group-skill">
@@ -345,6 +364,7 @@ export default function PreAlgebraGenerator() {
       })}
     </section> : null}
 
+    {mode === 'single' && level === 'applied' ? <PracticeLinks path="/middle-school/pre-algebra" unitId={unitId} language={language} /> : null}
     {mode === 'single' ? <div className={`worksheet-paper middle-worksheet ${view === 'answers' ? 'answer-sheet' : ''}`}>
       <header className="worksheet-heading"><div className="worksheet-brand"><span className="brand-mark">DAILY</span><strong>{tr(language, 'dailyLab')}</strong></div><div className="worksheet-title"><span>{profileLabel}</span><h2>{unitLabel} {tr(language, view === 'answers' ? 'answerSheet' : 'worksheetWord')}</h2><p>{unitDescription}</p></div><div className="worksheet-identity"><div><span>{tr(language, 'worksheetId')}</span><strong>{seed}</strong><small>{tr(language, 'scanQr')}</small></div>{qrDataUrl ? <img src={qrDataUrl} alt={`Worksheet ${seed} QR code`} /> : null}</div></header>
       <div className="student-row"><span>{tr(language, 'name')}</span><i /><span>{tr(language, 'date')}</span><i /><span className="sheet-kind">{(view === 'answers' ? tr(language, 'answers') : withCount(tr(language, 'problems20'), count))}</span></div>
