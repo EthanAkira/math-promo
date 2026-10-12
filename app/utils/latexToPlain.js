@@ -73,7 +73,7 @@ export function latexToPlain(input) {
       if (g) {
         i = g.end;
         const chars = Array.from(latexToPlain(g.value));
-        const mark = (c) => `${c}̇`;
+        const mark = (c) => `${c}\u0307`;
         if (chars.length) {
           chars[0] = mark(chars[0]);
           if (chars.length > 1) chars[chars.length - 1] = mark(chars[chars.length - 1]);
