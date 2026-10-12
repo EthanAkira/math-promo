@@ -423,8 +423,81 @@ function PolyhedronGeneralDiagram({ data }) {
   return <svg className="generated-geometry generated-solid" viewBox="0 0 230 165" role="img" aria-label={`${data.n}-gonal prism`}><polygon points={top.map(p => p.join(',')).join(' ')} /><polygon points={bottom.map(p => p.join(',')).join(' ')} />{top.map((p, i) => <line key={i} x1={p[0]} y1={p[1]} x2={bottom[i][0]} y2={bottom[i][1]} />)}<text x="115" y="160" textAnchor="middle">{data.n}-gonal prism</text></svg>;
 }
 
+// Wireframe drawings of the five regular polyhedra: real vertex coordinates, projected orthographically.
+// Edges with at least one front-facing neighbouring face are drawn solid, the rest dashed. The caption is
+// the solid's name only (never its face count, which is often the question).
+const PHI = (1 + Math.sqrt(5)) / 2;
+function regularSolidGeometry(name) {
+  let vertices;
+  let faceOf;
+  if (name === '정사면체') {
+    vertices = [[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]];
+  } else if (name === '정육면체') {
+    vertices = [];
+    [-1, 1].forEach((x) => [-1, 1].forEach((y) => [-1, 1].forEach((z) => vertices.push([x, y, z]))));
+  } else if (name === '정팔면체') {
+    vertices = [[1.3, 0, 0], [-1.3, 0, 0], [0, 1.3, 0], [0, -1.3, 0], [0, 0, 1.3], [0, 0, -1.3]];
+  } else if (name === '정십이면체') {
+    vertices = [];
+    [-1, 1].forEach((x) => [-1, 1].forEach((y) => [-1, 1].forEach((z) => vertices.push([x, y, z]))));
+    [-1, 1].forEach((a) => [-1, 1].forEach((b) => {
+      vertices.push([0, a / PHI, b * PHI], [a / PHI, b * PHI, 0], [b * PHI, 0, a / PHI]);
+    }));
+  } else {
+    vertices = [];
+    [-1, 1].forEach((a) => [-1, 1].forEach((b) => {
+      vertices.push([0, a, b * PHI], [a, b * PHI, 0], [b * PHI, 0, a]);
+    }));
+  }
+  const dist = (p, q) => Math.hypot(p[0] - q[0], p[1] - q[1], p[2] - q[2]);
+  let minDistance = Infinity;
+  vertices.forEach((p, i) => vertices.forEach((q, j) => { if (j > i) minDistance = Math.min(minDistance, dist(p, q)); }));
+  const edges = [];
+  vertices.forEach((p, i) => vertices.forEach((q, j) => { if (j > i && Math.abs(dist(p, q) - minDistance) < 1e-6) edges.push([i, j]); }));
+  const adjacent = (i, j) => edges.some(([a, b]) => (a === i && b === j) || (a === j && b === i));
+  let faces = [];
+  if (name === '정육면체') {
+    [[0, 1], [0, -1], [1, 1], [1, -1], [2, 1], [2, -1]].forEach(([axis, sign]) => {
+      faces.push(vertices.map((v, i) => (v[axis] === sign ? i : -1)).filter((i) => i >= 0));
+    });
+  } else if (name === '정십이면체') {
+    // The 12 face centres point along the icosahedron's vertex directions.
+    const centres = [];
+    [-1, 1].forEach((a) => [-1, 1].forEach((b) => { centres.push([0, a * PHI, b], [a * PHI, b, 0], [b, 0, a * PHI]); }));
+    faces = centres.map((c) => {
+      const dots = vertices.map((v) => v[0] * c[0] + v[1] * c[1] + v[2] * c[2]);
+      const max = Math.max(...dots);
+      return dots.map((d, i) => (Math.abs(d - max) < 1e-6 ? i : -1)).filter((i) => i >= 0);
+    });
+  } else {
+    for (let i = 0; i < vertices.length; i += 1) for (let j = i + 1; j < vertices.length; j += 1) for (let k = j + 1; k < vertices.length; k += 1) {
+      if (adjacent(i, j) && adjacent(j, k) && adjacent(i, k)) faces.push([i, j, k]);
+    }
+  }
+  faceOf = faces.map((face) => {
+    const sum = face.reduce((acc, index) => [acc[0] + vertices[index][0], acc[1] + vertices[index][1], acc[2] + vertices[index][2]], [0, 0, 0]);
+    return { face, normal: sum.map((value) => value / face.length) };
+  });
+  return { vertices, edges, faces: faceOf };
+}
+
 function RegularPolyhedronDiagram({ data }) {
-  return <svg className="generated-geometry generated-solid" viewBox="0 0 230 160" role="img" aria-label={data.name}><polygon points="115,18 38,112 192,112" /><polygon points="115,143 38,48 192,48" /><line x1="38" y1="112" x2="192" y2="48" className="guide-line" /><line x1="192" y1="112" x2="38" y2="48" className="guide-line" /><text x="115" y="157" textAnchor="middle" className="value-label">{data.name} · {data.faces} faces</text></svg>;
+  const { vertices, edges, faces } = regularSolidGeometry(data.name);
+  const yaw = (32 * Math.PI) / 180; const pitch = (-24 * Math.PI) / 180;
+  const rotate = ([x, y, z]) => {
+    const x1 = x * Math.cos(yaw) + z * Math.sin(yaw); const z1 = -x * Math.sin(yaw) + z * Math.cos(yaw);
+    const y2 = y * Math.cos(pitch) - z1 * Math.sin(pitch); const z2 = y * Math.sin(pitch) + z1 * Math.cos(pitch);
+    return [x1, y2, z2];
+  };
+  const turned = vertices.map(rotate);
+  const radius = Math.max(...vertices.map((v) => Math.hypot(v[0], v[1], v[2])));
+  const scale = 62 / radius;
+  const point = (index) => [115 + turned[index][0] * scale, 76 - turned[index][1] * scale];
+  const isVisible = (i, j) => faces.some(({ face, normal }) => face.includes(i) && face.includes(j) && rotate(normal)[2] > 1e-6);
+  return <svg className="generated-geometry generated-solid" viewBox="0 0 230 160" role="img" aria-label={data.name}>
+    {edges.map(([i, j]) => { const [x1, y1] = point(i); const [x2, y2] = point(j); return <line key={`${i}-${j}`} x1={x1} y1={y1} x2={x2} y2={y2} className={isVisible(i, j) ? '' : 'hidden-edge'} />; })}
+    <text x="115" y="152" textAnchor="middle" className="value-label">{data.name}</text>
+  </svg>;
 }
 
 function RevolutionDiagram({ data }) {
