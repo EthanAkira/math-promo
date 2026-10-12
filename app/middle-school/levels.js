@@ -19,7 +19,12 @@ export function expertTabLabel(language) {
 
 // Level of any catalog unit (pre-algebra / basic-figures keep a hand-judged difficulty `tier`):
 // applied-* units use the label rule above; others map basic→기본, intermediate→응용, advanced→고난도.
+// The chapter-level "기본 문제" units listed on the home curriculum page, whatever difficulty tier their
+// catalog entry carries (many 중3 basics live under applied-* ids).
+const HOME_BASIC_IDS = new Set(['expressions-review', 'equations-review', 'visual-foundations', 'polygon-angles-basic', 'circle-sector-inverse-basic', 'polyhedron-concepts-euler', 'expanded-solid-measures', 'frequency-table', 'decimal-classification', 'polynomial-operations-2', 'linear-inequalities-2', 'systems-linear', 'linear-functions-2', 'isosceles-triangle-properties', 'special-quadrilaterals', 'similarity-conditions', 'pythagorean-basic', 'probability-2', 'radicals-real-numbers', 'applied-g9-radical-ops-mult-div', 'applied-g9-poly-mult-square', 'identities-factoring', 'quadratic-equations', 'applied-g9-quad-app-numbers', 'quadratic-functions', 'applied-g9-quad-func-standard-form', 'applied-g9s2-trig-concept', 'applied-g9s2-trig-apps-length', 'circle-properties-mixed', 'circle-chord-properties', 'circle-tangent-properties', 'circle-inscribed-circumscribed', 'circle-inscribed-angles', 'circle-cyclic-quadrilaterals', 'circle-tangent-chord-angles', 'data-variation']);
+
 export function unitLevel(unit) {
+  if (HOME_BASIC_IDS.has(unit?.id)) return 'basic';
   if (String(unit?.id ?? '').startsWith('applied-')) return appliedLevel(unit);
   if (unit?.tier === 'advanced') return 'expert';
   if (unit?.tier === 'intermediate') return 'applied';
@@ -106,4 +111,29 @@ export function groupUnits(units, labelOf) {
     byLabel.get(label).units.push(unit);
   });
   return groups;
+}
+
+// Chapter of a 중3 unit, used to title the groups of the unit list (their catalog category is just "중3-1 실전 응용").
+const MIDDLE3_CHAPTER = [
+  [/g9s2.*(circle|inscribed|tangent|angle|cyclic|chord)|circle-/, '원의 성질'],
+  [/g9s2-trig-apps/, '삼각비의 활용'],
+  [/g9s2-trig/, '삼각비'],
+  [/radical-ops|radical-mult|rationalize/, '근호를 포함한 식의 계산'],
+  [/radicals-real|radical-/, '제곱근과 실수'],
+  [/poly-mult/, '다항식의 곱셈'],
+  [/factor|identities/, '인수분해'],
+  [/quad-func|quadratic-functions|quadratic-max/, '이차함수'],
+  [/quad-app/, '이차방정식의 활용'],
+  [/quad-|quadratic-equations/, '이차방정식'],
+  [/trig-apps/, '삼각비의 활용'],
+  [/trig/, '삼각비'],
+  [/circle|inscribed|tangent/, '원의 성질'],
+  [/scatter|correlation/, '상관관계와 산점도'],
+  [/stats|variation/, '대푯값과 산포도'],
+  [/advanced-skill|grade9/, '심화 · 종합'],
+];
+export function middle3Chapter(unit) {
+  const id = String(unit?.id ?? '');
+  for (const [pattern, label] of MIDDLE3_CHAPTER) if (pattern.test(id)) return label;
+  return null;
 }
