@@ -263,7 +263,7 @@ export function rpmPrimeFactorAnalysis(random) {
 
 // [유형 05] 약수와 거듭제곱 약수의 성질
 export function rpmPrimeDivisorProperties(random) {
-  const variant = pick(random, ['squareDivisors', 'secondRankedDivisors', 'invalidDivisor']);
+  const variant = pick(random, ['squareDivisors', 'secondRankedDivisors']);
   if (variant === 'squareDivisors') {
     const [p1, p2, e1, e2] = pick(random, [
       [2, 3, 3, 3],
@@ -284,7 +284,7 @@ export function rpmPrimeDivisorProperties(random) {
       answerSuffix: '개',
       explanation: `${N} = ${p1}^${e1} × ${p2}^${e2}의 약수 중 어떤 자연수의 제곱이 되는 수는 소인수의 지수가 모두 짝수(0 포함)이어야 합니다. ${p1}의 지수로 가능한 것은 ${countP1}개, ${p2}의 지수로 가능한 것은 ${countP2}개이므로 총 개수는 ${countP1} × ${countP2} = ${ans}개입니다.`,
     };
-  } else if (variant === 'secondRankedDivisors') {
+  } else {
     const p1 = pick(random, [2, 3]);
     const p2 = p1 === 2 ? pick(random, [3, 5]) : 5;
     const p3 = p2 === 3 ? 5 : 7;
@@ -299,24 +299,6 @@ export function rpmPrimeDivisorProperties(random) {
       expression: `${N}의 약수`,
       answer: String(ans),
       explanation: `모든 자연수의 가장 작은 약수는 1이므로 두 번째로 작은 약수는 가장 작은 소인수인 ${a}(= a)입니다. 가장 큰 약수는 자기 자신인 ${N}이므로 두 번째로 큰 약수는 ${N} ÷ ${a} = ${b}(= b)입니다. 따라서 a + b = ${a} + ${b} = ${ans}입니다.`,
-    };
-  } else {
-    const baseFact = '2^3 × 5 × 7^2';
-    const correctWrongChoice = '2^3 × 3';
-    const choices = [
-      { value: '1', label: correctWrongChoice },
-      { value: '2', label: '2^2 × 7' },
-      { value: '3', label: '5 × 7^2' },
-      { value: '4', label: '2^3 × 5' },
-    ].sort(() => random() - 0.5);
-    const ansIdx = choices.findIndex((c) => c.label === correctWrongChoice) + 1;
-    return {
-      prompt: `다음 중 ${baseFact}의 약수가 아닌 것을 고르시오.`,
-      promptEn: `Which of the following is NOT a divisor of ${baseFact}?`,
-      expression: `${baseFact}`,
-      answer: String(ansIdx),
-      choices,
-      explanation: `${baseFact}의 약수는 소인수 2, 5, 7만을 포함하며 각 지수가 원래 수의 지수 이하이어야 합니다. ${correctWrongChoice}은 소인수 3을 포함하고 있으므로 약수가 될 수 없습니다. 정답은 ${ansIdx}번입니다.`,
     };
   }
 }
