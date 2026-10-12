@@ -148,7 +148,39 @@ function TopicItem({ topic, copy }) {
   );
 }
 
+// In Korean stages the AMC practice link is not an inline badge on each basic topic; it becomes its own
+// "[응용] AMC 응용문제 편" row placed at the bottom of the applied-problem (응용) group — or at the end of
+// the stage when the stage has no applied group. Non-Korean stages are left untouched.
+const HANGUL = /[가-힣]/;
+export function arrangeAmcAsApplied(topics) {
+  if (!topics.some((t) => !t.isHeader && t.amc && HANGUL.test(t.label || ''))) return topics;
+  const out = [];
+  let pending = [];
+  let inApplied = false;
+  const flush = () => {
+    pending.forEach((t) => {
+      const clean = String(t.label).replace(/^\[[^\]]+\]\s*/, '');
+      out.push({ label: `[응용] AMC 응용문제 편 · ${clean}`, href: t.amc.href, ready: true, availability: 'ready', catalogId: `${t.catalogId || t.label}::amc-applied` });
+    });
+    pending = [];
+  };
+  topics.forEach((t) => {
+    if (t.isHeader) {
+      if (inApplied) flush();
+      inApplied = /응용/.test(t.label || '');
+      out.push(t);
+    } else if (t.amc && HANGUL.test(t.label || '')) {
+      const { amc, ...rest } = t;
+      out.push(rest);
+      pending.push(t);
+    } else out.push(t);
+  });
+  flush();
+  return out;
+}
+
 function renderStage(stage, copy, { openByDefault = false, extraClassName = '' } = {}) {
+  const stageTopics = arrangeAmcAsApplied(stage.topics);
   const stageStatus = availabilityForTopics(stage.topics);
   return (
     <details className={`curriculum-stage ${extraClassName}`.trim()} key={stage.id} open={openByDefault}>
@@ -165,7 +197,7 @@ function renderStage(stage, copy, { openByDefault = false, extraClassName = '' }
           <span>ℹ️</span> {sanitizePublicText(stage.notice)}
         </div>
       )}
-      <div className="curriculum-topic-list">{stage.topics.map((topic) => <TopicItem key={topic.catalogId || topic.label} topic={topic} copy={copy} />)}</div>
+      <div className="curriculum-topic-list">{stageTopics.map((topic) => <TopicItem key={topic.catalogId || topic.label} topic={topic} copy={copy} />)}</div>
     </details>
   );
 }
