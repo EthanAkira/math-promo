@@ -40,11 +40,15 @@ export const SCIENCE_UNITS = [
   U(2, 'resources', 'earth', '지구의 자원', "Earth's Natural Resources", '암석·흙·물·바람, 식물과 동물 자원, 연료, 태양 에너지'),
   U(2, 'water', 'earth', '물과 물의 순환', 'Water and the Water Cycle', '물의 이용, 증발·응결·강수'),
   // ── G3
+  U(3, 'land-adaptations', 'life', '육지 환경과 적응', 'Adaptations in Land Environments', '사막·초원·숲·툰드라, 생물군계와 적응'),
+  U(3, 'water-adaptations', 'life', '물 환경과 적응', 'Adaptations in Water Environments', '민물·바다·습지의 생물과 적응'),
+  U(3, 'environment-change', 'life', '변하는 환경', 'Environments Change', '생물과 사람이 환경에 미치는 영향, 오염, 3R'),
   U(3, 'life-cycles-traits', 'life', '한살이와 유전 형질', 'Life Cycles and Traits', '생물의 한살이, 부모를 닮는 형질, 환경의 영향'),
-  U(3, 'habitats-survival', 'life', '환경과 생존', 'Environments and Survival', '집단 생활, 적응, 서식지 변화'),
-  U(3, 'fossils', 'life', '화석과 과거의 생물', 'Fossils and Past Life', '화석의 형성, 과거 환경 추론'),
+  U(3, 'fossils', 'life', '화석과 과거의 생물', 'Fossils and Past Life', '멸종, 화석의 형성, 과거 환경 추론'),
+  U(3, 'matter', 'physical', '물질의 상태와 변화', 'Matter and Its Changes', '고체·액체·기체, 가열·냉각, 물리 변화와 화학 변화'),
   U(3, 'forces-magnets', 'physical', '힘과 자석', 'Forces and Magnets', '균형·불균형한 힘, 자석의 성질'),
-  U(3, 'light-shadows', 'physical', '빛과 그림자', 'Light and Shadows', '빛의 직진, 반사, 그림자'),
+  U(3, 'light-shadows', 'physical', '빛과 그림자', 'Light and Shadows', '빛의 진행과 반사, 색, 그림자, 투명·불투명'),
+  U(3, 'earth-sun-moon', 'earth', '지구·태양·달', 'Our Earth, Sun and Moon', '낮과 밤, 계절, 달의 위상'),
   U(3, 'weather-climate', 'earth', '날씨와 기후', 'Weather and Climate', '날씨 측정, 기후 패턴, 자연재해'),
   U(3, 'inquiry-skills', 'inquiry', '과학 탐구 기초', 'Science Skills and Measurement', '관찰·측정·기록, 공정한 실험'),
   // ── G4
