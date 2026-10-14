@@ -11,6 +11,9 @@ export default function SciencePage() {
     <>
       <SiteHeader />
       <main style={{ maxWidth: 1160, margin: '0 auto', padding: '32px 20px 80px' }}>
+        <a href="/science/middle" className="button button-secondary no-print" style={{ marginBottom: 16, display: 'inline-flex' }}>
+          중학교 과학 G7–G9 (Cambridge Lower Secondary) →
+        </a>
         <ScienceArchive />
       </main>
       <SiteFooter />

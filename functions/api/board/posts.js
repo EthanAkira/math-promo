@@ -20,7 +20,7 @@ export async function onRequestGet({ request, env }) {
 
   const category = url.searchParams.get('category');
   const prefix = url.searchParams.get('prefix');
-  const filtered = prefix && /^science-g[1-6]-/.test(prefix)
+  const filtered = prefix && /^science-g[1-9]-/.test(prefix)
     ? posts.filter((post) => typeof post.category === 'string' && post.category.startsWith(prefix))
     : isValidCategory(category) ? posts.filter((post) => post.category === category) : posts;
   const sorted = [...filtered].sort((a, b) => orderOf(b) - orderOf(a));
