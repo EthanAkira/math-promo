@@ -13,6 +13,7 @@ const result = await esbuild.build({
   format: 'esm',
   platform: 'node',
   target: 'node18',
+  loader: { '.js': 'jsx' },
   logLevel: 'silent',
 });
 
