@@ -9,3 +9,4 @@ out/
 npm-debug.log*
 math-promo/
 scripts/jjang_calc1_src/out/
+scripts/ocr_cache/
