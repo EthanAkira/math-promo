@@ -56,7 +56,18 @@ export default function ScienceArchive({ grade }) {
   }))), [ko]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const unit = unitId ? unitById(unitId) : null;
-  const unitTotal = (id) => (counts[scienceCategory(id, 'tb')] || 0) + (counts[scienceCategory(id, 'wb')] || 0);
+  // Card numbers: 📘 = textbook lessons written for the unit + uploaded textbook files,
+  // 📝 = practice questions in the unit's worksheet pool + uploaded workbook files.
+  const unitCounts = (id) => {
+    const c = contentOf(id);
+    const lessons = c ? c.lessons.length : 0;
+    const questions = c ? c.lessons.reduce((n, l) => n + l.items.length, 0) : 0;
+    return {
+      tb: lessons + (counts[scienceCategory(id, 'tb')] || 0),
+      wb: questions + (counts[scienceCategory(id, 'wb')] || 0),
+    };
+  };
+  const unitTotal = (id) => { const c = unitCounts(id); return c.tb + c.wb; };
 
   return <>
     <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 6 }}>
@@ -98,7 +109,7 @@ export default function ScienceArchive({ grade }) {
                 <div style={{ fontWeight: 700, fontSize: 14 }}>{name(u)}</div>
                 <div style={{ fontSize: 12, color: 'var(--ink-soft)', margin: '4px 0', lineHeight: 1.5 }}>{u.topicsKo}</div>
                 <div style={{ fontSize: 12, color: total ? 'var(--chalk-green)' : 'var(--ink-soft)' }}>
-                  📘 {counts[scienceCategory(u.id, 'tb')] || 0} · 📝 {counts[scienceCategory(u.id, 'wb')] || 0}
+                  <span title={ko ? '교과서: 학습 내용(레슨) + 업로드 자료' : 'Textbook: lessons + uploaded files'}>📘 {unitCounts(u.id).tb}</span> · <span title={ko ? '워크북: 연습 문항 + 업로드 자료' : 'Workbook: practice questions + uploaded files'}>📝 {unitCounts(u.id).wb}</span>
                 </div>
               </button>{contentOf(u.id) ? <a className="button button-secondary" style={{ textAlign: 'center', fontSize: 13 }} href={`/science/study?unit=${u.id}`}>📖 {ko ? '학습 내용 · 연습 학습지' : 'Notes & Worksheets'}</a> : null}</div>;
             })}
