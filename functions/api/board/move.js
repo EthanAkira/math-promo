@@ -1,4 +1,4 @@
-import { readBoard, writeBoard, jsonResponse, CORS_HEADERS, VALID_CATEGORIES, isAdminPassword } from './_shared.js';
+import { readBoard, writeBoard, jsonResponse, CORS_HEADERS, isValidCategory, isAdminPassword } from './_shared.js';
 
 export async function onRequestPost({ request, env }) {
   let body;
@@ -12,7 +12,7 @@ export async function onRequestPost({ request, env }) {
   if (!isAdminPassword(env, password)) {
     return jsonResponse({ error: 'Incorrect password.' }, { status: 401 });
   }
-  if (!VALID_CATEGORIES.includes(category)) {
+  if (!isValidCategory(category)) {
     return jsonResponse({ error: 'Invalid category.' }, { status: 400 });
   }
 

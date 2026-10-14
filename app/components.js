@@ -36,6 +36,7 @@ export function SiteHeader() {
           <a href="/math" className="nav-item">{language === 'ko' ? '수학' : 'Math'}</a>
           <a href="/amc" className="nav-item">AMC</a>
           <a href="/csat" className="nav-item">{tr(language, 'navCsat')}</a>
+          <a href="/science" className="nav-item">{language === 'ko' ? '과학' : 'Science'}</a>
           <a href="/coding" className="nav-item">{tr(language, 'navCoding')}</a>
           <a href="/games" className="nav-item">{tr(language, 'restCorner')}</a>
           <a href="/about" className="nav-item">{language === 'ko' ? '소개 (About)' : 'About'}</a>
@@ -154,6 +155,7 @@ export function SiteFooter() {
           <a href="/#learning-areas">{language === 'ko' ? '학습 영역' : 'Learning Areas'}</a>
           <a href="/amc">AMC 8/10/12</a>
           <a href="/csat">{tr(language, 'navCsat')}</a>
+          <a href="/science">{language === 'ko' ? '과학' : 'Science'}</a>
           <a href="/coding">{tr(language, 'navCoding')}</a>
           <a href="/games">{tr(language, 'restCorner')}</a>
           <a href="/about">{language === 'ko' ? 'ILLUMIA LAB 소개' : 'About ILLUMIA LAB'}</a>

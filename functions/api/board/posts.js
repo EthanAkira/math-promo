@@ -1,4 +1,4 @@
-import { CODING_CATEGORIES, readBoard, writeBoard, jsonResponse, postImageKey, genId, CORS_HEADERS, VALID_CATEGORIES, ADMIN_ONLY_CATEGORIES, isAdminPassword, orderOf } from './_shared.js';
+import { readBoard, writeBoard, jsonResponse, postImageKey, genId, CORS_HEADERS, isValidCategory, isAdminOnlyCategory, isLargeAttachmentCategory, isAdminPassword, orderOf } from './_shared.js';
 
 const MAX_BYTES = 8 * 1024 * 1024;
 const MAX_ATTACHMENT_BYTES = 20 * 1024 * 1024;
@@ -19,7 +19,10 @@ export async function onRequestGet({ request, env }) {
   }
 
   const category = url.searchParams.get('category');
-  const filtered = VALID_CATEGORIES.includes(category) ? posts.filter((post) => post.category === category) : posts;
+  const prefix = url.searchParams.get('prefix');
+  const filtered = prefix && /^science-g[1-6]-/.test(prefix)
+    ? posts.filter((post) => typeof post.category === 'string' && post.category.startsWith(prefix))
+    : isValidCategory(category) ? posts.filter((post) => post.category === category) : posts;
   const sorted = [...filtered].sort((a, b) => orderOf(b) - orderOf(a));
   return jsonResponse({ posts: sorted });
 }
@@ -33,11 +36,11 @@ export async function onRequestPost({ request, env }) {
   }
 
   const category = String(formData.get('category') || '');
-  if (!VALID_CATEGORIES.includes(category)) {
+  if (!isValidCategory(category)) {
     return jsonResponse({ error: 'Invalid category.' }, { status: 400 });
   }
 
-  if (ADMIN_ONLY_CATEGORIES.includes(category) && !isAdminPassword(env, formData.get('password'))) {
+  if (isAdminOnlyCategory(category) && !isAdminPassword(env, formData.get('password'))) {
     return jsonResponse({ error: 'Incorrect password.' }, { status: 401 });
   }
 
@@ -52,7 +55,7 @@ export async function onRequestPost({ request, env }) {
   let image = null;
   const file = formData.get('image');
   if (file && typeof file.arrayBuffer === 'function' && file.size > 0) {
-    const maxBytes = CODING_CATEGORIES.includes(category) ? MAX_ATTACHMENT_BYTES : MAX_BYTES;
+    const maxBytes = isLargeAttachmentCategory(category) ? MAX_ATTACHMENT_BYTES : MAX_BYTES;
     if (file.size > maxBytes) {
       return jsonResponse({ error: 'Attachment is too large.' }, { status: 400 });
     }

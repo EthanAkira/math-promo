@@ -55,7 +55,7 @@ const tableHeadStyle = { padding: '10px 8px', borderBottom: '2px solid var(--ink
 const tableCellStyle = { padding: '10px 8px', borderBottom: '1px solid var(--paper-line)', fontSize: 13, verticalAlign: 'top' };
 const tagStyle = { display: 'inline-block', marginLeft: 6, fontSize: 11, fontWeight: 700, color: 'var(--red-pen)', border: '1px solid var(--red-pen)', borderRadius: 4, padding: '1px 5px', verticalAlign: 'middle' };
 
-export default function Board({ category, adminOnlyPost = false, allowReply = true, staticPosts = [], attachmentAccept = 'image/*', attachmentLabelKey = 'formImage', composerTitleKey }) {
+export default function Board({ category, adminOnlyPost = false, allowReply = true, staticPosts = [], attachmentAccept = 'image/*', attachmentLabelKey = 'formImage', composerTitleKey, movableOptions }) {
   const { language } = useLanguage();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -431,7 +431,7 @@ export default function Board({ category, adminOnlyPost = false, allowReply = tr
         {adminUnlocked && !selectedPost.static ? <div className="no-print" style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 16, paddingTop: 14, borderTop: '1px dashed var(--paper-line)', fontSize: 12.5 }}>
           <span style={labelStyle}>{tr(language, 'boardMoveTo')}</span>
           <select value={moveTarget || selectedPost.category} onChange={(e) => setMoveTarget(e.target.value)} style={{ ...fieldStyle, padding: '6px 10px' }}>
-            {MOVABLE_CATEGORIES.map((value) => <option key={value} value={value}>{tr(language, `boardCategory_${value.replace('-', '_')}`)}</option>)}
+            {(movableOptions || MOVABLE_CATEGORIES.map((value) => ({ value, label: tr(language, `boardCategory_${value.replace('-', '_')}`) }))).map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
           <button type="button" onClick={moveSelected} disabled={busy || !moveTarget || moveTarget === selectedPost.category} className="button button-secondary">{tr(language, 'boardMoveButton')}</button>
         </div> : null}

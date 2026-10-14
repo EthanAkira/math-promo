@@ -4,6 +4,14 @@ export const CODING_CATEGORIES = ['coding', ...CODING_TRACKS.map((t) => 'coding-
 export const VALID_CATEGORIES = ['notice', 'contact', ...CODING_CATEGORIES];
 export const ADMIN_ONLY_CATEGORIES = ['notice', ...CODING_CATEGORIES];
 
+// Science archive slots: science-<unitId>-<tb|wb>, e.g. science-g3-forces-tb.
+// unitId always starts with the grade (g1..g6); the unit catalog lives client-side.
+export const SCIENCE_CATEGORY_RE = /^science-g[1-6]-[a-z0-9-]{1,40}-(tb|wb)$/;
+export const isScienceCategory = (c) => typeof c === 'string' && SCIENCE_CATEGORY_RE.test(c);
+export const isValidCategory = (c) => VALID_CATEGORIES.includes(c) || isScienceCategory(c);
+export const isAdminOnlyCategory = (c) => ADMIN_ONLY_CATEGORIES.includes(c) || isScienceCategory(c);
+export const isLargeAttachmentCategory = (c) => CODING_CATEGORIES.includes(c) || isScienceCategory(c);
+
 export function isAdminPassword(env, password) {
   return Boolean(env.AMC_UPLOAD_PASSWORD) && password === env.AMC_UPLOAD_PASSWORD;
 }
