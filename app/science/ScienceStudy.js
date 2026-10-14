@@ -199,7 +199,7 @@ export default function ScienceStudy() {
     </p>
 
     <section className="worksheet-controls no-print" aria-label="science study controls">
-      <div role="tablist" style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+      <div role="tablist" style={{ display: 'flex', flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>
         <button type="button" role="tab" aria-selected={tab === 'notes'} className={tab === 'notes' ? 'button' : 'button button-secondary'} onClick={() => changeTab('notes')}>📘 {ko ? '학습 내용' : 'Study Notes'}</button>
         <button type="button" role="tab" aria-selected={tab === 'sheet'} className={tab === 'sheet' ? 'button' : 'button button-secondary'} onClick={() => changeTab('sheet')}>📝 {ko ? '연습 학습지' : 'Practice Worksheet'}</button>
       </div>
