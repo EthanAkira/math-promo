@@ -951,8 +951,10 @@ export default function ScienceArchive({ grade }) {
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
                     {list.map((u) => {
                       const active = u.id === unitId;
-                      const tbCount = counts[scienceCategory(u.id, 'tb')] || 0;
-                      const wbCount = counts[scienceCategory(u.id, 'wb')] || 0;
+                      // 📘 = written lessons + uploaded textbook files; 📝 = practice questions + uploaded workbook files
+                      const written = contentOf(u.id);
+                      const tbCount = (written ? written.lessons.length : 0) + (counts[scienceCategory(u.id, 'tb')] || 0);
+                      const wbCount = (written ? written.lessons.reduce((n, l) => n + l.items.length, 0) : 0) + (counts[scienceCategory(u.id, 'wb')] || 0);
                       const hasStudy = Boolean(contentOf(u.id));
 
                       return (
@@ -991,10 +993,10 @@ export default function ScienceArchive({ grade }) {
                             </div>
                             <div style={{ display: 'flex', gap: 6, fontSize: 11.5, fontWeight: 600 }}>
                               <span style={{ padding: '2px 6px', borderRadius: 4, background: '#e0f2fe', color: '#0369a1' }}>
-                                📘 교과서 {tbCount}
+                                📘 레슨 {tbCount}
                               </span>
                               <span style={{ padding: '2px 6px', borderRadius: 4, background: '#fef3c7', color: '#b45309' }}>
-                                📝 워크북 {wbCount}
+                                📝 문항 {wbCount}
                               </span>
                             </div>
                           </button>
