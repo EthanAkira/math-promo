@@ -13,6 +13,7 @@ for (const [uid, c] of Object.entries(SCIENCE_CONTENT)) {
     n++; const w = `${uid}/${l.id}: ${it.q}`;
     if (it.kind === 'mc') { if (!it.choices.includes(it.answer)) err(`${w} answer not in choices`); if (new Set(it.choices).size !== it.choices.length) err(`${w} dup choices`); }
     if (it.kind === 'fb') { if (!it.q.includes('______')) err(`${w} no blank`); if (it.bank && !it.bank.includes(it.answer)) err(`${w} answer not in bank`); }
+    if (it.kind === 'cz' && !/\[[^\]]+\]/.test(it.text)) err(`${w} cloze has no [blank]`);
     if (it.kind === 'tf' && typeof it.answer !== 'boolean') err(`${w} tf answer`);
     if ((it.kind === 'sa' || it.kind === 'dr') && !it.model) err(`${w} no model`);
   }

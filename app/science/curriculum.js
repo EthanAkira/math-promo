@@ -30,12 +30,14 @@ export const SCIENCE_UNITS = [
   U(1, 'materials', 'physical', '고체·액체·기체', 'Solids, Liquids and Gases', '물질 설명하기, 질량, 고체/액체/기체의 성질'),
   U(1, 'light-sound', 'physical', '빛과 소리', 'Light and Sound', '광원, 그림자, 소리의 발생'),
   // ── G2
+  U(2, 'plant-life', 'life', '식물의 한살이', 'Plant Life Cycles', '뿌리·줄기·잎, 꽃·열매·씨앗, 씨앗의 이동, 식물의 한살이와 적응'),
+  U(2, 'animal-life', 'life', '동물의 한살이', 'Animal Life Cycles', '동물 분류, 포유류, 알에서 태어나는 동물, 동물의 생김새와 행동'),
   U(2, 'habitats', 'life', '서식지와 생물', 'Habitats and Living Things', '서식지 종류, 환경에 적응한 생물'),
-  U(2, 'life-cycles', 'life', '식물·동물의 한살이', 'Plant and Animal Life Cycles', '씨앗의 발아, 곤충·개구리 한살이'),
   U(2, 'food-health', 'life', '음식과 건강한 몸', 'Food and Staying Healthy', '식품군, 운동, 위생'),
-  U(2, 'matter', 'physical', '고체·액체·기체', 'Solids, Liquids and Gases', '물질의 세 가지 상태, 상태 변화 관찰'),
-  U(2, 'forces-motion', 'physical', '힘과 운동 (밀기·당기기)', 'Forces and Motion: Push and Pull', '밀고 당기는 힘, 빠르기와 방향'),
-  U(2, 'rocks-soil', 'earth', '암석과 흙', 'Rocks and Soil', '암석의 종류와 성질, 흙의 구성'),
+  U(2, 'matter', 'physical', '물질의 상태와 변화', 'States of Matter and Changes', '고체·액체·기체의 변화: 가열, 냉각, 섞기'),
+  U(2, 'forces-motion', 'physical', '위치·운동·힘', 'Position, Motion and Forces', '위치, 거리, 빠르기, 밀기와 당기기, 마찰'),
+  U(2, 'rocks-soil', 'earth', '암석과 흙', 'Rocks and Soil', '암석의 성질, 광물, 풍화, 흙의 구성'),
+  U(2, 'resources', 'earth', '지구의 자원', "Earth's Natural Resources", '암석·흙·물·바람, 식물과 동물 자원, 연료, 태양 에너지'),
   U(2, 'water', 'earth', '물과 물의 순환', 'Water and the Water Cycle', '물의 이용, 증발·응결·강수'),
   // ── G3
   U(3, 'life-cycles-traits', 'life', '한살이와 유전 형질', 'Life Cycles and Traits', '생물의 한살이, 부모를 닮는 형질, 환경의 영향'),

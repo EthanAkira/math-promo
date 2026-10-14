@@ -11,6 +11,7 @@ import { unitById } from './curriculum';
 
 const SHEET_SIZE = 14;
 const BLANK = '______';
+const CLOZE_RE = /\[([^\]]+)\]/g;
 
 function createSeed() {
   const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -56,15 +57,20 @@ function buildSheet(content, seed) {
   return picked.map((item, idx) => ({
     ...item,
     id: idx + 1,
+    blanks: item.kind === 'cz' ? [...item.text.matchAll(CLOZE_RE)].map((m) => m[1]) : undefined,
     choices: item.choices ? shuffled(item.choices, rand) : undefined,
-    bank: item.bank ? shuffled(item.bank, rand) : undefined,
+    bank: item.kind === 'cz' ? shuffled([...item.text.matchAll(CLOZE_RE)].map((m) => m[1]), rand) : item.bank ? shuffled(item.bank, rand) : undefined,
   }));
 }
 
 const norm = (v) => String(v ?? '').toLowerCase().replace(/\s+/g, ' ').trim();
-const isAuto = (item) => item.kind === 'mc' || item.kind === 'fb' || item.kind === 'tf';
+const isAuto = (item) => item.kind === 'mc' || item.kind === 'fb' || item.kind === 'tf' || item.kind === 'cz';
+// One gradable cell per answer: a cloze passage has one per blank, every other auto item has one.
+const cellsOf = (item, value) => (item.kind === 'cz'
+  ? item.blanks.map((w, n) => ({ ok: norm(value?.[n]) === norm(w), has: hasValue(value?.[n]), text: value?.[n] }))
+  : [{ ok: isRight(item, value), has: hasValue(value), text: value }]);
 const isRight = (item, value) => (item.kind === 'tf' ? value === item.answer : norm(value) === norm(item.answer));
-const hasValue = (value) => value !== undefined && value !== '';
+function hasValue(value) { return value !== undefined && value !== ''; }
 
 function buildUrl(unitId, tab, seed, view) {
   const url = new URL(window.location.href);
@@ -77,7 +83,7 @@ function buildUrl(unitId, tab, seed, view) {
 
 function ItemBody({ item, view, value, onChange, checked, ko }) {
   const answerView = view === 'answers';
-  const right = isAuto(item) && hasValue(value) ? isRight(item, value) : null;
+  const right = isAuto(item) && item.kind !== 'cz' && hasValue(value) ? isRight(item, value) : null;
   const mark = checked && !answerView && right !== null
     ? <span className={`result-mark ${right ? 'correct' : 'wrong'}`}>{right ? (ko ? '맞았어요' : 'Correct') : (ko ? '다시 풀기' : 'Try again')}</span> : null;
 
@@ -107,6 +113,22 @@ function ItemBody({ item, view, value, onChange, checked, ko }) {
         })}
       </div>
       {mark}
+    </div>;
+  }
+  if (item.kind === 'cz') {
+    const pieces = item.text.split(CLOZE_RE); // [text, blank, text, blank, ...]
+    let n = -1;
+    return <div className="sci-body">
+      <p className="sci-q">{item.q}</p>
+      {!answerView ? <p className="sci-bank">{ko ? '낱말 상자' : 'Word box'}: {item.bank.join('  ·  ')}</p> : null}
+      <p className="sci-cloze">{pieces.map((piece, i) => {
+        if (i % 2 === 0) return <Fragment key={i}>{piece}</Fragment>;
+        n += 1; const idx = n;
+        if (answerView) return <strong key={i} className="sci-fill">{piece}</strong>;
+        const cur = value?.[idx];
+        const cls = checked && hasValue(cur) ? (norm(cur) === norm(piece) ? ' sci-right' : ' sci-wrong') : '';
+        return <input key={i} className={`sci-fill-input${cls}`} value={cur ?? ''} onChange={(e) => onChange(item.id, { ...(value || {}), [idx]: e.target.value })} aria-label={`blank ${idx + 1}`} autoCapitalize="none" autoComplete="off" spellCheck={false} />;
+      })}</p>
     </div>;
   }
   if (item.kind === 'fb') {
@@ -180,13 +202,14 @@ export default function ScienceStudy() {
   const onChange = (id, value) => { setAnswers((a) => ({ ...a, [id]: value })); setChecked(false); };
 
   const auto = items.filter(isAuto);
-  const correct = auto.filter((it) => hasValue(answers[it.id]) && isRight(it, answers[it.id])).length;
+  const cells = auto.flatMap((it) => cellsOf(it, answers[it.id]));
+  const correct = cells.filter((c) => c.has && c.ok).length;
   const check = () => {
     setChecked(true);
-    const entries = auto.filter((it) => hasValue(answers[it.id])).map((it) => ({
-      grade: `science-g${unit.grade}`, unit: unit.id, problemType: it.kind === 'fb' ? 'short' : 'mcq',
-      isCorrect: isRight(it, answers[it.id]), answer: String(answers[it.id]),
-    }));
+    const entries = auto.flatMap((it) => cellsOf(it, answers[it.id]).filter((c) => c.has).map((c) => ({
+      grade: `science-g${unit.grade}`, unit: unit.id, problemType: it.kind === 'mc' || it.kind === 'tf' ? 'mcq' : 'short',
+      isCorrect: c.ok, answer: String(c.text),
+    })));
     recordAttempts(user, entries);
     syncAnswerEvents(entries);
   };
@@ -243,7 +266,7 @@ export default function ScienceStudy() {
       </div> : <>
         <div className="student-row"><span>{ko ? '이름' : 'Name'}</span><i /><span>{ko ? '날짜' : 'Date'}</span><i /><span className="sheet-kind">{items.length} {ko ? '문항' : 'questions'}</span></div>
         <ol className="sci-items" aria-label="questions">
-          {items.map((item) => <li key={item.id} className="sci-item">
+          {items.map((item) => <li key={item.id} className={`sci-item${item.kind === 'cz' ? ' sci-wide' : ''}`}>
             <span className="problem-number">{item.id}</span>
             <ItemBody item={item} view={view} value={answers[item.id]} onChange={onChange} checked={checked} ko={ko} />
             {view === 'problems' && (item.kind === 'dr' || item.kind === 'sa') ? <ProblemScratchpad problemId={item.id} seed={`science:${unitId}:${seed}`} language={language} forceOpen={item.kind === 'dr' ? true : tabletMode} /> : null}
@@ -260,7 +283,7 @@ export default function ScienceStudy() {
         <p>{ko ? '객관식은 눌러서 고르고, 빈칸은 영어 단어로 쓰세요. 서술·그림 문제는 ✍️ 연습장에 펜슬로 쓰고 정답지로 스스로 확인합니다.' : 'Tap to choose, type one word for blanks. For written and drawing questions use the ✍️ pad with your pencil, then compare with the answer key.'}</p>
       </div>
       <button type="button" className="button button-primary" onClick={check}>{ko ? '채점하기' : 'Check answers'}</button>
-      {checked ? <strong className="score">{ko ? `자동 채점 ${auto.length}문항 중 ${correct}개 정답` : `${correct} of ${auto.length} auto-graded answers correct`}</strong> : null}
+      {checked ? <strong className="score">{ko ? `자동 채점 ${cells.length}칸 중 ${correct}칸 정답` : `${correct} of ${cells.length} auto-graded answers correct`}</strong> : null}
     </section> : null}
   </div>;
 }

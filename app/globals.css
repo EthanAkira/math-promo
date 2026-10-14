@@ -3559,3 +3559,9 @@ html[dir="rtl"] .generated-proportion-graph {
   .sci-lesson h3 { font-size: 14px; }
   .sci-model { background: #fff; border-left-color: #000; font-size: 10.5px; }
 }
+
+.sci-wide { grid-column: 1 / -1; }
+.sci-cloze { margin: 8px 0 0; font-size: 14.5px; line-height: 2.2; }
+.sci-fill-input.sci-right { border-bottom-color: var(--chalk-green); color: var(--chalk-green); }
+.sci-fill-input.sci-wrong { border-bottom-color: var(--red-pen); color: var(--red-pen); }
+@media print { .sci-cloze { font-size: 11.5px; line-height: 2.1; } }
