@@ -3513,3 +3513,49 @@ html[dir="rtl"] .generated-proportion-graph {
 .math-table-cell { display: table-cell; min-width: 2.6em; padding: 5px 14px; border: 1px solid var(--ink-soft, #667); text-align: center; vertical-align: middle; font-weight: 600; }
 .math-table.has-head .math-table-row > .math-table-cell:first-child { background: #f1ede2; font-weight: 800; }
 @media print { .math-table-cell { border-color: #000; } }
+
+/* ── Science study notes + worksheet ───────────────────────────── */
+.sci-paper { min-height: 0; }
+.sci-intro { margin: 14px 4px 6px; color: var(--ink-soft); font-size: 14px; line-height: 1.7; }
+.sci-lesson { margin: 18px 4px 0; padding-top: 12px; border-top: 1px dashed #c7cdd2; break-inside: avoid; }
+.sci-lesson h3 { margin: 0 0 8px; font-size: 18px; }
+.sci-lesson h3 small { margin-left: 8px; color: var(--ink-soft); font-size: 12px; font-weight: 600; }
+.sci-ideas { margin: 0 0 10px; padding-left: 22px; font-size: 14.5px; line-height: 1.75; }
+.sci-vocab { width: 100%; border-collapse: collapse; font-size: 13px; }
+.sci-vocab th,.sci-vocab td { padding: 5px 8px; border: 1px solid #c7cdd2; text-align: left; vertical-align: top; }
+.sci-vocab th { background: #f1ede2; }
+.sci-vocab small { margin-left: 4px; color: var(--ink-soft); }
+.sci-items { list-style: none; margin: 0; padding: 8px 4px 0; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 22px; }
+.sci-item { position: relative; padding: 14px 8px 14px 38px; border-bottom: 1px dashed #c7cdd2; break-inside: avoid; min-height: 96px; }
+.sci-item .problem-number { position: absolute; left: 4px; top: 12px; }
+.sci-q { margin: 0 0 8px; font-size: 14.5px; line-height: 1.6; font-weight: 600; }
+.sci-choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.sci-choice { font: inherit; font-size: 13.5px; padding: 6px 12px; color: var(--ink); background: #fff; border: 1.5px solid #9aa1a8; border-radius: 999px; cursor: pointer; }
+.sci-choice b { margin-right: 4px; }
+.sci-choice.on { background: var(--chalk-green-soft, #e3f0e8); border-color: var(--chalk-green); font-weight: 700; }
+.sci-choice:disabled { cursor: default; opacity: 1; }
+.sci-fill-input { width: 9em; margin: 0 4px; padding: 2px 6px; font: inherit; border: 0; border-bottom: 2px solid var(--ink); background: transparent; text-align: center; }
+.sci-fill { margin: 0 4px; padding: 0 6px; border-bottom: 2px solid var(--chalk-green); color: var(--chalk-green); }
+.sci-bank { margin: 6px 0 0; font-size: 12px; color: var(--ink-soft); }
+.sci-textarea { width: 100%; font: inherit; font-size: 14px; padding: 6px 8px; border: 1px solid var(--paper-line); border-radius: 8px; box-sizing: border-box; }
+.sci-lines { display: none; }
+.sci-drawbox { height: 150px; border: 1.5px solid #7b8086; border-radius: 6px; }
+.sci-model { margin: 4px 0 0; padding: 6px 10px; background: #eef6f1; border-left: 3px solid var(--chalk-green); font-size: 13px; line-height: 1.6; }
+.sci-item .result-mark { position: static; display: inline-block; margin-top: 6px; }
+@media (max-width: 720px) { .sci-items { grid-template-columns: 1fr; } .sci-fill-input { width: 7em; } }
+@media print {
+  .sci-paper { padding: 9mm 11mm 7mm; }
+  .sci-items { grid-template-columns: repeat(2,1fr); gap: 0 6mm; }
+  .sci-item { min-height: 30mm; padding: 4mm 2mm 3mm 9mm; }
+  .sci-q { font-size: 11.5px; margin-bottom: 2mm; }
+  .sci-choice { font-size: 11px; padding: 1px 8px; border-color: #000; }
+  .sci-choice.on { background: #fff; }
+  .sci-fill-input { border-bottom: 1px solid #000; width: 28mm; }
+  .sci-lines { display: block; }
+  .sci-lines i { display: block; height: 7mm; border-bottom: 1px solid #555; }
+  .sci-drawbox { height: 38mm; border-color: #000; }
+  .sci-ideas { font-size: 11.5px; line-height: 1.55; }
+  .sci-vocab { font-size: 10.5px; }
+  .sci-lesson h3 { font-size: 14px; }
+  .sci-model { background: #fff; border-left-color: #000; font-size: 10.5px; }
+}

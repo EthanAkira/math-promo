@@ -21,13 +21,14 @@ const U = (grade, slug, strand, ko, en, topicsKo) => ({ id: `g${grade}-${slug}`,
 
 export const SCIENCE_UNITS = [
   // ── G1
-  U(1, 'living-things', 'life', '생물과 무생물', 'Living and Non-living Things', '생물의 특징, 생물/무생물 분류'),
-  U(1, 'plants', 'life', '식물의 부분과 필요한 것', 'Plants: Parts and Needs', '뿌리·줄기·잎·꽃, 물·빛·공기'),
-  U(1, 'animals', 'life', '동물과 새끼', 'Animals and Their Young', '동물 분류, 부모와 새끼의 닮은 점'),
+  U(1, 'plants', 'life', '식물과 식물이 필요한 것', 'Plants and Their Needs', '식물의 종류, 물·공기·빛·공간, 뿌리·줄기·잎·꽃'),
+  U(1, 'animals', 'life', '동물과 동물이 필요한 것', 'Animals and Their Needs', '포유류·조류·파충류·곤충·어류, 먹이와 몸의 구조'),
+  U(1, 'habitats', 'life', '서식지: 식물과 동물이 함께 사는 곳', 'Habitats: Plants and Animals Together', '초원·숲·연못·바다, 서로 돕는 생물'),
   U(1, 'body-senses', 'life', '우리 몸과 오감', 'My Body and Senses', '신체 부위, 다섯 가지 감각'),
-  U(1, 'materials', 'physical', '물체와 재료의 성질', 'Materials and Their Properties', '재료 분류, 단단함·부드러움·투명함'),
+  U(1, 'weather', 'earth', '날씨', 'Weather', '날씨 표현, 해의 따뜻함, 날씨 측정 도구'),
+  U(1, 'seasons', 'earth', '계절', 'Seasons', '겨울·봄·여름·가을의 날씨와 햇빛, 동식물의 변화'),
+  U(1, 'materials', 'physical', '고체·액체·기체', 'Solids, Liquids and Gases', '물질 설명하기, 질량, 고체/액체/기체의 성질'),
   U(1, 'light-sound', 'physical', '빛과 소리', 'Light and Sound', '광원, 그림자, 소리의 발생'),
-  U(1, 'sky-weather', 'earth', '해·달·날씨와 계절', 'Sun, Moon, Weather and Seasons', '낮과 밤, 날씨 관찰, 계절 변화'),
   // ── G2
   U(2, 'habitats', 'life', '서식지와 생물', 'Habitats and Living Things', '서식지 종류, 환경에 적응한 생물'),
   U(2, 'life-cycles', 'life', '식물·동물의 한살이', 'Plant and Animal Life Cycles', '씨앗의 발아, 곤충·개구리 한살이'),

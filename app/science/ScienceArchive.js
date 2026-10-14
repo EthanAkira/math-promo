@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useLanguage } from '../language';
 import { tr } from '../i18n';
 import Board from '../board/Board';
+import { contentOf } from './content';
 import { SCIENCE_GRADES, SCIENCE_KINDS, SCIENCE_STRANDS, SCIENCE_UNITS, scienceCategory, unitById, unitsOfGrade } from './curriculum';
 
 const ACCEPT = 'image/*,application/pdf,.zip,.docx,.pptx,.xlsx,.hwp';
@@ -92,14 +93,14 @@ export default function ScienceArchive({ grade }) {
             {list.map((u) => {
               const active = u.id === unitId;
               const total = unitTotal(u.id);
-              return <button key={u.id} type="button" onClick={() => select(u.id)} aria-pressed={active}
+              return <div key={u.id} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}><button type="button" onClick={() => select(u.id)} aria-pressed={active}
                 style={{ textAlign: 'left', font: 'inherit', cursor: 'pointer', padding: 12, borderRadius: 10, color: 'var(--ink)', background: 'var(--paper, transparent)', border: active ? '2px solid var(--chalk-green)' : '1px solid var(--paper-line)' }}>
                 <div style={{ fontWeight: 700, fontSize: 14 }}>{name(u)}</div>
                 <div style={{ fontSize: 12, color: 'var(--ink-soft)', margin: '4px 0', lineHeight: 1.5 }}>{u.topicsKo}</div>
                 <div style={{ fontSize: 12, color: total ? 'var(--chalk-green)' : 'var(--ink-soft)' }}>
                   📘 {counts[scienceCategory(u.id, 'tb')] || 0} · 📝 {counts[scienceCategory(u.id, 'wb')] || 0}
                 </div>
-              </button>;
+              </button>{contentOf(u.id) ? <a className="button button-secondary" style={{ textAlign: 'center', fontSize: 13 }} href={`/science/study?unit=${u.id}`}>📖 {ko ? '학습 내용 · 연습 학습지' : 'Notes & Worksheets'}</a> : null}</div>;
             })}
           </div>
         </section>;
