@@ -16,6 +16,7 @@ import csatJeongseokCatalog from '../../data/csatJeongseokCalculusCatalog.json';
 import csatSilryeokIntegralStatsCatalog from '../../data/csatSilryeokIntegralStatsCatalog.json';
 import csatSilryeokGeoVectorsCatalog from '../../data/csatSilryeokGeoVectorsCatalog.json';
 import csatJeongseokCalc2Catalog from '../../data/csatJeongseokCalc2Catalog.json';
+import csatSilryeokMath1Catalog from '../../data/csatSilryeokMath1Catalog.json';
 import { enrichProblemsListWithRates } from '../../utils/csatRates';
 import { generateCommonMathVariant } from '../commonMathProblemGenerator';
 import { generateCalculus1Variant } from '../calculus1ProblemGenerator';
@@ -27,6 +28,7 @@ import { generateJeongseokCalculusVariant } from '../jeongseokCalculusProblemGen
 import { generateSilryeokIntegralStatsVariant } from '../silryeokIntegralStatsProblemGenerator';
 import { generateSilryeokGeoVariant } from '../silryeokGeoVectorsProblemGenerator';
 import { generateJeongseokCalc2Variant } from '../jeongseokCalc2ProblemGenerator';
+import { generateSilryeokMath1Variant } from '../silryeokMath1ProblemGenerator';
 import { generateCsatSimilarProblem } from '../csatForecastEngine';
 import {
   ALL_DETAILED_TYPES,
@@ -47,6 +49,7 @@ const combinedStaticCatalog = [
   ...csatSilryeokIntegralStatsCatalog,
   ...csatSilryeokGeoVectorsCatalog,
   ...csatJeongseokCalc2Catalog,
+  ...csatSilryeokMath1Catalog,
 ];
 
 const COPY = {
@@ -225,6 +228,8 @@ export default function CsatUnitBrowser() {
       generated = generateSilryeokIntegralStatsVariant(candidate);
     } else if (candidate?.id?.startsWith('silryeok-geo-')) {
       generated = generateSilryeokGeoVariant(candidate);
+    } else if (candidate?.id?.startsWith('silryeok-math1-')) {
+      generated = generateSilryeokMath1Variant(candidate);
     } else if (unitId && (unitId === 'sequence-limits' || unitId === 'limits-continuity' || unitId === 'differentiation' || unitId === 'integration' || candidate?.id?.startsWith('jjangeasy-calc-'))) {
       generated = generateCalculus1Variant(candidate);
     } else {

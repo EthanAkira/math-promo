@@ -116,6 +116,54 @@ const GRADE_METAS = {
   },
 };
 
+const STRAND_DESCRIPTIONS = {
+  chemistry: {
+    badge: '화학 (Chemistry)',
+    summaryKo: '물질의 성질, 상태 변화, 용액과 혼합물, 원자·분자, 화학 반응',
+    summaryEn: 'States of matter, mixtures, solutions, atoms, elements, and chemical reactions.',
+    icon: '🧪',
+    color: '#e11d48',
+    bg: '#fff1f2',
+    border: '#fecdd3',
+  },
+  physics: {
+    badge: '물리 (Physics)',
+    summaryKo: '힘과 운동, 마찰, 단순 기계, 빛과 소리, 전기·자기, 파동, 열과 에너지',
+    summaryEn: 'Forces, motion, simple machines, light, sound, electricity, magnetism, and energy.',
+    icon: '⚡',
+    color: '#2563eb',
+    bg: '#eff6ff',
+    border: '#bfdbfe',
+  },
+  life: {
+    badge: '생명과학 (Life Science)',
+    summaryKo: '식물·동물, 서식지와 환경 적응, 생태계와 먹이사슬, 세포, 인체 기관계, 유전',
+    summaryEn: 'Plants, animals, habitats, adaptations, ecosystems, cells, body systems, and heredity.',
+    icon: '🌱',
+    color: '#059669',
+    bg: '#ecfdf5',
+    border: '#a7f3d0',
+  },
+  earth: {
+    badge: '지구과학 (Earth & Space)',
+    summaryKo: '암석과 흙, 날씨와 기후, 물의 순환, 지표 변화, 지구의 자원, 태양계와 우주',
+    summaryEn: 'Rocks, soil, weather, climate, water cycle, Earth dynamics, and solar system.',
+    icon: '🌍',
+    color: '#d97706',
+    bg: '#fffbeb',
+    border: '#fde68a',
+  },
+  inquiry: {
+    badge: '과학 탐구 (Scientific Inquiry)',
+    summaryKo: '관찰·측정, 가설 설정, 공정한 실험(변인 통제), 자료 해석 및 보고서 작성',
+    summaryEn: 'Observation, hypothesis, fair testing, data analysis, and scientific reporting.',
+    icon: '🔬',
+    color: '#7c3aed',
+    bg: '#f5f3ff',
+    border: '#ddd6fe',
+  },
+};
+
 export default function ScienceArchive({ grade }) {
   const { language } = useLanguage();
   const ko = language === 'ko';
@@ -126,6 +174,7 @@ export default function ScienceArchive({ grade }) {
   const [counts, setCounts] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
   const [activeMainTab, setActiveMainTab] = useState('grades'); // 'grades' | 'strands' | 'study'
+  const [activeStrandFilter, setActiveStrandFilter] = useState('all'); // 'all' | 'chemistry' | 'physics' | 'life' | 'earth' | 'inquiry'
 
   // Deep link
   useEffect(() => {
@@ -163,7 +212,6 @@ export default function ScienceArchive({ grade }) {
     try {
       window.history.replaceState(null, '', `?unit=${id}&kind=${k}`);
     } catch {}
-    // Scroll to board smoothly
     if (typeof window !== 'undefined') {
       setTimeout(() => {
         const el = document.getElementById('science-board');
@@ -184,7 +232,6 @@ export default function ScienceArchive({ grade }) {
   );
 
   const unit = unitId ? unitById(unitId) : null;
-  const unitTotal = (id) => (counts[scienceCategory(id, 'tb')] || 0) + (counts[scienceCategory(id, 'wb')] || 0);
 
   // All non-misc units
   const allRegularUnits = useMemo(() => SCIENCE_UNITS.filter((u) => u.strand !== 'misc'), []);
@@ -202,6 +249,9 @@ export default function ScienceArchive({ grade }) {
 
   // Total interactive study units count
   const studyUnitsCount = useMemo(() => allRegularUnits.filter((u) => contentOf(u.id)).length, [allRegularUnits]);
+
+  // Active strands list (excluding 'misc')
+  const coreStrands = useMemo(() => SCIENCE_STRANDS.filter((s) => s.id !== 'misc'), []);
 
   return (
     <div style={{ color: 'var(--ink, #0f172a)' }}>
@@ -240,14 +290,13 @@ export default function ScienceArchive({ grade }) {
           border: '1px solid rgba(255, 255, 255, 0.12)',
         }}
       >
-        {/* Subtle decorative glow */}
         <div
           style={{
             position: 'absolute',
             top: -60,
             right: -60,
-            width: 220,
-            height: 220,
+            width: 240,
+            height: 240,
             borderRadius: '50%',
             background: 'radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%)',
             pointerEvents: 'none',
@@ -283,7 +332,7 @@ export default function ScienceArchive({ grade }) {
                 border: '1px solid rgba(125, 211, 252, 0.3)',
               }}
             >
-              ✨ 인터랙티브 개념 학습 &amp; 실시간 워크시트
+              ✨ 화학 · 물리 · 생명과학 · 지구과학 4대 핵심 영역
             </span>
           </div>
 
@@ -319,8 +368,8 @@ export default function ScienceArchive({ grade }) {
               ko ? GRADE_METAS[grade]?.descKo : GRADE_METAS[grade]?.descEn
             ) : (
               ko
-                ? 'G1부터 G6까지, 생명과학 · 물리화학 · 지구우주 · 과학탐구 4대 핵심 영역을 아우르는 단원별 교과서, 워크북 자료와 실시간 인터랙티브 온라인 학습지를 제공합니다.'
-                : 'Explore unit-based textbooks, workbooks, and interactive online worksheets spanning Life Science, Physical Science, Earth & Space, and Scientific Inquiry across G1–G6.'
+                ? 'G1부터 G6까지, [화학 🧪 · 물리 ⚡ · 생명과학 🌱 · 지구과학 🌍] 4대 핵심 영역을 아우르는 단원별 교과서, 워크북 자료와 실시간 인터랙티브 온라인 학습지를 제공합니다.'
+                : 'Explore unit-based textbooks, workbooks, and interactive online worksheets spanning Chemistry, Physics, Life Science, and Earth & Space Science across G1–G6.'
             )}
           </p>
 
@@ -339,12 +388,12 @@ export default function ScienceArchive({ grade }) {
               <div style={{ fontSize: 16, fontWeight: 800, color: '#f8fafc', marginTop: 2 }}>G1 ~ G6 전과정</div>
             </div>
             <div style={{ background: 'rgba(255, 255, 255, 0.08)', borderRadius: 10, padding: '10px 14px' }}>
-              <div style={{ fontSize: 11.5, color: '#94a3b8', fontWeight: 600 }}>📚 총 정규 단원</div>
-              <div style={{ fontSize: 16, fontWeight: 800, color: '#f8fafc', marginTop: 2 }}>57개 탐구 단원</div>
+              <div style={{ fontSize: 11.5, color: '#94a3b8', fontWeight: 600 }}>🧪 4대 순수 과학</div>
+              <div style={{ fontSize: 16, fontWeight: 800, color: '#f8fafc', marginTop: 2 }}>화학·물리·생명·지구</div>
             </div>
             <div style={{ background: 'rgba(255, 255, 255, 0.08)', borderRadius: 10, padding: '10px 14px' }}>
-              <div style={{ fontSize: 11.5, color: '#94a3b8', fontWeight: 600 }}>🧪 4대 핵심 영역</div>
-              <div style={{ fontSize: 16, fontWeight: 800, color: '#f8fafc', marginTop: 2 }}>생명·물리·지구·탐구</div>
+              <div style={{ fontSize: 11.5, color: '#94a3b8', fontWeight: 600 }}>📚 총 정규 단원</div>
+              <div style={{ fontSize: 16, fontWeight: 800, color: '#f8fafc', marginTop: 2 }}>57개 탐구 단원</div>
             </div>
             <div style={{ background: 'rgba(255, 255, 255, 0.08)', borderRadius: 10, padding: '10px 14px' }}>
               <div style={{ fontSize: 11.5, color: '#94a3b8', fontWeight: 600 }}>📝 온라인 학습지</div>
@@ -484,7 +533,7 @@ export default function ScienceArchive({ grade }) {
                   transition: 'all 0.15s',
                 }}
               >
-                🧬 {ko ? '4대 핵심 영역별 보기' : 'By 4 Strands'}
+                🧬 {ko ? '4대 핵심 영역별 보기 (화학·물리·생명·지구)' : 'By 4 Strands (Chem·Phys·Life·Earth)'}
               </button>
               <button
                 type="button"
@@ -511,7 +560,7 @@ export default function ScienceArchive({ grade }) {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={ko ? '단원명, 탐구 키워드 검색 (예: 광합성, 자석, 세포, 태양계)...' : 'Search topic, keyword (e.g. magnet, cell, plant)...'}
+                placeholder={ko ? '단원명, 탐구 키워드 검색 (예: 화학변화, 전기, 세포, 암석)...' : 'Search topic, keyword (e.g. chemical, circuit, cell, rock)...'}
                 style={{
                   width: '100%',
                   padding: '9px 14px',
@@ -679,107 +728,217 @@ export default function ScienceArchive({ grade }) {
             </div>
           )}
 
-          {/* TAB 2: STRANDS EXPLORER VIEW */}
+          {/* TAB 2: STRANDS EXPLORER VIEW (화학, 물리, 생명과학, 지구과학 4대 핵심 영역) */}
           {activeMainTab === 'strands' && !searchQuery.trim() && (
-            <div style={{ display: 'grid', gap: 24, marginBottom: 40 }}>
-              {SCIENCE_STRANDS.filter((s) => s.id !== 'misc').map((strand) => {
-                const strandUnits = allRegularUnits.filter((u) => u.strand === strand.id);
-                return (
-                  <section
-                    key={strand.id}
-                    style={{
-                      background: '#ffffff',
-                      border: '1px solid #e2e8f0',
-                      borderRadius: 16,
-                      padding: '24px',
-                      boxShadow: '0 3px 12px rgba(0, 0, 0, 0.02)',
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16, borderBottom: '1px solid #f1f5f9', paddingBottom: 12 }}>
-                      <span style={{ fontSize: 24 }}>{strand.icon}</span>
-                      <div>
-                        <h2 style={{ fontSize: 18, fontWeight: 800, margin: 0, color: '#0f172a' }}>
-                          {name(strand)}
-                        </h2>
-                        <span style={{ fontSize: 12, color: '#64748b' }}>
-                          초등 G1–G6 연계 {strandUnits.length}개 핵심 단원
-                        </span>
-                      </div>
-                    </div>
+            <div>
+              {/* 4대 핵심 영역 대시보드 요약 카드 4종 */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 14, marginBottom: 24 }}>
+                {coreStrands.filter((s) => s.id !== 'inquiry').map((strand) => {
+                  const strandUnits = allRegularUnits.filter((u) => u.strand === strand.id);
+                  const isSelected = activeStrandFilter === strand.id;
+                  const meta = STRAND_DESCRIPTIONS[strand.id];
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
-                      {strandUnits.map((u) => (
-                        <div
-                          key={u.id}
+                  return (
+                    <button
+                      key={strand.id}
+                      type="button"
+                      onClick={() => setActiveStrandFilter(isSelected ? 'all' : strand.id)}
+                      style={{
+                        textAlign: 'left',
+                        padding: '18px 20px',
+                        borderRadius: 14,
+                        border: isSelected ? `2.5px solid ${meta?.color || strand.color}` : `1.5px solid ${meta?.border || '#e2e8f0'}`,
+                        background: isSelected ? meta?.bg || '#f8fafc' : '#ffffff',
+                        cursor: 'pointer',
+                        boxShadow: isSelected ? '0 4px 16px rgba(0,0,0,0.06)' : '0 2px 6px rgba(0,0,0,0.02)',
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                        <span style={{ fontSize: 28 }}>{strand.icon}</span>
+                        <span
                           style={{
-                            border: '1px solid #e2e8f0',
-                            borderRadius: 10,
-                            padding: '12px 14px',
-                            background: '#f8fafc',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'space-between',
+                            fontSize: 12,
+                            fontWeight: 800,
+                            padding: '3px 8px',
+                            borderRadius: 12,
+                            background: meta?.color || '#0f172a',
+                            color: '#ffffff',
                           }}
                         >
+                          {strandUnits.length}개 단원
+                        </span>
+                      </div>
+                      <h3 style={{ fontSize: 17, fontWeight: 800, margin: '0 0 6px', color: '#0f172a' }}>
+                        {name(strand)}
+                      </h3>
+                      <p style={{ fontSize: 12, color: '#475569', margin: 0, lineHeight: 1.5 }}>
+                        {ko ? meta?.summaryKo : meta?.summaryEn}
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* 4대 영역 탭 필터 바 */}
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 20 }}>
+                <button
+                  type="button"
+                  onClick={() => setActiveStrandFilter('all')}
+                  style={{
+                    padding: '7px 14px',
+                    borderRadius: 20,
+                    fontSize: 12.5,
+                    fontWeight: 700,
+                    border: activeStrandFilter === 'all' ? '1.5px solid #0f172a' : '1px solid #cbd5e1',
+                    background: activeStrandFilter === 'all' ? '#0f172a' : '#ffffff',
+                    color: activeStrandFilter === 'all' ? '#ffffff' : '#334155',
+                    cursor: 'pointer',
+                  }}
+                >
+                  🌐 전체 영역 모아보기 ({allRegularUnits.length})
+                </button>
+                {coreStrands.map((strand) => {
+                  const strandUnits = allRegularUnits.filter((u) => u.strand === strand.id);
+                  const active = activeStrandFilter === strand.id;
+                  return (
+                    <button
+                      key={strand.id}
+                      type="button"
+                      onClick={() => setActiveStrandFilter(strand.id)}
+                      style={{
+                        padding: '7px 14px',
+                        borderRadius: 20,
+                        fontSize: 12.5,
+                        fontWeight: 700,
+                        border: active ? `1.5px solid ${strand.color}` : '1px solid #cbd5e1',
+                        background: active ? strand.color : '#ffffff',
+                        color: active ? '#ffffff' : '#334155',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 5,
+                      }}
+                    >
+                      <span>{strand.icon}</span>
+                      <span>{name(strand)} ({strandUnits.length})</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Detailed Strands Sections */}
+              <div style={{ display: 'grid', gap: 26, marginBottom: 40 }}>
+                {coreStrands.filter((s) => activeStrandFilter === 'all' || s.id === activeStrandFilter).map((strand) => {
+                  const strandUnits = allRegularUnits.filter((u) => u.strand === strand.id);
+                  const meta = STRAND_DESCRIPTIONS[strand.id];
+
+                  return (
+                    <section
+                      key={strand.id}
+                      style={{
+                        background: '#ffffff',
+                        border: `1.5px solid ${meta?.border || '#e2e8f0'}`,
+                        borderRadius: 18,
+                        padding: '24px 26px',
+                        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.03)',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10, marginBottom: 18, borderBottom: '1px solid #f1f5f9', paddingBottom: 14 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                          <span style={{ fontSize: 32 }}>{strand.icon}</span>
                           <div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                              <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 6px', borderRadius: 6, background: '#e2e8f0', color: '#334155' }}>
-                                Grade {u.grade}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                              <h2 style={{ fontSize: 20, fontWeight: 800, margin: 0, color: '#0f172a' }}>
+                                {name(strand)}
+                              </h2>
+                              <span style={{ fontSize: 12, fontWeight: 700, padding: '2px 8px', borderRadius: 10, background: meta?.color || '#0f172a', color: '#ffffff' }}>
+                                {strandUnits.length}개 단원
                               </span>
-                              {contentOf(u.id) && (
-                                <span style={{ fontSize: 10.5, fontWeight: 700, color: '#059669', background: '#dcfce7', padding: '1px 6px', borderRadius: 4 }}>
-                                  온라인 학습지 풀기 가능
-                                </span>
-                              )}
                             </div>
-                            <div style={{ fontWeight: 700, fontSize: 14, color: '#0f172a', margin: '4px 0' }}>
-                              {name(u)}
-                            </div>
-                            <div style={{ fontSize: 12, color: '#64748b', lineHeight: 1.5, marginBottom: 10 }}>
-                              {u.topicsKo}
-                            </div>
+                            <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
+                              {ko ? meta?.summaryKo : meta?.summaryEn}
+                            </p>
                           </div>
-                          <div style={{ display: 'flex', gap: 6 }}>
-                            <a
-                              href={`/science/g${u.grade}?unit=${u.id}`}
-                              style={{
-                                flex: 1,
-                                textAlign: 'center',
-                                padding: '6px 10px',
-                                borderRadius: 6,
-                                fontSize: 12,
-                                fontWeight: 700,
-                                textDecoration: 'none',
-                                background: '#ffffff',
-                                color: '#2563eb',
-                                border: '1px solid #2563eb',
-                              }}
-                            >
-                              자료 보기 →
-                            </a>
-                            {contentOf(u.id) && (
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(270px, 1fr))', gap: 14 }}>
+                        {strandUnits.map((u) => (
+                          <div
+                            key={u.id}
+                            style={{
+                              border: '1px solid #e2e8f0',
+                              borderRadius: 12,
+                              padding: '14px 16px',
+                              background: '#f8fafc',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              justifyContent: 'space-between',
+                            }}
+                          >
+                            <div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                                <span style={{ fontSize: 11.5, fontWeight: 800, padding: '2px 8px', borderRadius: 6, background: '#e2e8f0', color: '#334155' }}>
+                                  Grade {u.grade}
+                                </span>
+                                {contentOf(u.id) ? (
+                                  <span style={{ fontSize: 11, fontWeight: 700, color: '#059669', background: '#dcfce7', padding: '2px 6px', borderRadius: 6 }}>
+                                    ✨ 학습지 수록
+                                  </span>
+                                ) : (
+                                  <span style={{ fontSize: 11, color: '#64748b' }}>교과서/워크북</span>
+                                )}
+                              </div>
+                              <div style={{ fontWeight: 800, fontSize: 15, color: '#0f172a', margin: '6px 0 4px' }}>
+                                {name(u)}
+                              </div>
+                              <div style={{ fontSize: 12.5, color: '#64748b', lineHeight: 1.5, marginBottom: 12 }}>
+                                {u.topicsKo}
+                              </div>
+                            </div>
+                            <div style={{ display: 'flex', gap: 6, paddingTop: 8, borderTop: '1px solid #e2e8f0' }}>
                               <a
-                                href={`/science/study?unit=${u.id}`}
+                                href={`/science/g${u.grade}?unit=${u.id}`}
                                 style={{
-                                  padding: '6px 10px',
+                                  flex: 1,
+                                  textAlign: 'center',
+                                  padding: '7px 10px',
                                   borderRadius: 6,
                                   fontSize: 12,
                                   fontWeight: 700,
                                   textDecoration: 'none',
-                                  background: '#2563eb',
-                                  color: '#ffffff',
+                                  background: '#ffffff',
+                                  color: meta?.color || '#2563eb',
+                                  border: `1px solid ${meta?.color || '#2563eb'}`,
                                 }}
                               >
-                                📖 학습
+                                자료실 보기 →
                               </a>
-                            )}
+                              {contentOf(u.id) && (
+                                <a
+                                  href={`/science/study?unit=${u.id}`}
+                                  style={{
+                                    padding: '7px 12px',
+                                    borderRadius: 6,
+                                    fontSize: 12,
+                                    fontWeight: 700,
+                                    textDecoration: 'none',
+                                    background: meta?.color || '#2563eb',
+                                    color: '#ffffff',
+                                  }}
+                                >
+                                  📖 문제 풀기
+                                </a>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-                );
-              })}
+                        ))}
+                      </div>
+                    </section>
+                  );
+                })}
+              </div>
             </div>
           )}
 
@@ -788,6 +947,8 @@ export default function ScienceArchive({ grade }) {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 14, marginBottom: 40 }}>
               {(searchQuery.trim() ? filteredUnits : allRegularUnits.filter((u) => contentOf(u.id))).map((u) => {
                 const hasStudy = Boolean(contentOf(u.id));
+                const strand = SCIENCE_STRANDS.find((s) => s.id === u.strand);
+
                 return (
                   <div
                     key={u.id}
@@ -804,15 +965,20 @@ export default function ScienceArchive({ grade }) {
                   >
                     <div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                        <span style={{ fontSize: 11.5, fontWeight: 800, padding: '2px 8px', borderRadius: 6, background: '#f1f5f9', color: '#1e293b' }}>
-                          Grade {u.grade}
-                        </span>
-                        {hasStudy ? (
-                          <span style={{ fontSize: 11, fontWeight: 700, color: '#059669', background: '#dcfce7', padding: '2px 6px', borderRadius: 6 }}>
-                            ✨ 인터랙티브 학습지
+                        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                          <span style={{ fontSize: 11.5, fontWeight: 800, padding: '2px 8px', borderRadius: 6, background: '#f1f5f9', color: '#1e293b' }}>
+                            Grade {u.grade}
                           </span>
-                        ) : (
-                          <span style={{ fontSize: 11, color: '#64748b' }}>교과서/워크북 아카이브</span>
+                          {strand && (
+                            <span style={{ fontSize: 11, fontWeight: 700, color: strand.color }}>
+                              {strand.icon} {name(strand)}
+                            </span>
+                          )}
+                        </div>
+                        {hasStudy && (
+                          <span style={{ fontSize: 11, fontWeight: 700, color: '#059669', background: '#dcfce7', padding: '2px 6px', borderRadius: 6 }}>
+                            ✨ 인터랙티브
+                          </span>
                         )}
                       </div>
                       <h3 style={{ fontSize: 15, fontWeight: 700, margin: '6px 0', color: '#0f172a' }}>
@@ -882,7 +1048,7 @@ export default function ScienceArchive({ grade }) {
                 🌟 국제학교 과학 연구소의 3대 학습 시스템
               </h2>
               <p style={{ fontSize: 13.5, color: '#64748b', margin: 0 }}>
-                개념 습득부터 인터랙티브 퀴즈, 오프라인 인쇄용 워크시트까지 완벽하게 지원합니다.
+                화학 · 물리 · 생명과학 · 지구과학 4대 핵심 영역의 개념 습득부터 인터랙티브 퀴즈, 오프라인 인쇄용 워크시트까지 완벽하게 지원합니다.
               </p>
             </div>
 
@@ -924,37 +1090,39 @@ export default function ScienceArchive({ grade }) {
             5. GRADE SPECIFIC VIEW (when grade is 1~6)
         ───────────────────────────────────────────────────────────── */
         <div>
-          {/* Grade Units Section by Strands */}
+          {/* Grade Units Section by Strands (화학, 물리, 생명과학, 지구과학 순) */}
           <div style={{ display: 'grid', gap: 24 }}>
-            {SCIENCE_STRANDS.map((s) => {
+            {coreStrands.map((s) => {
               const list = units.filter((u) => u.strand === s.id);
               if (!list.length) return null;
+              const meta = STRAND_DESCRIPTIONS[s.id];
+
               return (
                 <section
                   key={s.id}
                   style={{
                     background: '#ffffff',
-                    border: '1px solid #e2e8f0',
+                    border: `1.5px solid ${meta?.border || '#e2e8f0'}`,
                     borderRadius: 16,
                     padding: '22px 24px',
                     boxShadow: '0 3px 10px rgba(0, 0, 0, 0.02)',
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, borderBottom: '1px solid #f1f5f9', paddingBottom: 10 }}>
-                    <span style={{ fontSize: 20 }}>{s.icon}</span>
-                    <h2 style={{ fontSize: 17, fontWeight: 800, margin: 0, color: '#0f172a' }}>
+                    <span style={{ fontSize: 22 }}>{s.icon}</span>
+                    <h2 style={{ fontSize: 18, fontWeight: 800, margin: 0, color: '#0f172a' }}>
                       {name(s)}
                     </h2>
-                    <span style={{ fontSize: 12, color: '#64748b' }}>({list.length}개 단원)</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: '#ffffff', background: meta?.color || '#2563eb', padding: '1px 8px', borderRadius: 10 }}>
+                      {list.length}개 단원
+                    </span>
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
                     {list.map((u) => {
                       const active = u.id === unitId;
-                      // 📘 = written lessons + uploaded textbook files; 📝 = practice questions + uploaded workbook files
-                      const written = contentOf(u.id);
-                      const tbCount = (written ? written.lessons.length : 0) + (counts[scienceCategory(u.id, 'tb')] || 0);
-                      const wbCount = (written ? written.lessons.reduce((n, l) => n + l.items.length, 0) : 0) + (counts[scienceCategory(u.id, 'wb')] || 0);
+                      const tbCount = counts[scienceCategory(u.id, 'tb')] || 0;
+                      const wbCount = counts[scienceCategory(u.id, 'wb')] || 0;
                       const hasStudy = Boolean(contentOf(u.id));
 
                       return (
@@ -964,9 +1132,9 @@ export default function ScienceArchive({ grade }) {
                             display: 'flex',
                             flexDirection: 'column',
                             gap: 8,
-                            border: active ? '2px solid #2563eb' : '1px solid #e2e8f0',
+                            border: active ? `2px solid ${meta?.color || '#2563eb'}` : '1px solid #e2e8f0',
                             borderRadius: 12,
-                            background: active ? 'rgba(37, 99, 235, 0.03)' : '#f8fafc',
+                            background: active ? meta?.bg || 'rgba(37, 99, 235, 0.03)' : '#f8fafc',
                             padding: 14,
                             transition: 'all 0.15s ease',
                           }}
@@ -985,7 +1153,7 @@ export default function ScienceArchive({ grade }) {
                               color: 'inherit',
                             }}
                           >
-                            <div style={{ fontWeight: 700, fontSize: 14.5, color: '#0f172a' }}>
+                            <div style={{ fontWeight: 800, fontSize: 14.5, color: '#0f172a' }}>
                               {name(u)}
                             </div>
                             <div style={{ fontSize: 12, color: '#64748b', margin: '4px 0 8px', lineHeight: 1.5 }}>
@@ -993,10 +1161,10 @@ export default function ScienceArchive({ grade }) {
                             </div>
                             <div style={{ display: 'flex', gap: 6, fontSize: 11.5, fontWeight: 600 }}>
                               <span style={{ padding: '2px 6px', borderRadius: 4, background: '#e0f2fe', color: '#0369a1' }}>
-                                📘 레슨 {tbCount}
+                                📘 교과서 {tbCount}
                               </span>
                               <span style={{ padding: '2px 6px', borderRadius: 4, background: '#fef3c7', color: '#b45309' }}>
-                                📝 문항 {wbCount}
+                                📝 워크북 {wbCount}
                               </span>
                             </div>
                           </button>
@@ -1011,7 +1179,7 @@ export default function ScienceArchive({ grade }) {
                                 fontSize: 12,
                                 fontWeight: 700,
                                 textDecoration: 'none',
-                                background: '#059669',
+                                background: meta?.color || '#059669',
                                 color: '#ffffff',
                                 marginTop: 4,
                               }}
