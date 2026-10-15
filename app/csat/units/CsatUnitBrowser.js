@@ -18,6 +18,7 @@ import csatSilryeokGeoVectorsCatalog from '../../data/csatSilryeokGeoVectorsCata
 import csatJeongseokCalc2Catalog from '../../data/csatJeongseokCalc2Catalog.json';
 import csatSilryeokMath1Catalog from '../../data/csatSilryeokMath1Catalog.json';
 import csatSilryeokMath2Catalog from '../../data/csatSilryeokMath2Catalog.json';
+import csatJjangeasyGeoCatalog from '../../data/csatJjangeasyGeoCatalog.json';
 import { enrichProblemsListWithRates } from '../../utils/csatRates';
 import { generateCommonMathVariant } from '../commonMathProblemGenerator';
 import { generateCalculus1Variant } from '../calculus1ProblemGenerator';
@@ -31,6 +32,7 @@ import { generateSilryeokGeoVariant } from '../silryeokGeoVectorsProblemGenerato
 import { generateJeongseokCalc2Variant } from '../jeongseokCalc2ProblemGenerator';
 import { generateSilryeokMath1Variant } from '../silryeokMath1ProblemGenerator';
 import { generateSilryeokMath2Variant } from '../silryeokMath2ProblemGenerator';
+import { generateJjangeasyGeoVariant } from '../jjangeasyGeoProblemGenerator';
 import { generateCsatSimilarProblem } from '../csatForecastEngine';
 import {
   ALL_DETAILED_TYPES,
@@ -53,6 +55,7 @@ const combinedStaticCatalog = [
   ...csatJeongseokCalc2Catalog,
   ...csatSilryeokMath1Catalog,
   ...csatSilryeokMath2Catalog,
+  ...csatJjangeasyGeoCatalog,
 ];
 
 const COPY = {
@@ -235,6 +238,8 @@ export default function CsatUnitBrowser() {
       generated = generateSilryeokMath1Variant(candidate);
     } else if (candidate?.id?.startsWith('silryeok-math2-')) {
       generated = generateSilryeokMath2Variant(candidate);
+    } else if (candidate?.id?.startsWith('jjangeasy-geo-')) {
+      generated = generateJjangeasyGeoVariant(candidate);
     } else if (unitId && (unitId === 'sequence-limits' || unitId === 'limits-continuity' || unitId === 'differentiation' || unitId === 'integration' || candidate?.id?.startsWith('jjangeasy-calc-'))) {
       generated = generateCalculus1Variant(candidate);
     } else {
