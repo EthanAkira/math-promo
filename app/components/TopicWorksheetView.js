@@ -688,23 +688,31 @@ export default function TopicWorksheetView({
             if (category === 'amc') {
               displaySource = problem.sourceLabel || `${problem.year || 2024} AMC ${problem.level || 8} · #${problem.problemNumber || absoluteNumber}`;
             } else {
-              const yr = problem.year || 2024;
-              const pnum = problem.problemNumber || problem.number || absoluteNumber;
-              const etype = problem.examType || 'nov';
-              let examTitle = '수능';
-              if (etype === 'sept') examTitle = '9월 모의평가';
-              else if (etype === 'june') examTitle = '6월 모의평가';
-              else if (etype === 'city-mock') examTitle = '학력평가';
+              if (problem.sourceLabel) {
+                displaySource = problem.sourceLabel;
+                if (problem.correctRate != null && !displaySource.includes('정답률')) {
+                  const err = problem.errorRate != null ? problem.errorRate : Math.round((100 - problem.correctRate) * 10) / 10;
+                  displaySource += ` ; 정답률 ${problem.correctRate}% (오답률 ${err}%)`;
+                }
+              } else {
+                const yr = problem.year || 2024;
+                const pnum = problem.problemNumber || problem.number || absoluteNumber;
+                const etype = problem.examType || 'nov';
+                let examTitle = '수능';
+                if (etype === 'sept') examTitle = '9월 모의평가';
+                else if (etype === 'june') examTitle = '6월 모의평가';
+                else if (etype === 'city-mock') examTitle = '학력평가';
 
-              let trackTitle = '';
-              if (problem.variant && !['공통', '홀수형', '짝수형', 'standard'].includes(problem.variant)) {
-                trackTitle = ` (${problem.variant})`;
-              }
+                let trackTitle = '';
+                if (problem.variant && !['공통', '홀수형', '짝수형', 'standard'].includes(problem.variant)) {
+                  trackTitle = ` (${problem.variant})`;
+                }
 
-              displaySource = `${yr}학년도 ${examTitle}${trackTitle} · ${pnum}번`;
-              if (problem.correctRate != null) {
-                const err = problem.errorRate != null ? problem.errorRate : Math.round((100 - problem.correctRate) * 10) / 10;
-                displaySource += ` ; 정답률 ${problem.correctRate}% (오답률 ${err}%)`;
+                displaySource = `${yr}학년도 ${examTitle}${trackTitle} · ${pnum}번`;
+                if (problem.correctRate != null) {
+                  const err = problem.errorRate != null ? problem.errorRate : Math.round((100 - problem.correctRate) * 10) / 10;
+                  displaySource += ` ; 정답률 ${problem.correctRate}% (오답률 ${err}%)`;
+                }
               }
             }
 
