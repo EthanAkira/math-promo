@@ -5145,7 +5145,7 @@
     ],
     "answer": "2",
     "correctAnswer": 2,
-    "explanation": "h(x         (x) Al\nes 때,\n/(2)=2이므로\n(x) =f(g(x)) =f(2)=2\n(0) 고가 짝수일 때,\n신지 ee\n(x) =f(g(2) )=f(3)=1\nws sen\n2 (2가홀수\nWOT) rpm)\nh(L) +h(2) ++ +h(10) =5(2+1) = 15",
+    "explanation": "h(x         (x) Al\nes 때,\n/(2)=2이므로\n(x) =f(g(x)) =f(2)=2\n(0) 고가 짝수일 때,\n신지 ee\n(x) =f(g(2) )=f(3)=1\nws sen\n2 (2가홀수\nWOT) )\nh(L) +h(2) ++ +h(10) =5(2+1) = 15",
     "category": "functions",
     "subUnitId": "composite-functions",
     "correctRate": 55.1,
