@@ -13,12 +13,6 @@ import csatMath2ImportantCatalog from '../../data/csatMath2ImportantCatalog.json
 import csatProbStatsImportantCatalog from '../../data/csatProbStatsImportantCatalog.json';
 import csatCalculus2ImportantCatalog from '../../data/csatCalculus2ImportantCatalog.json';
 import csatGrade1NationalMockCatalog from '../../data/csatGrade1NationalMockCatalog.json';
-import csatJeongseokCatalog from '../../data/csatJeongseokCalculusCatalog.json';
-import csatSilryeokIntegralStatsCatalog from '../../data/csatSilryeokIntegralStatsCatalog.json';
-import csatSilryeokGeoVectorsCatalog from '../../data/csatSilryeokGeoVectorsCatalog.json';
-import csatJeongseokCalc2Catalog from '../../data/csatJeongseokCalc2Catalog.json';
-import csatSilryeokMath1Catalog from '../../data/csatSilryeokMath1Catalog.json';
-import csatSilryeokMath2Catalog from '../../data/csatSilryeokMath2Catalog.json';
 import csatJjangeasyGeoCatalog from '../../data/csatJjangeasyGeoCatalog.json';
 import { csatMarpleCalc1Catalog, fetchMarpleSimilarProblem, MARPLE_CALC1_ID_PREFIX } from '../marpleCalc1Catalog';
 import { enrichProblemsListWithRates } from '../../utils/csatRates';
@@ -28,12 +22,6 @@ import { generateMath2ImportantVariant } from '../math2ImportantProblemGenerator
 import { generateProbStatsImportantVariant } from '../probStatsImportantProblemGenerator';
 import { generateCalculus2ImportantVariant } from '../calculus2ImportantProblemGenerator';
 import { generateVariationForGrade1Mock } from '../grade1NationalMockGenerator';
-import { generateJeongseokCalculusVariant } from '../jeongseokCalculusProblemGenerator';
-import { generateSilryeokIntegralStatsVariant } from '../silryeokIntegralStatsProblemGenerator';
-import { generateSilryeokGeoVariant } from '../silryeokGeoVectorsProblemGenerator';
-import { generateJeongseokCalc2Variant } from '../jeongseokCalc2ProblemGenerator';
-import { generateSilryeokMath1Variant } from '../silryeokMath1ProblemGenerator';
-import { generateSilryeokMath2Variant } from '../silryeokMath2ProblemGenerator';
 import { generateJjangeasyGeoVariant } from '../jjangeasyGeoProblemGenerator';
 import { generateCsatSimilarProblem } from '../csatForecastEngine';
 import {
@@ -42,6 +30,23 @@ import {
   getMiddleUnitsGrouped,
   matchProblemToDetailedType,
 } from '../csatTaxonomyHelper';
+
+export function isAuthenticCsatProblem(p) {
+  if (!p || !p.question) return false;
+  const q = String(p.question);
+  if (
+    q.includes('주어진 수학적 원리') ||
+    q.includes('문항입니다') ||
+    q.includes('정답을 도출하시오') ||
+    q.includes('유제') ||
+    q.includes('기본문제') ||
+    q.includes('연습문제')
+  ) {
+    return false;
+  }
+  if (q.trim().length < 8) return false;
+  return true;
+}
 
 const combinedStaticCatalog = [
   ...csat2025Catalog,
@@ -52,15 +57,9 @@ const combinedStaticCatalog = [
   ...csatProbStatsImportantCatalog,
   ...csatCalculus2ImportantCatalog,
   ...csatGrade1NationalMockCatalog,
-  ...csatJeongseokCatalog,
-  ...csatSilryeokIntegralStatsCatalog,
-  ...csatSilryeokGeoVectorsCatalog,
-  ...csatJeongseokCalc2Catalog,
-  ...csatSilryeokMath1Catalog,
-  ...csatSilryeokMath2Catalog,
   ...csatJjangeasyGeoCatalog,
   ...csatMarpleCalc1Catalog,
-];
+].filter(isAuthenticCsatProblem);
 
 const COPY = {
   ko: {
@@ -360,7 +359,7 @@ export default function CsatUnitBrowser() {
           const staticIds = new Set(prev.map((p) => p.id));
           const additions = [];
           for (const item of d1Problems) {
-            if (!item?.id || staticIds.has(item.id)) continue;
+            if (!item?.id || staticIds.has(item.id) || !isAuthenticCsatProblem(item)) continue;
             let finalSubjectId = item.subjectId;
             if (!finalSubjectId) {
               for (const subject of CSAT_SUBJECTS) {

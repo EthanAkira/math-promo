@@ -28,7 +28,25 @@ export default function TopicWorksheetView({
   const [expandAllSolutions, setExpandAllSolutions] = useState(false);
   const [allScratchpadOpen, setAllScratchpadOpen] = useState(false);
 
-  const totalCount = problems.length;
+  const validProblems = useMemo(() => {
+    return (problems || []).filter((p) => {
+      if (!p || !p.question) return false;
+      const q = String(p.question);
+      if (
+        q.includes('주어진 수학적 원리') ||
+        q.includes('문항입니다') ||
+        q.includes('정답을 도출하시오') ||
+        q.includes('유제') ||
+        q.includes('기본문제') ||
+        q.includes('연습문제')
+      ) {
+        return false;
+      }
+      return q.trim().length >= 8;
+    });
+  }, [problems]);
+
+  const totalCount = validProblems.length;
 
   // Calculate rounds
   const effectivePageSize = pageSize === 0 ? totalCount : pageSize;
@@ -44,11 +62,11 @@ export default function TopicWorksheetView({
   // Problems for active round
   const activeProblems = useMemo(() => {
     if (totalCount === 0) return [];
-    if (pageSize === 0) return problems;
+    if (pageSize === 0) return validProblems;
     const start = (currentRound - 1) * pageSize;
     const end = Math.min(start + pageSize, totalCount);
-    return problems.slice(start, end);
-  }, [problems, currentRound, pageSize, totalCount]);
+    return validProblems.slice(start, end);
+  }, [validProblems, currentRound, pageSize, totalCount]);
 
   const startIndex = pageSize === 0 ? 0 : (currentRound - 1) * pageSize;
   const endIndex = pageSize === 0 ? totalCount : Math.min(startIndex + pageSize, totalCount);
