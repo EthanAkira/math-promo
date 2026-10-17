@@ -38,6 +38,9 @@ export default function TopicWorksheetView({
         q.includes('정답을 도출하시오') ||
         q.includes('유제') ||
         q.includes('기본문제') ||
+        q.includes('기본 문제') ||
+        q.includes('기하학적 조건') ||
+        q.includes('공식을 활용하여') ||
         q.includes('연습문제')
       ) {
         return false;
