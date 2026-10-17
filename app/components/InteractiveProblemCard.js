@@ -10,6 +10,40 @@ import { syncAnswerEvents } from '../lib/submissions';
 const CHOICE_SYMBOLS = ['①', '②', '③', '④', '⑤'];
 const CHOICE_LETTERS = ['(A)', '(B)', '(C)', '(D)', '(E)'];
 
+// Scanned problem / solution image served to subscribers only (/api/marple-calc1/asset ...).
+// A 401/403 turns into a short login / subscription notice instead of a broken image.
+function GatedImage({ src, alt, language = 'ko' }) {
+  const [failure, setFailure] = useState(null);
+
+  function handleError() {
+    fetch(src).then((res) => {
+      if (res.status === 401) setFailure('login');
+      else if (res.status === 403) setFailure('subscription');
+      else setFailure('error');
+    }).catch(() => setFailure('error'));
+  }
+
+  if (failure) {
+    const ko = {
+      login: '🔒 로그인 후 볼 수 있는 문항입니다. 오른쪽 위 로그인 버튼으로 먼저 로그인해주세요.',
+      subscription: '🔒 CSAT 구독 회원 전용 문항입니다. 구독이 필요하면 문의하기로 연락해주세요.',
+      error: '이미지를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.',
+    };
+    const en = {
+      login: '🔒 Please log in to view this problem.',
+      subscription: '🔒 This problem is for CSAT subscribers. Contact us for access.',
+      error: 'Could not load the image. Please try again shortly.',
+    };
+    return (
+      <div style={{ padding: '18px 16px', textAlign: 'center', border: '1px dashed var(--paper-line, #d8c9a8)', borderRadius: 10, color: 'var(--ink-soft, #718096)', fontSize: 14 }}>
+        {(language === 'ko' ? ko : en)[failure]}
+      </div>
+    );
+  }
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={src} alt={alt} onError={handleError} style={{ maxWidth: '100%', display: 'block', margin: '0 auto', borderRadius: 6 }} />;
+}
+
 export default function InteractiveProblemCard({
   problem,
   userAnswer,
@@ -43,6 +77,8 @@ export default function InteractiveProblemCard({
     choices = [],
     figureSvg,
     figureUrl,
+    questionImage,
+    explanationImage,
     correctAnswer, // 0-based index or string number
     explanation = '',
     unit,
@@ -62,7 +98,7 @@ export default function InteractiveProblemCard({
   const displayResult = isExamMode ? showResult : checkedInPractice;
   const isLetterChoices = choiceMarkerType === 'letters' || examType === 'amc';
   const symbols = isLetterChoices ? CHOICE_LETTERS : CHOICE_SYMBOLS;
-  const isSolutionVisible = solutionOpen || forceSolutionOpen || (isExamMode && showResult && explanation);
+  const isSolutionVisible = solutionOpen || forceSolutionOpen || (isExamMode && showResult && (explanation || explanationImage));
 
   const effectiveCorrectRate = correctRate ?? problem.correctRate;
   const effectiveErrorRate = errorRate ?? problem.errorRate ?? (effectiveCorrectRate != null ? Math.round((100 - effectiveCorrectRate) * 10) / 10 : null);
@@ -75,6 +111,8 @@ export default function InteractiveProblemCard({
     rawSource = `${yr}학년도 ${et} · ${num}번`;
   }
 
+  const hideRates = isExamMode && !showResult;
+
   let sourceBase = '';
   let sourceRatePart = '';
 
@@ -82,18 +120,18 @@ export default function InteractiveProblemCard({
     if (rawSource.includes(';')) {
       const parts = rawSource.split(';').map((s) => s.trim());
       sourceBase = parts[0];
-      if (!isExamMode) {
+      if (!hideRates) {
         sourceRatePart = parts.slice(1).join('; ');
       }
     } else {
       sourceBase = rawSource.trim();
-      if (!isExamMode && effectiveCorrectRate != null) {
+      if (!hideRates && effectiveCorrectRate != null) {
         sourceRatePart = `정답률 ${effectiveCorrectRate}% (오답률 ${effectiveErrorRate}%)`;
       }
     }
   }
 
-  if (isExamMode) {
+  if (hideRates) {
     sourceRatePart = '';
   }
 
@@ -202,7 +240,7 @@ export default function InteractiveProblemCard({
               {sanitizePublicText(unit)}
             </span>
           ) : null}
-          {!isExamMode && !hasRateInSource && effectiveCorrectRate !== undefined && effectiveCorrectRate !== null ? (
+          {!hideRates && !hasRateInSource && effectiveCorrectRate !== undefined && effectiveCorrectRate !== null ? (
             <span
               style={{
                 fontSize: '12px',
@@ -280,7 +318,11 @@ export default function InteractiveProblemCard({
           fontFamily: "'Gowun Batang', serif",
         }}
       >
-        <LatexMath text={cleanCsatProblemText(question)} />
+        {questionImage ? (
+          <GatedImage src={questionImage} alt={`${number}`} language={language} />
+        ) : (
+          <LatexMath text={cleanCsatProblemText(question)} />
+        )}
       </div>
 
       {/* SVG / Graphic Figure if available */}
@@ -457,7 +499,7 @@ export default function InteractiveProblemCard({
             ) : null}
           </div>
 
-          {explanation ? (
+          {explanation || explanationImage ? (
             <button
               type="button"
               onClick={() => setSolutionOpen((v) => !v)}
@@ -495,7 +537,11 @@ export default function InteractiveProblemCard({
           <div style={{ fontWeight: '800', color: 'var(--gold, #a87926)', marginBottom: '6px' }}>
             💡 {language === 'ko' ? '상세 해설' : 'Step-by-step Solution'}
           </div>
-          <LatexMath text={cleanCsatProblemText(explanation)} />
+          {explanationImage ? (
+            <GatedImage src={explanationImage} alt="solution" language={language} />
+          ) : (
+            <LatexMath text={cleanCsatProblemText(explanation)} />
+          )}
           {Array.isArray(choiceRatios) && choiceRatios.length === 5 ? (
             <div
               style={{

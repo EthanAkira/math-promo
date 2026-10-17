@@ -6,6 +6,7 @@ import { useLanguage } from '../../language';
 import { CSAT_SUBJECTS, csatUnitTagLabel, COMMON_MATH_SUBJECTS, commonMathUnitTagLabel } from '../../examUnits';
 import TopicWorksheetView from '../../components/TopicWorksheetView';
 import staticCsatCatalog from '../../data/csatProblemCatalog.json';
+import csat2025Catalog from '../../data/csat2025ProblemCatalog.json';
 import csatCommonMathCatalog from '../../data/csatCommonMathProblemCatalog.json';
 import csatCalculus1Catalog from '../../data/csatCalculus1BasicCatalog.json';
 import csatMath2ImportantCatalog from '../../data/csatMath2ImportantCatalog.json';
@@ -19,6 +20,7 @@ import csatJeongseokCalc2Catalog from '../../data/csatJeongseokCalc2Catalog.json
 import csatSilryeokMath1Catalog from '../../data/csatSilryeokMath1Catalog.json';
 import csatSilryeokMath2Catalog from '../../data/csatSilryeokMath2Catalog.json';
 import csatJjangeasyGeoCatalog from '../../data/csatJjangeasyGeoCatalog.json';
+import { csatMarpleCalc1Catalog, fetchMarpleSimilarProblem, MARPLE_CALC1_ID_PREFIX } from '../marpleCalc1Catalog';
 import { enrichProblemsListWithRates } from '../../utils/csatRates';
 import { generateCommonMathVariant } from '../commonMathProblemGenerator';
 import { generateCalculus1Variant } from '../calculus1ProblemGenerator';
@@ -42,6 +44,7 @@ import {
 } from '../csatTaxonomyHelper';
 
 const combinedStaticCatalog = [
+  ...csat2025Catalog,
   ...staticCsatCatalog,
   ...csatCommonMathCatalog,
   ...csatCalculus1Catalog,
@@ -56,6 +59,7 @@ const combinedStaticCatalog = [
   ...csatSilryeokMath1Catalog,
   ...csatSilryeokMath2Catalog,
   ...csatJjangeasyGeoCatalog,
+  ...csatMarpleCalc1Catalog,
 ];
 
 const COPY = {
@@ -196,6 +200,16 @@ export default function CsatUnitBrowser() {
   function handleGenerateVariant(unitId, candidateProblem = null) {
     const candidate = candidateProblem || problems.find((p) => p.unitId === unitId) || { unitId };
     let generated;
+    if (candidate?.id?.startsWith(MARPLE_CALC1_ID_PREFIX)) {
+      // 마플 수능기출 미적분Ⅰ: similar problems are generated server-side for subscribers
+      fetchMarpleSimilarProblem(candidate).then(setVariantProblem).catch((err) => {
+        if (typeof window === 'undefined') return;
+        if (err.message === 'login_required') window.alert(COPY[language]?.alertNeedLogin || COPY.ko.alertNeedLogin);
+        else if (err.message === 'subscription_required') window.alert(COPY[language]?.alertNeedSub || COPY.ko.alertNeedSub);
+        else window.alert('유사문제를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.');
+      });
+      return;
+    }
     if (candidate?.id?.startsWith('mock-g1-')) {
       generated = generateVariationForGrade1Mock(candidate);
     } else if (candidate?.id?.startsWith('jjangimportant-calc2-') || (candidate?.subUnitId && [

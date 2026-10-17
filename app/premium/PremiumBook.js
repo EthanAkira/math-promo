@@ -6,7 +6,8 @@ import MathText from '../components/MathText';
 import AuthModal from '../components/AuthModal';
 
 const CIRCLED = ['①', '②', '③', '④', '⑤'];
-const SECTION_LABEL = { b: '기본', p: '기출', e: '예상' };
+const DEFAULT_SECTIONS = [{ code: 'b', label: '기본' }, { code: 'p', label: '기출' }, { code: 'e', label: '예상' }];
+const SECTION_COLORS = { b: ['#e8f5ec', '#166534'], p: ['#fde2e2', '#b91c1c'], e: ['#e0ecff', '#1d4ed8'], h: ['#fef3c7', '#92400e'] };
 const cardStyle = { border: '1px solid var(--paper-line)', borderRadius: 10, padding: 16, background: 'var(--card-bg, #fff)' };
 const chip = (active) => ({
   padding: '6px 14px', borderRadius: 999, border: '1px solid var(--paper-line)', cursor: 'pointer', fontSize: 13, fontWeight: 700,
@@ -22,6 +23,7 @@ function ProblemCard({ item, index, mode, onShowSolution, api }) {
   const [typed, setTyped] = useState('');
   const [graded, setGraded] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [showSolImage, setShowSolImage] = useState(false);
 
   const isMcq = item.kind === 'mcq';
   const answerText = isMcq ? CIRCLED[Number(item.answer) - 1] : item.answer;
@@ -33,8 +35,9 @@ function ProblemCard({ item, index, mode, onShowSolution, api }) {
     <article style={{ ...cardStyle, marginBottom: 14 }}>
       <header style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginBottom: 10 }}>
         <strong className="font-display" style={{ fontSize: 17 }}>{mode === 'stored' ? item.number : index + 1}.</strong>
-        {mode === 'stored' ? <span style={{ fontSize: 12, fontWeight: 800, padding: '2px 8px', borderRadius: 999, background: item.sectionCode === 'p' ? '#fde2e2' : item.sectionCode === 'e' ? '#e0ecff' : '#e8f5ec', color: item.sectionCode === 'p' ? '#b91c1c' : item.sectionCode === 'e' ? '#1d4ed8' : '#166534' }}>{item.section}</span> : <span style={{ fontSize: 12, fontWeight: 800, padding: '2px 8px', borderRadius: 999, background: '#f3e8ff', color: '#6d28d9' }}>유사문제</span>}
+        {mode === 'stored' ? <span style={{ fontSize: 12, fontWeight: 800, padding: '2px 8px', borderRadius: 999, background: (SECTION_COLORS[item.sectionCode] || SECTION_COLORS.b)[0], color: (SECTION_COLORS[item.sectionCode] || SECTION_COLORS.b)[1] }}>{item.section}</span> : <span style={{ fontSize: 12, fontWeight: 800, padding: '2px 8px', borderRadius: 999, background: '#f3e8ff', color: '#6d28d9' }}>유사문제</span>}
         {item.source ? <span style={{ fontSize: 12.5, color: 'var(--ink-soft)' }}>📌 {item.source}</span> : null}
+        {mode === 'stored' && item.topic ? <span style={{ fontSize: 12.5, color: 'var(--ink-soft)' }}>· {item.topic}</span> : null}
       </header>
 
       {stemSrc ? <img src={stemSrc} alt={`${item.number}번 문제`} style={{ maxWidth: '100%', display: 'block', margin: '0 auto 10px' }} /> : (
@@ -61,9 +64,11 @@ function ProblemCard({ item, index, mode, onShowSolution, api }) {
           <strong style={{ color: correct ? '#16a34a' : '#dc2626' }}>{correct ? '정답입니다 ✓' : `오답입니다 — 정답: ${answerText}`}</strong>
           <button type="button" className="button button-secondary" onClick={() => { setGraded(false); setPicked(null); setTyped(''); setShowExplanation(false); }}>다시 풀기</button>
         </>}
+        {graded && mode === 'stored' && item.solImage ? <button type="button" className="button button-secondary" onClick={() => setShowSolImage((v) => !v)}>{showSolImage ? '해설 닫기' : '📖 해설 보기'}</button> : null}
         {graded && mode === 'stored' && item.solPage ? <button type="button" className="button button-secondary" onClick={() => onShowSolution(item.solPage, item)}>📖 해설 보기 (원문 {item.solPage}쪽)</button> : null}
         {graded && mode === 'similar' ? <button type="button" className="button button-secondary" onClick={() => setShowExplanation((v) => !v)}>{showExplanation ? '해설 닫기' : '📖 해설 보기'}</button> : null}
       </div>
+      {graded && mode === 'stored' && item.solImage && showSolImage ? <div style={{ marginTop: 10, padding: 8, background: '#fff', border: '1px solid var(--paper-line)', borderRadius: 8 }}><img src={`/api/${api}/asset?id=${item.solImage}`} alt={`${item.number}번 해설`} style={{ maxWidth: '100%', display: 'block', margin: '0 auto' }} /></div> : null}
       {graded && mode === 'similar' && showExplanation ? <div style={{ marginTop: 10, padding: 12, background: 'var(--paper-soft, #faf7f0)', borderRadius: 8, lineHeight: 1.9, whiteSpace: 'pre-wrap', fontSize: 14.5 }}><MathText value={item.explanation} /></div> : null}
     </article>
   );
@@ -111,14 +116,20 @@ export default function PremiumBook({ cfg }) {
   useEffect(() => {
     if (authStatus !== 'ready') return;
     if (!user) { setSub('inactive'); return; }
-    fetch('/api/subscriptions/status?subject=curriculum-advanced').then((r) => r.json()).then((d) => setSub(d.active ? 'active' : 'inactive')).catch(() => setSub('inactive'));
+    const subjects = cfg.subjects || ['curriculum-advanced'];
+    Promise.all(subjects.map((s) => fetch(`/api/subscriptions/status?subject=${s}`).then((r) => r.json()).then((d) => Boolean(d.active)).catch(() => false)))
+      .then((flags) => setSub(flags.some(Boolean) ? 'active' : 'inactive'));
   }, [authStatus, user]);
 
   useEffect(() => {
-    const param = new URLSearchParams(window.location.search).get('type');
+    const params = new URLSearchParams(window.location.search);
+    const param = params.get('type');
     if (param && Number(param) >= 1 && Number(param) <= cfg.typeCount) setTypeNo(Number(param));
+    const sectionParam = params.get('section');
+    if (sectionParam && (cfg.sections || DEFAULT_SECTIONS).some((s) => s.code === sectionParam)) setSection(sectionParam);
   }, []);
 
+  const sections = cfg.sections || DEFAULT_SECTIONS;
   const entitled = sub === 'active';
   const currentType = useMemo(() => types.find((t) => t.no === typeNo) || null, [types, typeNo]);
 
@@ -152,7 +163,7 @@ export default function PremiumBook({ cfg }) {
   return <>
     <p className="no-print" style={{ fontSize: 13, color: 'var(--ink-soft)', marginBottom: 6 }}><a href="/">홈</a> / <a href="/math">수학 영역</a> / {cfg.title}</p>
     <h1 className="font-display" style={{ fontSize: 26, margin: '0 0 6px' }}>{cfg.title} <span style={{ fontSize: 13, verticalAlign: 'middle', background: '#6d28d9', color: '#fff', padding: '3px 10px', borderRadius: 999 }}>유료</span></h1>
-    <p style={{ color: 'var(--ink-soft)', margin: '0 0 20px', lineHeight: 1.7 }}>수능·모의평가 기출 문제를 17개 유형으로 묶고, 유형마다 기본문제·기출문제·예상문제와 해설을 제공합니다. 기출문제에는 출제 연도·시험 정보가 함께 표시되며, 원할 때 같은 유형의 유사문제를 새로 생성할 수 있습니다.</p>
+    <p style={{ color: 'var(--ink-soft)', margin: '0 0 20px', lineHeight: 1.7 }}>{cfg.intro || '수능·모의평가 기출 문제를 17개 유형으로 묶고, 유형마다 기본문제·기출문제·예상문제와 해설을 제공합니다. 기출문제에는 출제 연도·시험 정보가 함께 표시되며, 원할 때 같은 유형의 유사문제를 새로 생성할 수 있습니다.'}</p>
 
     {gate ? <div style={{ ...cardStyle, borderColor: '#6d28d9', marginBottom: 20 }}>
       <strong>{user ? '이 콘텐츠는 유료 구독 회원 전용입니다.' : '로그인 후 이용할 수 있는 유료 콘텐츠입니다.'}</strong>
@@ -167,7 +178,7 @@ export default function PremiumBook({ cfg }) {
         {types.filter((t) => t.grade === group.grade).map((t) => <button type="button" key={t.no} onClick={() => chooseType(t.no)} style={{ ...cardStyle, textAlign: 'left', cursor: 'pointer', borderColor: typeNo === t.no ? '#6d28d9' : 'var(--paper-line)', boxShadow: typeNo === t.no ? '0 0 0 2px #6d28d933' : 'none' }}>
           <div className="font-mono" style={{ fontSize: 12, color: '#6d28d9', fontWeight: 800 }}>유형 {String(t.no).padStart(2, '0')}</div>
           <div className="font-display" style={{ fontSize: 15.5, margin: '2px 0 6px' }}>{t.name}</div>
-          <div style={{ fontSize: 12, color: 'var(--ink-soft)' }}>기본 {t.counts[0]} · 기출 {t.counts[1]} · 예상 {t.counts[2]}</div>
+          <div style={{ fontSize: 12, color: 'var(--ink-soft)' }}>{sections.map((s, i) => `${s.label} ${t.counts[i] ?? 0}`).join(' · ')}</div>
         </button>)}
       </div>
     </section>)}
@@ -184,7 +195,7 @@ export default function PremiumBook({ cfg }) {
         <button type="button" style={chip(mode === 'similar')} onClick={() => setMode('similar')}>⚡ 유사문제 생성</button>
         {mode === 'stored' ? <>
           <span style={{ width: 8 }} />
-          {['all', 'b', 'p', 'e'].map((s) => <button type="button" key={s} style={chip(section === s)} onClick={() => setSection(s)}>{s === 'all' ? '전체' : SECTION_LABEL[s]}</button>)}
+          {[{ code: 'all', label: '전체' }, ...sections].map((s) => <button type="button" key={s.code} style={chip(section === s.code)} onClick={() => setSection(s.code)}>{s.label}</button>)}
         </> : <button type="button" className="button" onClick={() => { setSimilar(null); setSeed(Math.random().toString(36).slice(2, 10)); }}>🔄 새 유사문제 10개</button>}
       </div>
 

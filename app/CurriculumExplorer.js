@@ -68,6 +68,7 @@ function TopicItem({ topic, copy }) {
   const hasAmc = Boolean(topic.amc);
   const hasCsat = Boolean(topic.csat);
   const hasPremium = Boolean(topic.premium);
+  const hasHard = Boolean(topic.hard);
 
   const typeMatch = displayLabel.match(/^\[(기본|응용|실전 총괄|통합)\]\s*/);
   const typeTag = typeMatch ? typeMatch[1] : null;
@@ -142,6 +143,12 @@ function TopicItem({ topic, copy }) {
       {hasPremium && (
         <a href={topic.premium.href} className="premium-inline-badge">
           <span>{topic.premium.label || '유형별 기출·응용 문제 (유료)'}</span>
+          <span className="premium-inline-badge-cta">문제 풀기 →</span>
+        </a>
+      )}
+      {hasHard && (
+        <a href={topic.hard.href} className="premium-inline-badge">
+          <span>{topic.hard.label || '고난도 문제 (유료)'}</span>
           <span className="premium-inline-badge-cta">문제 풀기 →</span>
         </a>
       )}
