@@ -266,7 +266,16 @@ export default function CsatUnitBrowser() {
           }
         }
       }
-      generated = generateCsatSimilarProblem(candidate, { subjectId: subjId });
+    }
+    if (generated) {
+      const cr = candidate?.correctRate ?? generated.correctRate ?? 76.5;
+      const er = candidate?.errorRate ?? generated.errorRate ?? Math.round((100 - cr) * 10) / 10;
+      generated.correctRate = cr;
+      generated.errorRate = er;
+      if (!generated.sourceLabel || !generated.sourceLabel.includes('정답률')) {
+        const base = generated.sourceLabel || '수능·평가원 기출 변형';
+        generated.sourceLabel = `${base} ; 정답률 ${cr}% (오답률 ${er}%)`;
+      }
     }
     setVariantProblem(generated);
   }
@@ -558,11 +567,30 @@ export default function CsatUnitBrowser() {
             </div>
           </div>
 
-          <h1 style={{ fontSize: 24, fontWeight: 800, margin: '0 0 10px', letterSpacing: '-0.02em' }}>
-            {detailedType ? detailedType.detailedType : unit.label}
-            <span style={{ fontSize: 16, fontWeight: 500, color: '#94a3b8', marginLeft: 10 }}>
+          <h1 style={{ fontSize: 24, fontWeight: 800, margin: '0 0 10px', letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+            <span>{detailedType ? detailedType.detailedType : unit.label}</span>
+            <span style={{ fontSize: 16, fontWeight: 500, color: '#94a3b8' }}>
               ({targetProblems.length}문항 실전 수록)
             </span>
+            {(() => {
+              const rates = targetProblems.map((p) => p.correctRate).filter((r) => r != null);
+              const avgCr = rates.length > 0 ? Math.round((rates.reduce((a, b) => a + b, 0) / rates.length) * 10) / 10 : null;
+              const avgEr = avgCr != null ? Math.round((100 - avgCr) * 10) / 10 : null;
+              if (avgCr == null) return null;
+              return (
+                <span style={{
+                  fontSize: 13,
+                  fontWeight: 700,
+                  padding: '3px 11px',
+                  borderRadius: 20,
+                  background: avgCr >= 70 ? 'rgba(16, 185, 129, 0.25)' : avgCr >= 40 ? 'rgba(245, 158, 11, 0.25)' : 'rgba(239, 68, 68, 0.25)',
+                  color: avgCr >= 70 ? '#6ee7b7' : avgCr >= 40 ? '#fde68a' : '#fca5a5',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                }}>
+                  📈 기출 평균 정답률 {avgCr}% (평균 오답률 {avgEr}%)
+                </span>
+              );
+            })()}
           </h1>
 
           {detailedType && (
@@ -870,6 +898,17 @@ export default function CsatUnitBrowser() {
                               <span style={{ fontSize: 11.5, fontWeight: 700, padding: '2px 8px', borderRadius: 10, background: '#e2e8f0', color: '#334155' }}>
                                 {words.problemCount(list.length)}
                               </span>
+                              {(() => {
+                                const uRates = list.map((p) => p.correctRate).filter((r) => r != null);
+                                const uAvgCr = uRates.length > 0 ? Math.round((uRates.reduce((a, b) => a + b, 0) / uRates.length) * 10) / 10 : null;
+                                const uAvgEr = uAvgCr != null ? Math.round((100 - uAvgCr) * 10) / 10 : null;
+                                if (uAvgCr == null) return null;
+                                return (
+                                  <span style={{ fontSize: 11.5, fontWeight: 700, padding: '2px 8px', borderRadius: 10, background: uAvgCr >= 70 ? 'rgba(16, 185, 129, 0.12)' : uAvgCr >= 40 ? 'rgba(245, 158, 11, 0.14)' : 'rgba(239, 68, 68, 0.14)', color: uAvgCr >= 70 ? '#047857' : uAvgCr >= 40 ? '#b45309' : '#b91c1c' }}>
+                                    평균 정답률 {uAvgCr}% (오답률 {uAvgEr}%)
+                                  </span>
+                                );
+                              })()}
                             </div>
 
                             <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
@@ -963,7 +1002,7 @@ export default function CsatUnitBrowser() {
                                               </span>
                                             </div>
 
-                                            {/* 5-Year Stat & Forecast Badge */}
+                                            {/* 5-Year Stat, Forecast & Accuracy Badges */}
                                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 8 }}>
                                               <span style={{ fontSize: 10.5, fontWeight: 600, padding: '2px 6px', borderRadius: 4, background: 'rgba(16, 185, 129, 0.12)', color: '#047857' }}>
                                                 📊 5개년 출제율 {dt.stats5Years.appearanceRate}
@@ -971,6 +1010,18 @@ export default function CsatUnitBrowser() {
                                               <span style={{ fontSize: 10.5, fontWeight: 600, padding: '2px 6px', borderRadius: 4, background: 'rgba(245, 158, 11, 0.12)', color: '#b45309' }}>
                                                 🎯 예상 {dt.forecast.appearanceProbability}
                                               </span>
+                                              {(() => {
+                                                const dtProbs = dtProblems.length > 0 ? dtProblems : list;
+                                                const rates = dtProbs.map((p) => p.correctRate).filter((r) => r != null);
+                                                const avgCr = rates.length > 0 ? Math.round((rates.reduce((a, b) => a + b, 0) / rates.length) * 10) / 10 : null;
+                                                const avgEr = avgCr != null ? Math.round((100 - avgCr) * 10) / 10 : null;
+                                                if (avgCr == null) return null;
+                                                return (
+                                                  <span style={{ fontSize: 10.5, fontWeight: 700, padding: '2px 6px', borderRadius: 4, background: avgCr >= 70 ? 'rgba(16, 185, 129, 0.14)' : avgCr >= 40 ? 'rgba(245, 158, 11, 0.15)' : 'rgba(239, 68, 68, 0.15)', color: avgCr >= 70 ? '#047857' : avgCr >= 40 ? '#b45309' : '#b91c1c' }}>
+                                                    📈 정답률 {avgCr}% (오답률 {avgEr}%)
+                                                  </span>
+                                                );
+                                              })()}
                                             </div>
 
                                             {/* Core Idea snippet */}

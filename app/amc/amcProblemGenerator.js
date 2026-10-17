@@ -5655,6 +5655,113 @@ export const GENERATORS = {
   },
 
   // -----------------------------------------------------------------------
+  // RATIONAL EQUATIONS & EXTRANEOUS ROOTS (Joseph Pak Algebra 2, Chapter 3.3)
+  // -----------------------------------------------------------------------
+  'algebra2-extraneous-rational': (lang) => {
+    // Problem: (x) / (x - a) = (a) / (x - a) + c
+    // => x = a + c(x - a) => x = a + cx - ac => (c - 1)x = ac - a = a(c - 1) => x = a (Extraneous root!)
+    const a = randInt(2, 6);
+    const c = randInt(2, 5);
+    const validCase = Math.random() < 0.5;
+
+    if (!validCase) {
+      // Extraneous root detection question
+      const choices = [String(a), String(-a), '0', String(a + c), lang === 'ko' ? '실근 없음 (무연근)' : 'No real solution (extraneous)'];
+      const correctIdx = 4;
+      const question = lang === 'ko'
+        ? `방정식 $\\dfrac{x}{x - ${a}} = \\dfrac{${a}}{x - ${a}} + ${c}$의 모든 실수 해를 구하세요.`
+        : `Solve the rational equation $\\dfrac{x}{x - ${a}} = \\dfrac{${a}}{x - ${a}} + ${c}$ for real $x$.`;
+      const explanation = lang === 'ko'
+        ? `**[Algebra 2 Solutions Manual Ch 3.3 분수방정식과 무연근 판별]**\n\n양변에 분모 $(x - ${a})$를 곱하면:\n$$x = ${a} + ${c}(x - ${a})$$\n$$x = ${a} + ${c}x - ${a * c} \\implies ${c - 1}x = ${a * (c - 1)} \\implies x = ${a}$$\n\n**[무연근 검산]**: 구한 $x = ${a}$를 원래 식의 분모에 대입하면 $x - ${a} = 0$이 되어 분모가 $0$이 되므로 **$x = ${a}$는 무연근(extraneous root)**입니다.\n따라서 원래 방정식의 실수 해는 존재하지 않습니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]}** 입니다.`
+        : `**[Algebra 2 Solutions Manual Ch 3.3 Rational Equations & Extraneous Roots]**\n\nMultiply both sides by $(x - ${a})$:\n$$x = ${a} + ${c}(x - ${a}) \\implies ${c - 1}x = ${a * (c - 1)} \\implies x = ${a}$$\n\n**[Extraneous Root Check]**: Substituting $x = ${a}$ yields a denominator of $0$, which is undefined. Hence $x = ${a}$ is an extraneous root.\nTherefore, there is no real solution.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]}**.`;
+      return { question, choices, correctIdx, explanation };
+    }
+
+    // Valid solution with extraneous distractor
+    const k = randInt(1, 4);
+    const xVal = a + k * c;
+    const { choices, correctIdx } = buildChoices(xVal, (i) => {
+      if (i === 1) return a; // extraneous value
+      if (i === 2) return -xVal;
+      if (i === 3) return a + c;
+      return xVal + randInt(2, 6) * (i % 2 === 0 ? 1 : -1);
+    });
+    const question = lang === 'ko'
+      ? `방정식 $\\dfrac{x + ${k * c}}{x - ${a}} = ${c + 1}$의 실근 $x$를 구하세요.`
+      : `Solve $\\dfrac{x + ${k * c}}{x - ${a}} = ${c + 1}$ for real $x$.`;
+    const explanation = lang === 'ko'
+      ? `**[Algebra 2 Solutions Manual Ch 3.3 분수방정식 풀이]**\n\n분모 $(x - ${a}) \\ne 0$ 조건 하에서 양변에 $(x - ${a})$를 곱합니다:\n$$x + ${k * c} = ${c + 1}(x - ${a}) = ${c + 1}x - ${(c + 1) * a}$$\n$${c}x = ${k * c + (c + 1) * a} \\implies x = ${xVal}$$\n\n검산: $x = ${xVal} \\ne ${a}$이므로 분모가 $0$이 되지 않아 참인 실근입니다.\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${xVal})** 입니다.`
+      : `**[Algebra 2 Solutions Manual Ch 3.3 Solving Rational Equations]**\n\nMultiply both sides by $(x - ${a}) \\ne 0$:\n$$x + ${k * c} = ${c + 1}(x - ${a}) \\implies x = ${xVal}$$\n\nCheck: $x = ${xVal} \\ne ${a}$, so denominator is non-zero (valid solution).\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${xVal})**.`;
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // CUBIC IDENTITIES & FACTORING (Joseph Pak Algebra 2, Chapter 1.5 & 2.1)
+  // -----------------------------------------------------------------------
+  'algebra2-cubic-identities': (lang) => {
+    const s = randInt(2, 5); // x + y
+    const p = randInt(1, 4); // x * y
+    // x^3 + y^3 = (x + y)^3 - 3xy(x + y) = s^3 - 3*p*s
+    const ans = s ** 3 - 3 * p * s;
+
+    const { choices, correctIdx } = buildChoices(ans, (i) => {
+      if (i === 1) return s ** 3;
+      if (i === 2) return s ** 3 - p;
+      if (i === 3) return s ** 3 + 3 * p * s;
+      return ans + randInt(3, 15) * (i % 2 === 0 ? 1 : -1);
+    });
+
+    const question = lang === 'ko'
+      ? `두 실수 $x, y$가 $x + y = ${s}$, $xy = ${p}$를 만족할 때, $x^3 + y^3$의 값을 구하세요.`
+      : `If two real numbers $x$ and $y$ satisfy $x + y = ${s}$ and $xy = ${p}$, find the value of $x^3 + y^3$.`;
+
+    const explanation = lang === 'ko'
+      ? `**[Algebra 2 Solutions Manual Ch 1.5 & 2.1 곱셈공식 변형과 세제곱의 합]**\n\n세제곱 곱셈공식의 변형 공식:\n$$x^3 + y^3 = (x + y)^3 - 3xy(x + y)$$\n\n주어진 조건 $x + y = ${s}$, $xy = ${p}$를 대입하면:\n$$x^3 + y^3 = (${s})^3 - 3(${p})(${s}) = ${s ** 3} - ${3 * p * s} = ${ans}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (${ans})** 입니다.`
+      : `**[Algebra 2 Solutions Manual Ch 1.5 & 2.1 Cubic Identities & Sum of Cubes]**\n\nUsing the algebraic identity:\n$$x^3 + y^3 = (x + y)^3 - 3xy(x + y)$$\n\nSubstituting $x + y = ${s}$ and $xy = ${p}$:\n$$x^3 + y^3 = (${s})^3 - 3(${p})(${s}) = ${s ** 3} - ${3 * p * s} = ${ans}$$\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (${ans})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
+  // PROFIT OPTIMIZATION VIA QUADRATICS (Joseph Pak Algebra 2, Chapter 6.3)
+  // -----------------------------------------------------------------------
+  'algebra2-profit-optimization': (lang) => {
+    // A store sells N items at price P each day. For each $1 decrease in price, sales increase by k items.
+    // Revenue R(x) = (P - x)(N + k*x) = -k*x^2 + (k*P - N)*x + N*P
+    // Vertex at x = (k*P - N) / (2k). Let's pick nice integers:
+    // P = 20, N = 40, k = 4 => k*P - N = 80 - 40 = 40 => x = 40 / 8 = 5. Optimal price = 20 - 5 = 15.
+    const scenarios = [
+      { P: 20, N: 40, k: 4, optDrop: 5, optPrice: 15 },
+      { P: 30, N: 60, k: 6, optDrop: 10, optPrice: 20 },
+      { P: 16, N: 32, k: 4, optDrop: 4, optPrice: 12 },
+      { P: 24, N: 48, k: 4, optDrop: 6, optPrice: 18 },
+      { P: 10, N: 20, k: 2, optDrop: 0, optPrice: 10 },
+      { P: 18, N: 36, k: 3, optDrop: 3, optPrice: 15 },
+    ];
+    const s = pickRandom(scenarios);
+    const { P, N, k, optDrop, optPrice } = s;
+
+    const { choices, correctIdx } = buildChoices(optPrice, (i) => {
+      if (i === 1) return P;
+      if (i === 2) return optDrop;
+      if (i === 3) return P - 2;
+      return optPrice + randInt(2, 5) * (i % 2 === 0 ? 1 : -1);
+    });
+
+    const question = lang === 'ko'
+      ? `어느 상점에서 단가 $\\$${P}$에 하루 평균 $${N}$개의 상품을 판매하고 있습니다. 가격을 $\\$1$ 인하할 때마다 하루 판매량이 $${k}$개씩 증가한다고 합니다. 하루 총 매출을 극대화하려면 상품의 판매 가격을 몇 달러로 정해야 합니까?`
+      : `A store sells $${N}$ units of a product per day at a price of $\\$${P}$ each. For each $\\$1$ decrease in price, daily sales increase by $${k}$ units. What selling price per unit maximizes total daily revenue?`;
+
+    const maxRevenue = (P - optDrop) * (N + k * optDrop);
+
+    const explanation = lang === 'ko'
+      ? `**[Algebra 2 Solutions Manual Ch 6.3 이차함수의 최댓값과 이윤 극대화]**\n\n가격을 $\\$x$만큼 인하했을 때:\n- 판매 가격: $(${P} - x)$ 달러\n- 판매량: $(${N} + ${k}x)$ 개\n\n하루 총 매출 함수 $R(x)$:\n$$R(x) = (${P} - x)(${N} + ${k}x) = -${k}x^2 + (${k * P} - ${N})x + ${P * N} = -${k}x^2 + ${k * P - N}x + ${P * N}$$\n\n위로 볼록한 포물선이므로 꼭짓점의 $x$좌표에서 최댓값을 갖습니다:\n$$x = -\\frac{b}{2a} = -\\frac{${k * P - N}}{2(-${k})} = ${optDrop}$$\n\n따라서 매출을 극대화하는 최적 판매 가격은:\n$$\\$${P} - \\$${optDrop} = \\$${optPrice}$$\n\n정답은 **${['①', '②', '③', '④', '⑤'][correctIdx]} (\\$${optPrice})** 입니다.`
+      : `**[Algebra 2 Solutions Manual Ch 6.3 Quadratic Maximization & Profit Optimization]**\n\nLet $x$ be the price reduction in dollars:\n- Price: $(${P} - x)$\n- Quantity: $(${N} + ${k}x)$\n\nTotal daily revenue $R(x)$:\n$$R(x) = (${P} - x)(${N} + ${k}x) = -${k}x^2 + ${k * P - N}x + ${P * N}$$\n\nSince this is a downward parabola, the vertex occurs at:\n$$x = -\\frac{b}{2a} = \\frac{${k * P - N}}{2(${k})} = ${optDrop}$$\n\nThe optimal selling price is $\\$${P} - \\$${optDrop} = \\$${optPrice}$.\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][correctIdx]} (\\$${optPrice})**.`;
+
+    return { question, choices, correctIdx, explanation };
+  },
+
+  // -----------------------------------------------------------------------
   // CHARTS & DATA ANALYSIS (AMC 8 / Pre-Algebra)
   // -----------------------------------------------------------------------
   'charts-data-analysis': (lang) => {
@@ -5817,7 +5924,7 @@ export const GENERATORS = {
 export function getGeneratorForUnit(unitId) {
   if (GENERATORS[unitId]) return GENERATORS[unitId];
 
-  // Math 2 Important units (짱중요한유형 수학Ⅱ 엔진 연동)
+  // Math 2 Important units (수능·평가원 수학Ⅱ 핵심 기출 엔진 연동)
   const math2UnitsMap = {
     'venn-sets': 'set-operations',
     'logical-reasoning': 'propositions-truth-sets',
@@ -5837,9 +5944,9 @@ export function getGeneratorForUnit(unitId) {
       let q = p.question;
       let expl = p.explanation;
       if (!isKo) {
-        expl = `**[Math 2 Important · ${p.chapterName || 'Algebra'}]**\n\n${expl}\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][p.correctAnswer]}**.`;
+        expl = `**[Math 2 Core Topics · ${p.chapterName || 'Algebra'}]**\n\n${expl}\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][p.correctAnswer]}**.`;
       } else {
-        expl = `**[짱중요한유형 수학Ⅱ 핵심 해설 · ${p.chapterName || ''}]**\n\n${expl}\n\n정답은 **${['①', '②', '③', '④', '⑤'][p.correctAnswer]}** 입니다.`;
+        expl = `**[수능·평가원 수학Ⅱ 핵심 기출 해설 · ${p.chapterName || ''}]**\n\n${expl}\n\n정답은 **${['①', '②', '③', '④', '⑤'][p.correctAnswer]}** 입니다.`;
       }
       return {
         question: q,
@@ -5850,7 +5957,7 @@ export function getGeneratorForUnit(unitId) {
     };
   }
 
-  // Probability & Statistics Important units (짱중요한유형 확률과 통계 엔진 연동)
+  // Probability & Statistics Important units (수능·평가원 확률과 통계 핵심 기출 엔진 연동)
   const probStatsUnitsMap = {
     'permutations-arrangements': 'permutations',
     'permutations-combinations': 'combinations',
@@ -5869,9 +5976,9 @@ export function getGeneratorForUnit(unitId) {
       let q = p.question;
       let expl = p.explanation;
       if (!isKo) {
-        expl = `**[Probability & Statistics Important · ${p.chapterName || 'Combinatorics'}]**\n\n${expl}\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][p.correctAnswer]}**.`;
+        expl = `**[Probability & Statistics Core Topics · ${p.chapterName || 'Combinatorics'}]**\n\n${expl}\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][p.correctAnswer]}**.`;
       } else {
-        expl = `**[짱중요한유형 확률과 통계 핵심 해설 · ${p.chapterName || ''}]**\n\n${expl}\n\n정답은 **${['①', '②', '③', '④', '⑤'][p.correctAnswer]}** 입니다.`;
+        expl = `**[수능·평가원 확률과 통계 핵심 기출 해설 · ${p.chapterName || ''}]**\n\n${expl}\n\n정답은 **${['①', '②', '③', '④', '⑤'][p.correctAnswer]}** 입니다.`;
       }
       return {
         question: q,
@@ -5882,7 +5989,7 @@ export function getGeneratorForUnit(unitId) {
     };
   }
 
-  // Calculus 2 Important units (짱중요한유형 미적분Ⅱ 엔진 연동)
+  // Calculus 2 Important units (수능·평가원 미적분 핵심 기출 엔진 연동)
   const calc2UnitsMap = {
     'trigonometry': 'trig-definition',
     'trig-identities': 'trig-addition-formulas',
@@ -5902,9 +6009,9 @@ export function getGeneratorForUnit(unitId) {
       let q = p.question;
       let expl = p.explanation;
       if (!isKo) {
-        expl = `**[Calculus 2 Important · ${p.chapterName || 'Calculus'}]**\n\n${expl}\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][p.correctAnswer]}**.`;
+        expl = `**[Calculus Core Topics · ${p.chapterName || 'Calculus'}]**\n\n${expl}\n\nThe correct choice is **${['A', 'B', 'C', 'D', 'E'][p.correctAnswer]}**.`;
       } else {
-        expl = `**[짱중요한유형 미적분Ⅱ 핵심 해설 · ${p.chapterName || ''}]**\n\n${expl}\n\n정답은 **${['①', '②', '③', '④', '⑤'][p.correctAnswer]}** 입니다.`;
+        expl = `**[수능·평가원 미적분 핵심 기출 해설 · ${p.chapterName || ''}]**\n\n${expl}\n\n정답은 **${['①', '②', '③', '④', '⑤'][p.correctAnswer]}** 입니다.`;
       }
       return {
         question: q,
@@ -5915,7 +6022,7 @@ export function getGeneratorForUnit(unitId) {
     };
   }
 
-  // Calculus & CSAT/AMC 12 units (짱쉬운 미적분 1 엔진 연동)
+  // Calculus & CSAT/AMC 12 units (미적분 기출 엔진 연동)
   if (
     unitId === 'sequence-limits' ||
     unitId === 'limits-continuity' ||
@@ -5954,7 +6061,11 @@ export function getGeneratorForUnit(unitId) {
     };
   }
 
-  // Specific mappings for AMC fine units
+  // Specific mappings for AMC fine units (including Joseph Pak Algebra 2 Workbook expansions)
+  if (unitId === 'factoring-quadratics' || unitId.includes('cubic')) return GENERATORS['algebra2-cubic-identities'];
+  if (unitId.includes('quadratic-opt') || unitId.includes('profit')) return GENERATORS['algebra2-profit-optimization'];
+  if (unitId === 'rational-functions' || unitId.includes('extraneous')) return GENERATORS['algebra2-extraneous-rational'];
+  if (unitId === 'complex-numbers' || unitId.includes('complex')) return GENERATORS['complex-numbers'];
   if (unitId.includes('work')) return GENERATORS['work-rate'];
   if (unitId.includes('am-gm')) return GENERATORS['am-gm-inequality'];
   if (unitId.includes('radical')) return GENERATORS['radical-equations'];

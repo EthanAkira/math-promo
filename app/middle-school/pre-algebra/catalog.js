@@ -9,6 +9,7 @@ import { COORDINATE_UNITS } from '../coordinate-plane/catalog';
 import { PROPORTION_UNITS } from '../proportion/catalog';
 import { SECONDARY_ALGEBRA_UNITS } from './secondaryAlgebraEngine';
 import { ALGEBRA_COMPLETION_UNITS } from './algebraCompletionEngine';
+import { ALGEBRA2_WORKBOOK_UNITS } from './algebra2WorkbookEngine';
 import { KOREAN_HIGH2_UNITS } from './koreanHigh2Engine';
 import { PRECALCULUS_UNITS } from './precalculusEngine';
 import { KOREAN_HIGH3_UNITS } from './koreanHigh3Engine';
@@ -1361,13 +1362,21 @@ const UNIT_TIERS = {
   'logistic-growth': 'advanced', 'arc-length': 'advanced', 'parametric-vector-calculus': 'advanced',
   'polar-calculus': 'advanced', 'series-convergence-tests': 'advanced', 'power-series-radius-of-convergence': 'advanced',
   'taylor-maclaurin-series': 'advanced',
+  // algebra2WorkbookEngine.js (Joseph Pak 워크북 기반)
+  'a2-exp-laws': 'intermediate', 'a2-monomial-calc': 'basic', 'a2-poly-expansion-cubic': 'intermediate',
+  'a2-factoring-cubic': 'intermediate', 'a2-factoring-trinomial-cross': 'intermediate', 'a2-factoring-substitution': 'advanced',
+  'a2-rational-complex-fractions': 'intermediate', 'a2-rational-equations-extraneous': 'advanced', 'a2-rational-work-rate': 'intermediate',
+  'a2-complex-powers': 'intermediate', 'a2-quadratic-viete-relations': 'intermediate',
+  'a2-quad-func-vertex-translation': 'basic', 'a2-quad-func-min-max-domain': 'advanced',
+  'a2-radical-rationalize-denom': 'intermediate', 'a2-radical-equations-extraneous': 'advanced',
+  'a2-special-absolute-value-opt': 'advanced', 'a2-special-function-composition': 'intermediate', 'a2-special-inverse-functions': 'intermediate',
 };
 
 function withDifficultyTier(units) {
   return units.map((unit) => (UNIT_TIERS[unit.id] ? { ...unit, tier: UNIT_TIERS[unit.id] } : unit));
 }
 
-export const PRE_ALGEBRA_UNITS = withDifficultyTier([...IMPORTED_UNITS, ...NEW_UNITS, ...SECONDARY_ALGEBRA_UNITS, ...ALGEBRA_COMPLETION_UNITS, ...KOREAN_HIGH2_UNITS, ...PRECALCULUS_UNITS, ...KOREAN_HIGH3_UNITS, ...AP_CALCULUS_UNITS]);
+export const PRE_ALGEBRA_UNITS = withDifficultyTier([...IMPORTED_UNITS, ...NEW_UNITS, ...SECONDARY_ALGEBRA_UNITS, ...ALGEBRA_COMPLETION_UNITS, ...ALGEBRA2_WORKBOOK_UNITS, ...KOREAN_HIGH2_UNITS, ...PRECALCULUS_UNITS, ...KOREAN_HIGH3_UNITS, ...AP_CALCULUS_UNITS]);
 PRE_ALGEBRA_UNITS.push(...amcUnitsForPath('/middle-school/pre-algebra', PRE_ALGEBRA_UNITS));
 
 export const PRE_ALGEBRA_PROFILES = [

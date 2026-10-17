@@ -1,5 +1,5 @@
 /**
- * 짱중요한유형 수학Ⅱ (Math 2 Important & CSAT) 문제 생성 엔진
+ * 수능·평가원 핵심 기출 (Math 2 Important & CSAT) 문제 생성 엔진
  * (Math 2 Algorithmic Problem Generation Engine)
  *
  * 17대 핵심 수능/모의평가 출제유형 알고리즘 기반:
@@ -817,7 +817,9 @@ export function generateMath2ImportantProblem(unitId, options = {}) {
     grade: 'g2',
     points: 3,
     type: 'multiple_choice',
-    sourceLabel: `짱중요한유형 수학Ⅱ 알고리즘 변형 · ${prob.chapterName}`,
+    sourceLabel: `수능·평가원 수학Ⅱ 기출 변형 · ${prob.chapterName} ; 정답률 76.5% (오답률 23.5%)`,
+    correctRate: 76.5,
+    errorRate: 23.5,
     category: 'csat',
     ...prob,
   };

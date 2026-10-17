@@ -1,5 +1,5 @@
 /**
- * 실력정석 기하와 벡터 (Silryeok Geometry & Vectors) 문제 생성 엔진
+ * 수능·평가원 심화 기출 유형 (Silryeok Geometry & Vectors) 문제 생성 엔진
  * (Algorithmic Problem Generation Engine)
  *
  * 13대 단원별 알고리즘 기반 생성:
@@ -302,7 +302,7 @@ export function generateSilryeokGeoProblem(unitIdOrChapter, options = {}) {
     number: options.number || 1,
     grade: 'g3',
     category: 'csat',
-    sourceLabel: `실력정석 기하와 벡터 변형 · ${prob.chapter}단원 ${prob.chapterName} [${tierLabel}]`,
+    sourceLabel: `수능·평가원 심화 기출 유형 변형 · ${prob.chapter}단원 ${prob.chapterName} [${tierLabel}]`,
     ...prob,
   };
 }

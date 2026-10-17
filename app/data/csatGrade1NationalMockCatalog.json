@@ -1,7 +1,7 @@
 [
   {
     "id": "mock-g1-june-001",
-    "sourceLabel": "고1 전국연합 6월 001번 [201406 + 22]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 01번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 1,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 1,
@@ -25,11 +25,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-june-002",
-    "sourceLabel": "고1 전국연합 6월 002번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 02번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 2,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 2,
@@ -59,11 +61,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-june-003",
-    "sourceLabel": "고1 전국연합 6월 003번 [201406*00번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 03번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 3,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 3,
@@ -93,11 +97,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-june-004",
-    "sourceLabel": "고1 전국연합 6월 004번 [201606 * 23]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 04번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 4,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 4,
@@ -121,11 +127,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-june-005",
-    "sourceLabel": "고1 전국연합 6월 005번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 05번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 5,
     "chapterName": "방정식과 부등식",
     "problemNumber": 5,
@@ -155,11 +163,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-june-006",
-    "sourceLabel": "고1 전국연합 6월 006번 [201506*24번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 06번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 6,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 6,
@@ -183,11 +193,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-june-007",
-    "sourceLabel": "고1 전국연합 6월 007번 [201406 * 08번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 07번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 7,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 7,
@@ -217,11 +229,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-june-008",
-    "sourceLabel": "고1 전국연합 6월 008번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 08번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 8,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 8,
@@ -251,11 +265,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-june-009",
-    "sourceLabel": "고1 전국연합 6월 009번 [201506 + 1384]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 09번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 9,
     "chapterName": "방정식과 부등식",
     "problemNumber": 9,
@@ -279,11 +295,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-june-010",
-    "sourceLabel": "고1 전국연합 6월 010번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 10번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 10,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 10,
@@ -307,11 +325,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-june-011",
-    "sourceLabel": "고1 전국연합 6월 011번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 11번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 11,
     "chapterName": "도형의 방정식",
     "problemNumber": 11,
@@ -335,11 +355,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-june-012",
-    "sourceLabel": "고1 전국연합 6월 012번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 12번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 12,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 12,
@@ -369,11 +391,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-june-013",
-    "sourceLabel": "고1 전국연합 6월 013번 [201506 + 05]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 13번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 13,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 13,
@@ -403,11 +427,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-june-014",
-    "sourceLabel": "고1 전국연합 6월 014번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 14번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 14,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 14,
@@ -437,11 +463,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-june-015",
-    "sourceLabel": "고1 전국연합 6월 015번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 15번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 15,
     "chapterName": "도형의 방정식",
     "problemNumber": 15,
@@ -471,11 +499,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-june-016",
-    "sourceLabel": "고1 전국연합 6월 016번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 16번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 16,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 16,
@@ -505,11 +535,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-june-017",
-    "sourceLabel": "고1 전국연합 6월 017번 [201506+06번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 17번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 17,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 17,
@@ -539,11 +571,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-june-018",
-    "sourceLabel": "고1 전국연합 6월 018번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 18번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 18,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 18,
@@ -567,11 +601,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-june-019",
-    "sourceLabel": "고1 전국연합 6월 019번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 19번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 19,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 19,
@@ -601,11 +637,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-june-020",
-    "sourceLabel": "고1 전국연합 6월 020번 [201606 * 2684]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 20번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 20,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 20,
@@ -629,11 +667,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-june-021",
-    "sourceLabel": "고1 전국연합 6월 021번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 21번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 21,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 21,
@@ -663,11 +703,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-022",
-    "sourceLabel": "고1 전국연합 6월 022번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 22번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 22,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 22,
@@ -691,11 +733,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-023",
-    "sourceLabel": "고1 전국연합 6월 023번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 23번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 23,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 23,
@@ -719,11 +763,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-024",
-    "sourceLabel": "고1 전국연합 6월 024번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 24번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 24,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 24,
@@ -747,11 +793,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-025",
-    "sourceLabel": "고1 전국연합 6월 025번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 25번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 25,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 25,
@@ -775,11 +823,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-026",
-    "sourceLabel": "고1 전국연합 6월 026번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 26번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 26,
     "chapterName": "방정식과 부등식",
     "problemNumber": 26,
@@ -803,11 +853,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-027",
-    "sourceLabel": "고1 전국연합 6월 027번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 27번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 27,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 27,
@@ -831,11 +883,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-028",
-    "sourceLabel": "고1 전국연합 6월 028번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 28번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 28,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 28,
@@ -859,11 +913,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-029",
-    "sourceLabel": "고1 전국연합 6월 029번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 29번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 29,
     "chapterName": "복소수와 이차방정식",
     "problemNumber": 29,
@@ -887,11 +943,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Complex Numbers",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-030",
-    "sourceLabel": "고1 전국연합 6월 030번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 30번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 30,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 30,
@@ -915,11 +973,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-031",
-    "sourceLabel": "고1 전국연합 6월 031번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 31번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 31,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 31,
@@ -943,11 +1003,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-032",
-    "sourceLabel": "고1 전국연합 6월 032번 [201606 * 1784]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 32번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 32,
     "chapterName": "복소수와 이차방정식",
     "problemNumber": 32,
@@ -971,11 +1033,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Complex Numbers",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-033",
-    "sourceLabel": "고1 전국연합 6월 033번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 33번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 33,
     "chapterName": "복소수와 이차방정식",
     "problemNumber": 33,
@@ -999,11 +1063,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Complex Numbers",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-034",
-    "sourceLabel": "고1 전국연합 6월 034번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [함수와 그래프 34번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 34,
     "chapterName": "함수와 그래프",
     "problemNumber": 34,
@@ -1027,11 +1093,13 @@
     "amcCategory": "functions",
     "amcExam": "AMC 10·12",
     "amcTopic": "Functions & Transformations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-035",
-    "sourceLabel": "고1 전국연합 6월 035번 [201506 * 2644]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 35번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 35,
     "chapterName": "복소수와 이차방정식",
     "problemNumber": 35,
@@ -1055,11 +1123,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Complex Numbers",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-036",
-    "sourceLabel": "고1 전국연합 6월 036번 [201506 * 27]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 36번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 36,
     "chapterName": "방정식과 부등식",
     "problemNumber": 36,
@@ -1083,11 +1153,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-037",
-    "sourceLabel": "고1 전국연합 6월 037번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 37번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 37,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 37,
@@ -1111,11 +1183,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-038",
-    "sourceLabel": "고1 전국연합 6월 038번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 38번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 38,
     "chapterName": "방정식과 부등식",
     "problemNumber": 38,
@@ -1139,11 +1213,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-039",
-    "sourceLabel": "고1 전국연합 6월 039번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 39번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 39,
     "chapterName": "방정식과 부등식",
     "problemNumber": 39,
@@ -1167,11 +1243,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-040",
-    "sourceLabel": "고1 전국연합 6월 040번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 40번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 40,
     "chapterName": "방정식과 부등식",
     "problemNumber": 40,
@@ -1195,11 +1273,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-041",
-    "sourceLabel": "고1 전국연합 6월 041번 [201606 * 20]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 41번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 41,
     "chapterName": "방정식과 부등식",
     "problemNumber": 41,
@@ -1223,11 +1303,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-042",
-    "sourceLabel": "고1 전국연합 6월 042번 [201606 + 2584]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 42번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 42,
     "chapterName": "방정식과 부등식",
     "problemNumber": 42,
@@ -1251,11 +1333,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-043",
-    "sourceLabel": "고1 전국연합 6월 043번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 43번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 43,
     "chapterName": "방정식과 부등식",
     "problemNumber": 43,
@@ -1279,11 +1363,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-044",
-    "sourceLabel": "고1 전국연합 6월 044번 [201506 * 224]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 44번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 44,
     "chapterName": "방정식과 부등식",
     "problemNumber": 44,
@@ -1307,11 +1393,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-045",
-    "sourceLabel": "고1 전국연합 6월 045번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 45번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 45,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 45,
@@ -1335,11 +1423,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-046",
-    "sourceLabel": "고1 전국연합 6월 046번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 46번] ; 정답률 61.0% (오답률 39.0%)",
     "chapter": 46,
     "chapterName": "방정식과 부등식",
     "problemNumber": 46,
@@ -1363,11 +1453,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 61.0,
+    "errorRate": 39.0
   },
   {
     "id": "mock-g1-june-047",
-    "sourceLabel": "고1 전국연합 6월 047번 [201406 * 2084]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 47번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 47,
     "chapterName": "순열과 조합",
     "problemNumber": 47,
@@ -1391,11 +1483,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-048",
-    "sourceLabel": "고1 전국연합 6월 048번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 48번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 48,
     "chapterName": "방정식과 부등식",
     "problemNumber": 48,
@@ -1419,11 +1513,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-049",
-    "sourceLabel": "고1 전국연합 6월 049번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 49번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 49,
     "chapterName": "방정식과 부등식",
     "problemNumber": 49,
@@ -1447,11 +1543,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-050",
-    "sourceLabel": "고1 전국연합 6월 050번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 50번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 50,
     "chapterName": "순열과 조합",
     "problemNumber": 50,
@@ -1475,11 +1573,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-051",
-    "sourceLabel": "고1 전국연합 6월 051번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 51번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 51,
     "chapterName": "도형의 방정식",
     "problemNumber": 51,
@@ -1503,11 +1603,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-052",
-    "sourceLabel": "고1 전국연합 6월 052번 [201406 * 3084]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 52번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 52,
     "chapterName": "방정식과 부등식",
     "problemNumber": 52,
@@ -1531,11 +1633,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-053",
-    "sourceLabel": "고1 전국연합 6월 053번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 53번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 53,
     "chapterName": "방정식과 부등식",
     "problemNumber": 53,
@@ -1559,11 +1663,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-054",
-    "sourceLabel": "고1 전국연합 6월 054번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 54번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 54,
     "chapterName": "방정식과 부등식",
     "problemNumber": 54,
@@ -1587,11 +1693,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-055",
-    "sourceLabel": "고1 전국연합 6월 055번 [201406 * 2384]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 55번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 55,
     "chapterName": "방정식과 부등식",
     "problemNumber": 55,
@@ -1615,11 +1723,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-056",
-    "sourceLabel": "고1 전국연합 6월 056번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 56번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 56,
     "chapterName": "방정식과 부등식",
     "problemNumber": 56,
@@ -1643,11 +1753,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-057",
-    "sourceLabel": "고1 전국연합 6월 057번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 57번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 57,
     "chapterName": "방정식과 부등식",
     "problemNumber": 57,
@@ -1671,11 +1783,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-058",
-    "sourceLabel": "고1 전국연합 6월 058번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 58번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 58,
     "chapterName": "방정식과 부등식",
     "problemNumber": 58,
@@ -1699,11 +1813,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-059",
-    "sourceLabel": "고1 전국연합 6월 059번 [201506 * 1944]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 59번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 59,
     "chapterName": "방정식과 부등식",
     "problemNumber": 59,
@@ -1727,11 +1843,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-060",
-    "sourceLabel": "고1 전국연합 6월 060번 [201406 * 1584]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 60번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 60,
     "chapterName": "방정식과 부등식",
     "problemNumber": 60,
@@ -1755,11 +1873,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-061",
-    "sourceLabel": "고1 전국연합 6월 061번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 61번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 61,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 61,
@@ -1783,11 +1903,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-062",
-    "sourceLabel": "고1 전국연합 6월 062번 [201606*09]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 62번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 62,
     "chapterName": "방정식과 부등식",
     "problemNumber": 62,
@@ -1811,11 +1933,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-063",
-    "sourceLabel": "고1 전국연합 6월 063번 [201606 + 1244]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 63번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 63,
     "chapterName": "방정식과 부등식",
     "problemNumber": 63,
@@ -1839,11 +1963,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-064",
-    "sourceLabel": "고1 전국연합 6월 064번 [201506 * 09]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 64번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 64,
     "chapterName": "방정식과 부등식",
     "problemNumber": 64,
@@ -1867,11 +1993,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-065",
-    "sourceLabel": "고1 전국연합 6월 065번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 65번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 65,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 65,
@@ -1895,11 +2023,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-066",
-    "sourceLabel": "고1 전국연합 6월 066번 [201406 + 1844]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 66번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 66,
     "chapterName": "순열과 조합",
     "problemNumber": 66,
@@ -1923,11 +2053,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-067",
-    "sourceLabel": "고1 전국연합 6월 067번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 67번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 67,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 67,
@@ -1951,11 +2083,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-068",
-    "sourceLabel": "고1 전국연합 6월 068번 [201606 + 1141]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 68번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 68,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 68,
@@ -1979,11 +2113,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-069",
-    "sourceLabel": "고1 전국연합 6월 069번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 69번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 69,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 69,
@@ -2007,11 +2143,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-070",
-    "sourceLabel": "고1 전국연합 6월 070번 [201606 * 3081]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 70번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 70,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 70,
@@ -2035,11 +2173,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-071",
-    "sourceLabel": "고1 전국연합 6월 071번 [201506 + 1084]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 71번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 71,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 71,
@@ -2063,11 +2203,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-072",
-    "sourceLabel": "고1 전국연합 6월 072번 [201506 + 218]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 72번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 72,
     "chapterName": "도형의 방정식",
     "problemNumber": 72,
@@ -2091,11 +2233,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-073",
-    "sourceLabel": "고1 전국연합 6월 073번 [201406*25번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 73번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 73,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 73,
@@ -2119,11 +2263,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-074",
-    "sourceLabel": "고1 전국연합 6월 074번 [201406 * 274]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 74번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 74,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 74,
@@ -2147,11 +2293,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-075",
-    "sourceLabel": "고1 전국연합 6월 075번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 75번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 75,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 75,
@@ -2175,11 +2323,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-076",
-    "sourceLabel": "고1 전국연합 6월 076번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 76번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 76,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 76,
@@ -2203,11 +2353,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-077",
-    "sourceLabel": "고1 전국연합 6월 077번 [201806 + 238]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 77번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 77,
     "chapterName": "방정식과 부등식",
     "problemNumber": 77,
@@ -2231,11 +2383,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-078",
-    "sourceLabel": "고1 전국연합 6월 078번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 78번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 78,
     "chapterName": "방정식과 부등식",
     "problemNumber": 78,
@@ -2259,11 +2413,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-079",
-    "sourceLabel": "고1 전국연합 6월 079번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 79번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 79,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 79,
@@ -2287,11 +2443,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-080",
-    "sourceLabel": "고1 전국연합 6월 080번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 80번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 80,
     "chapterName": "방정식과 부등식",
     "problemNumber": 80,
@@ -2315,11 +2473,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-081",
-    "sourceLabel": "고1 전국연합 6월 081번 [201506 + 12]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [함수와 그래프 81번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 81,
     "chapterName": "함수와 그래프",
     "problemNumber": 81,
@@ -2343,11 +2503,13 @@
     "amcCategory": "functions",
     "amcExam": "AMC 10·12",
     "amcTopic": "Functions & Transformations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-082",
-    "sourceLabel": "고1 전국연합 6월 082번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 82번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 82,
     "chapterName": "방정식과 부등식",
     "problemNumber": 82,
@@ -2371,11 +2533,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-083",
-    "sourceLabel": "고1 전국연합 6월 083번 [201406 * 1081]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 83번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 83,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 83,
@@ -2399,11 +2563,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-084",
-    "sourceLabel": "고1 전국연합 6월 084번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 84번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 84,
     "chapterName": "방정식과 부등식",
     "problemNumber": 84,
@@ -2427,11 +2593,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-085",
-    "sourceLabel": "고1 전국연합 6월 085번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 85번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 85,
     "chapterName": "복소수와 이차방정식",
     "problemNumber": 85,
@@ -2455,11 +2623,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Complex Numbers",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-086",
-    "sourceLabel": "고1 전국연합 6월 086번 [201606 + 2184]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 86번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 86,
     "chapterName": "방정식과 부등식",
     "problemNumber": 86,
@@ -2483,11 +2653,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-087",
-    "sourceLabel": "고1 전국연합 6월 087번 [201606 * 2444]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 87번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 87,
     "chapterName": "방정식과 부등식",
     "problemNumber": 87,
@@ -2511,11 +2683,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-088",
-    "sourceLabel": "고1 전국연합 6월 088번 [201506 * 15]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 88번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 88,
     "chapterName": "방정식과 부등식",
     "problemNumber": 88,
@@ -2539,11 +2713,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-089",
-    "sourceLabel": "고1 전국연합 6월 089번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 89번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 89,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 89,
@@ -2567,11 +2743,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-june-090",
-    "sourceLabel": "고1 전국연합 6월 090번 [201406 + 248]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 90번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 90,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 90,
@@ -2595,11 +2773,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-001",
-    "sourceLabel": "고1 전국연합 9월 001번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 01번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 1,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 1,
@@ -2629,11 +2809,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-sept-002",
-    "sourceLabel": "고1 전국연합 9월 002번 [201509*02번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 02번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 2,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 2,
@@ -2663,11 +2845,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-sept-003",
-    "sourceLabel": "고1 전국연합 9월 003번 [201409 + 0244]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 03번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 3,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 3,
@@ -2697,11 +2881,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-sept-004",
-    "sourceLabel": "고1 전국연합 9월 004번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 04번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 4,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 4,
@@ -2731,11 +2917,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-sept-005",
-    "sourceLabel": "고1 전국연합 9월 005번 [201409+06번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 05번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 5,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 5,
@@ -2765,11 +2953,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-sept-006",
-    "sourceLabel": "고1 전국연합 9월 006번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 06번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 6,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 6,
@@ -2793,11 +2983,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-sept-007",
-    "sourceLabel": "고1 전국연합 9월 007번 [201509 + 1184]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 07번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 7,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 7,
@@ -2827,11 +3019,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-sept-008",
-    "sourceLabel": "고1 전국연합 9월 008번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 08번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 8,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 8,
@@ -2861,11 +3055,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-sept-009",
-    "sourceLabel": "고1 전국연합 9월 009번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 09번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 9,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 9,
@@ -2895,11 +3091,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-sept-010",
-    "sourceLabel": "고1 전국연합 9월 010번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 10번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 10,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 10,
@@ -2919,15 +3117,17 @@
     "choices": [],
     "answer": "14",
     "correctAnswer": 14,
-    "explanation": "010                                    aun7N BH\n\n통큰해설\n\n다항식 /(2)=ㅠ\"+0ㅠ+ 를 7+1로 나눈 나머지가 2이므로 나\n머지정리에 의하여 /(ㅡ-1)=2\n\n1-0+6=8  ~0-0=-1  ……6ㅁ\n\n다항식 /(2)=ㅠ\"+0ㅠ+ 를 7ㅡ1로 나눈 나머지가 8이므로 나\n머지정리에 의하여 /(1)=8\nltatb=8  -.0+6=7\nㅠ+ㅠ을 하면\n\n2a=6 a=\n\n이것을 Del] 대입하여 정리하면\nb=4\n\nTRH f(z) =a\" +32 +4012\nf(2)=2+3x24+4=14\n\n\n\n",
+    "explanation": "010                                    aun7N BH\n\n통큰해설\n\n다항식 /(2)=ㅠ\"+0ㅠ+ 를 7+1로 나눈 나머지가 2이므로 나\n머지정리에 의하여 /(ㅡ-1)=2\n\n1-0+6=8  ~0-0=-1  ……6ㅁ\n\n다항식 /(2)=ㅠ\"+0ㅠ+ 를 7ㅡ1로 나눈 나머지가 8이므로 나\n머지정리에 의하여 /(1)=8\nltatb=8  -.0+6=7\nㅠ+ㅠ을 하면\n\n2a=6 a=\n\n이것을 Del] 대입하여 정리하면\nb=4\n\nTRH f(z) =a\" +32 +4012\nf(2)=2+3x24+4=14",
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-sept-011",
-    "sourceLabel": "고1 전국연합 9월 011번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 11번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 11,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 11,
@@ -2957,11 +3157,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-sept-012",
-    "sourceLabel": "고1 전국연합 9월 012번 [201609 * 0584]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 12번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 12,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 12,
@@ -2985,11 +3187,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-sept-013",
-    "sourceLabel": "고1 전국연합 9월 013번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 13번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 13,
     "chapterName": "복소수와 이차방정식",
     "problemNumber": 13,
@@ -3019,11 +3223,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Complex Numbers",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-sept-014",
-    "sourceLabel": "고1 전국연합 9월 014번 [201509 + 224]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 14번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 14,
     "chapterName": "복소수와 이차방정식",
     "problemNumber": 14,
@@ -3047,11 +3253,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Complex Numbers",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-sept-015",
-    "sourceLabel": "고1 전국연합 9월 015번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 15번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 15,
     "chapterName": "복소수와 이차방정식",
     "problemNumber": 15,
@@ -3077,15 +3285,17 @@
     ],
     "answer": "1",
     "correctAnswer": 1,
-    "explanation": "015                                  RUE EO\n통큰해설\n(3+20)고-5(2/+702=8+19/에서\n(32°—102xy) + (2x°—5x)i=8+ 127\n복소수가 서로 같을 조건에 의하여\n3x°—10zy=8         -O, 250512 아아에©\n\n©oA| 22°—5r—12=0\n(2x+3)(a—4)=0\n\n=-응 또는 2=4\n\n그런데 ce 정수이므로 2=4\n이것을 에 대입하면\n48—40y=8, —40y=—40\n1\n\n기 2+0=4+1=6\n\n'\n\n\n",
+    "explanation": "015                                  RUE EO\n통큰해설\n(3+20)고-5(2/+702=8+19/에서\n(32°—102xy) + (2x°—5x)i=8+ 127\n복소수가 서로 같을 조건에 의하여\n3x°—10zy=8         -O, 250512 아아에©\n\n©oA| 22°—5r—12=0\n(2x+3)(a—4)=0\n\n=-응 또는 2=4\n\n그런데 ce 정수이므로 2=4\n이것을 에 대입하면\n48—40y=8, —40y=—40\n1\n\n기 2+0=4+1=6\n\n'",
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Complex Numbers",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-sept-016",
-    "sourceLabel": "고1 전국연합 9월 016번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 16번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 16,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 16,
@@ -3115,11 +3325,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-sept-017",
-    "sourceLabel": "고1 전국연합 9월 017번 [201509*19번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 17번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 17,
     "chapterName": "순열과 조합",
     "problemNumber": 17,
@@ -3143,11 +3355,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-sept-018",
-    "sourceLabel": "고1 전국연합 9월 018번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 18번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 18,
     "chapterName": "방정식과 부등식",
     "problemNumber": 18,
@@ -3171,11 +3385,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-sept-019",
-    "sourceLabel": "고1 전국연합 9월 019번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 19번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 19,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 19,
@@ -3205,11 +3421,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-sept-020",
-    "sourceLabel": "고1 전국연합 9월 020번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 20번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 20,
     "chapterName": "방정식과 부등식",
     "problemNumber": 20,
@@ -3239,11 +3457,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-sept-021",
-    "sourceLabel": "고1 전국연합 9월 021번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 21번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 21,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 21,
@@ -3273,11 +3493,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-022",
-    "sourceLabel": "고1 전국연합 9월 022번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 22번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 22,
     "chapterName": "방정식과 부등식",
     "problemNumber": 22,
@@ -3297,15 +3519,17 @@
     "choices": [],
     "answer": "2",
     "correctAnswer": 2,
-    "explanation": "022                      BER ED\n통큰해설\n\n이차함수 4/=/(ㅅㅠ)의 그래프와 일차함수 y=h(x) 2] 그래프가\n접하는 점의 +좌표가 ao] BS 이차방정식 f(x) =h(x), 즉\n/(2)-//(2)=0은 중근 oS 갖는다.\n\n조건 야에서 이차함수 y=f(x) 2] 최고차항의 계수가 1이므로\nf(x) —h(2)=(x-a)?\n\nf(x2)=(x—-a)l+h(z)\n\n같은 방법으로 이차함수 y= g(x) 2) 그래프와 일차함수\ny=h(x)2| 그래프가 접하는 점의 <좌표가 /이므로 이차방정식\n4(2)=/(2), 4 g(x)—h(x)=02 중근 /를 갖는다.\n\n조건 야에서 이차함수 y= g(x) 2] 최고차항의 계수가 4이므로\ng(x)—h(x)=4(2—B)\n\ng(x) =4(x—B) +h(z)\n\n조건 Wo a: B=1: 2이므로 B=2a\n\n이 g(a) =4(x—2a)*+h(x)\n\n두 이차함수 y=f(x), y=e(x) 2) 그래프가 만나는 점의 7좌표\n는 이차방정식 /(=)=《#(<), 즉./(=)ㅡ8(<)=0의 근이므로\n(x-a)'+h(x)—4(x—2a)*—h(x)=0\n\nav —2arta’—4(a°—4ar+4a*)=0\n\n3x°—ldar+15a°=0, (32-50)(2-30)=0\n\nvra$a Bb 2=30\n\n이때, a<r<B=2a2) 좌표가 /이므로\n\n5,\nt=3a\n\nge 모의고사 | 049\n\n\n",
+    "explanation": "022                      BER ED\n통큰해설\n\n이차함수 4/=/(ㅅㅠ)의 그래프와 일차함수 y=h(x) 2] 그래프가\n접하는 점의 +좌표가 ao] BS 이차방정식 f(x) =h(x), 즉\n/(2)-//(2)=0은 중근 oS 갖는다.\n\n조건 야에서 이차함수 y=f(x) 2] 최고차항의 계수가 1이므로\nf(x) —h(2)=(x-a)?\n\nf(x2)=(x—-a)l+h(z)\n\n같은 방법으로 이차함수 y= g(x) 2) 그래프와 일차함수\ny=h(x)2| 그래프가 접하는 점의 <좌표가 /이므로 이차방정식\n4(2)=/(2), 4 g(x)—h(x)=02 중근 /를 갖는다.\n\n조건 야에서 이차함수 y= g(x) 2] 최고차항의 계수가 4이므로\ng(x)—h(x)=4(2—B)\n\ng(x) =4(x—B) +h(z)\n\n조건 Wo a: B=1: 2이므로 B=2a\n\n이 g(a) =4(x—2a)*+h(x)\n\n두 이차함수 y=f(x), y=e(x) 2) 그래프가 만나는 점의 7좌표\n는 이차방정식 /(=)=《#(<), 즉./(=)ㅡ8(<)=0의 근이므로\n(x-a)'+h(x)—4(x—2a)*—h(x)=0\n\nav —2arta’—4(a°—4ar+4a*)=0\n\n3x°—ldar+15a°=0, (32-50)(2-30)=0\n\nvra$a Bb 2=30\n\n이때, a<r<B=2a2) 좌표가 /이므로\n\n5,\nt=3a\n\nge 모의고사 | 049",
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-023",
-    "sourceLabel": "고1 전국연합 9월 023번 [201609 *28번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 23번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 23,
     "chapterName": "방정식과 부등식",
     "problemNumber": 23,
@@ -3329,11 +3553,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-024",
-    "sourceLabel": "고1 전국연합 9월 024번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 24번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 24,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 24,
@@ -3357,11 +3583,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-025",
-    "sourceLabel": "고1 전국연합 9월 025번 [201509 * 1884]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 25번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 25,
     "chapterName": "순열과 조합",
     "problemNumber": 25,
@@ -3385,11 +3613,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-026",
-    "sourceLabel": "고1 전국연합 9월 026번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 26번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 26,
     "chapterName": "방정식과 부등식",
     "problemNumber": 26,
@@ -3413,11 +3643,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-027",
-    "sourceLabel": "고1 전국연합 9월 027번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 27번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 27,
     "chapterName": "순열과 조합",
     "problemNumber": 27,
@@ -3441,11 +3673,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-028",
-    "sourceLabel": "고1 전국연합 9월 028번 [201409*15번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 28번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 28,
     "chapterName": "방정식과 부등식",
     "problemNumber": 28,
@@ -3469,11 +3703,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-029",
-    "sourceLabel": "고1 전국연합 9월 029번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 29번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 29,
     "chapterName": "순열과 조합",
     "problemNumber": 29,
@@ -3497,11 +3733,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-030",
-    "sourceLabel": "고1 전국연합 9월 030번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 30번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 30,
     "chapterName": "방정식과 부등식",
     "problemNumber": 30,
@@ -3525,11 +3763,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-031",
-    "sourceLabel": "고1 전국연합 9월 031번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 31번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 31,
     "chapterName": "방정식과 부등식",
     "problemNumber": 31,
@@ -3553,11 +3793,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-032",
-    "sourceLabel": "고1 전국연합 9월 032번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 32번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 32,
     "chapterName": "방정식과 부등식",
     "problemNumber": 32,
@@ -3581,11 +3823,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-033",
-    "sourceLabel": "고1 전국연합 9월 033번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 33번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 33,
     "chapterName": "방정식과 부등식",
     "problemNumber": 33,
@@ -3609,11 +3853,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-034",
-    "sourceLabel": "고1 전국연합 9월 034번 [201409+30번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 34번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 34,
     "chapterName": "방정식과 부등식",
     "problemNumber": 34,
@@ -3637,11 +3883,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-035",
-    "sourceLabel": "고1 전국연합 9월 035번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 35번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 35,
     "chapterName": "방정식과 부등식",
     "problemNumber": 35,
@@ -3665,11 +3913,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-036",
-    "sourceLabel": "고1 전국연합 9월 036번 [201609 + 168]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 36번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 36,
     "chapterName": "순열과 조합",
     "problemNumber": 36,
@@ -3693,11 +3943,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-037",
-    "sourceLabel": "고1 전국연합 9월 037번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 37번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 37,
     "chapterName": "방정식과 부등식",
     "problemNumber": 37,
@@ -3721,11 +3973,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-038",
-    "sourceLabel": "고1 전국연합 9월 038번 [201509 + 158]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 38번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 38,
     "chapterName": "방정식과 부등식",
     "problemNumber": 38,
@@ -3749,11 +4003,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-039",
-    "sourceLabel": "고1 전국연합 9월 039번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 39번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 39,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 39,
@@ -3777,11 +4033,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-040",
-    "sourceLabel": "고1 전국연합 9월 040번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 40번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 40,
     "chapterName": "순열과 조합",
     "problemNumber": 40,
@@ -3805,11 +4063,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-041",
-    "sourceLabel": "고1 전국연합 9월 041번 [201400 + 1881]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 41번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 41,
     "chapterName": "방정식과 부등식",
     "problemNumber": 41,
@@ -3833,11 +4093,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-042",
-    "sourceLabel": "고1 전국연합 9월 042번 [201609 * 1084]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 42번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 42,
     "chapterName": "방정식과 부등식",
     "problemNumber": 42,
@@ -3857,15 +4119,17 @@
     "choices": [],
     "answer": "2",
     "correctAnswer": 2,
-    "explanation": "042                                         BEE GIN 담으\n통큰해설\n\n이차함수 fla) =2°—2ax+9a9l] 대하                  wf)\n여 이차부등식 f(z) <08 만족시키는\n해가 없으려면 이차함수 y= f(x) 2]\n그래프가 오른쪽 그림과 같아야 한다.\n이차방정식 /(2)=0의 BBS Det\n\n하면\n\nD_\n\nTae —9aS 0A a(a—9) <0\n*. 0Sa<9\n\n따라서 주어진 조건을 만족시키는 정수 ae 0, 1, 2, …, 92] 1074\n\n이다.\n\n'\n\n\n",
+    "explanation": "042                                         BEE GIN 담으\n통큰해설\n\n이차함수 fla) =2°—2ax+9a9l] 대하                  wf)\n여 이차부등식 f(z) <08 만족시키는\n해가 없으려면 이차함수 y= f(x) 2]\n그래프가 오른쪽 그림과 같아야 한다.\n이차방정식 /(2)=0의 BBS Det\n\n하면\n\nD_\n\nTae —9aS 0A a(a—9) <0\n*. 0Sa<9\n\n따라서 주어진 조건을 만족시키는 정수 ae 0, 1, 2, …, 92] 1074\n\n이다.\n\n'",
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-043",
-    "sourceLabel": "고1 전국연합 9월 043번 [201609 * 2344]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 43번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 43,
     "chapterName": "방정식과 부등식",
     "problemNumber": 43,
@@ -3889,11 +4153,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-044",
-    "sourceLabel": "고1 전국연합 9월 044번 [201509 *08번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 44번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 44,
     "chapterName": "방정식과 부등식",
     "problemNumber": 44,
@@ -3917,11 +4183,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-045",
-    "sourceLabel": "고1 전국연합 9월 045번 [201509 *14번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 45번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 45,
     "chapterName": "도형의 방정식",
     "problemNumber": 45,
@@ -3945,11 +4213,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-046",
-    "sourceLabel": "고1 전국연합 9월 046번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 46번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 46,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 46,
@@ -3973,11 +4243,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-047",
-    "sourceLabel": "고1 전국연합 9월 047번 [201409*1번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 47번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 47,
     "chapterName": "순열과 조합",
     "problemNumber": 47,
@@ -4001,11 +4273,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-048",
-    "sourceLabel": "고1 전국연합 9월 048번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 48번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 48,
     "chapterName": "방정식과 부등식",
     "problemNumber": 48,
@@ -4029,11 +4303,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-049",
-    "sourceLabel": "고1 전국연합 9월 049번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 49번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 49,
     "chapterName": "도형의 방정식",
     "problemNumber": 49,
@@ -4057,11 +4333,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-050",
-    "sourceLabel": "고1 전국연합 9월 050번 [201609 *04번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 50번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 50,
     "chapterName": "도형의 방정식",
     "problemNumber": 50,
@@ -4085,11 +4363,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-051",
-    "sourceLabel": "고1 전국연합 9월 051번 [201809 + 0384]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 51번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 51,
     "chapterName": "도형의 방정식",
     "problemNumber": 51,
@@ -4113,11 +4393,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-052",
-    "sourceLabel": "고1 전국연합 9월 052번 [201800 + 2884]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 52번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 52,
     "chapterName": "도형의 방정식",
     "problemNumber": 52,
@@ -4141,11 +4423,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-053",
-    "sourceLabel": "고1 전국연합 9월 053번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 53번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 53,
     "chapterName": "도형의 방정식",
     "problemNumber": 53,
@@ -4169,11 +4453,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-054",
-    "sourceLabel": "고1 전국연합 9월 054번 [201609 *07번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 54번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 54,
     "chapterName": "도형의 방정식",
     "problemNumber": 54,
@@ -4197,11 +4483,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-055",
-    "sourceLabel": "고1 전국연합 9월 055번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 55번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 55,
     "chapterName": "도형의 방정식",
     "problemNumber": 55,
@@ -4225,11 +4513,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-056",
-    "sourceLabel": "고1 전국연합 9월 056번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 56번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 56,
     "chapterName": "도형의 방정식",
     "problemNumber": 56,
@@ -4253,11 +4543,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-057",
-    "sourceLabel": "고1 전국연합 9월 057번 [201509*07번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 57번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 57,
     "chapterName": "도형의 방정식",
     "problemNumber": 57,
@@ -4281,11 +4573,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-058",
-    "sourceLabel": "고1 전국연합 9월 058번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 58번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 58,
     "chapterName": "도형의 방정식",
     "problemNumber": 58,
@@ -4309,11 +4603,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-059",
-    "sourceLabel": "고1 전국연합 9월 059번 [201409 * 194]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 59번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 59,
     "chapterName": "도형의 방정식",
     "problemNumber": 59,
@@ -4337,11 +4633,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-060",
-    "sourceLabel": "고1 전국연합 9월 060번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 60번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 60,
     "chapterName": "도형의 방정식",
     "problemNumber": 60,
@@ -4365,11 +4663,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-061",
-    "sourceLabel": "고1 전국연합 9월 061번 [201609*08번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 61번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 61,
     "chapterName": "도형의 방정식",
     "problemNumber": 61,
@@ -4393,11 +4693,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-062",
-    "sourceLabel": "고1 전국연합 9월 062번 [201609 * 1984]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 62번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 62,
     "chapterName": "도형의 방정식",
     "problemNumber": 62,
@@ -4421,11 +4723,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-063",
-    "sourceLabel": "고1 전국연합 9월 063번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 63번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 63,
     "chapterName": "도형의 방정식",
     "problemNumber": 63,
@@ -4449,11 +4753,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-064",
-    "sourceLabel": "고1 전국연합 9월 064번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 64번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 64,
     "chapterName": "도형의 방정식",
     "problemNumber": 64,
@@ -4477,11 +4783,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-065",
-    "sourceLabel": "고1 전국연합 9월 065번 [201509*2번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 65번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 65,
     "chapterName": "방정식과 부등식",
     "problemNumber": 65,
@@ -4505,11 +4813,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-066",
-    "sourceLabel": "고1 전국연합 9월 066번 [201409*17번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 66번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 66,
     "chapterName": "도형의 방정식",
     "problemNumber": 66,
@@ -4533,11 +4843,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-067",
-    "sourceLabel": "고1 전국연합 9월 067번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 67번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 67,
     "chapterName": "도형의 방정식",
     "problemNumber": 67,
@@ -4561,11 +4873,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-068",
-    "sourceLabel": "고1 전국연합 9월 068번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 68번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 68,
     "chapterName": "도형의 방정식",
     "problemNumber": 68,
@@ -4589,11 +4903,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-069",
-    "sourceLabel": "고1 전국연합 9월 069번 [201409*29번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 69번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 69,
     "chapterName": "순열과 조합",
     "problemNumber": 69,
@@ -4617,11 +4933,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-070",
-    "sourceLabel": "고1 전국연합 9월 070번 [201609*09번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 70번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 70,
     "chapterName": "도형의 방정식",
     "problemNumber": 70,
@@ -4645,11 +4963,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-071",
-    "sourceLabel": "고1 전국연합 9월 071번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 71번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 71,
     "chapterName": "도형의 방정식",
     "problemNumber": 71,
@@ -4673,11 +4993,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-072",
-    "sourceLabel": "고1 전국연합 9월 072번 [201509*09번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 72번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 72,
     "chapterName": "도형의 방정식",
     "problemNumber": 72,
@@ -4701,11 +5023,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-073",
-    "sourceLabel": "고1 전국연합 9월 073번 [201509 * 204]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 73번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 73,
     "chapterName": "도형의 방정식",
     "problemNumber": 73,
@@ -4729,11 +5053,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-074",
-    "sourceLabel": "고1 전국연합 9월 074번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 74번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 74,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 74,
@@ -4757,11 +5083,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-075",
-    "sourceLabel": "고1 전국연합 9월 075번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 75번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 75,
     "chapterName": "도형의 방정식",
     "problemNumber": 75,
@@ -4785,11 +5113,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-076",
-    "sourceLabel": "고1 전국연합 9월 076번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 76번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 76,
     "chapterName": "집합과 명제",
     "problemNumber": 76,
@@ -4813,11 +5143,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-077",
-    "sourceLabel": "고1 전국연합 9월 077번 [201609 * 1244]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 77번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 77,
     "chapterName": "집합과 명제",
     "problemNumber": 77,
@@ -4841,11 +5173,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-078",
-    "sourceLabel": "고1 전국연합 9월 078번 [201509 * 12]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 78번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 78,
     "chapterName": "집합과 명제",
     "problemNumber": 78,
@@ -4865,15 +5199,17 @@
     "choices": [],
     "answer": "1",
     "correctAnswer": 1,
-    "explanation": "078                             정답를 70% BO\n\n동큰해설\n\n(x+22—y+1)(2°+y°—-9) SOFA\n\n[2teeret 20 gg (etar—ytiso\n또는|\n\nxt+y'—950      x't+y'—920\nyS(a41)°          y2(xt1)°\nii,\n나       ( I 빼\n”\n=                                수\n(et, 경계썬포함)                 (단 2d Bh)\n\n(i), (OI 구하는 부등식의 영역은 오\n른쪽 그림의 어두운 부분(경계선 포함)\n과 같다.\n\n'\n\n\n",
+    "explanation": "078                             정답를 70% BO\n\n동큰해설\n\n(x+22—y+1)(2°+y°—-9) SOFA\n\n[2teeret 20 gg (etar—ytiso\n또는|\n\nxt+y'—950      x't+y'—920\nyS(a41)°          y2(xt1)°\nii,\n나       ( I 빼\n”\n=                                수\n(et, 경계썬포함)                 (단 2d Bh)\n\n(i), (OI 구하는 부등식의 영역은 오\n른쪽 그림의 어두운 부분(경계선 포함)\n과 같다.\n\n'",
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-079",
-    "sourceLabel": "고1 전국연합 9월 079번 [201409 *08번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 79번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 79,
     "chapterName": "집합과 명제",
     "problemNumber": 79,
@@ -4897,11 +5233,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-080",
-    "sourceLabel": "고1 전국연합 9월 080번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 80번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 80,
     "chapterName": "집합과 명제",
     "problemNumber": 80,
@@ -4925,11 +5263,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-081",
-    "sourceLabel": "고1 전국연합 9월 081번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 81번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 81,
     "chapterName": "도형의 방정식",
     "problemNumber": 81,
@@ -4953,11 +5293,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-082",
-    "sourceLabel": "고1 전국연합 9월 082번 [201400 * 2681]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 82번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 82,
     "chapterName": "집합과 명제",
     "problemNumber": 82,
@@ -4981,11 +5323,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-083",
-    "sourceLabel": "고1 전국연합 9월 083번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 83번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 83,
     "chapterName": "집합과 명제",
     "problemNumber": 83,
@@ -5009,11 +5353,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-084",
-    "sourceLabel": "고1 전국연합 9월 084번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 84번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 84,
     "chapterName": "집합과 명제",
     "problemNumber": 84,
@@ -5037,11 +5383,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-085",
-    "sourceLabel": "고1 전국연합 9월 085번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 85번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 85,
     "chapterName": "집합과 명제",
     "problemNumber": 85,
@@ -5065,11 +5413,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-086",
-    "sourceLabel": "고1 전국연합 9월 086번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 86번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 86,
     "chapterName": "집합과 명제",
     "problemNumber": 86,
@@ -5093,11 +5443,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-087",
-    "sourceLabel": "고1 전국연합 9월 087번 [201609*71번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 87번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 87,
     "chapterName": "집합과 명제",
     "problemNumber": 87,
@@ -5121,11 +5473,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-088",
-    "sourceLabel": "고1 전국연합 9월 088번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 88번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 88,
     "chapterName": "집합과 명제",
     "problemNumber": 88,
@@ -5149,11 +5503,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-089",
-    "sourceLabel": "고1 전국연합 9월 089번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 89번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 89,
     "chapterName": "집합과 명제",
     "problemNumber": 89,
@@ -5177,11 +5533,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-090",
-    "sourceLabel": "고1 전국연합 9월 090번 [201500 * 2581]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 90번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 90,
     "chapterName": "집합과 명제",
     "problemNumber": 90,
@@ -5205,11 +5563,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-sept-091",
-    "sourceLabel": "고1 전국연합 9월 091번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 91번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 91,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 91,
@@ -5233,11 +5593,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-001",
-    "sourceLabel": "고1 전국연합 11월 001번 [201411*28번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 01번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 1,
     "chapterName": "방정식과 부등식",
     "problemNumber": 1,
@@ -5261,11 +5623,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-nov-002",
-    "sourceLabel": "고1 전국연합 11월 002번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 02번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 2,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 2,
@@ -5289,11 +5653,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-nov-003",
-    "sourceLabel": "고1 전국연합 11월 003번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 03번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 3,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 3,
@@ -5323,11 +5689,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-nov-004",
-    "sourceLabel": "고1 전국연합 11월 004번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 04번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 4,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 4,
@@ -5357,11 +5725,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-nov-005",
-    "sourceLabel": "고1 전국연합 11월 005번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 05번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 5,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 5,
@@ -5385,11 +5755,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-nov-006",
-    "sourceLabel": "고1 전국연합 11월 006번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 06번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 6,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 6,
@@ -5419,11 +5791,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-nov-007",
-    "sourceLabel": "고1 전국연합 11월 007번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 07번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 7,
     "chapterName": "복소수와 이차방정식",
     "problemNumber": 7,
@@ -5447,11 +5821,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Complex Numbers",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-nov-008",
-    "sourceLabel": "고1 전국연합 11월 008번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 08번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 8,
     "chapterName": "복소수와 이차방정식",
     "problemNumber": 8,
@@ -5481,11 +5857,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Complex Numbers",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-nov-009",
-    "sourceLabel": "고1 전국연합 11월 009번 [201511*21번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 09번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 9,
     "chapterName": "순열과 조합",
     "problemNumber": 9,
@@ -5511,15 +5889,17 @@
     ],
     "answer": "2",
     "correctAnswer": 2,
-    "explanation": "009                             BEE 05% 담기:\n\n통큰해설\n121 +ㅜ(2-1)7=3-ㅡ2/에서 복소수가 서로 같을 조건에 의하여\n|x\n\n_\n\n에서\n\na             -1\n이것을 |2ㅡ81=3에 대입하면\n\n-1-1=38\n=3 또는 -1-/=-ㅜ3\n\n이때, 2/<0이므로 2=-ㅡ1, y=2\n이 2+0=(-1)+90=1\n\n6269 이치방정식과 이차함수\n\n(1) 이차함수 /=0ㅠ\"+6ㅜ+ <의 그래프와 <축의 교점의 <좌표는 이\n차방정식 4\"+6ㅠㅜㅜ+<=0의 실근과 같다.\n\n(2) 이차함수 /=04ㅠ\"+ 6ㅠ+<의 그래프와 축의 WYO 개수는 이차\n방정식 47“\"+6ㅠ+<=0의 서로 다른 실근의 개수와 같다.\n\n(9) 방정식 f(x) =g(.x) 2] 서로 CHE 실근의 개수는 두 함수\ny=f(x), y= g(x) 2| 그래프의 교점의 개수와 같다.\n\n(41 이차함수 y=ax*+ bx+cO| 그래프와 직선 /=&ㅜ의 위치 관계\n이차방정식 ax'+br+c=kr, 즉 ax'+(b—k)x+c=09] 판\n별식을 /)=(6ㅡㅅ)`-ㅡ40<라할 때.\n© 7) >0일 때, 서로 다른 두 점에서 만난다.\n@ /?=0일 때, 한 점에서 만난다. ( 접한다.)\n@ /)<0일 때, 만나지 않는다.\n\n\n",
+    "explanation": "009                             BEE 05% 담기:\n\n통큰해설\n121 +ㅜ(2-1)7=3-ㅡ2/에서 복소수가 서로 같을 조건에 의하여\n|x\n\n_\n\n에서\n\na             -1\n이것을 |2ㅡ81=3에 대입하면\n\n-1-1=38\n=3 또는 -1-/=-ㅜ3\n\n이때, 2/<0이므로 2=-ㅡ1, y=2\n이 2+0=(-1)+90=1\n\n6269 이치방정식과 이차함수\n\n(1) 이차함수 /=0ㅠ\"+6ㅜ+ <의 그래프와 <축의 교점의 <좌표는 이\n차방정식 4\"+6ㅠㅜㅜ+<=0의 실근과 같다.\n\n(2) 이차함수 /=04ㅠ\"+ 6ㅠ+<의 그래프와 축의 WYO 개수는 이차\n방정식 47“\"+6ㅠ+<=0의 서로 다른 실근의 개수와 같다.\n\n(9) 방정식 f(x) =g(.x) 2] 서로 CHE 실근의 개수는 두 함수\ny=f(x), y= g(x) 2| 그래프의 교점의 개수와 같다.\n\n(41 이차함수 y=ax*+ bx+cO| 그래프와 직선 /=&ㅜ의 위치 관계\n이차방정식 ax'+br+c=kr, 즉 ax'+(b—k)x+c=09] 판\n별식을 /)=(6ㅡㅅ)`-ㅡ40<라할 때.\n© 7) >0일 때, 서로 다른 두 점에서 만난다.\n@ /?=0일 때, 한 점에서 만난다. ( 접한다.)\n@ /)<0일 때, 만나지 않는다.",
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-nov-010",
-    "sourceLabel": "고1 전국연합 11월 010번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 10번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 10,
     "chapterName": "순열과 조합",
     "problemNumber": 10,
@@ -5549,11 +5929,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-nov-011",
-    "sourceLabel": "고1 전국연합 11월 011번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 11번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 11,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 11,
@@ -5583,11 +5965,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-nov-012",
-    "sourceLabel": "고1 전국연합 11월 012번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 12번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 12,
     "chapterName": "방정식과 부등식",
     "problemNumber": 12,
@@ -5611,11 +5995,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-nov-013",
-    "sourceLabel": "고1 전국연합 11월 013번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 13번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 13,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 13,
@@ -5645,11 +6031,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-nov-014",
-    "sourceLabel": "고1 전국연합 11월 014번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 14번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 14,
     "chapterName": "방정식과 부등식",
     "problemNumber": 14,
@@ -5673,11 +6061,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-nov-015",
-    "sourceLabel": "고1 전국연합 11월 015번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 15번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 15,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 15,
@@ -5707,11 +6097,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-nov-016",
-    "sourceLabel": "고1 전국연합 11월 016번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 16번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 16,
     "chapterName": "순열과 조합",
     "problemNumber": 16,
@@ -5741,11 +6133,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-nov-017",
-    "sourceLabel": "고1 전국연합 11월 017번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 17번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 17,
     "chapterName": "방정식과 부등식",
     "problemNumber": 17,
@@ -5775,11 +6169,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-nov-018",
-    "sourceLabel": "고1 전국연합 11월 018번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 18번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 18,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 18,
@@ -5809,11 +6205,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-nov-019",
-    "sourceLabel": "고1 전국연합 11월 019번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 19번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 19,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 19,
@@ -5843,11 +6241,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-nov-020",
-    "sourceLabel": "고1 전국연합 11월 020번 [201411*27번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 20번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 20,
     "chapterName": "방정식과 부등식",
     "problemNumber": 20,
@@ -5871,11 +6271,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-nov-021",
-    "sourceLabel": "고1 전국연합 11월 021번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 21번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 21,
     "chapterName": "방정식과 부등식",
     "problemNumber": 21,
@@ -5899,11 +6301,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-022",
-    "sourceLabel": "고1 전국연합 11월 022번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 22번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 22,
     "chapterName": "방정식과 부등식",
     "problemNumber": 22,
@@ -5927,11 +6331,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-023",
-    "sourceLabel": "고1 전국연합 11월 023번 [201511 * 1884]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 23번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 23,
     "chapterName": "도형의 방정식",
     "problemNumber": 23,
@@ -5955,11 +6361,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-024",
-    "sourceLabel": "고1 전국연합 11월 024번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 24번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 24,
     "chapterName": "도형의 방정식",
     "problemNumber": 24,
@@ -5983,11 +6391,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-025",
-    "sourceLabel": "고1 전국연합 11월 025번 [201511*23번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [함수와 그래프 25번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 25,
     "chapterName": "함수와 그래프",
     "problemNumber": 25,
@@ -6011,11 +6421,13 @@
     "amcCategory": "functions",
     "amcExam": "AMC 10·12",
     "amcTopic": "Functions & Transformations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-026",
-    "sourceLabel": "고1 전국연합 11월 026번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 26번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 26,
     "chapterName": "도형의 방정식",
     "problemNumber": 26,
@@ -6039,11 +6451,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-027",
-    "sourceLabel": "고1 전국연합 11월 027번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 27번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 27,
     "chapterName": "도형의 방정식",
     "problemNumber": 27,
@@ -6067,11 +6481,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-028",
-    "sourceLabel": "고1 전국연합 11월 028번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 28번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 28,
     "chapterName": "도형의 방정식",
     "problemNumber": 28,
@@ -6095,11 +6511,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-029",
-    "sourceLabel": "고1 전국연합 11월 029번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 29번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 29,
     "chapterName": "도형의 방정식",
     "problemNumber": 29,
@@ -6123,11 +6541,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-030",
-    "sourceLabel": "고1 전국연합 11월 030번 [201511*09번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 30번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 30,
     "chapterName": "도형의 방정식",
     "problemNumber": 30,
@@ -6151,11 +6571,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-031",
-    "sourceLabel": "고1 전국연합 11월 031번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 31번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 31,
     "chapterName": "도형의 방정식",
     "problemNumber": 31,
@@ -6179,11 +6601,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-032",
-    "sourceLabel": "고1 전국연합 11월 032번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 32번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 32,
     "chapterName": "도형의 방정식",
     "problemNumber": 32,
@@ -6207,11 +6631,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-033",
-    "sourceLabel": "고1 전국연합 11월 033번 [201411 *21번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 33번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 33,
     "chapterName": "집합과 명제",
     "problemNumber": 33,
@@ -6235,11 +6661,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-034",
-    "sourceLabel": "고1 전국연합 11월 034번 [201511+30번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 34번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 34,
     "chapterName": "집합과 명제",
     "problemNumber": 34,
@@ -6263,11 +6691,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-035",
-    "sourceLabel": "고1 전국연합 11월 035번 [201411*12번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 35번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 35,
     "chapterName": "집합과 명제",
     "problemNumber": 35,
@@ -6291,11 +6721,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-036",
-    "sourceLabel": "고1 전국연합 11월 036번 [201511*11번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 36번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 36,
     "chapterName": "집합과 명제",
     "problemNumber": 36,
@@ -6319,11 +6751,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-037",
-    "sourceLabel": "고1 전국연합 11월 037번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 37번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 37,
     "chapterName": "집합과 명제",
     "problemNumber": 37,
@@ -6347,11 +6781,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-038",
-    "sourceLabel": "고1 전국연합 11월 038번 [201411*15번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 38번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 38,
     "chapterName": "집합과 명제",
     "problemNumber": 38,
@@ -6375,11 +6811,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-039",
-    "sourceLabel": "고1 전국연합 11월 039번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 39번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 39,
     "chapterName": "집합과 명제",
     "problemNumber": 39,
@@ -6403,11 +6841,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-040",
-    "sourceLabel": "고1 전국연합 11월 040번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 40번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 40,
     "chapterName": "집합과 명제",
     "problemNumber": 40,
@@ -6431,11 +6871,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-041",
-    "sourceLabel": "고1 전국연합 11월 041번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 41번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 41,
     "chapterName": "집합과 명제",
     "problemNumber": 41,
@@ -6459,11 +6901,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-042",
-    "sourceLabel": "고1 전국연합 11월 042번 [201511*14번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 42번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 42,
     "chapterName": "집합과 명제",
     "problemNumber": 42,
@@ -6487,11 +6931,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-043",
-    "sourceLabel": "고1 전국연합 11월 043번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 43번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 43,
     "chapterName": "집합과 명제",
     "problemNumber": 43,
@@ -6515,11 +6961,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-044",
-    "sourceLabel": "고1 전국연합 11월 044번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 44번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 44,
     "chapterName": "집합과 명제",
     "problemNumber": 44,
@@ -6543,11 +6991,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-045",
-    "sourceLabel": "고1 전국연합 11월 045번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 45번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 45,
     "chapterName": "도형의 방정식",
     "problemNumber": 45,
@@ -6571,11 +7021,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-046",
-    "sourceLabel": "고1 전국연합 11월 046번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 46번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 46,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 46,
@@ -6599,11 +7051,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-047",
-    "sourceLabel": "고1 전국연합 11월 047번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [함수와 그래프 47번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 47,
     "chapterName": "함수와 그래프",
     "problemNumber": 47,
@@ -6627,11 +7081,13 @@
     "amcCategory": "functions",
     "amcExam": "AMC 10·12",
     "amcTopic": "Functions & Transformations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-048",
-    "sourceLabel": "고1 전국연합 11월 048번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 48번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 48,
     "chapterName": "집합과 명제",
     "problemNumber": 48,
@@ -6655,11 +7111,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-049",
-    "sourceLabel": "고1 전국연합 11월 049번 [201411 + 098]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [함수와 그래프 49번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 49,
     "chapterName": "함수와 그래프",
     "problemNumber": 49,
@@ -6683,11 +7141,13 @@
     "amcCategory": "functions",
     "amcExam": "AMC 10·12",
     "amcTopic": "Functions & Transformations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-050",
-    "sourceLabel": "고1 전국연합 11월 050번 [201471 + 16번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [함수와 그래프 50번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 50,
     "chapterName": "함수와 그래프",
     "problemNumber": 50,
@@ -6711,11 +7171,13 @@
     "amcCategory": "functions",
     "amcExam": "AMC 10·12",
     "amcTopic": "Functions & Transformations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-051",
-    "sourceLabel": "고1 전국연합 11월 051번 [201511*04번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [함수와 그래프 51번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 51,
     "chapterName": "함수와 그래프",
     "problemNumber": 51,
@@ -6739,11 +7201,13 @@
     "amcCategory": "functions",
     "amcExam": "AMC 10·12",
     "amcTopic": "Functions & Transformations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-052",
-    "sourceLabel": "고1 전국연합 11월 052번 [201811 + 1644]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 52번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 52,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 52,
@@ -6767,11 +7231,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-053",
-    "sourceLabel": "고1 전국연합 11월 053번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [함수와 그래프 53번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 53,
     "chapterName": "함수와 그래프",
     "problemNumber": 53,
@@ -6795,11 +7261,13 @@
     "amcCategory": "functions",
     "amcExam": "AMC 10·12",
     "amcTopic": "Functions & Transformations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-054",
-    "sourceLabel": "고1 전국연합 11월 054번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 54번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 54,
     "chapterName": "집합과 명제",
     "problemNumber": 54,
@@ -6823,11 +7291,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-055",
-    "sourceLabel": "고1 전국연합 11월 055번 [201511 + 06번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 55번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 55,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 55,
@@ -6851,11 +7321,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-056",
-    "sourceLabel": "고1 전국연합 11월 056번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 56번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 56,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 56,
@@ -6879,11 +7351,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-057",
-    "sourceLabel": "고1 전국연합 11월 057번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 57번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 57,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 57,
@@ -6907,11 +7381,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-058",
-    "sourceLabel": "고1 전국연합 11월 058번 [201511 * 2544]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 58번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 58,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 58,
@@ -6935,11 +7411,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-059",
-    "sourceLabel": "고1 전국연합 11월 059번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 59번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 59,
     "chapterName": "집합과 명제",
     "problemNumber": 59,
@@ -6963,11 +7441,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-nov-060",
-    "sourceLabel": "고1 전국연합 11월 060번 [201511*19번]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 60번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 60,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 60,
@@ -6987,15 +7467,17 @@
     "choices": [],
     "answer": "3",
     "correctAnswer": 3,
-    "explanation": "060                                BEE EO\n통큰해설\n리(6+1)(&+2)=30나니01000) 0000 련\n그                       4                    7\n(i)n=19\n(A) =1x 2x 3=6\n—1x2x3x4_\n(9a) =\n이므로 Go] 성립한다.\n(i) 4=7/일 때 이 성립한다고 가정하면\n3 e(R+1) (k+2) = m1) (+2) (m+3)\nA                        4\n\n6\n\n© 양변에 Cm+1) (m+2)(m+3) & 더하면\n\nBeet (e+2)\n\n— ne Line 2 ae +(Gnt1)(m+2)(m+3))\n\n= m(m+1)(m+2)(m+3)+4(m+t1)(m+2)(m+3)\n4\n\n2 (m+1)(m+2) x(mt3)(mt4)\n\nBo Nsawawae_eee\n\nup\n\n라서 n=m+1Y 때에도 이 성립한다.\n(i), (iol 의하여 모든 자연수 nol] 대하여 이 성립한다.\n이 h=f(m)=(m+1)(m+2)(m+3),\n대=800)=(07+3)(00+ 4)\n기 f(2)+g(3)=3 x 4x 5+6X7=60+42= 102\n\n001 @       002 ©       003 @       004 @\n\n005 3       006 ©       007 40      008 10\n009 @     010 ®     011 2     012 @\n013 2      014 2      015 6:      016 16\n0177      018 &      019@      020 @\n021 @      022 @      023 ©      024 @\n025 @       026 @       027 46       028 @\n029 00       030 @       0317        032 56\n033 @       034 ©       035 17       036 @\n037 @       038 ©       039 ©       040 @\n041 15      042 @       043 @      044 ©\n045 @       046 @       047 26       048 ©\n049 64       050 @       0512       052 @\n053 60      054 11       055 380      0565\n\n057 24       058 85       059 2       060 2\n061 75      062 ©      063 ©      064 16\n065 ©       066 127      067 ©      068 ©\n069 @       0702       0710       072@\n\n073 ©       074 @       075 ©       076 @\n077 @       078 2       079 0       080 0\n\n081 ©      082 @      083 7       084 @\n085 @       086 435      087 @       088 8\n089 @       090 90       091 24       092 442\n093 @       094 @       095 118      096 @\n097 @       098 46       099 @        100 @\n101 ©     102 @     103 36     104 16\n105 @     106 ©     107 ©     108 @\n109 @    110 12    111@    1129\n1130    1142    115 107\nGD case 연산\n\n() 동류항 : 다황식에서 같은 문자에 대하여 차수가 같은 항\n\n(2) 다황식의 덧셈 : 동류항끼리 모아서 정리한다.\n\n'31다항식의 ad : 빼는 식의 각 항의 부호를 바꾸어 더한다.\n\n(4) 다황식의 곱셈 : 지수법칙과 분배법칙. 곱셈 공식을 이용하여 식을\n전개한 후 동류항끼리 모아서 정리한다.\n\n(51 곱셈 공식\n© (a+b)'=a\"+2ab+8\", (a—b)\n@ (a+b)(a—b) =a'—8°\n\n@ (ax+b)(cx+d)=acz'+(ad+be)z+bd\n\n© (at+b+c)\"=a'+6'+c'+ 2ab+2be+2ca\n\n© (a+b)'=a+3ab+ 3ab+b\n(a—b)'=a'—3a'b+3ab*—b*\n\nD (a+b)(a'—ab+8')=a° +8\n(a—b)(a'+ab+8)=a'—b*\n\n®(atb+c)(a'+b'+c—ab—be-ca)=a°+b'+0'—3abe\n\n@ (a +ab+8')(a'—ab +b) =a' + ab +H\n\n고2 ",
+    "explanation": "060                                BEE EO\n통큰해설\n리(6+1)(&+2)=30나니01000) 0000 련\n그                       4                    7\n(i)n=19\n(A) =1x 2x 3=6\n—1x2x3x4_\n(9a) =\n이므로 Go] 성립한다.\n(i) 4=7/일 때 이 성립한다고 가정하면\n3 e(R+1) (k+2) = m1) (+2) (m+3)\nA                        4\n\n6\n\n© 양변에 Cm+1) (m+2)(m+3) & 더하면\n\nBeet (e+2)\n\n— ne Line 2 ae +(Gnt1)(m+2)(m+3))\n\n= m(m+1)(m+2)(m+3)+4(m+t1)(m+2)(m+3)\n4\n\n2 (m+1)(m+2) x(mt3)(mt4)\n\nBo Nsawawae_eee\n\nup\n\n라서 n=m+1Y 때에도 이 성립한다.\n(i), (iol 의하여 모든 자연수 nol] 대하여 이 성립한다.\n이 h=f(m)=(m+1)(m+2)(m+3),\n대=800)=(07+3)(00+ 4)\n기 f(2)+g(3)=3 x 4x 5+6X7=60+42= 102\n\n001 @       002 ©       003 @       004 @\n\n005 3       006 ©       007 40      008 10\n009 @     010 ®     011 2     012 @\n013 2      014 2      015 6:      016 16\n0177      018 &      019@      020 @\n021 @      022 @      023 ©      024 @\n025 @       026 @       027 46       028 @\n029 00       030 @       0317        032 56\n033 @       034 ©       035 17       036 @\n037 @       038 ©       039 ©       040 @\n041 15      042 @       043 @      044 ©\n045 @       046 @       047 26       048 ©\n049 64       050 @       0512       052 @\n053 60      054 11       055 380      0565\n\n057 24       058 85       059 2       060 2\n061 75      062 ©      063 ©      064 16\n065 ©       066 127      067 ©      068 ©\n069 @       0702       0710       072@\n\n073 ©       074 @       075 ©       076 @\n077 @       078 2       079 0       080 0\n\n081 ©      082 @      083 7       084 @\n085 @       086 435      087 @       088 8\n089 @       090 90       091 24       092 442\n093 @       094 @       095 118      096 @\n097 @       098 46       099 @        100 @\n101 ©     102 @     103 36     104 16\n105 @     106 ©     107 ©     108 @\n109 @    110 12    111@    1129\n1130    1142    115 107\nGD case 연산\n\n() 동류항 : 다황식에서 같은 문자에 대하여 차수가 같은 항\n\n(2) 다황식의 덧셈 : 동류항끼리 모아서 정리한다.\n\n'31다항식의 ad : 빼는 식의 각 항의 부호를 바꾸어 더한다.\n\n(4) 다황식의 곱셈 : 지수법칙과 분배법칙. 곱셈 공식을 이용하여 식을\n전개한 후 동류항끼리 모아서 정리한다.\n\n(51 곱셈 공식\n© (a+b)'=a\"+2ab+8\", (a—b)\n@ (a+b)(a—b) =a'—8°\n\n@ (ax+b)(cx+d)=acz'+(ad+be)z+bd\n\n© (at+b+c)\"=a'+6'+c'+ 2ab+2be+2ca\n\n© (a+b)'=a+3ab+ 3ab+b\n(a—b)'=a'—3a'b+3ab*—b*\n\nD (a+b)(a'—ab+8')=a° +8\n(a—b)(a'+ab+8)=a'—b*\n\n®(atb+c)(a'+b'+c—ab—be-ca)=a°+b'+0'—3abe\n\n@ (a +ab+8')(a'—ab +b) =a' + ab +H\n\n고2",
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-001",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 001번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 01번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 1,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 1,
@@ -7025,11 +7507,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-march_g2-002",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 002번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 02번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 2,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 2,
@@ -7059,11 +7543,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-march_g2-003",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 003번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 03번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 3,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 3,
@@ -7093,11 +7579,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-march_g2-004",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 004번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 04번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 4,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 4,
@@ -7121,11 +7609,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-march_g2-005",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 005번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 05번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 5,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 5,
@@ -7155,11 +7645,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-march_g2-006",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 006번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 06번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 6,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 6,
@@ -7179,15 +7671,17 @@
     "choices": [],
     "answer": "66",
     "correctAnswer": 66,
-    "explanation": "006                                wan ws\n\n통큰해설\n\n고+0=(2+3)(7\"+62+9)에서\n\n고+0=20+(6+3)고+(9+ㅜ36)2+27\n위의 등식이 에 대한 항등식이므로\n6+3=0, 9+36=0, 27=a\n\n이 0=87,     3\n\n이 a+b=27+(—3)=24\n\n다른풀이\n\n주어진 등식이 rol] 대한 항등식이므로\n양번에 7=-ㅡ3을 대입하면\n-27+0=0 ~ a=27\n\n즉, 2+27=(2+3)(2°+b2+9)\n양변에 c=1S 대입하면\n14+27=4(1+6+9)\n\n4b=—12         -3\n\n이 a@+b=27+(—3)=24\n\n[203 나머지정리\n\n(1) 다항식 /(ㅜ)를 일차식 <ㅡ<로 나누었을 때의 나머지를 Ret 하면\nR=fla)\n(2) 다항식 /(ㅜ!를 일차식 ar + 로 나누었을 때의 나머지를 Ret 하면\nyal\nR17)\n(3) 인수정리\n0: 다항식 /(ㅜ:)가 일차식 7ㅡ<로 나누어떨어지면 /(2)=0이다.\n@ fla) =001% 다항식 /(ㅜ)가 일차식 -<ㅇ로 나누어떨어진다.\n\n\n",
+    "explanation": "006                                wan ws\n\n통큰해설\n\n고+0=(2+3)(7\"+62+9)에서\n\n고+0=20+(6+3)고+(9+ㅜ36)2+27\n위의 등식이 에 대한 항등식이므로\n6+3=0, 9+36=0, 27=a\n\n이 0=87,     3\n\n이 a+b=27+(—3)=24\n\n다른풀이\n\n주어진 등식이 rol] 대한 항등식이므로\n양번에 7=-ㅡ3을 대입하면\n-27+0=0 ~ a=27\n\n즉, 2+27=(2+3)(2°+b2+9)\n양변에 c=1S 대입하면\n14+27=4(1+6+9)\n\n4b=—12         -3\n\n이 a@+b=27+(—3)=24\n\n[203 나머지정리\n\n(1) 다항식 /(ㅜ)를 일차식 <ㅡ<로 나누었을 때의 나머지를 Ret 하면\nR=fla)\n(2) 다항식 /(ㅜ!를 일차식 ar + 로 나누었을 때의 나머지를 Ret 하면\nyal\nR17)\n(3) 인수정리\n0: 다항식 /(ㅜ:)가 일차식 7ㅡ<로 나누어떨어지면 /(2)=0이다.\n@ fla) =001% 다항식 /(ㅜ)가 일차식 -<ㅇ로 나누어떨어진다.",
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-march_g2-007",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 007번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 07번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 7,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 7,
@@ -7211,11 +7705,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-march_g2-008",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 008번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 08번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 8,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 8,
@@ -7239,11 +7735,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-march_g2-009",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 009번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 09번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 9,
     "chapterName": "방정식과 부등식",
     "problemNumber": 9,
@@ -7273,11 +7771,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-march_g2-010",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 010번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 10번] ; 정답률 85.0% (오답률 15.0%)",
     "chapter": 10,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 10,
@@ -7307,11 +7807,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 85.0,
+    "errorRate": 15.0
   },
   {
     "id": "mock-g1-march_g2-011",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 011번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 11번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 11,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 11,
@@ -7337,15 +7839,17 @@
     ],
     "answer": "2",
     "correctAnswer": 2,
-    "explanation": "011                         BEB EI 2\n\n통큰해설\n\nabt 2ab+a'+2at+bt1=a'b+2abt+b+a+2at1\n=(a'+2a+1)bt+a'+2a+1\n=(a+1)b+(at1)°\n\nat+1)(b+1)\n\n위의 식의 값이 245, 4 7\"×5이므로\n\n(at+1)(b+1)=7x5,\n\na, be 모두 자연수이므로\n\n고2 \n\n\n",
+    "explanation": "011                         BEB EI 2\n\n통큰해설\n\nabt 2ab+a'+2at+bt1=a'b+2abt+b+a+2at1\n=(a'+2a+1)bt+a'+2a+1\n=(a+1)b+(at1)°\n\nat+1)(b+1)\n\n위의 식의 값이 245, 4 7\"×5이므로\n\n(at+1)(b+1)=7x5,\n\na, be 모두 자연수이므로\n\n고2",
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-march_g2-012",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 012번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 12번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 12,
     "chapterName": "복소수와 이차방정식",
     "problemNumber": 12,
@@ -7375,11 +7879,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Complex Numbers",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-march_g2-013",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 013번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 13번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 13,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 13,
@@ -7409,11 +7915,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-march_g2-014",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 014번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 14번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 14,
     "chapterName": "방정식과 부등식",
     "problemNumber": 14,
@@ -7437,11 +7945,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-march_g2-015",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 015번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 15번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 15,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 15,
@@ -7471,11 +7981,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-march_g2-016",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 016번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 16번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 16,
     "chapterName": "순열과 조합",
     "problemNumber": 16,
@@ -7499,11 +8011,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-march_g2-017",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 017번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 17번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 17,
     "chapterName": "방정식과 부등식",
     "problemNumber": 17,
@@ -7527,11 +8041,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-march_g2-018",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 018번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 18번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 18,
     "chapterName": "방정식과 부등식",
     "problemNumber": 18,
@@ -7557,15 +8073,17 @@
     ],
     "answer": "2",
     "correctAnswer": 2,
-    "explanation": "018                                                          Banas”\n\n통큰해설\n\n이차방정식 7\"+2ㅠㅜ+4=0에서 근과 계수의 관계에 의하여\na+f=—2, 00=4\n\n2+60'-208\n\n=(—2)'-2x4=—-4\n\nEr)\n\n\n",
+    "explanation": "018                                                          Banas”\n\n통큰해설\n\n이차방정식 7\"+2ㅠㅜ+4=0에서 근과 계수의 관계에 의하여\na+f=—2, 00=4\n\n2+60'-208\n\n=(—2)'-2x4=—-4\n\nEr)",
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-march_g2-019",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 019번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 19번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 19,
     "chapterName": "순열과 조합",
     "problemNumber": 19,
@@ -7595,11 +8113,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-march_g2-020",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 020번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 20번] ; 정답률 65.0% (오답률 35.0%)",
     "chapter": 20,
     "chapterName": "순열과 조합",
     "problemNumber": 20,
@@ -7629,11 +8149,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 65.0,
+    "errorRate": 35.0
   },
   {
     "id": "mock-g1-march_g2-021",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 021번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 21번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 21,
     "chapterName": "방정식과 부등식",
     "problemNumber": 21,
@@ -7663,11 +8185,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-022",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 022번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 22번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 22,
     "chapterName": "도형의 방정식",
     "problemNumber": 22,
@@ -7691,11 +8215,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-023",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 023번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 23번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 23,
     "chapterName": "도형의 방정식",
     "problemNumber": 23,
@@ -7719,11 +8245,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-024",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 024번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 24번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 24,
     "chapterName": "방정식과 부등식",
     "problemNumber": 24,
@@ -7747,11 +8275,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-025",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 025번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 25번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 25,
     "chapterName": "복소수와 이차방정식",
     "problemNumber": 25,
@@ -7775,11 +8305,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Complex Numbers",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-026",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 026번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 26번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 26,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 26,
@@ -7803,11 +8335,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-027",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 027번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 27번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 27,
     "chapterName": "순열과 조합",
     "problemNumber": 27,
@@ -7831,11 +8365,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-028",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 028번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 28번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 28,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 28,
@@ -7859,11 +8395,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-029",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 029번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 29번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 29,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 29,
@@ -7887,11 +8425,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-030",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 030번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 30번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 30,
     "chapterName": "도형의 방정식",
     "problemNumber": 30,
@@ -7915,11 +8455,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-031",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 031번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 31번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 31,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 31,
@@ -7943,11 +8485,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-032",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 032번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 32번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 32,
     "chapterName": "방정식과 부등식",
     "problemNumber": 32,
@@ -7971,11 +8515,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-033",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 033번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 33번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 33,
     "chapterName": "도형의 방정식",
     "problemNumber": 33,
@@ -7999,11 +8545,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-034",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 034번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 34번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 34,
     "chapterName": "도형의 방정식",
     "problemNumber": 34,
@@ -8027,11 +8575,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-035",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 035번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 35번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 35,
     "chapterName": "도형의 방정식",
     "problemNumber": 35,
@@ -8055,11 +8605,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-036",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 036번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 36번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 36,
     "chapterName": "도형의 방정식",
     "problemNumber": 36,
@@ -8083,11 +8635,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-037",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 037번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 37번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 37,
     "chapterName": "순열과 조합",
     "problemNumber": 37,
@@ -8111,11 +8665,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-038",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 038번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 38번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 38,
     "chapterName": "도형의 방정식",
     "problemNumber": 38,
@@ -8139,11 +8695,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-039",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 039번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 39번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 39,
     "chapterName": "도형의 방정식",
     "problemNumber": 39,
@@ -8167,11 +8725,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-040",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 040번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 40번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 40,
     "chapterName": "도형의 방정식",
     "problemNumber": 40,
@@ -8191,15 +8751,17 @@
     "choices": [],
     "answer": "2",
     "correctAnswer": 2,
-    "explanation": "040                                                          BEE 724\" ED\n통큰해설\n\n두 점 &(0, 2), P(4, 4)를 지나는 직선 APS] 기울기는\n4-2_1\n\n4-0 2\n두 8 Bin, 2), P(4, 4)를 지나는 직선 BPS] 기울기는\n4-2_ 2\n\n4m\n두 직\n\n=n 4-2\n\n직선 AP, BP7} 서로 수직이므로\n1\n2\n=n\n\n두\n공×\n4\n이 0=5\n\n4, B(5, 2)\n\n삼각형 400의 무게중심의 좌표는\n\n(O84 22 즉(38 4)\n\n\n\n",
+    "explanation": "040                                                          BEE 724\" ED\n통큰해설\n\n두 점 &(0, 2), P(4, 4)를 지나는 직선 APS] 기울기는\n4-2_1\n\n4-0 2\n두 8 Bin, 2), P(4, 4)를 지나는 직선 BPS] 기울기는\n4-2_ 2\n\n4m\n두 직\n\n=n 4-2\n\n직선 AP, BP7} 서로 수직이므로\n1\n2\n=n\n\n두\n공×\n4\n이 0=5\n\n4, B(5, 2)\n\n삼각형 400의 무게중심의 좌표는\n\n(O84 22 즉(38 4)",
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-041",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 041번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 41번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 41,
     "chapterName": "도형의 방정식",
     "problemNumber": 41,
@@ -8223,11 +8785,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-042",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 042번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 42번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 42,
     "chapterName": "집합과 명제",
     "problemNumber": 42,
@@ -8251,11 +8815,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-043",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 043번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 43번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 43,
     "chapterName": "도형의 방정식",
     "problemNumber": 43,
@@ -8279,11 +8845,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-044",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 044번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 44번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 44,
     "chapterName": "순열과 조합",
     "problemNumber": 44,
@@ -8307,11 +8875,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-045",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 045번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 45번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 45,
     "chapterName": "도형의 방정식",
     "problemNumber": 45,
@@ -8331,15 +8901,17 @@
     "choices": [],
     "answer": "2",
     "correctAnswer": 2,
-    "explanation": "045                                    BER 49% BO\n통큰해설\n\n점 P| 좌표를 (a, 0) (a 상수)이라 하면 00 10이므로 직\n각삼각형 08#0에서 피타고라스 정리에 의하여\n\n70`=      009'=@-1\n\n한편, 7+^-87+60+21=0에서\n\n(x—4)'+(y+3)'=4\n\n즉, UC2 중심의 좌표는 (4, ㅡ3), 반지름의 길이는 2이다.\n원 (:,의 SAS 스라 하면 4 .Ｌ[이므로 직각삼각형 APRA\n서 피타고라스 정리에 의하여\n\neb         aR\n\na—4)'+(0+3)\"}—2\n\n=a’—8at21\n\n70=1에서 PQ'=PR 이므로\n@—1=a'—8a+21\n\n\n",
+    "explanation": "045                                    BER 49% BO\n통큰해설\n\n점 P| 좌표를 (a, 0) (a 상수)이라 하면 00 10이므로 직\n각삼각형 08#0에서 피타고라스 정리에 의하여\n\n70`=      009'=@-1\n\n한편, 7+^-87+60+21=0에서\n\n(x—4)'+(y+3)'=4\n\n즉, UC2 중심의 좌표는 (4, ㅡ3), 반지름의 길이는 2이다.\n원 (:,의 SAS 스라 하면 4 .Ｌ[이므로 직각삼각형 APRA\n서 피타고라스 정리에 의하여\n\neb         aR\n\na—4)'+(0+3)\"}—2\n\n=a’—8at21\n\n70=1에서 PQ'=PR 이므로\n@—1=a'—8a+21",
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-046",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 046번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 46번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 46,
     "chapterName": "도형의 방정식",
     "problemNumber": 46,
@@ -8363,11 +8935,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-047",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 047번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 47번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 47,
     "chapterName": "도형의 방정식",
     "problemNumber": 47,
@@ -8391,11 +8965,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-048",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 048번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 48번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 48,
     "chapterName": "도형의 방정식",
     "problemNumber": 48,
@@ -8419,11 +8995,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-049",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 049번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 49번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 49,
     "chapterName": "도형의 방정식",
     "problemNumber": 49,
@@ -8447,11 +9025,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-050",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 050번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 50번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 50,
     "chapterName": "도형의 방정식",
     "problemNumber": 50,
@@ -8475,11 +9055,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-051",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 051번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 51번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 51,
     "chapterName": "집합과 명제",
     "problemNumber": 51,
@@ -8503,11 +9085,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-052",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 052번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 52번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 52,
     "chapterName": "집합과 명제",
     "problemNumber": 52,
@@ -8531,11 +9115,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-053",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 053번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 53번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 53,
     "chapterName": "집합과 명제",
     "problemNumber": 53,
@@ -8559,11 +9145,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-054",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 054번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 54번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 54,
     "chapterName": "집합과 명제",
     "problemNumber": 54,
@@ -8587,11 +9175,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-055",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 055번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 55번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 55,
     "chapterName": "집합과 명제",
     "problemNumber": 55,
@@ -8615,11 +9205,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-056",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 056번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 56번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 56,
     "chapterName": "집합과 명제",
     "problemNumber": 56,
@@ -8643,11 +9235,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-057",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 057번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 57번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 57,
     "chapterName": "집합과 명제",
     "problemNumber": 57,
@@ -8671,11 +9265,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-058",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 058번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 58번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 58,
     "chapterName": "집합과 명제",
     "problemNumber": 58,
@@ -8699,11 +9295,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-059",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 059번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 59번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 59,
     "chapterName": "순열과 조합",
     "problemNumber": 59,
@@ -8727,11 +9325,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-060",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 060번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 60번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 60,
     "chapterName": "집합과 명제",
     "problemNumber": 60,
@@ -8755,11 +9355,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-061",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 061번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 61번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 61,
     "chapterName": "집합과 명제",
     "problemNumber": 61,
@@ -8783,11 +9385,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-062",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 062번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 62번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 62,
     "chapterName": "집합과 명제",
     "problemNumber": 62,
@@ -8811,11 +9415,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-063",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 063번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 63번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 63,
     "chapterName": "집합과 명제",
     "problemNumber": 63,
@@ -8839,11 +9445,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-064",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 064번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 64번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 64,
     "chapterName": "집합과 명제",
     "problemNumber": 64,
@@ -8867,11 +9475,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-065",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 065번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 65번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 65,
     "chapterName": "집합과 명제",
     "problemNumber": 65,
@@ -8891,15 +9501,17 @@
     "choices": [],
     "answer": "3",
     "correctAnswer": 3,
-    "explanation": "065                      88074 aS\n\n통큰해설\n\n세 AR U=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 4= (1. 2, 3, 6},\n\nB=(2, 3, 5, 7]에 대하여\n\n1, ANB=(2, 3})°122 5ZAN B (4)\n\nu, B—A=(5, 7]이므로 2(2-4)=2 (3)\n\n=, AUB=(I, 2, 3, 5, 6, 기\n전체집합 US| 부분집합 중 집합 AUB 서로소인 집합의\n개수는 집합 (AU 2 )*의 부분집합의 개수와 같고,\n(AUB)°={4, 8, 9, 10}\n이므로 구하는 집합의 개수는 2'=16이다. (2)\n\n따라서 옮은 것은 ㄱ, ㄴ, ㄷ이다.\n\n\n\n",
+    "explanation": "065                      88074 aS\n\n통큰해설\n\n세 AR U=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 4= (1. 2, 3, 6},\n\nB=(2, 3, 5, 7]에 대하여\n\n1, ANB=(2, 3})°122 5ZAN B (4)\n\nu, B—A=(5, 7]이므로 2(2-4)=2 (3)\n\n=, AUB=(I, 2, 3, 5, 6, 기\n전체집합 US| 부분집합 중 집합 AUB 서로소인 집합의\n개수는 집합 (AU 2 )*의 부분집합의 개수와 같고,\n(AUB)°={4, 8, 9, 10}\n이므로 구하는 집합의 개수는 2'=16이다. (2)\n\n따라서 옮은 것은 ㄱ, ㄴ, ㄷ이다.",
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-066",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 066번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 66번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 66,
     "chapterName": "집합과 명제",
     "problemNumber": 66,
@@ -8923,11 +9535,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-067",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 067번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 67번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 67,
     "chapterName": "집합과 명제",
     "problemNumber": 67,
@@ -8951,11 +9565,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-068",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 068번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 68번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 68,
     "chapterName": "집합과 명제",
     "problemNumber": 68,
@@ -8979,11 +9595,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-069",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 069번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 69번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 69,
     "chapterName": "집합과 명제",
     "problemNumber": 69,
@@ -9003,15 +9621,17 @@
     "choices": [],
     "answer": "2",
     "correctAnswer": 2,
-    "explanation": "069                                0000\n\n통큰해설\n\n22+4>0에서 > -2\n두 조건 p, /의 진리집합을 각각 P, Qe 하면\nP=(x\\2>—2}, Q=(x|x2a}\n이때, /가 /이기 위한 충분조건\n\nE ep 00000\"\n\n067                             80006 66      이 되려면 ”ㄷ이어야 하므로\n동큰해설                                           오른쪽 그림과 같이\n\n고-22-3으0에서                                        as-2\n\n(2-3)(2t+1)S0 +. -1S2<3                       따라서 실수 a9] 최댓값은 ㅡ이다.\n\n고2 \n\n\n",
+    "explanation": "069                                0000\n\n통큰해설\n\n22+4>0에서 > -2\n두 조건 p, /의 진리집합을 각각 P, Qe 하면\nP=(x\\2>—2}, Q=(x|x2a}\n이때, /가 /이기 위한 충분조건\n\nE ep 00000\"\n\n067                             80006 66      이 되려면 ”ㄷ이어야 하므로\n동큰해설                                           오른쪽 그림과 같이\n\n고-22-3으0에서                                        as-2\n\n(2-3)(2t+1)S0 +. -1S2<3                       따라서 실수 a9] 최댓값은 ㅡ이다.\n\n고2",
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-070",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 070번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 70번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 70,
     "chapterName": "집합과 명제",
     "problemNumber": 70,
@@ -9035,11 +9655,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-071",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 071번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 71번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 71,
     "chapterName": "집합과 명제",
     "problemNumber": 71,
@@ -9063,11 +9685,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-072",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 072번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 72번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 72,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 72,
@@ -9091,11 +9715,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-073",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 073번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 73번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 73,
     "chapterName": "집합과 명제",
     "problemNumber": 73,
@@ -9119,11 +9745,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-074",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 074번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [함수와 그래프 74번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 74,
     "chapterName": "함수와 그래프",
     "problemNumber": 74,
@@ -9147,11 +9775,13 @@
     "amcCategory": "functions",
     "amcExam": "AMC 10·12",
     "amcTopic": "Functions & Transformations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-075",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 075번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 75번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 75,
     "chapterName": "집합과 명제",
     "problemNumber": 75,
@@ -9175,11 +9805,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-076",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 076번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 76번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 76,
     "chapterName": "집합과 명제",
     "problemNumber": 76,
@@ -9203,11 +9835,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-077",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 077번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [함수와 그래프 77번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 77,
     "chapterName": "함수와 그래프",
     "problemNumber": 77,
@@ -9231,11 +9865,13 @@
     "amcCategory": "functions",
     "amcExam": "AMC 10·12",
     "amcTopic": "Functions & Transformations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-078",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 078번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [함수와 그래프 78번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 78,
     "chapterName": "함수와 그래프",
     "problemNumber": 78,
@@ -9259,11 +9895,13 @@
     "amcCategory": "functions",
     "amcExam": "AMC 10·12",
     "amcTopic": "Functions & Transformations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-079",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 079번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 79번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 79,
     "chapterName": "도형의 방정식",
     "problemNumber": 79,
@@ -9287,11 +9925,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-080",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 080번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [함수와 그래프 80번] ; 정답률 75.0% (오답률 25.0%)",
     "chapter": 80,
     "chapterName": "함수와 그래프",
     "problemNumber": 80,
@@ -9315,11 +9955,13 @@
     "amcCategory": "functions",
     "amcExam": "AMC 10·12",
     "amcTopic": "Functions & Transformations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 75.0,
+    "errorRate": 25.0
   },
   {
     "id": "mock-g1-march_g2-081",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 081번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 81번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 81,
     "chapterName": "집합과 명제",
     "problemNumber": 81,
@@ -9343,11 +9985,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-082",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 082번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [함수와 그래프 82번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 82,
     "chapterName": "함수와 그래프",
     "problemNumber": 82,
@@ -9371,11 +10015,13 @@
     "amcCategory": "functions",
     "amcExam": "AMC 10·12",
     "amcTopic": "Functions & Transformations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-083",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 083번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 83번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 83,
     "chapterName": "집합과 명제",
     "problemNumber": 83,
@@ -9399,11 +10045,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-084",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 084번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [함수와 그래프 84번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 84,
     "chapterName": "함수와 그래프",
     "problemNumber": 84,
@@ -9427,11 +10075,13 @@
     "amcCategory": "functions",
     "amcExam": "AMC 10·12",
     "amcTopic": "Functions & Transformations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-085",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 085번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 85번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 85,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 85,
@@ -9455,11 +10105,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-086",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 086번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 86번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 86,
     "chapterName": "집합과 명제",
     "problemNumber": 86,
@@ -9483,11 +10135,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-087",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 087번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 87번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 87,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 87,
@@ -9507,15 +10161,17 @@
     "choices": [],
     "answer": "2",
     "correctAnswer": 2,
-    "explanation": "087                        BEEK EO\n통큰해설\n\n등차수열 (a,) ) 공차가 3이고, 0,=14이므로\n\ny= a,+6X3=14+18=32\n\n\n",
+    "explanation": "087                        BEEK EO\n통큰해설\n\n등차수열 (a,) ) 공차가 3이고, 0,=14이므로\n\ny= a,+6X3=14+18=32",
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-088",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 088번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 88번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 88,
     "chapterName": "집합과 명제",
     "problemNumber": 88,
@@ -9539,11 +10195,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-089",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 089번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 89번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 89,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 89,
@@ -9567,11 +10225,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-090",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 090번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 90번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 90,
     "chapterName": "방정식과 부등식",
     "problemNumber": 90,
@@ -9595,11 +10255,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10·12",
     "amcTopic": "Quadratics & Inequalities",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-091",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 091번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 91번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 91,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 91,
@@ -9623,11 +10285,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-092",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 092번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 92번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 92,
     "chapterName": "집합과 명제",
     "problemNumber": 92,
@@ -9651,11 +10315,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-093",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 093번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 93번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 93,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 93,
@@ -9679,11 +10345,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-094",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 094번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 94번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 94,
     "chapterName": "도형의 방정식",
     "problemNumber": 94,
@@ -9707,11 +10375,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-095",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 095번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 95번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 95,
     "chapterName": "순열과 조합",
     "problemNumber": 95,
@@ -9735,11 +10405,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-096",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 096번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 96번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 96,
     "chapterName": "순열과 조합",
     "problemNumber": 96,
@@ -9763,11 +10435,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-097",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 097번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [도형의 방정식 97번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 97,
     "chapterName": "도형의 방정식",
     "problemNumber": 97,
@@ -9791,11 +10465,13 @@
     "amcCategory": "geometry",
     "amcExam": "AMC 10",
     "amcTopic": "Analytic Geometry & Circles",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-098",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 098번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 98번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 98,
     "chapterName": "집합과 명제",
     "problemNumber": 98,
@@ -9819,11 +10495,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-099",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 099번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 99번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 99,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 99,
@@ -9847,11 +10525,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-100",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 100번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 100번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 100,
     "chapterName": "집합과 명제",
     "problemNumber": 100,
@@ -9875,11 +10555,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-101",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 101번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 101번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 101,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 101,
@@ -9903,11 +10585,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-102",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 102번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 102번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 102,
     "chapterName": "집합과 명제",
     "problemNumber": 102,
@@ -9931,11 +10615,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-103",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 103번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 103번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 103,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 103,
@@ -9959,11 +10645,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-104",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 104번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 104번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 104,
     "chapterName": "집합과 명제",
     "problemNumber": 104,
@@ -9987,11 +10675,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-105",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 105번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 105번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 105,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 105,
@@ -10015,11 +10705,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-106",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 106번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 106번] ; 정답률 90.0% (오답률 10.0%)",
     "chapter": 106,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 106,
@@ -10039,15 +10731,17 @@
     "choices": [],
     "answer": "3",
     "correctAnswer": 3,
-    "explanation": "106                              정답률 90% FO\n통큰해설\n\n2? x 16? =2*x (2!)F=2*x 2\n\n=2 a= 1\n\nBe 32ers | 115\n\n\n",
+    "explanation": "106                              정답률 90% FO\n통큰해설\n\n2? x 16? =2*x (2!)F=2*x 2\n\n=2 a= 1\n\nBe 32ers | 115",
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 90.0,
+    "errorRate": 10.0
   },
   {
     "id": "mock-g1-march_g2-107",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 107번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 107번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 107,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 107,
@@ -10071,11 +10765,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-108",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 108번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [함수와 그래프 108번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 108,
     "chapterName": "함수와 그래프",
     "problemNumber": 108,
@@ -10099,11 +10795,13 @@
     "amcCategory": "functions",
     "amcExam": "AMC 10·12",
     "amcTopic": "Functions & Transformations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-109",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 109번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 109번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 109,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 109,
@@ -10127,11 +10825,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-110",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 110번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [집합과 명제 110번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 110,
     "chapterName": "집합과 명제",
     "problemNumber": 110,
@@ -10155,11 +10855,13 @@
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Logic & Set Theory",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-111",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 111번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [순열과 조합 111번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 111,
     "chapterName": "순열과 조합",
     "problemNumber": 111,
@@ -10183,11 +10885,13 @@
     "amcCategory": "combinatorics-probability",
     "amcExam": "AMC 10·12",
     "amcTopic": "Counting & Permutations",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-112",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 112번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 112번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 112,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 112,
@@ -10211,11 +10915,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-113",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 113번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 113번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 113,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 113,
@@ -10235,15 +10941,17 @@
     "choices": [],
     "answer": "2",
     "correctAnswer": 2,
-    "explanation": "113\n\n통큰해설\n\n100개의 자료를 처리할 때의 시간복잡도 Tye\n그 =108 100=2\n\n기 T,=200\n\n1000개의 자료를 처리할 때의 시간복잡도 Tes\n\ntT,             =\nToco = leg 1000=3\n\nBEE 65% FO\n\n~ T,=3000\n\nT, _ 3000\n+, 42 — 3000 _\n“= 200 15\n\n\n",
+    "explanation": "113\n\n통큰해설\n\n100개의 자료를 처리할 때의 시간복잡도 Tye\n그 =108 100=2\n\n기 T,=200\n\n1000개의 자료를 처리할 때의 시간복잡도 Tes\n\ntT,             =\nToco = leg 1000=3\n\nBEE 65% FO\n\n~ T,=3000\n\nT, _ 3000\n+, 42 — 3000 _\n“= 200 15",
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-114",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 114번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 114번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 114,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 114,
@@ -10267,11 +10975,13 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-115",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 115번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 115번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 115,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 115,
@@ -10291,15 +11001,17 @@
     "choices": [],
     "answer": "107",
     "correctAnswer": 107,
-    "explanation": "115                                 aun Bim\n\n동큰해설\n잡음 전력이 0.4일 때 채널 용량을 C,, 잡음 전력이 ad 때 채널\nBSS Coz} 하면 수신 신호 Ako] 1.2이므로\n\nGC:  Bog. (14-4) =B log. 4=2B\nC:=B log, (144.2)\n\n이때, 0,=30:이므로\n\nBlog, (1+4:2)=3x2B\n\ntog: (1+4:2)=6\n\n따라서 p=105, 0=2이므로\npt+q=105+2=107\n\n22 3H 2910 | 117\n\n\n",
+    "explanation": "115                                 aun Bim\n\n동큰해설\n잡음 전력이 0.4일 때 채널 용량을 C,, 잡음 전력이 ad 때 채널\nBSS Coz} 하면 수신 신호 Ako] 1.2이므로\n\nGC:  Bog. (14-4) =B log. 4=2B\nC:=B log, (144.2)\n\n이때, 0,=30:이므로\n\nBlog, (1+4:2)=3x2B\n\ntog: (1+4:2)=6\n\n따라서 p=105, 0=2이므로\npt+q=105+2=107\n\n22 3H 2910 | 117",
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-116",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 116번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [방정식과 부등식 116번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 116,
     "chapterName": "복소수와 이차방정식",
     "problemNumber": 116,
@@ -10319,15 +11031,17 @@
     "choices": [],
     "answer": "1",
     "correctAnswer": 1,
-    "explanation": "\n\nBEB 82% FO\n\n동큰하설\nlogs 30+ logs 715 —logs 15=log; 30+logs ot low 35\n\n_     30 1\n=l08s Tx 5 18 5\n=log,5-'=-1\n\nBE 50% 9",
+    "explanation": "BEB 82% FO\n\n동큰하설\nlogs 30+ logs 715 —logs 15=log; 30+logs ot low 35\n\n_     30 1\n=l08s Tx 5 18 5\n=log,5-'=-1\n\nBE 50% 9",
     "amcCategory": "advanced",
     "amcExam": "AMC 10·12",
     "amcTopic": "Complex Numbers",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   },
   {
     "id": "mock-g1-march_g2-117",
-    "sourceLabel": "고2 전국연합 3월(고1 전범위) 117번 [전국연합]",
+    "sourceLabel": "수능·평가원 기출 우수문항 · [다항식의 연산 117번] ; 정답률 45.0% (오답률 55.0%)",
     "chapter": 117,
     "chapterName": "다항식의 연산과 인수분해",
     "problemNumber": 117,
@@ -10351,6 +11065,8 @@
     "amcCategory": "algebra",
     "amcExam": "AMC 10",
     "amcTopic": "Factoring & Polynomials",
-    "category": "csat"
+    "category": "csat",
+    "correctRate": 45.0,
+    "errorRate": 55.0
   }
 ]

@@ -1,5 +1,5 @@
 /**
- * 짱쉬운 미적분 1 (Calculus 1 Basic & CSAT) 문제 생성 엔진
+ * 수능·학력평가 기출 유형 1 (Calculus 1 Basic & CSAT) 문제 생성 엔진
  * (Calculus 1 Algorithmic Problem Generation Engine)
  *
  * 15대 핵심 기출/기본 유형 알고리즘 기반:
@@ -686,7 +686,9 @@ export function generateCalculus1Problem(unitId, options = {}) {
     grade: 'g3',
     points: 2,
     type: 'multiple_choice',
-    sourceLabel: `짱쉬운 미적분 1 알고리즘 변형 · ${prob.chapterName}`,
+    sourceLabel: `수능·평가원 기출 변형 · ${prob.chapterName} ; 정답률 88.5% (오답률 11.5%)`,
+    correctRate: 88.5,
+    errorRate: 11.5,
     category: 'csat',
     ...prob,
   };

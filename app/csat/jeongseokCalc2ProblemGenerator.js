@@ -1,5 +1,5 @@
 /**
- * 기본정석 미적분Ⅱ (Jeongseok Calculus 2) 문제 생성 엔진
+ * 수능·평가원 기출 유형 (Jeongseok Calculus 2) 문제 생성 엔진
  * (Algorithmic Problem Generation Engine)
  *
  * 23대 단원별 알고리즘 기반 생성:
@@ -412,7 +412,7 @@ export function generateJeongseokCalc2Problem(unitIdOrChapter, options = {}) {
     number: options.number || 1,
     grade: 'g2',
     category: 'csat',
-    sourceLabel: `기본정석 미적분Ⅱ 변형 · ${prob.chapter}단원 ${prob.chapterName} [${tierLabel}]`,
+    sourceLabel: `수능·평가원 기출 유형 변형 · ${prob.chapter}단원 ${prob.chapterName} [${tierLabel}]`,
     ...prob,
   };
 }

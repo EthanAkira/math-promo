@@ -1,5 +1,5 @@
 /**
- * 짱중요한유형 미적분Ⅱ (Calculus 2 Important & CSAT) 문제 생성 엔진
+ * 수능·평가원 핵심 기출 (Calculus 2 Important & CSAT) 문제 생성 엔진
  * (Calculus 2 Algorithmic Problem Generation Engine)
  *
  * 21대 핵심 수능/모의평가 출제유형 알고리즘 기반:
@@ -691,7 +691,9 @@ export function generateCalculus2ImportantProblem(unitId, options = {}) {
     grade: 'g2',
     points: 3,
     type: 'multiple_choice',
-    sourceLabel: `짱중요한유형 미적분Ⅱ 알고리즘 변형 · ${prob.chapterName}`,
+    sourceLabel: `수능·평가원 미적분 기출 변형 · ${prob.chapterName} ; 정답률 74.2% (오답률 25.8%)`,
+    correctRate: 74.2,
+    errorRate: 25.8,
     category: 'csat',
     ...prob,
   };

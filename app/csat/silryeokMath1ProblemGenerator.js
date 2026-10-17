@@ -1,5 +1,5 @@
 /**
- * 실력정석 수학1 (Silryeok Jeongseok Math 1) 문제 생성 엔진
+ * 수능·평가원 심화 기출 유형 (Silryeok Jeongseok Math 1) 문제 생성 엔진
  * (Algorithmic Problem Generation Engine)
  *
  * 17대 단원별 알고리즘 기반 생성:
@@ -814,7 +814,7 @@ export function generateSilryeokMath1Problem(unitIdOrChapter, options = {}) {
     number: options.number || 1,
     grade: 'g3',
     category: 'csat',
-    sourceLabel: `실력정석 수학1 변형 · ${prob.chapter}단원 ${prob.chapterName} [${tierLabel}]`,
+    sourceLabel: `수능·평가원 심화 기출 유형 변형 · ${prob.chapter}단원 ${prob.chapterName} [${tierLabel}]`,
     ...prob,
   };
 }

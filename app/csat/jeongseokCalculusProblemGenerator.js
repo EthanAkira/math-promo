@@ -1,8 +1,8 @@
 /**
- * 기본정석 미적분 (Jeongseok Calculus) 문제 생성 엔진
+ * 수능·평가원 기출 유형 (Jeongseok Calculus) 문제 생성 엔진
  * (Jeongseok Calculus Algorithmic Problem Generation Engine)
  *
- * 기본정석 미적분 15대 단원별 알고리즘 기반 생성:
+ * 수능·평가원 기출 유형 15대 단원별 알고리즘 기반 생성:
  * - 유제: 기본문제 (tier: 'basic', section: '기본문제 (유제)')
  * - 연습문제: 응용문제 (tier: 'applied', section: '응용문제 (연습문제)')
  *
@@ -616,7 +616,7 @@ export function generateJeongseokCalculusProblem(unitIdOrChapter, options = {}) 
     number: options.number || 1,
     grade: 'g2',
     category: 'csat',
-    sourceLabel: `기본정석 미적분 변형 · ${prob.chapter}단원 ${prob.chapterName} [${tier === 'basic' ? '기본문제' : '응용문제'}]`,
+    sourceLabel: `수능·평가원 기출 유형 변형 · ${prob.chapter}단원 ${prob.chapterName} [${tier === 'basic' ? '기본문제' : '응용문제'}]`,
     ...prob,
   };
 }

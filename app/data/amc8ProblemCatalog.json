@@ -1643,11 +1643,11 @@
     "unitId": "permutations-arrangements",
     "question": "from left to right. (The directions ”left” and ”right” are from the point of\nview of the people as they sit in the seats.) During the movie Ada went to the\nlobby to get some popcorn. When she returned, she found that Bea had moved\ntwo seats to the right, Ceci had moved one seat to the left, and Dee and Edie\nhad switched seats, leaving an end seat for Ada. In which seat had Ada been\nsitting before she got up?",
     "choices": [
-      "1",
-      "2",
-      "3",
-      "4",
-      "5"
+      "$1$",
+      "$2$",
+      "$3$",
+      "$4$",
+      "$5$"
     ],
     "answer": "0",
     "explanation": "2016 AMC 8 #5 기출문제 해설입니다.",
@@ -2113,11 +2113,11 @@
     "unitId": "quadrilaterals-polygons",
     "question": "In the diagram, all angles are right angles and the lengths of the sides are given in centimeters. Note the diagram is not drawn to scale. What is X, in centimeters?",
     "choices": [
-      "1",
-      "2",
-      "3",
-      "4",
-      "5"
+      "$1$",
+      "$2$",
+      "$3$",
+      "$4$",
+      "$5$"
     ],
     "answer": "2",
     "explanation": "Summing the vertical and horizontal segments shows that the missing horizontal segment $ balances the opposite side lengths:  = 3$. Therefore, the correct answer is (C) 3.",
@@ -3728,11 +3728,11 @@
     "unitId": "word-problems",
     "question": "The Amaco Middle School bookstore sells pencils costing a whole number of\ncents. Some seventh graders each b ought a p encil, paying a total of $1.43.\nSome of the 30 sixth graders each b ought a p encil, and they paid a total of\n$1.95. How many more sixth graders than seventh graders bought a p encil?",
     "choices": [
-      "1",
-      "2",
-      "3",
-      "4",
-      "5"
+      "$1$",
+      "$2$",
+      "$3$",
+      "$4$",
+      "$5$"
     ],
     "answer": "0",
     "explanation": "2009 AMC 8 #11 기출문제 해설입니다.",
@@ -5524,11 +5524,11 @@
     "unitId": "percentages-money",
     "question": "After Sally takes 20 shots, she has made 55% of her shots. After she takes 5\nmore shots, she raises her percentage to 56%. How many of the last 5 shots did\nshe make?",
     "choices": [
-      "1",
-      "2",
-      "3",
-      "4",
-      "5"
+      "$1$",
+      "$2$",
+      "$3$",
+      "$4$",
+      "$5$"
     ],
     "answer": "0",
     "explanation": "2004 AMC 8 #6 기출문제 해설입니다.",
@@ -6266,11 +6266,11 @@
     "unitId": "counting",
     "question": "How many integers between 1000 and 2000 have all three of the numbers\n15, 20 and 25 as factors?",
     "choices": [
-      "1",
-      "2",
-      "3",
-      "4",
-      "5"
+      "$1$",
+      "$2$",
+      "$3$",
+      "$4$",
+      "$5$"
     ],
     "answer": "0",
     "explanation": "2003 AMC 8 #19 기출문제 해설입니다.",

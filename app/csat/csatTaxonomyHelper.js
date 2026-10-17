@@ -385,8 +385,10 @@ export function matchProblemToDetailedType(problem, unitDetailedTypes) {
 
     if (typeName.includes('등차') && (chap.includes('등차') || subId.includes('arithmetic'))) return dt;
     if (typeName.includes('등비') && (chap.includes('등비') || subId.includes('geometric'))) return dt;
-    if (typeName.includes('σ 계산') && (chap.includes('시그마') || chap.includes('합') || q.includes('\\sum'))) return dt;
+    if (typeName.includes('등차·등비수열의 합') && (chap.includes('등차') || chap.includes('등비') || subId.includes('sequence-means'))) return dt;
+    if (typeName.includes('σ 계산') && (chap.includes('시그마') || chap.includes('합') || subId.includes('sigma') || q.includes('\\sum'))) return dt;
     if (typeName.includes('귀납') && (chap.includes('귀납') || subId.includes('inductive') || q.includes('a_{n+1}'))) return dt;
+    if ((typeName.includes('규칙성') || typeName.includes('경우분류')) && (chap.includes('여러 가지') || subId.includes('various') || chap.includes('추론') || q.includes('규칙'))) return dt;
 
     if (typeName.includes('극한값') && (chap.includes('함수의 극한') || subId.includes('function-limits'))) return dt;
     if (typeName.includes('연속') && (chap.includes('연속') || subId.includes('continuity'))) return dt;

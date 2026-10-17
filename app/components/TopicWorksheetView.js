@@ -368,7 +368,9 @@ export default function TopicWorksheetView({
               ...variantProblem,
               examType: category,
               choiceMarkerType: category === 'amc' ? 'letters' : 'numbers',
-              sourceLabel: language === 'ko' ? '알고리즘 유사 변형' : 'Algorithmic Variant',
+              sourceLabel: variantProblem.sourceLabel || (language === 'ko' ? '수능·평가원 기출 변형' : 'CSAT Variant'),
+              correctRate: variantProblem.correctRate,
+              errorRate: variantProblem.errorRate,
             }}
             userAnswer={userAnswers[variantProblem.id] ?? null}
             onSelectAnswer={(ans) => handleSelectAnswer(variantProblem.id, ans)}

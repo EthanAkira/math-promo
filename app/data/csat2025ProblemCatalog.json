@@ -24,7 +24,9 @@
       4.1,
       1.5
     ],
-    "sourceLabel": "2025학년도 수능 · 1번 ; 정답률 83.6% (오답률 16.4%)"
+    "sourceLabel": "2025학년도 수능 · 1번 ; 정답률 83.6% (오답률 16.4%)",
+    "unitId": "exp-log",
+    "subjectId": "math1"
   },
   {
     "id": "csat-2025-02",
@@ -51,7 +53,9 @@
       88.6,
       1.2
     ],
-    "sourceLabel": "2025학년도 수능 · 2번 ; 정답률 88.6% (오답률 11.4%)"
+    "sourceLabel": "2025학년도 수능 · 2번 ; 정답률 88.6% (오답률 11.4%)",
+    "unitId": "differentiation",
+    "subjectId": "math2"
   },
   {
     "id": "csat-2025-03",
@@ -78,7 +82,9 @@
       7.1,
       72.1
     ],
-    "sourceLabel": "2025학년도 수능 · 3번 ; 정답률 72.1% (오답률 27.9%)"
+    "sourceLabel": "2025학년도 수능 · 3번 ; 정답률 72.1% (오답률 27.9%)",
+    "unitId": "trig",
+    "subjectId": "math1"
   },
   {
     "id": "csat-2025-04",
@@ -105,7 +111,9 @@
       4.5,
       1.9
     ],
-    "sourceLabel": "2025학년도 수능 · 4번 ; 정답률 87.2% (오답률 12.8%)"
+    "sourceLabel": "2025학년도 수능 · 4번 ; 정답률 87.2% (오답률 12.8%)",
+    "unitId": "limits-continuity",
+    "subjectId": "math2"
   },
   {
     "id": "csat-2025-05",
@@ -132,7 +140,9 @@
       4.8,
       2.2
     ],
-    "sourceLabel": "2025학년도 수능 · 5번 ; 정답률 87.0% (오답률 13.0%)"
+    "sourceLabel": "2025학년도 수능 · 5번 ; 정답률 87.0% (오답률 13.0%)",
+    "unitId": "differentiation",
+    "subjectId": "math2"
   },
   {
     "id": "csat-2025-06",
@@ -159,7 +169,9 @@
       11.4,
       3.8
     ],
-    "sourceLabel": "2025학년도 수능 · 6번 ; 정답률 74.4% (오답률 25.6%)"
+    "sourceLabel": "2025학년도 수능 · 6번 ; 정답률 74.4% (오답률 25.6%)",
+    "unitId": "trig",
+    "subjectId": "math1"
   },
   {
     "id": "csat-2025-07",
@@ -186,7 +198,9 @@
       8.7,
       73.0
     ],
-    "sourceLabel": "2025학년도 수능 · 7번 ; 정답률 73.0% (오답률 27.0%)"
+    "sourceLabel": "2025학년도 수능 · 7번 ; 정답률 73.0% (오답률 27.0%)",
+    "unitId": "integration",
+    "subjectId": "math2"
   },
   {
     "id": "csat-2025-08",
@@ -213,7 +227,9 @@
       9.9,
       15.0
     ],
-    "sourceLabel": "2025학년도 수능 · 8번 ; 정답률 63.0% (오답률 37.0%)"
+    "sourceLabel": "2025학년도 수능 · 8번 ; 정답률 63.0% (오답률 37.0%)",
+    "unitId": "differentiation",
+    "subjectId": "math2"
   },
   {
     "id": "csat-2025-09",
@@ -240,7 +256,9 @@
       72.8,
       4.6
     ],
-    "sourceLabel": "2025학년도 수능 · 9번 ; 정답률 72.8% (오답률 27.2%)"
+    "sourceLabel": "2025학년도 수능 · 9번 ; 정답률 72.8% (오답률 27.2%)",
+    "unitId": "sequences",
+    "subjectId": "math1"
   },
   {
     "id": "csat-2025-10",
@@ -267,7 +285,9 @@
       16.2,
       6.8
     ],
-    "sourceLabel": "2025학년도 수능 · 10번 ; 정답률 61.1% (오답률 38.9%)"
+    "sourceLabel": "2025학년도 수능 · 10번 ; 정답률 61.1% (오답률 38.9%)",
+    "unitId": "integration",
+    "subjectId": "math2"
   },
   {
     "id": "csat-2025-11",
@@ -294,7 +314,9 @@
       8.6,
       11.2
     ],
-    "sourceLabel": "2025학년도 수능 · 11번 ; 정답률 50.0% (오답률 50.0%)"
+    "sourceLabel": "2025학년도 수능 · 11번 ; 정답률 50.0% (오답률 50.0%)",
+    "unitId": "exp-log",
+    "subjectId": "math1"
   },
   {
     "id": "csat-2025-12",
@@ -321,7 +343,9 @@
       10.9,
       5.7
     ],
-    "sourceLabel": "2025학년도 수능 · 12번 ; 정답률 71.4% (오답률 28.6%)"
+    "sourceLabel": "2025학년도 수능 · 12번 ; 정답률 71.4% (오답률 28.6%)",
+    "unitId": "sequences",
+    "subjectId": "math1"
   },
   {
     "id": "csat-2025-13",
@@ -348,7 +372,9 @@
       18.3,
       57.4
     ],
-    "sourceLabel": "2025학년도 수능 · 13번 ; 정답률 57.4% (오답률 42.6%)"
+    "sourceLabel": "2025학년도 수능 · 13번 ; 정답률 57.4% (오답률 42.6%)",
+    "unitId": "trig",
+    "subjectId": "math1"
   },
   {
     "id": "csat-2025-14",
@@ -375,7 +401,9 @@
       47.0,
       11.5
     ],
-    "sourceLabel": "2025학년도 수능 · 14번 ; 정답률 47.0% (오답률 53.0%)"
+    "sourceLabel": "2025학년도 수능 · 14번 ; 정답률 47.0% (오답률 53.0%)",
+    "unitId": "differentiation",
+    "subjectId": "math2"
   },
   {
     "id": "csat-2025-15",
@@ -402,7 +430,9 @@
       38.1,
       11.1
     ],
-    "sourceLabel": "2025학년도 수능 · 15번 ; 정답률 38.1% (오답률 61.9%)"
+    "sourceLabel": "2025학년도 수능 · 15번 ; 정답률 38.1% (오답률 61.9%)",
+    "unitId": "sequences",
+    "subjectId": "math1"
   },
   {
     "id": "csat-2025-16",
@@ -416,7 +446,9 @@
     "explanation": "$$a_2 = 1^2 \\cdot 1 + 1 = 2$$\n$$a_3 = 2^2 \\cdot 2 + 1 = 9$$",
     "correctRate": 83.2,
     "errorRate": 16.8,
-    "sourceLabel": "2025학년도 수능 · 16번 ; 정답률 83.2% (오답률 16.8%)"
+    "sourceLabel": "2025학년도 수능 · 16번 ; 정답률 83.2% (오답률 16.8%)",
+    "unitId": "exp-log",
+    "subjectId": "math1"
   },
   {
     "id": "csat-2025-17",
@@ -430,7 +462,9 @@
     "explanation": "$$F(x) = x^4 - x^2 + 4 \\implies F(2) = 16 - 4 + 4 = 16$$",
     "correctRate": 85.5,
     "errorRate": 14.5,
-    "sourceLabel": "2025학년도 수능 · 17번 ; 정답률 85.5% (오답률 14.5%)"
+    "sourceLabel": "2025학년도 수능 · 17번 ; 정답률 85.5% (오답률 14.5%)",
+    "unitId": "integration",
+    "subjectId": "math2"
   },
   {
     "id": "csat-2025-18",
@@ -444,7 +478,9 @@
     "explanation": "$$\\sin(\\angle\\mathrm{BAC}) = \\sqrt{1 - \\frac{9}{25}} = \\frac{4}{5}$$\n$$S = \\frac{1}{2} \\times 5 \\times 6 \\times \\frac{4}{5} = 12$$",
     "correctRate": 61.7,
     "errorRate": 38.3,
-    "sourceLabel": "2025학년도 수능 · 18번 ; 정답률 61.7% (오답률 38.3%)"
+    "sourceLabel": "2025학년도 수능 · 18번 ; 정답률 61.7% (오답률 38.3%)",
+    "unitId": "sequences",
+    "subjectId": "math1"
   },
   {
     "id": "csat-2025-19",
@@ -458,7 +494,9 @@
     "explanation": "$f(x) = 2x^3+3x^2-12x-8$ 의 극댓값 $f(-2)=12$, 극솟값 $f(1)=-15$, $f(2)=-4$ 이므로 최솟값 $k=15$ 입니다.",
     "correctRate": 48.7,
     "errorRate": 51.3,
-    "sourceLabel": "2025학년도 수능 · 19번 ; 정답률 48.7% (오답률 51.3%)"
+    "sourceLabel": "2025학년도 수능 · 19번 ; 정답률 48.7% (오답률 51.3%)",
+    "unitId": "limits-continuity",
+    "subjectId": "math2"
   },
   {
     "id": "csat-2025-20",
@@ -472,7 +510,9 @@
     "explanation": "빈칸 추론 단계에 따라 $f(n) = \\frac{1}{3}n$, $p=a_2$, $q$ 값을 계산합니다.",
     "correctRate": 29.9,
     "errorRate": 70.1,
-    "sourceLabel": "2025학년도 수능 · 20번 ; 정답률 29.9% (오답률 70.1%)"
+    "sourceLabel": "2025학년도 수능 · 20번 ; 정답률 29.9% (오답률 70.1%)",
+    "unitId": "differentiation",
+    "subjectId": "math2"
   },
   {
     "id": "csat-2025-21",
@@ -486,7 +526,9 @@
     "explanation": "연속성과 분모 $x(x-2)$ 에 의한 영점 조건 해석을 통해 함수 $g(x)$ 를 결정하고 $g(-5)=180$ 을 구합니다.",
     "correctRate": 2.4,
     "errorRate": 97.6,
-    "sourceLabel": "2025학년도 수능 · 21번 ; 정답률 2.4% (오답률 97.6%)"
+    "sourceLabel": "2025학년도 수능 · 21번 ; 정답률 2.4% (오답률 97.6%)",
+    "unitId": "sequences",
+    "subjectId": "math1"
   },
   {
     "id": "csat-2025-22",
@@ -500,7 +542,9 @@
     "explanation": "역함수 대칭점과 중점 관계를 연립하여 $a, b$ 의 곱을 도출합니다.",
     "correctRate": 3.3,
     "errorRate": 96.7,
-    "sourceLabel": "2025학년도 수능 · 22번 ; 정답률 3.3% (오답률 96.7%)"
+    "sourceLabel": "2025학년도 수능 · 22번 ; 정답률 3.3% (오답률 96.7%)",
+    "unitId": "differentiation",
+    "subjectId": "math2"
   },
   {
     "id": "csat-2025-23",
@@ -527,7 +571,9 @@
       2.8,
       0.8
     ],
-    "sourceLabel": "2025학년도 수능 · 23번 ; 정답률 91.2% (오답률 8.8%)"
+    "sourceLabel": "2025학년도 수능 · 23번 ; 정답률 91.2% (오답률 8.8%)",
+    "unitId": "sequence-limits",
+    "subjectId": "calculus"
   },
   {
     "id": "csat-2025-24",
@@ -554,7 +600,9 @@
       69.5,
       3.6
     ],
-    "sourceLabel": "2025학년도 수능 · 24번 ; 정답률 69.5% (오답률 30.5%)"
+    "sourceLabel": "2025학년도 수능 · 24번 ; 정답률 69.5% (오답률 30.5%)",
+    "unitId": "advanced-differentiation",
+    "subjectId": "calculus"
   },
   {
     "id": "csat-2025-25",
@@ -581,7 +629,9 @@
       6.2,
       4.3
     ],
-    "sourceLabel": "2025학년도 수능 · 25번 ; 정답률 79.4% (오답률 20.6%)"
+    "sourceLabel": "2025학년도 수능 · 25번 ; 정답률 79.4% (오답률 20.6%)",
+    "unitId": "advanced-integration",
+    "subjectId": "calculus"
   },
   {
     "id": "csat-2025-26",
@@ -608,7 +658,9 @@
       14.2,
       4.5
     ],
-    "sourceLabel": "2025학년도 수능 · 26번 ; 정답률 66.2% (오답률 33.8%)"
+    "sourceLabel": "2025학년도 수능 · 26번 ; 정답률 66.2% (오답률 33.8%)",
+    "unitId": "sequence-limits",
+    "subjectId": "calculus"
   },
   {
     "id": "csat-2025-27",
@@ -635,7 +687,9 @@
       12.7,
       10.0
     ],
-    "sourceLabel": "2025학년도 수능 · 27번 ; 정답률 63.2% (오답률 36.8%)"
+    "sourceLabel": "2025학년도 수능 · 27번 ; 정답률 63.2% (오답률 36.8%)",
+    "unitId": "advanced-differentiation",
+    "subjectId": "calculus"
   },
   {
     "id": "csat-2025-28",
@@ -662,7 +716,9 @@
       19.3,
       28.0
     ],
-    "sourceLabel": "2025학년도 수능 · 28번 ; 정답률 28.0% (오답률 72.0%)"
+    "sourceLabel": "2025학년도 수능 · 28번 ; 정답률 28.0% (오답률 72.0%)",
+    "unitId": "advanced-differentiation",
+    "subjectId": "calculus"
   },
   {
     "id": "csat-2025-29",
@@ -676,7 +732,9 @@
     "explanation": "등비수열의 공비와 등차수열의 공차를 구하여 급수의 합을 계산합니다.",
     "correctRate": 18.4,
     "errorRate": 81.6,
-    "sourceLabel": "2025학년도 수능 · 29번 ; 정답률 18.4% (오답률 81.6%)"
+    "sourceLabel": "2025학년도 수능 · 29번 ; 정답률 18.4% (오답률 81.6%)",
+    "unitId": "advanced-integration",
+    "subjectId": "calculus"
   },
   {
     "id": "csat-2025-30",
@@ -690,6 +748,8 @@
     "explanation": "접선의 기울기에 따른 교점 개수 $g(m)$ 의 불연속점을 분석하여 값을 구합니다.",
     "correctRate": 3.1,
     "errorRate": 96.9,
-    "sourceLabel": "2025학년도 수능 · 30번 ; 정답률 3.1% (오답률 96.9%)"
+    "sourceLabel": "2025학년도 수능 · 30번 ; 정답률 3.1% (오답률 96.9%)",
+    "unitId": "advanced-differentiation",
+    "subjectId": "calculus"
   }
 ]

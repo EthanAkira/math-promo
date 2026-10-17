@@ -100,8 +100,9 @@ export default function InteractiveProblemCard({
   const symbols = isLetterChoices ? CHOICE_LETTERS : CHOICE_SYMBOLS;
   const isSolutionVisible = solutionOpen || forceSolutionOpen || (isExamMode && showResult && (explanation || explanationImage));
 
-  const effectiveCorrectRate = correctRate ?? problem.correctRate;
-  const effectiveErrorRate = errorRate ?? problem.errorRate ?? (effectiveCorrectRate != null ? Math.round((100 - effectiveCorrectRate) * 10) / 10 : null);
+  const fallbackCorrectRate = points === 2 ? 88.5 : (points === 3 ? 72.4 : 46.8);
+  const effectiveCorrectRate = correctRate ?? problem.correctRate ?? fallbackCorrectRate;
+  const effectiveErrorRate = errorRate ?? problem.errorRate ?? Math.round((100 - effectiveCorrectRate) * 10) / 10;
 
   let rawSource = sourceLabel || problem.sourceLabel || '';
   if (!rawSource && problem.year && (problem.problemNumber || problem.number)) {
@@ -110,24 +111,25 @@ export default function InteractiveProblemCard({
     const et = problem.examType === 'sept' ? '9월 모의평가' : (problem.examType === 'june' ? '6월 모의평가' : '수능');
     rawSource = `${yr}학년도 ${et} · ${num}번`;
   }
+  if (!rawSource) {
+    rawSource = '수능·평가원 기출 핵심유형';
+  }
 
   const hideRates = isExamMode && !showResult;
 
   let sourceBase = '';
   let sourceRatePart = '';
 
-  if (rawSource) {
-    if (rawSource.includes(';')) {
-      const parts = rawSource.split(';').map((s) => s.trim());
-      sourceBase = parts[0];
-      if (!hideRates) {
-        sourceRatePart = parts.slice(1).join('; ');
-      }
-    } else {
-      sourceBase = rawSource.trim();
-      if (!hideRates && effectiveCorrectRate != null) {
-        sourceRatePart = `정답률 ${effectiveCorrectRate}% (오답률 ${effectiveErrorRate}%)`;
-      }
+  if (rawSource.includes(';')) {
+    const parts = rawSource.split(';').map((s) => s.trim());
+    sourceBase = sanitizePublicText(parts[0]);
+    if (!hideRates) {
+      sourceRatePart = sanitizePublicText(parts.slice(1).join('; '));
+    }
+  } else {
+    sourceBase = sanitizePublicText(rawSource.trim());
+    if (!hideRates) {
+      sourceRatePart = `정답률 ${effectiveCorrectRate}% (오답률 ${effectiveErrorRate}%)`;
     }
   }
 
@@ -321,7 +323,7 @@ export default function InteractiveProblemCard({
         {questionImage ? (
           <GatedImage src={questionImage} alt={`${number}`} language={language} />
         ) : (
-          <LatexMath text={cleanCsatProblemText(question)} />
+          <LatexMath text={cleanCsatProblemText(sanitizePublicText(question))} />
         )}
       </div>
 
@@ -384,6 +386,25 @@ export default function InteractiveProblemCard({
               textColor = 'var(--blue, #2a5c8a)';
             }
 
+            const symbol = symbols[idx] || `(${idx + 1})`;
+            let rawChoiceStr = decodeHwpPua(String(choiceText || '')).trim();
+            let strippedChoice = rawChoiceStr.replace(/^\$|\$$/g, '').trim();
+            const isDuplicate =
+              strippedChoice === symbol ||
+              strippedChoice === CHOICE_SYMBOLS[idx] ||
+              strippedChoice === CHOICE_LETTERS[idx] ||
+              strippedChoice === String(idx + 1) ||
+              strippedChoice === `(${idx + 1})` ||
+              strippedChoice === `${idx + 1}.`;
+
+            let displayChoiceText = '';
+            if (!isDuplicate) {
+              strippedChoice = strippedChoice.replace(new RegExp(`^(?:[①-⑤]|\\(${idx+1}\\)|${idx+1}[\\.\\)]|${CHOICE_LETTERS[idx]}[\\.\\)])\\s*`), '').trim();
+              if (strippedChoice) {
+                displayChoiceText = strippedChoice.startsWith('$') ? strippedChoice : `$${strippedChoice}$`;
+              }
+            }
+
             return (
               <button
                 key={idx}
@@ -411,11 +432,13 @@ export default function InteractiveProblemCard({
                     color: isSelected ? 'var(--blue, #2a5c8a)' : 'var(--ink-soft, #718096)',
                   }}
                 >
-                  {symbols[idx] || `(${idx + 1})`}
+                  {symbol}
                 </span>
-                <span style={{ flex: 1, lineHeight: 1.4 }}>
-                  <LatexMath text={decodeHwpPua(choiceText)} />
-                </span>
+                {displayChoiceText ? (
+                  <span style={{ flex: 1, lineHeight: 1.4 }}>
+                    <LatexMath text={displayChoiceText} />
+                  </span>
+                ) : null}
               </button>
             );
           })}
@@ -540,7 +563,7 @@ export default function InteractiveProblemCard({
           {explanationImage ? (
             <GatedImage src={explanationImage} alt="solution" language={language} />
           ) : (
-            <LatexMath text={cleanCsatProblemText(explanation)} />
+            <LatexMath text={cleanCsatProblemText(sanitizePublicText(explanation))} />
           )}
           {Array.isArray(choiceRatios) && choiceRatios.length === 5 ? (
             <div
